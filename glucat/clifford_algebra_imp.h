@@ -41,18 +41,18 @@
 namespace glucat
 {
   template< typename Scalar_T, typename Index_Set_T, typename Multivector_T>
-  char*
+  const std::string
   clifford_algebra<Scalar_T,Index_Set_T,Multivector_T>::
   classname()
   { return "clifford_algebra"; }
 
   // Test for inequality of multivectors
   template
-	<
-		template<typename, const index_t, const index_t> class Multivector,
-		template<typename, const index_t, const index_t> class RHS,
-		typename Scalar_T, const index_t LO, const index_t HI
-	>
+  <
+    template<typename, const index_t, const index_t> class Multivector,
+    template<typename, const index_t, const index_t> class RHS,
+    typename Scalar_T, const index_t LO, const index_t HI
+  >
   inline
   bool
   operator!= (const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs)
@@ -60,24 +60,24 @@ namespace glucat
 
 
   // Test for inequality of multivector and scalar
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   bool
   operator!= (const Multivector<Scalar_T,LO,HI>& lhs, const Scalar_T& scr)
   { return lhs.frame().count() != 0 || scalar(lhs) != scr; }
 
   // Test for inequality of scalar and multivector
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   bool
   operator!= (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI>& rhs)
   { return rhs.frame().count() != 0 || scalar(rhs) != scr; }
 
   /// Geometric sum of multivector and scalar
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   const Multivector<Scalar_T,LO,HI>
   operator+ (const Multivector<Scalar_T,LO,HI>& lhs, const Scalar_T& scr)
@@ -87,8 +87,8 @@ namespace glucat
   }
 
   /// Geometric sum of scalar and multivector
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   const Multivector<Scalar_T,LO,HI>
   operator+ (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI>& rhs)
@@ -98,11 +98,11 @@ namespace glucat
 
   /// Geometric sum
   template
-	<
-		template<typename, const index_t, const index_t> class Multivector,
-		template<typename, const index_t, const index_t> class RHS,
-		typename Scalar_T, const index_t LO, const index_t HI
-	>
+  <
+    template<typename, const index_t, const index_t> class Multivector,
+    template<typename, const index_t, const index_t> class RHS,
+    typename Scalar_T, const index_t LO, const index_t HI
+  >
   inline
   const Multivector<Scalar_T,LO,HI>
   operator+ (const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs)
@@ -112,8 +112,8 @@ namespace glucat
   }
 
   /// Geometric difference of multivector and scalar
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   const Multivector<Scalar_T,LO,HI>
   operator- (const Multivector<Scalar_T,LO,HI>& lhs, const Scalar_T& scr)
@@ -123,8 +123,8 @@ namespace glucat
   }
 
   /// Geometric difference of scalar and multivector
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   const Multivector<Scalar_T,LO,HI>
   operator- (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI>& rhs)
@@ -132,11 +132,11 @@ namespace glucat
 
   /// Geometric difference
   template
-	<
-		template<typename, const index_t, const index_t> class Multivector,
-		template<typename, const index_t, const index_t> class RHS,
-		typename Scalar_T, const index_t LO, const index_t HI
-	>
+  <
+    template<typename, const index_t, const index_t> class Multivector,
+    template<typename, const index_t, const index_t> class RHS,
+    typename Scalar_T, const index_t LO, const index_t HI
+  >
   inline
   const Multivector<Scalar_T,LO,HI>
   operator- (const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs)
@@ -146,8 +146,8 @@ namespace glucat
   }
 
   /// Product of multivector and scalar
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   const Multivector<Scalar_T,LO,HI>
   operator* (const Multivector<Scalar_T,LO,HI>& lhs, const Scalar_T& scr)
@@ -157,8 +157,8 @@ namespace glucat
   }
 
   /// Product of scalar and multivector
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   const Multivector<Scalar_T,LO,HI>
   operator* (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI>& rhs)
@@ -169,11 +169,11 @@ namespace glucat
 
   /// Geometric product
   template
-	<
-		template<typename, const index_t, const index_t> class Multivector,
+  <
+    template<typename, const index_t, const index_t> class Multivector,
     template<typename, const index_t, const index_t> class RHS,
-		typename Scalar_T, const index_t LO, const index_t HI
-	>
+    typename Scalar_T, const index_t LO, const index_t HI
+  >
   inline
   const Multivector<Scalar_T,LO,HI>
   operator* (const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs)
@@ -184,11 +184,11 @@ namespace glucat
 
   /// Left contraction
   template
-	<
-		template<typename, const index_t, const index_t> class Multivector,
-		template<typename, const index_t, const index_t> class RHS,
-		typename Scalar_T, const index_t LO, const index_t HI
-	>
+  <
+    template<typename, const index_t, const index_t> class Multivector,
+    template<typename, const index_t, const index_t> class RHS,
+    typename Scalar_T, const index_t LO, const index_t HI
+  >
   inline
   const Multivector<Scalar_T,LO,HI>
   operator% (const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs)
@@ -199,11 +199,11 @@ namespace glucat
 
   /// Inner product
   template
-	<
-		template<typename, const index_t, const index_t> class Multivector,
-		template<typename, const index_t, const index_t> class RHS,
-		typename Scalar_T, const index_t LO, const index_t HI
-	>
+  <
+    template<typename, const index_t, const index_t> class Multivector,
+    template<typename, const index_t, const index_t> class RHS,
+    typename Scalar_T, const index_t LO, const index_t HI
+  >
   inline
   const Multivector<Scalar_T,LO,HI>
   operator& (const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs)
@@ -214,11 +214,11 @@ namespace glucat
 
   /// Outer product
   template
-	<
-		template<typename, const index_t, const index_t> class Multivector,
-		template<typename, const index_t, const index_t> class RHS,
-		typename Scalar_T, const index_t LO, const index_t HI
-	>
+  <
+    template<typename, const index_t, const index_t> class Multivector,
+    template<typename, const index_t, const index_t> class RHS,
+    typename Scalar_T, const index_t LO, const index_t HI
+  >
   inline
   const Multivector<Scalar_T,LO,HI>
   operator^ (const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs)
@@ -229,19 +229,19 @@ namespace glucat
 
   /// Hestenes scalar product
   template
-	<
-		template<typename, const index_t, const index_t> class Multivector,
-		template<typename, const index_t, const index_t> class RHS,
-		typename Scalar_T, const index_t LO, const index_t HI
-	>
+  <
+    template<typename, const index_t, const index_t> class Multivector,
+    template<typename, const index_t, const index_t> class RHS,
+    typename Scalar_T, const index_t LO, const index_t HI
+  >
   inline
   Scalar_T
   star(const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs)
   { return scalar(lhs * rhs); }
 
   /// Quotient of multivector and scalar
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   const Multivector<Scalar_T,LO,HI>
   operator/ (const Multivector<Scalar_T,LO,HI>& lhs, const Scalar_T& scr)
@@ -251,8 +251,8 @@ namespace glucat
   }
 
   /// Quotient of scalar and multivector
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   const Multivector<Scalar_T,LO,HI>
   operator/ (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI>& rhs)
@@ -263,11 +263,11 @@ namespace glucat
 
   /// Geometric quotient
   template
-	<
-		template<typename, const index_t, const index_t> class Multivector,
-		template<typename, const index_t, const index_t> class RHS,
-		typename Scalar_T, const index_t LO, const index_t HI
-	>
+  <
+    template<typename, const index_t, const index_t> class Multivector,
+    template<typename, const index_t, const index_t> class RHS,
+    typename Scalar_T, const index_t LO, const index_t HI
+  >
   inline
   const Multivector<Scalar_T,LO,HI>
   operator/ (const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs)
@@ -277,137 +277,136 @@ namespace glucat
   }
 
   /// Geometric multiplicative inverse
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   const Multivector<Scalar_T,LO,HI>
   inv(const Multivector<Scalar_T,LO,HI>& val)
   { return val.inv(); }
 
-	/// Main involution, each {i} is replaced by -{i} in each term, eg. {1}*{2} -> (-{2})*(-{1})
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  /// Main involution, each {i} is replaced by -{i} in each term, eg. {1}*{2} -> (-{2})*(-{1})
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   const Multivector<Scalar_T,LO,HI>
   involute(const Multivector<Scalar_T,LO,HI>& val)
   { return val.involute(); }
 
   /// Reversion, eg. {1}*{2} -> {2}*{1}
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   const Multivector<Scalar_T,LO,HI>
   reverse(const Multivector<Scalar_T,LO,HI>& val)
   { return val.reverse(); }
 
   /// Conjugation, rev o invo == invo o rev
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   const Multivector<Scalar_T,LO,HI>
   conj(const Multivector<Scalar_T,LO,HI>& val)
   { return val.conj(); }
 
   /// Scalar_T quadratic form == (rev(x)*x)(0)
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   Scalar_T
   quad(const Multivector<Scalar_T,LO,HI>& val)
   { return val.quad(); }
 
   /// Scalar part
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   Scalar_T
   scalar(const Multivector<Scalar_T,LO,HI>& val)
   { return val[index_set<LO,HI>()]; }
 
   /// Pure part
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   const Multivector<Scalar_T,LO,HI>
   pure(const Multivector<Scalar_T,LO,HI>& val)
   { return val - scalar(val); }
 
   /// Even part
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   const Multivector<Scalar_T,LO,HI>
   even(const Multivector<Scalar_T,LO,HI>& val)
   { return val.even(); }
 
   /// Vector part of multivector, as a vector_t with respect to frame()
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
+  inline
   const std::vector<Scalar_T>
   vector_part(const Multivector<Scalar_T,LO,HI>& val)
   { return val.vector_part(); }
 
   /// Absolute value == sqrt(norm)
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   Scalar_T
   abs(const Multivector<Scalar_T,LO,HI>& val)
   { return std::sqrt(val.norm()); }
 
   /// Scalar_T norm == sum of norm of coordinates
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   Scalar_T
   norm(const Multivector<Scalar_T,LO,HI>& val)
   { return val.norm(); }
 
   /// Real part of scalar part
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   Scalar_T
   real(const Multivector<Scalar_T,LO,HI>& val)
   { return std::real(scalar(val)); }
 
   /// Imaginary part of scalar part
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   Scalar_T
   imag(const Multivector<Scalar_T,LO,HI>& val)
   { return std::imag(scalar(val)); }
 
   /// Integer power of multivector
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
+  inline
   const Multivector<Scalar_T,LO,HI>
   pow(const Multivector<Scalar_T,LO,HI>& lhs, int rhs)
   { return lhs.pow(rhs); }
 
   /// Multivector power of multivector
   template
-	<
-		template<typename, const index_t, const index_t> class Multivector,
-		template<typename, const index_t, const index_t> class RHS,
-		typename Scalar_T, const index_t LO, const index_t HI
-	>
+  <
+    template<typename, const index_t, const index_t> class Multivector,
+    template<typename, const index_t, const index_t> class RHS,
+    typename Scalar_T, const index_t LO, const index_t HI
+  >
+  inline
   const Multivector<Scalar_T,LO,HI>
   pow(const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs)
   { return exp(log(lhs) * rhs); }
 
   /// Square root of -1 which commutes with all members of the frame of the given multivector
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
-  inline
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   const Multivector<Scalar_T,LO,HI>
   elliptic(const Multivector<Scalar_T,LO,HI>& val)
   {
     typedef Multivector<Scalar_T,LO,HI> multivector_t;
-    Scalar_T i = std::sqrt(Scalar_T(-1));
-    if (i*i == Scalar_T(-1))
-      return i;
     typedef typename multivector_t::index_set_t index_set_t;
     index_set_t frm = val.frame();
     index_t incp[] = {0, 2, 1, 0};
@@ -428,15 +427,16 @@ namespace glucat
           break;
         }
     index_t new_bott = pos_mod(frm.count_pos() - frm.count_neg(), 4);
+
     if ((incp[new_bott] == 0) && (incq[new_bott] == 0))
       return multivector_t(frm, Scalar_T(1));
     else
-      return i;
+      return Scalar_T(std::log(0.0)); // This actually returns -Inf;
   }
 
   /// Pade' approximation
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   const Multivector<Scalar_T,LO,HI>
   pade_approx(const Scalar_T a[], const Scalar_T b[], const Multivector<Scalar_T,LO,HI>& A)
@@ -447,31 +447,32 @@ namespace glucat
 
     typedef Multivector<Scalar_T,LO,HI> multivector_t;
 
-    const multivector_t A2 = A*A;
-    const multivector_t A4 = A2*A2;
-    const multivector_t N = a[0]+A2*a[2]+(a[4]+A2*a[6]+A4*a[8])*A4 +
-                         A*(a[1]+A2*a[3]+(a[5]+A2*a[7])*A4);
-    const multivector_t D = b[0]+A2*b[2]+(b[4]+A2*b[6]+A4*b[8])*A4 +
-                         A*(b[1]+A2*b[3]+(b[5]+A2*b[7])*A4);
+    const multivector_t& A2 = A*A;
+    const multivector_t& A4 = A2*A2;
+    const multivector_t& N = a[0]+A2*a[2]+(a[4]+A2*a[6]+A4*a[8])*A4 +
+                          A*(a[1]+A2*a[3]+(a[5]+A2*a[7])*A4);
+    const multivector_t& D = b[0]+A2*b[2]+(b[4]+A2*b[6]+A4*b[8])*A4 +
+                          A*(b[1]+A2*b[3]+(b[5]+A2*b[7])*A4);
     return N / D;
   }
 
   /// Single step of product form of Denman-Beavers square root iteration
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
+  inline
   void
   db_step(Multivector<Scalar_T,LO,HI>& M, Multivector<Scalar_T,LO,HI>& Y)
   {
     // Reference: [CHKL]
     typedef Multivector<Scalar_T,LO,HI> multivector_t;
-    multivector_t iM = inv(M);
+    const multivector_t& iM = inv(M);
     M = (Scalar_T(1) + (M + iM)/Scalar_T(2)) / Scalar_T(2);
     Y *= (Scalar_T(1) + iM) / Scalar_T(2);
   }
 
   /// Product form of Denman-Beavers square root iteration
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   const Multivector<Scalar_T,LO,HI>
   db_sqrt(const Multivector<Scalar_T,LO,HI>& val)
   {
@@ -486,14 +487,14 @@ namespace glucat
     for (; step != Tune_P::sqrt_max_steps && norm(Scalar_T(1) - M) > 0; ++step)
       db_step(M, Y);
     if (step == Tune_P::sqrt_max_steps && norm(Scalar_T(1) - M) > 0)
-			std::cerr << "Warning: sqrt iteration did not converge. norm = "
-					 << norm(Scalar_T(1) - M) << std::endl;
+      std::cerr << "Warning: sqrt iteration did not converge. norm = "
+           << norm(Scalar_T(1) - M) << std::endl;
     return Y;
   }
 
   /// Square root of multivector
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   const Multivector<Scalar_T,LO,HI>
   sqrt(const Multivector<Scalar_T,LO,HI>& val)
   {
@@ -502,7 +503,7 @@ namespace glucat
     typedef Multivector<Scalar_T,LO,HI> multivector_t;
     static const Scalar_T a[] =
     {
-       1.0,				   17.0/4.0,		  119.0/16.0,
+       1.0,          17.0/4.0,      119.0/16.0,
      221.0/32.0,    935.0/256.0,    561.0/512.0,
      357.0/2048.0,   51.0/4096.0,    17.0/65536.0
     };
@@ -521,7 +522,7 @@ namespace glucat
 
     // Scale val towards circle abs(val) == 1
     const Scalar_T scale = abs(val);
-    const multivector_t unitval = val / scale;
+    const multivector_t& unitval = val / scale;
     if (norm(unitval - Scalar_T(1)) < Scalar_T(1))
       // Pade' approximation of square root
       return pade_approx(a, b, unitval - Scalar_T(1)) * Scalar_T(std::sqrt(scale));
@@ -531,8 +532,8 @@ namespace glucat
   }
 
   /// Exponential of multivector
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   const Multivector<Scalar_T,LO,HI>
   exp(const Multivector<Scalar_T,LO,HI>& val)
   {
@@ -552,10 +553,10 @@ namespace glucat
         for (int k = 0; k != q; ++k)
           c[k+1] = c[k]*(q-k) / ((2*q-k)*(k+1));
       }
-      const multivector_t A2 = A*A;
-      const multivector_t A4 = A2*A2;
-      const multivector_t U =     c[0]+A2*c[2]+(c[4]+A2*c[6]+A4*c[8])*A4;
-      const multivector_t AV = A*(c[1]+A2*c[3]+(c[5]+A2*c[7])*A4);
+      const multivector_t& A2 = A*A;
+      const multivector_t& A4 = A2*A2;
+      const multivector_t& U =     c[0]+A2*c[2]+(c[4]+A2*c[6]+A4*c[8])*A4;
+      const multivector_t& AV = A*(c[1]+A2*c[3]+(c[5]+A2*c[7])*A4);
       result = (U+AV) / (U-AV);
     }
     for (int k = 0; k != j && !result.isnan(); ++k)
@@ -564,8 +565,8 @@ namespace glucat
   }
 
   /// Scaled Pade' approximation of log
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   const Multivector<Scalar_T,LO,HI>
   pade_log(const Multivector<Scalar_T,LO,HI>& val)
   {
@@ -594,8 +595,8 @@ namespace glucat
   }
 
   /// Incomplete square root cascade and scaled Pade' approximation of log
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   const Multivector<Scalar_T,LO,HI>
   cascade_log(const Multivector<Scalar_T,LO,HI>& val)
   {
@@ -609,28 +610,28 @@ namespace glucat
     int outer_step;
     for (outer_step = 0;
         outer_step != Tune_P::log_max_outer_steps &&
-				norm(Scalar_T(1) - Y) > Scalar_T(0.5);
+        norm(Scalar_T(1) - Y) > Scalar_T(0.5);
         ++outer_step)
     {
       if (Y == 0)
         return Scalar_T(std::log(0.0));
-	    // Incomplete product form of Denman-Beavers square root iteration
+      // Incomplete product form of Denman-Beavers square root iteration
       multivector_t M = Y;
       for (int inner_step = 0;
-					inner_step != Tune_P::log_max_inner_steps && norm(Scalar_T(1) - M) > 0;
-					++inner_step)
+          inner_step != Tune_P::log_max_inner_steps && norm(Scalar_T(1) - M) > 0;
+          ++inner_step)
         db_step(M, Y);
       E += E + Scalar_T(1) - M;
     }
-		if (outer_step == Tune_P::log_max_outer_steps && norm(Scalar_T(1) - Y) > Scalar_T(0.5))
-			std::cerr << "Warning: log iteration did not converge. norm = "
-					 << norm(Scalar_T(1) - Y) << std::endl;
+    if (outer_step == Tune_P::log_max_outer_steps && norm(Scalar_T(1) - Y) > Scalar_T(0.5))
+      std::cerr << "Warning: log iteration did not converge. norm = "
+                << norm(Scalar_T(1) - Y) << std::endl;
     return pade_log(Y) * Scalar_T(std::pow(Scalar_T(2), outer_step)) + E;
   }
 
   /// Natural logarithm of multivector
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   const Multivector<Scalar_T,LO,HI>
   log(const Multivector<Scalar_T,LO,HI>& val)
   {
@@ -644,8 +645,8 @@ namespace glucat
       return Scalar_T(std::log(-realval)) + elliptic(val) * Scalar_T(l_pi);
 
     // Scale val towards abs(A) == 1
-    Scalar_T scale = abs(val);
-    Scalar_T logscale = std::log(scale);
+    const Scalar_T scale = abs(val);
+    const Scalar_T logscale = std::log(scale);
     if (val == scale)
       return logscale;
     else
@@ -653,36 +654,33 @@ namespace glucat
   }
 
   /// Cosine of multivector
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
-  inline
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   const Multivector<Scalar_T,LO,HI>
   cos(const Multivector<Scalar_T,LO,HI>& val)
   {
     typedef Multivector<Scalar_T,LO,HI> multivector_t;
     const Scalar_T s = scalar(val);
     const Scalar_T twopi = Scalar_T(2) * Scalar_T(l_pi);
-    const multivector_t i = elliptic(val);
-    const multivector_t z = i * (val - s + std::fmod(std::real(s), twopi) + std::imag(s));
+    const multivector_t& i = elliptic(val);
+    const multivector_t& z = i *
+      (val - s + Scalar_T(std::fmod(Scalar_T(std::real(s)), twopi)) +
+                 Scalar_T(std::imag(s)));
     return (exp(z)+exp(-z)) / Scalar_T(2);
   }
 
   /// Inverse cosine of multivector
   // Reference: [AS], Section 4.4, p79-83
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   const Multivector<Scalar_T,LO,HI>
   acos(const Multivector<Scalar_T,LO,HI>& val)
-  {
-    typedef Multivector<Scalar_T,LO,HI> multivector_t;
-    const multivector_t i = elliptic(val);
-    return i*acosh(val);
-  }
+  { return elliptic(val)*acosh(val); }
 
   /// Hyperbolic cosine of multivector
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   const Multivector<Scalar_T,LO,HI>
   cosh(const Multivector<Scalar_T,LO,HI>& val)
@@ -690,44 +688,45 @@ namespace glucat
 
   /// Inverse hyperbolic cosine of multivector
   // Reference: [AS], Section 4.6, p86-89
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   const Multivector<Scalar_T,LO,HI>
   acosh(const Multivector<Scalar_T,LO,HI>& val)
   { return log(val + sqrt(val*val - Scalar_T(1))); }
 
   /// Sine of multivector
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
-  inline
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   const Multivector<Scalar_T,LO,HI>
   sin(const Multivector<Scalar_T,LO,HI>& val)
   {
     typedef Multivector<Scalar_T,LO,HI> multivector_t;
     const Scalar_T s = scalar(val);
     const Scalar_T twopi = Scalar_T(2) * Scalar_T(l_pi);
-    const multivector_t i = elliptic(val);
-    const multivector_t z = i * (val - s + std::fmod(std::real(s), twopi) + std::imag(s));
+    const multivector_t& i = elliptic(val);
+    const multivector_t& z = i *
+      (val - s + Scalar_T(std::fmod(Scalar_T(std::real(s)), twopi)) +
+                 Scalar_T(std::imag(s)));
     return (exp(z)-exp(-z)) / (i*Scalar_T(2));
   }
 
   /// Inverse sine of multivector
   // Reference: [AS], Section 4.4, p79-83
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   const Multivector<Scalar_T,LO,HI>
   asin(const Multivector<Scalar_T,LO,HI>& val)
   {
     typedef Multivector<Scalar_T,LO,HI> multivector_t;
-    const multivector_t i = elliptic(val);
+    const multivector_t& i = elliptic(val);
     return -i*asinh(i*val);
   }
 
   /// Hyperbolic sine of multivector
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   const Multivector<Scalar_T,LO,HI>
   sinh(const Multivector<Scalar_T,LO,HI>& val)
@@ -735,16 +734,16 @@ namespace glucat
 
   /// Inverse hyperbolic sine of multivector
   // Reference: [AS], Section 4.6, p86-89
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   const Multivector<Scalar_T,LO,HI>
   asinh(const Multivector<Scalar_T,LO,HI>& val)
   { return log(val + sqrt(val*val + Scalar_T(1))); }
 
   /// Tangent of multivector
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   const Multivector<Scalar_T,LO,HI>
   tan(const Multivector<Scalar_T,LO,HI>& val)
@@ -752,20 +751,20 @@ namespace glucat
 
   /// Inverse tangent of multivector
   // Reference: [AS], Section 4.4, p79-83
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   const Multivector<Scalar_T,LO,HI>
   atan(const Multivector<Scalar_T,LO,HI>& val)
   {
     typedef Multivector<Scalar_T,LO,HI> multivector_t;
-    const multivector_t i = elliptic(val);
+    const multivector_t& i = elliptic(val);
     return -i*atanh(i*val);
   }
 
   /// Hyperbolic tangent of multivector
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   const Multivector<Scalar_T,LO,HI>
   tanh(const Multivector<Scalar_T,LO,HI>& val)
@@ -773,8 +772,8 @@ namespace glucat
 
   /// Inverse hyperbolic tangent of multivector
   // Reference: [AS], Section 4.6, p86-89
-  template<	template<typename, const index_t, const index_t> class Multivector,
-						typename Scalar_T, const index_t LO, const index_t HI	>
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
   inline
   const Multivector<Scalar_T,LO,HI>
   atanh(const Multivector<Scalar_T,LO,HI>& val)
