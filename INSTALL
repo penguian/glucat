@@ -44,11 +44,25 @@ To Make the Test Program
  ./configure and make. What make does here is use the headers in ./glucat and
  the source in ./test to make the test program ./test/glucat
 
+ Unfortunately, ./configure for GluCat is still at an early stage of
+ development. This means you may need to edit ./test/Makefile.in
+
+ If you are using the Intel C++ compler, you will need to edit
+ ./test/Makefile.in, comment out the lines reading:
+ AM_CXXFLAGS = -fexceptions -ansi -Woverloaded-virtual -Wall
+ CXXFLAGS = -O1 -DNDEBUG -finline-limit=400
+
+ and uncomment the lines reading:
+ # AM_CXXFLAGS = -I/usr/local/include -mp1 -DBOOST_UBLAS_USE_LONG_DOUBLE
+ # CXXFLAGS = -O1 -DNDEBUG -finline-limit=400 -mieee
+ then run ./configure, then make.
+
  If you are using Compaq Alpha, you will need to edit ./test/Makefile.in,
  comment out the line reading:
- CXXFLAGS = -O1 -finline-limit=400
+ CXXFLAGS = -O1 -DNDEBUG -finline-limit=400
+
  and uncomment the line reading:
- # CXXFLAGS = -O1 -finline-functions -mieee
+ # CXXFLAGS = -O1 -DNDEBUG -finline-limit=400 -mieee
  then run ./configure, then make.
 
  Once you have created the test program, create a runtime directory and copy
@@ -60,24 +74,34 @@ To Make the Test Program
 
  To run a meaningful timing test using the g++ compiler, edit
  ./test/Makefile.in, comment out the line reading:
- CXXFLAGS = -O1 -finline-limit=400
+ CXXFLAGS = -O1 -DNDEBUG -finline-limit=400
+
  and uncomment the line reading:
- # CXXFLAGS = -O2 -finline-functions -finline-limit=800
+ # CXXFLAGS = -O3 -DNDEBUG -finline-limit=900
  then run ./configure, then make.
 
  WARNINGS:
  1) The optimized compilation may take a long time to complete.
  See http://www.garloff.de/kurt/freesoft/gcc/
- 2) On Compaq Alpha, you will not be able to build the debug version
- of the test. The -g flag for g++ 3.0.3 fails with "string too big"
+
+ 2) With Red Hat g++ 2.96, do no try to set -finline-limit higher than
+ 900. Setting eg. -finline-limit=1000 resulted in a segmentation
+ fault in uBLAS at runtime. This seems to be related to this bug:
+ Bug 3777 Segmentation fault in simple program
+ http://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=3777
+
+ 3) On Compaq Alpha, you will not be able to build the debug version
+ of the test. The -g flag for eg. g++ 3.0.3 fails with "string too big"
  on Compaq Alpha. This problem seems similar to eg,
  http://gcc.gnu.org/ml/gcc-bugs/2000-06/msg00557.html
  http://gcc.gnu.org/ml/gcc-bugs/1998-04/msg00700.html
- 3) On Compaq Alpha, if you do not use -mieee, Test 11 will fail,
+
+ 4) On Compaq Alpha, if you do not use -mieee, Test 11 will fail,
  with a floating point exception.  GluCat is written for IEEE arithmetic
  and Compaq Alpha does not  use strict IEEE arithmetic unless you tell
  it to via -mieee.
- 4) Many Clifford algebra algorithms are exponential in both time and
+
+ 5) Many Clifford algebra algorithms are exponential in both time and
  space complexity. In particular, programming example 7 (triality) may run
  very slowly.
 
