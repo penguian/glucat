@@ -4,7 +4,7 @@
 # Project related configuration options
 #---------------------------------------------------------------------------
 PROJECT_NAME           = glucat.kdevelop
-PROJECT_NUMBER         = glucat-0.1.5
+PROJECT_NUMBER         = glucat-0.1.6
 OUTPUT_DIRECTORY       = 
 OUTPUT_LANGUAGE        = English
 USE_WINDOWS_ENCODING   = NO
