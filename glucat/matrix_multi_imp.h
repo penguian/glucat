@@ -74,7 +74,10 @@ namespace glucat
     if (!prechecked && (val.m_frame | m_frame) != m_frame)
       throw error_t("multivector_t(val,frm): cannot initialize with value outside of frame");
     if (m_frame == val.m_frame)
+    {
+      m_matrix.resize( val.m_matrix.size1(), val.m_matrix.size2() );
       m_matrix = val.m_matrix;
+    }
     else
       *this = multivector_t(framed_multi_t(val), frm, true);
   }
