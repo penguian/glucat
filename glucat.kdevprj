@@ -19,29 +19,28 @@ type=DATA
 [Config for BinMakefileAm]
 addcxxflags=
 bin_program=glucat
-cxxflags=\s-O0 -g3 -Wall
+cflags=
+cppflags=
+cxxflags=\s-O1 -g3 -Wall
 ldadd=
-ldflags=
-libtool_dir=
-path_to_bin_program=./test
+ldflags=\s   \s
 
 [General]
 AMChanged=false
 author=Paul C. Leopardi
-configure_args=
-debug_args=-3
-dir_where_make_will_be_called=./
+configure_args=\s--build=i386-linux --host=i386-linux --target=i386-linux --disable-debug --enable-debug\s
 email=leopardi@bigpond.net.au
 kdevprj_version=1.3
 lfv_open_groups=
 make_options=\s-j1
-makefiles=Makefile.am,glucat/Makefile.am,glucat/docs/Makefile.am,glucat/docs/en/Makefile.am,po/Makefile.am,test/Makefile.am
-modifyMakefiles=true
-project_name=GluCat
-project_type=normal_empty
+makefiles=Makefile.am,glucat/Makefile.am,test/Makefile.am
+modifyMakefiles=false
+project_name=Glucat
+project_type=normal_cpp
+sgml_file=
 short_info=
 sub_dir=glucat/
-version=0.0.6
+version=0.0.7
 version_control=CVS
 workspace=1
 
@@ -51,24 +50,26 @@ install=false
 install_location=
 type=DATA
 
+[KPP]
+kpp_appgrp=
+kpp_bldroot=
+kpp_icon=0
+kpp_license=0
+kpp_summary=
+kpp_url=
+kpp_version=0.0.7
+
 [LFV Groups]
 GNU=AUTHORS,COPYING,ChangeLog,INSTALL,README,TODO,NEWS
 Headers=*.h,*.hh,*.hxx,*.hpp,*.H
 Others=*
 Sources=*.cpp,*.c,*.cc,*.C,*.cxx,*.ec,*.ecpp,*.lxx,*.l++,*.ll,*.l
-User Interface=*.kdevdlg,*.ui,*.rc
-groups=Headers,Sources,User Interface,GNU,Others
+groups=Headers,Sources,GNU,Others
 
 [Makefile.am]
-files=glucat.kdevprj,AUTHORS,COPYING,ChangeLog,INSTALL,README,TODO,glucat.lsm,NEWS
+files=glucat.kdevprj,admin,AUTHORS,COPYING,ChangeLog,INSTALL,README,TODO,glucat.lsm
 sub_dirs=glucat,test
 type=normal
-
-[NEWS]
-dist=true
-install=false
-install_location=
-type=DATA
 
 [README]
 dist=true
@@ -77,6 +78,12 @@ install_location=
 type=DATA
 
 [TODO]
+dist=true
+install=false
+install_location=
+type=DATA
+
+[admin]
 dist=true
 install=false
 install_location=
@@ -95,9 +102,9 @@ install_location=
 type=DATA
 
 [glucat/Makefile.am]
-files=glucat/clifford_algebra.h,glucat/clifford_algebra_imp.h,glucat/errors.h,glucat/errors_imp.h,glucat/framed_multi.h,glucat/framed_multi_imp.h,glucat/global.h,glucat/glucat.h,glucat/glucat_imp.h,glucat/index_set.h,glucat/index_set_imp.h,glucat/long_double.h,glucat/matrix.h,glucat/matrix_imp.h,glucat/matrix_multi.h,glucat/matrix_multi_imp.h,glucat/portability.h,glucat/scalar.h,glucat/generation.h,glucat/generation_imp.h
+files=glucat/clifford_algebra.h,glucat/clifford_algebra_imp.h,glucat/errors.h,glucat/errors_imp.h,glucat/framed_multi.h,glucat/framed_multi_imp.h,glucat/generation.h,glucat/generation_imp.h,glucat/global.h,glucat/glucat.h,glucat/glucat_imp.h,glucat/index_set.h,glucat/index_set_imp.h,glucat/long_double.h,glucat/matrix.h,glucat/matrix_imp.h,glucat/matrix_multi.h,glucat/matrix_multi_imp.h,glucat/portability.h,glucat/scalar.h
 sub_dirs=
-type=prog_main
+type=
 
 [glucat/clifford_algebra.h]
 dist=true
@@ -110,14 +117,6 @@ dist=true
 install=false
 install_location=
 type=HEADER
-
-[glucat/docs/Makefile.am]
-sub_dirs=
-type=normal
-
-[glucat/docs/en/Makefile.am]
-sub_dirs=
-type=normal
 
 [glucat/errors.h]
 dist=true
@@ -227,16 +226,10 @@ install=false
 install_location=
 type=HEADER
 
-[po/Makefile.am]
-sub_dirs=
-type=po
-
 [test/Makefile.am]
 files=test/driver.cpp,test/driver.h,test/eg8.txt,test/peg01.h,test/peg02.h,test/peg03.h,test/peg04.h,test/peg05.h,test/peg06.h,test/peg07.h,test/peg08.h,test/peg09.h,test/peg10.h,test/peg11.h,test/peg12.h,test/peg13.h,test/peg14.h,test/peg15.h,test/peg16.h,test/squaring.h,test/eg3.res,test/test-6.out,test/test.out
-sharedlib_LDFLAGS=-version-info 0:0:1
-sharedlib_rootname=test
 sub_dirs=
-type=static_library
+type=prog_main
 
 [test/driver.cpp]
 dist=true
