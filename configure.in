@@ -2,6 +2,11 @@ dnl    This file is part of the KDE libraries/packages
 dnl    Copyright (C) 2001 Stephan Kulow (coolo@kde.org)
 dnl                       modified by Walter Tasin (tasin@kdevelop.org)
 dnl                       for c++ console applications
+dnl                       modified by Paul Leopardi (paul.leopardi@unsw.edu.au)
+dnl                       for GluCat
+dnl                       includes code from admin/acinclude.m4 also
+dnl                       modified by Paul Leopardi (paul.leopardi@unsw.edu.au)
+dnl                       for GluCat
 
 dnl    This file is free software; you can redistribute it and/or
 dnl    modify it under the terms of the GNU Library General Public
@@ -26,6 +31,260 @@ dnl Process this file with autoconf to produce a configure script.
 
 AC_INIT(acinclude.m4) dnl a source file from your sub dir
 
+AC_DEFUN(AC_GLUCAT_CHECK_COMPILERS,
+[
+  AC_ARG_ENABLE(debug,[  --enable-debug[=ARG]    enables debug symbols (yes|no|full) [default=yes]],
+  [
+    case $enableval in
+      yes)
+        kde_use_debug_code="yes"
+        kde_use_ndebug_define=yes
+        ;;
+      full)
+        kde_use_debug_code="full"
+        kde_use_ndebug_define=no
+        ;;
+      no)
+        kde_use_debug_code="no"
+        kde_use_ndebug_define=yes
+        ;;
+      *)
+        kde_use_debug_code="yes"
+        kde_use_ndebug_define=yes
+        ;;
+    esac
+  ], 
+    [kde_use_debug_code="yes"
+     kde_use_ndebug_define=yes
+  ])
+
+  dnl Just for configure --help
+  AC_ARG_ENABLE(dummyoption,[  --disable-debug         disables debug output and debug symbols [default=no]],[],[])
+
+  AC_ARG_ENABLE(strict,[  --enable-strict         compiles with strict compiler options (may not work!)],
+   [
+    if test $enableval = "no"; then
+         kde_use_strict_options="no"
+       else
+         kde_use_strict_options="yes"
+    fi
+   ], [kde_use_strict_options="no"])
+
+  AC_ARG_ENABLE(warnings,[  --disable-warnings      disables compilation with -Wall and similiar],
+   [
+    if test $enableval = "no"; then
+         kde_use_warnings="no"
+       else
+         kde_use_warnings="yes"
+    fi
+   ], [kde_use_warnings="yes"])
+
+  dnl enable warnings for debug build
+  if test "$kde_use_debug_code" != "no"; then
+    kde_use_warnings=yes
+  fi
+
+  AC_ARG_ENABLE(profile,[  --enable-profile        creates profiling infos [default=no]],
+    [kde_use_profiling=$enableval],
+    [kde_use_profiling="no"]
+  )
+
+  dnl this prevents stupid AC_PROG_CC to add "-g" to the default CFLAGS
+  CFLAGS=" $CFLAGS"
+
+  AC_PROG_CC 
+
+  AC_PROG_CPP
+
+  if test "$GCC" = "yes"; then
+    if test "$kde_use_debug_code" != "no"; then
+      if test $kde_use_debug_code = "full"; then
+        CFLAGS="-g3 $CFLAGS"
+      else
+        CFLAGS="-g -O2 $CFLAGS"
+      fi
+    else
+      CFLAGS="-O2 $CFLAGS"
+    fi
+  fi
+
+  if test "$kde_use_ndebug_define" = "yes"; then
+    CFLAGS="-DNDEBUG $CFLAGS"
+  fi
+
+  case "$host" in
+  *-*-sysv4.2uw*) CFLAGS="-D_UNIXWARE $CFLAGS";;
+  *-*-sysv5uw7*) CFLAGS="-D_UNIXWARE7 $CFLAGS";;
+  esac
+
+  if test -z "$LDFLAGS" && test "$kde_use_debug_code" = "no" && test "$GCC" = "yes"; then
+     LDFLAGS=""
+  fi
+
+  CXXFLAGS=" $CXXFLAGS"
+
+  AC_PROG_CXX
+
+  if test "$CXX" = "icc"; then
+    CXXFLAGS="-I/usr/local/include -DBOOST_UBLAS_USE_LONG_DOUBLE $CXXFLAGS"
+    KDE_CHECK_COMPILER_FLAG(mp1,[CXXFLAGS="-mp1 $CXXFLAGS"])
+  fi
+  if test "$GXX" = "yes" || test "$CXX" = "icc" || test "$CXX" = "KCC"; then
+    GLUCAT_CXX_DEBUG_FLAG=""
+    if test "$kde_use_debug_code" != "no"; then
+      if test "$CXX" = "KCC"; then
+        CXXFLAGS="+K0 -Wall -pedantic -W -Wpointer-arith -Wmissing-prototypes -Wwrite-strings $CXXFLAGS"
+      else
+       if test "$CXX" = "icc"; then
+          CXXFLAGS="-O0 $CXXFLAGS"
+       else
+        if test "$kde_use_debug_code" = "full"; then
+          CXXFLAGS="-O0 -finline-limit=400 $CXXFLAGS"
+          GLUCAT_CXX_DEBUG_FLAG="-g3"
+        else
+          CXXFLAGS="-O1 -finline-limit=400 $CXXFLAGS"
+          GLUCAT_CXX_DEBUG_FLAG="-g"
+        fi
+       fi
+      fi
+      dnl KDE_CHECK_COMPILER_FLAG(fno-builtin,[CXXFLAGS="-fno-builtin $CXXFLAGS"])
+
+      dnl convenience compiler flags
+      KDE_CHECK_COMPILER_FLAG(Woverloaded-virtual, [WOVERLOADED_VIRTUAL="-Woverloaded-virtual"], [WOVERLOADED_VRITUAL=""])
+      AC_SUBST(WOVERLOADED_VIRTUAL)
+    else
+      if test "$CXX" = "KCC"; then
+        CXXFLAGS="+K3 $CXXFLAGS"
+      else
+       if test "$CXX" = "icc"; then
+        CXXFLAGS="-O3 $CXXFLAGS"
+       else
+        CXXFLAGS="-O3 -finline-limit=900 $CXXFLAGS"
+        GLUCAT_CXX_DEBUG_FLAG="-g"
+       fi
+      fi  
+    fi
+  
+    case $host in
+      alpha*-*-*)	GLUCAT_CXX_DEBUG_FLAG=""
+        ;;
+    esac
+    CXXFLAGS="$GLUCAT_CXX_DEBUG_FLAG $CXXFLAGS"
+  fi
+
+  if test "$kde_use_ndebug_define" = "yes"; then
+    CXXFLAGS="-DNDEBUG $CXXFLAGS"
+  fi  
+
+  if test "$kde_use_profiling" = "yes"; then
+    KDE_CHECK_COMPILER_FLAG(pg,
+    [
+      CFLAGS="-pg $CFLAGS"
+      CXXFLAGS="-pg $CXXFLAGS"
+    ])
+  fi
+
+  if test "$kde_use_warnings" = "yes"; then
+      if test "$GCC" = "yes"; then
+        case $host in
+          *-*-linux-gnu)	
+            CFLAGS="-ansi -W -Wall -pedantic -Wshadow -Wpointer-arith -Wmissing-prototypes -Wwrite-strings -D_XOPEN_SOURCE=500 -D_BSD_SOURCE $CFLAGS"
+            CXXFLAGS="-ansi $CXXFLAGS"
+          ;;
+        esac
+        CXXFLAGS="-Wall $CXXFLAGS"
+        dnl KDE_CHECK_COMPILER_FLAG(Wundef,[CXXFLAGS="-Wundef $CXXFLAGS"])
+        dnl KDE_CHECK_COMPILER_FLAG(Wbad-function-cast,[CXXFLAGS="-Wbad-function-cast $CXXFLAGS"])
+        dnl KDE_CHECK_COMPILER_FLAG(Wno-long-long,[CXXFLAGS="-Wno-long-long $CXXFLAGS"])
+        dnl KDE_CHECK_COMPILER_FLAG(Wnon-virtual-dtor,[CXXFLAGS="-Wnon-virtual-dtor $CXXFLAGS"])
+     fi
+  fi
+
+  if test "$GCC" = "yes" && test "$kde_use_strict_options" = "yes"; then
+    CXXFLAGS="-Wcast-qual -Wshadow -Wcast-align $CXXFLAGS"
+  fi
+    
+  if test "$GXX" = "yes"; then
+    dnl KDE_CHECK_COMPILER_FLAG(fno-exceptions,[CXXFLAGS="$CXXFLAGS -fno-exceptions"])
+    KDE_CHECK_COMPILER_FLAG(fno-check-new, [CXXFLAGS="$CXXFLAGS -fno-check-new"])
+    KDE_CHECK_COMPILER_FLAG(fexceptions, [USE_EXCEPTIONS="-fexceptions"], USE_EXCEPTIONS=	)
+  fi
+  if test "$CXX" = "KCC"; then
+    dnl unfortunately we currently cannot disable exception support in KCC
+    dnl because doing so is binary incompatible and Qt by default links with exceptions :-(
+    dnl KDE_CHECK_COMPILER_FLAG(-no_exceptions,[CXXFLAGS="$CXXFLAGS --no_exceptions"])
+    dnl KDE_CHECK_COMPILER_FLAG(-exceptions, [USE_EXCEPTIONS="--exceptions"], USE_EXCEPTIONS=	)
+
+    AC_ARG_ENABLE(pch,[  --enable-pch            enables precompiled header support (currently only KCC) [default=no]],
+    [
+      kde_use_pch=$enableval
+    ],[kde_use_pch=no])
+ 
+    if test "$kde_use_pch" = "yes"; then
+      dnl TODO: support --pch-dir!
+      KDE_CHECK_COMPILER_FLAG(-pch,[CXXFLAGS="$CXXFLAGS --pch"])
+      dnl the below works (but the dir must exist), but it's
+      dnl useless for a whole package.
+      dnl The are precompiled headers for each source file, so when compiling
+      dnl from scratch, it doesn't make a difference, and they take up
+      dnl around ~5Mb _per_ sourcefile.
+      dnl KDE_CHECK_COMPILER_FLAG(-pch_dir /tmp,
+      dnl   [CXXFLAGS="$CXXFLAGS --pch_dir `pwd`/pcheaders"])
+    fi
+    dnl this flag controls inlining. by default KCC inlines in optimisation mode
+    dnl all implementations that are defined inside the class {} declaration. 
+    dnl because of templates-compatibility with broken gcc compilers, this
+    dnl can cause excessive inlining. This flag limits it to a sane level
+    KDE_CHECK_COMPILER_FLAG(-inline_keyword_space_time=6,[CXXFLAGS="$CXXFLAGS --inline_keyword_space_time=6"])
+    KDE_CHECK_COMPILER_FLAG(-inline_auto_space_time=2,[CXXFLAGS="$CXXFLAGS --inline_auto_space_time=2"])
+    KDE_CHECK_COMPILER_FLAG(-inline_implicit_space_time=2.0,[CXXFLAGS="$CXXFLAGS --inline_implicit_space_time=2.0"])
+    KDE_CHECK_COMPILER_FLAG(-inline_generated_space_time=2.0,[CXXFLAGS="$CXXFLAGS --inline_generated_space_time=2.0"])
+    dnl Some source files are shared between multiple executables
+    dnl (or libraries) and some of those need template instantiations.
+    dnl In that case KCC needs to compile those sources with
+    dnl --one_instantiation_per_object.  To make it easy for us we compile
+    dnl _all_ objects with that flag (--one_per is a shorthand).
+    KDE_CHECK_COMPILER_FLAG(-one_per, [CXXFLAGS="$CXXFLAGS --one_per"])
+  fi
+  AC_SUBST(USE_EXCEPTIONS)
+  dnl obsolete macro - provided to keep things going
+  USE_RTTI=
+  AC_SUBST(USE_RTTI)
+
+  case "$host" in
+      alpha*-*-*) test "$GXX" = yes && CXXFLAGS="-mieee $CXXFLAGS" ;;
+      *-*-irix*)  test "$GXX" = yes && CXXFLAGS="-D_LANGUAGE_C_PLUS_PLUS -D__LANGUAGE_C_PLUS_PLUS $CXXFLAGS" ;;
+      *-*-sysv4.2uw*) CXXFLAGS="-D_UNIXWARE $CXXFLAGS";;
+      *-*-sysv5uw7*) CXXFLAGS="-D_UNIXWARE7 $CXXFLAGS";;
+      *-*-solaris*) 
+        if test "$GXX" = yes; then
+          libstdcpp=`$CXX -print-file-name=libstdc++.so`
+          if test ! -f $libstdcpp; then
+             AC_MSG_ERROR([You've compiled gcc without --enable-shared. This doesn't work with KDE. Please recompile gcc with --enable-shared to receive a libstdc++.so])
+          fi
+        fi
+        ;;
+  esac
+
+  AC_VALIDIFY_CXXFLAGS
+
+  AC_PROG_CXXCPP
+
+  if test "$GCC" = yes; then
+     NOOPT_CXXFLAGS=-O0
+     NOOPT_CFLAGS=-O0
+  fi
+
+  AC_SUBST(NOOPT_CXXFLAGS)
+  AC_SUBST(NOOPT_CFLAGS)
+
+  KDE_CHECK_FINAL
+
+  ifdef([AM_DEPENDENCIES], AC_REQUIRE([KDE_ADD_DEPENDENCIES]), [])
+])
+
+dnl CXXFLAGS="$CXXFLAGS $USE_EXCEPTIONS"
+
 dnl This is so we can use kde-common
 AC_CONFIG_AUX_DIR(admin)
 
@@ -38,7 +297,7 @@ dnl Perform program name transformation
 AC_ARG_PROGRAM
 
 dnl Automake doc recommends to do this only here. (Janos)
-AM_INIT_AUTOMAKE(glucat,0.1.1)
+AM_INIT_AUTOMAKE(glucat,0.1.2)
 
 dnl almost the same like KDE_SET_PEFIX but the path is /usr/local
 dnl
@@ -59,9 +318,9 @@ AM_CONFIG_HEADER(config.h)
 
 dnl checks for programs.
 dnl first check for c/c++ compilers
-AC_CHECK_COMPILERS
+AC_GLUCAT_CHECK_COMPILERS
 
-CXXFLAGS="$NOOPT_CXXFLAGS" dnl __kdevelop[noopt]__
+dnl CXXFLAGS="$NOOPT_CXXFLAGS" dnl __kdevelop[noopt]__
 CFLAGS="$NOOPT_CFLAGS" dnl __kdevelop[noopt]__
 CXXFLAGS="$CXXFLAGS $USE_EXCEPTIONS" dnl __kdevelop[exc]__
 
@@ -72,8 +331,56 @@ dnl set the following to yes, if you want to create static
 dnl libtool-libraries, too.
 AC_ENABLE_STATIC(no)
 
+dnl just a wrapper to clean up configure.in
+AC_DEFUN(GLUCAT_PROG_LIBTOOL,
+[
+AC_REQUIRE([AC_GLUCAT_CHECK_COMPILERS])
+AC_REQUIRE([AC_ENABLE_SHARED])
+AC_REQUIRE([AC_ENABLE_STATIC])
+
+AC_REQUIRE([AC_LIBTOOL_DLOPEN])
+
+AC_LANG_SAVE
+AC_LANG_C
+AC_OBJEXT
+AC_EXEEXT
+AC_LANG_RESTORE
+
+AM_PROG_LIBTOOL
+AC_LIBTOOL_CXX
+
+LIBTOOL_SHELL="/bin/sh ./libtool"
+#  LIBTOOL="$LIBTOOL --silent"
+KDE_PLUGIN="-avoid-version -module -no-undefined \$(KDE_RPATH) \$(KDE_MT_LDFLAGS)"
+AC_SUBST(KDE_PLUGIN)
+
+AC_ARG_ENABLE(objprelink, [  --enable-objprelink     prelink apps using objprelink (experimental [only tested on linux/386])],
+       kde_use_objprelink=$enableval, kde_use_objprelink=no)
+  if test "x$kde_use_objprelink" = "xyes"; then 
+
+      KDE_FIND_PATH(objprelink, OBJPRELINK, [], [kde_use_objprelink=no])   
+     
+      if test "x$kde_use_objprelink" = "xyes"; then
+      AC_MSG_CHECKING([Patching libtool to run objprelink.])
+      mv libtool libtool.orig
+      cat > libtool <<\EOF
+#! /bin/sh
+for n ; do case $n in
+  *.o)  test -r $n && echo objprelink $n && objprelink $n ;;
+  *.lo) m=`basename $n .lo`".o" && test -r $m && echo objprelink $m && objprelink $m 
+        m=".libs/$m" && test -r $m && echo objprelink $m && objprelink $m ;;
+esac; done
+EOF
+      cat >> libtool libtool.orig
+      rm libtool.orig
+      chmod a+x libtool
+      AC_MSG_RESULT(done)
+	fi
+  fi
+])
+
 dnl create a working libtool-script
-KDE_PROG_LIBTOOL
+GLUCAT_PROG_LIBTOOL
 
 dnl activate the next macro call for DLOPEN tests and setting LIBDL
 dnl   (n.b. KDE_MISC_TESTS does the same to you, so use either this or the next one)
@@ -93,9 +400,9 @@ AC_SUBST(all_includes)
 AC_SUBST(all_libraries)
 
 AC_SUBST(AUTODIRS)
-
 KDE_CREATE_SUBDIRSLIST
 AC_CONFIG_FILES([ ./Makefile ])
 AC_CONFIG_FILES([ glucat/Makefile ])
 AC_CONFIG_FILES([ test/Makefile ])
+AC_CONFIG_FILES([ transforms/Makefile ])
 AC_OUTPUT
