@@ -13,9 +13,7 @@ same version of g++.
  The code has so far been tested using:
  1) Red Hat Linux 8.0, g++ 3.2,   Boost 1.30.2         on Intel(R) Pentium(R) 4.
  2) SuSE SEL 8,        g++ 3.2.2, Boost 1.30.2         on dual AMD Opteron(tm).
- 3) SuSE Linux 9.0,    g++ 3.3.2, Boost 1.31.0         on AMD Athlon(tm) 64.
- 4) SuSE Linux 9.0,    g++ 3.3.3, Boost 1.31.0         on AMD Athlon(tm) 64.
- 5) SuSE Linux 9.0,    g++ 3.4.0, Boost CVS 2004-05-09 on AMD Athlon(tm) 64.
+ 3) SuSE Linux 9.1,    g++ 3.3.3, Boost CVS 2004-05-09 on AMD Athlon(tm) 64.
 
  Note: Boost 1.31.0 uBLAS does NOT compile under g++ 3.4. 
 
