@@ -32,7 +32,9 @@ typedef glucat::tuning
     glucat::DEFAULT_Sqrt_Max_Steps,
     glucat::DEFAULT_Log_Max_Outer_Steps,
     glucat::DEFAULT_Log_Max_Inner_Steps,
-    DRIVER_BASIS_MAX_COUNT
+    DRIVER_BASIS_MAX_COUNT,
+    glucat::DEFAULT_Fast_Size_Threshold,
+    glucat::DEFAULT_Inv_Fast_Dim_Threshold
   >
   Tune_P;
 #include "glucat/glucat_imp.h"
