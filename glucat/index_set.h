@@ -28,16 +28,16 @@ namespace glucat
   /// Index set class based on std::bitset<> in Gnu standard C++ library
   template<const index_t LO, const index_t HI>
   class index_set :
-  private std::bitset<HI-LO+1>
+  private std::bitset<HI-LO>
   {
   private:
-    typedef std::bitset<HI-LO+1>  bitset_t;
+    typedef std::bitset<HI-LO>    bitset_t;
     typedef error<index_set>      error_t;
   public:
     typedef index_set             index_set_t;
     static const index_t          v_lo = LO;
     static const index_t          v_hi = HI;
-    
+
     static const std::string  classname();
     /// Default constructor creates an empty set
     index_set     () { }
@@ -134,8 +134,8 @@ namespace glucat
     reference     operator[](index_t idx);
   };
 
-  /// Size of set_value_t should be enough to contain bitset<DEFAULT_HI-DEFAULT_LO+1>
-  _GLUCAT_CTAssert(sizeof(set_value_t) >= sizeof(std::bitset<DEFAULT_HI-DEFAULT_LO+1>),
+  /// Size of set_value_t should be enough to contain bitset<DEFAULT_HI-DEFAULT_LO>
+  _GLUCAT_CTAssert(sizeof(set_value_t) >= sizeof(std::bitset<DEFAULT_HI-DEFAULT_LO>),
            Default_index_set_too_big_for_value)
 
   // non-members
