@@ -1,3 +1,13 @@
+2002-08-17 16:21  leopardi
+
+	* INSTALL, README: Update to correctly describe changes needed to
+	Makefile.in to build the test on Compaq Alpha, and to build the
+	timing test.
+
+2002-08-15 22:54  leopardi
+
+	* ChangeLog: Changes up to version 0.0.7
+
 2002-08-15 22:53  leopardi
 
 	* glucat/Makefile.am: Update for consistency
