@@ -89,6 +89,11 @@ AC_DEFUN(AC_GLUCAT_CHECK_COMPILERS,
     [kde_use_profiling="no"]
   )
 
+  AC_ARG_WITH(hash-map, [  --with-hash-map         uses GNU hash_map if available [default=no]],
+    [glucat_use_hash_map=$withval],
+    [glucat_use_hash_map="no"]
+  )
+
   dnl this prevents stupid AC_PROG_CC to add "-g" to the default CFLAGS
   CFLAGS=" $CFLAGS"
 
@@ -150,7 +155,7 @@ AC_DEFUN(AC_GLUCAT_CHECK_COMPILERS,
       dnl KDE_CHECK_COMPILER_FLAG(fno-builtin,[CXXFLAGS="-fno-builtin $CXXFLAGS"])
 
       dnl convenience compiler flags
-      KDE_CHECK_COMPILER_FLAG(Woverloaded-virtual, [WOVERLOADED_VIRTUAL="-Woverloaded-virtual"], [WOVERLOADED_VRITUAL=""])
+      KDE_CHECK_COMPILER_FLAG(Woverloaded-virtual, [WOVERLOADED_VIRTUAL="-Woverloaded-virtual"], [WOVERLOADED_VIRTUAL=""])
       AC_SUBST(WOVERLOADED_VIRTUAL)
     else
       if test "$CXX" = "KCC"; then
@@ -159,12 +164,12 @@ AC_DEFUN(AC_GLUCAT_CHECK_COMPILERS,
        if test "$CXX" = "icc"; then
         CXXFLAGS="-O3 $CXXFLAGS"
        else
-        CXXFLAGS="-O3 -finline-limit=900 $CXXFLAGS"
+        CXXFLAGS="-O3 -finline-limit=1600 $CXXFLAGS"
         GLUCAT_CXX_DEBUG_FLAG="-g"
        fi
-      fi  
+      fi
     fi
-  
+
     case $host in
       alpha*-*-*)	GLUCAT_CXX_DEBUG_FLAG=""
         ;;
@@ -174,7 +179,7 @@ AC_DEFUN(AC_GLUCAT_CHECK_COMPILERS,
 
   if test "$kde_use_ndebug_define" = "yes"; then
     CXXFLAGS="-DNDEBUG $CXXFLAGS"
-  fi  
+  fi
 
   if test "$kde_use_profiling" = "yes"; then
     KDE_CHECK_COMPILER_FLAG(pg,
@@ -187,7 +192,7 @@ AC_DEFUN(AC_GLUCAT_CHECK_COMPILERS,
   if test "$kde_use_warnings" = "yes"; then
       if test "$GCC" = "yes"; then
         case $host in
-          *-*-linux-gnu)	
+          *-*-linux-gnu)
             CFLAGS="-ansi -W -Wall -pedantic -Wshadow -Wpointer-arith -Wmissing-prototypes -Wwrite-strings -D_XOPEN_SOURCE=500 -D_BSD_SOURCE $CFLAGS"
             CXXFLAGS="-ansi $CXXFLAGS"
           ;;
@@ -203,12 +208,26 @@ AC_DEFUN(AC_GLUCAT_CHECK_COMPILERS,
   if test "$GCC" = "yes" && test "$kde_use_strict_options" = "yes"; then
     CXXFLAGS="-Wcast-qual -Wshadow -Wcast-align $CXXFLAGS"
   fi
-    
+
+  AC_TRY_CPP([#include <boost/numeric/ublas/lu.hpp>],
+  [CXXFLAGS="$CXXFLAGS -D_GLUCAT_HAVE_UBLAS_LU_H"],
+  [])
+
+  if test "$GXX" = "yes" && test "$glucat_use_hash_map" != "no"; then
+    dnl AC_TRY_CPP(
+    dnl   [#include <map>
+    dnl    #include <ext/hash_map>],
+    dnl [CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_GNU_CXX_HASH_MAP"],
+    dnl [])
+    CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_GNU_CXX_HASH_MAP"
+  fi
+
   if test "$GXX" = "yes"; then
     dnl KDE_CHECK_COMPILER_FLAG(fno-exceptions,[CXXFLAGS="$CXXFLAGS -fno-exceptions"])
     KDE_CHECK_COMPILER_FLAG(fno-check-new, [CXXFLAGS="$CXXFLAGS -fno-check-new"])
     KDE_CHECK_COMPILER_FLAG(fexceptions, [USE_EXCEPTIONS="-fexceptions"], USE_EXCEPTIONS=	)
     KDE_CHECK_COMPILER_FLAG(fabi-version=0,[CXXFLAGS="$CXXFLAGS -fabi-version=0"])
+    KDE_CHECK_COMPILER_FLAG(mcmodel=medium,[CXXFLAGS="$CXXFLAGS -mcmodel=medium"])
   fi
   if test "$CXX" = "KCC"; then
     dnl unfortunately we currently cannot disable exception support in KCC
@@ -220,7 +239,7 @@ AC_DEFUN(AC_GLUCAT_CHECK_COMPILERS,
     [
       kde_use_pch=$enableval
     ],[kde_use_pch=no])
- 
+
     if test "$kde_use_pch" = "yes"; then
       dnl TODO: support --pch-dir!
       KDE_CHECK_COMPILER_FLAG(-pch,[CXXFLAGS="$CXXFLAGS --pch"])
@@ -233,7 +252,7 @@ AC_DEFUN(AC_GLUCAT_CHECK_COMPILERS,
       dnl   [CXXFLAGS="$CXXFLAGS --pch_dir `pwd`/pcheaders"])
     fi
     dnl this flag controls inlining. by default KCC inlines in optimisation mode
-    dnl all implementations that are defined inside the class {} declaration. 
+    dnl all implementations that are defined inside the class {} declaration.
     dnl because of templates-compatibility with broken gcc compilers, this
     dnl can cause excessive inlining. This flag limits it to a sane level
     KDE_CHECK_COMPILER_FLAG(-inline_keyword_space_time=6,[CXXFLAGS="$CXXFLAGS --inline_keyword_space_time=6"])
@@ -257,7 +276,7 @@ AC_DEFUN(AC_GLUCAT_CHECK_COMPILERS,
       *-*-irix*)  test "$GXX" = yes && CXXFLAGS="-D_LANGUAGE_C_PLUS_PLUS -D__LANGUAGE_C_PLUS_PLUS $CXXFLAGS" ;;
       *-*-sysv4.2uw*) CXXFLAGS="-D_UNIXWARE $CXXFLAGS";;
       *-*-sysv5uw7*) CXXFLAGS="-D_UNIXWARE7 $CXXFLAGS";;
-      *-*-solaris*) 
+      *-*-solaris*)
         if test "$GXX" = yes; then
           libstdcpp=`$CXX -print-file-name=libstdc++.so`
           if test ! -f $libstdcpp; then
@@ -266,7 +285,7 @@ AC_DEFUN(AC_GLUCAT_CHECK_COMPILERS,
         fi
         ;;
   esac
-
+  
   AC_VALIDIFY_CXXFLAGS
 
   AC_PROG_CXXCPP
@@ -298,7 +317,7 @@ dnl Perform program name transformation
 AC_ARG_PROGRAM
 
 dnl Automake doc recommends to do this only here. (Janos)
-AM_INIT_AUTOMAKE(glucat,0.1.4)
+AM_INIT_AUTOMAKE(glucat,0.1.5)
 
 dnl almost the same like KDE_SET_PEFIX but the path is /usr/local
 dnl
@@ -324,10 +343,6 @@ AC_GLUCAT_CHECK_COMPILERS
 dnl CXXFLAGS="$NOOPT_CXXFLAGS" dnl __kdevelop[noopt]__
 CFLAGS="$NOOPT_CFLAGS" dnl __kdevelop[noopt]__
 CXXFLAGS="$CXXFLAGS $USE_EXCEPTIONS" dnl __kdevelop[exc]__
-
-AC_TRY_CPP([#include <boost/numeric/ublas/lu.hpp>],
-[CXXFLAGS="$CXXFLAGS -D_GLUCAT_HAVE_UBLAS_LU_H"],
-[])
 
 dnl create only shared libtool-libraries
 AC_ENABLE_SHARED(yes)
