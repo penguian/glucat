@@ -1,6 +1,6 @@
 ####### kdevelop will overwrite this part!!! (begin)##########
 INCLUDES = $(all_includes)
-EXTRA_DIST = Makefile.am driver.cpp driver.h transforms.h 
+EXTRA_DIST = Makefile.am transforms.h transforms.h 
 ####### kdevelop will overwrite this part!!! (end)############
 AUTOMAKE_OPTIONS = foreign
 noinst_PROGRAMS = transforms
@@ -11,6 +11,6 @@ transforms_INCLUDES = $(all_includes)
 LDFLAGS =
 transforms_LDFLAGS = $(all_libraries)
 
-transforms_SOURCES = driver.cpp
+transforms_SOURCES = transforms.cpp
 transforms_LDADD = $(LDADD)
 transforms_DEPENDENCIES = driver.h transforms.h
