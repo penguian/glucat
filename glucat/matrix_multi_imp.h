@@ -621,7 +621,7 @@ namespace glucat
   std::ostream&
   operator<< (std::ostream& os, const matrix_multi<Scalar_T,LO,HI>& val)
   {
-    os << matrix_multi<Scalar_T,LO,HI>::framed_multi_t(val);
+    os << typename matrix_multi<Scalar_T,LO,HI>::framed_multi_t(val);
     return os;
   }
 
@@ -775,7 +775,7 @@ namespace glucat
 
   /// Use inverse generalized FFT to construct a framed_multi_t
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const framed_multi<Scalar_T,LO,HI>
+  const typename matrix_multi<Scalar_T,LO,HI>::framed_multi_t
   matrix_multi<Scalar_T,LO,HI>::
   fast_framed_multi() const
   {
