@@ -26,7 +26,7 @@
 namespace glucat
 {
   template<const index_t LO, const index_t HI>
-  const char*
+  const std::string
   index_set<LO,HI>::
   classname()
   { return "index_set"; }

@@ -38,7 +38,7 @@ namespace glucat
     static const index_t          v_lo = LO;
     static const index_t          v_hi = HI;
     
-    static const char* classname();
+    static const std::string  classname();
     /// Default constructor creates an empty set
     index_set     () { }
     /// Constructor from index
@@ -130,7 +130,7 @@ namespace glucat
 
   /// Size of set_value_t should be enough to contain bitset<DEFAULT_HI-DEFAULT_LO+1>
   _GLUCAT_CTAssert(sizeof(set_value_t) >= sizeof(std::bitset<DEFAULT_HI-DEFAULT_LO+1>),
-           Default_index_set_too_big_for_value);
+           Default_index_set_too_big_for_value)
 
   // non-members
   /// Symmetric set difference: exclusive or
