@@ -1,30 +1,42 @@
-o There is plenty of testing, cleanup, packaging and documentation work yet to do.
-o There should be a programmer's guide with descriptions of the API.
-o The example and test programs need better packaging.
+There is plenty of testing, cleanup, packaging and documentation work yet to do.
+o Improve the packaging of the example and test programs.
+o Write a programmer's guide with descriptions of the API.
 o Test with Blitz++, deal.II, MTL, POOMA and adjust accordingly.
-o The names in glucat:: which shadow names in std:: will probably need to
-  move to std:: so that eg. std::abs() will work for multivector_t within
-  other template libraries, such as MTL.
-o Try using the complex irreducible representations for the matrix represenetation.
-  The complex irreducible representations uses smaller matrices, which are faster.
-  This will mean changes to basis_element(), folded_dim() and others.
-  This may be delivered as an additional template class rather than a change to matrix_multi<>
-o The transcendental functions need better algorithms and better implementations
-  of existing algorithms.
-o Tune_P should be made into a mixin policy class template parameter, ie.
-  framed_multi<Scalar_T,LO,HI,Tune_P>, etc. With g++ 2.95.3 this currently
-  does not work - it either causes strange error messages about invalid template
+o Fix sqrt() and log() so that they deal properly with negative real eigenvalues.
+o Devise better algorithms and better implementations of existing algorithms for
+  the transcendental functions. In particular, pay more attention to radius of
+  convergence, condition number of matrices and poking out of the subalgebra.
+o Try making Tune_P into a mixin policy class template parameter, ie.
+  framed_multi<Scalar_T,LO,HI,Tune_P>, etc. With g++ 2.95.3 this currently does
+  not work - it either causes strange error messages about invalid template
   parameters for _Rb_tree<> or causes Internal Compiler Errors.
-o framed_multi< complex<T>, LO, HI > etc. need proper support and testing.
-o IEEE NaN needs proper support. Current code depends on <mtl/mtl_limits.h> when
- <limits> is not available, but <mtl/mtl_limits.h> apparently does not define NaN correctly.
-o When MTL 3.X is available, port to MTL 3.X
-  This will mean rewriting some matrix algorithms to use matrix operators.
-o Port to other architectures and compilers which support template template parameters
-o Add operator| for geometric operations:
-  const multivector_t operator| (const multivector_t& lhs, const multivector_t& rhs)
-  { return rhs * lhs * involute(inv(rhs)); }
-o Add convenience constructors to index_set:
-  index_set(int, int), index_set(int, int, int), ... index_set(int, int, ..., int), etc.
-o Try using copy-on-write for matrix_multi_t::matrix_t, since MTL already does reference
-  counting
+o Support IEEE NaN properly. Current code depends on <mtl/mtl_limits.h> which
+  apparently does not define NaN correctly.
+o When MTL 3.X is available, port to MTL 3.X This will mean rewriting some
+  matrix algorithms to use matrix operators.
+o Port to other architectures and compilers which support template template
+  parameters
+o Add operator| for geometric operations: return rhs * lhs * involute(inv(rhs))
+o Add convenience constructors to index_set<>: index_set<>(int, int),
+  index_set<>(int, int, int), ... etc.
+o Try moving the names in glucat:: which shadow names in std:: into std:: itself
+  so that eg. std::abs() will work for multivector_t within other template
+  libraries, such as MTL.
+o Provide better support and testing for framed_multi< complex<> > etc.
+o Try creating a class, hashed_multi<>, which uses std::hash_map rather than
+  std::map. This should be faster than framed_multi<>, if tuned properly. The
+  disadvantage is that std::hash_map is not standard.
+o Try using the complex matrix representations. These use smaller matrices,
+  which should be faster. This would mean changes to basis_element(),
+  folded_dim() and others. Possibly deliver this as an additional template class
+  rather than a change to matrix_multi<>.
+o Try replacing multiplication by +/-1 within inner products by addition and
+  subtraction.
+o Try ordering the generation of basis matrices during conversion from
+  matrix_multi<> to framed_multi<> in such a way as to minimize the number of
+  multiplications by generator matrices. Possibly by recursive enumeration of the
+  index sets.
+o Try using a size-limited cache of basis matrices, especially for small
+  dimensions.
+o Try using copy-on-write for matrix_multi_t::matrix_t, since MTL already does
+  reference counting.
