@@ -740,8 +740,6 @@ namespace glucat
     typedef multivector_t::matrix_index_t matrix_index_t;
     typedef index_set<LO,HI>              index_set_t;
 
-    static map< signature_t, vector<matrix_t> > generators;
-
     const index_set_t folded_set = ist.fold(m_frame);
     const index_set_t folded_frame = m_frame.fold();
     const index_t folded_max = folded_frame.max();
@@ -752,7 +750,8 @@ namespace glucat
 
     const int p = max( int(folded_max), 0);
     const int q = max(-int(folded_min), 0);
-    const matrix_t* e = gen(p, q, generators);
+
+    const matrix_t* e = (generator<matrix_t>())(p,q);
 
     for (index_t k = folded_min; k <= folded_max; ++k)
       if (folded_set[k])

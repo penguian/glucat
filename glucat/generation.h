@@ -26,22 +26,50 @@
 namespace glucat
 {
   /// Modulo function which works reliably for lhs < 0
-  inline
   const int
-  pos_mod(int lhs, int rhs)
-  { return lhs > 0? lhs % rhs : (-lhs) % rhs == 0 ? 0 : rhs - (-lhs) % rhs; }
+  pos_mod(int lhs, int rhs);
 
   /// A signature is a pair of indices, p, q, with p == frame.max(), q == -frame.min()
   typedef pair<index_t, index_t> signature_t;
 
-  /// Pointer to generators for a specific signature
+  /// Table of generators for specific signatures
   template< class Matrix_T >
-  const Matrix_T*
-  gen(const index_t p, const index_t q, map< signature_t, vector<Matrix_T> >& generators);
+  class generator_table :
+  private map< signature_t, vector<Matrix_T> >
+  {
+  public:
+    /// Pointer to generators for a specific signature
+    const Matrix_T* operator() (const index_t p, const index_t q);
+    /// Single instance of generator table
+    friend generator_table& generator<Matrix_T>();
+  private:
+    /// Construct a vector of generators for a specific signature
+    const vector<Matrix_T>& gen_vector(const index_t p, const index_t q);
+    /// Construct generators for p,q given generators for p-1,q-1
+    void gen_from_pm1_qm1(const vector<Matrix_T>& old, const signature_t sig);
+    /// Construct generators for p,q given generators for p-4,q+4
+    void gen_from_pm4_qp4(const vector<Matrix_T>& old, const signature_t sig);
+    /// Construct generators for p,q given generators for p+4,q-4
+    void gen_from_pp4_qm4(const vector<Matrix_T>& old, const signature_t sig);
+    /// Construct generators for p,q given generators for q+1,p-1
+    void gen_from_qp1_pm1(const vector<Matrix_T>& old, const signature_t sig);
 
-  /// Determine the matrix dimension of the fold of a subalegbra
+    // Enforce singleton
+    // Reference: A. Alexandrescu, "Modern C++ Design", Chapter 6
+    generator_table() {}
+    ~generator_table() {}
+    generator_table(const generator_table&);
+    generator_table& operator= (const generator_table&);
+  };
+
+  /// Single instance of generator table
+  template< class Matrix_T >
+  generator_table<Matrix_T>&
+  generator();
+
+  /// Determine the matrix dimension of the fold of a frame
   template< typename Matrix_Index_T, const index_t LO, const index_t HI >
   const Matrix_Index_T
-  folded_dim( const index_set<LO,HI>& sub );
+  folded_dim( const index_set<LO,HI>& frm );
 }
 #endif  // _GLUCAT_GENERATION_H
