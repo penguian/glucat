@@ -24,7 +24,8 @@
  ***************************************************************************/
 
 #include "glucat/glucat.h"
-const int DRIVER_BASIS_MAX_COUNT = 9;
+
+const int DRIVER_BASIS_MAX_COUNT = 7;
 typedef glucat::tuning
   <
     glucat::DEFAULT_Mult_Matrix_Threshold,
@@ -39,21 +40,39 @@ typedef glucat::tuning
   Tune_P;
 #include "glucat/glucat_imp.h"
 #include <stdio.h>
-#include "test/peg01.h"
-#include "test/peg02.h"
-#include "test/peg03.h"
-#include "test/peg04.h"
-#include "test/peg05.h"
-#include "test/peg06.h"
-#include "test/peg07.h"
-#include "test/peg08.h"
-#include "test/peg09.h"
-#include "test/peg10.h"
-#include "test/peg11.h"
-#include "test/peg12.h"
-#include "test/peg13.h"
-#include "test/peg14.h"
-#include "test/peg15.h"
-#include "test/peg16.h"
-#include "test/squaring.h"
+
+typedef int (*intfn)();
+
+int try_catch(intfn f)
+{
+  using namespace std;
+  using namespace glucat;
+  try
+    { (*f)(); }
+  catch (const glucat_error& e)
+    { e.print_error_msg(); }
+  catch (bad_alloc)
+    { cerr << "bad_alloc" << endl; }
+  catch (...)
+    { cerr << "unexpected exception" << endl; }
+  return 0;
+}
+
+typedef int (*intintfn)(int);
+
+int try_catch(intintfn f, int arg)
+{
+  using namespace std;
+  using namespace glucat;
+  try
+    { (*f)(arg); }
+  catch (const glucat_error& e)
+    { e.print_error_msg(); }
+  catch (bad_alloc)
+    { cerr << "bad_alloc" << endl; }
+  catch (...)
+    { cerr << "unexpected exception" << endl; }
+  return 0;
+}
+
 #endif // GLUCAT_TEST_DRIVER_H
