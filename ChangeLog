@@ -1,3 +1,41 @@
+2002-04-14 23:18  leopardi
+
+	* test/: test-6.out, test.out: Update test output to reflect change
+	in elliptic()
+
+2002-04-14 21:28  leopardi
+
+	* glucat.kdevprj: Update version
+
+2002-04-14 21:25  leopardi
+
+	* configure.in, glucat.doxygen, glucat.lsm: Update version
+
+2002-04-14 21:14  leopardi
+
+	* glucat/clifford_algebra_imp.h: Fix elliptic() to return a unit
+	volume element I which commutes with the whole relevant subalgebra
+
+2002-04-14 21:13  leopardi
+
+	* glucat/generation_imp.h: Use count_pos() and count_neg() in
+	folded_dim()
+
+2002-04-14 21:12  leopardi
+
+	* glucat/: index_set.h, index_set_imp.h: Add count_pos() and
+	count_neg(): count positive and negative indices
+
+2002-04-14 21:03  leopardi
+
+	* TODO: Update to include items listed in the coursework thesis,
+	"Practical Computation with Clifford Algebras," submitted as part
+	of the requirements for MScTech at UNSW.
+
+2002-01-27 10:54  leopardi
+
+	* ChangeLog: Update to version 0.0.5
+
 2002-01-27 09:27  leopardi
 
 	* INSTALL: Add instructions for g++ 3.0.X
