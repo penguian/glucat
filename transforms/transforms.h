@@ -23,6 +23,23 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
+#include "glucat/glucat.h"
+const int DRIVER_FAST_SIZE_THRESHOLD    = 1 << 30;
+const int DRIVER_INV_FAST_DIM_THRESHOLD = 1 << 15;
+typedef glucat::tuning
+  <
+    glucat::DEFAULT_Mult_Matrix_Threshold,
+    glucat::DEFAULT_Div_Max_Steps,
+    glucat::DEFAULT_Sqrt_Max_Steps,
+    glucat::DEFAULT_Log_Max_Outer_Steps,
+    glucat::DEFAULT_Log_Max_Inner_Steps,
+    glucat::DEFAULT_Basis_Max_Count,
+    DRIVER_FAST_SIZE_THRESHOLD,
+    DRIVER_INV_FAST_DIM_THRESHOLD
+  >
+  Tune_P;
+#include "glucat/glucat_imp.h"
+#include <stdio.h>
 #include <iomanip>
 
 namespace glucat_fast_test
@@ -200,7 +217,7 @@ namespace glucat_fast_test
   }
 }
 
-int transforms(const long int n)
+int transforms(const int n)
 {
   using namespace glucat_fast_test;
   if (n > max_n)
