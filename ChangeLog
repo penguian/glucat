@@ -1,3 +1,20 @@
+2004-06-20 19:58  leopardi
+
+	* glucat.kdevelop: Cosmetic changes resulting form quitting
+	  kdevelop
+
+2004-06-20 19:57  leopardi
+
+	* INSTALL: Update list of tested systems
+
+2004-06-20 19:55  leopardi
+
+	* README: Move Dependencies section to INSTALL
+
+2004-06-20 19:16  leopardi
+
+	* ChangeLog: Update for version 0.1.7
+
 2004-06-20 19:09  leopardi
 
 	* README: New URL for John Fletcher
