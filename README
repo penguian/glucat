@@ -6,9 +6,9 @@ Purpose
  corresponding to each non-degenerate quadratic form up to a maximum set by
  the user.
 
- GluCat classes can be used as template parameters for other template
- libraries, such as Blitz++, deal.II, Matrix Template Library and POOMA.
- These template libraries expect a numeric class which implements
+ GluCat classes are designed for use as numeric class template parameters with
+ other template libraries, such as Blitz++, deal.II, Matrix Template Library 
+ and POOMA. These template libraries expect a numeric class which implements
  "appropriate numeric semantics". To provide these semantics, the GluCat
  interface matches float or complex<> as much as possible. Yet the GluCat
  classes must be different from float or complex<>, because they model a
@@ -16,27 +16,27 @@ Purpose
 
 Before you go any further
 -------------------------
- Before you use this template library, become familiar with geometric and Clifford
- algebras.
+ Before you use this template library, become familiar with geometric and 
+ Clifford algebras.
 Web sites:
+o Rafal Ablamowitz
+  http://top.math.tntech.edu/rafal/
 o Pertti Lounesto
-  http://www.teli.stadia.fi/~lounesto/
+  http://www.hut.fi/~ppuska/mirror/Lounesto/
+o The Clifford Research Group at Ghent
+  http://cage.rug.ac.be/~krauss/clg/cliffrug.html
 o The Geometric Algebra Research Group at Cambridge:
   http://www.mrao.cam.ac.uk/~clifford/
+o William Baylis:
+  http://cronus.uwindsor.ca/baylis-research
 o Leo Dorst
   http://carol.wins.uva.nl/~leo/clifford/
+o John Fletcher
+  http://www.ceac.aston.ac.uk/clifford/index.htm
 o David Hestenes
   http://modelingnts.la.asu.edu/
 o Christian Perwass
   http://www.perwass.de/cbup/start.html
-o Rafal Ablamowitz
-  http://top.math.tntech.edu/rafal/
-o William Baylis:
-  http://www.cs.uwindsor.ca/users/b/baylis/index.htm
-o The Clifford Research Group at Gent
-  http://cage.rug.ac.be/~fb/crg/
-o John Fletcher
-  http://www.ceac.aston.ac.uk/clifford/index.htm
 
 Books:
 o Rafal Ablamowicz, Pertti Lounesto, Josep Parra (eds.),
@@ -50,39 +50,36 @@ o Ian R. Porteous, "Clifford Algebras and the Classical groups",
   Cambridge University Press, 1995.
 
 Software:
- o GAIGEN, a C++ code optimized generator   
-   http://carol.wins.uva.nl/~fontijne/gaigen/ 
  o CLU, a C++ library with OPEN-GL graphics
    http://www.perwass.de/cbup/clu.html 
- o GABLE, a Matlab package with visualization
-   http://carol.wins.uva.nl/~leo/GABLE/index.html 
+ o GAIGEN, a C++ code optimized generator   
+   http://www.science.uva.nl/ga/gaigen/
+ o CLICAL, a Clifford algebra calculator
+   http://www.hut.fi/~ppuska/mirror/Lounesto/CLICAL.htm
+ o CLIFFORD for Maple 9
+   http://math.tntech.edu/rafal/cliff9/index.html
  o GA Package for Maple V
    http://www.mrao.cam.ac.uk/~clifford/software/GA/
- o CLIFFORD for Maple V
-   http://math.tntech.edu/rafal/cliff5/index.html
- o CLICAL, a Clifford algebra calculator
-   http://www.teli.stadia.fi/~lounesto/CLICAL.htm
+ o GABLE, a Matlab package with visualization
+   http://carol.wins.uva.nl/~leo/GABLE/index.html 
 
 Dependencies
 ------------
  GluCat uses the C++ Standard Library and the Boost Library. Make sure
  you have these installed and working before attempting to use GluCat.
- Use the instructions at http://www.boost.org/more/download.html
- to obtain the Boost Library. GluCat has been tested with Boost CVS and
- Boost 1.30.0.
-
+ To obtain the Boost Library, use the instructions at 
+ http://sourceforge.net/project/showfiles.php?group_id=7586
+ 
  If you are using g++ 3.X.Y, make sure that you have installed Boost with the
-same version of g++.
+ same version of g++.
 
  The headers need a compiler which correctly handles template template classes.
 
- The code has so far been tested using Boost CVS and Boost 1.30.0 with:
- 1) SuSE Linux 8.2 using g++ 3.3 (SuSE prerelease)
- 2) SuSE Linux 8.2 using Intel C++ 7.0.1
- 3) Red Hat Linux 8.0 using g++ 3.2
- 4) Digital UNIX V4.0F (Rev. 1229) using g++ 3.1
- (reported by configure as alphaev6-dec-osf4.0f)
-
+ The code has so far been tested using:
+ 1) Red Hat Linux 8.0 with g++ 3.2   and Boost 1.30.2 on an Intel(R) Pentium(R) 4.
+ 2) SuSE SEL 8        with g++ 3.2.2 and Boost 1.30.2 on a dual AMD Opteron(tm).
+ 3) SuSE Linux 9.0    with g++ 3.3.2 and Boost 1.31.0 on an AMD Athlon(tm) 64.
+ 
 Installation and Testing
 ------------------------
  See INSTALL
@@ -121,14 +118,45 @@ typedef glucat::tuning<> Tune_P;
 
 using namespace glucat;
 
+ o GluCat uses two preprocessor defines to control header files. In glucat.h:
+ 
+ _GLUCAT_HAS_UBLAS_LU_H controls the use of the header files
+ <boost/numeric/ublas/operation.hpp> and <boost/numeric/ublas/lu.hpp>.
+ If _GLUCAT_HAS_UBLAS_LU_H is defined, glucat.h includes these uBLAS files, 
+ which contain the uBLAS declarations and definitions for LU solve.
+ Otherwise, the compilation includes the contents of ublas.h and ublas_imp.h,
+ which contain a GluCat version of these definitions.
+ 
+ The configure script automatically adds -D_GLUCAT_HAS_UBLAS_LU_H to CXXFLAGS
+ in the test Makefiles, depending on whether it can find  these uBLAS files.
+ For your own compilation, check the test Makefiles, and add 
+ -D_GLUCAT_HAS_UBLAS_LU_H to your own Makefile as appropriate.
+ 
+ _GLUCAT_USE_GNU_CXX_HASH_MAP controls the use of the header file 
+ <ext/hash_map>. 
+ If _GLUCAT_USE_GNU_CXX_HASH_MAP is defined, glucat.h includes this file, 
+ which contains the GNU definitions and declarations for __gnu_cxx::hash_map. 
+ The main purpose of this define is found in framed_multi.h. 
+ If _GLUCAT_USE_GNU_CXX_HASH_MAP is defined, framed_multi.h defines 
+ glucat::framed_multi<> using __gnu_cxx::hash_map<>, which is an unsorted map. 
+ Otherwise framed_multi.h defines glucat::framed_multi<> using std::map<>, 
+ which is a sorted map.
+ 
+ The configure script flag --with-hash-map adds -D_GLUCAT_USE_GNU_CXX_HASH_MAP
+ to CXXFLAGS in the test Makefiles, depending on whether you are using the g++
+ compiler.  For your own compilation, check your compiler, and add 
+ -D_GLUCAT_USE_GNU_CXX_HASH_MAP to your own Makefile if you want to use
+ __gnu_cxx::hash_map<>.
+
+Coding standards
+----------------
+   
  The headers are split into declarations and definitions. The software was
  developed using the g++ compiler, which does not implement the "export" keyword.
  Separate compilation is possible, if you include both the declarations and
  definitions in each compilation unit, but compilation is slow and the resulting
  binary is large.
-
-Coding standards
-----------------
+ 
  The code follows many, but not all of the guidelines in the
  GNU C++ Standard Library Style Guidelines at
  http://gcc.gnu.org/onlinedocs/libstdc++/17_intro/C++STYLE
