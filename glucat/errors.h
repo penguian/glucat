@@ -29,7 +29,7 @@ namespace glucat
   class glucat_error : public std::logic_error
   {
   public:
-    glucat_error(const string& msg)
+    glucat_error(const std::string& msg)
     : logic_error(msg)
     { }
     virtual const char* heading() const throw() =0;
@@ -42,7 +42,7 @@ namespace glucat
   class error : public glucat_error
   {
   public:
-    error(const string& msg);
+    error(const std::string& msg);
     virtual const char* heading() const throw();
     virtual const char* classname() const throw();
     virtual void print_error_msg() const;

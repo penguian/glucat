@@ -343,7 +343,7 @@ namespace glucat
   /// Vector part of multivector, as a vector_t with respect to frame()
   template<	template<typename, const index_t, const index_t> class Multivector,
 						typename Scalar_T, const index_t LO, const index_t HI	>
-  const vector<Scalar_T>
+  const std::vector<Scalar_T>
   vector_part(const Multivector<Scalar_T,LO,HI>& val)
   { return val.vector_part(); }
 
@@ -421,8 +421,8 @@ namespace glucat
       if (pseudo*pseudo == Scalar_T(-1))
         return pseudo;
 		}
-    index_t frm_max = max(frm.max(), index_t(0));
-    index_t frm_min = min(frm.min(), index_t(0));
+    index_t frm_max = std::max(frm.max(), index_t(0));
+    index_t frm_min = std::min(frm.min(), index_t(0));
     if (frm_min == 0 && frm_max == 0 && LO < 0)
       return multivector_t(index_set_t(-1), Scalar_T(1));
     if (frm_max+1 < HI)
@@ -485,8 +485,8 @@ namespace glucat
     for (; step != Tune_P::sqrt_max_steps && norm(Scalar_T(1) - M) > 0; ++step)
       db_step(M, Y);
     if (step == Tune_P::sqrt_max_steps && norm(Scalar_T(1) - M) > 0)
-			cerr << "Warning: sqrt iteration did not converge. norm = "
-					 << norm(Scalar_T(1) - M) << endl;
+			std::cerr << "Warning: sqrt iteration did not converge. norm = "
+					 << norm(Scalar_T(1) - M) << std::endl;
     return Y;
   }
 
@@ -539,7 +539,7 @@ namespace glucat
     // Reference: [GL], Section 11.3, p572-576.
     typedef Multivector<Scalar_T,LO,HI> multivector_t;
     multivector_t A = pure(val);
-    const int j = max(0, 1 + int(floor(log2(A.max_abs()))));
+    const int j = std::max(0, 1 + int(floor(log2(A.max_abs()))));
     A /= Scalar_T(std::pow(Scalar_T(2),j));
     multivector_t result;
     {
@@ -622,9 +622,9 @@ namespace glucat
       E += E + Scalar_T(1) - M;
     }
 		if (outer_step == Tune_P::log_max_outer_steps && norm(Scalar_T(1) - Y) > Scalar_T(0.5))
-			cerr << "Warning: log iteration did not converge. norm = "
-					 << norm(Scalar_T(1) - Y) << endl;
-    return pade_log(Y) * Scalar_T(std::pow(2, outer_step)) + E;
+			std::cerr << "Warning: log iteration did not converge. norm = "
+					 << norm(Scalar_T(1) - Y) << std::endl;
+    return pade_log(Y) * Scalar_T(std::pow(Scalar_T(2), outer_step)) + E;
   }
 
   /// Natural logarithm of multivector

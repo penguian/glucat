@@ -61,8 +61,8 @@ namespace glucat
       break;
     default:
       // Select generators from the vector for a larger frame
-      const index_t super_p = p + max(offset_to_super[bott],0);
-      const index_t super_q = q - min(offset_to_super[bott],0);
+      const index_t super_p = p + std::max(offset_to_super[bott],0);
+      const index_t super_q = q - std::min(offset_to_super[bott],0);
       return &(gen_vector(super_p, super_q)[super_q]);
       break;
     }
@@ -249,8 +249,8 @@ namespace glucat
   {
     static const int offset_log2_dim[] = {0, 1 , 0, 1, 1, 2, 1, 1};
     const index_set<LO,HI> folded = sub.fold();
-    const int p = max( int(folded.max()), 0);
-    const int q = max(-int(folded.min()), 0);
+    const int p = std::max( int(folded.max()), 0);
+    const int q = std::max(-int(folded.min()), 0);
     const int bott = pos_mod(p-q, 8);
     return 1 << ((p+q)/2 + offset_log2_dim[bott]);
   }

@@ -30,11 +30,11 @@ namespace glucat
   class clifford_algebra
   {
   public:
-    typedef Scalar_T                            scalar_t;
-    typedef Index_Set_T                         index_set_t;
-    typedef Multivector_T                       multivector_t;
-    typedef pair< const index_set_t, Scalar_T > pair_t;
-    typedef vector< Scalar_T >                  vector_t;
+    typedef Scalar_T                      scalar_t;
+    typedef Index_Set_T                   index_set_t;
+    typedef Multivector_T                 multivector_t;
+    typedef std::pair< const index_set_t, Scalar_T > pair_t;
+    typedef std::vector<Scalar_T>         vector_t;
     static  char *      classname();
 
     virtual ~clifford_algebra() {};
@@ -100,7 +100,7 @@ namespace glucat
     /// Write formatted multivector to output
     virtual void                write       (char* msg="") const =0;
     /// Write formatted multivector to file
-    virtual void                write       (ofstream& ofile, char* msg="") const =0;
+    virtual void                write       (std::ofstream& ofile, char* msg="") const =0;
   };
 
 #ifndef _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
@@ -136,7 +136,7 @@ namespace glucat
           (const Scalar_T& limit = Scalar_T(DEFAULT_TRUNCATION)) const; \
     const bool          isnan       () const;                         \
     void                write       (char* msg="") const;             \
-    void                write       (ofstream& ofile, char* msg="") const;
+    void                write       (std::ofstream& ofile, char* msg="") const;
 #endif // _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
 
   // Test for inequality of multivectors
@@ -332,7 +332,7 @@ namespace glucat
   /// Vector part of multivector, as a vector_t with respect to frame()
   template<	template<typename, const index_t, const index_t> class Multivector,
 						typename Scalar_T, const index_t LO, const index_t HI	>
-  const vector<Scalar_T>
+  const std::vector<Scalar_T>
   vector_part(const Multivector<Scalar_T,LO,HI>& val);
 
   /// Absolute value == sqrt(norm)

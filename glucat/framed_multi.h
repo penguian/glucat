@@ -32,20 +32,20 @@ namespace glucat
   template< typename Scalar_T, const index_t LO = DEFAULT_LO, const index_t HI = DEFAULT_HI >
   class framed_multi :
   public clifford_algebra< Scalar_T, index_set<LO,HI>, framed_multi<Scalar_T,LO,HI> >,
-  private map< const index_set<LO,HI>, Scalar_T >
+  private std::map< const index_set<LO,HI>, Scalar_T >
   {
   public:
-    typedef framed_multi                     		    multivector_t;
-    typedef Scalar_T                                scalar_t;
-    typedef index_set<LO,HI>                        index_set_t;
-    typedef pair< const index_set_t, Scalar_T >     pair_t;
-    typedef vector< Scalar_T >                      vector_t;
-    typedef error< multivector_t >                  error_t;
-    typedef matrix_multi<Scalar_T,LO,HI>     		    matrix_multi_t;
-    typedef multivector_t                           framed_multi_t;
+    typedef framed_multi                  multivector_t;
+    typedef Scalar_T                      scalar_t;
+    typedef index_set<LO,HI>              index_set_t;
+    typedef std::pair< const index_set_t, Scalar_T > pair_t;
+    typedef std::vector<Scalar_T>         vector_t;
+    typedef error<multivector_t>          error_t;
+    typedef matrix_multi<Scalar_T,LO,HI>  matrix_multi_t;
+    typedef multivector_t                 framed_multi_t;
     friend class matrix_multi_t;
   private:
-    typedef map< const index_set_t, Scalar_T >      map_t;
+    typedef std::map< const index_set_t, Scalar_T > map_t;
   public:
     /// Class name used in messages
     static const char* classname();
@@ -69,19 +69,19 @@ namespace glucat
     framed_multi(const vector_t& vec,
 								 const index_set_t& frm, const bool prechecked = false);
     /// Construct a multivector from a string: eg: "3+2{1,2}-6.1e-2{2,3}"
-    framed_multi(const string& str);
+    framed_multi(const std::string& str);
     /// Construct a multivector, within a given frame, from a string: eg: "3+2{1,2}-6.1e-2{2,3}"
-    framed_multi(const string& str,
+    framed_multi(const std::string& str,
 								 const index_set_t& frm, const bool prechecked = false);
     /// Construct a multivector from a matrix_multi_t
     framed_multi        (const matrix_multi_t& val);
     _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
-    friend istream&
-      operator>> <>(istream& s, multivector_t& val);
-    friend ostream&
-      operator<< <>(ostream& os, const multivector_t& val);
-    friend ostream&
-      operator<< <>(ostream& os, const pair_t& term);
+    friend std::istream&
+      operator>> <>(std::istream& s, multivector_t& val);
+    friend std::ostream&
+      operator<< <>(std::ostream& os, const multivector_t& val);
+    friend std::ostream&
+      operator<< <>(std::ostream& os, const pair_t& term);
   private:
     /// Add a term, if non-zero
     multivector_t&      operator+= (const pair_t& term);
@@ -90,24 +90,24 @@ namespace glucat
 
   /// Read multivector from input
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  istream&
-  operator>> (istream& s, framed_multi<Scalar_T,LO,HI>& val);
+  std::istream&
+  operator>> (std::istream& s, framed_multi<Scalar_T,LO,HI>& val);
 
   /// Write multivector to output
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  ostream&
-  operator<< (ostream& os, const framed_multi<Scalar_T,LO,HI>& val);
+  std::ostream&
+  operator<< (std::ostream& os, const framed_multi<Scalar_T,LO,HI>& val);
 
   /// Write term to output
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  ostream&
-  operator<< (ostream& os, const pair< const index_set<LO,HI>, Scalar_T >& term);
+  std::ostream&
+  operator<< (std::ostream& os, const std::pair< const index_set<LO,HI>, Scalar_T >& term);
 
   /// Product of terms
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const pair<const index_set<LO,HI>, Scalar_T>
+  const std::pair<const index_set<LO,HI>, Scalar_T>
   operator*
-   (const pair<const index_set<LO,HI>, Scalar_T>& lhs,
-    const pair<const index_set<LO,HI>, Scalar_T>& rhs);
+   (const std::pair<const index_set<LO,HI>, Scalar_T>& lhs,
+    const std::pair<const index_set<LO,HI>, Scalar_T>& rhs);
 }
 #endif  // _GLUCAT_FRAMED_MULTI_H

@@ -30,12 +30,12 @@ namespace glucat
   pos_mod(int lhs, int rhs);
 
   /// A signature is a pair of indices, p, q, with p == frame.max(), q == -frame.min()
-  typedef pair<index_t, index_t> signature_t;
+  typedef std::pair<index_t, index_t> signature_t;
 
   /// Table of generators for specific signatures
   template< class Matrix_T >
   class generator_table :
-  private map< signature_t, vector<Matrix_T> >
+  private std::map< signature_t, std::vector<Matrix_T> >
   {
   public:
     /// Pointer to generators for a specific signature
@@ -44,15 +44,15 @@ namespace glucat
     friend generator_table& generator<Matrix_T>();
   private:
     /// Construct a vector of generators for a specific signature
-    const vector<Matrix_T>& gen_vector(const index_t p, const index_t q);
+    const std::vector<Matrix_T>& gen_vector(const index_t p, const index_t q);
     /// Construct generators for p,q given generators for p-1,q-1
-    void gen_from_pm1_qm1(const vector<Matrix_T>& old, const signature_t sig);
+    void gen_from_pm1_qm1(const std::vector<Matrix_T>& old, const signature_t sig);
     /// Construct generators for p,q given generators for p-4,q+4
-    void gen_from_pm4_qp4(const vector<Matrix_T>& old, const signature_t sig);
+    void gen_from_pm4_qp4(const std::vector<Matrix_T>& old, const signature_t sig);
     /// Construct generators for p,q given generators for p+4,q-4
-    void gen_from_pp4_qm4(const vector<Matrix_T>& old, const signature_t sig);
+    void gen_from_pp4_qm4(const std::vector<Matrix_T>& old, const signature_t sig);
     /// Construct generators for p,q given generators for q+1,p-1
-    void gen_from_qp1_pm1(const vector<Matrix_T>& old, const signature_t sig);
+    void gen_from_qp1_pm1(const std::vector<Matrix_T>& old, const signature_t sig);
 
     // Enforce singleton
     // Reference: A. Alexandrescu, "Modern C++ Design", Chapter 6

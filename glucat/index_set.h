@@ -28,15 +28,15 @@ namespace glucat
   /// Index set class based on std::bitset<> in Gnu standard C++ library
   template<const index_t LO, const index_t HI>
   class index_set :
-  private bitset<HI-LO+1>
+  private std::bitset<HI-LO+1>
   {
   private:
-    typedef bitset<HI-LO+1>   bitset_t;
-    typedef error<index_set>  error_t;
+    typedef std::bitset<HI-LO+1>  bitset_t;
+    typedef error<index_set>      error_t;
   public:
-    typedef index_set         index_set_t;
-    static const index_t      v_lo = LO;
-    static const index_t      v_hi = HI;
+    typedef index_set             index_set_t;
+    static const index_t          v_lo = LO;
+    static const index_t          v_hi = HI;
     
     static const char* classname();
     /// Default constructor creates an empty set
@@ -46,7 +46,7 @@ namespace glucat
     /// Constructor from set value of an index set folded within the given frame
     index_set     (const set_value_t& folded_val, const index_set& frm, const bool prechecked = false);
     /// Constructor from string
-    index_set     (const string& str);
+    index_set     (const std::string& str);
 
     /// Equality
     const bool          operator==  (const index_set& rhs) const;
@@ -125,7 +125,7 @@ namespace glucat
   };
 
   /// Size of set_value_t should be enough to contain bitset<DEFAULT_HI-DEFAULT_LO+1>
-  CTAssert(sizeof(set_value_t) >= sizeof(bitset<DEFAULT_HI-DEFAULT_LO+1>),
+  CTAssert(sizeof(set_value_t) >= sizeof(std::bitset<DEFAULT_HI-DEFAULT_LO+1>),
            Default_index_set_too_big_for_value);
 
   // non-members
@@ -154,13 +154,13 @@ namespace glucat
 
   /// Write out index set
   template<const index_t LO, const index_t HI>
-  ostream&
-  operator<< (ostream& os, const index_set<LO,HI>& ist);
+  std::ostream&
+  operator<< (std::ostream& os, const index_set<LO,HI>& ist);
 
   /// Read in index set
   template<const index_t LO, const index_t HI>
-  istream&
-  operator>> (istream& s, index_set<LO,HI>& ist);
+  std::istream&
+  operator>> (std::istream& s, index_set<LO,HI>& ist);
 
   // Functions which support Clifford algebra operations
   /// Square of generator {j}

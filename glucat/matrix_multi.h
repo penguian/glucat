@@ -34,21 +34,21 @@ namespace glucat
   public clifford_algebra< Scalar_T, index_set<LO,HI>, matrix_multi<Scalar_T,LO,HI> >
   {
   public:
-    typedef matrix_multi                            multivector_t;
-    typedef Scalar_T                                scalar_t;
-    typedef index_set<LO,HI>                        index_set_t;
-    typedef pair< const index_set_t, Scalar_T >     pair_t;
-    typedef vector< Scalar_T >                      vector_t;
-    typedef error< multivector_t >                  error_t;
-    typedef multivector_t                           matrix_multi_t;
-    typedef framed_multi<Scalar_T,LO,HI>            framed_multi_t;
+    typedef matrix_multi                  multivector_t;
+    typedef Scalar_T                      scalar_t;
+    typedef index_set<LO,HI>              index_set_t;
+    typedef std::pair< const index_set_t, Scalar_T >  pair_t;
+    typedef std::vector<Scalar_T>         vector_t;
+    typedef error<multivector_t>          error_t;
+    typedef multivector_t                 matrix_multi_t;
+    typedef framed_multi<Scalar_T,LO,HI>  framed_multi_t;
     friend class framed_multi_t;
   private:
-    typedef mtl::matrix< Scalar_T, mtl::rectangle<>,
-    mtl::compressed<>, mtl::row_major >::type       sparse_matrix_t;
-    typedef mtl::matrix< Scalar_T, mtl::rectangle<>,
-    mtl::dense<>, mtl::row_major >::type            dense_matrix_t;
-    typedef sparse_matrix_t                         matrix_t;
+    typedef mtl::matrix< Scalar_T, mtl::rectangle<>, mtl::compressed<>,
+            mtl::row_major >::type        sparse_matrix_t;
+    typedef mtl::matrix< Scalar_T, mtl::rectangle<>, mtl::dense<>,
+            mtl::row_major >::type        dense_matrix_t;
+    typedef sparse_matrix_t               matrix_t;
     typedef mtl::matrix_traits<matrix_t>::size_type matrix_index_t;
   public:
     /// Class name used in messages
@@ -75,9 +75,9 @@ namespace glucat
     matrix_multi(const vector_t& vec,
 								 const index_set_t& frm, const bool prechecked = false);
     /// Construct a multivector from a string: eg: "3+2{1,2}-6.1e-2{2,3}"
-    matrix_multi(const string& str);
+    matrix_multi(const std::string& str);
     /// Construct a multivector, within a given frame, from a string: eg: "3+2{1,2}-6.1e-2{2,3}"
-    matrix_multi(const string& str,
+    matrix_multi(const std::string& str,
 								 const index_set_t& frm, const bool prechecked = false);
   	/// Construct a multivector from a framed_multi_t
     matrix_multi(const framed_multi_t& val);
@@ -105,14 +105,13 @@ namespace glucat
 
   /// Write multivector to output
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  ostream&
-  operator << (ostream& os, const matrix_multi<Scalar_T,LO,HI>& val);
+  std::ostream&
+  operator << (std::ostream& os, const matrix_multi<Scalar_T,LO,HI>& val);
 
   /// Read multivector from input
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  istream&
-  operator >> (istream& s, matrix_multi<Scalar_T,LO,HI>& val);
-
+  std::istream&
+  operator >> (std::istream& s, matrix_multi<Scalar_T,LO,HI>& val);
 
   /// Create a basis element matrix within a frame
   template< typename Scalar_T, const index_t LO, const index_t HI >

@@ -24,7 +24,7 @@
  ***************************************************************************/
 
 //***************************** fix to `ios_base':
-#if defined (__GNUG__) && (__GNUC_MINOR__ <= 96)
-#define ios_base ios         // scope is different for standard C++
+#if defined (__GNUG__) && (__GNUC__ <= 2) && (__GNUC_MINOR__ <= 96)
+#define ios_base ios // scope is different for standard C++
 #endif
 #endif // _GLUCAT_PORTABILITY_H

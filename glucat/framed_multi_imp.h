@@ -111,16 +111,16 @@ namespace glucat
   /// Construct a multivector from a string: eg: "3+2{1,2}-6.1e-2{2,3}"
   template< typename Scalar_T, const index_t LO, const index_t HI >
   framed_multi<Scalar_T,LO,HI>::
-  framed_multi(const string& str)
+  framed_multi(const std::string& str)
   {
-    istringstream ss(str);
+    std::istringstream ss(str);
     ss >> *this;
   }
 
   /// Construct a multivector, within a given frame, from a string: eg: "3+2{1,2}-6.1e-2{2,3}"
   template< typename Scalar_T, const index_t LO, const index_t HI >
   framed_multi<Scalar_T,LO,HI>::
-  framed_multi(const string& str, const index_set_t& frm, const bool prechecked)
+  framed_multi(const std::string& str, const index_set_t& frm, const bool prechecked)
   {
     if (prechecked)
       *this = multivector_t(str);
@@ -571,23 +571,23 @@ namespace glucat
   void
   framed_multi<Scalar_T,LO,HI>::
   write(char* msg) const
-  { cout << msg << endl << "  " << (*this) << endl; }
+  { std::cout << msg << std::endl << "  " << (*this) << std::endl; }
 
   /// Write multivector to file
   template< typename Scalar_T, const index_t LO, const index_t HI >
   void
   framed_multi<Scalar_T,LO,HI>::
-  write(ofstream& ofile, char* msg) const
+  write(std::ofstream& ofile, char* msg) const
   {
     if (!ofile)
       throw error_t("write(ofile,msg): cannot write to output file");
-    ofile << msg << endl << "  " << (*this) << endl;
+    ofile << msg << std::endl << "  " << (*this) << std::endl;
   }
 
   /// Write multivector to output
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  ostream&
-  operator<< (ostream& os, const framed_multi<Scalar_T,LO,HI>& val)
+  std::ostream&
+  operator<< (std::ostream& os, const framed_multi<Scalar_T,LO,HI>& val)
   {
   	typedef framed_multi<Scalar_T,LO,HI>  multivector_t;
     if(val.empty())
@@ -609,8 +609,8 @@ namespace glucat
 
   /// Write term to output
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  ostream&
-  operator<< (ostream& os, const pair< const index_set<LO,HI>, Scalar_T >& term)
+  std::ostream&
+  operator<< (std::ostream& os, const std::pair< const index_set<LO,HI>, Scalar_T >& term)
   {
     if (term.first.count() == 0)
       os << term.second;
@@ -630,8 +630,8 @@ namespace glucat
   }
 
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  istream&
-  operator>> (istream& s, framed_multi<Scalar_T,LO,HI> & val)
+  std::istream&
+  operator>> (std::istream& s, framed_multi<Scalar_T,LO,HI> & val)
   { // Input looks like 1.0 -2.0{1,2} +3.2{3,4}
     framed_multi<Scalar_T,LO,HI>  local;
     char c = 0;
@@ -763,11 +763,11 @@ namespace glucat
   /// Product of terms
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  const pair<const index_set<LO,HI>, Scalar_T>
-  operator* (const pair<const index_set<LO,HI>, Scalar_T>& lhs,
-             const pair<const index_set<LO,HI>, Scalar_T>& rhs)
+  const std::pair<const index_set<LO,HI>, Scalar_T>
+  operator* (const std::pair<const index_set<LO,HI>, Scalar_T>& lhs,
+             const std::pair<const index_set<LO,HI>, Scalar_T>& rhs)
   {
-    typedef pair<const index_set<LO,HI>, Scalar_T> pair_t;
+    typedef std::pair<const index_set<LO,HI>, Scalar_T> pair_t;
     return (pair_t(
             lhs.first ^ rhs.first,
             lhs.second * rhs.second *

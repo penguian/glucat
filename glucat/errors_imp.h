@@ -28,7 +28,7 @@ namespace glucat
   /// Specific exception class
   template< class Class_T >
   error<Class_T>::
-  error(const string& msg)
+  error(const std::string& msg)
   : glucat_error(msg)
   { }
 
@@ -48,6 +48,6 @@ namespace glucat
   void
   error<Class_T>::
   print_error_msg() const
-  { cerr << heading() << classname() << endl << what() << endl; }
+  { std::cerr << heading() << classname() << std::endl << what() << std::endl; }
 };
 #endif // _GLUCAT_ERRORS_IMP_H

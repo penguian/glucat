@@ -65,9 +65,9 @@ namespace glucat
   /// Constructor from string
   template<const index_t LO, const index_t HI>
   index_set<LO,HI>::
-  index_set<LO,HI>(const string& str)
+  index_set<LO,HI>(const std::string& str)
   {
-    istringstream ss(str);
+    std::istringstream ss(str);
     ss >> *this;
   }
 
@@ -318,8 +318,8 @@ namespace glucat
 
   /// Write out index set
   template<const index_t LO, const index_t HI>
-  ostream&
-  operator<< (ostream& os, const index_set<LO,HI>& ist)
+  std::ostream&
+  operator<< (std::ostream& os, const index_set<LO,HI>& ist)
   {
     index_t i;
     os << '{';
@@ -336,8 +336,8 @@ namespace glucat
 
   /// Read in index set
   template<const index_t LO, const index_t HI>
-  istream&
-  operator>> (istream& s, index_set<LO,HI>& ist)
+  std::istream&
+  operator>> (std::istream& s, index_set<LO,HI>& ist)
   {
     char c = 0;
     index_t i = 0;
@@ -357,10 +357,10 @@ namespace glucat
       local.set(i);
     }
     if (bracketed && (c != '}'))
-      s.clear(ios_base::failbit); // set state to error
+      s.clear(std::ios_base::failbit); // set state to error
     else if (!s.fail())
       if ((i < LO) || (i > HI))
-        s.clear(ios_base::failbit); // set state to error
+        s.clear(std::ios_base::failbit); // set state to error
       else
       {
         local.set(i);
@@ -497,14 +497,14 @@ namespace glucat
   inline
   const index_t
   max_pos(const index_set<LO,HI>& ist)
-  { return max(ist.max(), index_t(0)); }
+  { return std::max(ist.max(), index_t(0)); }
 
   /// minimum negative index, or 0 if none
   template<const index_t LO, const index_t HI>
   inline
   const index_t
   min_neg(const index_set<LO,HI>& ist)
-  { return min(ist.min(), index_t(0)); }
+  { return std::min(ist.min(), index_t(0)); }
 
   /// Set containing a range of indices from range_min to range_max
   template<const index_t LO, const index_t HI>
@@ -512,8 +512,8 @@ namespace glucat
   index_range(const index_t range_min, const index_t range_max)
   {
     typedef index_set<LO,HI> index_set_t;
-    const index_t safe_min = max(range_min, LO);
-    const index_t safe_max = min(range_max, HI);
+    const index_t safe_min = std::max(range_min, LO);
+    const index_t safe_max = std::min(range_max, HI);
     index_set_t result;
     for (index_t idx = safe_min; idx <= safe_max; ++idx)
       if (idx != 0)

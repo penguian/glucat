@@ -131,13 +131,13 @@ namespace glucat
   /// Construct a multivector from a string: eg: "3+2{1,2}-6.1e-2{2,3}"
   template< typename Scalar_T, const index_t LO, const index_t HI >
   matrix_multi<Scalar_T,LO,HI>::
-  matrix_multi(const string& str)
+  matrix_multi(const std::string& str)
   { *this = framed_multi_t(str); }
 
   /// Construct a multivector, within a given frame, from a string: eg: "3+2{1,2}-6.1e-2{2,3}"
   template< typename Scalar_T, const index_t LO, const index_t HI >
   matrix_multi<Scalar_T,LO,HI>::
-  matrix_multi(const string& str, const index_set_t& frm, const bool prechecked)
+  matrix_multi(const std::string& str, const index_set_t& frm, const bool prechecked)
   { *this = multivector_t(framed_multi_t(str), frm, prechecked); }
 
 	/// Construct a multivector from a framed_multi_t
@@ -642,16 +642,16 @@ namespace glucat
   }
 
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  ostream&
-  operator<< (ostream& os, const matrix_multi<Scalar_T,LO,HI>& val)
+  std::ostream&
+  operator<< (std::ostream& os, const matrix_multi<Scalar_T,LO,HI>& val)
   {
     os << matrix_multi<Scalar_T,LO,HI>::framed_multi_t(val);
     return os;
   }
 
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  istream&
-  operator>> (istream& s, matrix_multi<Scalar_T,LO,HI>& val)
+  std::istream&
+  operator>> (std::istream& s, matrix_multi<Scalar_T,LO,HI>& val)
   { // Input looks like 1.0-2.0{1,2}+3.2{3,4}
     framed_multi<Scalar_T,LO,HI> local;
     s >> local;
@@ -673,7 +673,7 @@ namespace glucat
   template< typename Scalar_T, const index_t LO, const index_t HI >
   void
   matrix_multi<Scalar_T,LO,HI>::
-  write(ofstream& ofile, char* msg) const
+  write(std::ofstream& ofile, char* msg) const
   {
     if (!ofile)
       throw error_t("write(ofile,msg): cannot write to output file");
@@ -748,8 +748,8 @@ namespace glucat
     result = matrix_t(dim, dim);
     unit(dim, result);
 
-    const int p = max( int(folded_max), 0);
-    const int q = max(-int(folded_min), 0);
+    const int p = std::max( int(folded_max), 0);
+    const int q = std::max(-int(folded_min), 0);
 
     const matrix_t* e = (generator<matrix_t>())(p,q);
 
