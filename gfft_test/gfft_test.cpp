@@ -32,14 +32,7 @@ int main(int argc, char ** argv)
     int max_index = 0;
     sscanf(*argv, "%d", &max_index);
     if (max_index > 0)
-      try
-        { gfft_test(max_index); }
-      catch (const glucat_error& e)
-        { e.print_error_msg(); }
-      catch (bad_alloc)
-        { cerr << "bad_alloc" << endl; }
-      catch (...)
-        { cerr << "unexpected exception" << endl; }
+      try_catch( gfft_test, max_index );
   }
   return 0;
 }
