@@ -135,6 +135,11 @@ AC_DEFUN(AC_GLUCAT_CHECK_COMPILERS,
     CXXFLAGS="-I/usr/local/include -DBOOST_UBLAS_USE_LONG_DOUBLE $CXXFLAGS"
     KDE_CHECK_COMPILER_FLAG(mp1,[CXXFLAGS="-mp1 $CXXFLAGS"])
   fi
+  if test "$GXX" = "yes"; then
+    dnl The following test is borrowed from VXL Project http://vxl.sourceforge.net/
+    cxxversion=`$CXX -v < /dev/null 2>&1 | grep 'gcc version' | awk '{print [\$]3}'`
+    AC_MSG_RESULT( $CXX version $cxxversion )
+  fi  
   if test "$GXX" = "yes" || test "$CXX" = "icc" || test "$CXX" = "KCC"; then
     GLUCAT_CXX_DEBUG_FLAG=""
     if test "$kde_use_debug_code" != "no"; then
