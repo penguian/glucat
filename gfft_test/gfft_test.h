@@ -39,8 +39,6 @@ typedef glucat::tuning
   >
   Tune_P;
 #include "glucat/glucat_imp.h"
-#include <stdio.h>
-
 #include <iomanip>
 
 namespace glucat_gfft_test
@@ -48,17 +46,16 @@ namespace glucat_gfft_test
   using namespace glucat;
   using namespace std;
   const index_t max_n = DEFAULT_HI;
-  typedef double Scalar_T;
-  typedef index_set< -max_n, max_n > index_set_t;
 
   inline
   double
   elapsed( clock_t cpu_time )
   { return ((clock() - cpu_time)*MS_PER_S) / CLOCKS_PER_SEC; }
 
+  template< typename Index_Set_T >
   inline
   void
-  print_times(const index_set_t& frame1, const index_set_t& frame2,
+  print_times(const Index_Set_T& frame1, const Index_Set_T& frame2,
               const double mm_cpu_time,  const double fm_cpu_time)
   {
     const int index_width = 2;
@@ -85,14 +82,17 @@ namespace glucat_gfft_test
   template< typename Multivector_T >
   void
   time_fast(Multivector_T& a, const Multivector_T& b,
-            const index_set_t& inner_frame,
-            const index_set_t& outer_frame)
+            const typename Multivector_T::index_set_t& inner_frame,
+            const typename Multivector_T::index_set_t& outer_frame)
   {
     typedef typename Multivector_T::matrix_multi_t matrix_multi_t;
     typedef typename Multivector_T::framed_multi_t framed_multi_t;
+    typedef typename Multivector_T::index_set_t index_set_t;
+    typedef typename Multivector_T::scalar_t    scalar_t;
+
     int trials;
     const int min_trials_if_zero = 1000;
-    a = a*b*(Scalar_T(1.0*rand())/RAND_MAX) + a*(Scalar_T(1.0*rand())/RAND_MAX);
+    a = a*b*(scalar_t(1.0*rand())/RAND_MAX) + a*(scalar_t(1.0*rand())/RAND_MAX);
     clock_t cpu_time = clock();
      matrix_multi_t A = a.fast_matrix_multi(outer_frame);
     double mm_cpu_time = elapsed(cpu_time);
@@ -141,9 +141,10 @@ namespace glucat_gfft_test
     cout << "Clifford algebra transform test:" << endl;
 
     typedef Multivector_T m_;
-    typedef index_set_t e_;
     typedef typename m_::matrix_multi_t matrix_multi_t;
     typedef typename m_::framed_multi_t framed_multi_t;
+    typedef typename m_::index_set_t e_;
+    typedef typename m_::scalar_t    scalar_t;
 
     const index_t max_index = min(n, max_n);
     m_ a = 1;
@@ -151,7 +152,7 @@ namespace glucat_gfft_test
     for (index_t i = 1; i != max_index+1; i++)
     {
       inner_frame |= e_(i);
-      a = a*m_(e_(i) , 1.0)*(Scalar_T(1.0*rand())/RAND_MAX) + a*(Scalar_T(1.0*rand())/RAND_MAX);
+      a = a*m_(e_(i) , 1.0)*(scalar_t(1.0*rand())/RAND_MAX) + a*(scalar_t(1.0*rand())/RAND_MAX);
       inner_frame |= e_(-i);
       time_fast(a, m_(e_(-i), 1.0), inner_frame, inner_frame);
     }
