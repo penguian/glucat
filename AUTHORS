@@ -4,6 +4,21 @@ Project supervisor
 ------------------
 Dr. William McLean, School of Mathematics, UNSW
 
+Prototype
+---------
+Arvind Raja
+Arvind Raja's original header comments and references follow.
+clifford algebra package,  Arvind.Raja@hut.fi
+ref: Press et.al. "Numerical Recipes in C", 2nd ed., C.U.P., 1992.
+ref: LEDA, v 3.0, Stefan N\"aher, Max-Planck-Institut f\"ur Informatik
+ref: Stroustrup B., "The C++ Programming Language", 2nd ed.,
+     Addison-Wesley, 1991.
+ref: R. Sedgewick, "Algorithms in C++", Addison-Wesley, 1992.
+ref: S. Meyers, "Effective C++ ", Addison-Wesley, 1992.
+
+Arvind Raja's prototype was modelled on Clical, by Pertti Lounesto, R. Mikkola, 
+V. Vierros
+
 Advice
 ------
 A. Alexandrescu, N. Josuttis, A. Koenig, Scott Meyers, B. Moo, Bjarne Stroustrup, T. Veldhuizen:
@@ -39,26 +54,54 @@ A. Lumsdaine, J. Siek, MTL project: Matrix algorithms and linear algebra
 Arvind Raja: framed_multivector<> sum, difference, inner product, outer product,
   geometric product, involutions and anti-involutions, norms
 Joerg Walter, uBLAS project: LU factor and solve, matrix algorithms and linear algebra
-
-Prototype
----------
-Arvind Raja
-Arvind Raja's original header comments and references follow.
-clifford algebra package,  Arvind.Raja@hut.fi
-ref: Press et.al. "Numerical Recipes in C", 2nd ed., C.U.P., 1992.
-ref: LEDA, v 3.0, Stefan N\"aher, Max-Planck-Institut f\"ur Informatik
-ref: Stroustrup B., "The C++ Programming Language", 2nd ed.,
-     Addison-Wesley, 1991.
-ref: R. Sedgewick, "Algorithms in C++", Addison-Wesley, 1992.
-ref: S. Meyers, "Effective C++ ", Addison-Wesley, 1992.
-
-Arvind Raja's prototype was modelled on Clical, by Pertti Lounesto, R. Mikkola, V. Vierros
+Michael Clausen, Ulrich Baum, David K. Maslen, Daniel N. Rockmore: 
+  Generalized FFTs for finite groups
 
 uBLAS Interface
 ---------------
 Joerg Walter: uBLAS interface.
 
+Configuration
+-------------
+Stephan Kulow, Walter Tasin, KDevelop team: 
+  Configuration code used in config.in.in
+
+Testing
+-------
+Joerg Walter, John Fletcher
+
+Related Projects
+----------------
+John Fletcher: BoostCliffordDiscussion
+
 Workarounds
 -----------
 Carlos O'Ryan: workaround used in generator.h for:
 "... only defines a private destructor and has no friends"
+
+References for generalized FFTs on finite groups
+------------------------------------------------
+Michael Clausen, "Fast generalized Fourier transforms", Theoretical Computer 
+Science 67, 1989, 55-63. MR 91f:68081.
+
+Persi Diaconis and Daniel Rockmore, "Efficient computation of the Fourier 
+transform of finite groups," J. Amer. Math. Soc., 3(2), 297--332, 1990.
+
+Michael Clausen, Ulrich Baum, "Fast Fourier Transforms," Bibliographisches 
+Institut & F. A. Brockhaus AG, Mannheim, 1993.
+
+Ulrich Baum, Michael Clausen, "Computing irreducible representations of 
+supersolvable groups," Math. Comp. 63, 1994, pp. 351--359.
+
+D. Maslen, Daniel Rockmore, "Generalized FFTs: A survey of some recent results," 
+In L. Finkelstein and W. Kantor, editors, Proc. 1995 DIMACS Workshop in Groups 
+and Computation. 
+
+Daniel Rockmore, "Some applications of generalized FFTs" (Appendix with D. 
+Healy), in Groups and Computation II, DIMACS Series in Discrete Math and 
+Computer Science, Vol. 28, L. Finkelstein and W. Kantor (eds.), 1997, pp. 
+329--369.
+
+D. Maslen, Daniel Rockmore, "Separation of variables and the 
+computation of Fourier transforms on finite groups", I. J. of the Amer. Math. 
+Soc., 10, No. 1, 1997, pp. 169--214.

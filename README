@@ -35,6 +35,8 @@ o William Baylis:
   http://www.cs.uwindsor.ca/users/b/baylis/index.htm
 o The Clifford Research Group at Gent
   http://cage.rug.ac.be/~fb/crg/
+o John Fletcher
+  http://www.ceac.aston.ac.uk/clifford/index.htm
 
 Books:
 o Rafal Ablamowicz, Pertti Lounesto, Josep Parra (eds.),
@@ -48,12 +50,12 @@ o Ian R. Porteous, "Clifford Algebras and the Classical groups",
   Cambridge University Press, 1995.
 
 Software:
- o GAIGEN, a C++ code optimized generator
-   http://carol.wins.uva.nl/~fontijne/gaigen/
+ o GAIGEN, a C++ code optimized generator   
+   http://carol.wins.uva.nl/~fontijne/gaigen/ 
  o CLU, a C++ library with OPEN-GL graphics
-   http://www.perwass.de/cbup/clu.html
+   http://www.perwass.de/cbup/clu.html 
  o GABLE, a Matlab package with visualization
-   http://carol.wins.uva.nl/~leo/GABLE/index.html
+   http://carol.wins.uva.nl/~leo/GABLE/index.html 
  o GA Package for Maple V
    http://www.mrao.cam.ac.uk/~clifford/software/GA/
  o CLIFFORD for Maple V
@@ -66,7 +68,7 @@ Dependencies
  GluCat uses the C++ Standard Library and the Boost Library. Make sure
  you have these installed and working before attempting to use GluCat.
  Use the instructions at http://www.boost.org/more/download.html
- to obtain the Boost Library. As at 2002-12-28, you need to use Boost CVS,
+ to obtain the Boost Library. As at 2003-02-25, you need to use Boost CVS,
  as Boost 1.29.0 does not contain a new enough uBLAS.
 
  If you are using g++ 3.X.Y, make sure that you have installed Boost with the same
@@ -74,7 +76,7 @@ Dependencies
 
  The headers need a compiler which correctly handles template template classes.
 
- The code has so far been tested using Boost CVS (2002-12-28) with:
+ The code has so far been tested using Boost CVS (2003-02-24) with:
  1) SuSE Linux 8.1 using g++ 3.2
  2) SuSE Linux 8.1 using Intel C++ 7.0
  3) Red Hat Linux 7.1 using g++ 2.96 and libstdc++-3
@@ -102,8 +104,9 @@ Usage
  o In your code, include individual files as <glucat/filename.h>
    You can also use the convenience headers <glucat/glucat.h> and
    <glucat/glucat_imp.h>
- o Use the test header file ./test/driver.h as a guide. It currently contains:
-
+ o Use the test header files ./test/driver.h and ./transforms/driver.h as 
+ guides. These contain lines which look something like:
+ 
 #include "glucat/glucat.h"
 typedef glucat::tuning<> Tune_P;
 #include "glucat/glucat_imp.h"

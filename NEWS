@@ -1,3 +1,10 @@
+2003-03-02: 0.1.2
+GluCat now uses a generalized Fast Fourier Transform (FFT) to map between 
+framed_multi<> and matrix-multi<> at high dimensions. This greatly speeds up 
+operations in higher dimensions, for example multiplication and division.
+A new ./transforms subdirectory includes a test program for the generalized FFT.
+Also, the build process has been updated to make better use of autoconf and 
+automake. As a result, you should no longer need to edit Makefile.in
 2003-01-08: 0.1.1
 An enhancement to basis_element() includes the use of a basis_table as a cache
 for basis elements. This should improve the speed of conversion between

@@ -3,11 +3,11 @@ Before You Begin
  GluCat uses the C++ Standard Library and the Boost Library. Make sure
  you have these installed and working before attempting to use GluCat.
  Use the instructions at http://www.boost.org/more/download.html
- to obtain the Boost Library. As at 2002-12-28, you need to use Boost CVS,
+ to obtain the Boost Library. As at 2003-02-25, you need to use Boost CVS,
  as Boost 1.29.0 does not contain a new enough uBLAS.
 
- If you are using g++ 3.X.Y, make sure that you have installed Boost with the same
- version of g++.
+ If you are using g++ 3.X.Y, make sure that you have installed Boost with the 
+same version of g++.
 
  The headers need a compiler which correctly handles template template classes.
 
@@ -22,64 +22,55 @@ To Test
 =======
  Once you have downloaded, unzipped and untarred the source code,
  you should have a directory, glucat-xxx, where xxx is the version number.
- Under glucat-xxx you should see three directories, ./glucat, ./glucat-api and
- ./test.
+ Under glucat-xxx you should see 5 directories, ./admin, ./glucat, ./glucat-api,
+ ./test and ./transforms
  The following instructions are meant to be used with glucat-xxx as the current
  directory.
 
-The Test Program
-----------------
- The test program takes any number (including zero) of numeric parameters.
- Positive numbers in the range 1 to 16 correspond to coding examples
- ./test/peg01.h to ./test/peg16.h. These examples are run in numerical order
- With zero parameters, all examples from 1 to 16 are run in order.
- Many of the examples are run twice - once with framed_multi<Scalar_T> and
- once with matrix_multi<Scalar_T>. If you use a negative parameter -n, this
- will run a timing test which squares larger and larger multivectors within
- the subalgebra defined by the frame of the index set {-n, ..., -1, 1, ..., n}
-
-To Make the Test Program
-------------------------
- If you are using Linux on Intel, you should be able to test GluCat using only
- ./configure and make. What make does here is use the headers in ./glucat and
- the source in ./test to make the test program ./test/glucat
-
- Unfortunately, ./configure for GluCat is still at an early stage of
- development. This means you may need to edit ./test/Makefile.in
-
- If you are using the Intel C++ compler, you will need to edit
- ./test/Makefile.in, comment out the lines reading:
- AM_CXXFLAGS = -fexceptions -ansi -Woverloaded-virtual -Wall
- CXXFLAGS = -O1 -DNDEBUG -finline-limit=400
-
- and uncomment the lines reading:
- # AM_CXXFLAGS = -I/usr/local/include -mp1 -DBOOST_UBLAS_USE_LONG_DOUBLE
- # CXXFLAGS = -O1 -DNDEBUG -finline-limit=400 -mieee
- then run ./configure, then make.
-
- If you are using Compaq Alpha, you will need to edit ./test/Makefile.in,
- comment out the line reading:
- CXXFLAGS = -O1 -DNDEBUG -finline-limit=400
-
- and uncomment the line reading:
- # CXXFLAGS = -O1 -DNDEBUG -finline-limit=400 -mieee
- then run ./configure, then make.
-
- Once you have created the test program, create a runtime directory and copy
+The Test Programs
+-----------------
+ The test program ./test/glucat takes any number (including zero) of numeric 
+ parameters. Positive numbers in the range 1 to 16 correspond to coding 
+ examples ./test/peg01.h to ./test/peg16.h. These examples are run in numerical 
+ order With zero parameters, all examples from 1 to 16 are run in order. Many of 
+ the examples are run twice - once with framed_multi<Scalar_T> and once with 
+ matrix_multi<Scalar_T>. 
+ 
+ If you use a negative parameter -n, this will run a timing test which squares 
+ larger and larger multivectors within the subalgebra  defined by the frame of 
+ the index set {-n, ..., -1, 1, ..., n} 
+ 
+ The test program ./transforms/transforms takes a parameter n, and transforms 
+ larger and larger multivectors within the subalgebra defined by the frame of 
+ the index set {-n, ..., -1, 1, ..., n} 
+ 
+To Make the Test Programs
+-------------------------
+ To create the GluCat test programs, set the environment variable CXX to 
+ indicate your C++ compiler, eg. "g++" for GNU C++, "icc" for Intel C++, then
+ run ./configure, then make.
+ 
+ What make does is to use the headers in ./glucat and the source in ./test and 
+ ./transforms to make the test programs ./test/glucat  and 
+ ./transforms/transforms
+ 
+ Once you have created the test programs, create a runtime directory and copy
  ./test/eg8.txt into the runtime directory. This file is needed by programming
  example 8 (reading multivectors from input).
 
- You can find sample test output in ./test/eg3.res, ./test/test.out and
- ./test/test-6.out
+ You can find sample test output in ./test/eg3.res, ./test/test.out,
+ ./test/test-6.out and ./transforms/transforms-6.out
 
- To run a meaningful timing test using the g++ compiler, edit
- ./test/Makefile.in, comment out the line reading:
- CXXFLAGS = -O1 -DNDEBUG -finline-limit=400
-
- and uncomment the line reading:
- # CXXFLAGS = -O3 -DNDEBUG -finline-limit=900
- then run ./configure, then make.
-
+ To create meaningful timing tests, run ./configure --enable-debug=no, then 
+ make.  Setting --enable-debug=no will invoke the highest optimization level of 
+ the relevant compiler. 
+ 
+ If you are using Linux on Intel, you can also:
+ o create a full debug version of the tests: 
+   run ./configure --enable-debug=full, then make.
+ o create a version for profiling:
+   run ./configure --enable-profile, then make. 
+ 
  WARNINGS:
  1) The optimized compilation may take a long time to complete.
  See http://www.garloff.de/kurt/freesoft/gcc/
@@ -90,21 +81,26 @@ To Make the Test Program
  Bug 3777 Segmentation fault in simple program
  http://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=3777
 
- 3) On Compaq Alpha, you will not be able to build the debug version
- of the test. The -g flag for eg. g++ 3.0.3 fails with "string too big"
- on Compaq Alpha. This problem seems similar to eg,
+ 3) On Compaq Alpha, the -g flag for g++ 3.0.3 fails with "string too big".
+ This problem seems similar to eg,
  http://gcc.gnu.org/ml/gcc-bugs/2000-06/msg00557.html
  http://gcc.gnu.org/ml/gcc-bugs/1998-04/msg00700.html
-
- 4) On Compaq Alpha, if you do not use -mieee, Test 11 will fail,
+ Running ./configure --enable-debug=full will work, but will not use the -g 
+ flag. 
+ 
+ 4) On Compaq Alpha, if the compilation does not use -mieee, Test 11 will fail,
  with a floating point exception.  GluCat is written for IEEE arithmetic
  and Compaq Alpha does not  use strict IEEE arithmetic unless you tell
- it to via -mieee.
-
+ it to via -mieee. 
+ ./configure automatically detects Compaq Alpha and uses the -mieee flag.
+ 
  5) Many Clifford algebra algorithms are exponential in both time and
  space complexity. In particular, programming example 7 (triality) may run
  very slowly.
-
+ 
+ 6) Detailed generic instructions for ./configure are given in "Basic 
+ Installation" below. See also ./configure --help
+ 
 To Install
 ==========
  Once you are satisfied that GluCat works, you can run make install.

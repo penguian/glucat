@@ -2,8 +2,6 @@ There is plenty of testing, cleanup, packaging and documentation work yet to do.
 o Try defining Boost concepts, numeric limits and traits, so that GluCat can
   eventually become a Boost library.
 o Improve the packaging of the example and test programs.
-o Make better use of automake and autoconf to eliminate the need to manually
-  edit Makefiles.
 o Write a programmer's guide with descriptions of the API.
 o Test with Blitz++, deal.II, MTL, POOMA and uBLAS and adjust accordingly.
 o Fix sqrt() and log() so that they deal properly with negative real
@@ -11,8 +9,10 @@ o Fix sqrt() and log() so that they deal properly with negative real
 o Devise better algorithms and better implementations of existing algorithms for
   the transcendental functions. In particular, pay more attention to radius of
   convergence, condition number of matrices and poking out of the subalgebra.
+o Try making set_value_t into a class template parameter, ie.
+  framed_multi<Scalar_T,LO,HI,Set_Value_T>, etc., to more easily support 64 bit 
+  index sets.
 o Try making Tune_P into a mixin policy class template parameter, ie.
-  framed_multi<Scalar_T,LO,HI,Tune_P>, etc.
 o Support IEEE NaN properly. 
 o Port to other architectures and compilers which support template template
   parameters.
@@ -39,6 +39,3 @@ o Try creating a class, vector_multi<>, which uses std::vector rather than
 o Try creating a class, hashed_multi<>, which uses std::hash_map rather than
   std::map. This should be faster than framed_multi<>, if tuned properly. The
   disadvantage is that std::hash_map is not standard.
-o Implement a Fast Clifford Fourier Transform between framed_multi<> and
-  matrix_multi<>, based on generalized Fast Fourier Transforms.
-
