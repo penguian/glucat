@@ -1,3 +1,16 @@
+2004-08-11 00:03  leopardi
+
+	* NEWS: Reflect chage in inlining
+
+2004-08-11 00:03  leopardi
+
+	* configure.in, configure.in.in: For g++ versions before 3.3 use an
+	  inline limit of 1200 rather than 2400
+
+2004-08-09 22:59  leopardi
+
+	* ChangeLog: Changes for GluCat 0.1.8
+
 2004-08-09 22:59  leopardi
 
 	* NEWS: Reflect recent changes
