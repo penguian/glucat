@@ -340,6 +340,14 @@ namespace glucat
   even(const Multivector<Scalar_T,LO,HI>& val)
   { return val.even(); }
 
+  /// Odd part
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
+  inline
+  const Multivector<Scalar_T,LO,HI>
+  odd(const Multivector<Scalar_T,LO,HI>& val)
+  { return val.odd(); }
+
   /// Vector part of multivector, as a vector_t with respect to frame()
   template< template<typename, const index_t, const index_t> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI >
@@ -412,15 +420,27 @@ namespace glucat
     index_t incp[] = {0, 2, 1, 0};
     index_t incq[] = {1, 0, 0, 0};
     index_t bott = pos_mod((frm.count_pos() - frm.count_neg()), 4);
-    for (index_t k = 0; k != incp[bott]; k++)
-      for (index_t idx = 1; idx != HI+1; ++idx)
+    for (index_t 
+        k = 0; 
+        k != incp[bott]; 
+        k++)
+      for (index_t 
+          idx = 1; 
+          idx != HI+1; 
+          ++idx)
         if (!frm[idx])
         {
           frm.set(idx);
           break;
         }
-    for (index_t k = 0; k != incq[bott]; k++)
-      for (index_t idx = -1; idx != LO-1; --idx)
+    for (index_t 
+        k = 0; 
+        k != incq[bott]; 
+        k++)
+      for (index_t 
+          idx = -1; 
+          idx != LO-1; 
+          --idx)
         if (!frm[idx])
         {
           frm.set(idx);
@@ -486,7 +506,9 @@ namespace glucat
     multivector_t M = val;
     multivector_t Y = val;
     int step = 0;
-    for (; step != Tune_P::sqrt_max_steps && norm(Scalar_T(1) - M) > 0; ++step)
+    for (; 
+        step != Tune_P::sqrt_max_steps && norm(Scalar_T(1) - M) > 0; 
+        ++step)
       db_step(M, Y);
     if (step == Tune_P::sqrt_max_steps && norm(Scalar_T(1) - M) > 0)
       std::cerr << "Warning: sqrt iteration did not converge. norm = "
@@ -552,7 +574,10 @@ namespace glucat
       if (c[0] != Scalar_T(1))
       {
         c[0] = Scalar_T(1);
-        for (int k = 0; k != q; ++k)
+        for (int 
+            k = 0; 
+            k != q; 
+            ++k)
           c[k+1] = c[k]*(q-k) / ((2*q-k)*(k+1));
       }
       const multivector_t& A2 = A*A;
@@ -561,7 +586,10 @@ namespace glucat
       const multivector_t& AV = A*(c[1]+A2*c[3]+(c[5]+A2*c[7])*A4);
       result = (U+AV) / (U-AV);
     }
-    for (int k = 0; k != j && !result.isnan(); ++k)
+    for (int 
+        k = 0; 
+        k != j && !result.isnan(); 
+        ++k)
       result *= result;
     return Scalar_T(std::exp(scalar(val))) * result;
   }
@@ -625,8 +653,10 @@ namespace glucat
           std::numeric_limits<Scalar_T>::quiet_NaN() : Scalar_T(std::log(0.0));
       // Incomplete product form of Denman-Beavers square root iteration
       multivector_t M = Y;
-      for (int inner_step = 0;
-          inner_step != Tune_P::log_max_inner_steps && norm(Scalar_T(1) - M) > 0;
+      for (int 
+          inner_step = 0;
+          inner_step != Tune_P::log_max_inner_steps && 
+          norm(Scalar_T(1) - M) > 0;
           ++inner_step)
         db_step(M, Y);
       E += E + Scalar_T(1) - M;
