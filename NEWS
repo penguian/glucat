@@ -1,3 +1,16 @@
+2002-12-31: 0.1.0
+GluCat is now compatible with gcc 3.2 and Intel C++ 7.0.
+This should ensure that the code is closer to standard C++.
+This version of GluCat was built using KDevelop 2.1.3 and Boost CVS (2002-12-28).
+GluCat now uses Boost uBLAS rather than MTL, for a number of reasons:
+1 MTL needed extensive patching to work with Intel C++.
+2 MTL maintenance seems to have halted.
+3 Joerg Walter contributed a uBLAS interface for GluCat.
+4 uBLAS uses expression templates and uBLAS matrices have value semantics.
+  This makes the relevant GluCat library code easier to read and understand.
+5 GluCat with uBLAS compiles faster than with MTL.
+6 uBLAS is also generally faster than MTL. This makes GluCat generally faster.
+Other improvements to GluCat include better use of IEEE NaN.
 2002-08-15: 0.0.7
 GluCat has been finally updated to be compatible with gcc 3.1.1, autoconf 2.5.2 and automake 1.63.
 This version of GluCat was built using KDevelop 2.1.2 and MTL 2.1.2-21.
