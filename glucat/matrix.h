@@ -41,11 +41,6 @@ namespace glucat
     const
     Matrix_T
     unit(const typename Matrix_T::size_type n);
-    /// Equality of matrices
-    template< typename LHS_T, typename RHS_T >
-    bool
-    operator==(const ublas::matrix_expression<LHS_T>& lhs,
-               const ublas::matrix_expression<RHS_T>& rhs);
 
     /// Product of monomial matrices
     template< typename LHS_T, typename RHS_T >

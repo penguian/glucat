@@ -66,14 +66,6 @@ namespace glucat { namespace matrix
     return result;
   }
 
-  /// Equality of matrices
-  template< typename LHS_T, typename RHS_T >
-  inline
-  bool
-  operator==(const ublas::matrix_expression<LHS_T>& lhs,
-             const ublas::matrix_expression<RHS_T>& rhs)
-  { return ublas::equals(lhs, rhs); }
-
   /// Product of monomial matrices
   template< typename LHS_T, typename RHS_T >
   const typename RHS_T::expression_type
