@@ -1,3 +1,13 @@
+2004-08-01 12:13  leopardi
+
+	* test_runtime/: gfft_test-10.out, squaring-8.out,
+	  transforms-6.out: Update timing test output to reflect change to
+	  constructor for matrix_multi<>
+
+2004-08-01 12:11  leopardi
+
+	* configure.in, configure.in.in: Update to GluCat version 0.1.8
+
 2004-07-31 20:41  leopardi
 
 	* ChangeLog: Changes for GluCat 0.1.8
