@@ -318,7 +318,7 @@ namespace glucat
           ++stv)
         if (result_array[stv] != Scalar_T(0))
         {
-          const index_set_t result_ist(stv, our_frame);
+          const index_set_t result_ist(stv, our_frame, true);
           this->insert(pair_t(result_ist, result_array[stv]));
         }
       return *this;
