@@ -234,19 +234,12 @@ namespace glucat
           result += (*scthis) * (*scthat);
       return *this = result;
     }
-    const index_set_t folded_frame = our_frame.fold();
-    const index_t min_folded_index = folded_frame.min();
-    const index_t max_folded_index = folded_frame.max();
-    const index_t folded_span = max_folded_index - min_folded_index;
-          index_t folded_bias = max_folded_index + min_folded_index;
-    folded_bias = folded_bias < 0 ? -folded_bias : folded_bias;
-    if ( folded_bias <= Tune_P::neutral_limit
-      && folded_span >= Tune_P::matrix_threshold)
-      // Close to the neutral case, the matrix algorithm is fastest
+    if (frm_count >= Tune_P::mult_matrix_threshold)
+      // Past a certain threshold, the matrix algorithm is fastest
       return *this = matrix_multi_t(*this, our_frame, true) *
                      matrix_multi_t(rhs, our_frame, true);
     else
-    { // Fastest dense algorithm in non-neutral case stores result in array
+    { // Fastest dense algorithm in low dimensions stores result in array
       vector< Scalar_T > result_array( array_size, Scalar_T(0) );
       for (multivector_t::const_iterator scthis = begin(); scthis != end(); ++scthis)
         for (multivector_t::const_iterator scthat = rhs.begin(); scthat != rhs.end(); ++scthat)
@@ -258,10 +251,10 @@ namespace glucat
       *this = Scalar_T(0);
       for (set_value_t stv = 0; stv < array_size; ++stv)
         if (result_array[stv] != Scalar_T(0))
-          {
-            const index_set_t result_ist(stv, our_frame);
-            insert(pair_t(result_ist, result_array[stv]));
-          }
+        {
+          const index_set_t result_ist(stv, our_frame);
+          insert(pair_t(result_ist, result_array[stv]));
+        }
       return *this;
     }
   }

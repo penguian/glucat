@@ -62,9 +62,8 @@ namespace glucat
   /// Tuning policy
   template
   <
-    int Mult_Neutral_Limit = 1,
-    int Mult_Matrix_Threshold = 10,
-    int Div_Max_Steps = 2,
+    int Mult_Matrix_Threshold = 9,
+    int Div_Max_Steps = 3,
     int Sqrt_Max_Steps = 7,
     int Log_Max_Outer_Steps = 256,
     int Log_Max_Inner_Steps = 8
@@ -72,13 +71,11 @@ namespace glucat
   struct tuning
   {
   // Tuning for multiplication
-    /// Maximum distance from neutrality to invoke matrix multiplication algorithm
-    enum { neutral_limit = Mult_Neutral_Limit };
     /// Minimum index count needed to invoke matrix multiplication algorithm
-    enum { matrix_threshold = Mult_Matrix_Threshold };
+    enum { mult_matrix_threshold = Mult_Matrix_Threshold };
   // Tuning for division
     /// Maximum steps of iterative refinement in division algorithm
-    enum { iterative_refinement_max_steps = Div_Max_Steps };
+    enum { div_max_steps = Div_Max_Steps };
   // Tuning for sqrt
     /// Maximum number of steps in square root iteration
     enum { sqrt_max_steps = Sqrt_Max_Steps };

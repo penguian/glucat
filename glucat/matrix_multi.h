@@ -113,15 +113,11 @@ namespace glucat
   istream&
   operator >> (istream& s, matrix_multi<Scalar_T,LO,HI>& val);
 
+
   /// Create a basis element matrix within a frame
   template< typename Scalar_T, const index_t LO, const index_t HI >
   void
   basis_element( const index_set<LO,HI>& ist, const index_set<LO,HI>& sub,
                 matrix_multi<Scalar_T,LO,HI>::matrix_t& result );
-
-  /// Determine the matrix dimension of the fold of a subalegbra
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  const matrix_multi<Scalar_T,LO,HI>::matrix_index_t
-  folded_dim( const index_set<LO,HI>& sub );
 }
 #endif  // _GLUCAT_MATRIX_MULTI_H

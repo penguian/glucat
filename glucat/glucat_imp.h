@@ -41,6 +41,8 @@
 #include <mtl/norm.h>
 #include "glucat/framed_multi_imp.h"
 
+#include "glucat/generation_imp.h"
+
 #include <mtl/lu.h>
 #include "glucat/matrix_multi_imp.h"
 

@@ -1,0 +1,47 @@
+#ifndef _GLUCAT_GENERATION_H
+#define _GLUCAT_GENERATION_H
+/***************************************************************************
+	  GluCat : Generic library of universal Clifford algebra templates
+    generation.h : Declare functions for generation of the matrix representation
+                             -------------------
+    begin                : Wed Jan 23 2002
+    copyright            : (C) 2002 by Paul C. Leopardi
+    email                : leopardi@bigpond.net.au
+ ***************************************************************************
+ *   This library is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation; either version 2.1 of the  *
+ *   License, or (at your option) any later version.                       *
+ *   See http://www.fsf.org/copyleft/lesser.html for details               *
+ ***************************************************************************
+ This library is based on a prototype written by Arvind Raja and was
+ licensed under the LGPL with permission of the author. See Arvind Raja,
+ "Object-oriented implementations of Clifford algebras in C++: a prototype",
+ in Ablamowicz, Lounesto and Parra (eds.)
+ "Clifford algebras with numeric and symbolic computations", Birkhauser, 1996.
+ ***************************************************************************
+     See also Arvind Raja's original header comments in glucat.h
+ ***************************************************************************/
+
+namespace glucat
+{
+  /// Modulo function which works reliably for lhs < 0
+  inline
+  const int
+  pos_mod(int lhs, int rhs)
+  { return lhs > 0? lhs % rhs : (-lhs) % rhs == 0 ? 0 : rhs - (-lhs) % rhs; }
+
+  /// A signature is a pair of indices, p, q, with p == frame.max(), q == -frame.min()
+  typedef pair<index_t, index_t> signature_t;
+
+  /// Pointer to generators for a specific signature
+  template< class Matrix_T >
+  const Matrix_T*
+  gen(const index_t p, const index_t q, map< signature_t, vector<Matrix_T> >& generators);
+
+  /// Determine the matrix dimension of the fold of a subalegbra
+  template< typename Matrix_Index_T, const index_t LO, const index_t HI >
+  const Matrix_Index_T
+  folded_dim( const index_set<LO,HI>& sub );
+}
+#endif  // _GLUCAT_GENERATION_H

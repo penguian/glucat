@@ -56,6 +56,7 @@
 #include "glucat/framed_multi.h"
 
 #include <mtl/mtl.h>
+#include "glucat/generation.h"
 #include "glucat/matrix_multi.h"
 
 #include "glucat/matrix.h"

@@ -71,7 +71,7 @@ namespace glucat
   matrix_multi(const index_set_t& ist, const Scalar_T& crd)
   : m_frame( ist )
   {
-    const matrix_index_t dim = folded_dim<Scalar_T,LO,HI>(m_frame);
+    const matrix_index_t dim = folded_dim<matrix_index_t,LO,HI>(m_frame);
     m_matrix = matrix_t( dim, dim );
     *this += pair_t(ist, crd);
   }
@@ -84,7 +84,7 @@ namespace glucat
   {
     if (!prechecked && (ist | frm) != frm)
       throw error_t("multivector_t(ist,crd,frm): cannot initialize with value outside of frame");
-    const matrix_index_t dim = folded_dim<Scalar_T,LO,HI>(m_frame);
+    const matrix_index_t dim = folded_dim<matrix_index_t,LO,HI>(m_frame);
     m_matrix = matrix_t( dim, dim );
     *this += pair_t(ist, crd);
 	}
@@ -95,7 +95,7 @@ namespace glucat
   matrix_multi(const Scalar_T& scr, const index_set_t& frm)
   : m_frame( frm )
   {
-    const matrix_index_t dim = folded_dim<Scalar_T,LO,HI>(m_frame);
+    const matrix_index_t dim = folded_dim<matrix_index_t,LO,HI>(m_frame);
     m_matrix = matrix_t( dim, dim );
     *this += pair_t(index_set_t(), scr);
   }
@@ -115,7 +115,7 @@ namespace glucat
   {
     if (!prechecked && index_t(vec.size()) != frm.count())
       throw error_t("multivector_t(vec,frm): cannot initialize with vector not matching frame");
-    const matrix_index_t dim = folded_dim<Scalar_T,LO,HI>(m_frame);
+    const matrix_index_t dim = folded_dim<matrix_index_t,LO,HI>(m_frame);
     m_matrix = matrix_t( dim, dim );
     vector_t::const_iterator scvec = vec.begin();
     const index_t begin_index = m_frame.min();
@@ -146,7 +146,7 @@ namespace glucat
   matrix_multi(const framed_multi_t& val)
   : m_frame( val.frame() )
   {
-    const matrix_index_t dim = folded_dim<Scalar_T,LO,HI>(m_frame);
+    const matrix_index_t dim = folded_dim<matrix_index_t,LO,HI>(m_frame);
     m_matrix = matrix_t( dim, dim );
 
     for(framed_multi_t::const_iterator
@@ -162,7 +162,7 @@ namespace glucat
   {
     if (!prechecked && (val.frame() | frm) != frm)
       throw error_t("multivector_t(val,frm): cannot initialize with value outside of frame");
-    const matrix_index_t dim = folded_dim<Scalar_T,LO,HI>(m_frame);
+    const matrix_index_t dim = folded_dim<matrix_index_t,LO,HI>(m_frame);
     m_matrix = matrix_t( dim, dim );
 
     for(framed_multi_t::const_iterator
@@ -176,7 +176,7 @@ namespace glucat
   matrix_multi(const matrix_t& mtx, const index_set_t& frm)
   : m_frame( frm )
   {
-    const matrix_index_t dim = folded_dim<Scalar_T,LO,HI>(m_frame);
+    const matrix_index_t dim = folded_dim<matrix_index_t,LO,HI>(m_frame);
     m_matrix = matrix_t( dim, dim );
     mtl::copy(mtx, m_matrix);
   }
@@ -440,7 +440,7 @@ namespace glucat
         // Iterative refinement.
         // Reference: Nicholas J. Higham, "Accuracy and Stability of Numerical Algorithms",
         // SIAM, 1996, ISBN 0-89871-355-2, Chapter 11
-        if (Tune_P::iterative_refinement_max_steps > 0)
+        if (Tune_P::div_max_steps > 0)
         {
           vector_t mb(AT.nrows());
           mtl::copy(scaled(*i, Scalar_T(-1)), mb);
@@ -457,7 +457,7 @@ namespace glucat
             mtl::copy(x, xnew);
             Scalar_T nrold = nr + Scalar_T(1);
             for (int step = 0;
-                 step != Tune_P::iterative_refinement_max_steps &&
+                 step != Tune_P::div_max_steps &&
                  nr < nrold &&
                  nr != Scalar_T(0) &&
                  nr == nr;
@@ -740,32 +740,27 @@ namespace glucat
     typedef multivector_t::matrix_index_t matrix_index_t;
     typedef index_set<LO,HI>              index_set_t;
 
-    static vector< vector< matrix_t > > generators;
+    static map< signature_t, vector<matrix_t> > generators;
 
     const index_set_t folded_set = ist.fold(m_frame);
     const index_set_t folded_frame = m_frame.fold();
-    const index_t n = max(index_t(-folded_frame.min()), folded_frame.max());
-    const matrix_index_t dim = 1 << n;
+    const index_t folded_max = folded_frame.max();
+    const index_t folded_min = folded_frame.min();
+    const matrix_index_t dim = folded_dim<matrix_index_t,LO,HI>(m_frame);
     result = matrix_t(dim, dim);
     unit(dim, result);
-    const vector<matrix_t>& e = gengen( n, generators );
-    for (index_t k = max(LO,index_t(-n)); k <= min(n,HI); ++k )
-      if ( folded_set[k] )
-      {
-        matrix_t y( dim, dim );
-        mtl::mult(result, e[k+n], y);
-        mtl::copy(y, result);
-      }
-  }
 
-  /// Determine the matrix dimension of the fold of a subalegbra
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  const
-  matrix_multi<Scalar_T,LO,HI>::matrix_index_t
-  folded_dim( const index_set<LO,HI>& sub )
-  {
-    const index_set<LO,HI> folded = sub.fold();
-    return 1 << max(index_t(-folded.min()), folded.max());
+    const int p = max( int(folded_max), 0);
+    const int q = max(-int(folded_min), 0);
+    const matrix_t* e = gen(p, q, generators);
+
+    for (index_t k = folded_min; k <= folded_max; ++k)
+      if (folded_set[k])
+      {
+        matrix_t temp(dim, dim);
+        mtl::mult(result, e[k], temp);
+        mtl::copy(temp, result);
+      }
   }
 }
 #endif  // _GLUCAT_MATRIX_MULTI_IMP_H

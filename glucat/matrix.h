@@ -53,16 +53,6 @@ namespace glucat
   bool
   is_perm_shaped(const Matrix_T& x);
 
-  /// Generate the next generation of generators, given the previous generation
-  template< class Matrix_T >
-  void
-  gen(const vector<Matrix_T>& old, vector< vector< Matrix_T > >& generators);
-
-  /// Generate a specific generation of generators, given the whole family tree
-  template< class Matrix_T >
-  const vector<Matrix_T>&
-  gengen(const int n, vector< vector<Matrix_T> >& generators);
-
   /// Inner product: sum(x(i,j)*y(i,j))/x.nrows()
   template< class Matrix_T, class Scalar_T >
   Scalar_T
