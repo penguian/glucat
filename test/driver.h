@@ -26,6 +26,7 @@
 #include "glucat/glucat.h"
 typedef glucat::tuning<> Tune_P;
 #include "glucat/glucat_imp.h"
-#include <stdio.h>
+#include "test/try_catch.h"
+#include <cstdio>
 
 #endif // GLUCAT_TEST_DRIVER_H

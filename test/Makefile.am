@@ -1,6 +1,6 @@
 ####### kdevelop will overwrite this part!!! (begin)##########
 
-EXTRA_DIST = driver.h Makefile.am
+EXTRA_DIST = driver.h try_catch.h Makefile.am
 
 ####### kdevelop will overwrite this part!!! (end)############
 AUTOMAKE_OPTIONS = foreign

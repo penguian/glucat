@@ -26,6 +26,7 @@
 #include "glucat/glucat.h"
 #include "squaring/tuning.h"
 #include "glucat/glucat_imp.h"
+#include "test/try_catch.h"
 #include <stdio.h>
 #include <iomanip>
 

@@ -39,6 +39,7 @@ typedef glucat::tuning
   >
   Tune_P;
 #include "glucat/glucat_imp.h"
+#include "test/try_catch.h"
 #include <stdio.h>
 #include <iomanip>
 

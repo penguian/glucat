@@ -173,7 +173,7 @@ target_alias = @target_alias@
 target_cpu = @target_cpu@
 target_os = @target_os@
 target_vendor = @target_vendor@
-EXTRA_DIST = driver.h Makefile.am
+EXTRA_DIST = driver.h try_catch.h Makefile.am
 
 ####### kdevelop will overwrite this part!!! (end)############
 AUTOMAKE_OPTIONS = foreign

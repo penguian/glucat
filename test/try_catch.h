@@ -1,10 +1,10 @@
-#ifndef _GLUCAT_ERRORS_H
-#define _GLUCAT_ERRORS_H
+#ifndef _GLUCAT_TRY_CATCH_H
+#define _GLUCAT_TRY_CATCH_H
 /***************************************************************************
     GluCat : Generic library of universal Clifford algebra templates
-    errors.h : Declare error classes and functions
+    errors_imp.h : Define error functions
                              -------------------
-    begin                : Sun 2001-12-09
+    begin                : Sun 2001-12-20
     copyright            : (C) 2001 by Paul C. Leopardi
     email                : leopardi@bigpond.net.au
  ***************************************************************************
@@ -25,31 +25,40 @@
 
 namespace glucat
 {
-  /// Abstract exception class
-  class glucat_error : public std::logic_error
+  /// For exception catching: pointer to function returning int
+  typedef int (*intfn)();
+  
+  /// For exception catching: pointer to function of int returning int
+  typedef int (*intintfn)(int);
+  
+  /// Exception catching for functions returning int
+  int try_catch(intfn f)
   {
-  public:
-    glucat_error(const std::string& context, const std::string& msg)
-    : logic_error(msg), name(context)
-    { }
-    ~glucat_error() throw()
-    { }
-    virtual const std::string heading() const throw() =0;
-    virtual const std::string classname() const throw() =0;
-    virtual void print_error_msg() const =0;
-    std::string name;
-  };
-
-  /// Specific exception class
-  template< class Class_T >
-  class error : public glucat_error
+    int result = 0;
+    try
+      { result = (*f)(); }
+    catch (const glucat_error& e)
+      { e.print_error_msg(); }
+    catch (std::bad_alloc)
+      { std::cerr << "bad_alloc" << std::endl; }
+    catch (...)
+      { std::cerr << "unexpected exception" << std::endl; }
+    return result;
+  }
+  
+  /// Exception catching for functions of int returning int
+  int try_catch(intintfn f, int arg)
   {
-  public:
-    error(const std::string& msg);
-    error(const std::string& context, const std::string& msg);
-    virtual const std::string heading() const throw();
-    virtual const std::string classname() const throw();
-    virtual void print_error_msg() const;
-  };
+    int result = 0;
+    try
+      { result = (*f)(arg); }
+    catch (const glucat_error& e)
+      { e.print_error_msg(); }
+    catch (std::bad_alloc)
+      { std::cerr << "bad_alloc" << std::endl; }
+    catch (...)
+      { std::cerr << "unexpected exception" << std::endl; }
+    return result;
+  }
 }
-#endif // _GLUCAT_ERRORS_H
+#endif // _GLUCAT_TRY_CATCH_H
