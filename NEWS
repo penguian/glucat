@@ -1,3 +1,11 @@
+2003-06-29: 0.1.4
+GluCat has gained two bits. The mapping of index_set_t to bitset_t now treats
+index 0 of index_set_t as a "virtual" bit rather than a real dead bit of
+bitset_t. This allows DEFAULT_LO to be reduced by 1, and DEFAULT_HI to be
+increased by 1. For a 32 bit unsigned long, the default index_set_t is
+now index_set<-16,16>, using std::bitset<32> rather than index_set<-15,15>, 
+which used std::bitset<31>.
+
 2003-06-23: 0.1.3
 GluCat now has a few optimizations. The tests have been split up into different
 directories to reduce memory usage during compilation, especially with g++ -O3.
@@ -6,27 +14,31 @@ value_of_fold(). The inverse generalized FFT has been optimized by use of an
 optimization to unit() and an optimization to nork() for the monomial case.
 GluCat remains compatible with Boost 1.30.0, and also takes advantage of recent
 changes to uBLAS, currently in Boost CVS.
+
 2003-03-02: 0.1.2
-GluCat now uses a generalized Fast Fourier Transform (FFT) to map between 
-framed_multi<> and matrix-multi<> at high dimensions. This greatly speeds up 
+GluCat now uses a generalized Fast Fourier Transform (FFT) to map between
+framed_multi<> and matrix-multi<> at high dimensions. This greatly speeds up
 operations in higher dimensions, for example multiplication and division.
 A new ./transforms subdirectory includes a test program for the generalized FFT.
-Also, the build process has been updated to make better use of autoconf and 
+Also, the build process has been updated to make better use of autoconf and
 automake. As a result, you should no longer need to edit Makefile.in
+
 2003-01-08: 0.1.1
 An enhancement to basis_element() includes the use of a basis_table as a cache
 for basis elements. This should improve the speed of conversion between
 framed_multi<> and matrix_multi<>, at the expense of memory. The tuning
 parameter Tune_P::basis_max_count controls the size of the cache. If this is
-set to zero, the cache is not used. The default value is DEFAULT_Basis_Max_Count,
-which is set to 10. You can change it when you define Tune_P, as is done in
-test/driver.h
+set to zero, the cache is not used. The default value is
+DEFAULT_Basis_Max_Count, which is set to 10. You can change it when you define
+Tune_P, as is done intest/driver.h
 Also included is a change to definition of template defaults for tuning<>, to
 make these defaults easier to override.
+
 2002-12-31: 0.1.0
 GluCat is now compatible with gcc 3.2 and Intel C++ 7.0.
 This should ensure that the code is closer to standard C++.
-This version of GluCat was built using KDevelop 2.1.3 and Boost CVS (2002-12-28).
+This version of GluCat was built using KDevelop 2.1.3 and Boost CVS
+(2002-12-28).
 GluCat now uses Boost uBLAS rather than MTL, for a number of reasons:
 1 MTL needed extensive patching to work with Intel C++.
 2 MTL maintenance seems to have halted.
@@ -36,22 +48,31 @@ GluCat now uses Boost uBLAS rather than MTL, for a number of reasons:
 5 GluCat with uBLAS compiles faster than with MTL.
 6 uBLAS is also generally faster than MTL. This makes GluCat generally faster.
 Other improvements to GluCat include better use of IEEE NaN.
+
 2002-08-15: 0.0.7
-GluCat has been finally updated to be compatible with gcc 3.1.1, autoconf 2.5.2 and automake 1.63.
-This version of GluCat was built using KDevelop 2.1.2 and MTL 2.1.2-21.
+GluCat has been finally updated to be compatible with gcc 3.1.1, autoconf 2.5.2
+and automake 1.63.This version of GluCat was built using KDevelop 2.1.2 and MTL
+2.1.2-21.
 Work continues to make GluCat and MTL compatible with Intel C++ 6.0.
+
 2002-04-15: 0.0.6
-A bug in elliptic() has been fixed. elliptic now returns a unit volume element I which
-commutes with the whole relevant subalgebra
+A bug in elliptic() has been fixed. elliptic now returns a unit volume element I
+whichcommutes with the whole relevant subalgebra
+
 2002-01-27: 0.0.5
-GluCat has now been tested with gcc 3.0.3 and should now be very compatible with standard C++.
+GluCat has now been tested with gcc 3.0.3 and should now be very compatible with
+standard C++.
+
 2002-01-24: 0.0.4
-GluCat now uses the real irreducible representation for matrix_multi<>, which should now run
-acceptably quickly for Cl(p,0) and Cl(0,q).
+GluCat now uses the real irreducible representation for matrix_multi<>, which
+should now runacceptably quickly for Cl(p,0) and Cl(0,q).
+
 2002-01-22: 0.0.3
 A nasty bug in matrix_multi<>::operator==() is now fixed. cos(), sin() and
 matrx_multi<>::norm() have been optimized.
+
 2002-01-12: 0.0.2
 GluCat now uses CVS.
+
 2002-01-09: 0.0.1
 
