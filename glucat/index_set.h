@@ -103,6 +103,7 @@ namespace glucat
     /// The set value of the fold of this index set within the given frame
     set_value_t         value_of_fold (const index_set& frm) const;
     int                 sign_of_mult  (const index_set& ist) const;
+    size_t              hash_fn       ()                     const;
 
   // Member reference:
     class reference;
