@@ -28,7 +28,7 @@ namespace glucat
 {
   /// Class name used in messages
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const char*
+  const std::string
   framed_multi<Scalar_T,LO,HI>::
   classname()
   { return "framed_multi"; }
@@ -43,12 +43,12 @@ namespace glucat
   template< typename Scalar_T, const index_t LO, const index_t HI >
   framed_multi<Scalar_T,LO,HI>::
   framed_multi(const multivector_t& val,
- 							 const index_set_t& frm, const bool prechecked)
+               const index_set_t& frm, const bool prechecked)
   {
     if (!prechecked && (val.frame() | frm) != frm)
       throw error_t("multivector_t(val,frm): cannot initialize with value outside of frame");
-		*this = val;
-	}
+    *this = val;
+  }
 
   /// Construct a multivector from an index set and a scalar coordinate
   template< typename Scalar_T, const index_t LO, const index_t HI >
@@ -59,11 +59,11 @@ namespace glucat
       this->insert(pair_t(ist, crd));
   }
 
- 	/// Construct a multivector, within a given frame, from an index set and a scalar coordinate
+  /// Construct a multivector, within a given frame, from an index set and a scalar coordinate
   template< typename Scalar_T, const index_t LO, const index_t HI >
   framed_multi<Scalar_T,LO,HI>::
   framed_multi(const index_set_t& ist, const Scalar_T& crd,
- 							 const index_set_t& frm, const bool prechecked)
+               const index_set_t& frm, const bool prechecked)
   {
     if (!prechecked && (ist | frm) != frm)
       throw error_t("multivector_t(ist,crd,frm): cannot initialize with value outside of frame");
@@ -89,11 +89,11 @@ namespace glucat
       this->insert(pair_t(index_set_t(), Scalar_T(scr)));
   }
 
-	/// Construct a multivector, within a given frame, from a given vector
+  /// Construct a multivector, within a given frame, from a given vector
   template< typename Scalar_T, const index_t LO, const index_t HI >
   framed_multi<Scalar_T,LO,HI>::
   framed_multi(const vector_t& vec,
- 							 const index_set_t& frm, const bool prechecked)
+               const index_set_t& frm, const bool prechecked)
   {
     if (!prechecked && index_t(vec.size()) != frm.count())
       throw error_t("multivector_t(vec,frm): cannot initialize with vector not matching frame");
@@ -138,9 +138,9 @@ namespace glucat
     for (set_value_t stv = 0; stv != end_set_value; stv++)
     {
       const index_set_t ist(stv, frm, true);
-      matrix_t e;
-      basis_element<Scalar_T,LO,HI>(ist, frm, e);
-      const Scalar_T crd = inner<matrix_t,Scalar_T>(e, val.m_matrix);
+      const Scalar_T crd =
+        matrix::inner<matrix_t,Scalar_T>(
+          basis_element<Scalar_T,LO,HI>(ist, frm), val.m_matrix);
       if (crd != Scalar_T(0))
         this->insert(pair_t(ist, crd));
     }
@@ -148,7 +148,6 @@ namespace glucat
 
   /// Test for equality of multivectors
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  inline
   bool
   framed_multi<Scalar_T,LO,HI>::
   operator==  (const multivector_t& rhs) const
@@ -156,7 +155,7 @@ namespace glucat
     if (this->size() != rhs.size())
       return false;
     else
-    {         
+    {
       const_iterator scthis = this->begin();
       const_iterator scthat = rhs.begin();
       for (;
@@ -170,13 +169,16 @@ namespace glucat
 
   // Test for equality of multivector and scalar
   template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
   bool
   framed_multi<Scalar_T,LO,HI>::
   operator==  (const Scalar_T& scr) const
   { return frame().count() == 0 && scalar(*this) == scr; }
 
+
   /// Geometric sum of multivector and scalar
   template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
   framed_multi<Scalar_T,LO,HI> &
   framed_multi<Scalar_T,LO,HI>::
   operator+= (const Scalar_T& scr)
@@ -212,8 +214,7 @@ namespace glucat
   /// Unary -
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  const
-  framed_multi<Scalar_T,LO,HI>
+  const framed_multi<Scalar_T,LO,HI>
   framed_multi<Scalar_T,LO,HI>::
   operator- () const
   { return *this * Scalar_T(-1.0); }
@@ -255,7 +256,7 @@ namespace glucat
                      matrix_multi_t(rhs, our_frame, true);
     else
     { // Fastest dense algorithm in low dimensions stores result in array
-      vector< Scalar_T > result_array( array_size, Scalar_T(0) );
+      std::vector< Scalar_T > result_array( array_size, Scalar_T(0) );
       for (const_iterator scthis = this->begin(); scthis != this->end(); ++scthis)
         for (const_iterator scthat = rhs.begin(); scthat != rhs.end(); ++scthat)
         {
@@ -307,7 +308,7 @@ namespace glucat
       for (const_iterator scthat = rhs.begin(); scthat != rhs.end(); scthat++)
       {
         const index_t grade = std::abs(scthis->first.count() - scthat->first.count());
-        const pair_t term = (*scthis) * (*scthat);
+        const pair_t& term = (*scthis) * (*scthat);
         if (term.first.count() == grade)
           result += term;
       }
@@ -328,7 +329,7 @@ namespace glucat
         const index_t grade = scthis->first.count() + scthat->first.count();
         if (grade <= HI-LO)
         {
-          const pair_t term = (*scthis) * (*scthat);
+          const pair_t& term = (*scthis) * (*scthat);
           if (term.first.count() == grade)
             result += term;
         }
@@ -360,8 +361,8 @@ namespace glucat
 
   /// Clifford multiplicative inverse
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const
-  framed_multi<Scalar_T,LO,HI>
+  inline
+  const framed_multi<Scalar_T,LO,HI>
   framed_multi<Scalar_T,LO,HI>::
   inv() const
   {
@@ -384,8 +385,7 @@ namespace glucat
 
   /// Main involution, each {i} is replaced by -{i} in each term
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const
-  framed_multi<Scalar_T,LO,HI>
+  const framed_multi<Scalar_T,LO,HI>
   framed_multi<Scalar_T,LO,HI>::
   involute() const
   {
@@ -400,8 +400,7 @@ namespace glucat
 
   /// Reversion, order of {i} is reversed in each term
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const
-  framed_multi<Scalar_T,LO,HI>
+  const framed_multi<Scalar_T,LO,HI>
   framed_multi<Scalar_T,LO,HI>::
   reverse() const
   {
@@ -423,8 +422,7 @@ namespace glucat
 
   /// Conjugation, conj == reverse o involute == involute o reverse
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const
-  framed_multi<Scalar_T,LO,HI>
+  const framed_multi<Scalar_T,LO,HI>
   framed_multi<Scalar_T,LO,HI>::
   conj() const
   {
@@ -472,15 +470,15 @@ namespace glucat
     Scalar_T result = Scalar_T(0);
     for (const_iterator scan = this->begin(); scan != this->end(); ++scan)
     {
-      result += std::norm(scan->second);
+      const Scalar_T n2 = ublas::type_traits<Scalar_T>::norm_2(scan->second);
+      result +=  n2 * n2;
     }
     return result;
   }
 
   /// *this to the m
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const
-  framed_multi<Scalar_T,LO,HI>
+  const framed_multi<Scalar_T,LO,HI>
   framed_multi<Scalar_T,LO,HI>::
   pow(int m) const
   {
@@ -518,13 +516,12 @@ namespace glucat
 
   /// Grading: part where each term is a grade-vector
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const
-  framed_multi<Scalar_T,LO,HI>
+  const framed_multi<Scalar_T,LO,HI>
   framed_multi<Scalar_T,LO,HI>::
   operator() (index_t grade) const
   {
     if ((grade < 0) || (grade > HI-LO))
-  		return 0;
+      return 0;
     else
     {
       multivector_t result;
@@ -539,8 +536,7 @@ namespace glucat
 
   /// Even part
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const
-  framed_multi<Scalar_T,LO,HI>
+  const framed_multi<Scalar_T,LO,HI>
   framed_multi<Scalar_T,LO,HI>::
   even() const
   { // even part of x, sum of the pure(count) with even count
@@ -552,8 +548,7 @@ namespace glucat
 
   /// Vector part of multivector, as a vector_t
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const
-  typename framed_multi<Scalar_T,LO,HI>::vector_t
+  const typename framed_multi<Scalar_T,LO,HI>::vector_t
   framed_multi<Scalar_T,LO,HI>::
   vector_part() const
   {
@@ -583,16 +578,18 @@ namespace glucat
 
   /// Write multivector to output
   template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
   void
   framed_multi<Scalar_T,LO,HI>::
-  write(char* msg) const
+  write(const std::string& msg) const
   { std::cout << msg << std::endl << "  " << (*this) << std::endl; }
 
   /// Write multivector to file
   template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
   void
   framed_multi<Scalar_T,LO,HI>::
-  write(std::ofstream& ofile, char* msg) const
+  write(std::ofstream& ofile, const std::string& msg) const
   {
     if (!ofile)
       throw error_t("write(ofile,msg): cannot write to output file");
@@ -604,7 +601,7 @@ namespace glucat
   std::ostream&
   operator<< (std::ostream& os, const framed_multi<Scalar_T,LO,HI>& val)
   {
-  	typedef framed_multi<Scalar_T,LO,HI>  multivector_t;
+    typedef framed_multi<Scalar_T,LO,HI>  multivector_t;
     if(val.empty())
       os << 0;
     else
@@ -658,7 +655,7 @@ namespace glucat
       ist.reset();
       c = s.peek();
       // Look for a leading '-'
-      bool negative = (c == '-');
+      const bool negative = (c == '-');
       if (negative)
       { // consume the '-'
         s >> c;
@@ -761,8 +758,7 @@ namespace glucat
   }
 
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const
-  framed_multi<Scalar_T,LO,HI>
+  const framed_multi<Scalar_T,LO,HI>
   framed_multi<Scalar_T,LO,HI>::
   truncated(const Scalar_T& limit) const
   {
