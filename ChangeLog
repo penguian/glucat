@@ -1,6 +1,66 @@
+2003-06-23 09:00  leopardi
+
+	* NEWS: Correct news date
+
+2003-06-23 08:58  leopardi
+
+	* INSTALL, README: Update g++ version tested on alpha to 3.1
+
+2003-06-23 08:56  leopardi
+
+	* glucat/index_set_imp.h: Use 1UL ((unsigned long) 1) in mask
+	calculations. This is needed for Alpha, which is 64-bit, and is
+	correct in all cases.
+
+2003-06-23 08:54  leopardi
+
+	* gfft_test/gfft_test.h: Remove unused constants v_lo and v_hi
+
+2003-06-22 19:58  leopardi
+
+	* glucat.kdevprj: Fix references to test04.  Add configure.in to
+	project.
+
+2003-06-22 19:57  leopardi
+
+	* Makefile.am: List all relevant directories, including test?? in
+	SUBDIRS
+
+2003-06-22 19:56  leopardi
+
+	* transforms/: Makefile.am, Makefile.in: Remove obsolete references
+	to driver.h
+
+2003-06-22 19:55  leopardi
+
+	* gfft_test/gfft_test.h: Remove unused variables pos_frame and
+	outer_frame.
+
+2003-06-21 23:45  leopardi
+
+	* INSTALL, README: Make instructions more accurate. Describe
+	test_runtime.
+
+2003-06-21 23:19  leopardi
+
+	* test/driver.h: Use default tuning for main tests and squaring
+	test.
+
+2003-06-21 23:16  leopardi
+
+	* test_runtime/: eg3.res, eg8.txt, gfft_test-10.out,
+	squaring-6.out, test.out, transforms-6.out: New directory for test
+	input and output files.
+
+2003-06-21 23:15  leopardi
+
+	* squaring/test-6.out, transforms/transforms-6.out: Move all test
+	output to test_runtime
+
 2003-06-21 00:49  leopardi
 
-	* INSTALL, NEWS, README: Update to reflect changes to 0.1.3
+	* INSTALL, NEWS, README, ChangeLog: Update to reflect changes to
+	0.1.3
 
 2003-06-21 00:16  leopardi
 
