@@ -29,7 +29,7 @@ namespace glucat
   // Reference: A. Alexandrescu, "Modern C++ Design", Addison-Wesley, 2001, p25
   template<bool> struct CTAssertion;
   template<> struct CTAssertion<true> { };
-  #define CTAssert(expr, msg) namespace { CTAssertion<(expr)> ERROR_##msg; };
+  #define _GLUCAT_CTAssert(expr, msg) namespace { CTAssertion<(expr)> ERROR_##msg; }
 
   // Global types which determine sizes
   /// Size of index_t should be enough to represent LO, HI
@@ -42,7 +42,7 @@ namespace glucat
 
   // Constants which determine sizes
   /// If radix of unsigned char is not 2, we can't easily determine number of bits from sizeof
-  CTAssert(std::numeric_limits<unsigned char>::radix == 2, CannotDetermineBitsPerChar);
+  _GLUCAT_CTAssert(std::numeric_limits<unsigned char>::radix == 2, CannotDetermineBitsPerChar);
 
   /// Number of bits per char is used to determine number of bits in set_value_t
   const index_t BITS_PER_CHAR = std::numeric_limits<unsigned char>::digits;
