@@ -27,9 +27,9 @@ namespace glucat
 {
   /// Compile time assertion
   // Reference: A. Alexandrescu, "Modern C++ Design", Addison-Wesley, 2001, p25
-  template<bool> struct CTChecker;
-  template<> struct CTChecker<true> { };
-  #define CTAssert(expr, msg) namespace { CTChecker<(expr)> ERROR_MSG_##msg; };
+  template<bool> struct CTAssertion;
+  template<> struct CTAssertion<true> { };
+  #define CTAssert(expr, msg) namespace { CTAssertion<(expr)> ERROR_##msg; };
 
   // Global types which determine sizes
   /// Size of index_t should be enough to represent LO, HI
