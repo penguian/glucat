@@ -469,30 +469,32 @@ namespace glucat
     index_set<LO,HI> local;
     bool bracketed;
     s >> c;
+    if (s.fail() || s.bad())
+      return s;
     bracketed = (c == '{');
     if (!bracketed)
       s.putback(c);
-    for (s >> i >> c; 
-        c == ','; 
-        s >> i >> c)
+    for (s >> i; 
+        !s.fail() && !s.bad(); 
+        s >> i)
     {
       if ((i < LO) || (i > HI))
       {
-        s.clear(std::ios_base::failbit); // set state to error
+        s.clear(std::ios_base::badbit); // set state to error
         break;
       }
       local.set(i);
+      s >> c;
+      if (!s.fail() && (c != ','))
+        s.clear(std::ios_base::failbit); // set state to fail
     }
     if (bracketed && (c != '}'))
-      s.clear(std::ios_base::failbit); // set state to error
-    else if (!s.fail())
-      if ((i < LO) || (i > HI))
-        s.clear(std::ios_base::failbit); // set state to error
-      else
-      {
-        local.set(i);
-        ist = local;
-      }
+      s.clear(std::ios_base::badbit); // set state to error
+    else if (!s.bad())
+    {
+      s.clear();
+      ist = local;
+    }
     return s;
   }
 
