@@ -41,7 +41,7 @@ project_name=GluCat
 project_type=normal_empty
 short_info=
 sub_dir=glucat/
-version=0.0.4
+version=0.0.5
 version_control=CVS
 workspace=1
 
