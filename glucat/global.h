@@ -59,15 +59,23 @@ namespace glucat
   /// Default for truncation
   const double DEFAULT_TRUNCATION = std::numeric_limits<float>::epsilon();
 
+  // Tuning policy default constants
+  const int DEFAULT_Mult_Matrix_Threshold =   9;
+  const int DEFAULT_Div_Max_Steps         =   4;
+  const int DEFAULT_Sqrt_Max_Steps        =   7;
+  const int DEFAULT_Log_Max_Outer_Steps   = 256;
+  const int DEFAULT_Log_Max_Inner_Steps   =   8;
+  const int DEFAULT_Basis_Max_Count       =  10;
+
   /// Tuning policy
   template
   <
-    int DEFAULT_Mult_Matrix_Threshold = 9,
-    int DEFAULT_Div_Max_Steps = 4,
-    int DEFAULT_Sqrt_Max_Steps = 7,
-    int DEFAULT_Log_Max_Outer_Steps = 256,
-    int DEFAULT_Log_Max_Inner_Steps = 8,
-    int DEFAULT_Basis_Max_Count = 10
+    int Mult_Matrix_Threshold = DEFAULT_Mult_Matrix_Threshold,
+    int Div_Max_Steps         = DEFAULT_Div_Max_Steps,
+    int Sqrt_Max_Steps        = DEFAULT_Sqrt_Max_Steps,
+    int Log_Max_Outer_Steps   = DEFAULT_Log_Max_Outer_Steps,
+    int Log_Max_Inner_Steps   = DEFAULT_Log_Max_Inner_Steps,
+    int Basis_Max_Count       = DEFAULT_Basis_Max_Count
   >
   struct tuning
   {
