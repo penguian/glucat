@@ -41,9 +41,8 @@ namespace glucat
     /// Pointer to generators for a specific signature
     const Matrix_T* operator() (const index_t p, const index_t q);
     /// Single instance of generator table
-    friend generator_table<Matrix_T>& generator<Matrix_T>();
-  public:
-//  private:
+    static generator_table<Matrix_T>& generator();
+  private:
     /// Construct a vector of generators for a specific signature
     const std::vector<Matrix_T>& gen_vector(const index_t p, const index_t q);
     /// Construct generators for p,q given generators for p-1,q-1
@@ -61,12 +60,13 @@ namespace glucat
     ~generator_table() {}
     generator_table(const generator_table&);
     generator_table& operator= (const generator_table&);
+    
+    /// Friend declaration to avoid compiler warning:
+    /// "... only defines a private destructor and has no friends"
+    /// Ref: Carlos O'Ryan, ACE http://doc.ece.uci.edu
+    friend class friend_for_private_destructor;
   };
 
-  /// Single instance of generator table
-  template< class Matrix_T >
-  generator_table<Matrix_T>&
-  generator();
 
   /// Determine the matrix dimension of the fold of a frame
   template< typename Matrix_Index_T, const index_t LO, const index_t HI >
