@@ -73,16 +73,24 @@ namespace glucat
   bool
   index_set<LO,HI>::
   operator== (const index_set& rhs) const
-  { return *static_cast<const bitset_t*>(this) == *static_cast<const bitset_t*>(&rhs); }
-  
+  {
+    const bitset_t* pthis = this;
+    const bitset_t* pthat = &rhs;
+    return *pthis == *pthat;
+  }
+
   /// Inequality
   template<const index_t LO, const index_t HI>
   inline
   bool
   index_set<LO,HI>::
   operator!= (const index_set& rhs) const
-  { return *static_cast<const bitset_t*>(this) != *static_cast<const bitset_t*>(&rhs); }
-  
+  {
+    const bitset_t* pthis = this;
+    const bitset_t* pthat = &rhs;
+    return *pthis != *pthat;
+  }
+
   /// Set complement: not
   template<const index_t LO, const index_t HI>
   inline
@@ -564,39 +572,32 @@ namespace glucat
     const bitset_t* pfolded = &folded_set;
     return ((*pfolded) >> (min_index - skip - LO)).to_ulong();
   }
-
+  
+  /// Sign of product of index sets, 
+  // using Walsh functions and Gray codes.
+  // Reference: [L] Chapter 21, 21.3
   template<const index_t LO, const index_t HI>
   int
   index_set<LO,HI>::
   sign_of_mult(const index_set<LO,HI>& ist) const
   {
-    int power = 0;
-    index_t i = this->count();
-    index_t j;
-    const index_t neg_end = std::min(0,HI+1);
-    for (j = LO; 
-        j < neg_end; 
+    bool h = false;
+    bool negative = false;
+    for (index_t 
+        j = LO;
+        j <= HI;
         ++j)
-      if ((*this)[j])
+    {
+      const bool b = ist[j];
+      h ^= b;
+      if (this->test(j))
       {
-        --i;
-        if (ist[j] && (i % 2 == 0))
-          ++power;
-      }
-      else if (ist[j] && (i % 2 == 1))
-        ++power;
-    for (; 
-        j <= HI; 
-        ++j)
-      if ((*this)[j])
-      {
-        --i;
-        if (ist[j] && (i % 2 == 1))
-          ++power;
-      }
-      else if (ist[j] && (i % 2 == 1))
-        ++power;
-    return (power % 2 == 1) ? -1 : 1;
+        negative ^= h;
+        if (j > 0)
+          negative ^= b;
+      }  
+    }    
+    return negative ? -1 : 1;
   }
 
   /// Hash function
