@@ -60,9 +60,9 @@ namespace glucat
                 const ublas::matrix_expression<RHS_T>& rhs);
 
     /// Inner product: sum(x(i,j)*y(i,j))/x.nrows()
-    template< typename Matrix_T, typename Scalar_T >
+    template< typename Scalar_T, typename Matrix_T >
     Scalar_T
-    inner(const Matrix_T& x, const Matrix_T& y);
+    inner(const Matrix_T& lhs, const Matrix_T& rhs);
 
     // uBLAS interface by Joerg Walter
     /// Permutation matrix for use in LU factorize and solve

@@ -119,7 +119,7 @@ namespace glucat { namespace matrix
   }
 
   /// Inner product: sum(lhs(i,j)*rhs(i,j))/lhs.nrows()
-  template< typename Matrix_T, typename Scalar_T >
+  template< typename Scalar_T, typename Matrix_T >
   Scalar_T
   inner(const Matrix_T& lhs, const Matrix_T& rhs)
   {
