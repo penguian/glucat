@@ -70,7 +70,6 @@
 #include <boost/numeric/ublas/matrix_sparse.hpp>
 #include <boost/numeric/ublas/operation_sparse.hpp>
 #include <boost/numeric/ublas/io.hpp>
-#include "glucat/ublas.h"
 #include "glucat/matrix.h"
 
 #include "glucat/generation.h"
