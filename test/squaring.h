@@ -29,7 +29,6 @@ namespace glucat_mult_test
 {
   using namespace glucat;
   using namespace std;
-  const int width = 12;
   const index_t max_n = DEFAULT_HI;
   typedef double Scalar_T;
   typedef index_set< -max_n, max_n > index_set_t;
@@ -44,15 +43,25 @@ namespace glucat_mult_test
   print_times(const index_set_t& frame1, const index_set_t& frame2,
               const double setup_cpu_time, const double mult_cpu_time)
   {
-    cout << "Cl(" <<  max_pos(frame1) << ","
-                  << -min_neg(frame1) << ") in "
-         << "Cl(" <<  max_pos(frame2) << ","
-                  << -min_neg(frame2) << ")"
-         << " CPU = "
+    const int index_width = 2;
+    const ios::fmtflags& old_flags = cout.flags();
+    cout << noshowpoint
+         << "Cl(" << setw(index_width) <<  max_pos(frame1) << ","
+                  << setw(index_width) << -min_neg(frame1) << ") in "
+         << "Cl(" << setw(index_width) <<  max_pos(frame2) << ","
+                  << setw(index_width) << -min_neg(frame2) << ")"
+         << " CPU = ";
+    const int width = 12;
+    const int old_prec = cout.precision();
+    const int new_prec = 2;
+    cout << fixed << showpoint
+         << setprecision(new_prec)
          << setw(width) << setup_cpu_time + mult_cpu_time << " ms: "
-         << setw(width) << setup_cpu_time   << " (setup) + "
-         << setw(width) << mult_cpu_time    << " (mult). "
+         << setw(width) << setup_cpu_time << " (setup) + "
+         << setw(width) << mult_cpu_time  << " (mult). "
+         << setprecision(old_prec)
          << endl;
+    cout.flags(old_flags);
   }
 
   template< typename Multivector_T >
@@ -61,13 +70,39 @@ namespace glucat_mult_test
             const index_set_t& inner_frame,
             const index_set_t& outer_frame)
   {
+    const int min_trials_if_zero = 1000;
     Multivector_T c;
     clock_t cpu_time = clock();
-     a = a * b*(Scalar_T(1.0*rand())/RAND_MAX) + a*(Scalar_T(1.0*rand())/RAND_MAX);
-    const double setup_cpu_time = elapsed(cpu_time);
+     c = a * b*(Scalar_T(1.0*rand())/RAND_MAX) + a*(Scalar_T(1.0*rand())/RAND_MAX);
+    double setup_cpu_time = elapsed(cpu_time);
+    if (setup_cpu_time < MS_PER_S)
+    {
+      const int max_trials =
+       setup_cpu_time == 0.0 ?
+         min_trials_if_zero :
+         int(floor(MS_PER_S/setup_cpu_time));
+      clock_t cpu_time = clock();
+      int trials;
+      for (trials = 0; trials != max_trials; ++trials)
+        c = a * b*(Scalar_T(1.0*rand())/RAND_MAX) + a*(Scalar_T(1.0*rand())/RAND_MAX);
+      setup_cpu_time = elapsed(cpu_time)/trials;
+    }
+    a = c;
     cpu_time = clock();
      c = a * a;
-    const double mult_cpu_time = elapsed(cpu_time);
+    double mult_cpu_time = elapsed(cpu_time);
+    if (mult_cpu_time < MS_PER_S)
+    {
+      const int max_trials =
+       mult_cpu_time == 0.0 ?
+         min_trials_if_zero :
+         int(floor(MS_PER_S/mult_cpu_time));
+      clock_t cpu_time = clock();
+      int trials;
+      for (trials = 0; trials != max_trials; ++trials)
+        c = a * a;
+      mult_cpu_time = elapsed(cpu_time)/trials;
+    }
     print_times(inner_frame, outer_frame, setup_cpu_time, mult_cpu_time);
   }
 
