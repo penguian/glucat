@@ -248,9 +248,8 @@ namespace glucat
   folded_dim( const index_set<LO,HI>& sub )
   {
     static const int offset_log2_dim[] = {0, 1 , 0, 1, 1, 2, 1, 1};
-    const index_set<LO,HI> folded = sub.fold();
-    const int p = std::max( int(folded.max()), 0);
-    const int q = std::max(-int(folded.min()), 0);
+    const int p = sub.count_pos();
+    const int q = sub.count_neg();
     const int bott = pos_mod(p-q, 8);
     return 1 << ((p+q)/2 + offset_log2_dim[bott]);
   }
