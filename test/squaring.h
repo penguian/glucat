@@ -44,18 +44,18 @@ namespace glucat_mult_test
               const double setup_cpu_time, const double mult_cpu_time)
   {
     const int index_width = 2;
-    const ios::fmtflags& old_flags = cout.flags();
-    cout << noshowpoint
-         << "Cl(" << setw(index_width) <<  max_pos(frame1) << ","
+    cout << "Cl(" << setw(index_width) <<  max_pos(frame1) << ","
                   << setw(index_width) << -min_neg(frame1) << ") in "
          << "Cl(" << setw(index_width) <<  max_pos(frame2) << ","
                   << setw(index_width) << -min_neg(frame2) << ")"
          << " CPU = ";
+    const ios::fmtflags& old_flags = cout.flags();
     const int width = 12;
     const int old_prec = cout.precision();
     const int new_prec = 2;
-    cout << fixed << showpoint
-         << setprecision(new_prec)
+    cout.setf(ios_base::fixed);
+    cout.setf(ios_base::showpoint);
+    cout << setprecision(new_prec)
          << setw(width) << setup_cpu_time + mult_cpu_time << " ms: "
          << setw(width) << setup_cpu_time << " (setup) + "
          << setw(width) << mult_cpu_time  << " (mult). "
