@@ -28,8 +28,8 @@
 #define ios_base ios // scope is different for standard C++
 #endif
 
-//***************************** workaround for ICC
-#if defined (__ICL) || defined (__ICC)
+//***************************** workaround for ICC and G++ 3.3+
+#if defined (__ICL) || defined (__ICC) || defined (__GNUG__) && (__GNUC__ >= 3) && (__GNUC_MINOR__ >= 3)
 #define _GLUCAT_PRIVATE public
 #else
 #define _GLUCAT_PRIVATE private
