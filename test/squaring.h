@@ -58,7 +58,6 @@ namespace glucat_mult_test
   template< typename Multivector_T >
   void
   time_mult(Multivector_T& a, const Multivector_T& b,
-            const index_t i, const index_t j,
             const index_set_t& inner_frame,
             const index_set_t& outer_frame)
   {
@@ -103,25 +102,25 @@ namespace glucat_mult_test
     for (index_t i = 1; i != max_pos+1; i++)
     {
       inner_frame |= e_(i);
-      time_mult(a, m_(e_(i) , 1.0, pos_frame), i, 0,   inner_frame, pos_frame);
+      time_mult(a, m_(e_(i) , 1.0, pos_frame), inner_frame, pos_frame);
     }
     inner_frame = e_();
     a = m_(1, outer_frame);
     for (index_t i = 1; i != max_index+1; i++)
     {
       inner_frame |= e_(i);
-      time_mult(a, m_(e_(i) , 1.0, outer_frame), i, i-1, inner_frame, outer_frame);
+      time_mult(a, m_(e_(i) , 1.0, outer_frame), inner_frame, outer_frame);
       inner_frame |= e_(-i);
-      time_mult(a, m_(e_(-i), 1.0, outer_frame), i, i,   inner_frame, outer_frame);
+      time_mult(a, m_(e_(-i), 1.0, outer_frame), inner_frame, outer_frame);
     }
     a = 1;
     inner_frame = e_();
     for (index_t i = 1; i != max_index+1; i++)
     {
       inner_frame |= e_(i);
-      time_mult(a, m_(e_(i) , 1.0), i, i-1, inner_frame, inner_frame);
+      time_mult(a, m_(e_(i) , 1.0), inner_frame, inner_frame);
       inner_frame |= e_(-i);
-      time_mult(a, m_(e_(-i), 1.0), i, i,   inner_frame, inner_frame);
+      time_mult(a, m_(e_(-i), 1.0), inner_frame, inner_frame);
     }
   }
 }
@@ -129,7 +128,12 @@ namespace glucat_mult_test
 int squaring(const long int n)
 {
   using namespace glucat_mult_test;
-
+  if (n > max_n)
+  {
+    cout << "Value " << n << " is too big." << endl;
+    cout << "Maximum value allowed is " << max_n << "." << endl;
+    return 1;
+  }
   cout << "framed_multi<double>" << endl;
   mult_test< framed_multi<double> >(n, max_n);
   cout << "matrix_multi<double>" << endl;
