@@ -1,4 +1,4 @@
-2003-06-21: 0.1.3
+2003-06-23: 0.1.3
 GluCat now has a few optimizations. The tests have been split up int different
 directories to reduce memory usage during compilation, especially with g++ -O3.
 index_set<> has been optimized by using bitset_t and masks in fold() and
