@@ -26,6 +26,7 @@
 namespace peg16
 {
   using namespace glucat;
+  using namespace std;
   template< class Multivector_T >
   void do_test16()
   {
@@ -59,8 +60,8 @@ namespace peg16
 
 int test16()
 {
-  cout << "Programming example 16 : Matrices of multivectors" << endl;
   using namespace peg16;
+  cout << "Programming example 16 : Matrices of multivectors" << endl;
   cout << endl;
   cout << "framed_multi<double,-3,3>" << endl;
   do_test16< framed_multi<double,-3,3> >();

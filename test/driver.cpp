@@ -26,6 +26,7 @@ using namespace glucat;
 
 int main(int argc, char ** argv)
 {
+  using namespace std;
   typedef int (*intfn)();
   intfn testfn[] =
   {

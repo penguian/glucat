@@ -26,6 +26,7 @@
 namespace peg01
 {
   using namespace glucat;
+  using namespace std;
   template< class Multivector_T >
   void do_test1()
   {
@@ -45,8 +46,8 @@ namespace peg01
 
 int test1()
 {
-  cout << "Programming example 1 : 2D lengths and areas" << endl;
   using namespace peg01;
+  cout << "Programming example 1 : 2D lengths and areas" << endl;
   cout << endl;
   cout << "Let OPQ be a triangle, where P=(4,3), Q=(2,3) and O is the origin (0,0)." << endl;
   cout << "Calculate the length r of side OP and the area A of the triangle." << endl;

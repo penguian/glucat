@@ -26,6 +26,7 @@
 namespace peg02
 {
   using namespace glucat;
+  using namespace std;
   template< class Multivector_T >
   void do_test2()
   {
@@ -50,8 +51,8 @@ namespace peg02
 
 int test2()
 {
-  cout << "Programming example 2 : inner, outer and geometric products, contraction" << endl;
   using namespace peg02;
+  cout << "Programming example 2 : inner, outer and geometric products, contraction" << endl;
   cout << endl;
   cout << "Let a, b be elements in Cl(3,0) where" << endl;
   cout << "a = 2{1} + 3{2} + 3{3} and b = 3{1} + {2} + 4{3}." << endl;

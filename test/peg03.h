@@ -26,6 +26,7 @@
 namespace peg03
 {
   using namespace glucat;
+  using namespace std;
   template< class Multivector_T >
   void do_test3()
   {
@@ -54,8 +55,8 @@ namespace peg03
 
 int test3()
 {
-  cout << "Programming example 3 : Powers, output to file" << endl;
   using namespace peg03;
+  cout << "Programming example 3 : Powers, output to file" << endl;
   cout << endl;
   cout << "In Cl_{2,1} let x = 2e1 + 6.2e2 - 4.1e23 and" << endl;
   cout << "                y = 7e1 - 2.1e2 + 9.6e12 + 6e23." << endl;

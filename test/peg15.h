@@ -25,8 +25,9 @@
 
 int test15()
 {
-  cout << "Programming example 15 : Subscripts and parts" << endl;
   using namespace glucat;
+  using namespace std;
+  cout << "Programming example 15 : Subscripts and parts" << endl;
   typedef matrix_multi<double> cm;
   typedef framed_multi<double> cf;
   typedef cm::index_set_t e;

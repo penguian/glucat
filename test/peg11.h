@@ -26,6 +26,7 @@
 namespace peg11
 {
   using namespace glucat;
+  using namespace std;
   template< class Multivector_T >
   void transcendtest(const Multivector_T& A)
   {
@@ -80,8 +81,8 @@ namespace peg11
 
 int test11()
 {
-  cout << "Programming example 11 : Square root and transcendental functions" << endl;
   using namespace peg11;
+  cout << "Programming example 11 : Square root and transcendental functions" << endl;
   cout << endl;
   cout << "framed_multi<double>" << endl;
   do_test11< framed_multi<double> >();

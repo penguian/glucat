@@ -26,6 +26,7 @@
 namespace peg12
 {
   using namespace glucat;
+  using namespace std;
   template< class Multivector_T >
   void mult_table(const Multivector_T& e1, const Multivector_T& e2)
   {
@@ -70,8 +71,8 @@ namespace peg12
 
 int test12()
 {
-  cout << "Programming example 12 : Frame group multiplication tables" << endl;
   using namespace peg12;
+  cout << "Programming example 12 : Frame group multiplication tables" << endl;
   cout << endl;
   cout << "framed_multi<float,-2,2>" << endl;
   do_test12< framed_multi<float,-2,2> >();

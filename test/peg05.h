@@ -26,6 +26,7 @@
 namespace peg05
 {
   using namespace glucat;
+  using namespace std;
   template< class Multivector_T >
   Multivector_T operator| (const Multivector_T& lhs, const Multivector_T& rhs)
   {
@@ -51,8 +52,8 @@ namespace peg05
 
 int test5()
 {
-  cout << "Programming example 5 : Octonions" << endl;
   using namespace peg05;
+  cout << "Programming example 5 : Octonions" << endl;
   cout << endl;
   cout << "In the Cayley algebra (=Cl(0,7)) compute the octonion product ab, where" << endl;
   cout << "a = 3 + e1 + 4e2 and b = 2 + 3e2 + 5e3." << endl;

@@ -26,6 +26,7 @@
 namespace peg07
 {
   using namespace glucat;
+  using namespace std;
   template< class Multivector_T >
   Multivector_T operator| (const Multivector_T& lhs, const Multivector_T& rhs)
   {
@@ -65,8 +66,8 @@ namespace peg07
 
 int test7()
 {
-  cout << "Programming example 7 : Triality" << endl;
   using namespace peg07;
+  cout << "Programming example 7 : Triality" << endl;
   cout << endl;
   cout << "framed_multi<double>" << endl;
   do_test7< framed_multi<double> >();

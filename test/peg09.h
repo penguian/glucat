@@ -28,6 +28,7 @@
 namespace peg09
 {
   using namespace glucat;
+  using namespace std;
   template< class Multivector_T >
   void do_test9()
   {
@@ -61,8 +62,8 @@ namespace peg09
 
 int test9()
 {
-  cout << "Programming example 9 : vector_part" << endl;
   using namespace peg09;
+  cout << "Programming example 9 : vector_part" << endl;
   cout << endl;
   cout << "framed_multi<double>" << endl;
   do_test9< framed_multi<double> >();

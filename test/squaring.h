@@ -28,6 +28,7 @@
 namespace glucat_mult_test
 {
   using namespace glucat;
+  using namespace std;
   const int width = 12;
   const index_t max_n = DEFAULT_HI;
   typedef double Scalar_T;

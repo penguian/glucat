@@ -25,8 +25,9 @@
 
 int test13()
 {
-  cout << "Programming example 13 : Multiplication and division" << endl;
   using namespace glucat;
+  using namespace std;
+  cout << "Programming example 13 : Multiplication and division" << endl;
   typedef matrix_multi<long double> cm;
   typedef framed_multi<long double> cf;
   const cf a("{-3}+{-2}+{-1}");

@@ -26,6 +26,7 @@
 namespace peg04
 {
   using namespace glucat;
+  using namespace std;
   template< class Multivector_T >
   void do_test4()
   {
@@ -133,8 +134,8 @@ namespace peg04
 
 int test4()
 {
-  cout << "Programming example 4 : Rotations and electromagnetic fields" << endl;
   using namespace peg04;
+  cout << "Programming example 4 : Rotations and electromagnetic fields" << endl;
   cout << endl;
   cout << "Demonstration calculations from P. Lounesto," << endl;
   cout << "''Clifford algebra calculations with a microcomputer'' in" << endl;
