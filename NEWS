@@ -1,3 +1,6 @@
+2002-04-15: 0.0.6
+A bug in elliptic() has been fixed. elliptic now returns a unit volume element I which
+commutes with the whole relevant subalgebra
 2002-01-27: 0.0.5
 GluCat has now been tested with gcc 3.0.3 and should now be very compatible with standard C++.
 2002-01-24: 0.0.4
