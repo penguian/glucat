@@ -63,19 +63,22 @@ Software:
 
 Dependencies
 ------------
- GluCat uses the C++ Standard Library and the Matrix Template Library. Make sure
+ GluCat uses the C++ Standard Library and the Boost Library. Make sure
  you have these installed and working before attempting to use GluCat.
+ Use the instructions at http://www.boost.org/more/download.html
+ to obtain the Boost Library. As at 2002-12-28, you need to use Boost CVS,
+ as Boost 1.29.0 does not contain a new enough uBLAS.
 
- If you are using g++ 3.X.Y, make sure that you have installed MTL with the same
- version of g++. g++ 3.X.Y provides <limits> and MTL uses this if it is present.
+ If you are using g++ 3.X.Y, make sure that you have installed Boost with the same
+ version of g++.
 
  The headers need a compiler which correctly handles template template classes.
 
- The code has so far been tested using MTL 2.1.2-21 with:
- 1) SuSE Linux 8.0 using g++ 3.1.1
- 2) Red Hat Linux 7.1 using g++ 2.96 and libstdc++-3
- and using MTL 2.1.2-20 with:
- 3) Digital UNIX V4.0F (Rev. 1229) using g++ 3.0.3
+ The code has so far been tested using Boost CVS (2002-12-28) with:
+ 1) SuSE Linux 8.1 using g++ 3.2
+ 2) SuSE Linux 8.1 using Intel C++ 7.0
+ 3) Red Hat Linux 7.1 using g++ 2.96 and libstdc++-3
+ 4) Digital UNIX V4.0F (Rev. 1229) using g++ 3.0.3
 
 Installation and Testing
 ------------------------
@@ -90,7 +93,7 @@ Usage
  GluCat defines, see the Doxygen API documentation in ./glucat-api/html
 
  GluCat is a C++ template library, similar to the C++ Standard Library or the
- Matrix Template Library (MTL). It consists entirely of source code header
+ Boost uBLAS Library (uBLAS). It consists entirely of source code header
  files, plus a suite of test routines.
 
  To use GluCat:
