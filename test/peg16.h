@@ -33,15 +33,14 @@ namespace peg16
     typedef Multivector_T number;
     typedef typename number::index_set_t index_set_t;
     const index_t hi = index_set_t::v_hi;
-    typedef typename mtl::matrix<number, mtl::rectangle<>, mtl::dense<>, mtl::row_major>::type
-            matrix_of_mv;
+    typedef ublas::matrix<number> matrix_of_mv;
     const int dim = 5;
     matrix_of_mv a(dim,dim);
     for (int i = 0; i != dim; ++i)
       for (int j = 0; j != dim; ++j)
         a(i,j) = number("0");
     a(1,1) = number("1");
-    print_all_matrix(a);
+    std::cout << a << std::endl;
     matrix_of_mv b(dim,dim);
     for (int i = 0; i != dim; ++i)
     {
@@ -49,12 +48,12 @@ namespace peg16
         b(i,j) = number("0");
       b(i,i) = number(index_set_t((i % hi) +1),1.0);
     }
-    mtl::print_all_matrix(b);
+    std::cout << b << std::endl;
     matrix_of_mv c(dim,dim);
-    mtl::mult(a,b,c);
-    mtl::print_all_matrix(c);
-    mtl::add(b,c);
-    mtl::print_all_matrix(c);
+    c = ublas::prod(a, b);
+    std::cout << c << std::endl;
+    c += b;
+    std::cout << c << std::endl;
   }
 }
 
