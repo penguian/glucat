@@ -60,43 +60,59 @@ namespace glucat
   const double DEFAULT_TRUNCATION = std::numeric_limits<float>::epsilon();
 
   // Tuning policy default constants
-  const int DEFAULT_Mult_Matrix_Threshold =   9;
-  const int DEFAULT_Div_Max_Steps         =   4;
-  const int DEFAULT_Sqrt_Max_Steps        =   7;
-  const int DEFAULT_Log_Max_Outer_Steps   = 256;
-  const int DEFAULT_Log_Max_Inner_Steps   =   8;
-  const int DEFAULT_Basis_Max_Count       =   8;
+  const int DEFAULT_Mult_Matrix_Threshold  =      8;
+  const int DEFAULT_Div_Max_Steps          =      4;
+  const int DEFAULT_Sqrt_Max_Steps         =      7;
+  const int DEFAULT_Log_Max_Outer_Steps    =    256;
+  const int DEFAULT_Log_Max_Inner_Steps    =      8;
+  const int DEFAULT_Basis_Max_Count        =      8;
+  const int DEFAULT_Fast_Size_Threshold    = 1 << 8;
+  const int DEFAULT_Inv_Fast_Dim_Threshold = 1 << 5;
 
   /// Tuning policy
   template
   <
-    int Mult_Matrix_Threshold = DEFAULT_Mult_Matrix_Threshold,
-    int Div_Max_Steps         = DEFAULT_Div_Max_Steps,
-    int Sqrt_Max_Steps        = DEFAULT_Sqrt_Max_Steps,
-    int Log_Max_Outer_Steps   = DEFAULT_Log_Max_Outer_Steps,
-    int Log_Max_Inner_Steps   = DEFAULT_Log_Max_Inner_Steps,
-    int Basis_Max_Count       = DEFAULT_Basis_Max_Count
+    int Mult_Matrix_Threshold  = DEFAULT_Mult_Matrix_Threshold,
+    int Div_Max_Steps          = DEFAULT_Div_Max_Steps,
+    int Sqrt_Max_Steps         = DEFAULT_Sqrt_Max_Steps,
+    int Log_Max_Outer_Steps    = DEFAULT_Log_Max_Outer_Steps,
+    int Log_Max_Inner_Steps    = DEFAULT_Log_Max_Inner_Steps,
+    int Basis_Max_Count        = DEFAULT_Basis_Max_Count,
+    int Fast_Size_Threshold    = DEFAULT_Fast_Size_Threshold,
+    int Inv_Fast_Dim_Threshold = DEFAULT_Inv_Fast_Dim_Threshold
   >
   struct tuning
   {
   // Tuning for multiplication
     /// Minimum index count needed to invoke matrix multiplication algorithm
-    enum { mult_matrix_threshold = DEFAULT_Mult_Matrix_Threshold };
+    enum { mult_matrix_threshold = Mult_Matrix_Threshold };
   // Tuning for division
     /// Maximum steps of iterative refinement in division algorithm
-    enum { div_max_steps = DEFAULT_Div_Max_Steps };
+    enum { div_max_steps = Div_Max_Steps };
   // Tuning for sqrt
     /// Maximum number of steps in square root iteration
-    enum { sqrt_max_steps = DEFAULT_Sqrt_Max_Steps };
+    enum { sqrt_max_steps = Sqrt_Max_Steps };
   // Tuning for log
     /// Maximum number of incomplete square roots in cascade log algorithm
-    enum { log_max_outer_steps = DEFAULT_Log_Max_Outer_Steps };
+    enum { log_max_outer_steps = Log_Max_Outer_Steps };
     /// Maximum number of steps in incomplete square root within cascade log algorithm
-    enum { log_max_inner_steps = DEFAULT_Log_Max_Inner_Steps };
+    enum { log_max_inner_steps = Log_Max_Inner_Steps };
   // Tuning for basis cache
     /// Maximum index count of folded frames in basis cache
-    enum { basis_max_count = DEFAULT_Basis_Max_Count };
+    enum { basis_max_count = Basis_Max_Count };
+  // Tuning for FFT
+    /// Minimum map size needed to invoke generalized FFT
+    enum { fast_size_threshold = Fast_Size_Threshold };
+    /// Minimum matrix dimension needed to invoke inverse generalized FFT
+    enum { inv_fast_dim_threshold = Inv_Fast_Dim_Threshold };
   };
+
+  /// Modulo function which works reliably for lhs < 0
+  template< typename LHS_T, typename RHS_T >
+  inline
+  LHS_T
+  pos_mod(LHS_T lhs, RHS_T rhs)
+  { return lhs > 0? lhs % rhs : (-lhs) % rhs == 0 ? 0 : rhs - (-lhs) % rhs; }
 
 }
 #endif // _GLUCAT_GLOBAL_H
