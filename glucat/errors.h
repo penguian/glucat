@@ -51,5 +51,17 @@ namespace glucat
     virtual const std::string classname() const throw();
     virtual void print_error_msg() const;
   };
+  
+  /// For exception catching: pointer to function returning int
+  typedef int (*intfn)();
+  
+  /// Exception catching for functions returning int
+  int try_catch(intfn f);
+  
+  /// For exception catching: pointer to function of int returning int
+  typedef int (*intintfn)(int);
+  
+  /// Exception catching for functions of int returning int
+  int try_catch(intintfn f, int arg);
 }
 #endif // _GLUCAT_ERRORS_H

@@ -28,38 +28,4 @@ typedef glucat::tuning<> Tune_P;
 #include "glucat/glucat_imp.h"
 #include <stdio.h>
 
-typedef int (*intfn)();
-
-int try_catch(intfn f)
-{
-  using namespace std;
-  using namespace glucat;
-  try
-    { (*f)(); }
-  catch (const glucat_error& e)
-    { e.print_error_msg(); }
-  catch (bad_alloc)
-    { cerr << "bad_alloc" << endl; }
-  catch (...)
-    { cerr << "unexpected exception" << endl; }
-  return 0;
-}
-
-typedef int (*intintfn)(int);
-
-int try_catch(intintfn f, int arg)
-{
-  using namespace std;
-  using namespace glucat;
-  try
-    { (*f)(arg); }
-  catch (const glucat_error& e)
-    { e.print_error_msg(); }
-  catch (bad_alloc)
-    { cerr << "bad_alloc" << endl; }
-  catch (...)
-    { cerr << "unexpected exception" << endl; }
-  return 0;
-}
-
 #endif // GLUCAT_TEST_DRIVER_H

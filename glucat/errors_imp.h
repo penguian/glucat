@@ -38,7 +38,6 @@ namespace glucat
   : glucat_error(context, msg)
   { }
 
-
   template< class Class_T >
   const std::string
   error<Class_T>::
@@ -56,5 +55,35 @@ namespace glucat
   error<Class_T>::
   print_error_msg() const
   { std::cerr << heading() << classname() << std::endl << what() << std::endl; }
+
+  /// Exception catching for functions returning int
+  int try_catch(intfn f)
+  {
+    int result = 0;
+    try
+      { result = (*f)(); }
+    catch (const glucat_error& e)
+      { e.print_error_msg(); }
+    catch (std::bad_alloc)
+      { std::cerr << "bad_alloc" << std::endl; }
+    catch (...)
+      { std::cerr << "unexpected exception" << std::endl; }
+    return result;
+  }
+  
+  /// Exception catching for functions of int returning int
+  int try_catch(intintfn f, int arg)
+  {
+    int result = 0;
+    try
+      { result = (*f)(arg); }
+    catch (const glucat_error& e)
+      { e.print_error_msg(); }
+    catch (std::bad_alloc)
+      { std::cerr << "bad_alloc" << std::endl; }
+    catch (...)
+      { std::cerr << "unexpected exception" << std::endl; }
+    return result;
+  }
 }
 #endif // _GLUCAT_ERRORS_IMP_H
