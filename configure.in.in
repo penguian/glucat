@@ -129,7 +129,8 @@ AC_DEFUN(AC_GLUCAT_CHECK_COMPILERS,
   CXXFLAGS=" $CXXFLAGS"
 
   AC_PROG_CXX
-
+  AC_LANG(C++)
+  
   if test "$CXX" = "icc"; then
     CXXFLAGS="-I/usr/local/include -DBOOST_UBLAS_USE_LONG_DOUBLE $CXXFLAGS"
     KDE_CHECK_COMPILER_FLAG(mp1,[CXXFLAGS="-mp1 $CXXFLAGS"])
@@ -209,22 +210,28 @@ AC_DEFUN(AC_GLUCAT_CHECK_COMPILERS,
     CXXFLAGS="-Wcast-qual -Wshadow -Wcast-align $CXXFLAGS"
   fi
 
-  AC_MSG_CHECKING([for <boost/numeric/ublas/lu.hpp>])
-  OLDCPPFLAGS="$CPPFLAGS"
-  CPPFLAGS="$CPPFLAGS $USER_INCLUDES"
-  AC_TRY_CPP([#include <boost/numeric/ublas/lu.hpp>],
-  [AC_MSG_RESULT([found.])
-   CXXFLAGS="$CXXFLAGS -D_GLUCAT_HAVE_UBLAS_LU_H"],
-  [AC_MSG_RESULT([not found.])])
-  CPPFLAGS="$OLDCPPFLAGS"
+  OLDCXXFLAGS="$CXXFLAGS"
+  CXXFLAGS="$CXXFLAGS -I. -I.. $USER_INCLUDES"
+  AC_CHECK_HEADERS([boost/numeric/ublas/lu.hpp],
+  [CXXFLAGS="$OLDCXXFLAGS -D_GLUCAT_HAVE_UBLAS_LU_H"],
+  [CXXFLAGS="$OLDCXXFLAGS"],
+  [
+    #include <boost/numeric/ublas/config.hpp>
+    #include <boost/numeric/ublas/vector.hpp>
+    #include <boost/numeric/ublas/matrix.hpp>
+    #include <boost/numeric/ublas/triangular.hpp>
+    #include <boost/numeric/ublas/vector_sparse.hpp>
+    #include <boost/numeric/ublas/matrix_sparse.hpp>
+    #include <boost/numeric/ublas/operation_sparse.hpp>
+    #include <boost/numeric/ublas/io.hpp>
+    #include <boost/numeric/ublas/operation.hpp>
+  ] )
 
   if test "$GXX" = "yes" && test "$glucat_use_hash_map" != "no"; then
-    dnl AC_TRY_CPP(
-    dnl   [#include <map>
-    dnl    #include <ext/hash_map>],
-    dnl [CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_GNU_CXX_HASH_MAP"],
-    dnl [])
-    CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_GNU_CXX_HASH_MAP"
+  AC_CHECK_HEADERS([ext/hash_map],
+    [CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_GNU_CXX_HASH_MAP"],
+    [],
+    [#include <map>])
   fi
 
   if test "$GXX" = "yes"; then
@@ -321,7 +328,7 @@ dnl Perform program name transformation
 AC_ARG_PROGRAM
 
 dnl Automake doc recommends to do this only here. (Janos)
-AM_INIT_AUTOMAKE(glucat,0.1.5)
+AM_INIT_AUTOMAKE(glucat,0.1.7)
 
 dnl almost the same like KDE_SET_PREFIX but the path is /usr/local
 dnl
