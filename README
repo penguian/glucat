@@ -73,12 +73,12 @@ Dependencies
 
  The code has so far been tested using MTL 2.1.2-21 with:
  1) SuSE Linux 8.0 using g++ 3.1.1
- and using MTL 2.1.2-20 with:
  2) Red Hat Linux 7.1 using g++ 2.96 and libstdc++-3
+ and using MTL 2.1.2-20 with:
  3) Digital UNIX V4.0F (Rev. 1229) using g++ 3.0.3
 
-Installation
-------------
+Installation and Testing
+------------------------
  See INSTALL
 
 Usage
@@ -135,30 +135,3 @@ Coding standards
  Other_Sentence_Case: Other template parameters, including template template
  parameters.
  ALL_CAPS_WITH_UNDERSCORES: A global constant defined in <glucat/global.h>
-
-The Test Program
-----------------
- See INSTALL for details on how to create the test program ./test/glucat
- Once you have created the test program, create a runtime directory and
- copy ./test/eg8.txt into the runtime directory. This file is needed by
- programming example 8 (reading multivectors from input).
-
- WARNING: Many Clifford algebra algorithms are exponential in both time and
- space complexity. In particular, programming example 7 (triality) may run
- very slowly.
-
- The test program takes any number (including zero) of numeric parameters.
- Positive numbers in the range 1 to 16 correspond to coding examples
- ./test/peg01.h to ./test/peg16.h. These examples are run in numerical order
- With zero parameters, all examples from 1 to 16 are run in order.
- Many of the examples are run twice - once with framed_multi<Scalar_T> and
- once with matrix_multi<Scalar_T>. If you use a negative parameter -n, this
- will run a timing test which squares larger and larger multivectors within
- the subalgebra defined by the frame of the index set {-n, ..., -1, 1, ..., n}
-
- To run a meaningful timing test using the g++ compiler, run make with
- CXXFLAGS = -O2 -g3 -finline-functions -finline-limit-768
- This optimized compilation may take a long time to complete.
-
- You can find sample test output in ./test/eg3.res, ./test/test.out and
- ./test/test-6.out

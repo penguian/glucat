@@ -10,8 +10,8 @@ Before You Begin
 
  The code has so far been tested using MTL 2.1.2-21 with:
  1) SuSE Linux 8.0 using g++ 3.1.1
- and using MTL 2.1.2-20 with:
  2) Red Hat Linux 7.1 using g++ 2.96 and libstdc++-3
+ and using MTL 2.1.2-20 with:
  3) Digital UNIX V4.0F (Rev. 1229) using g++ 3.0.3
 
 To Test
@@ -25,10 +25,50 @@ To Test
  What make does here is use the headers in ./glucat and the source in ./test to
  make the test program ./test/glucat
 
+ Please note:
+ On Compaq Alpha, you will need to edit ./test/Makefile.in to change
+ CXXFLAGS = -O -g
+ to
+ CXXFLAGS = -O
+ The g++ -g flag does not work on Compaq Alpha.
+
  Once you have created the test program, create a runtime directory and
  copy ./test/eg8.txt into the runtime directory. This file is needed by
  programming example 8 (reading multivectors from input).
- See README for notes on running the test program.
+
+The Test Program
+----------------
+
+ The test program takes any number (including zero) of numeric parameters.
+ Positive numbers in the range 1 to 16 correspond to coding examples
+ ./test/peg01.h to ./test/peg16.h. These examples are run in numerical order
+ With zero parameters, all examples from 1 to 16 are run in order.
+ Many of the examples are run twice - once with framed_multi<Scalar_T> and
+ once with matrix_multi<Scalar_T>. If you use a negative parameter -n, this
+ will run a timing test which squares larger and larger multivectors within
+ the subalgebra defined by the frame of the index set {-n, ..., -1, 1, ..., n}
+
+ WARNINGS:
+ 1) Test 11 will fail on Compaq Alpha, with a floating point exception.
+ This is because GluCat is written for IEEE arithmetic and Compaq Alpha
+ does not use IEEE arithmetic.
+ 2) Many Clifford algebra algorithms are exponential in both time and
+ space complexity. In particular, programming example 7 (triality) may run
+ very slowly.
+
+ To run a meaningful timing test using the g++ compiler, edit
+ ./test/Makefile.in and change
+ CXXFLAGS = -O -g
+ to
+ CXXFLAGS = -O2 -g3 -finline-functions -finline-limit-768
+ (on Intel), or
+ CXXFLAGS = -O2 -finline-functions -finline-limit-768
+ (on Compaq Alpha), then run ./configure, then make.
+
+ This optimized compilation may take a long time to complete.
+
+ You can find sample test output in ./test/eg3.res, ./test/test.out and
+ ./test/test-6.out
 
 To Install
 ==========
