@@ -164,7 +164,7 @@ AC_DEFUN(AC_GLUCAT_CHECK_COMPILERS,
        if test "$CXX" = "icc"; then
         CXXFLAGS="-O3 $CXXFLAGS"
        else
-        CXXFLAGS="-O3 -finline-limit=1600 $CXXFLAGS"
+        CXXFLAGS="-O3 -finline-limit=2400 $CXXFLAGS"
         GLUCAT_CXX_DEBUG_FLAG="-g"
        fi
       fi
