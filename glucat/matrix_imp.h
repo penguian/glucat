@@ -40,15 +40,27 @@ namespace glucat { namespace matrix
     const matrix_index_t rhs_ncols = rhs.size2();
     Matrix_T result(lhs_nrows*rhs_nrows, lhs_ncols*rhs_ncols);
 
-    for (      typename Matrix_T::const_iterator1 i = lhs.begin1(); i != lhs.end1(); ++i)
-      for (    typename Matrix_T::const_iterator2 j = i.begin(); j != i.end(); ++j)
+    for (typename Matrix_T::const_iterator1 
+        i = lhs.begin1(); 
+        i != lhs.end1(); 
+        ++i)
+      for (typename Matrix_T::const_iterator2 
+          j = i.begin(); 
+          j != i.end(); 
+          ++j)
       {
         const matrix_index_t rj1 = j.index1()*rhs_nrows;
         const matrix_index_t cj2 = j.index2()*rhs_ncols;
         const scalar_t lhs_ij = (*j);
-        for (  typename Matrix_T::const_iterator1 k = rhs.begin1(); k != rhs.end1(); ++k)
-          for (typename Matrix_T::const_iterator2 l = k.begin(); l != k.end(); ++l)
-              result(rj1 + l.index1(), cj2 + l.index2()) = lhs_ij * (*l);
+        for (typename Matrix_T::const_iterator1 
+            k = rhs.begin1(); 
+            k != rhs.end1(); 
+            ++k)
+          for (typename Matrix_T::const_iterator2 
+              l = k.begin(); 
+              l != k.end(); 
+              ++l)
+            result(rj1 + l.index1(), cj2 + l.index2()) = lhs_ij * (*l);
       }
     return result;
   }
@@ -78,25 +90,29 @@ namespace glucat { namespace matrix
     if (res_s2 * lhs_s2 != rhs_s2)
       throw error_t("matrix", "nork: incompatible numbers of cols");
     typedef typename matrix_t::value_type scalar_t;
-    const scalar_t nnz_lhs = scalar_t( mono ? lhs.non_zeros() : nnz(lhs) );
+    const scalar_t nnz_lhs = scalar_t( mono ? lhs_s1 : nnz(lhs) );
     if (nnz_lhs == scalar_t(0))
       throw error_t("matrix", "nork: LHS must not be 0");
     matrix_t result(res_s1, res_s2);
     typedef typename matrix_t::const_iterator1 const_iterator1;
     typedef typename matrix_t::const_iterator2 const_iterator2;
-    for (  const_iterator1 lhs_it1 = lhs.begin1();
-                           lhs_it1 != lhs.end1(); ++lhs_it1)
-      for (const_iterator2 lhs_it2 = lhs_it1.begin();
-                           lhs_it2 != lhs_it1.end(); ++lhs_it2)
+    for (const_iterator1 
+        lhs_it1 = lhs.begin1();
+        lhs_it1 != lhs.end1(); 
+        ++lhs_it1)
+      for (const_iterator2 
+          lhs_it2 = lhs_it1.begin();
+          lhs_it2 != lhs_it1.end(); 
+          ++lhs_it2)
         if (*lhs_it2 != scalar_t(0))
         {
           using namespace ublas;
           typedef matrix_range<const matrix_t> matrix_range_t;
-          const matrix_index_t i1 = lhs_it2.index1();
-          const matrix_index_t i2 = lhs_it2.index2();
-          const range range1 = range(i1*res_s1, (i1+1)*res_s1);
-          const range range2 = range(i2*res_s2, (i2+1)*res_s2);
-          matrix_range_t rhs_range = matrix_range_t(rhs, range1, range2);
+          const matrix_index_t start1 = res_s1 * lhs_it2.index1();
+          const matrix_index_t start2 = res_s2 * lhs_it2.index2();
+          const range& range1 = range(start1, start1+res_s1);
+          const range& range2 = range(start2, start2+res_s2);
+          const matrix_range_t& rhs_range = matrix_range_t(rhs, range1, range2);
           result += rhs_range / (*lhs_it2 * nnz_lhs);
         }
     return result;
@@ -114,8 +130,14 @@ namespace glucat { namespace matrix
     typedef typename matrix_t::const_iterator1 const_iterator1;
     typedef typename matrix_t::const_iterator2 const_iterator2;
     matrix_index_t result = 0;
-    for (  const_iterator1 it1 = m.begin1(); it1 != m.end1(); ++it1)
-      for (const_iterator2 it2 = it1.begin(); it2 != it1.end(); ++it2)
+    for (const_iterator1 
+        it1 = m.begin1(); 
+        it1 != m.end1(); 
+        ++it1)
+      for (const_iterator2 
+          it2 = it1.begin(); 
+          it2 != it1.end(); 
+          ++it2)
         if (*it2 != 0)
           ++result;
     return result;
@@ -150,7 +172,10 @@ namespace glucat { namespace matrix
 
     const matrix_index_t dim = lhs().size1();
     matrix_t result(dim, dim);
-    for (lhs_const_iterator1 lhs_row = lhs().begin1(); lhs_row != lhs().end1(); ++lhs_row)
+    for (lhs_const_iterator1 
+        lhs_row = lhs().begin1(); 
+        lhs_row != lhs().end1(); 
+        ++lhs_row)
     {
       const lhs_const_iterator2& lhs_it = lhs_row.begin();
       if (lhs_it != lhs_row.end())
@@ -181,8 +206,14 @@ namespace glucat { namespace matrix
   inner(const Matrix_T& lhs, const Matrix_T& rhs)
   {
     Scalar_T result = 0;
-    for (typename Matrix_T::const_iterator1 i = lhs.begin1(); i != lhs.end1(); ++i)
-      for (typename Matrix_T::const_iterator2 j = i.begin(); j != i.end(); ++j)
+    for (typename Matrix_T::const_iterator1 
+        i = lhs.begin1(); 
+        i != lhs.end1(); 
+        ++i)
+      for (typename Matrix_T::const_iterator2 
+          j = i.begin(); 
+          j != i.end(); 
+          ++j)
       {
         const Scalar_T rhs_j12 = rhs(j.index1(),j.index2());
         if (rhs_j12 != Scalar_T(0))
