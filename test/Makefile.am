@@ -10,7 +10,18 @@ EXTRA_DIST = driver.cpp driver.h eg8.txt peg01.h peg02.h peg03.h peg04.h peg05.h
 AUTOMAKE_OPTIONS = foreign
 noinst_PROGRAMS = glucat
 AM_CXXFLAGS = -ftemplate-depth-32 -fexceptions -ansi -Wold-style-cast -Woverloaded-virtual -Wall-Wno-return-type
-CXXFLAGS = -O -g
+
+# Uncomment for normal test build - excluding Compaq Alpha:
+CXXFLAGS = -O1 -finline-limit=400
+# Uncomment for normal test build on Compaq Alpha:
+CXXFLAGS = -O1 -finline-limit=400 -mieee
+# Uncomment for debugging - excluding Compaq Alpha:
+# CXXFLAGS = -O1 -finline-limit=400 -g3
+# Uncomment for speed test build - excluding Compaq Alpha:
+# CXXFLAGS = -O2 -finline-limit=800 -finline-functions
+# Uncomment for speed test build on Compaq Alpha:
+# CXXFLAGS = -O2 -finline-limit=800 -finline-functions -mieee
+
 # set the include path found by configure
 glucat_INCLUDES = $(all_includes)
 # the library search path.
