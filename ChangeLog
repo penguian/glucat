@@ -1,3 +1,36 @@
+2003-06-28 22:19  leopardi
+
+	* NEWS: Describe changes for version 0.1.4. Reformat.
+
+2003-06-28 21:49  leopardi
+
+	* configure.in.in, glucat.doxygen, glucat.kdevprj, glucat.lsm:
+	Update to version 0.1.4
+
+2003-06-28 21:43  leopardi
+
+	* glucat/: global.h, index_set.h, index_set_imp.h: Change mapping
+	of index_set_t to bitset_t to make index 0 of index_set_t a
+	"virtual" bit rather than a real dead bit of bitset_t. This allows
+	DEFAULT_LO to be reduced by 1, and DEFAULT_HI to be increased by 1.
+	For a 32 bit unsigned long, the default index_set_t is now
+	index_set<-16,16>, using std::bitset<32> rather than
+	index_set<-15,15>, using std::bitset<31>.
+
+2003-06-28 21:18  leopardi
+
+	* glucat/clifford_algebra.h: Reformat: change tabs to spaces, fold
+	long lines, tidy up.
+
+2003-06-28 20:25  leopardi
+
+	* test/test.sh: Add to CVS. This should have been added for
+	glucat-0.1.3 and tagged release_0_1_3
+
+2003-06-23 09:22  leopardi
+
+	* ChangeLog: Update Changelog using cvs2cl.pl
+
 2003-06-23 09:20  leopardi
 
 	* NEWS: Correct a typo.
