@@ -1,5 +1,5 @@
 ####### kdevelop will overwrite this part!!! (begin)##########
-EXTRA_DIST = squaring.cpp squaring.h test-6.out Makefile.am
+EXTRA_DIST = squaring.cpp squaring.h tuning.h Makefile.am
 ####### kdevelop will overwrite this part!!! (end)############
 AUTOMAKE_OPTIONS = foreign
 noinst_PROGRAMS = squaring

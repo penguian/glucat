@@ -1,7 +1,6 @@
 ####### kdevelop will overwrite this part!!! (begin)##########
 
-
-EXTRA_DIST = driver.h
+EXTRA_DIST = driver.h Makefile.am
 
 ####### kdevelop will overwrite this part!!! (end)############
 AUTOMAKE_OPTIONS = foreign
