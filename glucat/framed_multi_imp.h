@@ -133,6 +133,14 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   framed_multi(const matrix_multi_t& val)
   {
+    if (val.m_matrix.size1() >= Tune_P::inv_fast_dim_threshold)
+      try
+      {
+        *this = val.fast_framed_multi();
+        return;
+      }
+      catch (const glucat_error& e)
+      { }
     const index_set_t frm = val.frame();
     const set_value_t end_set_value = 1 << frm.count();
     for (set_value_t stv = 0; stv != end_set_value; stv++)
@@ -706,7 +714,7 @@ namespace glucat
     // Do not insert terms with 0 coordinate
     if (term.second != Scalar_T(0))
     {
-      multivector_t::iterator scan = this->find(term.first);
+      iterator scan = this->find(term.first);
       if (scan == this->end())
         this->insert(term);
       else if (scan->second + term.second == Scalar_T(0))
@@ -770,6 +778,260 @@ namespace glucat
     return result;
   }
 
+  /// Subalgebra isomorphism: fold each term within the given frame
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  framed_multi<Scalar_T,LO,HI>
+  framed_multi<Scalar_T,LO,HI>::
+  fold(const index_set_t& frm) const
+  {
+    multivector_t result;
+    for(const_iterator this_it = this->begin(); this_it != this->end(); ++this_it)
+      result.insert(pair_t(this_it->first.fold(frm), this_it->second));
+    return result;
+  }
+
+  /// Subalgebra isomorphism: unfold each term within the given frame
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  framed_multi<Scalar_T,LO,HI>
+  framed_multi<Scalar_T,LO,HI>::
+  unfold(const index_set_t& frm) const
+  {
+    multivector_t result;
+    for(const_iterator this_it = this->begin(); this_it != this->end(); ++this_it)
+      result.insert(pair_t(this_it->first.unfold(frm, true), this_it->second));
+    return result;
+  }
+
+  /// Subalgebra isomorphism: R_{p,q} to R_{p-4,q+4}
+  // Reference: [L] 16.4 Periodicity of 8, p216
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  framed_multi<Scalar_T,LO,HI>&
+  framed_multi<Scalar_T,LO,HI>::
+  centre_pm4_qp4(int& p, int& q)
+  {
+    // We add 4 to q by subtracting 4 from p
+    if (q+4 > -LO)
+      throw error_t("centre_pm4_qp4(p,q): LO is too high to represent this value");
+    if (this->frame().max() > p-4)
+    {
+      const var_pair_t mqm4321(
+        index_set_t(-q-4) | index_set_t(-q-3) |
+        index_set_t(-q-2) | index_set_t(-q-1), scalar_t(1));
+      const index_set_t pm3210(
+        index_set_t(p-3) | index_set_t(p-2) |
+        index_set_t(p-1) | index_set_t(p));
+      multivector_t result;
+      for (const_iterator this_it = this->begin();
+                          this_it != this->end(); ++this_it)
+      {
+        index_set_t ist = this_it->first;
+        if (ist.max() > p-4)
+        {
+          var_pair_t term = var_pair_t(index_set_t(), 1);
+          for (int n = 0; n != 4; ++n)
+            if (ist[n+p-3])
+              term = term * var_pair_t(index_set_t(n-q-4), scalar_t(1)) * mqm4321;
+          // Mask out {p-3}..{p}
+          index_set_t term_ist = ist & ~pm3210;
+          term = var_pair_t(term_ist, this_it->second) * term;
+          result.insert(term);
+        }
+        else
+          result.insert(*this_it);
+      }
+      *this = result;
+    }
+    p -=4; q += 4;
+    return *this;
+  }
+
+  /// Subalgebra isomorphism: R_{p,q} to R_{p+4,q-4}
+  // Reference: [L] 16.4 Periodicity of 8, p216
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  framed_multi<Scalar_T,LO,HI>&
+  framed_multi<Scalar_T,LO,HI>::
+  centre_pp4_qm4(int& p, int& q)
+  {
+    // We add 4 to p by subtracting 4 from q
+    if (p+4 > HI)
+      throw error_t("centre_pp4_qm4(p,q): HI is too low to represent this value");
+    if (this->frame().min() < -q+4)
+    {
+      const index_set_t mqp0123(
+        index_set_t(-q)   | index_set_t(-q+1) |
+        index_set_t(-q+2) | index_set_t(-q+3));
+      const var_pair_t pp1234(
+        index_set_t(p+1) | index_set_t(p+2) |
+        index_set_t(p+3) | index_set_t(p+4), scalar_t(1));
+      multivector_t result;
+      for (const_iterator this_it = this->begin();
+                          this_it != this->end(); ++this_it)
+      {
+        index_set_t ist = this_it->first;
+        if (ist.min() < -q+4)
+        {
+          var_pair_t term = var_pair_t(index_set_t(), 1);
+          for (int n = 0; n != 4; ++n)
+            if (ist[n-q])
+              term = term * var_pair_t(index_set_t(n+p+1), 1) * pp1234;
+          // Mask out {-q}..{-q+3}
+          index_set_t term_ist = ist & ~mqp0123;
+          term = term * var_pair_t(term_ist, this_it->second);
+          result.insert(term);
+        }
+        else
+          result.insert(*this_it);
+      }
+      *this = result;
+    }
+    p +=4; q -= 4;
+    return *this;
+  }
+
+  /// Subalgebra isomorphism: R_{p,q} to R_{q+1,p-1}
+  // Reference: [P] Proposition 15.20, p 131
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  framed_multi<Scalar_T,LO,HI>&
+  framed_multi<Scalar_T,LO,HI>::
+  centre_qp1_pm1(int& p, int& q)
+  {
+    if (q+1 > HI)
+      throw error_t("centre_qp1_pm1(p,q): HI is too low to represent this value");
+    if (p-1 > -LO)
+      throw error_t("centre_qp1_pm1(p,q): LO is too high to represent this value");
+    multivector_t result;
+    for(const_iterator this_it = this->begin(); this_it != this->end(); ++this_it)
+    {
+      const index_set_t qp1 = index_set_t(q+1);
+      const index_set_t ist = this_it->first;
+      var_pair_t term = var_pair_t(index_set_t(), this_it->second);
+      for (int n = -q; n != p; ++n)
+        if (n != 0 && ist[n])
+          term = term * var_pair_t(index_set_t(-n) | qp1, 1);
+      if (p != 0 && ist[p])
+        term = term * var_pair_t(qp1, 1);
+      result.insert(term);
+    }
+    int orig_p = p;
+    p = q+1;
+    q = orig_p-1;
+    return *this = result;
+  }
+
+  /// Divide multivector into quotient with terms divisible by index set and remainder
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const std::pair< const framed_multi<Scalar_T,LO,HI>, const framed_multi<Scalar_T,LO,HI> >
+  framed_multi<Scalar_T,LO,HI>::
+  divide(const index_set_t& ist) const
+  {
+    multivector_t quo;
+    multivector_t rem;
+    for (const_iterator this_it = this->begin(); this_it != this->end(); ++this_it)
+      if ((this_it->first | ist) == this_it->first)
+        quo.insert(pair_t(this_it->first ^ ist, this_it->second));
+      else
+        rem.insert(*this_it);
+    return framed_pair_t(quo, rem);
+  }
+
+  /// Generalized FFT from framed_multi_t to matrix_t
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const typename matrix_multi<Scalar_T,LO,HI>::matrix_t
+  framed_multi<Scalar_T,LO,HI>::
+  fast(const index_t level, const bool odd) const
+  {
+    // Assume val is already folded and centred
+    if (level == 0)
+      return matrix::unit<matrix_t>(1) * scalar(*this);
+
+    const matrix_t I = matrix::unit<matrix_t>(2);
+    matrix_t J(2,2);
+    J(0,1) =    -1;
+    J(1,0) = 1;
+    matrix_t K(2,2);
+    K(0,1) =     1;
+    K(1,0) = 1;
+    matrix_t JK(2,2);
+    JK(0,0) = -1;
+    JK(1,1) =    1;
+
+    const index_set_t ist_mn = index_set_t(-level);
+    const index_set_t ist_pn = index_set_t(level);
+    if (level == 1)
+    {
+      if (odd)
+        return J * (*this)[ist_mn] + K  * (*this)[ist_pn];
+      else
+        return I * scalar(*this)   + JK * (*this)[ist_mn | ist_pn];
+    }
+    else
+    {
+      typedef std::pair<framed_multi_t, framed_multi_t> framed_pair_t;
+      const framed_pair_t& pair_mn = this->divide(ist_mn);
+      const framed_multi_t& quo_mn = pair_mn.first;
+      const framed_multi_t& rem_mn = pair_mn.second;
+      const framed_pair_t& pair_quo_mnpn = quo_mn.divide(ist_pn);
+      const framed_pair_t& pair_rem_mnpn = rem_mn.divide(ist_pn);
+      const framed_multi_t& val_mnpn = pair_quo_mnpn.first;
+      const framed_multi_t& val_mn   = pair_quo_mnpn.second;
+      const framed_multi_t& val_pn   = pair_rem_mnpn.first;
+      const framed_multi_t& val_1    = pair_rem_mnpn.second;
+      if (odd)
+        return - matrix::kron(JK, val_1.fast   (level-1, 1))
+               + matrix::kron(I,  val_mnpn.fast(level-1, 1))
+               + matrix::kron(J,  val_mn.fast  (level-1, 0))
+               + matrix::kron(K,  val_pn.fast  (level-1, 0));
+      else
+        return   matrix::kron(I,  val_1.fast   (level-1, 0))
+               + matrix::kron(JK, val_mnpn.fast(level-1, 0))
+               + matrix::kron(K,  val_mn.fast  (level-1, 1))
+               - matrix::kron(J,  val_pn.fast  (level-1, 1));
+    }
+  }
+
+  /// Use generalized FFT to construct a matrix_multi_t 
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const matrix_multi<Scalar_T,LO,HI>
+  framed_multi<Scalar_T,LO,HI>::
+  fast_matrix_multi(const index_set_t& frm) const
+  {
+    // Fold val
+    multivector_t val = this->fold(frm);
+    int p = frm.count_pos();
+    int q = frm.count_neg();
+
+    const index_t bott = pos_mod(p-q, 8);
+    p += std::max(gen::offset_to_super[bott],0);
+    q -= std::min(gen::offset_to_super[bott],0);
+    if (p > HI)
+      throw error_t("use_fast(frm): HI is too low to represent this value");
+    if (q > -LO)
+      throw error_t("use_fast(frm): LO is too high to represent this value");
+
+    // Centre val
+    while (p-q > 4)
+      val.centre_pm4_qp4(p, q);
+    while (p-q < -3)
+      val.centre_pp4_qm4(p, q);
+    if (p-q > 1)
+      val.centre_qp1_pm1(p, q);
+    const index_t level = (p+q)/2;
+
+    matrix_multi_t result;
+    result.m_frame = frm;
+    const multivector_t& ev_val = val.even();
+    const multivector_t& od_val = val - ev_val;
+    result.m_matrix = ev_val.fast(level, 0) +
+                      od_val.fast(level, 1);
+    return result;
+  }
+
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const framed_multi<Scalar_T,LO,HI>
+  framed_multi<Scalar_T,LO,HI>::
+  fast_framed_multi() const
+  { return *this; }
+
   /// Product of terms
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
@@ -779,6 +1041,20 @@ namespace glucat
   {
     typedef std::pair<const index_set<LO,HI>, Scalar_T> pair_t;
     return (pair_t(
+            lhs.first ^ rhs.first,
+            lhs.second * rhs.second *
+            lhs.first.sign_of_mult(rhs.first)));
+  }
+
+  /// Product of variable terms
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
+  const std::pair<index_set<LO,HI>, Scalar_T>
+  operator* (const std::pair<index_set<LO,HI>, Scalar_T>& lhs,
+             const std::pair<index_set<LO,HI>, Scalar_T>& rhs)
+  {
+    typedef std::pair<index_set<LO,HI>, Scalar_T> var_pair_t;
+    return (var_pair_t(
             lhs.first ^ rhs.first,
             lhs.second * rhs.second *
             lhs.first.sign_of_mult(rhs.first)));

@@ -47,6 +47,9 @@ namespace glucat
   private:
     typedef typename matrix_multi_t::matrix_t        matrix_t;
     typedef std::map< const index_set_t, Scalar_T >  map_t;
+    typedef std::pair< index_set_t, Scalar_T >       var_pair_t;
+    typedef std::pair< const multivector_t, const multivector_t >
+                                                     framed_pair_t;
   public:
     typedef typename map_t::iterator                 iterator;
     typedef typename map_t::const_iterator           const_iterator;
@@ -78,7 +81,12 @@ namespace glucat
     framed_multi(const std::string& str,
                  const index_set_t& frm, const bool prechecked = false);
     /// Construct a multivector from a matrix_multi_t
-    framed_multi        (const matrix_multi_t& val);
+    framed_multi(const matrix_multi_t& val);
+    /// Use generalized FFT to construct a matrix_multi_t 
+    const matrix_multi_t fast_matrix_multi(const index_set_t& frm) const;
+    /// Use inverse generalized FFT to construct a framed_multi_t
+    const framed_multi_t fast_framed_multi() const;
+
     _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
     friend std::istream&
       operator>> <>(std::istream& s, multivector_t& val);
@@ -89,6 +97,20 @@ namespace glucat
   private:
     /// Add a term, if non-zero
     multivector_t&      operator+= (const pair_t& term);
+    /// Subalgebra isomorphism: fold each term within the given frame
+    multivector_t       fold(const index_set_t& frm) const;
+    /// Subalgebra isomorphism: unfold each term within the given frame
+    multivector_t       unfold(const index_set_t& frm) const;
+    /// Subalgebra isomorphism: R_{p,q} to R_{p-4,q+4}
+    multivector_t&      centre_pm4_qp4(int& p, int& q);
+    /// Subalgebra isomorphism: R_{p,q} to R_{p+4,q-4}
+    multivector_t&      centre_pp4_qm4(int& p, int& q);
+    /// Subalgebra isomorphism: R_{p,q} to R_{q+1,p-1}
+    multivector_t&      centre_qp1_pm1(int& p, int& q);
+    /// Divide multivector into part divisible by index_set and remainder
+    const framed_pair_t divide(const index_set_t& ist) const;
+    /// Generalized FFT from framed_multi_t to matrix_t
+    const matrix_t      fast(const index_t level, const bool parity) const;
   };
   // non-members
 
@@ -113,5 +135,12 @@ namespace glucat
   operator*
    (const std::pair<const index_set<LO,HI>, Scalar_T>& lhs,
     const std::pair<const index_set<LO,HI>, Scalar_T>& rhs);
+
+  /// Product of variable terms
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const std::pair<index_set<LO,HI>, Scalar_T>
+  operator*
+   (const std::pair<index_set<LO,HI>, Scalar_T>& lhs,
+    const std::pair<index_set<LO,HI>, Scalar_T>& rhs);
 }
 #endif  // _GLUCAT_FRAMED_MULTI_H
