@@ -1,6 +1,6 @@
 ####### kdevelop will overwrite this part!!! (begin)##########
 
-SUBDIRS = glucat test 
+SUBDIRS = glucat test transforms 
 
 EXTRA_DIST = glucat.kdevprj admin AUTHORS COPYING ChangeLog INSTALL README TODO glucat.lsm NEWS 
 
