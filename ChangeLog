@@ -1,3 +1,138 @@
+2003-03-02 09:47  leopardi
+
+	* test/: test-6.out, test.out: Test results for version 0.1.2
+
+2003-03-02 09:47  leopardi
+
+	* transforms/transforms-6.out: Results of running
+	./transforms/transforms 6 when compiled with g++ -O3
+
+2003-03-02 02:24  leopardi
+
+	* AUTHORS, INSTALL, NEWS, README, TODO: Reflect changes to version
+	0.1.2
+
+2003-03-02 02:15  leopardi
+
+	* glucat.doxygen, glucat.kdevprj, glucat.lsm: Update to version
+	0.1.2
+
+2003-03-02 02:13  leopardi
+
+	* configure.in, configure.in.in: Handle differences in platforms
+	and options here rather than in Makefile.am
+
+2003-03-02 02:11  leopardi
+
+	* Makefile.am: Add transforms directory.
+
+2003-03-02 02:08  leopardi
+
+	* glucat/: framed_multi.h, framed_multi_imp.h: Add generalized FFT
+	fast_matrix_multi(frm) Add fast_framed_multi(), which creates a
+	copy of *this.	Add private member functions used by 
+	fast_matrix_multi(frm), including the recursive function fast(),
+	which almost all the work.  Use generalized FFT in constructors
+	from matrix_multi<>.
+
+2003-03-02 01:52  leopardi
+
+	* transforms/transforms.h: Change output format to make it narrower
+	and easier to read.  Rename variables to make naming more
+	consistent.
+
+2003-03-02 01:51  leopardi
+
+	* transforms/Makefile.am: Change name of program to transforms.
+
+2003-03-02 01:50  leopardi
+
+	* test/Makefile.am: Simplify. ./configure now takes care of
+	differences between platforms and options.
+
+2003-03-02 01:41  leopardi
+
+	* test/driver.h: Add Tune_P template parameters for generalized
+	FFT.
+
+2003-03-02 01:40  leopardi
+
+	* test/driver.cpp: Cosmetic change.
+
+2003-03-02 01:39  leopardi
+
+	* test/peg03.h: Change template to relax constraints on LO and HI.
+	They don't work well with generalized FFT and are not really needed
+	anyway.
+
+2003-03-02 01:15  leopardi
+
+	* glucat/matrix_multi_imp.h: Add offset_level(). Move folded_dim()
+	from generation.h.  Add fast_matrix_multi(frm), which creates a
+	copy of *this within frm.  Use generalized FFT in constructors from
+	framed_multi<>.  Add inverse generalized FFT fast_framed_multi(). 
+	This uses the new recursive function fast() to do almost all the
+	work.  In operator/=, use ublas::norm_inf() rather than
+	ublas::norm_2().  Use namespace gen:: where needed.
+
+2003-03-02 01:14  leopardi
+
+	* glucat/matrix_multi.h: Add fast_matrix_multi(frm), which creates
+	a copy of *this within frm.  Add inverse generalized FFT
+	fast_framed_multi().
+
+2003-03-01 20:13  leopardi
+
+	* glucat/global.h: Fix bug in tuning<> policy class where default
+	was always used in enumerations, regardless of template parameters.
+	Add tuning for generalised FFT and inverse generalized FFT. Tweak
+	default values for tuning parameters to take account of generalised
+	FFT and its inverse.  Move pos_mod() to this file.
+
+2003-03-01 20:05  leopardi
+
+	* glucat/: matrix.h, matrix_imp.h: Add nork() - left inverse of
+	Kronecker product kron(). Change call to ublas::sparse_prod() to
+	match changes to uBLAS in Boost CVS.
+
+2003-03-01 20:03  leopardi
+
+	* glucat/: generation.h, generation_imp.h: Hide contents inside
+	namespace gen. Add the offset_to_super[] table to the interface.
+	Move pos_mod() to global.h. Remove folded_dim().
+
+2003-03-01 19:58  leopardi
+
+	* glucat/: errors.h, errors_imp.h: Generalize glucat_error by
+	adding a context string. This can be used for the classname(), as
+	previously, or for a different context string. This allows
+	glucat_error to be used where classname() does not exist or is
+	otherwise misleading.
+
+2003-03-01 19:55  leopardi
+
+	* glucat/: index_set.h, index_set_imp.h: Add index_set complement
+	(operator~, not) and intersection (operator&=, operator&, and)
+
+2003-02-26 10:30  leopardi
+
+	* transforms/: Makefile.am, driver.cpp, driver.h, transforms.h: New
+	directory ./transforms for generalized FFT test
+
+2003-02-26 10:15  leopardi
+
+	* test/: Makefile.am, driver.cpp, driver.h: Re-add files which were
+	accidentally deleted from CVS repository.
+
+2003-02-25 23:59  leopardi
+
+	* test/: .cvsignore, Makefile.am, driver.cpp, driver.h: New
+	directory ./transforms for generalized FFT test program.
+
+2003-01-12 19:26  leopardi
+
+	* ChangeLog: Changes up to GluCat 0.1.1
+
 2003-01-12 19:25  leopardi
 
 	* INSTALL: More accurate installation instructions, including a
