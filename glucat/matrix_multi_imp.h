@@ -25,12 +25,37 @@
 
 namespace glucat
 {
+  // References for algorithms:
+  // [M]: Scott Meyers, "Effective C++" Second Edition, Addison-Wesley, 1998.
+  // [P]: Ian R. Porteous, "Clifford algebras and the classical groups", Cambridge UP, 1995.
+  // [L]: Pertti Lounesto, "Clifford algebras and spinors", Cambridge UP, 1997.
+  
   /// Class name used in messages
   template< typename Scalar_T, const index_t LO, const index_t HI >
   const std::string
   matrix_multi<Scalar_T,LO,HI>::
   classname()
   { return "matrix_multi"; }
+
+  /// Determine the log2 dim corresponding to signature p, q
+  // Reference: [P] Table 15.27, p 133
+  inline
+  index_t
+  offset_level(const index_t p, const index_t q)
+  {
+    // Offsets between the log2 of the matrix dimension for the current signature
+    // and that of the real superalgebra
+    static const int offset_log2_dim[] = {0, 1, 0, 1, 1, 2, 1, 1};
+    const int bott = pos_mod(p-q, 8);
+    return (p+q)/2 + offset_log2_dim[bott];
+  }
+
+  /// Determine the matrix dimension of the fold of a subalegbra
+  // Reference: [P] Table 15.27, p 133
+  template< typename Matrix_Index_T, const index_t LO, const index_t HI >
+  const Matrix_Index_T
+  folded_dim( const index_set<LO,HI>& sub )
+  { return 1 << offset_level(sub.count_pos(), sub.count_neg()); }
 
   /// Default constructor
   template< typename Scalar_T, const index_t LO, const index_t HI >
@@ -133,6 +158,14 @@ namespace glucat
   matrix_multi(const framed_multi_t& val)
   : m_frame( val.frame() )
   {
+    if (val.size() >= Tune_P::fast_size_threshold)
+      try
+      {
+        *this = val.fast_matrix_multi(m_frame);
+        return;
+      }
+      catch (const glucat_error& e)
+      { }
     const matrix_index_t dim = folded_dim<matrix_index_t>(m_frame);
     m_matrix.resize(dim, dim);
 
@@ -149,6 +182,14 @@ namespace glucat
   {
     if (!prechecked && (val.frame() | frm) != frm)
       throw error_t("multivector_t(val,frm): cannot initialize with value outside of frame");
+    if (val.size() >= Tune_P::fast_size_threshold)
+      try
+      {
+        *this = val.fast_matrix_multi(m_frame);
+        return;
+      }
+      catch (const glucat_error& e)
+      { }
     const matrix_index_t dim = folded_dim<matrix_index_t>(m_frame);
     m_matrix.resize(dim, dim);
 
@@ -371,7 +412,7 @@ namespace glucat
         {
           const matrix_t& BT = ublas::trans(m_matrix);
           matrix_t R = matrix::sparse_prod(AT, XT) - BT;
-          Scalar_T nr = ublas::norm_2(R);
+          Scalar_T nr = ublas::norm_inf(R);
           // (nr == nr) below is to exclude NaN
           if ( nr != Scalar_T(0) && nr == nr )
           {
@@ -391,7 +432,7 @@ namespace glucat
               matrix::lu_solve(LU, pvector, D);
               XTnew -= D;
               R = matrix::sparse_prod(AT, XTnew) - BT;
-              nr = ublas::norm_2(R);
+              nr = ublas::norm_inf(R);
             }
           }
         }
@@ -636,6 +677,125 @@ namespace glucat
     return *this;
   }
 
+  /// Inverse generalized Fast Fourier Transform
+  template< typename Multivector_T, typename Matrix_T >
+  Multivector_T
+  fast(const Matrix_T& M, index_t level)
+  {
+    typedef Multivector_T framed_multi_t;
+    if (level == 0)
+      return framed_multi_t(M(0,0));
+
+    typedef Matrix_T matrix_t;
+    typedef typename framed_multi_t::index_set_t index_set_t;
+    const matrix_t I = matrix::unit<matrix_t>(2);
+    matrix_t J(2,2);
+    J(0,1) =    -1;
+    J(1,0) = 1;
+    matrix_t K(2,2);
+    K(0,1) =     1;
+    K(1,0) = 1;
+    matrix_t JK(2,2);
+    JK(0,0) = -1;
+    JK(1,1) =    1;
+
+    typedef typename framed_multi_t::index_set_t index_set_t;
+    typedef typename framed_multi_t::scalar_t scalar_t;
+    const framed_multi_t mn = framed_multi_t(index_set_t(-level), scalar_t(1));
+    const framed_multi_t pn = framed_multi_t(index_set_t(level), scalar_t(1));
+    if (level == 1)
+    {
+      const framed_multi_t& I_M  = (matrix::nork(I, M))(0, 0);
+      const framed_multi_t& J_M  = (matrix::nork(J, M))(0, 0);
+      const framed_multi_t& K_M  = (matrix::nork(K, M))(0, 0);
+      const framed_multi_t& JK_M = (matrix::nork(JK, M))(0, 0);
+      return    I_M
+        + mn * (JK_M * pn + J_M)
+        +       K_M * pn;
+    }
+    const framed_multi_t& I_M  =
+      fast<framed_multi_t, matrix_t>(matrix::nork(I, M), level-1);
+    const framed_multi_t& J_M  =
+      fast<framed_multi_t, matrix_t>(matrix::nork(J, M), level-1);
+    const framed_multi_t& K_M  =
+      fast<framed_multi_t, matrix_t>(matrix::nork(K, M), level-1);
+    const framed_multi_t& JK_M =
+      fast<framed_multi_t, matrix_t>(matrix::nork(JK, M), level-1);
+    const framed_multi_t& ev_I_M = even(I_M);
+    const framed_multi_t& od_I_M = I_M - ev_I_M;
+    const framed_multi_t& ev_J_M = even(J_M);
+    const framed_multi_t& od_J_M = J_M - ev_J_M;
+    const framed_multi_t& ev_K_M = even(K_M);
+    const framed_multi_t& od_K_M = K_M - ev_K_M;
+    const framed_multi_t& ev_JK_M = even(JK_M);
+    const framed_multi_t& od_JK_M = JK_M - ev_JK_M;
+    return (ev_I_M  - od_JK_M)
+     + mn*((ev_JK_M + od_I_M)*pn
+     +     (ev_J_M  + od_K_M))
+     +     (ev_K_M  - od_J_M)*pn;
+  }
+
+  /// Use generalized FFT to construct a matrix_multi_t 
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const matrix_multi<Scalar_T,LO,HI>
+  matrix_multi<Scalar_T,LO,HI>::
+  fast_matrix_multi(const index_set_t& frm) const
+  { 
+    if (m_frame == frm)
+      return *this;
+    else
+      return (this->fast_framed_multi()).fast_matrix_multi(frm);
+  }
+
+  /// Use inverse generalized FFT to construct a framed_multi_t
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const framed_multi<Scalar_T,LO,HI>
+  matrix_multi<Scalar_T,LO,HI>::
+  fast_framed_multi() const
+  {
+    // Determine the amount of off-centering needed
+    int p = m_frame.count_pos();
+    int q = m_frame.count_neg();
+
+    const index_t bott = pos_mod(p-q, 8);
+    p += std::max(gen::offset_to_super[bott],0);
+    q -= std::min(gen::offset_to_super[bott],0);
+
+    const int orig_p = p;
+    const int orig_q = q;
+    while (p-q > 4)
+      { p -= 4; q += 4; }
+    while (p-q < -3)
+      { p += 4; q -= 4; }
+    if (p-q > 1)
+    {
+      int old_p = p;
+      p = q+1;
+      q = old_p-1;
+    }
+    const index_t level = (p+q)/2;
+    framed_multi_t val = fast<framed_multi_t, matrix_t>(m_matrix, level);
+
+    // Off-centre val
+    switch (pos_mod(orig_p-orig_q, 8))
+    {
+    case 2:
+    case 3:
+    case 4:
+      val.centre_qp1_pm1(p, q);
+      break;
+    default:
+      break;
+    }
+    if (orig_p-orig_q > 4)
+      while (p != orig_p)
+        val.centre_pp4_qm4(p, q);
+    if (orig_p-orig_q < -3)
+      while (p != orig_p)
+        val.centre_pm4_qp4(p, q);
+    return val.unfold(m_frame);
+  }
+
   /// Table of basis elements used as a cache by basis_element()
   template< typename Scalar_T, const index_t LO, const index_t HI >
   class basis_table :
@@ -658,7 +818,6 @@ namespace glucat
     /// Ref: Carlos O'Ryan, ACE http://doc.ece.uci.edu
     friend class friend_for_private_destructor;
   };
-
 
   /// Create a basis element matrix within a frame
   template< typename Scalar_T, const index_t LO, const index_t HI >
@@ -691,7 +850,7 @@ namespace glucat
       if (basis_it != basis_cache.end())
         return basis_it->second;
     }
-    const matrix_t* e = (generator_table<matrix_t>::generator())(p,q);
+    const matrix_t* e = (gen::generator_table<matrix_t>::generator())(p,q);
     matrix_t result = matrix::unit<matrix_t>(dim);
     for (index_t k = folded_min; k <= folded_max; ++k)
       if (folded_set[k])
