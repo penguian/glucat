@@ -30,6 +30,7 @@
 #include "glucat/index_set_imp.h"
 #include "glucat/clifford_algebra_imp.h"
 #include "glucat/framed_multi_imp.h"
+#include "glucat/ublas_imp.h"
 #include "glucat/matrix_imp.h"
 #include "glucat/generation_imp.h"
 #include "glucat/matrix_multi_imp.h"
