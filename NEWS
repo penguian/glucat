@@ -1,8 +1,9 @@
-2004-08-01: 0.1.8
+2004-08-09: 0.1.8
 GluCat has had a few bugs fixed, and a few minor enhancements. 
 The constuctor for index_set<> from string and the corresponding stream input
 operator >> now work properly with strings of the form "1,2" as well as
 "{1,2}". 
+The sign_of_mult() function for index_set<> has been improved.
 The subscripting operator [] for matrix_multi<> now works properly for index
 sets not contained in m_frame. 
 Programs which use GluCat can now invoke GluCat classes and functions from
