@@ -2,7 +2,7 @@ Paul C. Leopardi <leopardi@bigpond.net.au>
 
 Project supervisor
 ------------------
-Dr. William McLean, School of Mathematics, UNSW
+Dr. William McLean, School of Mathematics, UNSW.
 
 Prototype
 ---------
@@ -17,45 +17,46 @@ ref: R. Sedgewick, "Algorithms in C++", Addison-Wesley, 1992.
 ref: S. Meyers, "Effective C++ ", Addison-Wesley, 1992.
 
 Arvind Raja's prototype was modelled on Clical, by Pertti Lounesto, R. Mikkola, 
-V. Vierros
+V. Vierros.
 
 Advice
 ------
 A. Alexandrescu, N. Josuttis, A. Koenig, Scott Meyers, B. Moo, Bjarne Stroustrup, T. Veldhuizen:
-  C++ usage
-Duraid Madina, Russell Standish: C++, debugging
-Christian Perwass: Operators, user interface
+  C++ usage.
+Duraid Madina, Russell Standish: C++, debugging.
+Christian Perwass: Operators, user interface.
 
 Definitions
 -----------
-Milton Abramowicz and Irene A. Stegun: Transcendental functions
-Mark Ashdown, G. P. Wene: Negative integer indices
+Milton Abramowicz and Irene A. Stegun: Transcendental functions.
+Mark Ashdown, G. P. Wene: Negative integer indices.
 Chris Doran, David Hestenes, Anthony Lasenby, Pertti Lounesto, Ian R. Porteous, Garret Sobczyk:
   Clifford algebra sum, difference, inner product, outer product,
-  geometric product, involutions and anti-involutions, norms
-Leo Dorst: Left contraction
-Leo Dorst, Arvind Raja: Index sets
+  geometric product, involutions and anti-involutions, norms.
+Leo Dorst: Left contraction.
+Leo Dorst, Arvind Raja: Index sets.
 David Hestenes, Garret Sobczyk,  G. P. Wene: Countably infinite dimensional Clifford algebra
-Pertti Lounesto, Ian R. Porteous: Matrix basis
+Pertti Lounesto, Ian R. Porteous: Matrix basis.
 
 Algorithms
 ----------
 Milton Abramowicz and Irene A. Stegun, Gene H. Golub, Charles F. van Loan, C.F. Gerald,  P.O. Wheatley:
-  Transcendental functions
+  Transcendental functions.
 Sheung Hun Cheng, Nicholas J. Higham, Charles S. Kenney, Alan J. Laub :
-  Product form of Denman-Beavers square root iteration, incomplete square root cascade logarithm
-Leo Dorst: Left contraction
+  Product form of Denman-Beavers square root iteration, incomplete square root cascade logarithm.
+Leo Dorst: Left contraction.
 P. Fleckenstein: framed_multivector<> geometric product
-Gene H. Golub, Charles F. van Loan, Nicholas J. Higham: Matrix division, iterative refinement
-Gene H. Golub, Charles F. van Loan: Matrix exponential
-Gene H. Golub, Charles F. van Loan, C.F. Gerald,  P.O. Wheatley: Pade approximation
-Pertti Lounesto, Ian R. Porteous: Matrix basis
-A. Lumsdaine, J. Siek, MTL project: Matrix algorithms and linear algebra
+Gene H. Golub, Charles F. van Loan, Nicholas J. Higham: Matrix division, iterative refinement.
+Gene H. Golub, Charles F. van Loan: Matrix exponential.
+Gene H. Golub, Charles F. van Loan, C.F. Gerald,  P.O. Wheatley: Pade approximation.
+Pertti Lounesto, Ian R. Porteous: Matrix basis.
+A. Lumsdaine, J. Siek, MTL project: Matrix algorithms and linear algebra.
 Arvind Raja: framed_multivector<> sum, difference, inner product, outer product,
-  geometric product, involutions and anti-involutions, norms
-Joerg Walter, uBLAS project: LU factor and solve, matrix algorithms and linear algebra
+  geometric product, involutions and anti-involutions, norms.
+Joerg Walter, uBLAS project: LU factor and solve, matrix algorithms and linear algebra.
+Jan Cnops: Recursive expressions for matrix representations of Clifford algebras.
 Michael Clausen, Ulrich Baum, David K. Maslen, Daniel N. Rockmore: 
-  Generalized FFTs for finite groups
+  Generalized FFTs for finite groups.
 
 uBLAS Interface
 ---------------
@@ -68,7 +69,7 @@ Stephan Kulow, Walter Tasin, KDevelop team:
 
 Testing
 -------
-Joerg Walter, John Fletcher
+Joerg Walter, John Fletcher, Henk Jansen
 
 Related Projects
 ----------------
@@ -81,27 +82,37 @@ Carlos O'Ryan: workaround used in generator.h for:
 
 References for generalized FFTs on finite groups
 ------------------------------------------------
-Michael Clausen, "Fast generalized Fourier transforms", Theoretical Computer 
+L. Babai, L. Ronyai, "Computing irreducible representations of finite groups", 
+Math. Comp. 55 (1990), 705--722.
+
+U. Baum, M. Clausen, "Computing irreducible representations of supersolvable 
+groups", Math. Comp. 63, 1994, pp. 351--359.
+
+T. Beth, "On the computational complexity of the general discrete Fourier 
+transform", Theoretical Computer Science, 51 (1987), no. 3, 331--339.
+
+G. S. Chirikjian, A. B. Kyatkin, Engineering applications of noncommutative 
+harmonic analysis. With emphasis on rotation and motion groups. CRC Press, 2001.
+
+M. Clausen, "Fast generalized Fourier transforms", Theoretical Computer 
 Science 67, 1989, 55-63. MR 91f:68081.
 
-Persi Diaconis and Daniel Rockmore, "Efficient computation of the Fourier 
-transform of finite groups," J. Amer. Math. Soc., 3(2), 297--332, 1990.
+M. Clausen, U. Baum, "Fast Fourier Transforms," Bibliographisches Institut & 
+F. A. Brockhaus AG, Mannheim, 1993.
 
-Michael Clausen, Ulrich Baum, "Fast Fourier Transforms," Bibliographisches 
-Institut & F. A. Brockhaus AG, Mannheim, 1993.
+P. Diaconis, D. Rockmore, "Efficient computation of the Fourier transform 
+of finite groups," J. Amer. Math. Soc., 3(2), 297--332, 1990.
 
-Ulrich Baum, Michael Clausen, "Computing irreducible representations of 
-supersolvable groups," Math. Comp. 63, 1994, pp. 351--359.
-
-D. Maslen, Daniel Rockmore, "Generalized FFTs: A survey of some recent results," 
+D. Maslen, D. Rockmore, "Generalized FFTs: A survey of some recent results", 
 In L. Finkelstein and W. Kantor, editors, Proc. 1995 DIMACS Workshop in Groups 
 and Computation. 
 
-Daniel Rockmore, "Some applications of generalized FFTs" (Appendix with D. 
+D. Maslen, D. Rockmore, "Separation of variables and the computation of 
+Fourier transforms on finite groups", I. J. of the Amer. Math. Soc., 10, 
+No. 1, 1997, pp. 169--214.
+
+D. Rockmore, "Some applications of generalized FFTs" (Appendix with D. 
 Healy), in Groups and Computation II, DIMACS Series in Discrete Math and 
 Computer Science, Vol. 28, L. Finkelstein and W. Kantor (eds.), 1997, pp. 
 329--369.
 
-D. Maslen, Daniel Rockmore, "Separation of variables and the 
-computation of Fourier transforms on finite groups", I. J. of the Amer. Math. 
-Soc., 10, No. 1, 1997, pp. 169--214.
