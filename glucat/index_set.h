@@ -41,6 +41,8 @@ namespace glucat
     static const std::string  classname();
     /// Default constructor creates an empty set
     index_set     () { }
+    /// Constructor from bitset_t
+    index_set(const bitset_t& bst);
     /// Constructor from index
     index_set     (const index_t& idx);
     /// Constructor from set value of an index set folded within the given frame

@@ -31,12 +31,22 @@ namespace glucat
   classname()
   { return "index_set"; }
 
+  /// Constructor from index value
   template<const index_t LO, const index_t HI>
   index_set<LO,HI>::
   index_set(const index_t& idx)
   {
-    set(idx);
-    reset(0);
+    this->set(idx);
+    this->reset(0);
+  }
+
+  /// Constructor from bitset_t
+  template<const index_t LO, const index_t HI>
+  index_set<LO,HI>::
+  index_set(const bitset_t& bst)
+  {
+    const index_set_t* pbst = static_cast<const index_set_t*>(&bst);
+    *this = *pbst;
   }
 
   /// Constructor from set value of an index set folded within the given frame
@@ -49,16 +59,12 @@ namespace glucat
         throw error_t("index_set(val,frm): cannot create: value gives an index set outside of frame");
     const index_set_t folded_frame = frm.fold();
     const index_t min_index = folded_frame.min();
-    const index_t max_index = folded_frame.max();
     const index_t skip = min_index > 0 ? 0 : 1;
-    index_set_t folded_set;
-    for (index_t idx = -1; idx >= min_index; --idx)
-      if ((folded_val >> (idx - min_index)) & 1)
-        folded_set.set(idx);
-    for (index_t idx = 1; idx <= max_index; ++idx)
-      if ((folded_val >> (idx - skip - min_index)) & 1)
-        folded_set.set(idx);
-    folded_set.reset(0);
+    static const index_set_t lo_mask = bitset_t((1 << -LO) - 1);
+    static const index_set_t hi_mask = ~bitset_t((1 << (1-LO)) -1);
+    const index_set_t neg_part = (index_set_t(bitset_t(folded_val) << (min_index - LO))) & lo_mask;
+    const index_set_t pos_part = (index_set_t(bitset_t(folded_val) << (min_index - LO + skip))) & hi_mask;
+    const index_set_t folded_set = neg_part | pos_part;
     *this = folded_set.unfold(frm);
   }
 
@@ -120,7 +126,7 @@ namespace glucat
     bitset_t* pthis = this;
     const bitset_t* pthat = &rhs;
     *pthis ^= *pthat;
-    reset(0);
+    this->reset(0);
     return *this;
   }
 
@@ -132,7 +138,7 @@ namespace glucat
   operator^ (const index_set<LO,HI>& lhs,
              const index_set<LO,HI>& rhs)
   {
-    index_set<LO,HI> result(lhs);
+    index_set<LO,HI> result = lhs;
     return result ^= rhs;
   }
 
@@ -146,7 +152,6 @@ namespace glucat
     bitset_t* pthis = this;
     const bitset_t* pthat = &rhs;
     *pthis &= *pthat;
-    reset(0);
     return *this;
   }
 
@@ -158,7 +163,7 @@ namespace glucat
   operator& (const index_set<LO,HI>& lhs,
              const index_set<LO,HI>& rhs)
   {
-    index_set<LO,HI> result(lhs);
+    index_set<LO,HI> result = lhs;
     return result &= rhs;
   }
 
@@ -172,7 +177,6 @@ namespace glucat
     bitset_t* pthis = this;
     const bitset_t* pthat = &rhs;
     *pthis |= *pthat;
-    reset(0);
     return *this;
   }
 
@@ -184,7 +188,7 @@ namespace glucat
   operator| (const index_set<LO,HI>& lhs,
              const index_set<LO,HI>& rhs)
   {
-    index_set<LO,HI> result(lhs);
+    index_set<LO,HI> result = lhs;
     return result |= rhs;
   }
 
@@ -194,7 +198,7 @@ namespace glucat
   bool
   index_set<LO,HI>::
   operator[] (index_t idx) const
-  { return test(idx); }
+  { return bitset_t::test(idx-LO); }
 
   /// Subscripting: Element access
   template<const index_t LO, const index_t HI>
@@ -222,7 +226,7 @@ namespace glucat
   set()
   {
     bitset_t::set();
-    reset(0);
+    this->reset(0);
     return *this;
   }
 
@@ -280,7 +284,7 @@ namespace glucat
   flip()
   {
     bitset_t::flip();
-    reset(0);
+    this->reset(0);
     return *this;
   }
 
@@ -313,7 +317,7 @@ namespace glucat
   {
     index_t result = 0;
     for (index_t idx = HI; idx != 0; --idx)
-      if (test(idx))
+      if (this->test(idx))
         ++result;
     return result;
   }
@@ -327,12 +331,12 @@ namespace glucat
   {
     index_t result = 0;
     for (index_t idx = LO; idx != 0; ++idx)
-      if (test(idx))
+      if (this->test(idx))
         ++result;
     return result;
   }
 
-  /// Minimum member
+  /// Minimum member, or 0 if none
   template<const index_t LO, const index_t HI>
   inline
   index_t
@@ -340,12 +344,12 @@ namespace glucat
   min() const
   {
     for (index_t result = LO; result <= HI; ++result)
-      if (test(result))
+      if (this->test(result))
         return result;
     return 0;
   }
 
-  /// Maximum member
+  /// Maximum member, or 0 if none
   template<const index_t LO, const index_t HI>
   inline
   index_t
@@ -353,7 +357,7 @@ namespace glucat
   max() const
   {
     for (index_t result = HI; result >= LO; --result)
-      if (test(result))
+      if (this->test(result))
         return result;
     return 0;
   }
@@ -445,7 +449,7 @@ namespace glucat
   index_set<LO,HI>
   index_set<LO,HI>::
   fold() const
-  { return fold(*this, true); }
+  { return this->fold(*this, true); }
 
   /// Fold this index set within the given frame
   template<const index_t LO, const index_t HI>
@@ -456,22 +460,16 @@ namespace glucat
   {
     if (!prechecked && ((*this | frm) != frm))
       throw error_t("fold(frm): cannot fold from outside of frame");
-    index_set<LO,HI> result;
+    index_set_t result;
     index_t fold_idx = -1;
     index_t unfold_idx;
     for (unfold_idx = -1; unfold_idx >= LO; --unfold_idx)
       if (frm[unfold_idx])
-      {
-        result[fold_idx] = (*this)[unfold_idx];
-        --fold_idx;
-      }
+        result.set(fold_idx--, this->test(unfold_idx));
     fold_idx = 1;
     for (unfold_idx = 1; unfold_idx <= HI; ++unfold_idx)
       if (frm[unfold_idx])
-      {
-        result[fold_idx] = (*this)[unfold_idx];
-        ++fold_idx;
-      }
+        result.set(fold_idx++, this->test(unfold_idx));
     return result;
   }
 
@@ -489,19 +487,13 @@ namespace glucat
     index_t unfold_idx;
     for (unfold_idx = -1; unfold_idx >= LO; --unfold_idx)
       if (frm[unfold_idx])
-      {
-        result[unfold_idx] = (*this)[fold_idx];
-        --fold_idx;
-      }
+        result.set(unfold_idx, this->test(fold_idx--));
     if (!prechecked && ((fold_idx+1) > this->min()))
       throw error_t(msg);
     fold_idx = 1;
     for (unfold_idx = 1; unfold_idx <= HI; ++unfold_idx)
       if (frm[unfold_idx])
-      {
-        result[unfold_idx] = (*this)[fold_idx];
-        ++fold_idx;
-      }
+        result.set(unfold_idx, this->test(fold_idx++));
     if (!prechecked && ((fold_idx-1) < this->max()))
       throw error_t(msg);
     return result;
@@ -513,21 +505,19 @@ namespace glucat
   index_set<LO,HI>::
   value_of_fold(const index_set& frm) const
   {
-    if (frm.count() > BITS_PER_SET_VALUE)
-      return 0;
-    const index_set<LO,HI> folded_set = fold(frm);
+    const index_set_t folded_set = this->fold(frm);
     const index_t min_index = frm.fold().min();
-    if (min_index == HI+1)
+    if (min_index == 0)
       return 0;
     const index_t skip = min_index > 0 ? 0 : 1;
-    set_value_t result = 0;
-    for (index_t idx = -1; idx >= min_index; --idx)
-      if (folded_set[idx])
-        result |= 1 << (idx - min_index);
-    for (index_t idx = 1; idx <= HI; ++idx)
-      if (folded_set[idx])
-        result |= 1 << (idx - skip - min_index);
-    return result;
+    static const index_set_t lo_mask =  bitset_t((1 << -LO) - 1);
+    static const index_set_t hi_mask = ~bitset_t((1 << (1-LO)) -1);
+    const index_set_t neg_part = folded_set & lo_mask;
+    const index_set_t pos_part = folded_set & hi_mask;
+    const bitset_t* pneg_part = &neg_part;
+    const bitset_t* ppos_part = &pos_part;
+    return ((*pneg_part) >> (min_index - LO)).to_ulong() +
+           ((*ppos_part) >> (min_index - LO + skip)).to_ulong();
   }
 
   template<const index_t LO, const index_t HI>
@@ -540,9 +530,9 @@ namespace glucat
     index_t i = 0;
     index_t j = 0;
 
-    i = count();
+    i = this->count();
     for(j = LO; j <= HI; ++j)
-      if (test(j))
+      if (this->test(j))
       {
         i--;
         if (ist[j])
