@@ -1,3 +1,20 @@
+2004-08-01: 0.1.8
+GluCat has had a few bugs fixed, and a few minor enhancements. 
+The constuctor for index_set<> from string and the corresponding stream input
+operator >> now work properly with strings of the form "1,2" as well as
+"{1,2}". 
+The subscripting operator [] for matrix_multi<> now works properly for index
+sets not contained in m_frame. 
+Programs which use GluCat can now invoke GluCat classes and functions from
+separately compiled modules. To allow for this, the try_catch functions have
+been moved from glucat/errors.h and glucat/errors_imp.h to the new file
+test/try_catch.h.
+Some constructors and the operators += and -= for matrix_multi<> have had some
+minor speed improvements.
+The left contraction operator %= for framed_multi<> has a minor speed
+improvement.
+The --enable-debug=no configuration option uses more aggressive inlining.
+
 2004-06-20: 0.1.7
 GluCat now has an improved ./configure script which is better able to 
 determine whether you have <boost/numeric/ublas/lu.hpp> available.
