@@ -24,8 +24,9 @@
  ***************************************************************************/
 
 #include "glucat/glucat.h"
-const int DRIVER_FAST_SIZE_THRESHOLD    = 1 << 30;
-const int DRIVER_INV_FAST_DIM_THRESHOLD = 1 << 15;
+const int DRIVER_BASIS_MAX_COUNT        = 1;
+const int DRIVER_FAST_SIZE_THRESHOLD    = 1 << 31;
+const int DRIVER_INV_FAST_DIM_THRESHOLD = 1 << 31;
 typedef glucat::tuning
   <
     glucat::DEFAULT_Mult_Matrix_Threshold,
@@ -33,7 +34,7 @@ typedef glucat::tuning
     glucat::DEFAULT_Sqrt_Max_Steps,
     glucat::DEFAULT_Log_Max_Outer_Steps,
     glucat::DEFAULT_Log_Max_Inner_Steps,
-    glucat::DEFAULT_Basis_Max_Count,
+    DRIVER_BASIS_MAX_COUNT,
     DRIVER_FAST_SIZE_THRESHOLD,
     DRIVER_INV_FAST_DIM_THRESHOLD
   >
@@ -56,7 +57,8 @@ namespace glucat_gfft_test
   inline
   void
   print_times(const Index_Set_T& frame1, const Index_Set_T& frame2,
-              const double mm_cpu_time,  const double fm_cpu_time)
+              const double mm_cpu_time,  const double fm_cpu_time,
+              const int mm_trials,       const int fm_trials)
   {
     const int index_width = 2;
     cout << "Cl(" << setw(index_width) <<  max_pos(frame1) << ","
@@ -68,6 +70,7 @@ namespace glucat_gfft_test
     const int width = 10;
     const int old_prec = cout.precision();
     const int prec = 2;
+    const int trial_width = 4;
     cout.setf(ios_base::fixed);
     cout.setf(ios_base::showpoint);
     cout << setprecision(prec)
@@ -75,6 +78,11 @@ namespace glucat_gfft_test
          << setw(width) << mm_cpu_time << " "
          << "fm: "
          << setw(width) << fm_cpu_time << " "
+         << "trials "
+         << "mm: "
+         << setw(trial_width) << mm_trials << " "
+         << "fm: "
+         << setw(trial_width) << fm_trials << " "
          << setprecision(old_prec);
     cout.flags(old_flags);
   }
@@ -91,37 +99,51 @@ namespace glucat_gfft_test
     typedef typename Multivector_T::scalar_t    scalar_t;
 
     int trials;
-    const int min_trials_if_zero = 1000;
+    const double min_cpu_time = 20.0;
+    const int min_trials_if_small = 1000;
     a = a*b*(scalar_t(1.0*rand())/RAND_MAX) + a*(scalar_t(1.0*rand())/RAND_MAX);
+    int mm_trials = 1;
     clock_t cpu_time = clock();
      matrix_multi_t A = a.fast_matrix_multi(outer_frame);
     double mm_cpu_time = elapsed(cpu_time);
     if (mm_cpu_time < MS_PER_S)
     {
       const int max_trials =
-       mm_cpu_time == 0.0 ?
-         min_trials_if_zero :
-         int(floor(MS_PER_S/mm_cpu_time));
+       mm_cpu_time < min_cpu_time ?
+         min_trials_if_small :
+         int(ceil(MS_PER_S/mm_cpu_time));
       cpu_time = clock();
       for (trials = 0; trials != max_trials; ++trials)
         A = a.fast_matrix_multi(outer_frame);
-      mm_cpu_time = elapsed(cpu_time)/trials;
+      double trial_time = elapsed(cpu_time);
+      matrix_multi_t new_A;
+      cpu_time = clock();
+      for (mm_trials = 0; mm_trials != trials; ++mm_trials)
+        new_A = A;
+      double for_time = elapsed(cpu_time);
+      mm_cpu_time = max(0.0,trial_time - for_time)/trials;
     }
+    int fm_trials = 1;
     cpu_time = clock();
      framed_multi_t new_a = A.fast_framed_multi();
     double fm_cpu_time = elapsed(cpu_time);
     if (fm_cpu_time < MS_PER_S)
     {
       const int max_trials =
-       fm_cpu_time == 0.0 ?
-         min_trials_if_zero :
-         int(floor(MS_PER_S/fm_cpu_time));
+       fm_cpu_time < min_cpu_time ?
+         min_trials_if_small :
+         int(ceil(MS_PER_S/fm_cpu_time));
       cpu_time = clock();
       for (trials = 0; trials != max_trials; ++trials)
         new_a = A.fast_framed_multi();
-      fm_cpu_time = elapsed(cpu_time)/trials;
+      double trial_time = elapsed(cpu_time);
+      cpu_time = clock();
+      for (fm_trials = 0; fm_trials != trials; ++fm_trials)
+        new_a = a;
+      double for_time = elapsed(cpu_time);
+      fm_cpu_time = max(0.0,trial_time - for_time)/trials;
     }
-    print_times(inner_frame, outer_frame, mm_cpu_time, fm_cpu_time);
+    print_times(inner_frame, outer_frame, mm_cpu_time, fm_cpu_time, mm_trials, fm_trials);
     const ios::fmtflags& old_flags = cout.flags();
     const int width = 8;
     const int old_prec = cout.precision();
