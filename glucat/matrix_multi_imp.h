@@ -132,7 +132,10 @@ namespace glucat
     const index_t begin_index = m_frame.min();
     const index_t end_index = m_frame.max()+1;
 
-    for (index_t idx = begin_index; idx != end_index; ++idx)
+    for (index_t 
+        idx = begin_index; 
+        idx != end_index; 
+        ++idx)
       if (m_frame[idx])
       {
         *this += pair_t(index_set_t(idx), *scvec);
@@ -169,9 +172,11 @@ namespace glucat
     const matrix_index_t dim = folded_dim<matrix_index_t>(m_frame);
     m_matrix.resize(dim, dim);
 
-    for(typename framed_multi_t::const_iterator
-      scan = val.begin(); scan != val.end(); ++scan)
-      *this += *scan;
+    for (typename framed_multi_t::const_iterator
+        val_it = val.begin(); 
+        val_it != val.end(); 
+        ++val_it)
+      *this += *val_it;
   }
 
   /// Construct a multivector, within a given frame, from a framed_multi_t
@@ -193,9 +198,11 @@ namespace glucat
     const matrix_index_t dim = folded_dim<matrix_index_t>(m_frame);
     m_matrix.resize(dim, dim);
 
-    for(typename framed_multi_t::const_iterator
-      scan = val.begin(); scan != val.end(); ++scan)
-      *this += *scan;
+    for (typename framed_multi_t::const_iterator
+        val_it = val.begin(); 
+        val_it != val.end(); 
+        ++val_it)
+      *this += *val_it;
   }
 
   /// Construct a multivector within a given frame from a given matrix
@@ -418,12 +425,13 @@ namespace glucat
           {
             matrix_t XTnew = XT;
             Scalar_T nrold = nr + Scalar_T(1);
-            for (int step = 0;
-                 step != Tune_P::div_max_steps &&
-                 nr < nrold &&
-                 nr != Scalar_T(0) &&
-                 nr == nr;
-                  ++step )
+            for (int 
+                step = 0;
+                step != Tune_P::div_max_steps &&
+                nr < nrold &&
+                nr != Scalar_T(0) &&
+                nr == nr;
+                ++step)
             {
               nrold = nr;
               if (step != 0)
@@ -522,7 +530,9 @@ namespace glucat
     else
       a = *this;
     multivector_t result = 1;
-    for (; m != 0; m >>= 1)
+    for (; 
+        m != 0; 
+        m >>= 1)
     {
       if (m & 1)
         result *= a;
@@ -540,7 +550,9 @@ namespace glucat
       throw error_t("outer_pow(m): negative exponent");
     multivector_t result = 1;
     multivector_t a = *this;
-    for (; m != 0; m >>= 1)
+    for (; 
+        m != 0; 
+        m >>= 1)
     {
       if (m & 1)
         result ^= a;
@@ -561,13 +573,24 @@ namespace glucat
       return (framed_multi_t(*this))(grade);
   }
 
+  /// Even part, sum of the even grade terms
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
   const matrix_multi<Scalar_T,LO,HI>
   matrix_multi<Scalar_T,LO,HI>::
   even() const
-  { // even part of x, sum of the pure(count) with even count
+  {
     return framed_multi_t(*this).even();
+  }
+
+  /// Odd part, sum of the odd grade terms
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
+  const matrix_multi<Scalar_T,LO,HI>
+  matrix_multi<Scalar_T,LO,HI>::
+  odd() const
+  {
+    return framed_multi_t(*this).odd();
   }
 
   /// Vector part of multivector, as a vector_t
@@ -579,7 +602,10 @@ namespace glucat
     vector_t result;
     const index_t begin_index = m_frame.min();
     const index_t end_index = m_frame.max()+1;
-    for (index_t idx = begin_index; idx != end_index; ++idx)
+    for (index_t 
+        idx = begin_index; 
+        idx != end_index; 
+        ++idx)
       if (m_frame[idx])
         // Frame may contain indices which do not correspond to a grade 1 term but
         // frame cannot omit any index corresponding to a grade 1 term
@@ -644,8 +670,14 @@ namespace glucat
   matrix_multi<Scalar_T,LO,HI>::
   isnan() const
   { // The distinguishing feature is that NaN != NaN
-    for (typename matrix_t::const_iterator1 i = m_matrix.begin1(); i != m_matrix.end1(); ++i)
-      for (typename matrix_t::const_iterator2 j = i.begin(); j != i.end(); ++j)
+    for (typename matrix_t::const_iterator1 
+        i = m_matrix.begin1(); 
+        i != m_matrix.end1(); 
+        ++i)
+      for (typename matrix_t::const_iterator2 
+          j = i.begin(); 
+          j != i.end(); 
+          ++j)
         if (*j != *j)
           return true;
     return false;
@@ -680,14 +712,15 @@ namespace glucat
   /// Inverse generalized Fast Fourier Transform
   template< typename Multivector_T, typename Matrix_T >
   Multivector_T
-  fast(const Matrix_T& M, index_t level)
+  fast(const Matrix_T& X, index_t level)
   {
     typedef Multivector_T framed_multi_t;
     if (level == 0)
-      return framed_multi_t(M(0,0));
+      return framed_multi_t(X(0,0));
 
     typedef Matrix_T matrix_t;
     typedef typename framed_multi_t::index_set_t index_set_t;
+
     const matrix_t I = matrix::unit<matrix_t>(2);
     matrix_t J(2,2);
     J(0,1) =    -1;
@@ -701,39 +734,31 @@ namespace glucat
 
     typedef typename framed_multi_t::index_set_t index_set_t;
     typedef typename framed_multi_t::scalar_t scalar_t;
-    const framed_multi_t mn = framed_multi_t(index_set_t(-level), scalar_t(1));
-    const framed_multi_t pn = framed_multi_t(index_set_t(level), scalar_t(1));
+    const index_set_t ist_mn = index_set_t(-level);
+    const index_set_t ist_pn = index_set_t(level);
+    const framed_multi_t mn   = framed_multi_t(ist_mn, scalar_t(1));
+    const framed_multi_t pn   = framed_multi_t(ist_pn,  scalar_t(1));
+    const framed_multi_t mnpn = framed_multi_t(ist_mn ^ ist_pn, scalar_t(1));
+    using matrix::nork;
     const bool mono = true;
     if (level == 1)
     {
-      const framed_multi_t& I_M  = (matrix::nork(I,  M, mono))(0, 0);
-      const framed_multi_t& J_M  = (matrix::nork(J,  M, mono))(0, 0);
-      const framed_multi_t& K_M  = (matrix::nork(K,  M, mono))(0, 0);
-      const framed_multi_t& JK_M = (matrix::nork(JK, M, mono))(0, 0);
-      return    I_M
-        + mn * (JK_M * pn + J_M)
-        +       K_M * pn;
+      const framed_multi_t& i_x  = (nork(I, X, mono))(0, 0);
+      const framed_multi_t& j_x  = (nork(J, X, mono))(0, 0);
+      const framed_multi_t& k_x  = (nork(K, X, mono))(0, 0);
+      const framed_multi_t& jk_x = (nork(JK,X, mono))(0, 0);
+      return i_x + j_x * mn + k_x * pn + jk_x * mnpn;
     }
-    const framed_multi_t& I_M  =
-      fast<framed_multi_t, matrix_t>(matrix::nork(I,  M, mono), level-1);
-    const framed_multi_t& J_M  =
-      fast<framed_multi_t, matrix_t>(matrix::nork(J,  M, mono), level-1);
-    const framed_multi_t& K_M  =
-      fast<framed_multi_t, matrix_t>(matrix::nork(K,  M, mono), level-1);
-    const framed_multi_t& JK_M =
-      fast<framed_multi_t, matrix_t>(matrix::nork(JK, M, mono), level-1);
-    const framed_multi_t& ev_I_M = even(I_M);
-    const framed_multi_t& od_I_M = I_M - ev_I_M;
-    const framed_multi_t& ev_J_M = even(J_M);
-    const framed_multi_t& od_J_M = J_M - ev_J_M;
-    const framed_multi_t& ev_K_M = even(K_M);
-    const framed_multi_t& od_K_M = K_M - ev_K_M;
-    const framed_multi_t& ev_JK_M = even(JK_M);
-    const framed_multi_t& od_JK_M = JK_M - ev_JK_M;
-    return (ev_I_M  - od_JK_M)
-     + mn*((ev_JK_M + od_I_M)*pn
-     +     (ev_J_M  + od_K_M))
-     +     (ev_K_M  - od_J_M)*pn;
+    const framed_multi_t& i_x  = fast<framed_multi_t, matrix_t>(nork(I, X, mono), level-1);
+    const framed_multi_t& j_x  = fast<framed_multi_t, matrix_t>(nork(J, X, mono), level-1);
+    const framed_multi_t& k_x  = fast<framed_multi_t, matrix_t>(nork(K, X, mono), level-1);
+    const framed_multi_t& jk_x = fast<framed_multi_t, matrix_t>(nork(JK,X, mono), level-1);
+
+    return  i_x.even()  - jk_x.odd()
+         + (j_x.even()  - k_x.odd()) * mn
+         + (k_x.even()  - j_x.odd()) * pn
+         + (jk_x.even() - i_x.odd()) * mnpn;
+
   }
 
   /// Use generalized FFT to construct a matrix_multi_t
@@ -853,7 +878,10 @@ namespace glucat
     }
     const matrix_t* e = (gen::generator_table<matrix_t>::generator())(p,q);
     matrix_t result = matrix::unit<matrix_t>(dim);
-    for (index_t k = folded_min; k <= folded_max; ++k)
+    for (index_t 
+        k = folded_min; 
+        k <= folded_max; 
+        ++k)
       if (folded_set[k])
         result = matrix::mono_prod(result, e[k]);
     if (p+q <= Tune_P::basis_max_count)
