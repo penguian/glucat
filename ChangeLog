@@ -1,3 +1,40 @@
+2004-08-09 22:59  leopardi
+
+	* NEWS: Reflect recent changes
+
+2004-08-09 22:55  leopardi
+
+	* configure.in, configure.in.in: Check for g++ version.  Do nothing
+	  with version for now
+
+2004-08-09 22:54  leopardi
+
+	* test_runtime/: gfft_test-10.out, squaring-8.out,
+	  transforms-6.out: Bring test results up to date
+
+2004-08-09 22:54  leopardi
+
+	* glucat/index_set_imp.h: Revert changes to operator==, operator!=.
+	  Streamline sign_of_mult
+
+2004-08-09 22:52  leopardi
+
+	* glucat/framed_multi_imp.h: Small speedup in geometric product
+
+2004-08-06 22:56  leopardi
+
+	* glucat/index_set_imp.h: Minor optimizations to sign_of_mult().
+	  Clean up some constructors, operator==, operator!=
+
+2004-08-02 07:45  leopardi
+
+	* test_runtime/: gfft_test-10.out, squaring-8.out,
+	  transforms-6.out: Update timing test results to reflect changes
+
+2004-08-02 07:04  leopardi
+
+	* ChangeLog: Changes for GluCat 0.1.8
+
 2004-08-02 07:03  leopardi
 
 	* NEWS: Remove news of reverted changes
