@@ -60,8 +60,8 @@ namespace glucat
     const index_set_t folded_frame = frm.fold();
     const index_t min_index = folded_frame.min();
     const index_t skip = min_index > 0 ? 0 : 1;
-    static const index_set_t lo_mask = bitset_t((1 << -LO) - 1);
-    static const index_set_t hi_mask = ~bitset_t((1 << (1-LO)) -1);
+    static const index_set_t lo_mask =  bitset_t((1UL << -LO) - 1);
+    static const index_set_t hi_mask = ~bitset_t((1UL << (1-LO)) -1);
     const index_set_t neg_part = (index_set_t(bitset_t(folded_val) << (min_index - LO))) & lo_mask;
     const index_set_t pos_part = (index_set_t(bitset_t(folded_val) << (min_index - LO + skip))) & hi_mask;
     const index_set_t folded_set = neg_part | pos_part;
@@ -510,8 +510,8 @@ namespace glucat
     if (min_index == 0)
       return 0;
     const index_t skip = min_index > 0 ? 0 : 1;
-    static const index_set_t lo_mask =  bitset_t((1 << -LO) - 1);
-    static const index_set_t hi_mask = ~bitset_t((1 << (1-LO)) -1);
+    static const index_set_t lo_mask =  bitset_t((1UL << -LO) - 1);
+    static const index_set_t hi_mask = ~bitset_t((1UL << (1-LO)) -1);
     const index_set_t neg_part = folded_set & lo_mask;
     const index_set_t pos_part = folded_set & hi_mask;
     const bitset_t* pneg_part = &neg_part;
