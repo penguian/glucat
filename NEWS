@@ -1,1 +1,12 @@
+2002-01-27: 0.0.5
+GluCat has now been tested with gcc 3.0.3 and should now be very compatible with standard C++.
+2002-01-24: 0.0.4
+GluCat now uses the real irreducible representation for matrix_multi<>, which should now run
+acceptably quickly for Cl(p,0) and Cl(0,q).
+2002-01-22: 0.0.3
+A nasty bug in matrix_multi<>::operator==() is now fixed. cos(), sin() and
+matrx_multi<>::norm() have been optimized.
+2002-01-12: 0.0.2
+GluCat now uses CVS.
+2002-01-09: 0.0.1
 

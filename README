@@ -65,10 +65,12 @@ Dependencies
 ------------
  GluCat uses the C++ Standard Library and the Matrix Template Library. Make sure
  you have these installed and working before attempting to use GluCat.
- The code currently runs on SuSE Linux 7.2 using g++ 2.95.3 with the
- libstdc++-v3 library and MTL 2.1.2-20. The headers need a compiler which
- correctly handles template template classes, which rules out (eg.) the Intel
- C++ compiler.
+ The code has so far been tested using MTL 2.1.2-20 with:
+ 1) SuSE Linux 7.2 using g++ 2.95.3 and libstdc++-libc6.2-2.so.3
+ 2) SuSE Linux 7.2 using g++ 3.0.3 and libstdc++.so.3.0.2
+ 3) Red Hat Linux 7.1 using g++ 2.96 and libstdc++-3
+ The headers need a compiler which correctly handles template template classes,
+ which rules out (eg.) the Intel C++ compiler.
 
 Installation
 ------------
@@ -76,8 +78,8 @@ Installation
 
 Usage
 -----
- As of the initial version 0.0.1 there are no detailed usage instructions. What
- follows is a brief summary. See also http://glucat.sourceforge.net
+ As of the current version there are no detailed usage instructions. What
+ follows is a brief summary of usage. See also http://glucat.sourceforge.net
 
  To see brief descriptions of the classes, functions and operators which
  GluCat defines, see the Doxygen API documentation in ./glucat-api/html
@@ -100,8 +102,8 @@ typedef glucat::tuning<> Tune_P;
 
  Tune_P is the tuning policy class. It may be included as a template parameter
  in future versions, but for now, you will need to define it as a typedef before
- including <glucat/glucat_imp.h>. tuning<> is a template class defined in
- <glucat/global.h>
+ including <glucat/glucat_imp.h>.
+ The tuning<> template class is defined in <glucat/global.h>
  Glucat defines and uses the glucat:: namespace. You can use names from this
  namespace by using the glucat:: prefix or by using the following declaration:
 
@@ -149,8 +151,8 @@ The Test Program
  will run a timing test which squares larger and larger multivectors within
  the subalgebra defined by the frame of the index set {-n, ..., -1, 1, ..., n}
 
- To run a meaningful timing test, run make with
- CXXFLAGS = -O2 -g3 -finline-functions -finline-limit-400
+ To run a meaningful timing test using the g++ compiler, run make with
+ CXXFLAGS = -O2 -g3 -finline-functions -finline-limit-768
  This optimized compilation may take a long time to complete.
 
  You can find sample test output in ./test/eg3.res, ./test/test.out and

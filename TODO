@@ -16,11 +16,8 @@ o Tune_P should be made into a mixin policy class template parameter, ie.
   does not work - it either causes strange error messages about invalid template
   parameters for _Rb_tree<> or causes Internal Compiler Errors.
 o framed_multi< complex<T>, LO, HI > etc. need proper support and testing.
-o IEEE NaN needs proper support. Current code depends on <mtl/mtl_limits.h>
-  which apparently does not define NaN correctly.
-o When g++ 3.X is the default compiler on either RedHat Linux or SuSE Linux, port to g++ 3.X
-o When g++ is the default compiler, use C++ standard library directly for, eg.
-  <limits>, rather than eg. <mtl/mtl_limits.h>
+o IEEE NaN needs proper support. Current code depends on <mtl/mtl_limits.h> when
+ <limits> is not available, but <mtl/mtl_limits.h> apparently does not define NaN correctly.
 o When MTL 3.X is available, port to MTL 3.X
   This will mean rewriting some matrix algorithms to use matrix operators.
 o Port to other architectures and compilers which support template template parameters
