@@ -46,6 +46,9 @@ namespace glucat
     friend class matrix_multi_t;
   private:
     typedef std::map< const index_set_t, Scalar_T > map_t;
+    typedef typename map_t::iterator       iterator;
+    typedef typename map_t::const_iterator const_iterator;
+    typedef typename matrix_multi_t::matrix_t matrix_t;
   public:
     /// Class name used in messages
     static const char* classname();

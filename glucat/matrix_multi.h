@@ -44,12 +44,13 @@ namespace glucat
     typedef framed_multi<Scalar_T,LO,HI>  framed_multi_t;
     friend class framed_multi_t;
   private:
-    typedef mtl::matrix< Scalar_T, mtl::rectangle<>, mtl::compressed<>,
+    typedef typename mtl::matrix< Scalar_T, mtl::rectangle<>, mtl::compressed<>,
             mtl::row_major >::type        sparse_matrix_t;
-    typedef mtl::matrix< Scalar_T, mtl::rectangle<>, mtl::dense<>,
+    typedef typename mtl::matrix< Scalar_T, mtl::rectangle<>, mtl::dense<>,
             mtl::row_major >::type        dense_matrix_t;
     typedef sparse_matrix_t               matrix_t;
-    typedef mtl::matrix_traits<matrix_t>::size_type matrix_index_t;
+    typedef typename mtl::matrix_traits<matrix_t>::size_type
+                                          matrix_index_t;
   public:
     /// Class name used in messages
     static const char* classname();
@@ -94,7 +95,11 @@ namespace glucat
   private:
     /// Add a term, if non-zero
     multivector_t&     operator+= (const pair_t& rhs);
+#ifdef __ICL
+  public: // hack for icc 6
+#else
   private:
+#endif
     // Data members
     /// Index set representing the frame for the subalgebra which contains the multivector
     index_set_t     m_frame;
@@ -117,6 +122,6 @@ namespace glucat
   template< typename Scalar_T, const index_t LO, const index_t HI >
   void
   basis_element( const index_set<LO,HI>& ist, const index_set<LO,HI>& sub,
-                matrix_multi<Scalar_T,LO,HI>::matrix_t& result );
+                 typename matrix_multi<Scalar_T,LO,HI>::matrix_t& result );
 }
 #endif  // _GLUCAT_MATRIX_MULTI_H

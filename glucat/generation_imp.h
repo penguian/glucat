@@ -32,7 +32,7 @@ namespace glucat
 
   /// Modulo function which works reliably for lhs < 0
   inline
-  const int
+  int
   pos_mod(int lhs, int rhs)
   { return lhs > 0? lhs % rhs : (-lhs) % rhs == 0 ? 0 : rhs - (-lhs) % rhs; }
 
@@ -78,7 +78,7 @@ namespace glucat
     const index_t bias = p - q;
     const index_t bott = pos_mod(bias, 8);
     const signature_t sig(p, q);
-    if (find(sig) == end())
+    if (this->find(sig) == this->end())
       switch(bott)
       {
       case 0:
@@ -93,7 +93,7 @@ namespace glucat
           vector<Matrix_T> result(1);
           result[0] = Matrix_T(1,1);
           mtl::set(result[0], 0);
-          insert(make_pair(sig, result));
+          this->insert(make_pair(sig, result));
         }
         else
           // Construct generators for p,q given generators for p-1,q-1
@@ -150,7 +150,7 @@ namespace glucat
     kron(pos , eye, result[new_size-1]);
 
     // Save the resulting generator array.
-    insert(make_pair(sig, result));
+    this->insert(make_pair(sig, result));
   }
 
   /// Construct generators for p,q given generators for p-4,q+4
@@ -182,7 +182,7 @@ namespace glucat
       mtl::copy(old[k], result[k-4]);
     }
     // Save the resulting generator array.
-    insert(make_pair(sig, result));
+    this->insert(make_pair(sig, result));
   }
 
   /// Construct generators for p,q given generators for p+4,q-4
@@ -214,7 +214,7 @@ namespace glucat
       mtl::copy(old[k-4], result[k]);
     }
     // Save the resulting generator array.
-    insert(make_pair(sig, result));
+    this->insert(make_pair(sig, result));
   }
 
   /// Construct generators for p,q given generators for q+1,p-1
@@ -238,7 +238,7 @@ namespace glucat
     mtl::copy(a, result[old_size-1]);
 
     // Save the resulting generator array.
-    insert(make_pair(sig, result));
+      this->insert(make_pair(sig, result));
   }
 
   /// Determine the matrix dimension of the fold of a subalegbra

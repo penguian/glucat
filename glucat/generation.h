@@ -26,7 +26,7 @@
 namespace glucat
 {
   /// Modulo function which works reliably for lhs < 0
-  const int
+  int
   pos_mod(int lhs, int rhs);
 
   /// A signature is a pair of indices, p, q, with p == frame.max(), q == -frame.min()
@@ -41,8 +41,9 @@ namespace glucat
     /// Pointer to generators for a specific signature
     const Matrix_T* operator() (const index_t p, const index_t q);
     /// Single instance of generator table
-    friend generator_table& generator<Matrix_T>();
-  private:
+    friend generator_table<Matrix_T>& generator<Matrix_T>();
+  public:
+//  private:
     /// Construct a vector of generators for a specific signature
     const std::vector<Matrix_T>& gen_vector(const index_t p, const index_t q);
     /// Construct generators for p,q given generators for p-1,q-1

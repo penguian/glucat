@@ -47,5 +47,5 @@ namespace glucat
     virtual const char* classname() const throw();
     virtual void print_error_msg() const;
   };
-};
+}
 #endif // _GLUCAT_ERRORS_H

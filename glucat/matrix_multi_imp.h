@@ -110,14 +110,14 @@ namespace glucat
   template< typename Scalar_T, const index_t LO, const index_t HI >
   matrix_multi<Scalar_T,LO,HI>::
   matrix_multi(const vector_t& vec,
- 							 const index_set_t& frm, const bool prechecked = false)
+ 							 const index_set_t& frm, const bool prechecked)
   : m_frame( frm )
   {
     if (!prechecked && index_t(vec.size()) != frm.count())
       throw error_t("multivector_t(vec,frm): cannot initialize with vector not matching frame");
     const matrix_index_t dim = folded_dim<matrix_index_t,LO,HI>(m_frame);
     m_matrix = matrix_t( dim, dim );
-    vector_t::const_iterator scvec = vec.begin();
+    typename vector_t::const_iterator scvec = vec.begin();
     const index_t begin_index = m_frame.min();
     const index_t end_index = m_frame.max()+1;
     for (index_t idx = begin_index; idx != end_index; ++idx)
@@ -149,7 +149,7 @@ namespace glucat
     const matrix_index_t dim = folded_dim<matrix_index_t,LO,HI>(m_frame);
     m_matrix = matrix_t( dim, dim );
 
-    for(framed_multi_t::const_iterator
+    for(typename framed_multi_t::const_iterator
       scan = val.begin(); scan != val.end(); ++scan)
       *this += *scan;
   }
@@ -165,7 +165,7 @@ namespace glucat
     const matrix_index_t dim = folded_dim<matrix_index_t,LO,HI>(m_frame);
     m_matrix = matrix_t( dim, dim );
 
-    for(framed_multi_t::const_iterator
+    for(typename framed_multi_t::const_iterator
       scan = val.begin(); scan != val.end(); ++scan)
       *this += *scan;
   }
@@ -202,7 +202,7 @@ namespace glucat
 
   /// Test for equality of multivectors
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const bool
+  bool
   matrix_multi<Scalar_T,LO,HI>::
   operator==  (const multivector_t& rhs) const
   {
@@ -233,7 +233,7 @@ namespace glucat
 
   // Test for equality of multivector and scalar
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const bool
+  bool
   matrix_multi<Scalar_T,LO,HI>::
   operator==  (const Scalar_T& scr) const
   { return (*this) == multivector_t(framed_multi_t(scr), m_frame, true); }
@@ -482,7 +482,7 @@ namespace glucat
         // Set X(i,:) = x
         const matrix_index_t i_index = i.index();
         mtl::set(*i, 0);
-        for (vector_t::const_iterator j = x.begin(); j != x.end(); ++j)
+        for (typename vector_t::const_iterator j = x.begin(); j != x.end(); ++j)
           if (*j !=  Scalar_T(0))
             m_matrix(i_index, j.index()) = *j;
       }
@@ -504,7 +504,7 @@ namespace glucat
 
   /// Subscripting: map from index set to scalar coordinate
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const Scalar_T
+  Scalar_T
   matrix_multi<Scalar_T,LO,HI>::
   operator[] (const index_set_t& ist) const
   {
@@ -539,7 +539,7 @@ namespace glucat
 
   /// Quadratic form := scalar part of rev(x)*x
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const Scalar_T
+  Scalar_T
   matrix_multi<Scalar_T,LO,HI>::
   quad() const
   { // scalar(conj(x)*x) = 2*quad(even(x)) - quad(x)
@@ -549,7 +549,7 @@ namespace glucat
 
   /// Scalar_T norm squared= sum of norm squared of coordinates
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const Scalar_T
+  Scalar_T
   matrix_multi<Scalar_T,LO,HI>::
   norm() const
   { return inner<matrix_t,Scalar_T>(m_matrix, m_matrix); }
@@ -622,7 +622,7 @@ namespace glucat
   /// Vector part of multivector, as a vector_t
   template< typename Scalar_T, const index_t LO, const index_t HI >
   const
-  matrix_multi<Scalar_T,LO,HI>::vector_t
+  typename matrix_multi<Scalar_T,LO,HI>::vector_t
   matrix_multi<Scalar_T,LO,HI>::
   vector_part() const
   {
@@ -681,7 +681,6 @@ namespace glucat
   }
 
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const
   Scalar_T
   matrix_multi<Scalar_T,LO,HI>::
   max_abs() const
@@ -689,7 +688,7 @@ namespace glucat
 
   /// Check if a multivector contains any IEEE NaN values
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const bool
+  bool
   matrix_multi<Scalar_T,LO,HI>::
   isnan() const
   { // The distinguishing feature is that NaN != NaN
@@ -733,12 +732,12 @@ namespace glucat
   template< typename Scalar_T, const index_t LO, const index_t HI >
   void
   basis_element( const index_set<LO,HI>& ist, const index_set<LO,HI>& m_frame,
-                 matrix_multi<Scalar_T,LO,HI>::matrix_t& result )
+                 typename matrix_multi<Scalar_T,LO,HI>::matrix_t& result )
   {
-    typedef matrix_multi<Scalar_T,LO,HI>  multivector_t;
-    typedef multivector_t::matrix_t       matrix_t;
-    typedef multivector_t::matrix_index_t matrix_index_t;
-    typedef index_set<LO,HI>              index_set_t;
+    typedef matrix_multi<Scalar_T,LO,HI>           multivector_t;
+    typedef typename multivector_t::matrix_t       matrix_t;
+    typedef typename multivector_t::matrix_index_t matrix_index_t;
+    typedef index_set<LO,HI>                       index_set_t;
 
     const index_set_t folded_set = ist.fold(m_frame);
     const index_set_t folded_frame = m_frame.fold();

@@ -33,7 +33,7 @@ namespace glucat
 
   template<const index_t LO, const index_t HI>
   index_set<LO,HI>::
-  index_set<LO,HI>(const index_t& idx)
+  index_set(const index_t& idx)
   {
     set(idx);
     reset(0);
@@ -42,7 +42,7 @@ namespace glucat
   /// Constructor from set value of an index set folded within the given frame
   template<const index_t LO, const index_t HI>
   index_set<LO,HI>::
-  index_set<LO,HI>(const set_value_t& folded_val, const index_set& frm, const bool prechecked)
+  index_set(const set_value_t& folded_val, const index_set_t& frm, const bool prechecked)
   {
     if (!prechecked)
       if (folded_val > set_value_t(1 << frm.count()))
@@ -65,7 +65,7 @@ namespace glucat
   /// Constructor from string
   template<const index_t LO, const index_t HI>
   index_set<LO,HI>::
-  index_set<LO,HI>(const std::string& str)
+  index_set(const std::string& str)
   {
     std::istringstream ss(str);
     ss >> *this;
@@ -74,7 +74,6 @@ namespace glucat
   /// Equality
   template<const index_t LO, const index_t HI>
   inline
-  const
   bool
   index_set<LO,HI>::
   operator== (const index_set& rhs) const
@@ -87,7 +86,7 @@ namespace glucat
   /// Inequality
   template<const index_t LO, const index_t HI>
   inline
-  const bool
+  bool
   index_set<LO,HI>::
   operator!= (const index_set& rhs) const
   {
@@ -151,7 +150,7 @@ namespace glucat
   /// Subscripting: Test idx for membership: test value of bit idx
   template<const index_t LO, const index_t HI>
   inline
-  const bool
+  bool
   index_set<LO,HI>::
   operator[] (index_t idx) const
   { return test(idx); }
@@ -159,7 +158,7 @@ namespace glucat
   /// Subscripting: Element access
   template<const index_t LO, const index_t HI>
   inline
-  index_set<LO,HI>::reference
+  typename index_set<LO,HI>::reference
   index_set<LO,HI>::
   operator[] (index_t idx)
   {
@@ -169,7 +168,7 @@ namespace glucat
   /// Test idx for membership: test value of bit idx
   template<const index_t LO, const index_t HI>
   inline
-  const bool
+  bool
   index_set<LO,HI>::
   test(index_t idx) const
   { return bitset_t::test(idx-LO); }
@@ -253,12 +252,13 @@ namespace glucat
   {
     if(idx != 0)
       bitset_t::flip(idx-LO);
+    return *this;
   }
 
   /// Cardinality: Number of indices included in set
   template<const index_t LO, const index_t HI>
   inline
-  const index_t
+  index_t
   index_set<LO,HI>::
   count() const
   { return bitset_t::count(); }
@@ -266,7 +266,7 @@ namespace glucat
   /// Number of positive indices included in set
   template<const index_t LO, const index_t HI>
   inline
-  const index_t
+  index_t
   index_set<LO,HI>::
   count_pos() const
   {
@@ -280,7 +280,7 @@ namespace glucat
   /// Number of negative indices included in set
   template<const index_t LO, const index_t HI>
   inline
-  const index_t
+  index_t
   index_set<LO,HI>::
   count_neg() const
   {
@@ -294,7 +294,7 @@ namespace glucat
   /// Minimum member
   template<const index_t LO, const index_t HI>
   inline
-  const index_t
+  index_t
   index_set<LO,HI>::
   min() const
   {
@@ -307,7 +307,7 @@ namespace glucat
   /// Maximum member
   template<const index_t LO, const index_t HI>
   inline
-  const index_t
+  index_t
   index_set<LO,HI>::
   max() const
   {
@@ -321,7 +321,7 @@ namespace glucat
   //  eg. {3,4,5} is less than {3,7,8}
   template<const index_t LO, const index_t HI>
   inline
-  const int
+  int
   compare(const index_set<LO,HI>& a, const index_set<LO,HI>& b)
   {
     for(index_t i = LO; i <= HI; i++)
@@ -334,7 +334,7 @@ namespace glucat
   // Order by count, then order lexicographically within the equivalence class of count.
   template<const index_t LO, const index_t HI>
   inline
-  const bool
+  bool
   operator< (const index_set<LO,HI>& a, const index_set<LO,HI>& b)
   {
     index_t a_grade = a.count();
@@ -468,7 +468,7 @@ namespace glucat
 
   /// The set value of the fold of this index set within the given frame
   template<const index_t LO, const index_t HI>
-  const set_value_t
+  set_value_t
   index_set<LO,HI>::
   value_of_fold(const index_set& frm) const
   {
@@ -491,7 +491,7 @@ namespace glucat
 
   template<const index_t LO, const index_t HI>
   inline
-  const int
+  int
   index_set<LO,HI>::
   sign_of_mult(const index_set<LO,HI>& ist) const
   {
@@ -516,21 +516,21 @@ namespace glucat
 
   /// Square of generator index j
   inline
-  const int
+  int
   sign_of_square(index_t j)
   { return j < 0 ? -1 : 1; }
 
   /// maximum positive index, or 0 if none
   template<const index_t LO, const index_t HI>
   inline
-  const index_t
+  index_t
   max_pos(const index_set<LO,HI>& ist)
   { return std::max(ist.max(), index_t(0)); }
 
   /// minimum negative index, or 0 if none
   template<const index_t LO, const index_t HI>
   inline
-  const index_t
+  index_t
   min_neg(const index_set<LO,HI>& ist)
   { return std::min(ist.min(), index_t(0)); }
 
@@ -561,7 +561,7 @@ namespace glucat
   /// for b[i] = x;
   template<const index_t LO, const index_t HI>
   inline
-  index_set<LO,HI>::reference&
+  typename index_set<LO,HI>::reference&
   index_set<LO,HI>::reference::
   operator= (bool x)
   {
@@ -575,9 +575,9 @@ namespace glucat
   /// for b[i] = b[j];
   template<const index_t LO, const index_t HI>
   inline
-  index_set<LO,HI>::reference&
+  typename index_set<LO,HI>::reference&
   index_set<LO,HI>::reference::
-  operator= (const index_set<LO,HI>::reference& j)
+  operator= (const typename index_set<LO,HI>::reference& j)
   {
     if ( (j.m_pst)[j.m_idx] )
       m_pst->set(m_idx);
@@ -588,7 +588,7 @@ namespace glucat
 
   /// flips the bit
   template<const index_t LO, const index_t HI>
-  const bool
+  bool
   index_set<LO,HI>::reference::
   operator~ () const
   { return !(m_pst->test(m_idx)); }
@@ -602,7 +602,7 @@ namespace glucat
 
   /// for b[i].flip();
   template<const index_t LO, const index_t HI>
-  index_set<LO,HI>::reference&
+  typename index_set<LO,HI>::reference&
   index_set<LO,HI>::reference::
   flip()
   {

@@ -54,7 +54,7 @@ namespace glucat
 		typename Scalar_T, const index_t LO, const index_t HI
 	>
   inline
-  const bool
+  bool
   operator!= (const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs)
   { return !(lhs == rhs); }
 
@@ -63,7 +63,7 @@ namespace glucat
   template<	template<typename, const index_t, const index_t> class Multivector,
 						typename Scalar_T, const index_t LO, const index_t HI	>
   inline
-  const bool
+  bool
   operator!= (const Multivector<Scalar_T,LO,HI>& lhs, const Scalar_T& scr)
   { return lhs.frame().count() != 0 || scalar(lhs) != scr; }
 
@@ -71,7 +71,7 @@ namespace glucat
   template<	template<typename, const index_t, const index_t> class Multivector,
 						typename Scalar_T, const index_t LO, const index_t HI	>
   inline
-  const bool
+  bool
   operator!= (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI>& rhs)
   { return rhs.frame().count() != 0 || scalar(rhs) != scr; }
 
@@ -235,7 +235,7 @@ namespace glucat
 		typename Scalar_T, const index_t LO, const index_t HI
 	>
   inline
-  const Scalar_T
+  Scalar_T
   star(const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs)
   { return scalar(lhs * rhs); }
 
@@ -312,7 +312,7 @@ namespace glucat
   template<	template<typename, const index_t, const index_t> class Multivector,
 						typename Scalar_T, const index_t LO, const index_t HI	>
   inline
-  const Scalar_T
+  Scalar_T
   quad(const Multivector<Scalar_T,LO,HI>& val)
   { return val.quad(); }
 
@@ -320,7 +320,7 @@ namespace glucat
   template<	template<typename, const index_t, const index_t> class Multivector,
 						typename Scalar_T, const index_t LO, const index_t HI	>
   inline
-  const Scalar_T
+  Scalar_T
   scalar(const Multivector<Scalar_T,LO,HI>& val)
   { return val[index_set<LO,HI>()]; }
 
@@ -351,7 +351,7 @@ namespace glucat
   template<	template<typename, const index_t, const index_t> class Multivector,
 						typename Scalar_T, const index_t LO, const index_t HI	>
   inline
-  const Scalar_T
+  Scalar_T
   abs(const Multivector<Scalar_T,LO,HI>& val)
   { return std::sqrt(val.norm()); }
 
@@ -359,7 +359,7 @@ namespace glucat
   template<	template<typename, const index_t, const index_t> class Multivector,
 						typename Scalar_T, const index_t LO, const index_t HI	>
   inline
-  const Scalar_T
+  Scalar_T
   norm(const Multivector<Scalar_T,LO,HI>& val)
   { return val.norm(); }
 
@@ -367,7 +367,7 @@ namespace glucat
   template<	template<typename, const index_t, const index_t> class Multivector,
 						typename Scalar_T, const index_t LO, const index_t HI	>
   inline
-  const Scalar_T
+  Scalar_T
   real(const Multivector<Scalar_T,LO,HI>& val)
   { return std::real(scalar(val)); }
 
@@ -375,7 +375,7 @@ namespace glucat
   template<	template<typename, const index_t, const index_t> class Multivector,
 						typename Scalar_T, const index_t LO, const index_t HI	>
   inline
-  const Scalar_T
+  Scalar_T
   imag(const Multivector<Scalar_T,LO,HI>& val)
   { return std::imag(scalar(val)); }
 

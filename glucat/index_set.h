@@ -49,17 +49,17 @@ namespace glucat
     index_set     (const std::string& str);
 
     /// Equality
-    const bool          operator==  (const index_set& rhs) const;
+    bool          operator==  (const index_set& rhs) const;
     /// Inequality
-    const bool          operator!=  (const index_set& rhs) const;
+    bool          operator!=  (const index_set& rhs) const;
     /// Symmetric set difference: exclusive or
     index_set&     operator^=  (const index_set& rhs);
     /// Set union: or
     index_set&     operator|=  (const index_set& rhs);
     /// Subscripting: Test idx for membership: test value of bit idx
-    const bool          operator[]  (index_t idx) const;
+    bool          operator[]  (index_t idx) const;
     /// Test idx for membership: test value of bit idx
-    const bool          test(index_t idx) const;
+    bool          test(index_t idx) const;
     /// Include all indices except 0: set all bits except 0
     index_set&    set();
     /// Include idx: Set bit at idx if idx != 0
@@ -75,15 +75,15 @@ namespace glucat
     /// Complement membership of idx if idx != 0: flip bit at idx if idx != 0
     index_set&    flip(index_t idx);
     /// Cardinality: Number of indices included in set
-    const index_t       count() const;
+    index_t       count() const;
     /// Number of positive indices included in set
-    const index_t       count_pos() const;
+    index_t       count_pos() const;
     /// Number of negative indices included in set
-    const index_t       count_neg() const;
+    index_t       count_neg() const;
     /// Minimum member
-    const index_t       min() const;
+    index_t       min() const;
     /// Maximum member
-    const index_t       max() const;
+    index_t       max() const;
 
   // Functions which support Clifford algebra operations
     /// Fold this index set within itself as a frame
@@ -93,8 +93,8 @@ namespace glucat
     /// Unfold this index set within the given frame
     const index_set     unfold        (const index_set& frm, const bool prechecked = false) const;
     /// The set value of the fold of this index set within the given frame
-    const set_value_t   value_of_fold (const index_set& frm) const;
-    const int           sign_of_mult  (const index_set& ist) const;
+    set_value_t   value_of_fold (const index_set& frm) const;
+    int           sign_of_mult  (const index_set& ist) const;
 
   // Member reference:
     class reference;
@@ -114,7 +114,7 @@ namespace glucat
       /// for b[i] = b[j];
       reference&  operator= (const reference& j);
       /// Flips a bit
-      const bool        operator~ () const;
+      bool        operator~ () const;
       /// for x = b[i];
                   operator bool () const;
       /// for b[i].flip();
@@ -129,7 +129,7 @@ namespace glucat
   };
 
   /// Size of set_value_t should be enough to contain bitset<DEFAULT_HI-DEFAULT_LO+1>
-  CTAssert(sizeof(set_value_t) >= sizeof(std::bitset<DEFAULT_HI-DEFAULT_LO+1>),
+  _GLUCAT_CTAssert(sizeof(set_value_t) >= sizeof(std::bitset<DEFAULT_HI-DEFAULT_LO+1>),
            Default_index_set_too_big_for_value);
 
   // non-members
@@ -148,12 +148,12 @@ namespace glucat
   /// "lexicographic compare" eg. {3,4,5} is less than {3,7,8}
   // -1 if a<b, +1 if a>b, 0 if a==b
   template<const index_t LO, const index_t HI>
-  const int
+  int
   compare(const index_set<LO,HI>& a, const index_set<LO,HI>& b);
 
   /// Less than operator used for comparisons, map, etc.
   template<const index_t LO, const index_t HI>
-  const bool
+  bool
   operator< (const index_set<LO,HI>& a, const index_set<LO,HI>& b);
 
   /// Write out index set
@@ -168,16 +168,16 @@ namespace glucat
 
   // Functions which support Clifford algebra operations
   /// Square of generator {j}
-  const int     sign_of_square(index_t j);
+  int     sign_of_square(index_t j);
 
   /// maximum positive index, or 0 if none
   template<const index_t LO, const index_t HI>
-  const index_t
+  index_t
   max_pos(const index_set<LO,HI>& ist);
 
   /// minimum negative index, or 0 if none
   template<const index_t LO, const index_t HI>
-  const index_t
+  index_t
   min_neg(const index_set<LO,HI>& ist);
 
   /// Set containing a range of indices from range_min to range_max

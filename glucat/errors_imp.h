@@ -49,5 +49,5 @@ namespace glucat
   error<Class_T>::
   print_error_msg() const
   { std::cerr << heading() << classname() << std::endl << what() << std::endl; }
-};
+}
 #endif // _GLUCAT_ERRORS_IMP_H
