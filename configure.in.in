@@ -232,7 +232,6 @@ AC_DEFUN(AC_GLUCAT_CHECK_COMPILERS,
     KDE_CHECK_COMPILER_FLAG(fno-check-new, [CXXFLAGS="$CXXFLAGS -fno-check-new"])
     KDE_CHECK_COMPILER_FLAG(fexceptions, [USE_EXCEPTIONS="-fexceptions"], USE_EXCEPTIONS=	)
     KDE_CHECK_COMPILER_FLAG(fabi-version=0,[CXXFLAGS="$CXXFLAGS -fabi-version=0"])
-    dnl KDE_CHECK_COMPILER_FLAG(mcmodel=medium,[CXXFLAGS="$CXXFLAGS -mcmodel=medium"])
   fi
   if test "$CXX" = "KCC"; then
     dnl unfortunately we currently cannot disable exception support in KCC
