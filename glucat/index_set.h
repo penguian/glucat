@@ -92,6 +92,8 @@ namespace glucat
     index_t       max() const;
 
   // Functions which support Clifford algebra operations
+    /// Less than operator used for comparisons, map, etc.
+    bool                operator<     (const index_set& rhs) const;
     /// Fold this index set within itself as a frame
     const index_set     fold          () const;
     /// Fold this index set within the given frame
@@ -99,8 +101,8 @@ namespace glucat
     /// Unfold this index set within the given frame
     const index_set     unfold        (const index_set& frm, const bool prechecked = false) const;
     /// The set value of the fold of this index set within the given frame
-    set_value_t   value_of_fold (const index_set& frm) const;
-    int           sign_of_mult  (const index_set& ist) const;
+    set_value_t         value_of_fold (const index_set& frm) const;
+    int                 sign_of_mult  (const index_set& ist) const;
 
   // Member reference:
     class reference;
@@ -132,6 +134,9 @@ namespace glucat
     };
     /// Subscripting: Element access
     reference     operator[](index_t idx);
+  private:
+    /// Lexicographic ordering of two sets: *this < rhs
+    bool                lex_less_than (const index_set& rhs) const;
   };
 
   /// Size of set_value_t should be enough to contain bitset<DEFAULT_HI-DEFAULT_LO>
@@ -162,11 +167,6 @@ namespace glucat
   template<const index_t LO, const index_t HI>
   int
   compare(const index_set<LO,HI>& a, const index_set<LO,HI>& b);
-
-  /// Less than operator used for comparisons, map, etc.
-  template<const index_t LO, const index_t HI>
-  bool
-  operator< (const index_set<LO,HI>& a, const index_set<LO,HI>& b);
 
   /// Write out index set
   template<const index_t LO, const index_t HI>
