@@ -191,7 +191,8 @@ namespace glucat
   bool
   index_set<LO,HI>::
   operator[] (index_t idx) const
-  { return idx == 0 ? false : bitset_t::test(idx-LO-(idx > 0 ? 1 : 0)); }
+  { return idx > 0 ? bitset_t::test(idx-LO-1) :
+           idx < 0 ? bitset_t::test(idx-LO) : false; }
 
   /// Subscripting: Element access
   template<const index_t LO, const index_t HI>
@@ -199,9 +200,7 @@ namespace glucat
   typename index_set<LO,HI>::reference
   index_set<LO,HI>::
   operator[] (index_t idx)
-  {
-    return reference(*this, idx);
-  }
+  { return reference(*this, idx); }
 
   /// Test idx for membership: test value of bit idx
   template<const index_t LO, const index_t HI>
@@ -209,7 +208,8 @@ namespace glucat
   bool
   index_set<LO,HI>::
   test(index_t idx) const
-  { return idx == 0 ? false : bitset_t::test(idx-LO-(idx > 0 ? 1 : 0)); }
+  { return idx > 0 ? bitset_t::test(idx-LO-1) :
+           idx < 0 ? bitset_t::test(idx-LO) : false; }
 
   /// Include all indices except 0: set all bits except 0
   template<const index_t LO, const index_t HI>
@@ -229,8 +229,10 @@ namespace glucat
   index_set<LO,HI>::
   set(index_t idx)
   {
-    if(idx != 0)
-      bitset_t::set(idx-LO-(idx > 0 ? 1 : 0));
+    if (idx > 0)
+      bitset_t::set(idx-LO-1);
+    else if (idx < 0)
+      bitset_t::set(idx-LO);
     return *this;
   }
 
@@ -241,8 +243,10 @@ namespace glucat
   index_set<LO,HI>::
   set(index_t idx, int val)
   {
-    if(idx != 0)
-      bitset_t::set(idx-LO-(idx > 0 ? 1 : 0), val);
+    if (idx > 0)
+      bitset_t::set(idx-LO-1, val);
+    else if (idx < 0)
+      bitset_t::set(idx-LO, val);
     return *this;
   }
 
@@ -264,8 +268,10 @@ namespace glucat
   index_set<LO,HI>::
   reset(index_t idx)
   {
-    if(idx != 0)
-      bitset_t::reset(idx-LO-(idx > 0 ? 1 : 0));
+    if (idx > 0)
+      bitset_t::reset(idx-LO-1);
+    else if (idx < 0)
+      bitset_t::reset(idx-LO);
     return *this;
   }
 
@@ -287,8 +293,10 @@ namespace glucat
   index_set<LO,HI>::
   flip(index_t idx)
   {
-    if(idx != 0)
-      bitset_t::flip(idx-LO-(idx > 0 ? 1 : 0));
+    if (idx > 0)
+      bitset_t::flip(idx-LO-1);
+    else if (idx < 0)
+      bitset_t::flip(idx-LO);
     return *this;
   }
 
@@ -300,20 +308,6 @@ namespace glucat
   count() const
   { return bitset_t::count(); }
 
-  /// Number of positive indices included in set
-  template<const index_t LO, const index_t HI>
-  inline
-  index_t
-  index_set<LO,HI>::
-  count_pos() const
-  {
-    index_t result = 0;
-    for (index_t idx = HI; idx != 0; --idx)
-      if (this->test(idx))
-        ++result;
-    return result;
-  }
-
   /// Number of negative indices included in set
   template<const index_t LO, const index_t HI>
   inline
@@ -322,8 +316,22 @@ namespace glucat
   count_neg() const
   {
     index_t result = 0;
-    for (index_t idx = LO; idx != 0; ++idx)
-      if (this->test(idx))
+    for (size_t idx = 0; idx != -LO; ++idx)
+      if (bitset_t::test(idx))
+        ++result;
+    return result;
+  }
+
+  /// Number of positive indices included in set
+  template<const index_t LO, const index_t HI>
+  inline
+  index_t
+  index_set<LO,HI>::
+  count_pos() const
+  {
+    index_t result = 0;
+    for (size_t idx = HI-LO-1; idx != -LO-1; --idx)
+      if (bitset_t::test(idx))
         ++result;
     return result;
   }
@@ -335,9 +343,12 @@ namespace glucat
   index_set<LO,HI>::
   min() const
   {
-    for (index_t result = LO; result <= HI; ++result)
-      if (this->test(result))
-        return result;
+    for (size_t idx = 0; idx != -LO; ++idx)
+      if (bitset_t::test(idx))
+        return idx+LO;
+    for (size_t idx = -LO; idx != HI-LO; ++idx)
+      if (bitset_t::test(idx))
+        return idx+LO+1;
     return 0;
   }
 
@@ -348,9 +359,14 @@ namespace glucat
   index_set<LO,HI>::
   max() const
   {
-    for (index_t result = HI; result >= LO; --result)
-      if (this->test(result))
-        return result;
+    for (size_t idx = HI-LO-1; idx != -LO-1; --idx)
+      if (bitset_t::test(idx))
+        return idx+LO+1;
+    for (size_t idx = -LO; idx != 0; --idx)
+      if (bitset_t::test(idx))
+        return idx+LO;
+    if (bitset_t::test(0))
+      return LO;
     return 0;
   }
 
@@ -367,18 +383,34 @@ namespace glucat
     return 0;    // all elements are equal => a == b
   }
 
+  /// Lexicographic ordering of two sets: *this < rhs
+  //  eg. {3,4,5} is less than {3,7,8}
+  template<const index_t LO, const index_t HI>
+  inline
+  bool
+  index_set<LO,HI>::
+  lex_less_than(const index_set<LO,HI>& rhs) const
+  {
+    const bitset_t* prhs = &rhs;
+    for(size_t idx = 0; idx != HI - LO; ++idx)
+      if(bitset_t::test(idx) != prhs->test(idx))
+        return bitset_t::test(idx) > prhs->test(idx);
+    return false;
+  }
+
   /// Less than operator used for comparisons, map, etc.
   // Order by count, then order lexicographically within the equivalence class of count.
   template<const index_t LO, const index_t HI>
   inline
   bool
-  operator< (const index_set<LO,HI>& a, const index_set<LO,HI>& b)
+  index_set<LO,HI>::
+  operator< (const index_set<LO,HI>& rhs) const
   {
-    index_t a_grade = a.count();
-    index_t b_grade = b.count();
-    return a_grade < b_grade ? true :
-           a_grade > b_grade ? false:
-           compare( a, b ) > 0 ? true : false ;
+    index_t this_grade = this->count();
+    index_t rhs_grade  = rhs.count();
+    return this_grade < rhs_grade ? true :
+           this_grade > rhs_grade ? false:
+           this->lex_less_than(rhs);
   }
 
   /// Write out index set
@@ -451,11 +483,7 @@ namespace glucat
   fold(const index_set& frm, const bool prechecked) const
   {
     if (!prechecked && ((*this | frm) != frm))
-    {
-      std::cerr << "*this: " << *this << std::endl
-                << "frm:   " << frm   << std::endl;
       throw error_t("fold(frm): cannot fold from outside of frame");
-    }
     index_set_t result;
     index_t fold_idx = -1;
     index_t unfold_idx;
@@ -485,25 +513,13 @@ namespace glucat
       if (frm[unfold_idx])
         result.set(unfold_idx, this->test(fold_idx--));
     if (!prechecked && ((fold_idx+1) > this->min()))
-    {
-      std::cerr << "*this: " << *this << std::endl
-                << "frm:   " << frm   << std::endl
-                << "fold_idx+1 " << fold_idx+1  << std::endl
-                << "this->min()" << this->min() << std::endl;
       throw error_t(msg);
-    }
     fold_idx = 1;
     for (unfold_idx = 1; unfold_idx <= HI; ++unfold_idx)
       if (frm[unfold_idx])
         result.set(unfold_idx, this->test(fold_idx++));
     if (!prechecked && ((fold_idx-1) < this->max()))
-    {
-      std::cerr << "*this: " << *this << std::endl
-                << "frm:   " << frm   << std::endl
-                << "fold_idx-1 " << fold_idx-1  << std::endl
-                << "this->max()" << this->max() << std::endl;
       throw error_t(msg);
-    }
     return result;
   }
 
