@@ -3,8 +3,8 @@
 # General configuration options
 #---------------------------------------------------------------------------
 PROJECT_NAME           = GluCat
-PROJECT_NUMBER         = 0.0.3
-OUTPUT_DIRECTORY       = /home/leopardi/Maths/Project/Working/glucat/glucat-api/
+PROJECT_NUMBER         = 0.0.4
+OUTPUT_DIRECTORY       = ./glucat-api/
 OUTPUT_LANGUAGE        = English
 EXTRACT_ALL            = YES
 EXTRACT_PRIVATE        = NO
@@ -50,7 +50,7 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = /home/leopardi/Maths/Project/Working/glucat/glucat/
+INPUT                  = ./glucat/
 FILE_PATTERNS          = *.h \
                          *.hh \
                          *.H

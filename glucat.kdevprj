@@ -23,12 +23,13 @@ cxxflags=\s-O0 -g3 -Wall
 ldadd=
 ldflags=
 libtool_dir=
-path_to_bin_program=.
+path_to_bin_program=./test
 
 [General]
 AMChanged=false
 author=Paul C. Leopardi
 configure_args=
+debug_args=-3
 dir_where_make_will_be_called=./
 email=leopardi@bigpond.net.au
 kdevprj_version=1.3
@@ -40,7 +41,7 @@ project_name=GluCat
 project_type=normal_empty
 short_info=
 sub_dir=glucat/
-version=0.0.2
+version=0.0.4
 version_control=CVS
 workspace=1
 
@@ -94,7 +95,7 @@ install_location=
 type=DATA
 
 [glucat/Makefile.am]
-files=glucat/clifford_algebra.h,glucat/clifford_algebra_imp.h,glucat/errors.h,glucat/errors_imp.h,glucat/framed_multi.h,glucat/framed_multi_imp.h,glucat/global.h,glucat/glucat.h,glucat/glucat_imp.h,glucat/index_set.h,glucat/index_set_imp.h,glucat/long_double.h,glucat/matrix.h,glucat/matrix_imp.h,glucat/matrix_multi.h,glucat/matrix_multi_imp.h,glucat/portability.h,glucat/scalar.h
+files=glucat/clifford_algebra.h,glucat/clifford_algebra_imp.h,glucat/errors.h,glucat/errors_imp.h,glucat/framed_multi.h,glucat/framed_multi_imp.h,glucat/global.h,glucat/glucat.h,glucat/glucat_imp.h,glucat/index_set.h,glucat/index_set_imp.h,glucat/long_double.h,glucat/matrix.h,glucat/matrix_imp.h,glucat/matrix_multi.h,glucat/matrix_multi_imp.h,glucat/portability.h,glucat/scalar.h,glucat/generation.h,glucat/generation_imp.h
 sub_dirs=
 type=prog_main
 
@@ -137,6 +138,18 @@ install_location=
 type=HEADER
 
 [glucat/framed_multi_imp.h]
+dist=true
+install=false
+install_location=
+type=HEADER
+
+[glucat/generation.h]
+dist=true
+install=false
+install_location=
+type=HEADER
+
+[glucat/generation_imp.h]
 dist=true
 install=false
 install_location=
