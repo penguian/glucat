@@ -1,6 +1,12 @@
 There is plenty of testing, cleanup, packaging and documentation work yet to do.
 o Try defining Boost concepts, numeric limits and traits, so that GluCat can
   eventually become a Boost library.
+o Try moving the names in glucat:: which shadow names in std:: into std:: itself
+  so that eg. std::abs() will work for multivector_t within other template
+  libraries, such as MTL.
+o Test and suggest improvements to John Fletcher's SWIG bindings to Ruby and 
+  Henk Jansen's SWIG bindings to Python.
+o Investigate if GluCat could be used as the back-end to Christian Perwass' CLU.
 o Improve the packaging of the example and test programs.
 o Write a programmer's guide with descriptions of the API.
 o Test with Blitz++, deal.II, MTL, POOMA and uBLAS and adjust accordingly.
@@ -24,18 +30,8 @@ o Try using the complex matrix representations. These use smaller matrices,
   which should be faster. This would mean changes to basis_element(),
   folded_dim() and others. Possibly deliver this as an additional template class
   rather than a change to matrix_multi<>.
-o Try moving the names in glucat:: which shadow names in std:: into std:: itself
-  so that eg. std::abs() will work for multivector_t within other template
-  libraries, such as MTL.
 o Try replacing multiplication by +/-1 within inner products by addition and
   subtraction.
-o Try ordering the generation of basis matrices during conversion from
-  matrix_multi<> to framed_multi<> in such a way as to minimize the number of
-  multiplications by generator matrices. Possibly by recursive enumeration of
-  the index sets.
 o Try creating a class, vector_multi<>, which uses std::vector rather than
   std::map. This should be faster than framed_multi<>, if tuned properly, for
   full multivectors. For sparse multivectors, it may be slower.
-o Try creating a class, hashed_multi<>, which uses std::hash_map rather than
-  std::map. This should be faster than framed_multi<>, if tuned properly. The
-  disadvantage is that std::hash_map is not standard.
