@@ -1,3 +1,98 @@
+2002-08-15 22:53  leopardi
+
+	* glucat/Makefile.am: Update for consistency
+
+2002-08-15 22:38  leopardi
+
+	* test/: test-6.out, test.out: Update test output
+
+2002-08-15 21:58  leopardi
+
+	* test/Makefile.am: Set default compile flags to -O -g
+
+2002-08-15 21:53  leopardi
+
+	* INSTALL, NEWS, README, TODO: Update documentation to reflect
+	changes to version 0.0.7
+
+2002-08-15 21:52  leopardi
+
+	* glucat.doxygen, glucat.kdevprj, glucat.lsm: Update to version
+	0.0.7, using KDevelop 2.1.2
+
+2002-08-14 22:12  leopardi
+
+	* test/Makefile.am: Simplify compile flags - reduce optimization
+	and debugging
+
+2002-08-14 21:29  leopardi
+
+	* config.log: Remove file apparently not needed
+
+2002-08-14 21:08  leopardi
+
+	* acinclude.m4, aclocal.m4, config.h, config.log, configure.files,
+	libtool, stamp-h1, subdirs: (Re)add files possibly needed by
+	autoconf, automake or configure
+
+2002-08-14 00:05  leopardi
+
+	* configure.in.in: Add file apparently needed by automake, autoconf
+	or configure
+
+2002-08-14 00:03  leopardi
+
+	* Makefile.am, Makefile.dist, config.h.in, configure.in: Update to
+	automake 1.6.3 and autoconf 2.52
+
+2002-08-13 23:55  leopardi
+
+	* config.status, configure: Add files apparently needed by
+	automake, autoconf or configure
+
+2002-08-12 22:35  leopardi
+
+	* admin/: ChangeLog, Makefile.common, acinclude.m4.in, am_edit,
+	conf.change.pl, config.guess, config.pl, config.sub,
+	configure.in.min, cvs-clean.pl, cvs.sh, debianrules, depcomp,
+	detect-autoconf.sh, install-sh, libtool.m4.in, ltmain.sh, missing,
+	mkinstalldirs, ylwrap: Add files apparently needed by autoconf,
+	automake or configure
+
+2002-08-12 22:30  leopardi
+
+	* acinclude.m4.in: Remove file apparently no longer needed by
+	autoconf, automake or configure
+
+2002-08-12 22:26  leopardi
+
+	* acconfig.h, config.guess, config.sub, configure.in.no_shlib,
+	install-sh, libtool.m4.in, ltconfig, ltmain.sh, missing,
+	mkinstalldirs, stamp-h.in: Remove files apparently no longer needed
+	by autoconf, automake or configure
+
+2002-08-10 19:56  leopardi
+
+	* test/peg16.h: Improve compatibility with g++ 3.1.1 and hopefully
+	also with standard C++'
+
+2002-08-10 19:54  leopardi
+
+	* glucat/: clifford_algebra.h, clifford_algebra_imp.h, errors.h,
+	errors_imp.h, framed_multi.h, framed_multi_imp.h, generation.h,
+	generation_imp.h, index_set.h, index_set_imp.h, matrix_multi.h,
+	matrix_multi_imp.h: Improve compatibility with g++ 3.1.1 and
+	hopefully also with standard C++
+
+2002-08-10 19:52  leopardi
+
+	* glucat/global.h: Remove possible name clash by renaming CTAssert
+	to _GLUCAT_CTAssert
+
+2002-04-15 07:33  leopardi
+
+	* ChangeLog: Update to reflect change to NEWS
+
 2002-04-15 07:29  leopardi
 
 	* NEWS: Update NEWS to reflect fix to elliptic()
