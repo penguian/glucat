@@ -1,3 +1,21 @@
+2004-08-02 07:03  leopardi
+
+	* NEWS: Remove news of reverted changes
+
+2004-08-01 22:24  leopardi
+
+	* configure.in, configure.in.in: Change -finline-limit back to
+	  2400. The value 3000 was too high for g++ 3.2 on Red Hat.
+
+2004-08-01 22:23  leopardi
+
+	* glucat/matrix_multi_imp.h: Revert changes to operator+= and
+	  operator-=
+
+2004-08-01 12:15  leopardi
+
+	* ChangeLog: Changes for GluCat 0.1.8
+
 2004-08-01 12:13  leopardi
 
 	* test_runtime/: gfft_test-10.out, squaring-8.out,
