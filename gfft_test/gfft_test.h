@@ -144,8 +144,6 @@ namespace glucat_gfft_test
     typedef index_set_t e_;
     typedef typename m_::matrix_multi_t matrix_multi_t;
     typedef typename m_::framed_multi_t framed_multi_t;
-    static const index_t v_lo = e_::v_lo;
-    static const index_t v_hi = e_::v_hi;
 
     const index_t max_index = min(n, max_n);
     m_ a = 1;
