@@ -24,7 +24,17 @@
  ***************************************************************************/
 
 #include "glucat/glucat.h"
-typedef glucat::tuning<> Tune_P;
+const int DRIVER_BASIS_MAX_COUNT = 8;
+typedef glucat::tuning
+  <
+    glucat::DEFAULT_Mult_Matrix_Threshold,
+    glucat::DEFAULT_Div_Max_Steps,
+    glucat::DEFAULT_Sqrt_Max_Steps,
+    glucat::DEFAULT_Log_Max_Outer_Steps,
+    glucat::DEFAULT_Log_Max_Inner_Steps,
+    DRIVER_BASIS_MAX_COUNT
+  >
+  Tune_P;
 #include "glucat/glucat_imp.h"
 #include <stdio.h>
 #include "test/peg01.h"
