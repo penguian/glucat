@@ -87,6 +87,10 @@ namespace glucat
     _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
     /// Assignment operator
     multivector_t&     operator= (const multivector_t& rhs);
+    /// Use generalized FFT to construct a matrix_multi_t 
+    const matrix_multi_t fast_matrix_multi(const index_set_t& frm) const;
+    /// Use inverse generalized FFT to construct a framed_multi_t
+    const framed_multi_t fast_framed_multi() const;
   private:
     /// Add a term, if non-zero
     multivector_t&     operator+= (const pair_t& rhs);
