@@ -31,6 +31,21 @@ namespace glucat
   template<> struct CTAssertion<true> { };
   #define _GLUCAT_CTAssert(expr, msg) namespace { CTAssertion<(expr)> ERROR_##msg; }
 
+  /// Type comparison
+  // Reference: A. Alexandrescu, "Modern C++ Design", Addison-Wesley, 2001, pp. 34--37
+  template < typename LHS_T, typename RHS_T >
+  class compare_types
+  {
+  public:
+    enum { are_same = false };
+  };
+  template < typename T >
+  class compare_types<T, T>
+  {
+  public:
+    enum { are_same = true };
+  };  
+  
   // Global types which determine sizes
   /// Size of index_t should be enough to represent LO, HI
   typedef short         index_t;
@@ -60,26 +75,26 @@ namespace glucat
   const double DEFAULT_TRUNCATION = std::numeric_limits<float>::epsilon();
 
   // Tuning policy default constants
-  const int DEFAULT_Mult_Matrix_Threshold  =      8;
-  const int DEFAULT_Div_Max_Steps          =      4;
-  const int DEFAULT_Sqrt_Max_Steps         =      7;
-  const int DEFAULT_Log_Max_Outer_Steps    =    256;
-  const int DEFAULT_Log_Max_Inner_Steps    =      8;
-  const int DEFAULT_Basis_Max_Count        =      8;
-  const int DEFAULT_Fast_Size_Threshold    = 1 << 8;
-  const int DEFAULT_Inv_Fast_Dim_Threshold = 1 << 4;
+  const unsigned int DEFAULT_Mult_Matrix_Threshold  =      6;
+  const unsigned int DEFAULT_Div_Max_Steps          =      4;
+  const unsigned int DEFAULT_Sqrt_Max_Steps         =      7;
+  const unsigned int DEFAULT_Log_Max_Outer_Steps    =    256;
+  const unsigned int DEFAULT_Log_Max_Inner_Steps    =      8;
+  const unsigned int DEFAULT_Basis_Max_Count        =      8;
+  const unsigned int DEFAULT_Fast_Size_Threshold    = 1 << 7;
+  const unsigned int DEFAULT_Inv_Fast_Dim_Threshold = 1 << 5;
 
   /// Tuning policy
   template
   <
-    int Mult_Matrix_Threshold  = DEFAULT_Mult_Matrix_Threshold,
-    int Div_Max_Steps          = DEFAULT_Div_Max_Steps,
-    int Sqrt_Max_Steps         = DEFAULT_Sqrt_Max_Steps,
-    int Log_Max_Outer_Steps    = DEFAULT_Log_Max_Outer_Steps,
-    int Log_Max_Inner_Steps    = DEFAULT_Log_Max_Inner_Steps,
-    int Basis_Max_Count        = DEFAULT_Basis_Max_Count,
-    int Fast_Size_Threshold    = DEFAULT_Fast_Size_Threshold,
-    int Inv_Fast_Dim_Threshold = DEFAULT_Inv_Fast_Dim_Threshold
+    unsigned int Mult_Matrix_Threshold  = DEFAULT_Mult_Matrix_Threshold,
+    unsigned int Div_Max_Steps          = DEFAULT_Div_Max_Steps,
+    unsigned int Sqrt_Max_Steps         = DEFAULT_Sqrt_Max_Steps,
+    unsigned int Log_Max_Outer_Steps    = DEFAULT_Log_Max_Outer_Steps,
+    unsigned int Log_Max_Inner_Steps    = DEFAULT_Log_Max_Inner_Steps,
+    unsigned int Basis_Max_Count        = DEFAULT_Basis_Max_Count,
+    unsigned int Fast_Size_Threshold    = DEFAULT_Fast_Size_Threshold,
+    unsigned int Inv_Fast_Dim_Threshold = DEFAULT_Inv_Fast_Dim_Threshold
   >
   struct tuning
   {
