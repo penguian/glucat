@@ -23,10 +23,10 @@ cflags=
 cppflags=
 cxxflags=\s-O1 -g3 -Wall
 ldadd=
-ldflags=\s       \s
+ldflags=\s        \s
 
 [General]
-AMChanged=true
+AMChanged=false
 author=Paul C. Leopardi
 configure_args=\s--build=i386-linux --host=i386-linux --target=i386-linux\s
 email=leopardi@bigpond.net.au
@@ -40,7 +40,7 @@ project_type=normal_cpp
 sgml_file=
 short_info=
 sub_dir=glucat/
-version=0.1.0
+version=0.1.1
 version_control=CVS
 workspace=1
 
@@ -233,9 +233,12 @@ install_location=
 type=HEADER
 
 [test/Makefile.am]
-files=test/driver.cpp,test/driver.h,test/eg8.txt,test/peg01.h,test/peg02.h,test/peg03.h,test/peg04.h,test/peg05.h,test/peg06.h,test/peg07.h,test/peg08.h,test/peg09.h,test/peg10.h,test/peg11.h,test/peg12.h,test/peg13.h,test/peg14.h,test/peg15.h,test/peg16.h,test/squaring.h,test/eg3.res,test/test-6.out,test/test.out
+dist=true
+files=test/driver.cpp,test/driver.h,test/eg8.txt,test/peg01.h,test/peg02.h,test/peg03.h,test/peg04.h,test/peg05.h,test/peg06.h,test/peg07.h,test/peg08.h,test/peg09.h,test/peg10.h,test/peg11.h,test/peg12.h,test/peg13.h,test/peg14.h,test/peg15.h,test/peg16.h,test/squaring.h,test/eg3.res,test/test-6.out,test/test.out,test/Makefile.am
+install=false
+install_location=
 sub_dirs=
-type=prog_main
+type=DATA
 
 [test/driver.cpp]
 dist=true
