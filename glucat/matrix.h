@@ -36,6 +36,12 @@ namespace glucat
     Matrix_T
     kron(const Matrix_T& x, const Matrix_T& y);
 
+    /// Left inverse of Kronecker product
+    template< typename Matrix_T >
+    const
+    Matrix_T
+    nork(const Matrix_T& lhs, const Matrix_T& rhs);
+
     /// Unit matrix - as per Matlab eye
     template< typename Matrix_T >
     const

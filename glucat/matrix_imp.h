@@ -53,6 +53,55 @@ namespace glucat { namespace matrix
     return result;
   }
 
+  /// Left inverse of Kronecker product
+  template< typename Matrix_T >
+  const
+  Matrix_T
+  nork(const Matrix_T& lhs, const Matrix_T& rhs)
+  {
+    // nork(A, kron(A, B)) is close to B
+    typedef Matrix_T matrix_t;
+    typedef typename matrix_t::size_type matrix_index_t;
+    const matrix_index_t lhs_s1 = lhs.size1();
+    const matrix_index_t lhs_s2 = lhs.size2();
+    const matrix_index_t rhs_s1 = rhs.size1();
+    const matrix_index_t rhs_s2 = rhs.size2();
+    const matrix_index_t res_s1 = rhs_s1 / lhs_s1;
+    const matrix_index_t res_s2 = rhs_s2 / lhs_s2;
+    typedef error<matrix_t> error_t;
+    if (rhs_s1 == 0)
+      throw error_t("matrix", "nork: number of rows must not be 0");
+    if (rhs_s2 == 0)
+      throw error_t("matrix", "nork: number of cols must not be 0");
+    if (res_s1 * lhs_s1 != rhs_s1)
+      throw error_t("matrix", "nork: incompatible numbers of rows");
+    if (res_s2 * lhs_s2 != rhs_s2)
+      throw error_t("matrix", "nork: incompatible numbers of cols");
+    typedef typename matrix_t::value_type scalar_t;
+    const scalar_t nnz_lhs = scalar_t(lhs.non_zeros());
+    if (nnz_lhs == 0)
+      throw error_t("matrix", "nork: LHS must not be 0");
+    matrix_t result(res_s1, res_s2);
+    typedef typename matrix_t::const_iterator1 const_iterator1;
+    typedef typename matrix_t::const_iterator2 const_iterator2;
+    for (  const_iterator1 lhs_it1 = lhs.begin1();
+                           lhs_it1 != lhs.end1(); ++lhs_it1)
+      for (const_iterator2 lhs_it2 = lhs_it1.begin();
+                           lhs_it2 != lhs_it1.end(); ++lhs_it2)
+        if (*lhs_it2 != scalar_t(0))
+        {
+          using namespace ublas;
+          typedef matrix_range<const matrix_t> matrix_range_t;
+          const matrix_index_t i1 = lhs_it2.index1();
+          const matrix_index_t i2 = lhs_it2.index2();
+          const range range1 = range(i1*res_s1, (i1+1)*res_s1);
+          const range range2 = range(i2*res_s2, (i2+1)*res_s2);
+          matrix_range_t rhs_range = matrix_range_t(rhs, range1, range2);
+          result += rhs_range / (*lhs_it2 * nnz_lhs);
+        }
+    return result;
+  }
+
   /// Unit matrix - as per Matlab eye
   template< typename Matrix_T >
   const
@@ -106,8 +155,7 @@ namespace glucat { namespace matrix
               const ublas::matrix_expression<RHS_T>& rhs)
   {
     typedef typename RHS_T::expression_type matrix_t;
-    typedef typename matrix_t::orientation_category orientation_category;
-    return ublas::sparse_prod<matrix_t>(lhs, rhs, orientation_category());
+    return ublas::sparse_prod<matrix_t>(lhs(), rhs());
   }
 
   /// Inner product: sum(lhs(i,j)*rhs(i,j))/lhs.nrows()
