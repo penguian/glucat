@@ -1,18 +1,18 @@
 Purpose
 -------
- GluCat is a library of template classes which can be used as template
- parameters for other template libraries, such as Blitz++, deal.II,
- Matrix Template Library and POOMA. These template libraries expect a
- numeric class which implements "appropriate numeric semantics".
- To provide these semantics, the GluCat interface matches float or
- complex<> as much as possible.
+ GluCat is a library of template classes which models the universal Clifford
+ algebras over the real field, with arbitrary dimension and arbitrary
+ signature.  To do this, GluCat implements a model of each Clifford algebra
+ corresponding to each non-degenerate quadratic form up to a maximum set by
+ the user.
 
- Yet the GluCat classes must be different from float or complex<>, because they
- model a different algebra. GluCat models the universal Clifford algebras over
- the real or complex fields, with arbitrary dimension and arbitrary signature.
- Technically, what GluCat implements is a model of each Clifford algebra
- corresponding to each non-degenerate quadratic form up to a maximum set by the
- user.
+ GluCat classes can be used as template parameters for other template
+ libraries, such as Blitz++, deal.II, Matrix Template Library and POOMA.
+ These template libraries expect a numeric class which implements
+ "appropriate numeric semantics". To provide these semantics, the GluCat
+ interface matches float or complex<> as much as possible. Yet the GluCat
+ classes must be different from float or complex<>, because they model a
+ different algebra.
 
 Before you go any further
 -------------------------
@@ -105,9 +105,8 @@ Usage
  o In your code, include individual files as <glucat/filename.h>
    You can also use the convenience headers <glucat/glucat.h> and
    <glucat/glucat_imp.h>
- o Use the test header files ./squaring/squaring.h and
- ./transforms/transforms.h as guides. These contain lines which look
- something like:
+ o Use the test header files ./test/driver.h and ./transforms/transforms.h as
+ guides. These contain lines which look something like:
  
 #include "glucat/glucat.h"
 typedef glucat::tuning<> Tune_P;

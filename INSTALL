@@ -22,8 +22,8 @@ To Test
 =======
  Once you have downloaded, unzipped and untarred the source code,
  you should have a directory, glucat-xxx, where xxx is the version number.
- Under glucat-xxx you should see 5 directories, ./admin, ./glucat, ./glucat-api,
- ./test and ./transforms
+ Under glucat-xxx you should see a number of directories, including ./admin,
+ ./glucat, ./glucat_gfft, ./glucat-api, ./squaring ./test and ./transforms
  The following instructions are meant to be used with glucat-xxx as the current
  directory.
 
@@ -54,18 +54,23 @@ To Make the Test Programs
  indicate your C++ compiler, eg. "g++" for GNU C++, "icc" for Intel C++, then
  run ./configure, then make.
  
- What make does is to use the headers in ./glucat and ./test and the source in
- ./test??, ./gfft_test, ./squaring and ./transforms to make the test programs
+ Make uses the headers in ./glucat and ./test and the source in ./test??,
+ ./gfft_test, ./squaring and ./transforms to make the test programs
  ./test??/test??, ./gfft_test/gfft_test, ./squaring/squaring and
  ./transforms/transforms
  
- Once you have created the test programs, create a runtime directory and copy
- ./test/eg8.txt into the runtime directory. This file is needed by programming
- example 8 (reading multivectors from input).
+ Once you have created the test programs, copy the runtime directory
+ ./test_runtime to a convenient place. ./test_runtime contains the test input
+ file eg8.txt. This file is needed by programming example 8 (reading multivectors
+ from input).
 
- You can find sample test output in ./test/eg3.res, ./test/test.out,
- ./gfft_test/gfft_test-10.out, ./squaring/squaring-6.out and
- ./transforms/transforms-6.out
+ The sample test output files are eg3.res, test.out, gfft_test-10.out,
+ squaring-6.out and transforms-6.out
+
+ The main test script is ./test/test.sh. This runs tests ./test01/test01 to
+ ./test16/test16, using relative pathnames, so it is best to leave test.sh
+ where it is and invoke it using the full path name. This allows it to find
+ test01 to test16.
 
  To create meaningful timing tests, run ./configure --enable-debug=no, then 
  make.  Setting --enable-debug=no will invoke the highest optimization level of 
