@@ -41,11 +41,10 @@ namespace glucat_fast_test
   inline
   void
   print_times(const index_set_t& frame1, const index_set_t& frame2,
-              const double setup_cpu_time,
-              const double mm_cpu_time,
-              const double fast_cpu_time,
-              const double fm_cpu_time,
-              const double inv_cpu_time)
+              const double old_mm_cpu_time,
+              const double new_mm_cpu_time,
+              const double old_fm_cpu_time,
+              const double new_fm_cpu_time)
   {
     const int index_width = 2;
     cout << "Cl(" << setw(index_width) <<  max_pos(frame1) << ","
@@ -60,11 +59,12 @@ namespace glucat_fast_test
     cout.setf(ios_base::fixed);
     cout.setf(ios_base::showpoint);
     cout << setprecision(new_prec)
-         << setw(width) << setup_cpu_time << " ms (setup). "
-         << setw(width) << mm_cpu_time    << " (mm) "
-         << setw(width) << fast_cpu_time   << " (fast) "
-         << setw(width) << fm_cpu_time    << " (fm) "
-         << setw(width) << inv_cpu_time   << " (inv) "
+         << "mm: "
+         << setw(width) << old_mm_cpu_time << " (old) "
+         << setw(width) << new_mm_cpu_time << " (new) "
+         << "fm: "
+         << setw(width) << old_fm_cpu_time << " (old) "
+         << setw(width) << new_fm_cpu_time << " (new) "
          << setprecision(old_prec);
     cout.flags(old_flags);
   }
@@ -79,69 +79,65 @@ namespace glucat_fast_test
     typedef typename Multivector_T::framed_multi_t framed_multi_t;
     int trials;
     const int min_trials_if_zero = 1000;
-    Multivector_T c;
+    a = a*b*(Scalar_T(1.0*rand())/RAND_MAX) + a*(Scalar_T(1.0*rand())/RAND_MAX);
     clock_t cpu_time = clock();
-     c = a * b*(Scalar_T(1.0*rand())/RAND_MAX) + a*(Scalar_T(1.0*rand())/RAND_MAX);
-    double setup_cpu_time = elapsed(cpu_time);
-    a = c;
-    cpu_time = clock();
      matrix_multi_t old_A = matrix_multi_t(a, outer_frame);
-    double mm_cpu_time = elapsed(cpu_time);
-    if (mm_cpu_time < MS_PER_S)
+    double old_mm_cpu_time = elapsed(cpu_time);
+    if (old_mm_cpu_time < MS_PER_S)
     {
       const int max_trials =
-       mm_cpu_time == 0.0 ?
+       old_mm_cpu_time == 0.0 ?
          min_trials_if_zero :
-         int(floor(MS_PER_S/mm_cpu_time));
+         int(floor(MS_PER_S/old_mm_cpu_time));
       cpu_time = clock();
       for (trials = 0; trials != max_trials; ++trials)
         old_A = matrix_multi_t(a, outer_frame);
-      mm_cpu_time = elapsed(cpu_time)/trials;
+      old_mm_cpu_time = elapsed(cpu_time)/trials;
     }
     cpu_time = clock();
      matrix_multi_t new_A = a.fast_matrix_multi(outer_frame);
-    double fast_cpu_time = elapsed(cpu_time);
-    if (fast_cpu_time < MS_PER_S)
+    double new_mm_cpu_time = elapsed(cpu_time);
+    if (new_mm_cpu_time < MS_PER_S)
     {
       const int max_trials =
-       fast_cpu_time == 0.0 ?
+       new_mm_cpu_time == 0.0 ?
          min_trials_if_zero :
-         int(floor(MS_PER_S/fast_cpu_time));
+         int(floor(MS_PER_S/new_mm_cpu_time));
       cpu_time = clock();
       for (trials = 0; trials != max_trials; ++trials)
         new_A = a.fast_matrix_multi(outer_frame);
-      fast_cpu_time = elapsed(cpu_time)/trials;
+      new_mm_cpu_time = elapsed(cpu_time)/trials;
     }
     cpu_time = clock();
-     framed_multi_t old_IA = old_A;
-    double fm_cpu_time = elapsed(cpu_time);
-    if (fm_cpu_time < MS_PER_S)
+     framed_multi_t old_a = old_A;
+    double old_fm_cpu_time = elapsed(cpu_time);
+    if (old_fm_cpu_time < MS_PER_S)
     {
       const int max_trials =
-       fm_cpu_time == 0.0 ?
+       old_fm_cpu_time == 0.0 ?
          min_trials_if_zero :
-         int(floor(MS_PER_S/fm_cpu_time));
+         int(floor(MS_PER_S/old_fm_cpu_time));
       cpu_time = clock();
       for (trials = 0; trials != max_trials; ++trials)
-        old_IA = old_A;
-      fm_cpu_time = elapsed(cpu_time)/trials;
+        old_a = old_A;
+      old_fm_cpu_time = elapsed(cpu_time)/trials;
     }
     cpu_time = clock();
-     framed_multi_t new_IA = new_A.fast_framed_multi();
-    double inv_cpu_time = elapsed(cpu_time);
-    if (inv_cpu_time < MS_PER_S)
+     framed_multi_t new_a = new_A.fast_framed_multi();
+    double new_fm_cpu_time = elapsed(cpu_time);
+    if (new_fm_cpu_time < MS_PER_S)
     {
       const int max_trials =
-       inv_cpu_time == 0.0 ?
+       new_fm_cpu_time == 0.0 ?
          min_trials_if_zero :
-         int(floor(MS_PER_S/inv_cpu_time));
+         int(floor(MS_PER_S/new_fm_cpu_time));
       cpu_time = clock();
       for (trials = 0; trials != max_trials; ++trials)
-        new_IA = new_A.fast_framed_multi();
-      inv_cpu_time = elapsed(cpu_time)/trials;
+        new_a = new_A.fast_framed_multi();
+      new_fm_cpu_time = elapsed(cpu_time)/trials;
     }
-    print_times(inner_frame, outer_frame, setup_cpu_time,
-      mm_cpu_time, fast_cpu_time, fm_cpu_time, inv_cpu_time);
+    print_times(inner_frame, outer_frame,
+      old_mm_cpu_time, new_mm_cpu_time, old_fm_cpu_time, new_fm_cpu_time);
     const ios::fmtflags& old_flags = cout.flags();
     const int width = 8;
     const int old_prec = cout.precision();
@@ -149,10 +145,10 @@ namespace glucat_fast_test
     cout.setf(ios_base::scientific);
     cout.setf(ios_base::showpoint);
     cout << setprecision(new_prec)
-         << " diff: old: "  << setw(width) << abs(old_A - old_IA)/abs(old_IA) 
-               << " new: "  << setw(width) << abs(new_A - new_IA)/abs(new_IA)
-               << " fast: " << setw(width) << abs(new_A - old_A)/abs(old_A)
-               << " inv: "  << setw(width) << abs(new_IA - old_IA)/abs(old_IA)
+         << " diff: old: " << setw(width) << abs(old_A - old_a)/abs(old_a) 
+               << " new: " << setw(width) << abs(new_A - new_a)/abs(new_a)
+               << " fm: "  << setw(width) << abs(new_A - old_A)/abs(old_A)
+               << " mm: "  << setw(width) << abs(new_a - old_a)/abs(old_a)
                << setprecision(old_prec)  << endl;
     cout.flags(old_flags);
   }
@@ -213,7 +209,10 @@ int transforms(const long int n)
     cout << "Maximum value allowed is " << max_n << "." << endl;
     return 1;
   }
+  cout << "framed_multi<double>" << endl;
   fast_test< framed_multi<double> >(n, max_n);
+  cout << "matrix_multi<double>" << endl;
+  fast_test< matrix_multi<double> >(n, max_n);
   return 0;
 }
 #endif // GLUCAT_TRANSFORMS_H
