@@ -1,11 +1,11 @@
 Clifford algebra transform test:
-Cl( 1, 1) in Cl( 1, 1) CPU = mm:       0.16 fm:       0.17  diff: 0.00e+00
-Cl( 2, 2) in Cl( 2, 2) CPU = mm:       1.00 fm:       1.21  diff: 6.24e-17
-Cl( 3, 3) in Cl( 3, 3) CPU = mm:       5.38 fm:       7.10  diff: 1.25e-16
-Cl( 4, 4) in Cl( 4, 4) CPU = mm:      27.88 fm:      40.61  diff: 1.19e-16
-Cl( 5, 5) in Cl( 5, 5) CPU = mm:     140.00 fm:     222.50  diff: 1.47e-16
-Cl( 6, 6) in Cl( 6, 6) CPU = mm:     720.00 fm:    1190.00  diff: 1.48e-16
-Cl( 7, 7) in Cl( 7, 7) CPU = mm:    3590.00 fm:    6310.00  diff: 1.61e-16
-Cl( 8, 8) in Cl( 8, 8) CPU = mm:   16740.00 fm:   32470.00  diff: 1.75e-16
-Cl( 9, 9) in Cl( 9, 9) CPU = mm:   79800.00 fm:  163780.00  diff: 1.82e-16
-Cl(10,10) in Cl(10,10) CPU = mm:  376320.00 fm:  805380.00  diff: 1.94e-16
+Cl( 1, 1) in Cl( 1, 1) CPU = mm:       0.02 fm:       0.07 trials mm: 1000 fm: 1000  diff: 0.00e+00
+Cl( 2, 2) in Cl( 2, 2) CPU = mm:       0.19 fm:       0.47 trials mm: 1000 fm: 1000  diff: 6.24e-17
+Cl( 3, 3) in Cl( 3, 3) CPU = mm:       0.90 fm:       2.13 trials mm: 1000 fm: 1000  diff: 1.25e-16
+Cl( 4, 4) in Cl( 4, 4) CPU = mm:       3.95 fm:       9.37 trials mm: 1000 fm: 1000  diff: 1.19e-16
+Cl( 5, 5) in Cl( 5, 5) CPU = mm:      17.00 fm:      40.40 trials mm:   50 fm:   25  diff: 1.47e-16
+Cl( 6, 6) in Cl( 6, 6) CPU = mm:      73.85 fm:     175.00 trials mm:   13 fm:    6  diff: 1.48e-16
+Cl( 7, 7) in Cl( 7, 7) CPU = mm:     317.50 fm:     755.00 trials mm:    4 fm:    2  diff: 1.61e-16
+Cl( 8, 8) in Cl( 8, 8) CPU = mm:    1390.00 fm:    3350.00 trials mm:    1 fm:    1  diff: 1.75e-16
+Cl( 9, 9) in Cl( 9, 9) CPU = mm:    6060.00 fm:   14890.00 trials mm:    1 fm:    1  diff: 1.83e-16
+Cl(10,10) in Cl(10,10) CPU = mm:   27050.00 fm:   69100.00 trials mm:    1 fm:    1  diff: 1.94e-16
