@@ -1,3 +1,11 @@
+2003-06-23 09:20  leopardi
+
+	* NEWS: Correct a typo.
+
+2003-06-23 09:01  leopardi
+
+	* ChangeLog: Update Changelog using cvs2cl.pl
+
 2003-06-23 09:00  leopardi
 
 	* NEWS: Correct news date
