@@ -75,7 +75,7 @@ namespace peg11
     transcendtest(m_("{1}"));
     transcendtest(m_("{-1}+{1}"));
     // the following should produce NaN values
-    transcendtest(m_("{-1}+{1}")*s_(1.0e500L));
+    transcendtest(m_("{-1}+{1}")*s_(numeric_limits<s_>::max()));
   }
 }
 
