@@ -274,8 +274,6 @@ namespace glucat
   {
     // Operate only within a common frame
     const index_set_t our_frame = m_frame | rhs.m_frame;
-    if ((m_frame != our_frame) && (rhs.m_frame != our_frame))
-      return *this = framed_multi_t(*this) + framed_multi_t(rhs);
     if (m_frame != our_frame)
       // Represent *this in our_frame via conversion through framed_multi_t
       *this = multivector_t(framed_multi_t(*this), our_frame, true);
@@ -297,8 +295,6 @@ namespace glucat
   {
     // Operate only within a common frame
     const index_set_t our_frame = m_frame | rhs.m_frame;
-    if ((m_frame != our_frame) && (rhs.m_frame != our_frame))
-      return *this = framed_multi_t(*this) - framed_multi_t(rhs);
     if (m_frame != our_frame)
       // Represent *this in our_frame via conversion through framed_multi_t
       *this = multivector_t(framed_multi_t(*this), our_frame, true);
