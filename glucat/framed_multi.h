@@ -32,50 +32,51 @@ namespace glucat
   template< typename Scalar_T, const index_t LO = DEFAULT_LO, const index_t HI = DEFAULT_HI >
   class framed_multi :
   public clifford_algebra< Scalar_T, index_set<LO,HI>, framed_multi<Scalar_T,LO,HI> >,
-  private std::map< const index_set<LO,HI>, Scalar_T >
+  _GLUCAT_PRIVATE std::map< const index_set<LO,HI>, Scalar_T >
   {
   public:
-    typedef framed_multi                  multivector_t;
-    typedef Scalar_T                      scalar_t;
-    typedef index_set<LO,HI>              index_set_t;
+    typedef framed_multi                             multivector_t;
+    typedef multivector_t                            framed_multi_t;
+    typedef Scalar_T                                 scalar_t;
+    typedef index_set<LO,HI>                         index_set_t;
     typedef std::pair< const index_set_t, Scalar_T > pair_t;
-    typedef std::vector<Scalar_T>         vector_t;
-    typedef error<multivector_t>          error_t;
-    typedef matrix_multi<Scalar_T,LO,HI>  matrix_multi_t;
-    typedef multivector_t                 framed_multi_t;
+    typedef std::vector<Scalar_T>                    vector_t;
+    typedef error<multivector_t>                     error_t;
+    typedef matrix_multi<Scalar_T,LO,HI>             matrix_multi_t;
     friend class matrix_multi_t;
   private:
-    typedef std::map< const index_set_t, Scalar_T > map_t;
-    typedef typename map_t::iterator       iterator;
-    typedef typename map_t::const_iterator const_iterator;
-    typedef typename matrix_multi_t::matrix_t matrix_t;
+    typedef typename matrix_multi_t::matrix_t        matrix_t;
+    typedef std::map< const index_set_t, Scalar_T >  map_t;
+  public:
+    typedef typename map_t::iterator                 iterator;
+    typedef typename map_t::const_iterator           const_iterator;
   public:
     /// Class name used in messages
-    static const char* classname();
-		/// Destructor
-		~framed_multi() {};
+    static const std::string classname();
+    /// Destructor
+    ~framed_multi() {};
     /// Default constructor
     framed_multi();
-  	/// Construct a multivector, within a given frame, from a given multivector
+    /// Construct a multivector, within a given frame, from a given multivector
     framed_multi(const multivector_t& val,
-								 const index_set_t& frm, const bool prechecked = false);
+                 const index_set_t& frm, const bool prechecked = false);
     /// Construct a multivector from an index set and a scalar coordinate
     framed_multi(const index_set_t& ist, const Scalar_T& crd);
-  	/// Construct a multivector, within a given frame, from an index set and a scalar coordinate
+    /// Construct a multivector, within a given frame, from an index set and a scalar coordinate
     framed_multi(const index_set_t& ist, const Scalar_T& crd,
-								 const index_set_t& frm, const bool prechecked = false);
+                 const index_set_t& frm, const bool prechecked = false);
     /// Construct a multivector from a scalar (within a frame, if given)
     framed_multi(const Scalar_T& scr, const index_set_t& frm = index_set_t());
     /// Construct a multivector from an int (within a frame, if given)
     framed_multi(const int scr, const index_set_t& frm = index_set_t());
-  	/// Construct a multivector, within a given frame, from a given vector
+    /// Construct a multivector, within a given frame, from a given vector
     framed_multi(const vector_t& vec,
-								 const index_set_t& frm, const bool prechecked = false);
+                 const index_set_t& frm, const bool prechecked = false);
     /// Construct a multivector from a string: eg: "3+2{1,2}-6.1e-2{2,3}"
     framed_multi(const std::string& str);
     /// Construct a multivector, within a given frame, from a string: eg: "3+2{1,2}-6.1e-2{2,3}"
     framed_multi(const std::string& str,
-								 const index_set_t& frm, const bool prechecked = false);
+                 const index_set_t& frm, const bool prechecked = false);
     /// Construct a multivector from a matrix_multi_t
     framed_multi        (const matrix_multi_t& val);
     _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
