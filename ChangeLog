@@ -1,17 +1,162 @@
-2002-01-09 Released glucat-0.0.1
-2002-01-10 ./README: Added -finline-limit-400
-2002-01-11 ./glucat/clifford_algebra_imp.h: Fixed elliptic() to give a result which commutes
-2002-01-11 ./test/peg12.cpp: Changed example name from "basis group" to "frame group"
-2002-01-11 ./test/peg13.cpp, peg14.cpp, peg15.cpp: Added cout << example name
-2002-01-11 ./test/peg16.cpp: Fixed example name to read: Matrices of multivectors
-2002-01-12 Updated version to 0.0.2
-2002-01-12 ./test/test.out, test6.out: Added sample output
-2002-01-12 Added all relevant files to CVS
-2002-01-12 ./glucat/doc: removed unused directory
-2002-01-21 Updated version to 0.0.3
-2002-01-21 Remove irrelevant KDevelop session file
-2002-01-21 ./glucat/clifford_algebra_imp.h: cos(), sin(): bring real part into range 0 <= x < 2*pi
-2002-01-21 ./glucat/matrix_multi_imp.h: operator==(): fix use of const_iterators
-2002-01-21 ./glucat/matrix_multi_imp.h: norm(): optimize by using inner()
+2002-01-24 19:43  leopardi
 
+	* test/: test-6.out, test.out: Update test results
+
+2002-01-24 18:43  leopardi
+
+	* TODO: Update to reflect that ithe rreducible real representation
+	has been implemented.
+
+2002-01-24 18:42  leopardi
+
+	* glucat.lsm: Update to version 0.0.4
+
+2002-01-24 17:03  leopardi
+
+	* configure.in, glucat.doxygen, glucat.kdevprj: Update version to
+	0.0.4
+
+2002-01-24 17:00  leopardi
+
+	* glucat/Makefile.am: Add generation.h and generation_imp.h to
+	Makefile
+
+2002-01-24 16:53  leopardi
+
+	* glucat/: generation.h, generation_imp.h, matrix_multi_imp.h:
+	Define class generator_table<> and singleton generator<>()
+
+2002-01-24 16:51  leopardi
+
+	* glucat/global.h: Change CTChecker to CTAssertion to avoid clash
+	with POOMA when using namespace glucat
+
+2002-01-24 08:42  leopardi
+
+	* test/squaring.h: Take account of irredicible representations by
+	testing Cl(n,0)
+
+2002-01-24 08:39  leopardi
+
+	* glucat/: framed_multi_imp.h, generation.h, generation_imp.h,
+	global.h, glucat.h, glucat_imp.h, matrix.h, matrix_imp.h,
+	matrix_multi.h, matrix_multi_imp.h: matrix_multi<> now uses real
+	irreducible representation per Porteous and Lounesto.
+
+2002-01-22 22:32  leopardi
+
+	* glucat/: matrix.h, matrix_imp.h: Optimize and clean up gen() and
+	gengen() before implementing irreducible real representation.
+
+2002-01-22 20:29  leopardi
+
+	* configure.in, glucat.doxygen: Update version to 0.0.3
+
+2002-01-22 20:26  leopardi
+
+	* configure: Remove configure: file is auto generated
+
+2002-01-21 23:44  leopardi
+
+	* ChangeLog: Add comment on change to norm() in matrix_multi_imp.h
+
+2002-01-21 23:26  leopardi
+
+	* test/: test-6.out, test.out: Version 0.0.3 test output
+
+2002-01-21 22:26  leopardi
+
+	* ChangeLog: Keep style consistent
+
+2002-01-21 22:25  leopardi
+
+	* glucat.lsm: Update to version 0.0.3
+
+2002-01-21 22:24  leopardi
+
+	* ChangeLog: Document version 0.0.3
+
+2002-01-21 02:09  leopardi
+
+	* glucat.kdevses: Remove irrelevant KDevelop session file
+
+2002-01-21 02:04  leopardi
+
+	* glucat/matrix_multi_imp.h: operator==: fix use of const_iterators
+	norm: optimize by using inner()
+
+2002-01-21 02:02  leopardi
+
+	* glucat/clifford_algebra_imp.h: cos, sin: bring real part into
+	range 0 <= x < 2*pi
+
+2002-01-12 13:07  leopardi
+
+	* configure, glucat.kdevprj: Get ready for release 0.0.2
+
+2002-01-12 12:59  leopardi
+
+	* TODO: update
+
+2002-01-12 12:19  leopardi
+
+	* ChangeLog: updated
+
+2002-01-12 12:04  leopardi
+
+	* configure.in: Remove unused doc directory
+
+2002-01-12 11:52  leopardi
+
+	* .cvsignore, AUTHORS, COPYING, ChangeLog, INSTALL, Makefile.am,
+	Makefile.dist, NEWS, README, TODO, acconfig.h, acinclude.m4.in,
+	config.guess, config.h.in, config.sub, configure, configure.in,
+	configure.in.no_shlib, glucat.directory, glucat.doxygen,
+	glucat.kdevprj, glucat.kdevses, glucat.lsm, install-sh,
+	libtool.m4.in, ltconfig, ltmain.sh, missing, mkinstalldirs,
+	stamp-h.in, glucat/.cvsignore, glucat/Makefile.am,
+	glucat/clifford_algebra.h, glucat/clifford_algebra_imp.h,
+	glucat/errors.h, glucat/errors_imp.h, glucat/framed_multi.h,
+	glucat/framed_multi_imp.h, glucat/global.h, glucat/glucat.h,
+	glucat/glucat_imp.h, glucat/index_set.h, glucat/index_set_imp.h,
+	glucat/long_double.h, glucat/matrix_multi_imp.h, glucat/matrix.h,
+	glucat/matrix_imp.h, glucat/matrix_multi.h, glucat/portability.h,
+	glucat/scalar.h, glucat/templates/.cvsignore,
+	glucat/templates/cpp_template, glucat/templates/header_template,
+	test/.cvsignore, test/Makefile.am, test/driver.cpp, test/driver.h,
+	test/eg3.res, test/eg8.txt, test/peg01.h, test/peg02.h,
+	test/peg03.h, test/peg04.h, test/peg05.h, test/peg06.h,
+	test/peg07.h, test/peg08.h, test/peg09.h, test/peg10.h,
+	test/peg11.h, test/peg12.h, test/peg13.h, test/peg14.h,
+	test/peg15.h, test/peg16.h, test/squaring.h, test/test-6.out,
+	test/test.out, test/templates/.cvsignore,
+	test/templates/cpp_template, test/templates/header_template:
+	Initial revision
+
+2002-01-12 11:52  leopardi
+
+	* .cvsignore, AUTHORS, COPYING, ChangeLog, INSTALL, Makefile.am,
+	Makefile.dist, NEWS, README, TODO, acconfig.h, acinclude.m4.in,
+	config.guess, config.h.in, config.sub, configure, configure.in,
+	configure.in.no_shlib, glucat.directory, glucat.doxygen,
+	glucat.kdevprj, glucat.kdevses, glucat.lsm, install-sh,
+	libtool.m4.in, ltconfig, ltmain.sh, missing, mkinstalldirs,
+	stamp-h.in, glucat/.cvsignore, glucat/Makefile.am,
+	glucat/clifford_algebra.h, glucat/clifford_algebra_imp.h,
+	glucat/errors.h, glucat/errors_imp.h, glucat/framed_multi.h,
+	glucat/framed_multi_imp.h, glucat/global.h, glucat/glucat.h,
+	glucat/glucat_imp.h, glucat/index_set.h, glucat/index_set_imp.h,
+	glucat/long_double.h, glucat/matrix_multi_imp.h, glucat/matrix.h,
+	glucat/matrix_imp.h, glucat/matrix_multi.h, glucat/portability.h,
+	glucat/scalar.h, glucat/templates/.cvsignore,
+	glucat/templates/cpp_template, glucat/templates/header_template,
+	test/.cvsignore, test/Makefile.am, test/driver.cpp, test/driver.h,
+	test/eg3.res, test/eg8.txt, test/peg01.h, test/peg02.h,
+	test/peg03.h, test/peg04.h, test/peg05.h, test/peg06.h,
+	test/peg07.h, test/peg08.h, test/peg09.h, test/peg10.h,
+	test/peg11.h, test/peg12.h, test/peg13.h, test/peg14.h,
+	test/peg15.h, test/peg16.h, test/squaring.h, test/test-6.out,
+	test/test.out, test/templates/.cvsignore,
+	test/templates/cpp_template, test/templates/header_template: Add
+	glucat to cvs
 
