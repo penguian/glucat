@@ -6,6 +6,7 @@
                              -------------------
     begin                : Sun 2001-12-09
     copyright            : (C) 2001 by Paul C. Leopardi
+                         : uBLAS interface contributed by Joerg Walter
     email                : leopardi@bigpond.net.au
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or modify  *
@@ -74,22 +75,23 @@ namespace glucat { namespace matrix
   { return ublas::equals(lhs, rhs); }
 
   /// Product of monomial matrices
-  template< typename Matrix_T, typename LHS_T, typename RHS_T >
-  const Matrix_T
+  template< typename LHS_T, typename RHS_T >
+  const typename RHS_T::expression_type
   mono_prod(const ublas::matrix_expression<LHS_T>& lhs,
             const ublas::matrix_expression<RHS_T>& rhs)
   {
     typedef const LHS_T lhs_expression_t;
     typedef const RHS_T rhs_expression_t;
-    typedef typename Matrix_T::size_type  matrix_index_t;
-    typedef typename Matrix_T::value_type scalar_t;
+    typedef typename RHS_T::expression_type matrix_t;
+    typedef typename matrix_t::size_type  matrix_index_t;
+    typedef typename matrix_t::value_type scalar_t;
     typedef typename lhs_expression_t::const_iterator1   lhs_const_iterator1;
     typedef typename lhs_expression_t::const_iterator2   lhs_const_iterator2;
     typedef typename ublas::matrix_row<rhs_expression_t> matrix_row_t;
     typedef typename matrix_row_t::const_iterator        row_const_iterator;
 
     const matrix_index_t dim = lhs().size1();
-    Matrix_T result(dim, dim);
+    matrix_t result(dim, dim);
     for (lhs_const_iterator1 lhs_row = lhs().begin1(); lhs_row != lhs().end1(); ++lhs_row)
     {
       const lhs_const_iterator2& lhs_it = lhs_row.begin();
@@ -104,13 +106,17 @@ namespace glucat { namespace matrix
     return result;
   }
 
-  /// Product of compressed matrices
-  template< typename Matrix_T, typename LHS_T, typename RHS_T >
+  /// Product of sparse matrices
+  template< typename LHS_T, typename RHS_T >
   inline
-  const Matrix_T
-  compressed_prod(const ublas::matrix_expression<LHS_T>& lhs,
-                  const ublas::matrix_expression<RHS_T>& rhs)
-  { return ublas::sparse_prod<Matrix_T>(lhs, rhs, typename Matrix_T::orientation_category()); }
+  const typename RHS_T::expression_type
+  sparse_prod(const ublas::matrix_expression<LHS_T>& lhs,
+              const ublas::matrix_expression<RHS_T>& rhs)
+  {
+    typedef typename RHS_T::expression_type matrix_t;
+    typedef typename matrix_t::orientation_category orientation_category;
+    return ublas::sparse_prod<matrix_t>(lhs, rhs, orientation_category());
+  }
 
   /// Inner product: sum(lhs(i,j)*rhs(i,j))/lhs.nrows()
   template< typename Matrix_T, typename Scalar_T >
@@ -127,5 +133,124 @@ namespace glucat { namespace matrix
       }
     return result / lhs.size1();
   }
+
+  // uBLAS interface by Joerg Walter
+  /// Swap rows of a vector
+  template<class PM, class MV>
+  BOOST_UBLAS_INLINE
+  void
+  swap_rows (const PM &pm, MV &mv, ublas::vector_tag)
+  {
+    typedef typename PM::size_type size_type;
+    typedef typename MV::value_type value_type;
+
+    size_type size = pm.size ();
+    for (size_type i = 0; i < size; ++ i)
+    {
+      value_type t (mv (i));
+      mv (i) = mv (pm (i));
+      mv (pm (i)) = t;
+    }
+  }
+
+  /// Swap rows of a matrix
+  template<class PM, class MV>
+  BOOST_UBLAS_INLINE
+  void
+  swap_rows (const PM &pm, MV &mv, ublas::matrix_tag)
+  {
+    typedef typename PM::size_type size_type;
+    typedef typename MV::value_type value_type;
+
+    size_type size = pm.size ();
+    for (size_type i = 0; i < size; ++ i)
+      for (size_type j = 0; j < mv.size2 (); ++ j)
+      {
+        value_type t (mv (i, j));
+        mv (i, j) = mv (pm (i), j);
+        mv (pm (i), j) = t;
+      }
+  }
+
+  /// Swap rows of a matrix or a vector: dispatcher
+  template<class PM, class MV>
+  BOOST_UBLAS_INLINE
+  void
+  swap_rows (const PM &pm, MV &mv)
+  { swap_rows (pm, mv, BOOST_UBLAS_TYPENAME MV::type_category ()); }
+
+  /// LU factorize: return LU in place of matrix
+  template<class M, class PM>
+  typename M::size_type lu_factorize (M &m, PM &pm)
+  {
+    using namespace ublas;
+    typedef M matrix_type;
+    typedef BOOST_UBLAS_TYPENAME M::size_type size_type;
+    typedef BOOST_UBLAS_TYPENAME M::value_type value_type;
+
+#ifdef BOOST_UBLAS_TYPE_CHECK
+    matrix_type cm (m);
+#endif
+    int singular = 0;
+    size_type size1 = m.size1 ();
+    size_type size2 = m.size2 ();
+    size_type size = std::min (size1, size2);
+    for (size_type i = 0; i < size; ++ i) {
+      matrix_column<M> mci (column (m, i));
+      matrix_row<M> mri (row (m, i));
+      size_type i_norm_inf = i + index_norm_inf (project (mci, range (i, size1)));
+      BOOST_UBLAS_CHECK (i_norm_inf < m.size1 (), external_logic ());
+      if (m (i_norm_inf, i) != value_type ())
+      {
+        pm (i) = i_norm_inf;
+        if (i_norm_inf != i)
+            row (m, i_norm_inf).swap (mri);
+        project (mci, range (i + 1, size1)) *= value_type (1) / m (i, i);
+      } else if (singular == 0)
+        singular = i + 1;
+      project (m, range (i + 1, size1), range (i + 1, size2)).minus_assign (
+        outer_prod (project (mci, range (i + 1, size1)),
+                    project (mri, range (i + 1, size2))));
+    }
+#ifdef BOOST_UBLAS_TYPE_CHECK
+    swap_rows (pm, cm);
+    BOOST_UBLAS_CHECK (
+      singular != 0 ||
+      equals (prod (triangular_adaptor<matrix_type, unit_lower> (m),
+                    triangular_adaptor<matrix_type, upper> (m)), cm), internal_logic ());
+#endif
+    return singular;
+  }
+
+  /// LU solve: linear solve using LU and permutation
+  template<class M, class PM, class MV>
+  void
+  lu_solve (M &m, const PM &pm, MV &mv)
+  {
+    using namespace ublas;
+    typedef M matrix_type;
+    typedef MV matrix_vector_type;
+
+    swap_rows (pm, mv);
+#ifdef BOOST_UBLAS_TYPE_CHECK
+    matrix_vector_type cmv1 (mv);
+#endif
+    inplace_solve (triangular_adaptor<matrix_type, unit_lower> (m),
+                   mv, unit_lower_tag (),
+                   BOOST_UBLAS_TYPENAME MV::type_category ());
+#ifdef BOOST_UBLAS_TYPE_CHECK
+    BOOST_UBLAS_CHECK (equals
+      (prod(triangular_adaptor<matrix_type, unit_lower> (m), mv), cmv1), internal_logic ());
+    matrix_vector_type cmv2 (mv);
+#endif
+    inplace_solve (triangular_adaptor<matrix_type, upper> (m),
+                   mv, upper_tag (),
+                   BOOST_UBLAS_TYPENAME MV::type_category ());
+#ifdef BOOST_UBLAS_TYPE_CHECK
+    BOOST_UBLAS_CHECK (equals
+      (prod (triangular_adaptor<matrix_type, upper> (m), mv), cmv2), internal_logic ());
+#endif
+  }
+
 } }
 #endif  // _GLUCAT_MATRIX_IMP_H
