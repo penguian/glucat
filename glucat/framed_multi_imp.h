@@ -344,11 +344,8 @@ namespace glucat
           rhs_it = rhs.begin(); 
           rhs_it != rhs.end(); 
           rhs_it++)
-      {
-        const pair_t term = (*this_it) * (*rhs_it);
         if ((this_it->first | rhs_it->first) == rhs_it->first)
-          result += term;
-      }
+          result += (*this_it) * (*rhs_it);
     return *this = result;
   }
 
