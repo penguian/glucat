@@ -207,46 +207,28 @@ namespace glucat
   operator==  (const multivector_t& rhs) const
   {
     // Compare only within a common frame
-    const index_set_t our_frame = m_frame | rhs.m_frame;
-    typename matrix_t::const_iterator ithis;
-    typename matrix_t::const_iterator this_end;
-    if (m_frame == our_frame)
-    {
-      ithis = m_matrix.begin();
-      this_end = m_matrix.end();
-    }
-    else
-    {
-      // Represent *this in our_frame via conversion through framed_multi_t
-      const multivector_t our_this(framed_multi_t(*this), our_frame, true);
-      ithis = our_this.m_matrix.begin();
-      this_end = our_this.m_matrix.end();
-    }
-    typename matrix_t::const_iterator ithat;
-    typename matrix_t::const_iterator that_end;
-    if (rhs.m_frame == our_frame)
-    {
-      ithat = rhs.m_matrix.begin();
-      that_end = rhs.m_matrix.end();
-    }
-    else
-    { // Represent rhs in our_frame via conversion through framed_multi_t
-      const multivector_t our_rhs = multivector_t(framed_multi_t(rhs), our_frame, true);
-      ithat = our_rhs.m_matrix.begin();
-      that_end = our_rhs.m_matrix.end();
-    }
-    for (; ithis != this_end; ++ithis, ++ithat)
-    {
-      typename      matrix_t::Row::const_iterator jthat = (*ithat).begin();
-      for (typename matrix_t::Row::const_iterator jthis = (*ithis).begin();
+    if (m_frame != rhs.m_frame)
+      return framed_multi_t(*this) == framed_multi_t(rhs);
 
-          jthis != (*ithis).end(); ++jthis, ++jthat)
+    typedef typename matrix_t::const_iterator matrix_iterator;
+    matrix_iterator ithis =          m_matrix.begin();
+    const matrix_iterator this_end = m_matrix.end();
+    matrix_iterator ithat =          rhs.m_matrix.begin();
+    const matrix_iterator that_end = rhs.m_matrix.end();
+    for (; ithis != this_end && ithat != that_end; ++ithis, ++ithat)
+    {
+      typedef typename matrix_t::Row::const_iterator row_iterator;
+      row_iterator jthis =           (*ithis).begin();
+      const row_iterator jthis_end = (*ithis).end();
+      row_iterator jthat =           (*ithat).begin();
+      const row_iterator jthat_end = (*ithat).end();
+      for (; jthis != jthis_end && jthat != jthat_end; ++jthis, ++jthat)
         if (*jthis != *jthat)
           return false;
-      if (jthat != (*ithat).end())
+      if (jthis != jthis_end || jthat != jthat_end)
         return false;
     }
-    return ithat == that_end;
+    return ithis == this_end && ithat == that_end;
   }
 
   // Test for equality of multivector and scalar
@@ -570,7 +552,7 @@ namespace glucat
   const Scalar_T
   matrix_multi<Scalar_T,LO,HI>::
   norm() const
-  { return framed_multi_t(*this).norm(); }
+  { return inner<matrix_t,Scalar_T>(m_matrix, m_matrix); }
 
   template< typename Scalar_T, const index_t LO, const index_t HI >
   const
