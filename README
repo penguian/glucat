@@ -76,9 +76,13 @@ Dependencies
  The headers need a compiler which correctly handles template template classes.
 
  The code has so far been tested using:
- 1) Red Hat Linux 8.0 with g++ 3.2   and Boost 1.30.2 on an Intel(R) Pentium(R) 4.
- 2) SuSE SEL 8        with g++ 3.2.2 and Boost 1.30.2 on a dual AMD Opteron(tm).
- 3) SuSE Linux 9.0    with g++ 3.3.2 and Boost 1.31.0 on an AMD Athlon(tm) 64.
+ 1) Red Hat Linux 8.0,       g++ 3.2,   Boost 1.30.2 on Intel(R) Pentium(R) 4.
+ 2) SuSE SEL 8,              g++ 3.2.2, Boost 1.30.2 on dual AMD Opteron(tm).
+ 3) SuSE Linux 9.0,          g++ 3.3.2, Boost 1.31.0 on AMD Athlon(tm) 64.
+ 4) SuSE Linux 9.0,          g++ 3.3.3, Boost 1.31.0 on AMD Athlon(tm) 64.
+ 5) Debian Linux (unstable), g++ 3.3.3, Boost 1.31.0 on Intel Itanium 2.
+
+ Note: This version of GluCat does NOT compile under g++ 3.4. 
  
 Installation and Testing
 ------------------------

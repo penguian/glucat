@@ -1,10 +1,11 @@
-2004-04-15: 0.1.5
+2004-05-05: 0.1.5
 GluCat has further optimizations. The fast conversion between framed_multi<> 
 and matrix_multi<> and its inverse are now implementations of the matrix
 representation algorithms described in the paper, "A generalized FFT for
 Clifford algebras". The optimized fast conversion uses the new function odd(),
 which gives the odd part of a multivector. A new configure option
 "--with-hash-map" replaces the separate hash_map version of GluCat.
+Note: This version of GluCat does NOT compile under gcc 3.4. 
 
 2003-07-05: 0.1.4-hash_map
 This is a hack to glucat-0.1.4 which uses __gnu_cxx::hash_map<> instead of
