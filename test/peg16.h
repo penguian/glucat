@@ -33,7 +33,7 @@ namespace peg16
     typedef Multivector_T number;
     typedef typename number::index_set_t index_set_t;
     const index_t hi = index_set_t::v_hi;
-    typedef mtl::matrix<number, mtl::rectangle<>, mtl::dense<>, mtl::row_major>::type
+    typedef typename mtl::matrix<number, mtl::rectangle<>, mtl::dense<>, mtl::row_major>::type
             matrix_of_mv;
     const int dim = 5;
     matrix_of_mv a(dim,dim);
