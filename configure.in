@@ -328,7 +328,7 @@ dnl Perform program name transformation
 AC_ARG_PROGRAM
 
 dnl Automake doc recommends to do this only here. (Janos)
-AM_INIT_AUTOMAKE(glucat,0.1.7)
+AM_INIT_AUTOMAKE(glucat,0.1.8)
 
 dnl almost the same like KDE_SET_PREFIX but the path is /usr/local
 dnl
