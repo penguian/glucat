@@ -68,20 +68,20 @@ Dependencies
  GluCat uses the C++ Standard Library and the Boost Library. Make sure
  you have these installed and working before attempting to use GluCat.
  Use the instructions at http://www.boost.org/more/download.html
- to obtain the Boost Library. As at 2003-03-02, you need to use Boost CVS,
- as Boost 1.29.0 does not contain a new enough uBLAS. GluCat has been tested
- with Boost CVS tagged as RC_1_30_0, so it should work with Boost 1.30.0.
+ to obtain the Boost Library. GluCat has been tested with Boost CVS and
+ Boost 1.30.0.
 
- If you are using g++ 3.X.Y, make sure that you have installed Boost with the same
- version of g++.
+ If you are using g++ 3.X.Y, make sure that you have installed Boost with the
+same version of g++.
 
  The headers need a compiler which correctly handles template template classes.
 
- The code has so far been tested using Boost CVS (2003-02-24) with:
- 1) SuSE Linux 8.1 using g++ 3.2
- 2) SuSE Linux 8.1 using Intel C++ 7.0
- 3) Red Hat Linux 7.1 using g++ 2.96 and libstdc++-3
+ The code has so far been tested using Boost CVS and Boost 1.30.0 with:
+ 1) SuSE Linux 8.2 using g++ 3.3 (SuSE prerelease)
+ 2) SuSE Linux 8.2 using Intel C++ 7.0.1
+ 3) Red Hat Linux 8.0 using g++ 3.2
  4) Digital UNIX V4.0F (Rev. 1229) using g++ 3.0.3
+ (reported by configure as alphaev6-dec-osf4.0f)
 
 Installation and Testing
 ------------------------
@@ -105,8 +105,9 @@ Usage
  o In your code, include individual files as <glucat/filename.h>
    You can also use the convenience headers <glucat/glucat.h> and
    <glucat/glucat_imp.h>
- o Use the test header files ./test/driver.h and ./transforms/driver.h as 
- guides. These contain lines which look something like:
+ o Use the test header files ./squaring/squaring.h and
+ ./transforms/transforms.h as guides. These contain lines which look
+ something like:
  
 #include "glucat/glucat.h"
 typedef glucat::tuning<> Tune_P;
@@ -125,8 +126,7 @@ using namespace glucat;
  developed using the g++ compiler, which does not implement the "export" keyword.
  Separate compilation is possible, if you include both the declarations and
  definitions in each compilation unit, but compilation is slow and the resulting
- binary is large. That is why ./test/glucat uses only one source file,
- ./test/driver.cpp, with all the remaining source code in header files.
+ binary is large.
 
 Coding standards
 ----------------
