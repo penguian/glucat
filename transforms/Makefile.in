@@ -152,7 +152,7 @@ target_vendor = @target_vendor@
 
 ####### kdevelop will overwrite this part!!! (begin)##########
 INCLUDES = $(all_includes)
-EXTRA_DIST = Makefile.am transforms.cpp transforms.h 
+EXTRA_DIST = Makefile.am transforms.h transforms.h 
 ####### kdevelop will overwrite this part!!! (end)############
 AUTOMAKE_OPTIONS = foreign
 noinst_PROGRAMS = transforms

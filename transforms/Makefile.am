@@ -13,4 +13,4 @@ transforms_LDFLAGS = $(all_libraries)
 
 transforms_SOURCES = transforms.cpp
 transforms_LDADD = $(LDADD)
-transforms_DEPENDENCIES = driver.h transforms.h
+transforms_DEPENDENCIES = transforms.h
