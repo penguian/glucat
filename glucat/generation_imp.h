@@ -26,9 +26,9 @@
 namespace glucat
 {
   // References for algorithms:
-  // [M] Scott Meyers, "Effective C++" Second Edition, Addison-Wesley, 1998.
+  // [M]: Scott Meyers, "Effective C++" Second Edition, Addison-Wesley, 1998.
   // [P]: Ian R. Porteous, "Clifford algebras and the classical groups", Cambridge UP, 1995.
-  // [L}: Pertti Lounesto, "Clifford algebras and spinors", Cambridge UP, 1997.
+  // [L]: Pertti Lounesto, "Clifford algebras and spinors", Cambridge UP, 1997.
 
   /// Modulo function which works reliably for lhs < 0
   inline
@@ -37,9 +37,10 @@ namespace glucat
   { return lhs > 0? lhs % rhs : (-lhs) % rhs == 0 ? 0 : rhs - (-lhs) % rhs; }
 
   /// Single instance of generator table
-  // Reference: {M] Item 47
+  // Reference: [M] Item 47
   template< class Matrix_T >
   generator_table<Matrix_T>&
+  generator_table<Matrix_T>::
   generator()
   { static generator_table<Matrix_T> g; return g;}
 
@@ -70,7 +71,7 @@ namespace glucat
 
   /// Construct a vector of generators for a specific signature
   template< class Matrix_T >
-  const vector<Matrix_T>&
+  const std::vector<Matrix_T>&
   generator_table<Matrix_T>::
   gen_vector(const index_t p, const index_t q)
   {
@@ -90,9 +91,8 @@ namespace glucat
           gen_from_pm4_qp4(gen_vector(p-4, q+4), sig);
         else if (card == 0)
         { // Base case. Save a generator vector containing one matrix, size 1.
-          vector<Matrix_T> result(1);
-          result[0] = Matrix_T(1,1);
-          mtl::set(result[0], 0);
+          std::vector<Matrix_T> result(1);
+          result[0].resize(1, 1);
           this->insert(make_pair(sig, result));
         }
         else
@@ -121,33 +121,34 @@ namespace glucat
   template< class Matrix_T >
   void
   generator_table<Matrix_T>::
-  gen_from_pm1_qm1(const vector<Matrix_T>& old, const signature_t sig)
+  gen_from_pm1_qm1(const std::vector<Matrix_T>& old, const signature_t sig)
   {
+    using namespace matrix;
     Matrix_T pos(2,2);
-    mtl::set(pos, 0);
     pos(0,1) =     1;
     pos(1,0) = 1;
 
     Matrix_T dup(2,2);
-    mtl::set(dup, 0);
     dup(0,0) = 1;
     dup(1,1) =    -1;
 
     Matrix_T neg(2,2);
-    mtl::set(neg, 0);
     neg(0,1) =    -1;
     neg(1,0) = 1;
 
     const int new_size = old.size() + 2;
-    const int old_dim = old[0].nrows();
-		Matrix_T eye(old_dim, old_dim);
-    unit(old_dim, eye);
+    const int old_dim = old[0].size1();
+    const int new_dim = old_dim*2;
+    const Matrix_T& eye = unit<Matrix_T>(old_dim);
 
-    vector<Matrix_T> result(new_size);
-    kron(neg , eye, result[0]);
+    std::vector<Matrix_T> result(new_size);
+    for (int k = 0; k != new_size; ++k)
+      result[k].resize(new_dim, new_dim);
+    
+    result[0] = kron(neg, eye);
     for (int k = 1; k != new_size-1; ++k)
-      kron(dup , old[k-1], result[k]);
-    kron(pos , eye, result[new_size-1]);
+      result[k] = kron(dup, old[k-1]);
+    result[new_size-1] = kron(pos, eye);
 
     // Save the resulting generator array.
     this->insert(make_pair(sig, result));
@@ -158,28 +159,26 @@ namespace glucat
   template< class Matrix_T >
   void
   generator_table<Matrix_T>::
-  gen_from_pm4_qp4(const vector<Matrix_T>& old, const signature_t sig)
+  gen_from_pm4_qp4(const std::vector<Matrix_T>& old, const signature_t sig)
   {
-    const int dim = old[0].nrows();
+    using namespace matrix;
+    const int dim = old[0].size1();
     const int old_size = old.size();
     Matrix_T h(dim, dim);
-    mtl::copy(old[0], h);
+    h = old[0];
     for (int k = 1; k != 4; ++k)
-    {
-      Matrix_T temp(dim, dim);
-      mtl::mult(old[k], h, temp);
-      mtl::copy(temp, h);
-    }
-    vector<Matrix_T> result(old_size);
+      h = mono_prod<Matrix_T>(old[k], h);
+
+    std::vector<Matrix_T> result(old_size);
     for (int k = 0; k != 4; ++k)
     {
-      result[k+old_size-4] = Matrix_T(dim, dim);
-      mtl::mult(old[k], h, result[k+old_size-4]);
+      result[k+old_size-4].resize( dim, dim );
+      result[k+old_size-4] = mono_prod<Matrix_T>(old[k], h);
     }
     for (int k = 4; k != old_size; ++k)
     {
-      result[k-4] = Matrix_T(dim, dim);
-      mtl::copy(old[k], result[k-4]);
+      result[k-4].resize(dim, dim);
+      result[k-4] = old[k];
     }
     // Save the resulting generator array.
     this->insert(make_pair(sig, result));
@@ -190,28 +189,26 @@ namespace glucat
   template< class Matrix_T >
   void
   generator_table<Matrix_T>::
-  gen_from_pp4_qm4(const vector<Matrix_T>& old, const signature_t sig)
+  gen_from_pp4_qm4(const std::vector<Matrix_T>& old, const signature_t sig)
   {
-    const int dim = old[0].nrows();
+    using namespace matrix;
+    const int dim = old[0].size1();
     const int old_size = old.size();
     Matrix_T h(dim, dim);
-    mtl::copy(old[old_size-1], h);
+    h = old[old_size-1];
     for (int k = 1; k != 4; ++k)
-    {
-      Matrix_T temp(dim, dim);
-      mtl::mult(old[old_size-1-k], h, temp);
-      mtl::copy(temp, h);
-    }
-    vector<Matrix_T> result(old_size);
+      h = mono_prod<Matrix_T>(old[old_size-1-k], h);
+
+    std::vector<Matrix_T> result(old_size);
     for (int k = 0; k != 4; ++k)
     {
-      result[k] = Matrix_T(dim, dim);
-      mtl::mult(old[k+old_size-4], h, result[k]);
+      result[k].resize(dim, dim);
+      result[k] = mono_prod<Matrix_T>(old[k+old_size-4], h);
     }
     for (int k = 4; k != old_size; ++k)
     {
-      result[k] = Matrix_T(dim, dim);
-      mtl::copy(old[k-4], result[k]);
+      result[k].resize(dim, dim);
+      result[k] = old[k-4];
     }
     // Save the resulting generator array.
     this->insert(make_pair(sig, result));
@@ -222,20 +219,21 @@ namespace glucat
   template< class Matrix_T >
   void
   generator_table<Matrix_T>::
-  gen_from_qp1_pm1(const vector<Matrix_T>& old, const signature_t sig)
+  gen_from_qp1_pm1(const std::vector<Matrix_T>& old, const signature_t sig)
   {
-    const int dim = old[0].nrows();
+    using namespace matrix;
+    const int dim = old[0].size1();
     const int old_size = old.size();
     const Matrix_T& a = old[old_size-1];
-    vector<Matrix_T> result(old_size);
+    std::vector<Matrix_T> result(old_size);
     int m = 0;
     for (int k = old_size-1; k != 0; --k, ++m)
     {
-      result[m] = Matrix_T(dim, dim);
-      mtl::mult(old[k-1], a, result[m]);
+      result[m].resize(dim, dim);
+      result[m] = mono_prod<Matrix_T>(old[k-1], a);
     }
-    result[old_size-1] = Matrix_T(dim, dim);
-    mtl::copy(a, result[old_size-1]);
+    result[old_size-1].resize(dim, dim);
+    result[old_size-1] = a;
 
     // Save the resulting generator array.
       this->insert(make_pair(sig, result));
