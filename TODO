@@ -1,5 +1,4 @@
 There is plenty of testing, cleanup, packaging and documentation work yet to do.
-o Fix compilation with g++ 3.4.
 o Try defining Boost concepts, numeric limits and traits, so that GluCat can
   eventually become a Boost library.
 o Try moving the names in glucat:: which shadow names in std:: into std:: itself
