@@ -42,7 +42,7 @@ namespace glucat
 
   // Constants which determine sizes
   /// If radix of unsigned char is not 2, we can't easily determine number of bits from sizeof
-  _GLUCAT_CTAssert(std::numeric_limits<unsigned char>::radix == 2, CannotDetermineBitsPerChar);
+  _GLUCAT_CTAssert(std::numeric_limits<unsigned char>::radix == 2, CannotDetermineBitsPerChar)
 
   /// Number of bits per char is used to determine number of bits in set_value_t
   const index_t BITS_PER_CHAR = std::numeric_limits<unsigned char>::digits;
@@ -63,7 +63,7 @@ namespace glucat
   template
   <
     int Mult_Matrix_Threshold = 9,
-    int Div_Max_Steps = 3,
+    int Div_Max_Steps = 4,
     int Sqrt_Max_Steps = 7,
     int Log_Max_Outer_Steps = 256,
     int Log_Max_Inner_Steps = 8
@@ -85,5 +85,6 @@ namespace glucat
     /// Maximum number of steps in incomplete square root within cascade log algorithm
     enum { log_max_inner_steps = Log_Max_Inner_Steps };
   };
+
 }
 #endif // _GLUCAT_GLOBAL_H
