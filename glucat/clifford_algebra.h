@@ -76,8 +76,10 @@ namespace glucat
     virtual Scalar_T            operator[]  (const index_set_t& ist) const =0;
     /// Pure grade-vector part
     virtual const multivector_t operator()  (index_t grade) const =0;
-    /// Even part of multivector, sum of even grade parts
+    /// Even part of multivector, sum of even grade terms
     virtual const multivector_t even()      const =0;
+    /// Odd part of multivector, sum of odd grade terms
+    virtual const multivector_t odd()      const =0;
     /// Vector part of multivector, as a vector_t with respect to frame()
     virtual const vector_t      vector_part () const = 0;
     /// Main involution, each {i} is replaced by -{i} in each term, eg. {1}*{2} -> (-{2})*(-{1})
@@ -124,6 +126,7 @@ namespace glucat
     Scalar_T            operator[]  (const index_set_t& ist) const;   \
     const multivector_t operator()  (index_t grade) const;            \
     const multivector_t even()      const;                            \
+    const multivector_t odd()       const;                            \
     const vector_t      vector_part() const;                          \
     const multivector_t involute()  const;                            \
     const multivector_t reverse()   const;                            \
@@ -390,6 +393,15 @@ namespace glucat
   >
   const Multivector<Scalar_T,LO,HI>
   even(const Multivector<Scalar_T,LO,HI>& val);
+
+  /// Odd part
+  template
+  <
+    template<typename, const index_t, const index_t> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI
+  >
+  const Multivector<Scalar_T,LO,HI>
+  odd(const Multivector<Scalar_T,LO,HI>& val);
 
   /// Vector part of multivector, as a vector_t with respect to frame()
   template
