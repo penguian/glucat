@@ -34,7 +34,9 @@
 #include "glucat/portability.h"
 
 // Declarations
-#include <mtl/mtl_limits.h>
+#define HAVE_STD_ABS
+#include <boost/limits.hpp>
+
 #include "glucat/global.h"
 
 #include <exception>
@@ -55,15 +57,23 @@
 #include <complex>
 #include "glucat/framed_multi.h"
 
-#include <mtl/mtl.h>
-#include "glucat/generation.h"
-#include "glucat/matrix_multi.h"
-
-#include "glucat/matrix.h"
-
 // Add real equivalents to complex functions
 #include <math.h>
 #include "glucat/long_double.h"
 #include "glucat/scalar.h"
+
+#include <boost/numeric/ublas/config.hpp>
+#include <boost/numeric/ublas/vector.hpp>
+#include <boost/numeric/ublas/matrix.hpp>
+#include <boost/numeric/ublas/triangular.hpp>
+#include <boost/numeric/ublas/vector_sparse.hpp>
+#include <boost/numeric/ublas/matrix_sparse.hpp>
+#include <boost/numeric/ublas/operation_sparse.hpp>
+#include <boost/numeric/ublas/io.hpp>
+#include "glucat/ublas.h"
+#include "glucat/matrix.h"
+
+#include "glucat/generation.h"
+#include "glucat/matrix_multi.h"
 
 #endif  // _GLUCAT_GLUCAT_H

@@ -20,15 +20,7 @@
  in Ablamowicz, Lounesto and Parra (eds.)
  "Clifford algebras with numeric and symbolic computations", Birkhauser, 1996.
  ***************************************************************************
-     Arvind Raja's original header comments and references follow.
- ***************************************************************************
-// clifford algebra package,  Arvind.Raja@hut.fi
-// ref: Press et.al. "Numerical Recipes in C", 2nd ed., C.U.P., 1992.
-// ref: LEDA, v 3.0, Stefan N\"aher, Max-Planck-Institut f\"ur Informatik
-// ref: Stroustrup B., "The C++ Programming Language", 2nd ed.,
-//      Addison-Wesley, 1991.
-// ref: R. Sedgewick, "Algorithms in C++", Addison-Wesley, 1992.
-// ref: S. Meyers, "Effective C++ ", Addison-Wesley, 1992.
+     For Arvind Raja's original header comments, see glucat.h
  ***************************************************************************/
 
 // Template definitions which cannot be compiled separately
@@ -37,15 +29,10 @@
 #include <sstream>
 #include "glucat/index_set_imp.h"
 #include "glucat/clifford_algebra_imp.h"
-
-#include <mtl/norm.h>
 #include "glucat/framed_multi_imp.h"
-
-#include "glucat/generation_imp.h"
-
-#include <mtl/lu.h>
-#include "glucat/matrix_multi_imp.h"
-
+#include "glucat/ublas_imp.h"
 #include "glucat/matrix_imp.h"
+#include "glucat/generation_imp.h"
+#include "glucat/matrix_multi_imp.h"
 
 #endif  // _GLUCAT_GLUCAT_IMP_H
