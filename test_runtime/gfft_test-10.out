@@ -1,0 +1,11 @@
+Clifford algebra transform test:
+Cl( 1, 1) in Cl( 1, 1) CPU = mm:       0.16 fm:       0.17  diff: 0.00e+00
+Cl( 2, 2) in Cl( 2, 2) CPU = mm:       1.15 fm:       1.20  diff: 6.24e-17
+Cl( 3, 3) in Cl( 3, 3) CPU = mm:       6.30 fm:       7.50  diff: 1.25e-16
+Cl( 4, 4) in Cl( 4, 4) CPU = mm:      32.73 fm:      44.50  diff: 1.19e-16
+Cl( 5, 5) in Cl( 5, 5) CPU = mm:     170.00 fm:     260.00  diff: 1.47e-16
+Cl( 6, 6) in Cl( 6, 6) CPU = mm:     850.00 fm:    1430.00  diff: 1.48e-16
+Cl( 7, 7) in Cl( 7, 7) CPU = mm:    4240.00 fm:    7720.00  diff: 1.61e-16
+Cl( 8, 8) in Cl( 8, 8) CPU = mm:   20800.00 fm:   40680.00  diff: 1.75e-16
+Cl( 9, 9) in Cl( 9, 9) CPU = mm:  100520.00 fm:  208520.00  diff: 1.82e-16
+Cl(10,10) in Cl(10,10) CPU = mm:  479990.00 fm: 1034360.00  diff: 1.94e-16
