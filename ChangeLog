@@ -1,9 +1,10 @@
 2002-01-09 Released glucat-0.0.1
-2002-01-10 README: Added -finline-limit-400
-2002-01-11 clifford_algebra_imp.h: Fixed elliptic() to give a result which commutes
-2002-01-11 peg12.cpp: Changed example name from "basis group" to "frame group"
-2002-01-11 peg13.cpp, peg14.cpp, peg15.cpp: Added cout << example name
-2002-01-11 peg16.cpp: Fixed example name to read: Matrices of multivectors
-2002-01-11 Added all relevant files to CVS
+2002-01-10 ./README: Added -finline-limit-400
+2002-01-11 ./glucat/clifford_algebra_imp.h: Fixed elliptic() to give a result which commutes
+2002-01-11 ./test/peg12.cpp: Changed example name from "basis group" to "frame group"
+2002-01-11 ./test/peg13.cpp, peg14.cpp, peg15.cpp: Added cout << example name
+2002-01-11 ./test/peg16.cpp: Fixed example name to read: Matrices of multivectors
 2002-01-12 Updated version to 0.0.2
-2002-01-12 test.out, test6.out: Added sample output
+2002-01-12 ./test/test.out, test6.out: Added sample output
+2002-01-12 Added all relevant files to CVS
+2002-01-12 ./glucat/doc: removed unused directory
