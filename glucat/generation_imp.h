@@ -167,13 +167,13 @@ namespace glucat
     Matrix_T h(dim, dim);
     h = old[0];
     for (int k = 1; k != 4; ++k)
-      h = mono_prod<Matrix_T>(old[k], h);
+      h = mono_prod(old[k], h);
 
     std::vector<Matrix_T> result(old_size);
     for (int k = 0; k != 4; ++k)
     {
       result[k+old_size-4].resize( dim, dim );
-      result[k+old_size-4] = mono_prod<Matrix_T>(old[k], h);
+      result[k+old_size-4] = mono_prod(old[k], h);
     }
     for (int k = 4; k != old_size; ++k)
     {
@@ -197,13 +197,13 @@ namespace glucat
     Matrix_T h(dim, dim);
     h = old[old_size-1];
     for (int k = 1; k != 4; ++k)
-      h = mono_prod<Matrix_T>(old[old_size-1-k], h);
+      h = mono_prod(old[old_size-1-k], h);
 
     std::vector<Matrix_T> result(old_size);
     for (int k = 0; k != 4; ++k)
     {
       result[k].resize(dim, dim);
-      result[k] = mono_prod<Matrix_T>(old[k+old_size-4], h);
+      result[k] = mono_prod(old[k+old_size-4], h);
     }
     for (int k = 4; k != old_size; ++k)
     {
@@ -230,7 +230,7 @@ namespace glucat
     for (int k = old_size-1; k != 0; --k, ++m)
     {
       result[m].resize(dim, dim);
-      result[m] = mono_prod<Matrix_T>(old[k-1], a);
+      result[m] = mono_prod(old[k-1], a);
     }
     result[old_size-1].resize(dim, dim);
     result[old_size-1] = a;
