@@ -29,3 +29,5 @@ o Add operator| for geometric operations:
   { return rhs * lhs * involute(inv(rhs)); }
 o Add convenience constructors to index_set:
   index_set(int, int), index_set(int, int, int), ... index_set(int, int, ..., int), etc.
+o Try using copy-on-write for matrix_multi_t::matrix_t, since MTL already does reference
+  counting
