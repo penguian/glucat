@@ -12,5 +12,6 @@
 2002-01-21 Remove irrelevant KDevelop session file
 2002-01-21 ./glucat/clifford_algebra_imp.h: cos(), sin(): bring real part into range 0 <= x < 2*pi
 2002-01-21 ./glucat/matrix_multi_imp.h: operator==(): fix use of const_iterators
+2002-01-21 ./glucat/matrix_multi_imp.h: norm(): optimize by using inner()
 
 
