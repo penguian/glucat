@@ -52,76 +52,6 @@ namespace glucat
     mtl::set_diagonal(result, 1);
   }
 
-  /// Generate the next generation of generators, given the previous generation
-  template< class Matrix_T >
-  const vector< Matrix_T >
-  gen(const vector< Matrix_T >& old )
-  {
-    Matrix_T z(2,2);
-    mtl::set(z, 0);
-    z(0,0) =   1;
-    z(1,1) =      -1;
-    Matrix_T pos(2,2);
-    mtl::set(pos, 0);
-    pos(0,1) =     1;
-    pos(1,0) = 1;
-    Matrix_T neg(2,2);
-    mtl::set(neg, 0);
-    neg(0,1) =    -1;
-    neg(1,0) = 1;
-
-    const int new_size = old.size() + 2;
-    const int old_mat_shape = old[0].nrows();
-		Matrix_T eye(old_mat_shape, old_mat_shape);
-    unit<Matrix_T>(old_mat_shape, eye);
-
-    vector< Matrix_T > result(new_size);
-    kron(neg , eye, result[0]);
-    kron(pos , eye, result[new_size-1]);
-    for (int k = 1; k != new_size-1; ++k)
-      kron(z , old[k-1], result[k]);
-    return result;
-  }
-
-  /// Generate a specific generation of generators, given the whole family tree
-  template< class Matrix_T >
-  const vector< Matrix_T >&
-  gengen(const int n, vector< vector< Matrix_T > >& generators)
-  {
-    int old_size( generators.size() );
-    if (old_size > n)
-      // Generator array already exists. Just return it.
-      return generators[n];
-    else if (n == 0)
-    { // Base case. Generator array will contain one matrix, size 1.
-      // Save this generator array.
-      generators.resize(1);
-      generators[0].resize(1);
-      generators[0][0] = Matrix_T(1,1);
-      mtl::set(generators[0][0], 0);
-      return generators[0];
-    }
-    else
-    {  // Use recursion to define generator array in terms of smaller generator array
-      vector< Matrix_T > result = gen(gengen<Matrix_T>(n-1, generators));
-      // Save the resulting generator array.
-      generators.push_back(result);
-      return generators[n];
-    }
-  }
-
-  /// Inner product: sum(x(i,j)*y(i,j))/x.nrows()
-  template< class Matrix_T, class Scalar_T >
-  Scalar_T
-  inner(const Matrix_T& x, const Matrix_T& y)
-  {
-    Scalar_T result = 0;
-    for (typename Matrix_T::const_iterator i = x.begin(); i != x.end(); ++i)
-      for (typename Matrix_T::Row::const_iterator j = (*i).begin(); j != (*i).end(); ++j)
-        result += (*j) * y(j.row(),j.column());
-    return result / x.nrows();
-  }
-
   /// Does a matrix have only one non-zero per row (or column) ?
   // Note: This should return false for dense matrices,
   // but this is OK for the current use of this function,
@@ -151,6 +81,72 @@ namespace glucat
       return is_singlet(xt);
     }
     return false;
+  }
+
+  /// Generate the next generation of generators, given the previous generation
+  template< class Matrix_T >
+  void
+  gen(const vector< Matrix_T >& old, vector< vector< Matrix_T > >& generators)
+  {
+    Matrix_T z(2,2);
+    mtl::set(z, 0);
+    z(0,0) =   1;
+    z(1,1) =      -1;
+
+    Matrix_T pos(2,2);
+    mtl::set(pos, 0);
+    pos(0,1) =     1;
+    pos(1,0) = 1;
+
+    Matrix_T neg(2,2);
+    mtl::set(neg, 0);
+    neg(0,1) =    -1;
+    neg(1,0) = 1;
+
+    const int new_size = old.size() + 2;
+    const int old_mat_shape = old[0].nrows();
+		Matrix_T eye(old_mat_shape, old_mat_shape);
+    unit<Matrix_T>(old_mat_shape, eye);
+
+    vector< Matrix_T > result(new_size);
+    kron(neg , eye, result[0]);
+    kron(pos , eye, result[new_size-1]);
+    for (int k = 1; k != new_size-1; ++k)
+      kron(z , old[k-1], result[k]);
+    // Save the resulting generator array.
+    generators.push_back(result);
+  }
+
+  /// Generate a specific generation of generators, given the whole family tree
+  template< class Matrix_T >
+  const vector< Matrix_T >&
+  gengen(const int n, vector< vector< Matrix_T > >& generators)
+  {
+    if (n >= int(generators.size()))
+      if (n == 0)
+      { // Base case. Generator array will contain one matrix, size 1.
+        // Save this generator array.
+        generators.resize(1);
+        generators[0].resize(1);
+        generators[0][0] = Matrix_T(1,1);
+        mtl::set(generators[0][0], 0);
+      }
+      else
+        // Use recursion to define generator array in terms of smaller generator array
+        gen(gengen<Matrix_T>(n-1, generators), generators);
+    return generators[n];
+  }
+
+  /// Inner product: sum(x(i,j)*y(i,j))/x.nrows()
+  template< class Matrix_T, class Scalar_T >
+  Scalar_T
+  inner(const Matrix_T& x, const Matrix_T& y)
+  {
+    Scalar_T result = 0;
+    for (typename Matrix_T::const_iterator i = x.begin(); i != x.end(); ++i)
+      for (typename Matrix_T::Row::const_iterator j = (*i).begin(); j != (*i).end(); ++j)
+        result += (*j) * y(j.row(),j.column());
+    return result / x.nrows();
   }
 
 }

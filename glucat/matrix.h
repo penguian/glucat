@@ -37,21 +37,6 @@ namespace glucat
   void
   unit(int n, Matrix_T& result);
 
-  /// Generate the next generation of generators, given the previous generation
-  template< class Matrix_T >
-  const vector<Matrix_T>
-  gen(const vector<Matrix_T>& old );
-
-  /// Generate a specific generation of generators, given the whole family tree
-  template< class Matrix_T >
-  const vector<Matrix_T>&
-  gengen(const int n, vector< vector<Matrix_T> >& generators);
-
-  /// Inner product: sum(x(i,j)*y(i,j))/x.nrows()
-  template< class Matrix_T, class Scalar_T >
-  Scalar_T
-  inner(const Matrix_T& x, const Matrix_T& y);
-
   /// Does a matrix have only one non-zero per row (or column) ?
   // Note: This should return false for dense matrices,
   // but this is OK for the current use of this function,
@@ -67,5 +52,20 @@ namespace glucat
   template< class Matrix_T >
   bool
   is_perm_shaped(const Matrix_T& x);
+
+  /// Generate the next generation of generators, given the previous generation
+  template< class Matrix_T >
+  void
+  gen(const vector<Matrix_T>& old, vector< vector< Matrix_T > >& generators);
+
+  /// Generate a specific generation of generators, given the whole family tree
+  template< class Matrix_T >
+  const vector<Matrix_T>&
+  gengen(const int n, vector< vector<Matrix_T> >& generators);
+
+  /// Inner product: sum(x(i,j)*y(i,j))/x.nrows()
+  template< class Matrix_T, class Scalar_T >
+  Scalar_T
+  inner(const Matrix_T& x, const Matrix_T& y);
 }
 #endif  // _GLUCAT_MATRIX_H
