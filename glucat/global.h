@@ -62,28 +62,32 @@ namespace glucat
   /// Tuning policy
   template
   <
-    int Mult_Matrix_Threshold = 9,
-    int Div_Max_Steps = 4,
-    int Sqrt_Max_Steps = 7,
-    int Log_Max_Outer_Steps = 256,
-    int Log_Max_Inner_Steps = 8
+    int DEFAULT_Mult_Matrix_Threshold = 9,
+    int DEFAULT_Div_Max_Steps = 4,
+    int DEFAULT_Sqrt_Max_Steps = 7,
+    int DEFAULT_Log_Max_Outer_Steps = 256,
+    int DEFAULT_Log_Max_Inner_Steps = 8,
+    int DEFAULT_Basis_Max_Count = 10
   >
   struct tuning
   {
   // Tuning for multiplication
     /// Minimum index count needed to invoke matrix multiplication algorithm
-    enum { mult_matrix_threshold = Mult_Matrix_Threshold };
+    enum { mult_matrix_threshold = DEFAULT_Mult_Matrix_Threshold };
   // Tuning for division
     /// Maximum steps of iterative refinement in division algorithm
-    enum { div_max_steps = Div_Max_Steps };
+    enum { div_max_steps = DEFAULT_Div_Max_Steps };
   // Tuning for sqrt
     /// Maximum number of steps in square root iteration
-    enum { sqrt_max_steps = Sqrt_Max_Steps };
+    enum { sqrt_max_steps = DEFAULT_Sqrt_Max_Steps };
   // Tuning for log
     /// Maximum number of incomplete square roots in cascade log algorithm
-    enum { log_max_outer_steps = Log_Max_Outer_Steps };
+    enum { log_max_outer_steps = DEFAULT_Log_Max_Outer_Steps };
     /// Maximum number of steps in incomplete square root within cascade log algorithm
-    enum { log_max_inner_steps = Log_Max_Inner_Steps };
+    enum { log_max_inner_steps = DEFAULT_Log_Max_Inner_Steps };
+  // Tuning for basis cache
+    /// Maximum index count of folded frames in basis cache
+    enum { basis_max_count = DEFAULT_Basis_Max_Count };
   };
 
 }
