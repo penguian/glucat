@@ -46,11 +46,7 @@ namespace glucat
   _GLUCAT_PRIVATE:
     typedef ublas::row_major                         orientation_t;
     typedef ublas::compressed_matrix< Scalar_T, orientation_t >
-                                                     sparse_matrix_t;
-    typedef ublas::compressed_matrix< Scalar_T, ublas::column_major >
-                                                     col_matrix_t;
-    typedef ublas::matrix< Scalar_T, orientation_t > dense_matrix_t;
-    typedef sparse_matrix_t                          matrix_t;
+                                                     matrix_t;
     typedef typename matrix_t::size_type             matrix_index_t;
   public:
     /// Class name used in messages
