@@ -139,8 +139,7 @@ namespace glucat
     {
       const index_set_t ist(stv, frm, true);
       const Scalar_T crd =
-        matrix::inner<Scalar_T>(
-          basis_element<Scalar_T,LO,HI>(ist, frm), val.m_matrix);
+        matrix::inner<Scalar_T>(basis_element<Scalar_T>(ist, frm), val.m_matrix);
       if (crd != Scalar_T(0))
         this->insert(pair_t(ist, crd));
     }
