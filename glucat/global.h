@@ -67,7 +67,7 @@ namespace glucat
   const int DEFAULT_Log_Max_Inner_Steps    =      8;
   const int DEFAULT_Basis_Max_Count        =      8;
   const int DEFAULT_Fast_Size_Threshold    = 1 << 8;
-  const int DEFAULT_Inv_Fast_Dim_Threshold = 1 << 5;
+  const int DEFAULT_Inv_Fast_Dim_Threshold = 1 << 4;
 
   /// Tuning policy
   template
