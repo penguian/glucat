@@ -76,6 +76,10 @@ namespace glucat
     index_set&    flip(index_t idx);
     /// Cardinality: Number of indices included in set
     const index_t       count() const;
+    /// Number of positive indices included in set
+    const index_t       count_pos() const;
+    /// Number of negative indices included in set
+    const index_t       count_neg() const;
     /// Minimum member
     const index_t       min() const;
     /// Maximum member

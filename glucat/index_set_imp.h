@@ -263,6 +263,34 @@ namespace glucat
   count() const
   { return bitset_t::count(); }
 
+  /// Number of positive indices included in set
+  template<const index_t LO, const index_t HI>
+  inline
+  const index_t
+  index_set<LO,HI>::
+  count_pos() const
+  {
+    index_t result = 0;
+    for (index_t idx = HI; idx != 0; --idx)
+      if (test(idx))
+        ++result;
+    return result;
+  }
+
+  /// Number of negative indices included in set
+  template<const index_t LO, const index_t HI>
+  inline
+  const index_t
+  index_set<LO,HI>::
+  count_neg() const
+  {
+    index_t result = 0;
+    for (index_t idx = LO; idx != 0; ++idx)
+      if (test(idx))
+        ++result;
+    return result;
+  }
+
   /// Minimum member
   template<const index_t LO, const index_t HI>
   inline
