@@ -1,12 +1,21 @@
 Before You Begin
 ================
  GluCat uses the C++ Standard Library and the Matrix Template Library. Make sure
- you have these installed and working before installing GluCat.
- The code currently runs on SuSE Linux 7.2 using g++ 2.95.3 with the
- libstdc++-v3 library and MTL 2.1.2-20. The headers need a compiler which
- correctly handles template template classes, which rules out (eg.) the Intel
- C++ compiler.
+ you have these installed and working before attempting to use GluCat.
 
+ If you are using g++ 3.0.X, make sure that you have installed MTL with the same
+ version of g++. g++ 3.0.X provides <limits> and MTL uses this if it is present.
+
+ The headers need a compiler which correctly handles template template classes,
+ which rules out (eg.) the Intel C++ compiler.
+
+ The code has so far been tested using MTL 2.1.2-20 with:
+ 1) SuSE Linux 7.2 using g++ 2.95.3 and libstdc++-libc6.2-2.so.3
+ 2) SuSE Linux 7.2 using g++ 3.0.3 and libstdc++.so.3.0.2
+ 3) Red Hat Linux 7.1 using g++ 2.96 and libstdc++-3
+
+To Test
+=======
  Once you have downloaded, unzipped and untarred the source code,
  you should have a directory, glucat-xxx, where xxx is the version number.
  Under glucat-xxx you should see three directories, ./glucat, ./glucat-api and ./test.
@@ -21,6 +30,8 @@ Before You Begin
  programming example 8 (reading multivectors from input).
  See README for notes on running the test program.
 
+To Install
+==========
  Once you are satisfied that GluCat works, you can run make install.
  What make install does is to install the headers from ./glucat into the
  installation directory, which defaults to /usr/local/include
