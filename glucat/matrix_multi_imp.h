@@ -399,12 +399,11 @@ namespace glucat
 
       const matrix_t& AT = ublas::trans(rhs.m_matrix);
       matrix_t LU = AT;
-      ublas::vector<int> pvector(AT.size1());
-      if (! matrix::lu_factorize(LU, pvector))
+      ublas::permutation_matrix<matrix_index_t> pvector(AT.size1());
+      if (! ublas::lu_factorize(LU, pvector))
       {
         matrix_t XT = ublas::trans(m_matrix);
-        matrix::lu_solve(LU, pvector, XT);
-
+        ublas::lu_substitute (LU, pvector, XT);
         // Iterative refinement.
         // Reference: Nicholas J. Higham, "Accuracy and Stability of Numerical Algorithms",
         // SIAM, 1996, ISBN 0-89871-355-2, Chapter 11
@@ -429,7 +428,7 @@ namespace glucat
               if (step != 0)
                 XT = XTnew;
               matrix_t& D = R;
-              matrix::lu_solve(LU, pvector, D);
+              ublas::lu_substitute (LU, pvector, D);
               XTnew -= D;
               R = matrix::sparse_prod(AT, XTnew) - BT;
               nr = ublas::norm_inf(R);
@@ -703,24 +702,25 @@ namespace glucat
     typedef typename framed_multi_t::scalar_t scalar_t;
     const framed_multi_t mn = framed_multi_t(index_set_t(-level), scalar_t(1));
     const framed_multi_t pn = framed_multi_t(index_set_t(level), scalar_t(1));
+    const bool mono = true;
     if (level == 1)
     {
-      const framed_multi_t& I_M  = (matrix::nork(I, M))(0, 0);
-      const framed_multi_t& J_M  = (matrix::nork(J, M))(0, 0);
-      const framed_multi_t& K_M  = (matrix::nork(K, M))(0, 0);
-      const framed_multi_t& JK_M = (matrix::nork(JK, M))(0, 0);
+      const framed_multi_t& I_M  = (matrix::nork(I,  M, mono))(0, 0);
+      const framed_multi_t& J_M  = (matrix::nork(J,  M, mono))(0, 0);
+      const framed_multi_t& K_M  = (matrix::nork(K,  M, mono))(0, 0);
+      const framed_multi_t& JK_M = (matrix::nork(JK, M, mono))(0, 0);
       return    I_M
         + mn * (JK_M * pn + J_M)
         +       K_M * pn;
     }
     const framed_multi_t& I_M  =
-      fast<framed_multi_t, matrix_t>(matrix::nork(I, M), level-1);
+      fast<framed_multi_t, matrix_t>(matrix::nork(I,  M, mono), level-1);
     const framed_multi_t& J_M  =
-      fast<framed_multi_t, matrix_t>(matrix::nork(J, M), level-1);
+      fast<framed_multi_t, matrix_t>(matrix::nork(J,  M, mono), level-1);
     const framed_multi_t& K_M  =
-      fast<framed_multi_t, matrix_t>(matrix::nork(K, M), level-1);
+      fast<framed_multi_t, matrix_t>(matrix::nork(K,  M, mono), level-1);
     const framed_multi_t& JK_M =
-      fast<framed_multi_t, matrix_t>(matrix::nork(JK, M), level-1);
+      fast<framed_multi_t, matrix_t>(matrix::nork(JK, M, mono), level-1);
     const framed_multi_t& ev_I_M = even(I_M);
     const framed_multi_t& od_I_M = I_M - ev_I_M;
     const framed_multi_t& ev_J_M = even(J_M);
@@ -735,12 +735,12 @@ namespace glucat
      +     (ev_K_M  - od_J_M)*pn;
   }
 
-  /// Use generalized FFT to construct a matrix_multi_t 
+  /// Use generalized FFT to construct a matrix_multi_t
   template< typename Scalar_T, const index_t LO, const index_t HI >
   const matrix_multi<Scalar_T,LO,HI>
   matrix_multi<Scalar_T,LO,HI>::
   fast_matrix_multi(const index_set_t& frm) const
-  { 
+  {
     if (m_frame == frm)
       return *this;
     else
