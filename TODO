@@ -5,10 +5,10 @@ o Test with Blitz++, deal.II, MTL, POOMA and adjust accordingly.
 o The names in glucat:: which shadow names in std:: will probably need to
   move to std:: so that eg. std::abs() will work for multivector_t within
   other template libraries, such as MTL.
-o The matrix representation needs to use irreducible representations.
-  Irreducible representations use smaller matrices, which are faster.
+o Try using the complex irreducible representations for the matrix represenetation.
+  The complex irreducible representations uses smaller matrices, which are faster.
   This will mean changes to basis_element(), folded_dim() and others.
-  This will also mean using complex<> matrices and may also need quaternions.
+  This may be delivered as an additional template class rather than a change to matrix_multi<>
 o The transcendental functions need better algorithms and better implementations
   of existing algorithms.
 o Tune_P should be made into a mixin policy class template parameter, ie.
