@@ -1,8 +1,8 @@
 ####### kdevelop will overwrite this part!!! (begin)##########
 
-SUBDIRS = glucat test transforms 
+SUBDIRS = glucat test transforms gfft_test squaring test01 
 
-EXTRA_DIST = glucat.kdevprj admin AUTHORS COPYING ChangeLog INSTALL README TODO glucat.lsm NEWS 
+EXTRA_DIST = glucat.kdevprj admin AUTHORS COPYING ChangeLog INSTALL README TODO glucat.lsm NEWS configure.in.in Makefile.am 
 
 ####### kdevelop will overwrite this part!!! (end)############
 # not a GNU package. You can remove this line, if
