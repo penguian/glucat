@@ -28,6 +28,7 @@ path_to_bin_program=.
 [General]
 AMChanged=false
 author=Paul C. Leopardi
+configure_args=
 dir_where_make_will_be_called=./
 email=leopardi@bigpond.net.au
 kdevprj_version=1.3
