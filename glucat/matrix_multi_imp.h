@@ -71,9 +71,12 @@ namespace glucat
   matrix_multi(const multivector_t& val, const index_set_t& frm, const bool prechecked)
   : m_frame( frm )
   {
-    if (!prechecked && (val.frame() | frm) != frm)
+    if (!prechecked && (val.m_frame | m_frame) != m_frame)
       throw error_t("multivector_t(val,frm): cannot initialize with value outside of frame");
-    *this = multivector_t(framed_multi_t(val), frm, true);
+    if (m_frame == val.m_frame)
+      m_matrix = val.m_matrix;
+    else
+      *this = multivector_t(framed_multi_t(val), frm, true);
   }
 
   /// Construct a multivector from an index set and a scalar coordinate
@@ -128,7 +131,7 @@ namespace glucat
       throw error_t("multivector_t(vec,frm): cannot initialize with vector not matching frame");
     const matrix_index_t dim = folded_dim<matrix_index_t>(m_frame);
     m_matrix.resize(dim, dim);
-    typename vector_t::const_iterator scvec = vec.begin();
+    typename vector_t::const_iterator vec_it = vec.begin();
     const index_t begin_index = m_frame.min();
     const index_t end_index = m_frame.max()+1;
 
@@ -138,8 +141,8 @@ namespace glucat
         ++idx)
       if (m_frame[idx])
       {
-        *this += pair_t(index_set_t(idx), *scvec);
-        ++scvec;
+        *this += pair_t(index_set_t(idx), *vec_it);
+        ++vec_it;
       }
   }
 
@@ -238,10 +241,10 @@ namespace glucat
   operator==  (const multivector_t& rhs) const
   {
     // Compare only within a common frame
-    if (m_frame != rhs.m_frame)
-      return framed_multi_t(*this) == framed_multi_t(rhs);
-    else
+    if (m_frame == rhs.m_frame)
       return ublas::equals(m_matrix, rhs.m_matrix);
+    else
+      return framed_multi_t(*this) == framed_multi_t(rhs);
   }
 
   // Test for equality of multivector and scalar
@@ -268,6 +271,8 @@ namespace glucat
   {
     // Operate only within a common frame
     const index_set_t our_frame = m_frame | rhs.m_frame;
+    if ((m_frame != our_frame) && (rhs.m_frame != our_frame))
+      return *this = framed_multi_t(*this) + framed_multi_t(rhs);
     if (m_frame != our_frame)
       // Represent *this in our_frame via conversion through framed_multi_t
       *this = multivector_t(framed_multi_t(*this), our_frame, true);
@@ -289,6 +294,8 @@ namespace glucat
   {
     // Operate only within a common frame
     const index_set_t our_frame = m_frame | rhs.m_frame;
+    if ((m_frame != our_frame) && (rhs.m_frame != our_frame))
+      return *this = framed_multi_t(*this) - framed_multi_t(rhs);
     if (m_frame != our_frame)
       // Represent *this in our_frame via conversion through framed_multi_t
       *this = multivector_t(framed_multi_t(*this), our_frame, true);
@@ -341,7 +348,7 @@ namespace glucat
     else
       // Represent rhs in our_frame via conversion through framed_multi_t
       m_matrix = matrix::sparse_prod(m_matrix,
-                                         multivector_t(framed_multi_t(rhs), our_frame, true).m_matrix);
+                                     multivector_t(framed_multi_t(rhs), our_frame, true).m_matrix);
     return *this;
   }
 
@@ -471,7 +478,13 @@ namespace glucat
   Scalar_T
   matrix_multi<Scalar_T,LO,HI>::
   operator[] (const index_set_t& ist) const
-  { return matrix::inner<Scalar_T>(basis_element<Scalar_T>(ist, m_frame), m_matrix); }
+  {
+    // Use matrix inner product only if ist is in frame
+    if ( (ist | m_frame) == m_frame) 
+      return matrix::inner<Scalar_T>(basis_element<Scalar_T>(ist, m_frame), m_matrix);
+    else
+      return Scalar_T(0); 
+  }
 
   /// Main involution, each {i} is replaced by -{i} in each term
   template< typename Scalar_T, const index_t LO, const index_t HI >
