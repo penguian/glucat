@@ -1118,7 +1118,7 @@ namespace glucat
 
   /// Generalized FFT from framed_multi_t to matrix_t
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const typename matrix_multi<Scalar_T,LO,HI>::matrix_t
+  const typename framed_multi<Scalar_T,LO,HI>::matrix_t
   framed_multi<Scalar_T,LO,HI>::
   fast(const index_t level, const bool odd) const
   {
@@ -1174,7 +1174,7 @@ namespace glucat
 
   /// Use generalized FFT to construct a matrix_multi_t
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const matrix_multi<Scalar_T,LO,HI>
+  const typename framed_multi<Scalar_T,LO,HI>::matrix_multi_t
   framed_multi<Scalar_T,LO,HI>::
   fast_matrix_multi(const index_set_t& frm) const
   {
