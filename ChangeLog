@@ -1,7 +1,174 @@
+2004-04-15 08:44  leopardi
+
+	* glucat/framed_multi_imp.h: Add odd(): Odd part of multivector.
+	  In operator==(), check if map is sorted and use appropriate
+	  algorithm.  In operator*=(), use double() to check array sizes.
+	  In operator()(), even(), odd() and vector_part(), use algorithm
+	  for unsorted map.  Use sorted_range<> as a helper for
+	  operator<<(), so that it works with both sorted and unsorted
+	  maps.  Tidy up fast().  Use odd() to make fast_matrix_multi()
+	  faster.  Make iterator names consistent.  Make for loops
+	  consistently tidy.
+
+2004-04-15 08:32  leopardi
+
+	* glucat/framed_multi.h: Make hash_map<> an optional base for
+	  framed_multi<>, depending on _GLUCAT_USE_GNU_CXX_HASH_MAP.
+	  Change misleading parameter name in fast().
+
+2004-04-15 08:29  leopardi
+
+	* glucat/glucat.h: Include <ext/hash_map> depending on
+	  _GLUCAT_USE_GNU_CXX_HASH_MAP.  Include
+	  <boost/numeric/ublas/operation.hpp> before
+	  <boost/numeric/ublas/lu.hpp>.
+
+2004-04-15 08:26  leopardi
+
+	* glucat/global.h: Add compare_types<> for type comparison.  Change
+	  tuning parameters to unsigned int.  Change default tuning
+	  parameter values.
+
+2004-04-15 08:14  leopardi
+
+	* glucat/clifford_algebra_imp.h: Add odd(): Odd part of
+	  multivector.	Make for loops consistently tidy.
+
+2004-04-15 08:12  leopardi
+
+	* glucat/index_set_imp.h: Add hash_fn().  Make for loops
+	  consistently tidy.
+
+2004-04-15 08:11  leopardi
+
+	* glucat/matrix_imp.h: In nork(), fix nnz_lhs, improve calculation
+	  of rhs_range.  Make for loops consistently tidy.
+
+2004-04-15 08:08  leopardi
+
+	* glucat/matrix_multi_imp.h: Add odd(): Odd part of multivector.
+	  Use odd() to make fast() faster, tidy up names in fast().  Make
+	  iterator names consistent.  Make for loops consistently tidy.
+
+2004-04-15 08:00  leopardi
+
+	* glucat/clifford_algebra.h: Add odd(): Odd part of multivector
+
+2004-04-15 07:58  leopardi
+
+	* glucat/index_set.h: Add hash_fn()
+
+2004-04-15 07:57  leopardi
+
+	* glucat/: generation_imp.h, ublas_imp.h: Make for loops
+	  consistently tidy.
+
+2004-04-15 07:53  leopardi
+
+	* gfft_test/gfft_test.h: Streamline testing.  Medium trials use
+	  more trials than before.  Aim is to get accurate, reproducible
+	  trial time.  Report number of trials used.
+
+2004-04-15 07:50  leopardi
+
+	* squaring/tuning.h: Use different tuning policies controlled by
+	  preprocessor defines. This was used for testing as documented in
+	  the paper, "A generalized FFT for Clifford algebras".
+
+2004-04-15 07:47  leopardi
+
+	* squaring/squaring.h: Streamline test. Use multivector_t as name
+	  of type.
+
+2004-04-15 07:46  leopardi
+
+	* transforms/transforms.cpp: Use try_catch
+
+2004-04-15 07:45  leopardi
+
+	* test_runtime/: gfft_test-10.out, squaring-6.out, test.out,
+	  transforms-6.out: Test using hash_map on Athlon64 3200+
+
+2004-04-15 07:43  leopardi
+
+	* glucat/errors.h, glucat/errors_imp.h, test/driver.h: Move
+	  declaration of try_catch to errors.h and definition to
+	  errors_imp.h
+
+2004-04-15 07:41  leopardi
+
+	* gfft_test/gfft_test.cpp: Use try_catch
+
+2004-04-15 07:41  leopardi
+
+	* squaring/squaring.cpp: Change misleading variable name
+
+2004-04-15 07:39  leopardi
+
+	* gfft_test/Makefile.in, squaring/Makefile.in, test/Makefile.in,
+	  test01/Makefile.in, test02/Makefile.in, test03/Makefile.in,
+	  test04/Makefile.in, test05/Makefile.in, test06/Makefile.in,
+	  test07/Makefile.in, test08/Makefile.in, test09/Makefile.in,
+	  test10/Makefile.in, test11/Makefile.in, test12/Makefile.in,
+	  test13/Makefile.in, test14/Makefile.in, test15/Makefile.in,
+	  test16/Makefile.in, transforms/Makefile.in: Update automake to
+	  1.7.6
+
+2004-04-15 07:34  leopardi
+
+	* INSTALL: Update Boost instructions.  Update testing status.  Add
+	  description of --with-hash-map.
+
+2004-04-15 07:33  leopardi
+
+	* README: Improve description of GluCat classes.  Update and
+	  rearrange web site and software references.  Update Boost
+	  instructions.  Update testing status.  Add descriptions of
+	  _GLUCAT_HAS_UBLAS_LU_H and _GLUCAT_USE_GNU_CXX_HASH_MAP to Usage.
+	  Move layout of headers to Coding standards.
+
+2004-04-15 07:13  leopardi
+
+	* TODO: Remove obsolete TODO items.  Add SWIG and CLU TODO items.
+	  Rearrange priorities.
+
+2004-04-15 07:10  leopardi
+
+	* glucat.lsm, NEWS: Update to version 0.1.5
+
+2004-04-15 07:10  leopardi
+
+	* AUTHORS: Add Jan Cnops as author of recursive expression for
+	  matrix representation.  Add Henk Jansen as tester.  Add more GFFT
+	  references.  Fix punctuation.
+
+2004-04-15 07:07  leopardi
+
+	* aclocal.m4: Update to aclocal 1.7.6
+
+2004-04-15 07:04  leopardi
+
+	* Doxyfile, glucat.doxygen: New name for Doxygen configuration
+	  file.  Change GluCat version to 0.1.5.  Bring up to date.
+	  Include new Doxygen capabilities.
+
+2004-04-15 06:26  leopardi
+
+	* configure.in, configure.in.in: Change GluCat version to 0.1.5.
+	  Add --with-hash-map, which sets $glucat_use_hash_map, which adds
+	  -D_USE_GLUCAT_GNU_CXX_HASH_MAP to CXXFLAGS.  Move test for
+	  <boost/numeric/ublas/lu.hpp> to an earlier part of configure.
+	  Fix test for Woverloaded-virtual. Increase O3 -finline-limit to
+	  1600.  Add test for mcmodel=medium to support AMD64 medium model.
+
+2003-07-01 22:26  leopardi
+
+	* ChangeLog: Update using cvs2cl.pl
+
 2003-07-01 22:24  leopardi
 
 	* test_runtime/: gfft_test-10.out, squaring-6.out, test.out,
-	transforms-6.out: Use test results from runs of this version.
+	  transforms-6.out: Use test results from runs of this version.
 
 2003-07-01 22:24  leopardi
 
@@ -10,28 +177,29 @@
 2003-07-01 22:23  leopardi
 
 	* gfft_test/gfft_test.h: Make tests depend on template parameters
-	rather than fixed typedefs.
+	  rather than fixed typedefs.
 
 2003-07-01 22:21  leopardi
 
 	* glucat/global.h: Decrease DEFAULT_Inv_Fast_Dim_Threshold to 1 <<
-	4
+	  4
 
 2003-07-01 22:20  leopardi
 
 	* glucat/matrix_multi_imp.h: Minor tidy up. Define and use
-	permutation_t.
+	  permutation_t.
 
 2003-07-01 22:20  leopardi
 
 	* glucat/index_set_imp.h: Previous implementation was too slow.
-	Optimize: o Use bitset_t as much as possible.  o New member
-	function lex_less_than() o Make operator<() into a member function.
+	  Optimize: o Use bitset_t as much as possible.  o New member
+	  function lex_less_than() o Make operator<() into a member
+	  function.
 
 2003-07-01 22:18  leopardi
 
 	* glucat/index_set.h: New index_set<> member function
-	less_less_than. Make operator< into a member function.
+	  less_less_than. Make operator< into a member function.
 
 2003-06-28 22:20  leopardi
 
@@ -44,27 +212,27 @@
 2003-06-28 21:49  leopardi
 
 	* configure.in.in, glucat.doxygen, glucat.kdevprj, glucat.lsm:
-	Update to version 0.1.4
+	  Update to version 0.1.4
 
 2003-06-28 21:43  leopardi
 
 	* glucat/: global.h, index_set.h, index_set_imp.h: Change mapping
-	of index_set_t to bitset_t to make index 0 of index_set_t a
-	"virtual" bit rather than a real dead bit of bitset_t. This allows
-	DEFAULT_LO to be reduced by 1, and DEFAULT_HI to be increased by 1.
-	For a 32 bit unsigned long, the default index_set_t is now
-	index_set<-16,16>, using std::bitset<32> rather than
-	index_set<-15,15>, using std::bitset<31>.
+	  of index_set_t to bitset_t to make index 0 of index_set_t a
+	  "virtual" bit rather than a real dead bit of bitset_t. This
+	  allows DEFAULT_LO to be reduced by 1, and DEFAULT_HI to be
+	  increased by 1. For a 32 bit unsigned long, the default
+	  index_set_t is now index_set<-16,16>, using std::bitset<32>
+	  rather than index_set<-15,15>, using std::bitset<31>.
 
 2003-06-28 21:18  leopardi
 
 	* glucat/clifford_algebra.h: Reformat: change tabs to spaces, fold
-	long lines, tidy up.
+	  long lines, tidy up.
 
 2003-06-28 20:25  leopardi
 
 	* test/test.sh: Add to CVS. This should have been added for
-	glucat-0.1.3 and tagged release_0_1_3
+	  glucat-0.1.3 and tagged release_0_1_3
 
 2003-06-23 09:22  leopardi
 
@@ -89,8 +257,8 @@
 2003-06-23 08:56  leopardi
 
 	* glucat/index_set_imp.h: Use 1UL ((unsigned long) 1) in mask
-	calculations. This is needed for Alpha, which is 64-bit, and is
-	correct in all cases.
+	  calculations. This is needed for Alpha, which is 64-bit, and is
+	  correct in all cases.
 
 2003-06-23 08:54  leopardi
 
@@ -99,99 +267,100 @@
 2003-06-22 19:58  leopardi
 
 	* glucat.kdevprj: Fix references to test04.  Add configure.in to
-	project.
+	  project.
 
 2003-06-22 19:57  leopardi
 
 	* Makefile.am: List all relevant directories, including test?? in
-	SUBDIRS
+	  SUBDIRS
 
 2003-06-22 19:56  leopardi
 
 	* transforms/: Makefile.am, Makefile.in: Remove obsolete references
-	to driver.h
+	  to driver.h
 
 2003-06-22 19:55  leopardi
 
 	* gfft_test/gfft_test.h: Remove unused variables pos_frame and
-	outer_frame.
+	  outer_frame.
 
 2003-06-21 23:45  leopardi
 
 	* INSTALL, README: Make instructions more accurate. Describe
-	test_runtime.
+	  test_runtime.
 
 2003-06-21 23:19  leopardi
 
 	* test/driver.h: Use default tuning for main tests and squaring
-	test.
+	  test.
 
 2003-06-21 23:16  leopardi
 
 	* test_runtime/: eg3.res, eg8.txt, gfft_test-10.out,
-	squaring-6.out, test.out, transforms-6.out: New directory for test
-	input and output files.
+	  squaring-6.out, test.out, transforms-6.out: New directory for
+	  test input and output files.
 
 2003-06-21 23:15  leopardi
 
 	* squaring/test-6.out, transforms/transforms-6.out: Move all test
-	output to test_runtime
+	  output to test_runtime
 
 2003-06-21 00:49  leopardi
 
 	* INSTALL, NEWS, README, ChangeLog: Update to reflect changes to
-	0.1.3
+	  0.1.3
 
 2003-06-21 00:16  leopardi
 
 	* glucat/: index_set.h, index_set_imp.h: Add a constructor from
-	bitset_t.  Optimize fold() and value_of_fold() by using bitset_t
-	and masks.  Use this->etc() more consistently.
+	  bitset_t.  Optimize fold() and value_of_fold() by using bitset_t
+	  and masks.  Use this->etc() more consistently.
 
 2003-06-21 00:12  leopardi
 
 	* glucat/: matrix.h, matrix_imp.h: Move ublas interface to ublas.h
-	and ublas_imp.h.  New nnz() function: number of non-zeros. 
-	Optimize nork() for the monomial case, and use new nnz().  Optimize
-	unit() by using ublas::identity_matrix() and declaring inline.
+	  and ublas_imp.h.  New nnz() function: number of non-zeros.
+	  Optimize nork() for the monomial case, and use new nnz().
+	  Optimize unit() by using ublas::identity_matrix() and declaring
+	  inline.
 
 2003-06-21 00:08  leopardi
 
 	* glucat/portability.h: Workaround change to gcc 3.3 which applies
-	visibility rules more strictly, by defining _GLUCAT_PRIVATE to be
-	public in this case.
+	  visibility rules more strictly, by defining _GLUCAT_PRIVATE to be
+	  public in this case.
 
 2003-06-21 00:06  leopardi
 
 	* glucat/: glucat.h, glucat_imp.h: Use updated uBLAS interface from
-	Boost CVS when available, while remaining compatible with uBLAS
-	from current Boost release 1.30.0: If _GLUCAT_HAVE_UBLAS_H  is
-	defined, includer <boost/numeric/ublas/lu.hpp> Include new ublas.h
-	and ublas_imp.h headers.
+	  Boost CVS when available, while remaining compatible with uBLAS
+	  from current Boost release 1.30.0: If _GLUCAT_HAVE_UBLAS_H  is
+	  defined, includer <boost/numeric/ublas/lu.hpp> Include new
+	  ublas.h and ublas_imp.h headers.
 
 2003-06-21 00:03  leopardi
 
 	* glucat/matrix_multi_imp.h: Change lu_solve() to lu_substitute()
-	and change permutation argument to lu_factorize() to match
-	<boost/numeric/ublas/lu.h> Use optimized monomial version of
-	nork().
+	  and change permutation argument to lu_factorize() to match
+	  <boost/numeric/ublas/lu.h> Use optimized monomial version of
+	  nork().
 
 2003-06-21 00:01  leopardi
 
 	* glucat/: ublas.h, ublas_imp.h: Move uBLAS interface to separate
-	files to clean it up. Make uBLAS interface optional, used only if
-	_GLUCAT_HAVE_UBLAS_LU_H is not defined. Change lu_solve() to
-	lu_substitute() to match <boost/numeric/ublas/lu.h>
+	  files to clean it up. Make uBLAS interface optional, used only if
+	  _GLUCAT_HAVE_UBLAS_LU_H is not defined. Change lu_solve() to
+	  lu_substitute() to match <boost/numeric/ublas/lu.h>
 
 2003-06-20 23:56  leopardi
 
 	* configure.in, configure.in.in: Add fabi-version=0 to work around
-	bug in gcc 3.3 where gcc 3.3 default is to match gcc 3.2 C++ abi,
-	which is known to be broken.  Automatically configure updated uBLAS
-	interface from Boost CVS while remaining compatible with uBLAS from
-	current Boost release 1.30.0: Test for <boost/numeric/ublas/lu.hpp>
-	and define _GLUCAT_HAVE_UBLAS_H if present.  Restructure tests.
-	Update to version 0.1.3
+	  bug in gcc 3.3 where gcc 3.3 default is to match gcc 3.2 C++ abi,
+	  which is known to be broken.	Automatically configure updated
+	  uBLAS interface from Boost CVS while remaining compatible with
+	  uBLAS from current Boost release 1.30.0: Test for
+	  <boost/numeric/ublas/lu.hpp> and define _GLUCAT_HAVE_UBLAS_H if
+	  present.  Restructure tests. Update to version 0.1.3
 
 2003-06-20 23:49  leopardi
 
@@ -212,12 +381,12 @@
 2003-06-20 23:45  leopardi
 
 	* test/driver.h: Restructure tests. Remove test includes from this
-	file. Add try_catch() function.
+	  file. Add try_catch() function.
 
 2003-06-20 23:43  leopardi
 
 	* transforms/transforms.h: Restructure transforms test. Add
-	contents of old driver.h to this file.
+	  contents of old driver.h to this file.
 
 2003-06-20 23:43  leopardi
 
@@ -230,69 +399,69 @@
 2003-06-20 23:38  leopardi
 
 	* test/Makefile.in, transforms/Makefile.in: Add to CVS for
-	consistency with other directories
+	  consistency with other directories
 
 2003-06-20 23:25  leopardi
 
 	* gfft_test/: Makefile.am, Makefile.in, gfft_test.cpp, gfft_test.h:
-	Add gfft_test based on transforms test, but testing only gfft and
-	inverse gfft.
+	  Add gfft_test based on transforms test, but testing only gfft and
+	  inverse gfft.
 
 2003-06-20 23:22  leopardi
 
 	* transforms/transforms.cpp: Restructure transforms test: rename
-	driver.cpp to transforms.cpp
+	  driver.cpp to transforms.cpp
 
 2003-06-20 23:21  leopardi
 
 	* transforms/: driver.cpp, driver.h: Restructure transforms test:
-	remove driver files
+	  remove driver files
 
 2003-06-19 16:55  leopardi
 
 	* test09/Makefile.am, test09/Makefile.in, test09/peg09.cpp,
-	test09/peg09.h, test10/Makefile.am, test10/Makefile.in,
-	test10/peg10.cpp, test10/peg10.h, test11/Makefile.am,
-	test11/Makefile.in, test11/peg11.cpp, test11/peg11.h,
-	test12/Makefile.am, test12/Makefile.in, test12/peg12.cpp,
-	test12/peg12.h, test13/Makefile.am, test13/Makefile.in,
-	test13/peg13.cpp, test13/peg13.h, test14/Makefile.am,
-	test14/Makefile.in, test14/peg14.cpp, test14/peg14.h,
-	test15/Makefile.am, test15/Makefile.in, test15/peg15.cpp,
-	test15/peg15.h, test16/Makefile.am, test16/Makefile.in,
-	test16/peg16.cpp, test16/peg16.h, test01/Makefile.am,
-	test01/Makefile.in, test01/peg01.cpp, test01/peg01.h,
-	test02/Makefile.am, test02/Makefile.in, test02/peg02.cpp,
-	test02/peg02.h, test03/Makefile.am, test03/Makefile.in,
-	test03/peg03.cpp, test03/peg03.h, test04/Makefile.am,
-	test04/Makefile.in, test04/peg04.cpp, test04/peg04.h,
-	test05/Makefile.am, test05/Makefile.in, test05/peg05.cpp,
-	test05/peg05.h, test06/Makefile.am, test06/Makefile.in,
-	test06/peg06.cpp, test06/peg06.h, test07/Makefile.am,
-	test07/Makefile.in, test07/peg07.cpp, test07/peg07.h,
-	test08/Makefile.am, test08/Makefile.in, test08/peg08.cpp,
-	test08/peg08.h: Move tests to separate subdirectories.
+	  test09/peg09.h, test10/Makefile.am, test10/Makefile.in,
+	  test10/peg10.cpp, test10/peg10.h, test11/Makefile.am,
+	  test11/Makefile.in, test11/peg11.cpp, test11/peg11.h,
+	  test12/Makefile.am, test12/Makefile.in, test12/peg12.cpp,
+	  test12/peg12.h, test13/Makefile.am, test13/Makefile.in,
+	  test13/peg13.cpp, test13/peg13.h, test14/Makefile.am,
+	  test14/Makefile.in, test14/peg14.cpp, test14/peg14.h,
+	  test15/Makefile.am, test15/Makefile.in, test15/peg15.cpp,
+	  test15/peg15.h, test16/Makefile.am, test16/Makefile.in,
+	  test16/peg16.cpp, test16/peg16.h, test01/Makefile.am,
+	  test01/Makefile.in, test01/peg01.cpp, test01/peg01.h,
+	  test02/Makefile.am, test02/Makefile.in, test02/peg02.cpp,
+	  test02/peg02.h, test03/Makefile.am, test03/Makefile.in,
+	  test03/peg03.cpp, test03/peg03.h, test04/Makefile.am,
+	  test04/Makefile.in, test04/peg04.cpp, test04/peg04.h,
+	  test05/Makefile.am, test05/Makefile.in, test05/peg05.cpp,
+	  test05/peg05.h, test06/Makefile.am, test06/Makefile.in,
+	  test06/peg06.cpp, test06/peg06.h, test07/Makefile.am,
+	  test07/Makefile.in, test07/peg07.cpp, test07/peg07.h,
+	  test08/Makefile.am, test08/Makefile.in, test08/peg08.cpp,
+	  test08/peg08.h: Move tests to separate subdirectories.
 
 2003-06-19 12:27  leopardi
 
 	* squaring/: Makefile.am, Makefile.in, squaring.cpp, squaring.h,
-	test-6.out: Try again. Moving squaring test to squaring
-	subdirectory.
+	  test-6.out: Try again. Moving squaring test to squaring
+	  subdirectory.
 
 2003-06-19 12:03  leopardi
 
 	* test/squaring.cpp: Try again. Moving squaring test to squaring
-	subdirectory.
+	  subdirectory.
 
 2003-06-19 11:54  leopardi
 
 	* test/Makefile.am: Try again. Moving squaring test to squaring
-	subdirectory.
+	  subdirectory.
 
 2003-06-19 11:50  leopardi
 
 	* test/squaring.cpp: Try again. Moving squaring test to squaring
-	subdirectory.
+	  subdirectory.
 
 2003-06-19 11:45  leopardi
 
@@ -301,7 +470,7 @@
 2003-06-19 11:40  leopardi
 
 	* test/squaring.cpp: Try again. Moving squaring test to squaring
-	subdirectory.
+	  subdirectory.
 
 2003-06-19 10:22  leopardi
 
@@ -310,12 +479,12 @@
 2003-06-19 10:21  leopardi
 
 	* test/: driver.cpp, driver.h, squaring.h: Remove files
-	accidentally added to these directories
+	  accidentally added to these directories
 
 2003-06-19 10:17  leopardi
 
 	* test/: eg3.res, eg8.txt, test.out: Remove files accidentally
-	added to this directory
+	  added to this directory
 
 2003-06-19 10:16  leopardi
 
@@ -324,14 +493,14 @@
 2003-06-19 09:39  leopardi
 
 	* test/: squaring.h, test-6.out: Move squaring test header and
-	output to squaring subdirectory
+	  output to squaring subdirectory
 
 2003-06-19 09:39  leopardi
 
 	* test/: peg01.h, peg02.h, peg03.h, peg04.h, peg05.h, peg06.h,
-	peg07.h, peg08.h, peg09.h, peg10.h, peg11.h, peg12.h, peg13.h,
-	peg14.h, peg15.h, peg16.h: Move test headers to test??
-	subdirectories
+	  peg07.h, peg08.h, peg09.h, peg10.h, peg11.h, peg12.h, peg13.h,
+	  peg14.h, peg15.h, peg16.h: Move test headers to test??
+	  subdirectories
 
 2003-03-02 12:54  leopardi
 
@@ -340,7 +509,7 @@
 2003-03-02 12:49  leopardi
 
 	* test/test-6.out, transforms/transforms-6.out: Update test results
-	to reflect use of Boost RC_1_30_0
+	  to reflect use of Boost RC_1_30_0
 
 2003-03-02 09:51  leopardi
 
@@ -353,22 +522,22 @@
 2003-03-02 09:47  leopardi
 
 	* transforms/transforms-6.out: Results of running
-	./transforms/transforms 6 when compiled with g++ -O3
+	  ./transforms/transforms 6 when compiled with g++ -O3
 
 2003-03-02 02:24  leopardi
 
 	* AUTHORS, INSTALL, NEWS, README, TODO: Reflect changes to version
-	0.1.2
+	  0.1.2
 
 2003-03-02 02:15  leopardi
 
 	* glucat.doxygen, glucat.kdevprj, glucat.lsm: Update to version
-	0.1.2
+	  0.1.2
 
 2003-03-02 02:13  leopardi
 
 	* configure.in, configure.in.in: Handle differences in platforms
-	and options here rather than in Makefile.am
+	  and options here rather than in Makefile.am
 
 2003-03-02 02:11  leopardi
 
@@ -377,17 +546,17 @@
 2003-03-02 02:08  leopardi
 
 	* glucat/: framed_multi.h, framed_multi_imp.h: Add generalized FFT
-	fast_matrix_multi(frm) Add fast_framed_multi(), which creates a
-	copy of *this.	Add private member functions used by 
-	fast_matrix_multi(frm), including the recursive function fast(),
-	which almost all the work.  Use generalized FFT in constructors
-	from matrix_multi<>.
+	  fast_matrix_multi(frm) Add fast_framed_multi(), which creates a
+	  copy of *this.  Add private member functions used by
+	  fast_matrix_multi(frm), including the recursive function fast(),
+	  which almost all the work.  Use generalized FFT in constructors
+	  from matrix_multi<>.
 
 2003-03-02 01:52  leopardi
 
 	* transforms/transforms.h: Change output format to make it narrower
-	and easier to read.  Rename variables to make naming more
-	consistent.
+	  and easier to read.  Rename variables to make naming more
+	  consistent.
 
 2003-03-02 01:51  leopardi
 
@@ -396,12 +565,12 @@
 2003-03-02 01:50  leopardi
 
 	* test/Makefile.am: Simplify. ./configure now takes care of
-	differences between platforms and options.
+	  differences between platforms and options.
 
 2003-03-02 01:41  leopardi
 
 	* test/driver.h: Add Tune_P template parameters for generalized
-	FFT.
+	  FFT.
 
 2003-03-02 01:40  leopardi
 
@@ -410,72 +579,73 @@
 2003-03-02 01:39  leopardi
 
 	* test/peg03.h: Change template to relax constraints on LO and HI.
-	They don't work well with generalized FFT and are not really needed
-	anyway.
+	  They don't work well with generalized FFT and are not really
+	  needed anyway.
 
 2003-03-02 01:15  leopardi
 
 	* glucat/matrix_multi_imp.h: Add offset_level(). Move folded_dim()
-	from generation.h.  Add fast_matrix_multi(frm), which creates a
-	copy of *this within frm.  Use generalized FFT in constructors from
-	framed_multi<>.  Add inverse generalized FFT fast_framed_multi(). 
-	This uses the new recursive function fast() to do almost all the
-	work.  In operator/=, use ublas::norm_inf() rather than
-	ublas::norm_2().  Use namespace gen:: where needed.
+	  from generation.h.  Add fast_matrix_multi(frm), which creates a
+	  copy of *this within frm.  Use generalized FFT in constructors
+	  from framed_multi<>.	Add inverse generalized FFT
+	  fast_framed_multi().	This uses the new recursive function fast()
+	  to do almost all the work.  In operator/=, use ublas::norm_inf()
+	  rather than ublas::norm_2().	Use namespace gen:: where needed.
 
 2003-03-02 01:14  leopardi
 
 	* glucat/matrix_multi.h: Add fast_matrix_multi(frm), which creates
-	a copy of *this within frm.  Add inverse generalized FFT
-	fast_framed_multi().
+	  a copy of *this within frm.  Add inverse generalized FFT
+	  fast_framed_multi().
 
 2003-03-01 20:13  leopardi
 
 	* glucat/global.h: Fix bug in tuning<> policy class where default
-	was always used in enumerations, regardless of template parameters.
-	Add tuning for generalised FFT and inverse generalized FFT. Tweak
-	default values for tuning parameters to take account of generalised
-	FFT and its inverse.  Move pos_mod() to this file.
+	  was always used in enumerations, regardless of template
+	  parameters. Add tuning for generalised FFT and inverse
+	  generalized FFT. Tweak default values for tuning parameters to
+	  take account of generalised FFT and its inverse.  Move pos_mod()
+	  to this file.
 
 2003-03-01 20:05  leopardi
 
 	* glucat/: matrix.h, matrix_imp.h: Add nork() - left inverse of
-	Kronecker product kron(). Change call to ublas::sparse_prod() to
-	match changes to uBLAS in Boost CVS.
+	  Kronecker product kron(). Change call to ublas::sparse_prod() to
+	  match changes to uBLAS in Boost CVS.
 
 2003-03-01 20:03  leopardi
 
 	* glucat/: generation.h, generation_imp.h: Hide contents inside
-	namespace gen. Add the offset_to_super[] table to the interface.
-	Move pos_mod() to global.h. Remove folded_dim().
+	  namespace gen. Add the offset_to_super[] table to the interface.
+	  Move pos_mod() to global.h. Remove folded_dim().
 
 2003-03-01 19:58  leopardi
 
 	* glucat/: errors.h, errors_imp.h: Generalize glucat_error by
-	adding a context string. This can be used for the classname(), as
-	previously, or for a different context string. This allows
-	glucat_error to be used where classname() does not exist or is
-	otherwise misleading.
+	  adding a context string. This can be used for the classname(), as
+	  previously, or for a different context string. This allows
+	  glucat_error to be used where classname() does not exist or is
+	  otherwise misleading.
 
 2003-03-01 19:55  leopardi
 
 	* glucat/: index_set.h, index_set_imp.h: Add index_set complement
-	(operator~, not) and intersection (operator&=, operator&, and)
+	  (operator~, not) and intersection (operator&=, operator&, and)
 
 2003-02-26 10:30  leopardi
 
 	* transforms/: Makefile.am, driver.cpp, driver.h, transforms.h: New
-	directory ./transforms for generalized FFT test
+	  directory ./transforms for generalized FFT test
 
 2003-02-26 10:15  leopardi
 
 	* test/: Makefile.am, driver.cpp, driver.h: Re-add files which were
-	accidentally deleted from CVS repository.
+	  accidentally deleted from CVS repository.
 
 2003-02-25 23:59  leopardi
 
 	* test/: .cvsignore, Makefile.am, driver.cpp, driver.h: New
-	directory ./transforms for generalized FFT test program.
+	  directory ./transforms for generalized FFT test program.
 
 2003-01-12 19:26  leopardi
 
@@ -484,7 +654,7 @@
 2003-01-12 19:25  leopardi
 
 	* INSTALL: More accurate installation instructions, including a
-	warning not to set -finline-limit too high with Red Hat g++ 2.96
+	  warning not to set -finline-limit too high with Red Hat g++ 2.96
 
 2003-01-11 23:07  leopardi
 
@@ -497,22 +667,22 @@
 2003-01-11 23:05  leopardi
 
 	* test/squaring.h: Change use of fixed and showpoint to ensure that
-	timing test compiles and runs correctly with RedHat g++ 2.96
+	  timing test compiles and runs correctly with RedHat g++ 2.96
 
 2003-01-11 23:04  leopardi
 
 	* test/driver.h: Change DRIVER_BASIS_MAX_COUNT from 8 to 9 to
-	partly compensate for the change to global.h
+	  partly compensate for the change to global.h
 
 2003-01-11 23:02  leopardi
 
 	* test/Makefile.am: Simplify build flags.  Use -O3 and
-	-finline-limit=900 for g++ production build
+	  -finline-limit=900 for g++ production build
 
 2003-01-11 22:57  leopardi
 
 	* glucat/global.h: Reduce DEFAULT_Basis_Max_Count from 10 to 8 to
-	reduce default potential memory usage of basis cache.
+	  reduce default potential memory usage of basis cache.
 
 2003-01-08 23:08  leopardi
 
@@ -525,27 +695,27 @@
 2003-01-08 01:39  leopardi
 
 	* test/driver.h: Define DRIVER_BASIS_MAX_COUNT as an example of the
-	use of Tune_P
+	  use of Tune_P
 
 2003-01-08 01:38  leopardi
 
 	* glucat/global.h: Make tuning<> template and associated constants
-	easier to use
+	  easier to use
 
 2003-01-08 00:36  leopardi
 
 	* glucat/global.h: Enhance basis_element() by using a basis_table
-	as a cache Change default tuning constant names to DEFAULT_*
+	  as a cache Change default tuning constant names to DEFAULT_*
 
 2003-01-08 00:35  leopardi
 
 	* glucat/matrix_multi_imp.h: Enhance basis_element() by using a
-	basis_table as a cache
+	  basis_table as a cache
 
 2003-01-07 23:37  leopardi
 
 	* test/squaring.h: Make timing more accurate.  Make output format
-	more consistent, neat and useful.
+	  more consistent, neat and useful.
 
 2003-01-07 23:35  leopardi
 
@@ -554,7 +724,7 @@
 2003-01-07 23:34  leopardi
 
 	* configure.in, configure.in.in, glucat.doxygen, glucat.kdevprj:
-	Update to GluCat version 0.1.1
+	  Update to GluCat version 0.1.1
 
 2002-12-31 18:44  leopardi
 
@@ -583,23 +753,23 @@
 2002-12-30 19:29  leopardi
 
 	* glucat/matrix_multi_imp.h: Use numeric_limits<>::quiet_NaN to
-	return NaN when appropriate.  Use matrix:: explicitly rather than
-	using namespace matrix.  Use ublas::equals().
+	  return NaN when appropriate.	Use matrix:: explicitly rather than
+	  using namespace matrix.  Use ublas::equals().
 
 2002-12-30 19:27  leopardi
 
 	* glucat/generation_imp.h: Use matrix:: rather than using namespace
-	matrix.
+	  matrix.
 
 2002-12-30 19:26  leopardi
 
 	* glucat/clifford_algebra_imp.h: Use numeric_limits<>::quiet_NaN to
-	return NaN when appropriate.
+	  return NaN when appropriate.
 
 2002-12-30 19:25  leopardi
 
 	* glucat/: matrix.h, matrix_imp.h: Remove operator== - no longer
-	needed
+	  needed
 
 2002-12-30 15:27  leopardi
 
@@ -608,50 +778,50 @@
 2002-12-30 15:26  leopardi
 
 	* test/squaring.h: Clean up time_mult() interface.  Add input
-	validation to prevent test with a value which is too big.
+	  validation to prevent test with a value which is too big.
 
 2002-12-30 15:24  leopardi
 
 	* test/Makefile.am: Add commented options for Intel C++, debugging,
-	profiling.  Rearrange commented options.
+	  profiling.  Rearrange commented options.
 
 2002-12-30 15:23  leopardi
 
 	* configure.in, configure.in.in, glucat.kdevprj, glucat.lsm: Update
-	to GluCat 0.1.0.
+	  to GluCat 0.1.0.
 
 2002-12-30 15:22  leopardi
 
 	* glucat.doxygen: Update to GluCat 0.1.0.  Use newer version of
-	Doxygen.
+	  Doxygen.
 
 2002-12-30 15:18  leopardi
 
 	* TODO: Remove items which are essentially done: Port to Intel C++
-	is done. Port to MTL3 replaced by port to uBLAS.  Add a few new
-	items, including better use of automake and autoconf.
+	  is done. Port to MTL3 replaced by port to uBLAS.  Add a few new
+	  items, including better use of automake and autoconf.
 
 2002-12-30 15:16  leopardi
 
 	* INSTALL, README: Update instructions and status to reflect the
-	use of uBLAS, Boost CVS, g++ 3.2 and Intel C++ 7.0.
+	  use of uBLAS, Boost CVS, g++ 3.2 and Intel C++ 7.0.
 
 2002-12-30 15:15  leopardi
 
 	* AUTHORS: Add Joerg Walter and Carlos O'Ryan.	Sort credits
-	alphabetically.
+	  alphabetically.
 
 2002-12-30 15:02  leopardi
 
 	* glucat/matrix_multi_imp.h: Use uBLAS rather than MTL.  Prefer
-	std::string to char* for classname.  Remove copy constructor - no
-	longer needed.	Have basis_element() return matrix_t rather than
-	void.  Remove dense_mult from operator *= - no longer needed. 
-	Operator /= now uses the whole matrix rather than a vector at a
-	time.  Use namespace matrix.  Clean up interface to inner().  Clean
-	up calls to folded_dim() and basis_element().  Use inline more
-	appropriately.	Minor formatting changes.  Use namespace std for
-	vector.
+	  std::string to char* for classname.  Remove copy constructor - no
+	  longer needed.  Have basis_element() return matrix_t rather than
+	  void.  Remove dense_mult from operator *= - no longer needed.
+	  Operator /= now uses the whole matrix rather than a vector at a
+	  time.  Use namespace matrix.	Clean up interface to inner().
+	  Clean up calls to folded_dim() and basis_element().  Use inline
+	  more appropriately.  Minor formatting changes.  Use namespace std
+	  for vector.
 
 2002-12-30 15:01  leopardi
 
@@ -660,7 +830,7 @@
 2002-12-30 14:38  leopardi
 
 	* glucat/: framed_multi_imp.h, matrix.h, matrix_imp.h: Clean up
-	interface to inner().
+	  interface to inner().
 
 2002-12-30 10:59  leopardi
 
@@ -669,15 +839,15 @@
 2002-12-30 10:58  leopardi
 
 	* glucat/: matrix.h, matrix_imp.h: Move swap_rows(), lu_factorize()
-	and lu_solve() from ublas.h to matrix.h.  Rename compressed_prod()
-	to sparse_prod().  Simplify interfaces of mon_prod() and
-	sparse_prod().
+	  and lu_solve() from ublas.h to matrix.h.  Rename
+	  compressed_prod() to sparse_prod().  Simplify interfaces of
+	  mon_prod() and sparse_prod().
 
 2002-12-30 09:36  leopardi
 
 	* glucat/: Makefile.am, glucat.h, glucat_imp.h, ublas.h,
-	ublas_imp.h: Move swap_rows(), lu_factorize() and lu_solve() from
-	ublas.h to matrix.h Remove ublas.h and ublas_imp.h
+	  ublas_imp.h: Move swap_rows(), lu_factorize() and lu_solve() from
+	  ublas.h to matrix.h Remove ublas.h and ublas_imp.h
 
 2002-12-30 09:31  leopardi
 
@@ -686,29 +856,29 @@
 2002-12-29 23:23  leopardi
 
 	* glucat/matrix_multi.h: Remove dense_matrix_t, sparse_matrix_t,
-	col_matrix_t - no longer needed.
+	  col_matrix_t - no longer needed.
 
 2002-12-29 23:02  leopardi
 
 	* glucat/generation_imp.h: Use uBLAS rather than MTL.  Use
-	namespace std.	Use namespace matrix.  Use new kron() and unit()
-	interfaces.  Use inline more appropriately.  Minor formatting
-	changes.
+	  namespace std.  Use namespace matrix.  Use new kron() and unit()
+	  interfaces.  Use inline more appropriately.  Minor formatting
+	  changes.
 
 2002-12-29 22:58  leopardi
 
 	* glucat/framed_multi_imp.h: Use uBLAS rather than MTL.  Use new
-	basis_element() interface.  Prefer std::string to char* for
-	classname.  Prefer referencing to copying multivectors.  Use inline
-	more appropriately.  Minor formatting changes.
+	  basis_element() interface.  Prefer std::string to char* for
+	  classname.  Prefer referencing to copying multivectors.  Use
+	  inline more appropriately.  Minor formatting changes.
 
 2002-12-29 10:48  leopardi
 
 	* glucat/matrix_multi.h: Prefer std::string to char* for classname.
-	 Use uBLAS rather than MTL.  Use _GLUCAT_PUBLIC for Intel C++
-	compatibility.	Remove copy constructor - no longer needed.  Have
-	basis_element() return matrix_t rather than void.  Minor formatting
-	changes.
+	  Use uBLAS rather than MTL.  Use _GLUCAT_PUBLIC for Intel C++
+	  compatibility.  Remove copy constructor - no longer needed.  Have
+	  basis_element() return matrix_t rather than void.  Minor
+	  formatting changes.
 
 2002-12-29 10:40  leopardi
 
@@ -717,25 +887,25 @@
 2002-12-29 10:32  leopardi
 
 	* config.h, config.h.in, config.status, configure, libtool: Remove
-	automatically generated files from CVS repository.
+	  automatically generated files from CVS repository.
 
 2002-12-29 10:15  leopardi
 
 	* glucat/matrix_imp.h: Use uBLAS rather than MTL.  Use namespace
-	matrix to reduce clutter in namespace glucat.  Remove
-	is_perm_shaped() and is_singlet() as they are no longer needed. 
-	Add operator==, mono_prod() and compressed_prod() for matrix
-	expressions.  Change interface so that kron and unit return
-	Matrix_T rather than void.
+	  matrix to reduce clutter in namespace glucat.  Remove
+	  is_perm_shaped() and is_singlet() as they are no longer needed.
+	  Add operator==, mono_prod() and compressed_prod() for matrix
+	  expressions.	Change interface so that kron and unit return
+	  Matrix_T rather than void.
 
 2002-12-29 10:14  leopardi
 
 	* glucat/matrix.h: Use uBLAS rather than MTL.  Use namespace matrix
-	to reduce clutter in namespace glucat.	Remove is_perm_shaped() and
-	is_singlet() as they are no longer needed.  Add operator==,
-	mono_prod() and compressed_prod() for matrix expressions.  Change
-	interface so that kron and unit return Matrix_T rather than void. 
-	Remove extraneous "using std::vector".
+	  to reduce clutter in namespace glucat.  Remove is_perm_shaped()
+	  and is_singlet() as they are no longer needed.  Add operator==,
+	  mono_prod() and compressed_prod() for matrix expressions.  Change
+	  interface so that kron and unit return Matrix_T rather than void.
+	  Remove extraneous "using std::vector".
 
 2002-12-29 10:06  leopardi
 
@@ -744,13 +914,13 @@
 2002-12-29 10:06  leopardi
 
 	* glucat/framed_multi.h: Prefer std::string to char* for classname.
-	Make iterators public. Minor formatting changes.
+	  Make iterators public. Minor formatting changes.
 
 2002-12-29 10:00  leopardi
 
 	* glucat/clifford_algebra_imp.h: Use inline more appropriately.
-	Prefer const referencing to copying multivectors. Minor formatting
-	changes.
+	  Prefer const referencing to copying multivectors. Minor
+	  formatting changes.
 
 2002-12-29 09:57  leopardi
 
@@ -759,27 +929,27 @@
 2002-12-28 18:30  leopardi
 
 	* glucat/: index_set.h, index_set_imp.h: Prefer std::string to
-	char*
+	  char*
 
 2002-12-28 18:27  leopardi
 
 	* glucat/portability.h: Intel C++ compatibility: define
-	_GLUCAT_PRIVATE to be public for Intel C++
+	  _GLUCAT_PRIVATE to be public for Intel C++
 
 2002-12-28 18:26  leopardi
 
 	* glucat/global.h: Increase default maximum steps of stepwise
-	refinement used in division (from 3 to 4)
+	  refinement used in division (from 3 to 4)
 
 2002-12-28 18:18  leopardi
 
 	* glucat/generation.h: Make single instance into a static member of
-	generator_table
+	  generator_table
 
 2002-12-28 18:13  leopardi
 
 	* glucat/: errors.h, errors_imp.h, clifford_algebra.h: Prefer
-	std::string to char*
+	  std::string to char*
 
 2002-12-28 11:01  leopardi
 
@@ -792,7 +962,7 @@
 2002-08-18 21:27  leopardi
 
 	* INSTALL: Improve test build documentation, especially in relation
-	to choices for CXXFLAGS
+	  to choices for CXXFLAGS
 
 2002-08-18 21:26  leopardi
 
@@ -805,8 +975,8 @@
 2002-08-17 16:21  leopardi
 
 	* INSTALL, README: Update to correctly describe changes needed to
-	Makefile.in to build the test on Compaq Alpha, and to build the
-	timing test.
+	  Makefile.in to build the test on Compaq Alpha, and to build the
+	  timing test.
 
 2002-08-15 22:54  leopardi
 
@@ -827,17 +997,17 @@
 2002-08-15 21:53  leopardi
 
 	* INSTALL, NEWS, README, TODO: Update documentation to reflect
-	changes to version 0.0.7
+	  changes to version 0.0.7
 
 2002-08-15 21:52  leopardi
 
 	* glucat.doxygen, glucat.kdevprj, glucat.lsm: Update to version
-	0.0.7, using KDevelop 2.1.2
+	  0.0.7, using KDevelop 2.1.2
 
 2002-08-14 22:12  leopardi
 
 	* test/Makefile.am: Simplify compile flags - reduce optimization
-	and debugging
+	  and debugging
 
 2002-08-14 21:29  leopardi
 
@@ -846,62 +1016,62 @@
 2002-08-14 21:08  leopardi
 
 	* acinclude.m4, aclocal.m4, config.h, config.log, configure.files,
-	libtool, stamp-h1, subdirs: (Re)add files possibly needed by
-	autoconf, automake or configure
+	  libtool, stamp-h1, subdirs: (Re)add files possibly needed by
+	  autoconf, automake or configure
 
 2002-08-14 00:05  leopardi
 
 	* configure.in.in: Add file apparently needed by automake, autoconf
-	or configure
+	  or configure
 
 2002-08-14 00:03  leopardi
 
 	* Makefile.am, Makefile.dist, config.h.in, configure.in: Update to
-	automake 1.6.3 and autoconf 2.52
+	  automake 1.6.3 and autoconf 2.52
 
 2002-08-13 23:55  leopardi
 
 	* config.status, configure: Add files apparently needed by
-	automake, autoconf or configure
+	  automake, autoconf or configure
 
 2002-08-12 22:35  leopardi
 
 	* admin/: ChangeLog, Makefile.common, acinclude.m4.in, am_edit,
-	conf.change.pl, config.guess, config.pl, config.sub,
-	configure.in.min, cvs-clean.pl, cvs.sh, debianrules, depcomp,
-	detect-autoconf.sh, install-sh, libtool.m4.in, ltmain.sh, missing,
-	mkinstalldirs, ylwrap: Add files apparently needed by autoconf,
-	automake or configure
+	  conf.change.pl, config.guess, config.pl, config.sub,
+	  configure.in.min, cvs-clean.pl, cvs.sh, debianrules, depcomp,
+	  detect-autoconf.sh, install-sh, libtool.m4.in, ltmain.sh,
+	  missing, mkinstalldirs, ylwrap: Add files apparently needed by
+	  autoconf, automake or configure
 
 2002-08-12 22:30  leopardi
 
 	* acinclude.m4.in: Remove file apparently no longer needed by
-	autoconf, automake or configure
+	  autoconf, automake or configure
 
 2002-08-12 22:26  leopardi
 
 	* acconfig.h, config.guess, config.sub, configure.in.no_shlib,
-	install-sh, libtool.m4.in, ltconfig, ltmain.sh, missing,
-	mkinstalldirs, stamp-h.in: Remove files apparently no longer needed
-	by autoconf, automake or configure
+	  install-sh, libtool.m4.in, ltconfig, ltmain.sh, missing,
+	  mkinstalldirs, stamp-h.in: Remove files apparently no longer
+	  needed by autoconf, automake or configure
 
 2002-08-10 19:56  leopardi
 
 	* test/peg16.h: Improve compatibility with g++ 3.1.1 and hopefully
-	also with standard C++'
+	  also with standard C++'
 
 2002-08-10 19:54  leopardi
 
 	* glucat/: clifford_algebra.h, clifford_algebra_imp.h, errors.h,
-	errors_imp.h, framed_multi.h, framed_multi_imp.h, generation.h,
-	generation_imp.h, index_set.h, index_set_imp.h, matrix_multi.h,
-	matrix_multi_imp.h: Improve compatibility with g++ 3.1.1 and
-	hopefully also with standard C++
+	  errors_imp.h, framed_multi.h, framed_multi_imp.h, generation.h,
+	  generation_imp.h, index_set.h, index_set_imp.h, matrix_multi.h,
+	  matrix_multi_imp.h: Improve compatibility with g++ 3.1.1 and
+	  hopefully also with standard C++
 
 2002-08-10 19:52  leopardi
 
 	* glucat/global.h: Remove possible name clash by renaming CTAssert
-	to _GLUCAT_CTAssert
+	  to _GLUCAT_CTAssert
 
 2002-04-15 07:33  leopardi
 
@@ -918,7 +1088,7 @@
 2002-04-14 23:18  leopardi
 
 	* test/: test-6.out, test.out: Update test output to reflect change
-	in elliptic()
+	  in elliptic()
 
 2002-04-14 21:28  leopardi
 
@@ -931,23 +1101,24 @@
 2002-04-14 21:14  leopardi
 
 	* glucat/clifford_algebra_imp.h: Fix elliptic() to return a unit
-	volume element I which commutes with the whole relevant subalgebra
+	  volume element I which commutes with the whole relevant
+	  subalgebra
 
 2002-04-14 21:13  leopardi
 
 	* glucat/generation_imp.h: Use count_pos() and count_neg() in
-	folded_dim()
+	  folded_dim()
 
 2002-04-14 21:12  leopardi
 
 	* glucat/: index_set.h, index_set_imp.h: Add count_pos() and
-	count_neg(): count positive and negative indices
+	  count_neg(): count positive and negative indices
 
 2002-04-14 21:03  leopardi
 
 	* TODO: Update to include items listed in the coursework thesis,
-	"Practical Computation with Clifford Algebras," submitted as part
-	of the requirements for MScTech at UNSW.
+	  "Practical Computation with Clifford Algebras," submitted as part
+	  of the requirements for MScTech at UNSW.
 
 2002-01-27 10:54  leopardi
 
@@ -960,37 +1131,37 @@
 2002-01-27 09:16  leopardi
 
 	* NEWS, README, TODO: Reflect that GluCat 0.0.5 is now compatible
-	with g++ 3.0.3
+	  with g++ 3.0.3
 
 2002-01-27 09:14  leopardi
 
 	* configure.in, glucat.doxygen, glucat.kdevprj, glucat.lsm: Update
-	version to 0.0.5
+	  version to 0.0.5
 
 2002-01-26 22:13  leopardi
 
 	* test/Makefile.am: Adjust makefile to keep G++ 3.0.X inlining
-	under control while optimizing as much as possible.
+	  under control while optimizing as much as possible.
 
 2002-01-26 22:11  leopardi
 
 	* test/: driver.cpp, peg01.h, peg02.h, peg03.h, peg04.h, peg05.h,
-	peg06.h, peg07.h, peg08.h, peg09.h, peg10.h, peg11.h, peg12.h,
-	peg13.h, peg14.h, peg15.h, peg16.h, squaring.h: Make tests
-	compatible with G++ 3.0.X by using namespace std where needed
+	  peg06.h, peg07.h, peg08.h, peg09.h, peg10.h, peg11.h, peg12.h,
+	  peg13.h, peg14.h, peg15.h, peg16.h, squaring.h: Make tests
+	  compatible with G++ 3.0.X by using namespace std where needed
 
 2002-01-26 22:10  leopardi
 
 	* glucat/: clifford_algebra.h, clifford_algebra_imp.h, errors.h,
-	errors_imp.h, framed_multi.h, framed_multi_imp.h, generation.h,
-	generation_imp.h, index_set.h, index_set_imp.h, matrix_multi.h,
-	matrix_multi_imp.h, portability.h: Make library compatible with G++
-	3.0.X by using std:: where needed
+	  errors_imp.h, framed_multi.h, framed_multi_imp.h, generation.h,
+	  generation_imp.h, index_set.h, index_set_imp.h, matrix_multi.h,
+	  matrix_multi_imp.h, portability.h: Make library compatible with
+	  G++ 3.0.X by using std:: where needed
 
 2002-01-24 20:46  leopardi
 
 	* ChangeLog: Use cvs2cl. Unfortunately this loses changes from
-	0.0.1 to 0.0.2.  Update for version 0.0.4
+	  0.0.1 to 0.0.2.  Update for version 0.0.4
 
 2002-01-24 19:43  leopardi
 
@@ -999,7 +1170,7 @@
 2002-01-24 18:43  leopardi
 
 	* TODO: Update to reflect that ithe rreducible real representation
-	has been implemented.
+	  has been implemented.
 
 2002-01-24 18:42  leopardi
 
@@ -1008,39 +1179,39 @@
 2002-01-24 17:03  leopardi
 
 	* configure.in, glucat.doxygen, glucat.kdevprj: Update version to
-	0.0.4
+	  0.0.4
 
 2002-01-24 17:00  leopardi
 
 	* glucat/Makefile.am: Add generation.h and generation_imp.h to
-	Makefile
+	  Makefile
 
 2002-01-24 16:53  leopardi
 
 	* glucat/: generation.h, generation_imp.h, matrix_multi_imp.h:
-	Define class generator_table<> and singleton generator<>()
+	  Define class generator_table<> and singleton generator<>()
 
 2002-01-24 16:51  leopardi
 
 	* glucat/global.h: Change CTChecker to CTAssertion to avoid clash
-	with POOMA when using namespace glucat
+	  with POOMA when using namespace glucat
 
 2002-01-24 08:42  leopardi
 
 	* test/squaring.h: Take account of irredicible representations by
-	testing Cl(n,0)
+	  testing Cl(n,0)
 
 2002-01-24 08:39  leopardi
 
 	* glucat/: framed_multi_imp.h, generation.h, generation_imp.h,
-	global.h, glucat.h, glucat_imp.h, matrix.h, matrix_imp.h,
-	matrix_multi.h, matrix_multi_imp.h: matrix_multi<> now uses real
-	irreducible representation per Porteous and Lounesto.
+	  global.h, glucat.h, glucat_imp.h, matrix.h, matrix_imp.h,
+	  matrix_multi.h, matrix_multi_imp.h: matrix_multi<> now uses real
+	  irreducible representation per Porteous and Lounesto.
 
 2002-01-22 22:32  leopardi
 
 	* glucat/: matrix.h, matrix_imp.h: Optimize and clean up gen() and
-	gengen() before implementing irreducible real representation.
+	  gengen() before implementing irreducible real representation.
 
 2002-01-22 20:29  leopardi
 
@@ -1077,12 +1248,12 @@
 2002-01-21 02:04  leopardi
 
 	* glucat/matrix_multi_imp.h: operator==: fix use of const_iterators
-	norm: optimize by using inner()
+	  norm: optimize by using inner()
 
 2002-01-21 02:02  leopardi
 
 	* glucat/clifford_algebra_imp.h: cos, sin: bring real part into
-	range 0 <= x < 2*pi
+	  range 0 <= x < 2*pi
 
 2002-01-12 13:07  leopardi
 
@@ -1103,54 +1274,54 @@
 2002-01-12 11:52  leopardi
 
 	* .cvsignore, AUTHORS, COPYING, ChangeLog, INSTALL, Makefile.am,
-	Makefile.dist, NEWS, README, TODO, acconfig.h, acinclude.m4.in,
-	config.guess, config.h.in, config.sub, configure, configure.in,
-	configure.in.no_shlib, glucat.directory, glucat.doxygen,
-	glucat.kdevprj, glucat.kdevses, glucat.lsm, install-sh,
-	libtool.m4.in, ltconfig, ltmain.sh, missing, mkinstalldirs,
-	stamp-h.in, glucat/.cvsignore, glucat/Makefile.am,
-	glucat/clifford_algebra.h, glucat/clifford_algebra_imp.h,
-	glucat/errors.h, glucat/errors_imp.h, glucat/framed_multi.h,
-	glucat/framed_multi_imp.h, glucat/global.h, glucat/glucat.h,
-	glucat/glucat_imp.h, glucat/index_set.h, glucat/index_set_imp.h,
-	glucat/long_double.h, glucat/matrix_multi_imp.h, glucat/matrix.h,
-	glucat/matrix_imp.h, glucat/matrix_multi.h, glucat/portability.h,
-	glucat/scalar.h, glucat/templates/.cvsignore,
-	glucat/templates/cpp_template, glucat/templates/header_template,
-	test/.cvsignore, test/Makefile.am, test/driver.cpp, test/driver.h,
-	test/eg3.res, test/eg8.txt, test/peg01.h, test/peg02.h,
-	test/peg03.h, test/peg04.h, test/peg05.h, test/peg06.h,
-	test/peg07.h, test/peg08.h, test/peg09.h, test/peg10.h,
-	test/peg11.h, test/peg12.h, test/peg13.h, test/peg14.h,
-	test/peg15.h, test/peg16.h, test/squaring.h, test/test-6.out,
-	test/test.out, test/templates/.cvsignore,
-	test/templates/cpp_template, test/templates/header_template: Add
-	glucat to cvs
+	  Makefile.dist, NEWS, README, TODO, acconfig.h, acinclude.m4.in,
+	  config.guess, config.h.in, config.sub, configure, configure.in,
+	  configure.in.no_shlib, glucat.directory, glucat.doxygen,
+	  glucat.kdevprj, glucat.kdevses, glucat.lsm, install-sh,
+	  libtool.m4.in, ltconfig, ltmain.sh, missing, mkinstalldirs,
+	  stamp-h.in, glucat/.cvsignore, glucat/Makefile.am,
+	  glucat/clifford_algebra.h, glucat/clifford_algebra_imp.h,
+	  glucat/errors.h, glucat/errors_imp.h, glucat/framed_multi.h,
+	  glucat/framed_multi_imp.h, glucat/global.h, glucat/glucat.h,
+	  glucat/glucat_imp.h, glucat/index_set.h, glucat/index_set_imp.h,
+	  glucat/long_double.h, glucat/matrix_multi_imp.h, glucat/matrix.h,
+	  glucat/matrix_imp.h, glucat/matrix_multi.h, glucat/portability.h,
+	  glucat/scalar.h, glucat/templates/.cvsignore,
+	  glucat/templates/cpp_template, glucat/templates/header_template,
+	  test/.cvsignore, test/Makefile.am, test/driver.cpp,
+	  test/driver.h, test/eg3.res, test/eg8.txt, test/peg01.h,
+	  test/peg02.h, test/peg03.h, test/peg04.h, test/peg05.h,
+	  test/peg06.h, test/peg07.h, test/peg08.h, test/peg09.h,
+	  test/peg10.h, test/peg11.h, test/peg12.h, test/peg13.h,
+	  test/peg14.h, test/peg15.h, test/peg16.h, test/squaring.h,
+	  test/test-6.out, test/test.out, test/templates/.cvsignore,
+	  test/templates/cpp_template, test/templates/header_template: Add
+	  glucat to cvs
 
 2002-01-12 11:52  leopardi
 
 	* .cvsignore, AUTHORS, COPYING, ChangeLog, INSTALL, Makefile.am,
-	Makefile.dist, NEWS, README, TODO, acconfig.h, acinclude.m4.in,
-	config.guess, config.h.in, config.sub, configure, configure.in,
-	configure.in.no_shlib, glucat.directory, glucat.doxygen,
-	glucat.kdevprj, glucat.kdevses, glucat.lsm, install-sh,
-	libtool.m4.in, ltconfig, ltmain.sh, missing, mkinstalldirs,
-	stamp-h.in, glucat/.cvsignore, glucat/Makefile.am,
-	glucat/clifford_algebra.h, glucat/clifford_algebra_imp.h,
-	glucat/errors.h, glucat/errors_imp.h, glucat/framed_multi.h,
-	glucat/framed_multi_imp.h, glucat/global.h, glucat/glucat.h,
-	glucat/glucat_imp.h, glucat/index_set.h, glucat/index_set_imp.h,
-	glucat/long_double.h, glucat/matrix_multi_imp.h, glucat/matrix.h,
-	glucat/matrix_imp.h, glucat/matrix_multi.h, glucat/portability.h,
-	glucat/scalar.h, glucat/templates/.cvsignore,
-	glucat/templates/cpp_template, glucat/templates/header_template,
-	test/.cvsignore, test/Makefile.am, test/driver.cpp, test/driver.h,
-	test/eg3.res, test/eg8.txt, test/peg01.h, test/peg02.h,
-	test/peg03.h, test/peg04.h, test/peg05.h, test/peg06.h,
-	test/peg07.h, test/peg08.h, test/peg09.h, test/peg10.h,
-	test/peg11.h, test/peg12.h, test/peg13.h, test/peg14.h,
-	test/peg15.h, test/peg16.h, test/squaring.h, test/test-6.out,
-	test/test.out, test/templates/.cvsignore,
-	test/templates/cpp_template, test/templates/header_template:
-	Initial revision
+	  Makefile.dist, NEWS, README, TODO, acconfig.h, acinclude.m4.in,
+	  config.guess, config.h.in, config.sub, configure, configure.in,
+	  configure.in.no_shlib, glucat.directory, glucat.doxygen,
+	  glucat.kdevprj, glucat.kdevses, glucat.lsm, install-sh,
+	  libtool.m4.in, ltconfig, ltmain.sh, missing, mkinstalldirs,
+	  stamp-h.in, glucat/.cvsignore, glucat/Makefile.am,
+	  glucat/clifford_algebra.h, glucat/clifford_algebra_imp.h,
+	  glucat/errors.h, glucat/errors_imp.h, glucat/framed_multi.h,
+	  glucat/framed_multi_imp.h, glucat/global.h, glucat/glucat.h,
+	  glucat/glucat_imp.h, glucat/index_set.h, glucat/index_set_imp.h,
+	  glucat/long_double.h, glucat/matrix_multi_imp.h, glucat/matrix.h,
+	  glucat/matrix_imp.h, glucat/matrix_multi.h, glucat/portability.h,
+	  glucat/scalar.h, glucat/templates/.cvsignore,
+	  glucat/templates/cpp_template, glucat/templates/header_template,
+	  test/.cvsignore, test/Makefile.am, test/driver.cpp,
+	  test/driver.h, test/eg3.res, test/eg8.txt, test/peg01.h,
+	  test/peg02.h, test/peg03.h, test/peg04.h, test/peg05.h,
+	  test/peg06.h, test/peg07.h, test/peg08.h, test/peg09.h,
+	  test/peg10.h, test/peg11.h, test/peg12.h, test/peg13.h,
+	  test/peg14.h, test/peg15.h, test/peg16.h, test/squaring.h,
+	  test/test-6.out, test/test.out, test/templates/.cvsignore,
+	  test/templates/cpp_template, test/templates/header_template:
+	  Initial revision
 
