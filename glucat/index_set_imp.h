@@ -35,18 +35,13 @@ namespace glucat
   template<const index_t LO, const index_t HI>
   index_set<LO,HI>::
   index_set(const index_t& idx)
-  {
-    this->set(idx);
-  }
+  { this->set(idx); }
 
   /// Constructor from bitset_t
   template<const index_t LO, const index_t HI>
   index_set<LO,HI>::
   index_set(const bitset_t& bst)
-  {
-    const index_set_t* pbst = static_cast<const index_set_t*>(&bst);
-    *this = *pbst;
-  }
+  { *this = *static_cast<const index_set_t*>(&bst); }
 
   /// Constructor from set value of an index set folded within the given frame
   template<const index_t LO, const index_t HI>
@@ -78,24 +73,16 @@ namespace glucat
   bool
   index_set<LO,HI>::
   operator== (const index_set& rhs) const
-  {
-    const bitset_t* pthis = this;
-    const bitset_t* pthat = &rhs;
-    return *pthis == *pthat;
-  }
-
+  { return *static_cast<const bitset_t*>(this) == *static_cast<const bitset_t*>(&rhs); }
+  
   /// Inequality
   template<const index_t LO, const index_t HI>
   inline
   bool
   index_set<LO,HI>::
   operator!= (const index_set& rhs) const
-  {
-    const bitset_t* pthis = this;
-    const bitset_t* pthat = &rhs;
-    return *pthis != *pthat;
-  }
-
+  { return *static_cast<const bitset_t*>(this) != *static_cast<const bitset_t*>(&rhs); }
+  
   /// Set complement: not
   template<const index_t LO, const index_t HI>
   inline
@@ -579,30 +566,37 @@ namespace glucat
   }
 
   template<const index_t LO, const index_t HI>
-  inline
   int
   index_set<LO,HI>::
   sign_of_mult(const index_set<LO,HI>& ist) const
   {
-    int result = 1;
-    index_t i = 0;
-    index_t j = 0;
-
-    i = this->count();
+    int power = 0;
+    index_t i = this->count();
+    index_t j;
+    const index_t neg_end = std::min(0,HI+1);
     for (j = LO; 
+        j < neg_end; 
+        ++j)
+      if ((*this)[j])
+      {
+        --i;
+        if (ist[j] && (i % 2 == 0))
+          ++power;
+      }
+      else if (ist[j] && (i % 2 == 1))
+        ++power;
+    for (; 
         j <= HI; 
         ++j)
-      if (this->test(j))
+      if ((*this)[j])
       {
-        i--;
-        if (ist[j])
-          result *= (i % 2 == 0) ? sign_of_square(j) :
-                                  -sign_of_square(j);
+        --i;
+        if (ist[j] && (i % 2 == 1))
+          ++power;
       }
-      else if (ist[j])
-        if (i % 2 == 1)
-          result *= -1;
-    return result;
+      else if (ist[j] && (i % 2 == 1))
+        ++power;
+    return (power % 2 == 1) ? -1 : 1;
   }
 
   /// Hash function
