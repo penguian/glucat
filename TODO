@@ -1,4 +1,6 @@
 There is plenty of testing, cleanup, packaging and documentation work yet to do.
+o Try defining Boost concepts, numeric limits and traits, so that GluCat can
+  eventually become a Boost library.
 o Improve the packaging of the example and test programs.
 o Make better use of automake and autoconf to eliminate the need to manually
   edit Makefiles.
@@ -37,8 +39,6 @@ o Try creating a class, vector_multi<>, which uses std::vector rather than
 o Try creating a class, hashed_multi<>, which uses std::hash_map rather than
   std::map. This should be faster than framed_multi<>, if tuned properly. The
   disadvantage is that std::hash_map is not standard.
-o Try defining Boost concepts, numeric limits and traits, so that GluCat can
-  eventually become a Boost library.
 o Implement a Fast Clifford Fourier Transform between framed_multi<> and
   matrix_multi<>, based on generalized Fast Fourier Transforms.
 
