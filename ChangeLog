@@ -1,3 +1,11 @@
+2002-04-15 07:29  leopardi
+
+	* NEWS: Update NEWS to reflect fix to elliptic()
+
+2002-04-14 23:39  leopardi
+
+	* ChangeLog: Update to version 0.0.6
+
 2002-04-14 23:18  leopardi
 
 	* test/: test-6.out, test.out: Update test output to reflect change
