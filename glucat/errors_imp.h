@@ -33,13 +33,13 @@ namespace glucat
   { }
 
   template< class Class_T >
-  const char*
+  const std::string
   error<Class_T>::
   heading() const throw()
   { return "Error in glucat::"; }
 
   template< class Class_T >
-  const char*
+  const std::string
   error<Class_T>::
   classname() const throw()
   { return Class_T::classname(); }

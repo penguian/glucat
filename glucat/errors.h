@@ -32,8 +32,8 @@ namespace glucat
     glucat_error(const std::string& msg)
     : logic_error(msg)
     { }
-    virtual const char* heading() const throw() =0;
-    virtual const char* classname() const throw() =0;
+    virtual const std::string heading() const throw() =0;
+    virtual const std::string classname() const throw() =0;
     virtual void print_error_msg() const =0;
   };
 
@@ -43,8 +43,8 @@ namespace glucat
   {
   public:
     error(const std::string& msg);
-    virtual const char* heading() const throw();
-    virtual const char* classname() const throw();
+    virtual const std::string heading() const throw();
+    virtual const std::string classname() const throw();
     virtual void print_error_msg() const;
   };
 }
