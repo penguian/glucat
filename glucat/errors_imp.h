@@ -29,8 +29,15 @@ namespace glucat
   template< class Class_T >
   error<Class_T>::
   error(const std::string& msg)
-  : glucat_error(msg)
+  : glucat_error(Class_T::classname(), msg)
   { }
+
+  template< class Class_T >
+  error<Class_T>::
+  error(const std::string& context, const std::string& msg)
+  : glucat_error(context, msg)
+  { }
+
 
   template< class Class_T >
   const std::string
@@ -42,7 +49,7 @@ namespace glucat
   const std::string
   error<Class_T>::
   classname() const throw()
-  { return Class_T::classname(); }
+  { return name; }
 
   template< class Class_T >
   void
