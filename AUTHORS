@@ -1,0 +1,54 @@
+Paul C. Leopardi <leopardi@bigpond.net.au>
+
+Project supervisor
+------------------
+Dr. William McLean, School of Mathematics, UNSW
+
+Advice
+------
+Christian Perwass: Operators, user interface
+Duraid Madina, Russell Standish: C++, debugging
+A. Alexandrescu, N. Josuttis, A. Koenig, Scott Meyers, B. Moo, Bjarne Stroustrup, T. Veldhuizen:
+  C++ usage
+
+Definitions
+-----------
+Chris Doran, David Hestenes, Anthony Lasenby, Pertti Lounesto, Ian R. Porteous, Garret Sobczyk:
+  Clifford algebra sum, difference, inner product, outer product,
+  geometric product, involutions and anti-involutions, norms
+Leo Dorst: Left contraction
+Leo Dorst, Arvind Raja: Index sets
+Mark Ashdown, G. P. Wene: Negative integer indices
+David Hestenes, Garret Sobczyk,  G. P. Wene: Countably infinite dimensional Clifford algebra
+Pertti Lounesto, Ian R. Porteous: Matrix basis
+Milton Abramowicz and Irene A. Stegun: Transcendental functions
+
+Algorithms
+----------
+Arvind Raja: framed_multivector<> sum, difference, inner product, outer product,
+  geometric product, involutions and anti-involutions, norms
+P. Fleckenstein: framed_multivector<> geometric product
+A. Lumsdaine, J. Siek, MTL project: Matrix algorithms and linear algebra
+Pertti Lounesto, Ian R. Porteous: Matrix basis
+Leo Dorst: Left contraction
+Gene H. Golub, Charles F. van Loan, Nicholas J. Higham: Matrix division, iterative refinement
+Gene H. Golub, Charles F. van Loan: Matrix exponential
+Gene H. Golub, Charles F. van Loan, C.F. Gerald,  P.O. Wheatley: Pade approximation
+Milton Abramowicz and Irene A. Stegun, Gene H. Golub, Charles F. van Loan, C.F. Gerald,  P.O. Wheatley:
+  Transcendental functions
+Sheung Hun Cheng, Nicholas J. Higham, Charles S. Kenney, Alan J. Laub :
+  Product form of Denman-Beavers square root iteration, incomplete square root cascade logarithm
+
+Prototype
+---------
+Arvind Raja
+Arvind Raja's original header comments and references follow.
+clifford algebra package,  Arvind.Raja@hut.fi
+ref: Press et.al. "Numerical Recipes in C", 2nd ed., C.U.P., 1992.
+ref: LEDA, v 3.0, Stefan N\"aher, Max-Planck-Institut f\"ur Informatik
+ref: Stroustrup B., "The C++ Programming Language", 2nd ed.,
+     Addison-Wesley, 1991.
+ref: R. Sedgewick, "Algorithms in C++", Addison-Wesley, 1992.
+ref: S. Meyers, "Effective C++ ", Addison-Wesley, 1992.
+
+Arvind Raja's prototype was modelled on Clical, by Pertti Lounesto, R. Mikkola, V. Vierros

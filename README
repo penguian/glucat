@@ -1,0 +1,157 @@
+Purpose
+-------
+ GluCat is a library of template classes which can be used as template
+ parameters for other template libraries, such as Blitz++, deal.II,
+ Matrix Template Library and POOMA. These template libraries expect a
+ numeric class which implements "appropriate numeric semantics".
+ To provide these semantics, the GluCat interface matches float or
+ complex<> as much as possible.
+
+ Yet the GluCat classes must be different from float or complex<>, because they
+ model a different algebra. GluCat models the universal Clifford algebras over
+ the real or complex fields, with arbitrary dimension and arbitrary signature.
+ Technically, what GluCat implements is a model of each Clifford algebra
+ corresponding to each non-degenerate quadratic form up to a maximum set by the
+ user.
+
+Before you go any further
+-------------------------
+ Before you use this template library, become familiar with geometric and Clifford
+ algebras.
+Web sites:
+o Pertti Lounesto
+  http://www.teli.stadia.fi/~lounesto/
+o The Geometric Algebra Research Group at Cambridge:
+  http://www.mrao.cam.ac.uk/~clifford/
+o Leo Dorst
+  http://carol.wins.uva.nl/~leo/clifford/
+o David Hestenes
+  http://modelingnts.la.asu.edu/
+o Christian Perwass
+  http://www.perwass.de/cbup/start.html
+o Rafal Ablamowitz
+  http://top.math.tntech.edu/rafal/
+o William Baylis:
+  http://www.cs.uwindsor.ca/users/b/baylis/index.htm
+o The Clifford Research Group at Gent
+  http://cage.rug.ac.be/~fb/crg/
+
+Books:
+o Rafal Ablamowicz, Pertti Lounesto, Josep Parra (eds.),
+  "Clifford Algebras with Numeric and Symbolic Computations",
+  Birkhäuser, 1996.
+o David Hestenes, Garret Sobczyk, "Clifford Algebra to Geometric Calculus"
+  Kluwer, first published in 1984; reprinted with corrections in 1992.
+o Pertti Lounesto, "Clifford Algebras and Spinors",
+  Cambridge University Press, Second enhanced edition, 2001.
+o Ian R. Porteous, "Clifford Algebras and the Classical groups",
+  Cambridge University Press, 1995.
+
+Software:
+ o GAIGEN, a C++ code optimized generator
+   http://carol.wins.uva.nl/~fontijne/gaigen/
+ o CLU, a C++ library with OPEN-GL graphics
+   http://www.perwass.de/cbup/clu.html
+ o GABLE, a Matlab package with visualization
+   http://carol.wins.uva.nl/~leo/GABLE/index.html
+ o GA Package for Maple V
+   http://www.mrao.cam.ac.uk/~clifford/software/GA/
+ o CLIFFORD for Maple V
+   http://math.tntech.edu/rafal/cliff5/index.html
+ o CLICAL, a Clifford algebra calculator
+   http://www.teli.stadia.fi/~lounesto/CLICAL.htm
+
+Dependencies
+------------
+ GluCat uses the C++ Standard Library and the Matrix Template Library. Make sure
+ you have these installed and working before attempting to use GluCat.
+ The code currently runs on SuSE Linux 7.2 using g++ 2.95.3 with the
+ libstdc++-v3 library and MTL 2.1.2-20. The headers need a compiler which
+ correctly handles template template classes, which rules out (eg.) the Intel
+ C++ compiler.
+
+Installation
+------------
+ See INSTALL
+
+Usage
+-----
+ As of the initial version 0.0.1 there are no detailed usage instructions. What
+ follows is a brief summary. See also http://glucat.sourceforge.net
+
+ To see brief descriptions of the classes, functions and operators which
+ GluCat defines, see the Doxygen API documentation in ./glucat-api/html
+
+ GluCat is a C++ template library, similar to the C++ Standard Library or the
+ Matrix Template Library (MTL). It consists entirely of source code header
+ files, plus a suite of test routines.
+
+ To use GluCat:
+ o Make sure that the installation directory is in your include path.
+   The default installation directory is /usr/local/include
+ o In your code, include individual files as <glucat/filename.h>
+   You can also use the convenience headers <glucat/glucat.h> and
+   <glucat/glucat_imp.h>
+ o Use the test header file ./test/driver.h as a guide. It currently contains:
+
+#include "glucat/glucat.h"
+typedef glucat::tuning<> Tune_P;
+#include "glucat/glucat_imp.h"
+
+ Tune_P is the tuning policy class. It may be included as a template parameter
+ in future versions, but for now, you will need to define it as a typedef before
+ including <glucat/glucat_imp.h>. tuning<> is a template class defined in
+ <glucat/global.h>
+ Glucat defines and uses the glucat:: namespace. You can use names from this
+ namespace by using the glucat:: prefix or by using the following declaration:
+
+using namespace glucat;
+
+ The headers are split into declarations and definitions. The software was
+ developed using the g++ compiler, which does not implement the "export" keyword.
+ Separate compilation is possible, if you include both the declarations and
+ definitions in each compilation unit, but compilation is slow and the resulting
+ binary is large. That is why ./test/glucat uses only one source file,
+ ./test/driver.cpp, with all the remaining source code in header files.
+
+Coding standards
+----------------
+ The code follows many, but not all of the guidelines in the
+ GNU C++ Standard Library Style Guidelines at
+ http://gcc.gnu.org/onlinedocs/libstdc++/17_intro/C++STYLE
+ The code also follows much of Scott Meyers' advice from "Effective C++",
+ Second Edition.
+
+ Some code conventions are:
+ name_t: The name of a type, either global or local to a class.
+ Sentence_Case_T: The name of a type used as a template parameter.
+ Other_Sentence_Case: Other template parameters, including template template
+ parameters.
+ ALL_CAPS_WITH_UNDERSCORES: A global constant defined in <glucat/global.h>
+
+The Test Program
+----------------
+ See INSTALL for details on how to create the test program ./test/glucat
+ Once you have created the test program, create a runtime directory and
+ copy ./test/eg8.txt into the runtime directory. This file is needed by
+ programming example 8 (reading multivectors from input).
+
+ WARNING: Many Clifford algebra algorithms are exponential in both time and
+ space complexity. In particular, programming example 7 (triality) may run
+ very slowly.
+
+ The test program takes any number (including zero) of numeric parameters.
+ Positive numbers in the range 1 to 16 correspond to coding examples
+ ./test/peg01.h to ./test/peg16.h. These examples are run in numerical order
+ With zero parameters, all examples from 1 to 16 are run in order.
+ Many of the examples are run twice - once with framed_multi<Scalar_T> and
+ once with matrix_multi<Scalar_T>. If you use a negative parameter -n, this
+ will run a timing test which squares larger and larger multivectors within
+ the subalgebra defined by the frame of the index set {-n, ..., -1, 1, ..., n}
+
+ To run a meaningful timing test, run make with
+ CXXFLAGS = -O2 -g3 -finline-functions -finline-limit-400
+ This optimized compilation may take a long time to complete.
+
+ You can find sample test output in ./test/eg3.res, ./test/test.out and
+ ./test/test-6.out

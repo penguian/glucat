@@ -1,0 +1,31 @@
+o There is plenty of testing, cleanup, packaging and documentation work yet to do.
+o There should be a programmer's guide with descriptions of the API.
+o The example and test programs need better packaging.
+o Test with Blitz++, deal.II, MTL, POOMA and adjust accordingly.
+o The names in glucat:: which shadow names in std:: will probably need to
+  move to std:: so that eg. std::abs() will work for multivector_t within
+  other template libraries, such as MTL.
+o The matrix representation needs to use irreducible representations.
+  Irreducible representations use smaller matrices, which are faster.
+  This will mean changes to basis_element(), folded_dim() and others.
+  This will also mean using complex<> matrices and may also need quaternions.
+o The transcendental functions need better algorithms and better implementations
+  of existing algorithms.
+o Tune_P should be made into a mixin policy class template parameter, ie.
+  framed_multi<Scalar_T,LO,HI,Tune_P>, etc. With g++ 2.95.3 this currently
+  does not work - it either causes strange error messages about invalid template
+  parameters for _Rb_tree<> or causes Internal Compiler Errors.
+o framed_multi< complex<T>, LO, HI > etc. need proper support and testing.
+o IEEE NaN needs proper support. Current code depends on <mtl/mtl_limits.h>
+  which apparently does not define NaN correctly.
+o When g++ 3.X is the default compiler on either RedHat Linux or SuSE Linux, port to g++ 3.X
+o When g++ is the default compiler, use C++ standard library directly for, eg.
+  <limits>, rather than eg. <mtl/mtl_limits.h>
+o When MTL 3.X is available, port to MTL 3.X
+  This will mean rewriting some matrix algorithms to use matrix operators.
+o Port to other architectures and compilers which support template template parameters
+o Add operator| for geometric operations:
+  const multivector_t operator| (const multivector_t& lhs, const multivector_t& rhs)
+  { return rhs * lhs * involute(inv(rhs)); }
+o Add convenience constructors to index_set:
+  index_set(int, int), index_set(int, int, int), ... index_set(int, int, ..., int), etc.

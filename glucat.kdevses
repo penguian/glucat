@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE KDevPrjSession ><KDevPrjSession>
+ <Mainframe MaximizeMode="1" />
+ <DocsAndViews NumberOfDocuments="3" >
+  <Doc0 CursorPosLine="1" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="0" FileName="/home/leopardi/Maths/Project/glucat/test/driver.cpp" >
+   <View0 Top="0" Width="958" Attach="0" Height="309" Left="0" Focus="0" Type="KWriteView" MinMaxMode="0" />
+  </Doc0>
+  <Doc1 CursorPosLine="1" Type="KWriteDoc" NumberOfViews="1" CursorPosCol="0" FileName="/home/leopardi/Maths/Project/glucat/test/templates/cpp_template" >
+   <View0 Top="0" Width="958" Attach="0" Height="309" Left="0" Focus="1" Type="KWriteView" MinMaxMode="0" />
+  </Doc1>
+  <Doc2 Type="CDocBrowser" NumberOfViews="1" FileName="file:/opt/kde2/share/doc/HTML/en/kdevelop/index-8.html#ss8.5" >
+   <View Top="0" Width="713" Attach="0" Height="309" Left="0" Focus="0" Type="KHTMLView" MinMaxMode="0" />
+  </Doc2>
+ </DocsAndViews>
+</KDevPrjSession>
