@@ -1,3 +1,13 @@
+2003-01-08: 0.1.1
+An enhancement to basis_element() includes the use of a basis_table as a cache
+for basis elements. This should improve the speed of conversion between
+framed_multi<> and matrix_multi<>, at the expense of memory. The tuning
+parameter Tune_P::basis_max_count controls the size of the cache. If this is
+set to zero, the cache is not used. The default value is DEFAULT_Basis_Max_Count,
+which is set to 10. You can change it when you define Tune_P, as is done in
+test/driver.h
+Also included is a change to definition of template defaults for tuning<>, to
+make these defaults easier to override.
 2002-12-31: 0.1.0
 GluCat is now compatible with gcc 3.2 and Intel C++ 7.0.
 This should ensure that the code is closer to standard C++.
