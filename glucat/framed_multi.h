@@ -65,41 +65,41 @@ namespace glucat
 #endif  
   {
   public:
-    typedef framed_multi                             multivector_t;
-    typedef multivector_t                            framed_multi_t;
-    typedef Scalar_T                                 scalar_t;
-    typedef index_set<LO,HI>                         index_set_t;
-    typedef std::pair< const index_set_t, Scalar_T > pair_t;
-    typedef std::vector<Scalar_T>                    vector_t;
-    typedef error<multivector_t>                     error_t;
+    typedef framed_multi                               multivector_t;
+    typedef multivector_t                              framed_multi_t;
+    typedef Scalar_T                                   scalar_t;
+    typedef index_set<LO,HI>                           index_set_t;
+    typedef std::pair< const index_set_t, Scalar_T >   pair_t;
+    typedef std::vector<Scalar_T>                      vector_t;
+    typedef error<multivector_t>                       error_t;
 
 //  Use friend_maker to make friendship into legal C++
 //  Ref: Matthew Wilson, "Friendly Templates", 
 //  C/C++ Users Journal > CUJ Web Exclusives > 2003 > December 2003
 //  http://www.cuj.com/documents/s=8942/cujweb0312wilson/
 //
+    typedef matrix_multi<Scalar_T,LO,HI>               matrix_multi_t;
     struct friend_maker
     {
-      typedef matrix_multi<Scalar_T,LO,HI>           matrix_multi_t;
+      typedef matrix_multi<Scalar_T,LO,HI>             matrix_multi_t;
     };
-    friend class friend_maker::matrix_multi_t;
-    typedef typename friend_maker::matrix_multi_t    matrix_multi_t;
+    friend class _GLUCAT_USE_STRUCT_NAME(friend_maker) matrix_multi_t;
   private:
-    typedef typename matrix_multi_t::matrix_t        matrix_t;
+    typedef typename matrix_multi_t::matrix_t          matrix_t;
     typedef std::map< const index_set_t, Scalar_T >             
-                                                     sorted_map_t;
+                                                       sorted_map_t;
 #ifdef _GLUCAT_USE_GNU_CXX_HASH_MAP
     typedef __gnu_cxx::hash_map< const index_set_t, Scalar_T, hash<LO,HI> >  
-                                                     map_t;
+                                                       map_t;
 #else
-    typedef sorted_map_t                             map_t;
+    typedef sorted_map_t                               map_t;
 #endif  
-    typedef std::pair< index_set_t, Scalar_T >       var_pair_t;
+    typedef std::pair< index_set_t, Scalar_T >         var_pair_t;
     typedef std::pair< const multivector_t, const multivector_t >
-                                                     framed_pair_t;
+                                                       framed_pair_t;
   public:
-    typedef typename map_t::iterator                 iterator;
-    typedef typename map_t::const_iterator           const_iterator;
+    typedef typename map_t::iterator                   iterator;
+    typedef typename map_t::const_iterator             const_iterator;
   public:
     /// Class name used in messages
     static const std::string classname();

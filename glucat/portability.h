@@ -35,4 +35,11 @@
 #define _GLUCAT_PRIVATE private
 #endif
 
+//***************************** workaround for G++ 3.2 typename bug
+#if defined (__GNUG__) && (__GNUC__ >= 3) && (__GNUC_MINOR__ <= 2)
+#define _GLUCAT_USE_STRUCT_NAME(T)
+#else
+#define _GLUCAT_USE_STRUCT_NAME(T) T::
+#endif
+
 #endif // _GLUCAT_PORTABILITY_H

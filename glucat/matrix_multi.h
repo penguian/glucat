@@ -34,31 +34,31 @@ namespace glucat
   public clifford_algebra< Scalar_T, index_set<LO,HI>, matrix_multi<Scalar_T,LO,HI> >
   {
   public:
-    typedef matrix_multi                             multivector_t;
-    typedef multivector_t                            matrix_multi_t;
-    typedef Scalar_T                                 scalar_t;
-    typedef index_set<LO,HI>                         index_set_t;
-    typedef std::pair< const index_set_t, Scalar_T > pair_t;
-    typedef std::vector<Scalar_T>                    vector_t;
-    typedef error<multivector_t>                     error_t;
+    typedef matrix_multi                               multivector_t;
+    typedef multivector_t                              matrix_multi_t;
+    typedef Scalar_T                                   scalar_t;
+    typedef index_set<LO,HI>                           index_set_t;
+    typedef std::pair< const index_set_t, Scalar_T >   pair_t;
+    typedef std::vector<Scalar_T>                      vector_t;
+    typedef error<multivector_t>                       error_t;
 
 //  Use friend_maker to make friendship into legal C++
 //  Ref: Matthew Wilson, "Friendly Templates", 
 //  C/C++ Users Journal > CUJ Web Exclusives > 2003 > December 2003
 //  http://www.cuj.com/documents/s=8942/cujweb0312wilson/
 //
+    typedef framed_multi<Scalar_T,LO,HI>               framed_multi_t;
     struct friend_maker
     {
       typedef framed_multi<Scalar_T,LO,HI>             framed_multi_t;
     };
-    friend class friend_maker::framed_multi_t;
-    typedef typename friend_maker::framed_multi_t      framed_multi_t;
+    friend class _GLUCAT_USE_STRUCT_NAME(friend_maker) framed_multi_t;
     
   _GLUCAT_PRIVATE:
-    typedef ublas::row_major                         orientation_t;
+    typedef ublas::row_major                           orientation_t;
     typedef ublas::compressed_matrix< Scalar_T, orientation_t >
-                                                     matrix_t;
-    typedef typename matrix_t::size_type             matrix_index_t;
+                                                       matrix_t;
+    typedef typename matrix_t::size_type               matrix_index_t;
   public:
     /// Class name used in messages
     static const std::string classname();
