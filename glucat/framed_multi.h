@@ -26,7 +26,24 @@
 namespace glucat
 {
   template< typename Scalar_T, const index_t LO, const index_t HI >
+  class framed_multi; // forward
+  template< typename Scalar_T, const index_t LO, const index_t HI >
   class matrix_multi; // forward
+
+  /// Read multivector from input
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  std::istream&
+  operator>> (std::istream& s, framed_multi<Scalar_T,LO,HI>& val);
+
+  /// Write multivector to output
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  std::ostream&
+  operator<< (std::ostream& os, const framed_multi<Scalar_T,LO,HI>& val);
+
+  /// Write term to output
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  std::ostream&
+  operator<< (std::ostream& os, const std::pair< const index_set<LO,HI>, Scalar_T >& term);
 
   template< const index_t LO, const index_t HI>
   class hash
@@ -55,8 +72,18 @@ namespace glucat
     typedef std::pair< const index_set_t, Scalar_T > pair_t;
     typedef std::vector<Scalar_T>                    vector_t;
     typedef error<multivector_t>                     error_t;
-    typedef matrix_multi<Scalar_T,LO,HI>             matrix_multi_t;
-    friend class matrix_multi_t;
+
+//  Use friend_maker to make friendship into legal C++
+//  Ref: Matthew Wilson, "Friendly Templates", 
+//  C/C++ Users Journal > CUJ Web Exclusives > 2003 > December 2003
+//  http://www.cuj.com/documents/s=8942/cujweb0312wilson/
+//
+    struct friend_maker
+    {
+      typedef matrix_multi<Scalar_T,LO,HI>           matrix_multi_t;
+    };
+    friend class friend_maker::matrix_multi_t;
+    typedef typename friend_maker::matrix_multi_t    matrix_multi_t;
   private:
     typedef typename matrix_multi_t::matrix_t        matrix_t;
     typedef std::map< const index_set_t, Scalar_T >             
@@ -133,21 +160,6 @@ namespace glucat
     const matrix_t      fast(const index_t level, const bool odd) const;
   };
   // non-members
-
-  /// Read multivector from input
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  std::istream&
-  operator>> (std::istream& s, framed_multi<Scalar_T,LO,HI>& val);
-
-  /// Write multivector to output
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  std::ostream&
-  operator<< (std::ostream& os, const framed_multi<Scalar_T,LO,HI>& val);
-
-  /// Write term to output
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  std::ostream&
-  operator<< (std::ostream& os, const std::pair< const index_set<LO,HI>, Scalar_T >& term);
 
   /// Product of terms
   template< typename Scalar_T, const index_t LO, const index_t HI >

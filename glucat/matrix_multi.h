@@ -41,8 +41,19 @@ namespace glucat
     typedef std::pair< const index_set_t, Scalar_T > pair_t;
     typedef std::vector<Scalar_T>                    vector_t;
     typedef error<multivector_t>                     error_t;
-    typedef framed_multi<Scalar_T,LO,HI>             framed_multi_t;
-    friend class framed_multi_t;
+
+//  Use friend_maker to make friendship into legal C++
+//  Ref: Matthew Wilson, "Friendly Templates", 
+//  C/C++ Users Journal > CUJ Web Exclusives > 2003 > December 2003
+//  http://www.cuj.com/documents/s=8942/cujweb0312wilson/
+//
+    struct friend_maker
+    {
+      typedef framed_multi<Scalar_T,LO,HI>             framed_multi_t;
+    };
+    friend class friend_maker::framed_multi_t;
+    typedef typename friend_maker::framed_multi_t      framed_multi_t;
+    
   _GLUCAT_PRIVATE:
     typedef ublas::row_major                         orientation_t;
     typedef ublas::compressed_matrix< Scalar_T, orientation_t >
