@@ -24,20 +24,7 @@
  ***************************************************************************/
 
 #include "glucat/glucat.h"
-
-const int DRIVER_BASIS_MAX_COUNT = 7;
-typedef glucat::tuning
-  <
-    glucat::DEFAULT_Mult_Matrix_Threshold,
-    glucat::DEFAULT_Div_Max_Steps,
-    glucat::DEFAULT_Sqrt_Max_Steps,
-    glucat::DEFAULT_Log_Max_Outer_Steps,
-    glucat::DEFAULT_Log_Max_Inner_Steps,
-    DRIVER_BASIS_MAX_COUNT,
-    glucat::DEFAULT_Fast_Size_Threshold,
-    glucat::DEFAULT_Inv_Fast_Dim_Threshold
-  >
-  Tune_P;
+typedef glucat::tuning<> Tune_P;
 #include "glucat/glucat_imp.h"
 #include <stdio.h>
 
