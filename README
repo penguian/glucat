@@ -68,8 +68,9 @@ Dependencies
  GluCat uses the C++ Standard Library and the Boost Library. Make sure
  you have these installed and working before attempting to use GluCat.
  Use the instructions at http://www.boost.org/more/download.html
- to obtain the Boost Library. As at 2003-02-25, you need to use Boost CVS,
- as Boost 1.29.0 does not contain a new enough uBLAS.
+ to obtain the Boost Library. As at 2003-03-02, you need to use Boost CVS,
+ as Boost 1.29.0 does not contain a new enough uBLAS. GluCat has been tested
+ with Boost CVS tagged as RC_1_30_0, so it should work with Boost 1.30.0.
 
  If you are using g++ 3.X.Y, make sure that you have installed Boost with the same
  version of g++.
