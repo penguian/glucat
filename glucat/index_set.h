@@ -49,11 +49,15 @@ namespace glucat
     index_set     (const std::string& str);
 
     /// Equality
-    bool          operator==  (const index_set& rhs) const;
+    bool           operator==  (const index_set& rhs) const;
     /// Inequality
-    bool          operator!=  (const index_set& rhs) const;
+    bool           operator!=  (const index_set& rhs) const;
+    /// Set complement: not
+    index_set      operator~   () const;
     /// Symmetric set difference: exclusive or
     index_set&     operator^=  (const index_set& rhs);
+    /// Set intersection: and
+    index_set&     operator&=  (const index_set& rhs);
     /// Set union: or
     index_set&     operator|=  (const index_set& rhs);
     /// Subscripting: Test idx for membership: test value of bit idx
@@ -137,6 +141,12 @@ namespace glucat
   template<const index_t LO, const index_t HI>
   const index_set<LO,HI>
   operator^ (const index_set<LO,HI>& lhs,
+             const index_set<LO,HI>& rhs);
+
+  /// Set intersection: and
+  template<const index_t LO, const index_t HI>
+  const index_set<LO,HI>
+  operator& (const index_set<LO,HI>& lhs,
              const index_set<LO,HI>& rhs);
 
   /// Set union: or

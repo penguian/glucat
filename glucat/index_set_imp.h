@@ -51,7 +51,7 @@ namespace glucat
     const index_t min_index = folded_frame.min();
     const index_t max_index = folded_frame.max();
     const index_t skip = min_index > 0 ? 0 : 1;
-    index_set<LO,HI> folded_set;
+    index_set_t folded_set;
     for (index_t idx = -1; idx >= min_index; --idx)
       if ((folded_val >> (idx - min_index)) & 1)
         folded_set.set(idx);
@@ -95,6 +95,21 @@ namespace glucat
     return *pthis != *pthat;
   }
 
+  /// Set complement: not
+  template<const index_t LO, const index_t HI>
+  inline
+  index_set<LO,HI>
+  index_set<LO,HI>::
+  operator~ () const
+  {
+    index_set_t result;
+    bitset_t* presult = &result;
+    const bitset_t* pthis = this;
+    *presult = ~(*pthis);
+    result.reset(0);
+    return result;
+  }
+
   /// Symmetric set difference: exclusive or
   template<const index_t LO, const index_t HI>
   inline
@@ -119,6 +134,32 @@ namespace glucat
   {
     index_set<LO,HI> result(lhs);
     return result ^= rhs;
+  }
+
+  /// Set intersection: and
+  template<const index_t LO, const index_t HI>
+  inline
+  index_set<LO,HI>&
+  index_set<LO,HI>::
+  operator&= (const index_set<LO,HI>& rhs)
+  {
+    bitset_t* pthis = this;
+    const bitset_t* pthat = &rhs;
+    *pthis &= *pthat;
+    reset(0);
+    return *this;
+  }
+
+  /// Set intersection: and
+  template<const index_t LO, const index_t HI>
+  inline
+  const
+  index_set<LO,HI>
+  operator& (const index_set<LO,HI>& lhs,
+             const index_set<LO,HI>& rhs)
+  {
+    index_set<LO,HI> result(lhs);
+    return result &= rhs;
   }
 
   /// Set union: or
@@ -351,7 +392,7 @@ namespace glucat
   {
     index_t i;
     os << '{';
-    for(i= LO; (i <= HI) & !(ist[i]); ++i)
+    for(i= LO; (i <= HI) && !(ist[i]); ++i)
     { }
     if(i <= HI)
       os << i;
