@@ -1,3 +1,17 @@
+2004-05-05 23:33  leopardi
+
+	* squaring/Makefile.am, squaring/Makefile.in, test/Makefile.am,
+	  test/Makefile.in: Correct EXTRA_DIST
+
+2004-05-05 23:32  leopardi
+
+	* configure.in, configure.in.in: Do not use -mcmodel=medium.  Fix
+	  typo in comment
+
+2004-05-05 22:53  leopardi
+
+	* ChangeLog: Update using cvs2cl
+
 2004-05-05 22:52  leopardi
 
 	* INSTALL, NEWS, README, TODO: Update testing and compilation
