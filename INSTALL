@@ -3,20 +3,17 @@ Before You Begin
  GluCat uses the C++ Standard Library and the Boost Library. Make sure
  you have these installed and working before attempting to use GluCat.
  Use the instructions at http://www.boost.org/more/download.html
- to obtain the Boost Library. GluCat has been tested with Boost CVS and
- Boost 1.30.0.
+ to obtain the Boost Library. GluCat has been tested with Boost 1.30.0.
 
- If you are using g++ 3.X.Y, make sure that you have installed Boost with the 
+ If you are using g++ 3.X.Y, make sure that you have installed Boost with the
 same version of g++.
 
  The headers need a compiler which correctly handles template template classes.
 
- The code has so far been tested using Boost CVS and Boost 1.30.0 with:
- 1) SuSE Linux 8.2 using g++ 3.3 (SuSE prerelease)
- 2) SuSE Linux 8.2 using Intel C++ 7.0.1
- 3) Red Hat Linux 8.0 using g++ 3.2
- 4) Digital UNIX V4.0F (Rev. 1229) using g++ 3.1
- (reported by configure as alphaev6-dec-osf4.0f)
+ The code has so far been tested using:
+ 1) Red Hat Linux 8.0 with g++ 3.2   and Boost 1.30.2 on an Intel(R) Pentium(R) 4.
+ 2) SuSE SEL 8        with g++ 3.2.2 and Boost 1.30.2 on a dual AMD Opteron(tm).
+ 3) SuSE Linux 9.0    with g++ 3.3.2 and Boost 1.31.0 on an AMD Athlon(tm) 64.
 
 To Test
 =======
@@ -76,12 +73,17 @@ To Make the Test Programs
  make.  Setting --enable-debug=no will invoke the highest optimization level of 
  the relevant compiler. 
  
+ To compile the tests using __gnu_cxx::hash_map for glucat::framed_multi<>, 
+ run ./configure --with-hash-map, then make. This adds 
+ -D_GLUCAT_USE_GNU_CXX_HASH_MAP to CXXFLAGS in the test Makefiles, depending 
+ on whether you are using the g++ compiler. See "Usage" in README for details.
+ 
  If you are using Linux on Intel, you can also:
  o create a full debug version of the tests: 
    run ./configure --enable-debug=full, then make.
  o create a version for profiling:
    run ./configure --enable-profile, then make. 
- 
+   
  WARNINGS:
  1) The optimized compilation may take a long time to complete.
  See http://www.garloff.de/kurt/freesoft/gcc/
@@ -108,10 +110,10 @@ To Make the Test Programs
  5) Many Clifford algebra algorithms are exponential in both time and
  space complexity. In particular, programming example 7 (triality) may run
  very slowly.
- 
- 6) Detailed generic instructions for ./configure are given in "Basic 
+
+ 6) Detailed generic instructions for ./configure are given in "Basic
  Installation" below. See also ./configure --help
- 
+
 To Install
 ==========
  Once you are satisfied that GluCat works, you can run make install.
