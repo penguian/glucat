@@ -24,7 +24,7 @@
  ***************************************************************************/
 
 #include "glucat/glucat.h"
-const int DRIVER_BASIS_MAX_COUNT = 8;
+const int DRIVER_BASIS_MAX_COUNT = 9;
 typedef glucat::tuning
   <
     glucat::DEFAULT_Mult_Matrix_Threshold,
