@@ -63,30 +63,9 @@ Software:
  o GABLE, a Matlab package with visualization
    http://carol.wins.uva.nl/~leo/GABLE/index.html 
 
-Dependencies
-------------
- GluCat uses the C++ Standard Library and the Boost Library. Make sure
- you have these installed and working before attempting to use GluCat.
- To obtain the Boost Library, use the instructions at 
- http://sourceforge.net/project/showfiles.php?group_id=7586
- 
- If you are using g++ 3.X.Y, make sure that you have installed Boost with the
- same version of g++.
-
- The headers need a compiler which correctly handles template template classes.
-
- The code has so far been tested using:
- 1) Red Hat Linux 8.0, g++ 3.2,   Boost 1.30.2         on Intel(R) Pentium(R) 4.
- 2) SuSE SEL 8,        g++ 3.2.2, Boost 1.30.2         on dual AMD Opteron(tm).
- 3) SuSE Linux 9.0,    g++ 3.3.2, Boost 1.31.0         on AMD Athlon(tm) 64.
- 4) SuSE Linux 9.0,    g++ 3.3.3, Boost 1.31.0         on AMD Athlon(tm) 64.
- 5) SuSE Linux 9.0,    g++ 3.4.0, Boost CVS 2004-05-09 on AMD Athlon(tm) 64.
-
- Note: Boost 1.31.0 uBLAS does NOT compile under g++ 3.4. 
- 
-Installation and Testing
+Dependencies, Installation and Testing
 ------------------------
- See INSTALL
+ See INSTALL.
 
 Usage
 -----
