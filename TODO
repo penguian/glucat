@@ -2,7 +2,8 @@ There is plenty of testing, cleanup, packaging and documentation work yet to do.
 o Improve the packaging of the example and test programs.
 o Write a programmer's guide with descriptions of the API.
 o Test with Blitz++, deal.II, MTL, POOMA and adjust accordingly.
-o Fix sqrt() and log() so that they deal properly with negative real eigenvalues.
+o Fix sqrt() and log() so that they deal properly with negative real
+  eigenvalues.
 o Devise better algorithms and better implementations of existing algorithms for
   the transcendental functions. In particular, pay more attention to radius of
   convergence, condition number of matrices and poking out of the subalgebra.
@@ -14,29 +15,38 @@ o Support IEEE NaN properly. Current code depends on <mtl/mtl_limits.h> which
   apparently does not define NaN correctly.
 o When MTL 3.X is available, port to MTL 3.X This will mean rewriting some
   matrix algorithms to use matrix operators.
+o Try adding an abstract linear algebra class to allow GluCat to use MTL, UBLAS,
+  or other linear algebra libraries. This would use the same type of
+  pseudo-polymorphism as per the abstract Clifford algebra class.
 o Port to other architectures and compilers which support template template
-  parameters
+  parameters.
+o In particular, port to Intel C++.
 o Add operator| for geometric operations: return rhs * lhs * involute(inv(rhs))
 o Add convenience constructors to index_set<>: index_set<>(int, int),
   index_set<>(int, int, int), ... etc.
-o Try moving the names in glucat:: which shadow names in std:: into std:: itself
-  so that eg. std::abs() will work for multivector_t within other template
-  libraries, such as MTL.
 o Provide better support and testing for framed_multi< complex<> > etc.
-o Try creating a class, hashed_multi<>, which uses std::hash_map rather than
-  std::map. This should be faster than framed_multi<>, if tuned properly. The
-  disadvantage is that std::hash_map is not standard.
 o Try using the complex matrix representations. These use smaller matrices,
   which should be faster. This would mean changes to basis_element(),
   folded_dim() and others. Possibly deliver this as an additional template class
   rather than a change to matrix_multi<>.
+o Try moving the names in glucat:: which shadow names in std:: into std:: itself
+  so that eg. std::abs() will work for multivector_t within other template
+  libraries, such as MTL.
+o Try creating a class, hashed_multi<>, which uses std::hash_map rather than
+  std::map. This should be faster than framed_multi<>, if tuned properly. The
+  disadvantage is that std::hash_map is not standard.
+o Try using copy-on-write for matrix_multi_t::matrix_t, since MTL already does
+  reference counting.
+o Try defining Boost concepts, so that GluCat can eventually become a Boost
+  library.
+o Investigate generalized Fast Fourier Transforms to see if there is a Fast
+  Clifford Fourier Transform between framed_multi<> and matrix_multi<>.
 o Try replacing multiplication by +/-1 within inner products by addition and
   subtraction.
 o Try ordering the generation of basis matrices during conversion from
   matrix_multi<> to framed_multi<> in such a way as to minimize the number of
-  multiplications by generator matrices. Possibly by recursive enumeration of the
-  index sets.
+  multiplications by generator matrices. Possibly by recursive enumeration of
+  the index sets.
 o Try using a size-limited cache of basis matrices, especially for small
   dimensions.
-o Try using copy-on-write for matrix_multi_t::matrix_t, since MTL already does
-  reference counting.
+

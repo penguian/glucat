@@ -1,3 +1,7 @@
+2002-08-15: 0.0.7
+GluCat has been finally updated to be compatible with gcc 3.1.1, autoconf 2.5.2 and automake 1.63.
+This version of GluCat was built using KDevelop 2.1.2 and MTL 2.1.2-21.
+Work continues to make GluCat and MTL compatible with Intel C++ 6.0.
 2002-04-15: 0.0.6
 A bug in elliptic() has been fixed. elliptic now returns a unit volume element I which
 commutes with the whole relevant subalgebra

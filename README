@@ -65,12 +65,17 @@ Dependencies
 ------------
  GluCat uses the C++ Standard Library and the Matrix Template Library. Make sure
  you have these installed and working before attempting to use GluCat.
- The code has so far been tested using MTL 2.1.2-20 with:
- 1) SuSE Linux 7.2 using g++ 2.95.3 and libstdc++-libc6.2-2.so.3
- 2) SuSE Linux 7.2 using g++ 3.0.3 and libstdc++.so.3.0.2
- 3) Red Hat Linux 7.1 using g++ 2.96 and libstdc++-3
- The headers need a compiler which correctly handles template template classes,
- which rules out (eg.) the Intel C++ compiler.
+
+ If you are using g++ 3.X.Y, make sure that you have installed MTL with the same
+ version of g++. g++ 3.X.Y provides <limits> and MTL uses this if it is present.
+
+ The headers need a compiler which correctly handles template template classes.
+
+ The code has so far been tested using MTL 2.1.2-21 with:
+ 1) SuSE Linux 8.0 using g++ 3.1.1
+ and using MTL 2.1.2-20 with:
+ 2) Red Hat Linux 7.1 using g++ 2.96 and libstdc++-3
+ 3) Digital UNIX V4.0F (Rev. 1229) using g++ 3.0.3
 
 Installation
 ------------
