@@ -28,11 +28,24 @@ namespace glucat
   template< typename Scalar_T, const index_t LO, const index_t HI >
   class matrix_multi; // forward
 
+  template< const index_t LO, const index_t HI>
+  class hash
+  {
+  public:
+    typedef index_set<LO,HI> index_set_t;
+    inline size_t operator()(index_set_t val) const { return val.hash_fn(); }
+  };
+
   /// A framed_multi<Scalar_T,LO,HI> is a framed approximation to a multivector
   template< typename Scalar_T, const index_t LO = DEFAULT_LO, const index_t HI = DEFAULT_HI >
   class framed_multi :
+#ifdef _GLUCAT_USE_GNU_CXX_HASH_MAP
+  public clifford_algebra< Scalar_T, index_set<LO,HI>, framed_multi<Scalar_T,LO,HI> >,
+  _GLUCAT_PRIVATE __gnu_cxx::hash_map< const index_set<LO,HI>, Scalar_T, hash<LO,HI> >
+#else
   public clifford_algebra< Scalar_T, index_set<LO,HI>, framed_multi<Scalar_T,LO,HI> >,
   _GLUCAT_PRIVATE std::map< const index_set<LO,HI>, Scalar_T >
+#endif  
   {
   public:
     typedef framed_multi                             multivector_t;
@@ -46,7 +59,14 @@ namespace glucat
     friend class matrix_multi_t;
   private:
     typedef typename matrix_multi_t::matrix_t        matrix_t;
-    typedef std::map< const index_set_t, Scalar_T >  map_t;
+    typedef std::map< const index_set_t, Scalar_T >             
+                                                     sorted_map_t;
+#ifdef _GLUCAT_USE_GNU_CXX_HASH_MAP
+    typedef __gnu_cxx::hash_map< const index_set_t, Scalar_T, hash<LO,HI> >  
+                                                     map_t;
+#else
+    typedef sorted_map_t                             map_t;
+#endif  
     typedef std::pair< index_set_t, Scalar_T >       var_pair_t;
     typedef std::pair< const multivector_t, const multivector_t >
                                                      framed_pair_t;
@@ -110,7 +130,7 @@ namespace glucat
     /// Divide multivector into part divisible by index_set and remainder
     const framed_pair_t divide(const index_set_t& ist) const;
     /// Generalized FFT from framed_multi_t to matrix_t
-    const matrix_t      fast(const index_t level, const bool parity) const;
+    const matrix_t      fast(const index_t level, const bool odd) const;
   };
   // non-members
 
