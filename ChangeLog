@@ -1,3 +1,35 @@
+2004-06-20 19:09  leopardi
+
+	* README: New URL for John Fletcher
+
+2004-06-20 19:08  leopardi
+
+	* test11/Makefile.in: Update autotools to 1.8.3
+
+2004-06-20 19:04  leopardi
+
+	* configure.in, configure.in.in: Use AC_CHECK_HEADERS to check
+	  headers
+
+2004-06-20 19:03  leopardi
+
+	* gfft_test/Makefile.in, squaring/Makefile.in, test/Makefile.in,
+	  test01/Makefile.in, test02/Makefile.in, test03/Makefile.in,
+	  test04/Makefile.in, test05/Makefile.in, test06/Makefile.in,
+	  test07/Makefile.in, aclocal.m4, test08/Makefile.in,
+	  test09/Makefile.in, test10/Makefile.in, test12/Makefile.in,
+	  test13/Makefile.in, test14/Makefile.in, test15/Makefile.in,
+	  test16/Makefile.in, transforms/Makefile.in: Update autotools to
+	  version 1.8.3
+
+2004-06-20 18:59  leopardi
+
+	* NEWS: News for version 0.1.7
+
+2004-06-20 18:58  leopardi
+
+	* Doxyfile, glucat.kdevelop, glucat.lsm: Update to version 0.1.7
+
 2004-05-10 21:28  leopardi
 
 	* glucat/: framed_multi.h, matrix_multi.h, portability.h: Use
