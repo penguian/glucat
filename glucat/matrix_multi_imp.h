@@ -636,6 +636,30 @@ namespace glucat
     return *this;
   }
 
+  /// Table of basis elements used as a cache by basis_element()
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  class basis_table :
+  public std::map< std::pair< const index_set<LO,HI>, const index_set<LO,HI> >,
+                   typename matrix_multi<Scalar_T, LO, HI>::matrix_t >
+  {
+  public:
+    /// Single instance of basis table
+    static basis_table& basis() { static basis_table b; return b;}
+  private:
+    // Enforce singleton
+    // Reference: A. Alexandrescu, "Modern C++ Design", Chapter 6
+    basis_table() {}
+    ~basis_table() {}
+    basis_table(const basis_table&);
+    basis_table& operator= (const basis_table&);
+
+    /// Friend declaration to avoid compiler warning:
+    /// "... only defines a private destructor and has no friends"
+    /// Ref: Carlos O'Ryan, ACE http://doc.ece.uci.edu
+    friend class friend_for_private_destructor;
+  };
+
+
   /// Create a basis element matrix within a frame
   template< typename Scalar_T, const index_t LO, const index_t HI >
   const typename matrix_multi<Scalar_T,LO,HI>::matrix_t
@@ -655,12 +679,25 @@ namespace glucat
     const int p = std::max( int(folded_max), 0);
     const int q = std::max(-int(folded_min), 0);
 
+    typedef basis_table<Scalar_T,LO,HI>                     basis_table_t;
+    typedef std::pair<const index_set_t, const index_set_t> index_set_pair_t;
+    typedef std::pair<const index_set_pair_t, matrix_t>     basis_pair_t;
+    typedef typename basis_table_t::const_iterator          basis_const_iterator_t;
+    basis_table_t& basis_cache = basis_table_t::basis();
+    const index_set_pair_t& folded_pair = index_set_pair_t(folded_set, folded_frame);
+    if (p+q <= Tune_P::basis_max_count)
+    {
+      const basis_const_iterator_t basis_it = basis_cache.find(folded_pair);
+      if (basis_it != basis_cache.end())
+        return basis_it->second;
+    }
     const matrix_t* e = (generator_table<matrix_t>::generator())(p,q);
     matrix_t result = matrix::unit<matrix_t>(dim);
-
     for (index_t k = folded_min; k <= folded_max; ++k)
       if (folded_set[k])
         result = matrix::mono_prod(result, e[k]);
+    if (p+q <= Tune_P::basis_max_count)
+      basis_cache.insert(basis_pair_t(folded_pair, result));
     return result;
   }
 
