@@ -1,3 +1,7 @@
+2004-06-20: 0.1.7
+GluCat now has an improved ./configure script which is better able to 
+determine whether you have <boost/numeric/ublas/lu.hpp> available.
+
 2004-05-09: 0.1.6
 Glucat now compiles under gcc 3.4.
 Note that the uBLAS in Boost 1.31.0 does NOT compile under gcc 3.4.
