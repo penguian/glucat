@@ -21,7 +21,6 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
-#include "test/driver.h"
 #include "squaring/squaring.h"
 using namespace glucat;
 
@@ -30,9 +29,9 @@ int main(int argc, char ** argv)
   using namespace std;
   for (argc--, argv++; argc != 0; argc--, argv++)
   {
-    int test_nbr = 0;
-    sscanf(*argv, "%d", &test_nbr);
-    try_catch(squaring, test_nbr);
+    int n = 0;
+    sscanf(*argv, "%d", &n);
+    try_catch(squaring, n);
   }
   return 0;
 }
