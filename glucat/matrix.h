@@ -23,39 +23,40 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
-using std::vector;
-
-namespace glucat
+namespace glucat { namespace matrix
 {
   /// Kronecker tensor product of matrices - as per Matlab kron
-  template< class Matrix_T >
-  void
-  kron(const Matrix_T& x, const Matrix_T& y, Matrix_T& z);
+  template< typename Matrix_T >
+  const
+  Matrix_T
+  kron(const Matrix_T& x, const Matrix_T& y);
 
   /// Unit matrix - as per Matlab eye
-  template< class Matrix_T >
-  void
-  unit(int n, Matrix_T& result);
-
-  /// Does a matrix have only one non-zero per row (or column) ?
-  // Note: This should return false for dense matrices,
-  // but this is OK for the current use of this function,
-  // which is to help determine when a compressed multiply should have a dense result
-  template< class Matrix_T >
+  template< typename Matrix_T >
+  const
+  Matrix_T
+  unit(const typename Matrix_T::size_type n);
+  /// Equality of matrices
+  template< typename LHS_T, typename RHS_T >
   bool
-  is_singlet(const Matrix_T& x);
+  operator==(const ublas::matrix_expression<LHS_T>& lhs,
+             const ublas::matrix_expression<RHS_T>& rhs);
 
-  /// Does a matrix have only one non-zero per row and column ?
-  // Note: This should return false for dense matrices,
-  // but this is OK for the current use of this function,
-  // which is to help determine when a compressed multiply should have a dense result
-  template< class Matrix_T >
-  bool
-  is_perm_shaped(const Matrix_T& x);
+  /// Product of monomial matrices
+  template< typename Matrix_T, typename LHS_T, typename RHS_T >
+  const Matrix_T
+  mono_prod(const ublas::matrix_expression<LHS_T>& lhs,
+            const ublas::matrix_expression<RHS_T>& rhs);
+
+  /// Product of compressed matrices
+  template< typename Matrix_T, typename LHS_T, typename RHS_T >
+  const Matrix_T
+  compressed_prod(const ublas::matrix_expression<LHS_T>& lhs,
+                  const ublas::matrix_expression<RHS_T>& rhs);
 
   /// Inner product: sum(x(i,j)*y(i,j))/x.nrows()
-  template< class Matrix_T, class Scalar_T >
+  template< typename Matrix_T, typename Scalar_T >
   Scalar_T
   inner(const Matrix_T& x, const Matrix_T& y);
-}
+} }
 #endif  // _GLUCAT_MATRIX_H
