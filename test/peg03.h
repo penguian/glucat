@@ -63,10 +63,10 @@ int test3()
   cout << "Compute 2x + 3y, x to the power 5, y to the outer power 3." << endl;
   cout << "Find the even part of x*y and write the result to a file called eg3.res" << endl;
   cout << endl;
-  cout << "framed_multi<double,-1,2>" << endl;
-  do_test3< framed_multi<double,-1,2> >();
-  cout << "matrix_multi<double,-1,2>" << endl;
-  do_test3< matrix_multi<double,-1,2> >();
+  cout << "framed_multi<double>" << endl;
+  do_test3< framed_multi<double> >();
+  cout << "matrix_multi<double>" << endl;
+  do_test3< matrix_multi<double> >();
   return 0;
 }
 #endif
