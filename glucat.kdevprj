@@ -23,24 +23,24 @@ cflags=
 cppflags=
 cxxflags=\s-O1 -g3 -Wall
 ldadd=
-ldflags=\s   \s
+ldflags=\s       \s
 
 [General]
-AMChanged=false
+AMChanged=true
 author=Paul C. Leopardi
-configure_args=\s--build=i386-linux --host=i386-linux --target=i386-linux --disable-debug --enable-debug\s
+configure_args=\s--build=i386-linux --host=i386-linux --target=i386-linux\s
 email=leopardi@bigpond.net.au
 kdevprj_version=1.3
 lfv_open_groups=
 make_options=\s-j1
 makefiles=Makefile.am,glucat/Makefile.am,test/Makefile.am
-modifyMakefiles=false
+modifyMakefiles=true
 project_name=Glucat
 project_type=normal_cpp
 sgml_file=
 short_info=
 sub_dir=glucat/
-version=0.0.7
+version=0.1.0
 version_control=CVS
 workspace=1
 
@@ -67,9 +67,15 @@ Sources=*.cpp,*.c,*.cc,*.C,*.cxx,*.ec,*.ecpp,*.lxx,*.l++,*.ll,*.l
 groups=Headers,Sources,GNU,Others
 
 [Makefile.am]
-files=glucat.kdevprj,admin,AUTHORS,COPYING,ChangeLog,INSTALL,README,TODO,glucat.lsm
+files=glucat.kdevprj,admin,AUTHORS,COPYING,ChangeLog,INSTALL,README,TODO,glucat.lsm,NEWS
 sub_dirs=glucat,test
 type=normal
+
+[NEWS]
+dist=true
+install=false
+install_location=
+type=DATA
 
 [README]
 dist=true
