@@ -1,3 +1,12 @@
+2004-05-05 22:52  leopardi
+
+	* INSTALL, NEWS, README, TODO: Update testing and compilation
+	  status to reflect that g++ 3.3.3 works and g++ 3.4 does not work.
+
+2004-04-18 18:39  leopardi
+
+	* ChangeLog: Update using cvs2cl
+
 2004-04-18 18:38  leopardi
 
 	* AUTHORS: Add tester. Add URL for BoostCliffordDiscussion.
