@@ -410,25 +410,26 @@ namespace glucat
       return i;
     typedef typename multivector_t::index_set_t index_set_t;
     index_set_t frm = val.frame();
-		if ((frm.count() % 2) == 1)
-		{
-			// Centre of frame group includes pseudo if number of generators is odd.
-			// Reference: T. Y Lam, Tara Smith,
-			// "On the Clifford-Littlewood-Eckmann groups: A new look at periodicity mod 8,"
-			// Rocky Mountain Journal of Mathematics, vol 19 (1989) pp749-786.
-
-      multivector_t pseudo(frm, Scalar_T(1));
-      if (pseudo*pseudo == Scalar_T(-1))
-        return pseudo;
-		}
-    index_t frm_max = std::max(frm.max(), index_t(0));
-    index_t frm_min = std::min(frm.min(), index_t(0));
-    if (frm_min == 0 && frm_max == 0 && LO < 0)
-      return multivector_t(index_set_t(-1), Scalar_T(1));
-    if (frm_max+1 < HI)
-      return multivector_t(index_set_t(frm_max+1)|index_set_t(frm_max+2), Scalar_T(1));
-    else if (frm_min-1 > LO)
-      return multivector_t(index_set_t(frm_min-1)|index_set_t(frm_min-2), Scalar_T(1));
+    index_t incp[] = {0, 2, 1, 0};
+    index_t incq[] = {1, 0, 0, 0};
+    index_t bott = pos_mod((frm.count_pos() - frm.count_neg()), 4);
+    for (index_t k = 0; k != incp[bott]; k++)
+      for (index_t idx = 1; idx != HI+1; ++idx)
+        if (!frm[idx])
+        {
+          frm.set(idx);
+          break;
+        }
+    for (index_t k = 0; k != incq[bott]; k++)
+      for (index_t idx = -1; idx != LO-1; --idx)
+        if (!frm[idx])
+        {
+          frm.set(idx);
+          break;
+        }
+    index_t new_bott = pos_mod(frm.count_pos() - frm.count_neg(), 4);
+    if ((incp[new_bott] == 0) && (incq[new_bott] == 0))
+      return multivector_t(frm, Scalar_T(1));
     else
       return i;
   }
