@@ -9,11 +9,9 @@ Programs which use GluCat can now invoke GluCat classes and functions from
 separately compiled modules. To allow for this, the try_catch functions have
 been moved from glucat/errors.h and glucat/errors_imp.h to the new file
 test/try_catch.h.
-Some constructors and the operators += and -= for matrix_multi<> have had some
-minor speed improvements.
+Some constructors for matrix_multi<> have minor speed improvements.
 The left contraction operator %= for framed_multi<> has a minor speed
 improvement.
-The --enable-debug=no configuration option uses more aggressive inlining.
 
 2004-06-20: 0.1.7
 GluCat now has an improved ./configure script which is better able to 
