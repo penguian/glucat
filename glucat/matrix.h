@@ -34,13 +34,19 @@ namespace glucat
     template< typename Matrix_T >
     const
     Matrix_T
-    kron(const Matrix_T& x, const Matrix_T& y);
+    kron(const Matrix_T& lhs, const Matrix_T& rhs);
 
     /// Left inverse of Kronecker product
     template< typename Matrix_T >
     const
     Matrix_T
-    nork(const Matrix_T& lhs, const Matrix_T& rhs);
+    nork(const Matrix_T& lhs, const Matrix_T& rhs, const bool mono = true);
+
+    /// Number of non-zeros
+    template< typename Matrix_T >
+    const
+    typename Matrix_T::size_type
+    nnz(const Matrix_T& m);
 
     /// Unit matrix - as per Matlab eye
     template< typename Matrix_T >
@@ -64,46 +70,7 @@ namespace glucat
     template< typename Scalar_T, typename Matrix_T >
     Scalar_T
     inner(const Matrix_T& lhs, const Matrix_T& rhs);
-
-    // uBLAS interface by Joerg Walter
-    /// Permutation matrix for use in LU factorize and solve
-    template<class T, class A = ublas::unbounded_array<T> >
-    class permutation_matrix :
-      public ublas::vector<T, A>
-    {
-    public:
-      typedef typename ublas::vector<T, A>::size_type size_type;
-
-      BOOST_UBLAS_EXPLICIT
-      BOOST_UBLAS_INLINE
-      permutation_matrix (size_type size):
-        ublas::vector<T, A> (size) {}
-    };
-
-    /// Swap rows of a vector
-    template<class PM, class MV>
-    void
-    swap_rows (const PM &pm, MV &mv, ublas::vector_tag);
-
-    /// Swap rows of a matrix
-    template<class PM, class MV>
-    void
-    swap_rows (const PM &pm, MV &mv, ublas::matrix_tag);
-
-    /// Swap rows of a matrix or a vector: dispatcher
-    template<class PM, class MV>
-    void
-    swap_rows (const PM &pm, MV &mv);
-
-    /// LU factorize: return LU in place of matrix
-    template<class M, class PM>
-    typename M::size_type
-    lu_factorize (M &m, PM &pm);
-
-    /// LU solve: linear solve using LU and permutation
-    template<class M, class PM, class MV>
-    void
-    lu_solve (M &m, const PM &pm, MV &mv);
   }
 }
+
 #endif  // _GLUCAT_MATRIX_H

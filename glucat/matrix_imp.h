@@ -57,7 +57,7 @@ namespace glucat { namespace matrix
   template< typename Matrix_T >
   const
   Matrix_T
-  nork(const Matrix_T& lhs, const Matrix_T& rhs)
+  nork(const Matrix_T& lhs, const Matrix_T& rhs, const bool mono)
   {
     // nork(A, kron(A, B)) is close to B
     typedef Matrix_T matrix_t;
@@ -78,8 +78,8 @@ namespace glucat { namespace matrix
     if (res_s2 * lhs_s2 != rhs_s2)
       throw error_t("matrix", "nork: incompatible numbers of cols");
     typedef typename matrix_t::value_type scalar_t;
-    const scalar_t nnz_lhs = scalar_t(lhs.non_zeros());
-    if (nnz_lhs == 0)
+    const scalar_t nnz_lhs = scalar_t( mono ? lhs.non_zeros() : nnz(lhs) );
+    if (nnz_lhs == scalar_t(0))
       throw error_t("matrix", "nork: LHS must not be 0");
     matrix_t result(res_s1, res_s2);
     typedef typename matrix_t::const_iterator1 const_iterator1;
@@ -102,17 +102,34 @@ namespace glucat { namespace matrix
     return result;
   }
 
+  /// Number of non-zeros
+  template< typename Matrix_T >
+  inline
+  const
+  typename Matrix_T::size_type
+  nnz(const Matrix_T& m)
+  {
+    typedef Matrix_T matrix_t;
+    typedef typename matrix_t::size_type matrix_index_t;
+    typedef typename matrix_t::const_iterator1 const_iterator1;
+    typedef typename matrix_t::const_iterator2 const_iterator2;
+    matrix_index_t result = 0;
+    for (  const_iterator1 it1 = m.begin1(); it1 != m.end1(); ++it1)
+      for (const_iterator2 it2 = it1.begin(); it2 != it1.end(); ++it2)
+        if (*it2 != 0)
+          ++result;
+    return result;
+  }
+
   /// Unit matrix - as per Matlab eye
   template< typename Matrix_T >
+  inline
   const
   Matrix_T
   unit(const typename Matrix_T::size_type dim)
   {
-    typedef typename Matrix_T::size_type matrix_index_t;
-    Matrix_T result(dim, dim);
-    for (matrix_index_t k = 0; k != dim; ++k)
-      result(k, k) = 1;
-    return result;
+    typedef typename Matrix_T::value_type scalar_t;
+    return ublas::identity_matrix<scalar_t>(dim);
   }
 
   /// Product of monomial matrices
@@ -173,124 +190,6 @@ namespace glucat { namespace matrix
       }
     return result / lhs.size1();
   }
-
-  // uBLAS interface by Joerg Walter
-  /// Swap rows of a vector
-  template<class PM, class MV>
-  BOOST_UBLAS_INLINE
-  void
-  swap_rows (const PM &pm, MV &mv, ublas::vector_tag)
-  {
-    typedef typename PM::size_type size_type;
-    typedef typename MV::value_type value_type;
-
-    size_type size = pm.size ();
-    for (size_type i = 0; i < size; ++ i)
-    {
-      value_type t (mv (i));
-      mv (i) = mv (pm (i));
-      mv (pm (i)) = t;
-    }
-  }
-
-  /// Swap rows of a matrix
-  template<class PM, class MV>
-  BOOST_UBLAS_INLINE
-  void
-  swap_rows (const PM &pm, MV &mv, ublas::matrix_tag)
-  {
-    typedef typename PM::size_type size_type;
-    typedef typename MV::value_type value_type;
-
-    size_type size = pm.size ();
-    for (size_type i = 0; i < size; ++ i)
-      for (size_type j = 0; j < mv.size2 (); ++ j)
-      {
-        value_type t (mv (i, j));
-        mv (i, j) = mv (pm (i), j);
-        mv (pm (i), j) = t;
-      }
-  }
-
-  /// Swap rows of a matrix or a vector: dispatcher
-  template<class PM, class MV>
-  BOOST_UBLAS_INLINE
-  void
-  swap_rows (const PM &pm, MV &mv)
-  { swap_rows (pm, mv, BOOST_UBLAS_TYPENAME MV::type_category ()); }
-
-  /// LU factorize: return LU in place of matrix
-  template<class M, class PM>
-  typename M::size_type lu_factorize (M &m, PM &pm)
-  {
-    using namespace ublas;
-    typedef M matrix_type;
-    typedef BOOST_UBLAS_TYPENAME M::size_type size_type;
-    typedef BOOST_UBLAS_TYPENAME M::value_type value_type;
-
-#ifdef BOOST_UBLAS_TYPE_CHECK
-    matrix_type cm (m);
-#endif
-    int singular = 0;
-    size_type size1 = m.size1 ();
-    size_type size2 = m.size2 ();
-    size_type size = std::min (size1, size2);
-    for (size_type i = 0; i < size; ++ i) {
-      matrix_column<M> mci (column (m, i));
-      matrix_row<M> mri (row (m, i));
-      size_type i_norm_inf = i + index_norm_inf (project (mci, range (i, size1)));
-      BOOST_UBLAS_CHECK (i_norm_inf < m.size1 (), external_logic ());
-      if (m (i_norm_inf, i) != value_type ())
-      {
-        pm (i) = i_norm_inf;
-        if (i_norm_inf != i)
-            row (m, i_norm_inf).swap (mri);
-        project (mci, range (i + 1, size1)) *= value_type (1) / m (i, i);
-      } else if (singular == 0)
-        singular = i + 1;
-      project (m, range (i + 1, size1), range (i + 1, size2)).minus_assign (
-        outer_prod (project (mci, range (i + 1, size1)),
-                    project (mri, range (i + 1, size2))));
-    }
-#ifdef BOOST_UBLAS_TYPE_CHECK
-    swap_rows (pm, cm);
-    BOOST_UBLAS_CHECK (
-      singular != 0 ||
-      equals (prod (triangular_adaptor<matrix_type, unit_lower> (m),
-                    triangular_adaptor<matrix_type, upper> (m)), cm), internal_logic ());
-#endif
-    return singular;
-  }
-
-  /// LU solve: linear solve using LU and permutation
-  template<class M, class PM, class MV>
-  void
-  lu_solve (M &m, const PM &pm, MV &mv)
-  {
-    using namespace ublas;
-    typedef M matrix_type;
-    typedef MV matrix_vector_type;
-
-    swap_rows (pm, mv);
-#ifdef BOOST_UBLAS_TYPE_CHECK
-    matrix_vector_type cmv1 (mv);
-#endif
-    inplace_solve (triangular_adaptor<matrix_type, unit_lower> (m),
-                   mv, unit_lower_tag (),
-                   BOOST_UBLAS_TYPENAME MV::type_category ());
-#ifdef BOOST_UBLAS_TYPE_CHECK
-    BOOST_UBLAS_CHECK (equals
-      (prod(triangular_adaptor<matrix_type, unit_lower> (m), mv), cmv1), internal_logic ());
-    matrix_vector_type cmv2 (mv);
-#endif
-    inplace_solve (triangular_adaptor<matrix_type, upper> (m),
-                   mv, upper_tag (),
-                   BOOST_UBLAS_TYPENAME MV::type_category ());
-#ifdef BOOST_UBLAS_TYPE_CHECK
-    BOOST_UBLAS_CHECK (equals
-      (prod (triangular_adaptor<matrix_type, upper> (m), mv), cmv2), internal_logic ());
-#endif
-  }
-
 } }
+
 #endif  // _GLUCAT_MATRIX_IMP_H
