@@ -399,11 +399,12 @@ namespace glucat
 
       const matrix_t& AT = ublas::trans(rhs.m_matrix);
       matrix_t LU = AT;
-      ublas::permutation_matrix<matrix_index_t> pvector(AT.size1());
+      typedef ublas::permutation_matrix<matrix_index_t> permutation_t;
+      permutation_t pvector(AT.size1());
       if (! ublas::lu_factorize(LU, pvector))
       {
         matrix_t XT = ublas::trans(m_matrix);
-        ublas::lu_substitute (LU, pvector, XT);
+        ublas::lu_substitute(LU, pvector, XT);
         // Iterative refinement.
         // Reference: Nicholas J. Higham, "Accuracy and Stability of Numerical Algorithms",
         // SIAM, 1996, ISBN 0-89871-355-2, Chapter 11
@@ -428,7 +429,7 @@ namespace glucat
               if (step != 0)
                 XT = XTnew;
               matrix_t& D = R;
-              ublas::lu_substitute (LU, pvector, D);
+              ublas::lu_substitute(LU, pvector, D);
               XTnew -= D;
               R = matrix::sparse_prod(AT, XTnew) - BT;
               nr = ublas::norm_inf(R);
