@@ -62,4 +62,4 @@ dnl perform program name transformation
 AC_ARG_PROGRAM
 
 dnl add here all your Makefiles. These will be created by configure
-AC_OUTPUT(Makefile glucat/Makefile glucat/docs/Makefile glucat/docs/en/Makefile test/Makefile )
+AC_OUTPUT(Makefile glucat/Makefile test/Makefile )
