@@ -659,8 +659,11 @@ namespace glucat
   cos(const Multivector<Scalar_T,LO,HI>& val)
   {
     typedef Multivector<Scalar_T,LO,HI> multivector_t;
+    const Scalar_T s = scalar(val);
+    const Scalar_T twopi = Scalar_T(2) * Scalar_T(l_pi);
     const multivector_t i = elliptic(val);
-    return (exp(i*val)+exp(-i*val)) / Scalar_T(2);
+    const multivector_t z = i * (val - s + std::fmod(std::real(s), twopi) + std::imag(s));
+    return (exp(z)+exp(-z)) / Scalar_T(2);
   }
 
   /// Inverse cosine of multivector
@@ -701,8 +704,11 @@ namespace glucat
   sin(const Multivector<Scalar_T,LO,HI>& val)
   {
     typedef Multivector<Scalar_T,LO,HI> multivector_t;
+    const Scalar_T s = scalar(val);
+    const Scalar_T twopi = Scalar_T(2) * Scalar_T(l_pi);
     const multivector_t i = elliptic(val);
-    return (exp(i*val)-exp(-i*val)) / (i*Scalar_T(2));
+    const multivector_t z = i * (val - s + std::fmod(std::real(s), twopi) + std::imag(s));
+    return (exp(z)-exp(-z)) / (i*Scalar_T(2));
   }
 
   /// Inverse sine of multivector
