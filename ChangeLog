@@ -1,3 +1,54 @@
+2004-07-31 20:40  leopardi
+
+	* glucat/matrix_multi_imp.h: Use resize() in constructor to ensure
+	  that matrix has correct size
+
+2004-07-31 18:15  leopardi
+
+	* NEWS: News items for GluCat 0.1.8
+
+2004-07-31 18:15  leopardi
+
+	* test_runtime/: gfft_test-10.out, squaring-6.out, squaring-8.out,
+	  test.out, transforms-6.out: Test output for GluCat 0.1.8
+
+2004-07-31 18:13  leopardi
+
+	* glucat/matrix_multi_imp.h: The subscripting operator [] for
+	  matrix_multi<> now works properly for index sets not contained in
+	  m_frame.  Minor speed improvements for some constructors and for
+	  the operators += and -=
+
+2004-07-31 18:12  leopardi
+
+	* glucat/index_set_imp.h: The stream input operator >> now works
+	  properly with strings of the form "1,2" as well as "{1,2}".
+
+2004-07-31 18:07  leopardi
+
+	* glucat/framed_multi_imp.h: Minor speed improvement in left
+	  contraction
+
+2004-07-31 18:06  leopardi
+
+	* gfft_test/gfft_test.h, glucat/errors.h, glucat/errors_imp.h,
+	  squaring/squaring.h, test/Makefile.am, test/Makefile.in,
+	  test/driver.h, test/try_catch.h, transforms/transforms.h: Move
+	  the try_catch functions from glucat/errors.h and
+	  glucat/errors_imp.h to the new file test/try_catch.h
+
+2004-07-31 18:04  leopardi
+
+	* configure.in, configure.in.in: Inline more agressively
+
+2004-07-31 18:03  leopardi
+
+	* Doxyfile, glucat.kdevelop, glucat.lsm: GluCat version 0.1.8
+
+2004-06-20 19:58  leopardi
+
+	* ChangeLog: Update for version 1.7 continued
+
 2004-06-20 19:58  leopardi
 
 	* glucat.kdevelop: Cosmetic changes resulting form quitting
