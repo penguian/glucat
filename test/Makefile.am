@@ -14,7 +14,7 @@ AM_CXXFLAGS = -ftemplate-depth-32 -fexceptions -ansi -Wold-style-cast -Woverload
 # Uncomment for normal test build - excluding Compaq Alpha:
 CXXFLAGS = -O1 -finline-limit=400
 # Uncomment for normal test build on Compaq Alpha:
-CXXFLAGS = -O1 -finline-limit=400 -mieee
+# CXXFLAGS = -O1 -finline-limit=400 -mieee
 # Uncomment for debugging - excluding Compaq Alpha:
 # CXXFLAGS = -O1 -finline-limit=400 -g3
 # Uncomment for speed test build - excluding Compaq Alpha:
