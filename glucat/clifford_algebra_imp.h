@@ -431,7 +431,9 @@ namespace glucat
     if ((incp[new_bott] == 0) && (incq[new_bott] == 0))
       return multivector_t(frm, Scalar_T(1));
     else
-      return Scalar_T(std::log(0.0)); // This actually returns -Inf;
+      // Return IEEE NaN or -Inf
+      return std::numeric_limits<Scalar_T>::has_quiet_NaN ?
+        std::numeric_limits<Scalar_T>::quiet_NaN() : Scalar_T(std::log(0.0));
   }
 
   /// Pade' approximation
@@ -588,7 +590,9 @@ namespace glucat
     typedef Multivector<Scalar_T,LO,HI> multivector_t;
 
     if (val == 0)
-      return Scalar_T(std::log(0.0));
+      // Return IEEE NaN or -Inf
+      return std::numeric_limits<Scalar_T>::has_quiet_NaN ?
+        std::numeric_limits<Scalar_T>::quiet_NaN() : Scalar_T(std::log(0.0));
     // Scale val towards circle abs(A) == 1
     Scalar_T scale = abs(val);
     return pade_approx(a, b, Scalar_T(1) - val / scale) + Scalar_T(std::log(scale)) ;
@@ -604,7 +608,9 @@ namespace glucat
     typedef Multivector<Scalar_T,LO,HI> multivector_t;
 
     if (val == 0)
-      return Scalar_T(std::log(0.0));
+      // Return IEEE NaN or -Inf
+      return std::numeric_limits<Scalar_T>::has_quiet_NaN ?
+        std::numeric_limits<Scalar_T>::quiet_NaN() : Scalar_T(std::log(0.0));
     multivector_t Y = val;
     multivector_t E = Scalar_T(0);
     int outer_step;
@@ -614,7 +620,9 @@ namespace glucat
         ++outer_step)
     {
       if (Y == 0)
-        return Scalar_T(std::log(0.0));
+        // Return IEEE NaN or -Inf
+        return std::numeric_limits<Scalar_T>::has_quiet_NaN ?
+          std::numeric_limits<Scalar_T>::quiet_NaN() : Scalar_T(std::log(0.0));
       // Incomplete product form of Denman-Beavers square root iteration
       multivector_t M = Y;
       for (int inner_step = 0;
@@ -639,7 +647,9 @@ namespace glucat
     // Reference: [CHKL]
     typedef Multivector<Scalar_T,LO,HI> multivector_t;
     if (val == 0)
-      return Scalar_T(std::log(0.0));
+      // Return IEEE NaN or -Inf
+      return std::numeric_limits<Scalar_T>::has_quiet_NaN ?
+        std::numeric_limits<Scalar_T>::quiet_NaN() : Scalar_T(std::log(0.0));
     const Scalar_T realval = real(val);
     if (val == realval && realval < Scalar_T(0))
       return Scalar_T(std::log(-realval)) + elliptic(val) * Scalar_T(l_pi);
