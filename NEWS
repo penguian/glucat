@@ -1,3 +1,8 @@
+2004-05-09: 0.1.6
+Glucat now compiles under gcc 3.4.
+Note that the uBLAS in Boost 1.31.0 does NOT compile under gcc 3.4.
+This has been fixed in Boost CVS.
+ 
 2004-05-05: 0.1.5
 GluCat has further optimizations. The fast conversion between framed_multi<> 
 and matrix_multi<> and its inverse are now implementations of the matrix
