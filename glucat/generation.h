@@ -23,12 +23,8 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
-namespace glucat
+namespace glucat { namespace gen
 {
-  /// Modulo function which works reliably for lhs < 0
-  int
-  pos_mod(int lhs, int rhs);
-
   /// A signature is a pair of indices, p, q, with p == frame.max(), q == -frame.min()
   typedef std::pair<index_t, index_t> signature_t;
 
@@ -67,9 +63,8 @@ namespace glucat
     friend class friend_for_private_destructor;
   };
 
-  /// Determine the matrix dimension of the fold of a frame
-  template< typename Matrix_Index_T, const index_t LO, const index_t HI >
-  const Matrix_Index_T
-  folded_dim( const index_set<LO,HI>& frm );
-}
+  /// Offsets between the current signature and that of the real superalgebra
+  static const int offset_to_super[] = {0,-1, 0,-1,-2, 3, 2, 1};
+
+} }
 #endif  // _GLUCAT_GENERATION_H

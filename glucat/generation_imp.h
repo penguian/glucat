@@ -23,18 +23,12 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
-namespace glucat
+namespace glucat { namespace gen
 {
   // References for algorithms:
   // [M]: Scott Meyers, "Effective C++" Second Edition, Addison-Wesley, 1998.
   // [P]: Ian R. Porteous, "Clifford algebras and the classical groups", Cambridge UP, 1995.
   // [L]: Pertti Lounesto, "Clifford algebras and spinors", Cambridge UP, 1997.
-
-  /// Modulo function which works reliably for lhs < 0
-  inline
-  int
-  pos_mod(int lhs, int rhs)
-  { return lhs > 0? lhs % rhs : (-lhs) % rhs == 0 ? 0 : rhs - (-lhs) % rhs; }
 
   /// Single instance of generator table
   // Reference: [M] Item 47
@@ -51,7 +45,6 @@ namespace glucat
   generator_table<Matrix_T>::
   operator() (const index_t p, const index_t q)
   {
-    static const int offset_to_super[] = {0, -1, 0, -1, -2, 3, 2, 1};
     const index_t bott = pos_mod(p-q, 8);
     switch(bott)
     {
@@ -232,20 +225,8 @@ namespace glucat
     result[old_size-1] = a;
 
     // Save the resulting generator array.
-      this->insert(make_pair(sig, result));
+    this->insert(make_pair(sig, result));
   }
 
-  /// Determine the matrix dimension of the fold of a subalegbra
-  // Reference: [P] Table 15.27, p 133
-  template< typename Matrix_Index_T, const index_t LO, const index_t HI >
-  const Matrix_Index_T
-  folded_dim( const index_set<LO,HI>& sub )
-  {
-    static const int offset_log2_dim[] = {0, 1 , 0, 1, 1, 2, 1, 1};
-    const int p = sub.count_pos();
-    const int q = sub.count_neg();
-    const int bott = pos_mod(p-q, 8);
-    return 1 << ((p+q)/2 + offset_log2_dim[bott]);
-  }
-}
+} }
 #endif  // _GLUCAT_GENERATION_IMP_H
