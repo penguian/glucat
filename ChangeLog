@@ -1,3 +1,42 @@
+2003-07-01 22:24  leopardi
+
+	* test_runtime/: gfft_test-10.out, squaring-6.out, test.out,
+	transforms-6.out: Use test results from runs of this version.
+
+2003-07-01 22:24  leopardi
+
+	* configure.in: Update to version 0.1.4
+
+2003-07-01 22:23  leopardi
+
+	* gfft_test/gfft_test.h: Make tests depend on template parameters
+	rather than fixed typedefs.
+
+2003-07-01 22:21  leopardi
+
+	* glucat/global.h: Decrease DEFAULT_Inv_Fast_Dim_Threshold to 1 <<
+	4
+
+2003-07-01 22:20  leopardi
+
+	* glucat/matrix_multi_imp.h: Minor tidy up. Define and use
+	permutation_t.
+
+2003-07-01 22:20  leopardi
+
+	* glucat/index_set_imp.h: Previous implementation was too slow.
+	Optimize: o Use bitset_t as much as possible.  o New member
+	function lex_less_than() o Make operator<() into a member function.
+
+2003-07-01 22:18  leopardi
+
+	* glucat/index_set.h: New index_set<> member function
+	less_less_than. Make operator< into a member function.
+
+2003-06-28 22:20  leopardi
+
+	* ChangeLog: Update using cvs2cl.pl
+
 2003-06-28 22:19  leopardi
 
 	* NEWS: Describe changes for version 0.1.4. Reformat.
