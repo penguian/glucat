@@ -65,7 +65,7 @@ namespace glucat
   const int DEFAULT_Sqrt_Max_Steps        =   7;
   const int DEFAULT_Log_Max_Outer_Steps   = 256;
   const int DEFAULT_Log_Max_Inner_Steps   =   8;
-  const int DEFAULT_Basis_Max_Count       =  10;
+  const int DEFAULT_Basis_Max_Count       =   8;
 
   /// Tuning policy
   template
