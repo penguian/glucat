@@ -1,3 +1,61 @@
+2004-05-10 21:26  leopardi
+
+	* glucat.kdevelop: Keep kdevelop3 project file up to date.
+
+2004-05-10 21:24  leopardi
+
+	* INSTALL, NEWS, README: GluCat 0.1.6 now compiles under g++ 3.4.
+	  Update files to reflect this, update list of tested
+	  configurations.
+
+2004-05-09 11:00  leopardi
+
+	* configure.in, configure.in.in: Use more agressive inlining when
+	  optimizing. Change inline limit from 1600 to 2400.
+
+2004-05-09 10:09  leopardi
+
+	* TODO: Compilation with g++ 3.4 has been fixed.
+
+2004-05-09 10:06  leopardi
+
+	* glucat/matrix_multi_imp.h: In operator<<(), insert keyword
+	  typename where g++ 3.4.0 requires it.  For function
+	  fast_framed_multi(), ensure function definition matches function
+	  declaration in the exact way that g++ 3.4.0 requires these to
+	  match.
+
+2004-05-09 10:04  leopardi
+
+	* glucat/framed_multi_imp.h: For functions fast() and
+	  fast_matrix_multi(), ensure function definition headers match
+	  function declarations in the exact way that g++ 3.4.0 requires
+	  these to match.
+
+2004-05-09 09:56  leopardi
+
+	* glucat/: framed_multi.h, matrix_multi.h: Correct declarations of
+	  framed_multi<> and matrix_multi<> to allow compilation with g++
+	  3.4.0.
+
+2004-05-09 09:54  leopardi
+
+	* configure.in, configure.in.in: Delete line containing
+	  "mcmodel=medium".
+
+2004-05-09 09:52  leopardi
+
+	* Doxyfile, glucat.kdevelop, glucat.lsm: Update version to 0.1.6.
+
+2004-05-09 09:39  leopardi
+
+	* glucat.kdevelop, glucat.kdevprj: Use kdevelop3 to control
+	  Doxygen.
+
+2004-05-05 23:35  leopardi
+
+	* ChangeLog: Update using cvs2cl
+
 2004-05-05 23:33  leopardi
 
 	* squaring/Makefile.am, squaring/Makefile.in, test/Makefile.am,
