@@ -76,7 +76,7 @@ KDE_USE_CLOSURE_TRUE = @KDE_USE_CLOSURE_TRUE@
 KDE_USE_FINAL_FALSE = @KDE_USE_FINAL_FALSE@
 KDE_USE_FINAL_TRUE = @KDE_USE_FINAL_TRUE@
 # the library search path.
-LDFLAGS = 
+LDFLAGS = $(all_libraries)
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
@@ -158,8 +158,8 @@ AUTOMAKE_OPTIONS = foreign
 noinst_PROGRAMS = test10
 
 # set the include path found by configure
-test10_INCLUDES = $(all_includes)
-test10_LDFLAGS = $(all_libraries)
+INCLUDES = $(all_includes)
+test10_LDFLAGS = $(LDFLAGS)
 
 test10_SOURCES = peg10.cpp
 test10_LDADD = $(LDADD)

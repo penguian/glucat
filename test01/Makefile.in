@@ -76,7 +76,7 @@ KDE_USE_CLOSURE_TRUE = @KDE_USE_CLOSURE_TRUE@
 KDE_USE_FINAL_FALSE = @KDE_USE_FINAL_FALSE@
 KDE_USE_FINAL_TRUE = @KDE_USE_FINAL_TRUE@
 # the library search path.
-LDFLAGS = 
+LDFLAGS = $(all_libraries)
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
@@ -152,14 +152,14 @@ target_os = @target_os@
 target_vendor = @target_vendor@
 
 ####### kdevelop will overwrite this part!!! (begin)##########
-EXTRA_DIST = driver.h peg01.cpp peg01.h Makefile.am
+EXTRA_DIST = ../test/driver.h peg01.cpp peg01.h Makefile.am
 ####### kdevelop will overwrite this part!!! (end)############
 AUTOMAKE_OPTIONS = foreign
 noinst_PROGRAMS = test01
 
 # set the include path found by configure
-test01_INCLUDES = $(all_includes)
-test01_LDFLAGS = $(all_libraries)
+INCLUDES = $(all_includes)
+test01_LDFLAGS = $(LDFLAGS)
 
 test01_SOURCES = peg01.cpp
 test01_LDADD = $(LDADD)
@@ -324,6 +324,7 @@ top_distdir = ..
 distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
 
 distdir: $(DISTFILES)
+	$(mkinstalldirs) $(distdir)/../test
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \

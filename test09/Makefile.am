@@ -5,10 +5,10 @@ AUTOMAKE_OPTIONS = foreign
 noinst_PROGRAMS = test09
 
 # set the include path found by configure
-test09_INCLUDES = $(all_includes)
+INCLUDES = $(all_includes)
 # the library search path.
-LDFLAGS =
-test09_LDFLAGS = $(all_libraries)
+LDFLAGS = $(all_libraries)
+test09_LDFLAGS = $(LDFLAGS)
 
 test09_SOURCES = peg09.cpp
 test09_LDADD = $(LDADD)

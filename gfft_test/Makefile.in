@@ -76,7 +76,7 @@ KDE_USE_CLOSURE_TRUE = @KDE_USE_CLOSURE_TRUE@
 KDE_USE_FINAL_FALSE = @KDE_USE_FINAL_FALSE@
 KDE_USE_FINAL_TRUE = @KDE_USE_FINAL_TRUE@
 # the library search path.
-LDFLAGS = 
+LDFLAGS = $(all_libraries)
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
@@ -152,15 +152,14 @@ target_os = @target_os@
 target_vendor = @target_vendor@
 
 ####### kdevelop will overwrite this part!!! (begin)##########
-INCLUDES = $(all_includes)
 EXTRA_DIST = Makefile.am gfft_test.cpp gfft_test.h
 ####### kdevelop will overwrite this part!!! (end)############
 AUTOMAKE_OPTIONS = foreign
 noinst_PROGRAMS = gfft_test
 
 # set the include path found by configure
-gfft_test_INCLUDES = $(all_includes)
-gfft_test_LDFLAGS = $(all_libraries)
+INCLUDES = $(all_includes)
+gfft_test_LDFLAGS = $(LDFLAGS)
 
 gfft_test_SOURCES = gfft_test.cpp
 gfft_test_LDADD = $(LDADD)

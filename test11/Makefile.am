@@ -5,10 +5,10 @@ AUTOMAKE_OPTIONS = foreign
 noinst_PROGRAMS = test11
 
 # set the include path found by configure
-test11_INCLUDES = $(all_includes)
+INCLUDES = $(all_includes)
 # the library search path.
-LDFLAGS =
-test11_LDFLAGS = $(all_libraries)
+LDFLAGS = $(all_libraries)
+test11_LDFLAGS = $(LDFLAGS)
 
 test11_SOURCES = peg11.cpp
 test11_LDADD = $(LDADD)
