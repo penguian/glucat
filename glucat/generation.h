@@ -67,7 +67,6 @@ namespace glucat
     friend class friend_for_private_destructor;
   };
 
-
   /// Determine the matrix dimension of the fold of a frame
   template< typename Matrix_Index_T, const index_t LO, const index_t HI >
   const Matrix_Index_T
