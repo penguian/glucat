@@ -38,7 +38,10 @@ namespace boost { namespace numeric {
       typedef typename MV::value_type value_type;
 
       size_type size = pm.size ();
-      for (size_type i = 0; i < size; ++ i)
+      for (size_type 
+          i = 0; 
+          i < size; 
+          ++ i)
       {
         value_type t (mv (i));
         mv (i) = mv (pm (i));
@@ -56,8 +59,14 @@ namespace boost { namespace numeric {
       typedef typename MV::value_type value_type;
 
       size_type size = pm.size ();
-      for (size_type i = 0; i < size; ++ i)
-        for (size_type j = 0; j < mv.size2 (); ++ j)
+      for (size_type 
+          i = 0; 
+          i < size; 
+          ++ i)
+        for (size_type 
+            j = 0; 
+            j < mv.size2 (); 
+            ++ j)
         {
           value_type t (mv (i, j));
           mv (i, j) = mv (pm (i), j);
@@ -87,7 +96,11 @@ namespace boost { namespace numeric {
       size_type size1 = m.size1 ();
       size_type size2 = m.size2 ();
       size_type size = std::min (size1, size2);
-      for (size_type i = 0; i < size; ++ i) {
+      for (size_type 
+          i = 0; 
+          i < size; 
+          ++ i) 
+      {
         matrix_column<M> mci (column (m, i));
         matrix_row<M> mri (row (m, i));
         size_type i_norm_inf = i + index_norm_inf (project (mci, range (i, size1)));

@@ -134,11 +134,17 @@ namespace glucat { namespace gen
     const Matrix_T& eye = matrix::unit<Matrix_T>(old_dim);
 
     std::vector<Matrix_T> result(new_size);
-    for (int k = 0; k != new_size; ++k)
+    for (int 
+        k = 0; 
+        k != new_size; 
+        ++k)
       result[k].resize(new_dim, new_dim);
     
     result[0] = matrix::kron(neg, eye);
-    for (int k = 1; k != new_size-1; ++k)
+    for (int 
+        k = 1; 
+        k != new_size-1; 
+        ++k)
       result[k] = matrix::kron(dup, old[k-1]);
     result[new_size-1] = matrix::kron(pos, eye);
 
@@ -157,16 +163,25 @@ namespace glucat { namespace gen
     const int old_size = old.size();
     Matrix_T h(dim, dim);
     h = old[0];
-    for (int k = 1; k != 4; ++k)
+    for (int 
+        k = 1; 
+        k != 4; 
+        ++k)
       h = matrix::mono_prod(old[k], h);
 
     std::vector<Matrix_T> result(old_size);
-    for (int k = 0; k != 4; ++k)
+    for (int 
+        k = 0; 
+        k != 4; 
+        ++k)
     {
       result[k+old_size-4].resize( dim, dim );
       result[k+old_size-4] = matrix::mono_prod(old[k], h);
     }
-    for (int k = 4; k != old_size; ++k)
+    for (int 
+        k = 4; 
+        k != old_size; 
+        ++k)
     {
       result[k-4].resize(dim, dim);
       result[k-4] = old[k];
@@ -186,16 +201,25 @@ namespace glucat { namespace gen
     const int old_size = old.size();
     Matrix_T h(dim, dim);
     h = old[old_size-1];
-    for (int k = 1; k != 4; ++k)
+    for (int 
+        k = 1; 
+        k != 4; 
+        ++k)
       h = matrix::mono_prod(old[old_size-1-k], h);
 
     std::vector<Matrix_T> result(old_size);
-    for (int k = 0; k != 4; ++k)
+    for (int 
+        k = 0; 
+        k != 4; 
+        ++k)
     {
       result[k].resize(dim, dim);
       result[k] = matrix::mono_prod(old[k+old_size-4], h);
     }
-    for (int k = 4; k != old_size; ++k)
+    for (int 
+        k = 4; 
+        k != old_size; 
+        ++k)
     {
       result[k].resize(dim, dim);
       result[k] = old[k-4];
@@ -216,7 +240,10 @@ namespace glucat { namespace gen
     const Matrix_T& a = old[old_size-1];
     std::vector<Matrix_T> result(old_size);
     int m = 0;
-    for (int k = old_size-1; k != 0; --k, ++m)
+    for (int 
+        k = old_size-1; 
+        k != 0; 
+        --k, ++m)
     {
       result[m].resize(dim, dim);
       result[m] = matrix::mono_prod(old[k-1], a);
