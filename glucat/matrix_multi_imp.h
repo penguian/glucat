@@ -189,12 +189,11 @@ namespace glucat
   matrix_multi<Scalar_T,LO,HI>::
   operator==  (const multivector_t& rhs) const
   {
-    using namespace matrix;
     // Compare only within a common frame
     if (m_frame != rhs.m_frame)
       return framed_multi_t(*this) == framed_multi_t(rhs);
     else
-      return m_matrix == rhs.m_matrix;
+      return ublas::equals(m_matrix, rhs.m_matrix);
   }
 
   // Test for equality of multivector and scalar
@@ -399,8 +398,9 @@ namespace glucat
         m_matrix = ublas::trans(XT);
       }
       else
-        // AT is singular. Return IEEE NaN
-        *this = Scalar_T(std::log(0.0)); // This actually returns -Inf
+        // AT is singular. Return IEEE NaN or -Inf
+        *this = std::numeric_limits<Scalar_T>::has_quiet_NaN ?
+          std::numeric_limits<Scalar_T>::quiet_NaN() : Scalar_T(std::log(0.0));
       return *this;
     }
   }
@@ -641,7 +641,6 @@ namespace glucat
   const typename matrix_multi<Scalar_T,LO,HI>::matrix_t
   basis_element(const index_set<LO,HI>& ist, const index_set<LO,HI>& m_frame)
   {
-    using namespace matrix;
     typedef matrix_multi<Scalar_T,LO,HI>           multivector_t;
     typedef typename multivector_t::matrix_t       matrix_t;
     typedef typename multivector_t::matrix_index_t matrix_index_t;
@@ -657,11 +656,11 @@ namespace glucat
     const int q = std::max(-int(folded_min), 0);
 
     const matrix_t* e = (generator_table<matrix_t>::generator())(p,q);
-    matrix_t result = unit<matrix_t>(dim);
+    matrix_t result = matrix::unit<matrix_t>(dim);
 
     for (index_t k = folded_min; k <= folded_max; ++k)
       if (folded_set[k])
-        result  = mono_prod(result, e[k]);
+        result = matrix::mono_prod(result, e[k]);
     return result;
   }
 
