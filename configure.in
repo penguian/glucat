@@ -175,6 +175,9 @@ AC_DEFUN(AC_GLUCAT_CHECK_COMPILERS,
         else 
          CXXFLAGS="-O3 -finline-limit=2400 $CXXFLAGS"
         fi
+        if test "$cxxversion" \> "4" && test "$cxxversion" \< "4.1" ; then
+          KDE_CHECK_COMPILER_FLAG(fno-strict-aliasing, [CXXFLAGS="-fno-strict-aliasing $CXXFLAGS"])
+        fi
         GLUCAT_CXX_DEBUG_FLAG="-g"
        fi
       fi
@@ -212,6 +215,9 @@ AC_DEFUN(AC_GLUCAT_CHECK_COMPILERS,
         dnl KDE_CHECK_COMPILER_FLAG(Wbad-function-cast,[CXXFLAGS="-Wbad-function-cast $CXXFLAGS"])
         dnl KDE_CHECK_COMPILER_FLAG(Wno-long-long,[CXXFLAGS="-Wno-long-long $CXXFLAGS"])
         dnl KDE_CHECK_COMPILER_FLAG(Wnon-virtual-dtor,[CXXFLAGS="-Wnon-virtual-dtor $CXXFLAGS"])
+        if test "$cxxversion" \> "4" ; then
+          KDE_CHECK_COMPILER_FLAG(Wstrict-aliasing=2,[CXXFLAGS="-Wstrict-aliasing=2 $CXXFLAGS"])
+        fi
      fi
   fi
 
@@ -225,7 +231,6 @@ AC_DEFUN(AC_GLUCAT_CHECK_COMPILERS,
   [CXXFLAGS="$OLDCXXFLAGS -D_GLUCAT_HAVE_UBLAS_LU_H"],
   [CXXFLAGS="$OLDCXXFLAGS"],
   [
-    #include <boost/numeric/ublas/config.hpp>
     #include <boost/numeric/ublas/vector.hpp>
     #include <boost/numeric/ublas/matrix.hpp>
     #include <boost/numeric/ublas/triangular.hpp>
@@ -337,7 +342,7 @@ dnl Perform program name transformation
 AC_ARG_PROGRAM
 
 dnl Automake doc recommends to do this only here. (Janos)
-AM_INIT_AUTOMAKE(glucat,0.1.8)
+AM_INIT_AUTOMAKE(glucat,0.1.9)
 
 dnl almost the same like KDE_SET_PREFIX but the path is /usr/local
 dnl
