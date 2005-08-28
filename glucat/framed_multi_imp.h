@@ -153,7 +153,7 @@ namespace glucat
     {
       const index_set_t ist(stv, frm, true);
       const Scalar_T crd =
-        matrix::inner<Scalar_T>(basis_element<Scalar_T>(ist, frm), val.m_matrix);
+        matrix::inner<Scalar_T>(val.basis_element(ist), val.m_matrix);
       if (crd != Scalar_T(0))
         this->insert(pair_t(ist, crd));
     }
@@ -169,26 +169,26 @@ namespace glucat
       return false;
     else if (compare_types< map_t, sorted_map_t >::are_same)
     {
-      const_iterator lhs_it = this->begin();
+      const_iterator this_it = this->begin();
       const_iterator rhs_it = rhs.begin();
       for (; 
-          (lhs_it != this->end()) || (rhs_it != rhs.end()); 
-          lhs_it++, rhs_it++)
-        if (*lhs_it != *rhs_it)
+          (this_it != this->end()) || (rhs_it != rhs.end()); 
+          this_it++, rhs_it++)
+        if (*this_it != *rhs_it)
           return false;
-      return (lhs_it == this->end()) && (rhs_it == rhs.end());
+      return (this_it == this->end()) && (rhs_it == rhs.end());
     }
     else
     {
       for (const_iterator 
-          lhs_it = this->begin();
-          lhs_it != this->end();
-          lhs_it++)
+          this_it = this->begin();
+          this_it != this->end();
+          this_it++)
       {
-        const_iterator rhs_it = rhs.find(lhs_it->first);
+        const_iterator rhs_it = rhs.find(this_it->first);
         if (rhs_it == rhs.end())
           return false;
-        else if (rhs_it->second != lhs_it->second)
+        else if (rhs_it->second != this_it->second)
           return false;
       }
       return true;
@@ -318,7 +318,7 @@ namespace glucat
           ++stv)
         if (result_array[stv] != Scalar_T(0))
         {
-          const index_set_t result_ist(stv, our_frame, true);
+          const index_set_t result_ist(stv, our_frame);
           this->insert(pair_t(result_ist, result_array[stv]));
         }
       return *this;
@@ -706,7 +706,7 @@ namespace glucat
     typedef Map_t map_t;
     typedef Sorted_Map_t sorted_map_t;
     typedef typename Sorted_Map_t::const_iterator sorted_iterator;
-    
+
     sorted_range (Sorted_Map_t &sorted_val, const Map_t& val)
     {
       for (typename map_t::const_iterator 
@@ -728,7 +728,7 @@ namespace glucat
     typedef Sorted_Map_t map_t;
     typedef Sorted_Map_t sorted_map_t;
     typedef typename Sorted_Map_t::const_iterator sorted_iterator;
-    
+
     sorted_range (Sorted_Map_t &sorted_val, const Sorted_Map_t& val)
     {
       sorted_begin = val.begin();
@@ -737,7 +737,7 @@ namespace glucat
     sorted_iterator sorted_begin;
     sorted_iterator sorted_end;
   };
-    
+
   /// Write multivector to output
   template< typename Scalar_T, const index_t LO, const index_t HI >
   std::ostream&
@@ -794,7 +794,8 @@ namespace glucat
   std::istream&
   operator>> (std::istream& s, framed_multi<Scalar_T,LO,HI> & val)
   { // Input looks like 1.0 -2.0{1,2} +3.2{3,4}
-    framed_multi<Scalar_T,LO,HI>  local;
+    typedef framed_multi<Scalar_T,LO,HI> multivector_t;
+    multivector_t local;
     char c = 0;
     while (s)
     {  // Default coordinate value is Scalar_T(0)
@@ -831,7 +832,8 @@ namespace glucat
       if (!s.bad() && coordinate != Scalar_T(0))
       { // Insert whatever we have
         coordinate = negative ? -coordinate : coordinate;
-        local += framed_multi<Scalar_T,LO,HI> (ist, coordinate);
+        typedef typename multivector_t::pair_t pair_t;
+        local += pair_t (ist, coordinate);
       }
       if(s)
       {
@@ -848,7 +850,8 @@ namespace glucat
     return s;
   }
 
-  template< typename Scalar_T, const index_t LO, const index_t HI >   inline
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
   framed_multi<Scalar_T,LO,HI> &
   framed_multi<Scalar_T,LO,HI>::
   operator+= (const pair_t& term)
@@ -869,6 +872,7 @@ namespace glucat
   }
 
   template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
   const index_set<LO,HI>
   framed_multi<Scalar_T,LO,HI>::
   frame() const
@@ -934,6 +938,7 @@ namespace glucat
 
   /// Subalgebra isomorphism: fold each term within the given frame
   template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
   framed_multi<Scalar_T,LO,HI>
   framed_multi<Scalar_T,LO,HI>::
   fold(const index_set_t& frm) const
@@ -949,6 +954,7 @@ namespace glucat
 
   /// Subalgebra isomorphism: unfold each term within the given frame
   template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
   framed_multi<Scalar_T,LO,HI>
   framed_multi<Scalar_T,LO,HI>::
   unfold(const index_set_t& frm) const
