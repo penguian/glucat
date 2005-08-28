@@ -142,7 +142,7 @@ namespace glucat
     void                write       (std::ofstream& ofile, const std::string& msg="") const;
 #endif // _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
 
-  // Test for inequality of multivectors
+  /// Test for inequality of multivectors
   template
   <
     template<typename, const index_t, const index_t> class Multivector,
@@ -152,7 +152,7 @@ namespace glucat
   bool
   operator!= (const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs);
 
-  // Test for inequality of multivector and scalar
+  /// Test for inequality of multivector and scalar
   template
   <
     template<typename, const index_t, const index_t> class Multivector,
@@ -161,7 +161,7 @@ namespace glucat
   bool
   operator!= (const Multivector<Scalar_T,LO,HI>& lhs, const Scalar_T& scr);
 
-  // Test for inequality of scalar and multivector
+  /// Test for inequality of scalar and multivector
   template
   <
     template<typename, const index_t, const index_t> class Multivector,
