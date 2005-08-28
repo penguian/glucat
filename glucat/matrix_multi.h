@@ -59,7 +59,7 @@ namespace glucat
 //  Ref: Matthew Wilson, "Friendly Templates", 
 //  C/C++ Users Journal > CUJ Web Exclusives > 2003 > December 2003
 //  http://www.cuj.com/documents/s=8942/cujweb0312wilson/
-//
+
     typedef framed_multi<Scalar_T,LO,HI>               framed_multi_t;
     struct friend_maker
     {
