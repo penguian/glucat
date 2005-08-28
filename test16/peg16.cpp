@@ -22,6 +22,7 @@
  ***************************************************************************/
 
 #include "test/driver.h"
+#include <boost/numeric/ublas/io.hpp>
 #include "test16/peg16.h"
 
 using namespace glucat;
