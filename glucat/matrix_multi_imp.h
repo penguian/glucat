@@ -74,10 +74,7 @@ namespace glucat
     if (!prechecked && (val.m_frame | m_frame) != m_frame)
       throw error_t("multivector_t(val,frm): cannot initialize with value outside of frame");
     if (m_frame == val.m_frame)
-    {
-      m_matrix.resize( val.m_matrix.size1(), val.m_matrix.size2() );
       m_matrix = val.m_matrix;
-    }
     else
       *this = multivector_t(framed_multi_t(val), frm, true);
   }
@@ -243,11 +240,57 @@ namespace glucat
   matrix_multi<Scalar_T,LO,HI>::
   operator==  (const multivector_t& rhs) const
   {
-    // Compare only within a common frame
-    if (m_frame == rhs.m_frame)
-      return ublas::equals(m_matrix, rhs.m_matrix);
-    else
+    // Compare matrices only within a common frame
+    if (m_frame != rhs.m_frame)
       return framed_multi_t(*this) == framed_multi_t(rhs);
+    else
+    {
+      typedef typename matrix_t::const_iterator1 const_iterator1;
+      typedef typename matrix_t::const_iterator2 const_iterator2;
+      // If either matrix contains zero entries, 
+      // compare using subtraction and ublas::norm_inf
+      for (const_iterator1 
+          it1 = m_matrix.begin1(); 
+          it1 != m_matrix.end1(); 
+          ++it1)
+        for (const_iterator2 
+            it2 = it1.begin(); 
+            it2 != it1.end(); 
+            ++it2)
+          if (*it2 == 0)
+            return ublas::norm_inf(m_matrix - rhs.m_matrix) == 0;
+      for (const_iterator1 
+          it1 = rhs.m_matrix.begin1(); 
+          it1 != rhs.m_matrix.end1(); 
+          ++it1)
+        for (const_iterator2 
+            it2 = it1.begin(); 
+            it2 != it1.end(); 
+            ++it2)
+          if (*it2 == 0)
+            return ublas::norm_inf(m_matrix - rhs.m_matrix) == 0;
+      // Neither matrix contains zero entries.
+      // Compare by iterating over both matrices in lock step.
+      const_iterator1 this_it1 = m_matrix.begin1();
+      const_iterator1 it1 = rhs.m_matrix.begin1(); 
+      for (;
+          (this_it1 != m_matrix.end1()) && (it1 != rhs.m_matrix.end1()); 
+          ++this_it1, ++it1)
+      {
+        if ( this_it1.index1() != it1.index1() )
+          return false;
+        const_iterator2 this_it2 = this_it1.begin();
+        const_iterator2 it2 = it1.begin(); 
+        for (;
+            (this_it2 != this_it1.end()) && (it2 != it1.end()); 
+            ++this_it2, ++it2)
+          if ( (this_it2.index2() != it2.index2()) || (*this_it2 != *it2) )
+            return false;
+        if ( (this_it2 != this_it1.end()) || (it2 != it1.end()) )
+          return false;
+      }
+      return (this_it1 == m_matrix.end1()) && (it1 == rhs.m_matrix.end1());
+    }
   }
 
   // Test for equality of multivector and scalar
@@ -274,6 +317,8 @@ namespace glucat
   {
     // Operate only within a common frame
     const index_set_t our_frame = m_frame | rhs.m_frame;
+    if ((m_frame != our_frame) && (rhs.m_frame != our_frame))
+      return *this = framed_multi_t(*this) + framed_multi_t(rhs);
     if (m_frame != our_frame)
       // Represent *this in our_frame via conversion through framed_multi_t
       *this = multivector_t(framed_multi_t(*this), our_frame, true);
@@ -295,6 +340,8 @@ namespace glucat
   {
     // Operate only within a common frame
     const index_set_t our_frame = m_frame | rhs.m_frame;
+    if ((m_frame != our_frame) && (rhs.m_frame != our_frame))
+      return *this = framed_multi_t(*this) - framed_multi_t(rhs);
     if (m_frame != our_frame)
       // Represent *this in our_frame via conversion through framed_multi_t
       *this = multivector_t(framed_multi_t(*this), our_frame, true);
@@ -480,7 +527,7 @@ namespace glucat
   {
     // Use matrix inner product only if ist is in frame
     if ( (ist | m_frame) == m_frame) 
-      return matrix::inner<Scalar_T>(basis_element<Scalar_T>(ist, m_frame), m_matrix);
+      return matrix::inner<Scalar_T>(basis_element(ist), m_matrix);
     else
       return Scalar_T(0); 
   }
@@ -622,9 +669,8 @@ namespace glucat
         // Frame may contain indices which do not correspond to a grade 1 term but
         // frame cannot omit any index corresponding to a grade 1 term
         result.push_back(
-          matrix::inner<Scalar_T>(
-            basis_element<Scalar_T>(index_set_t(idx), m_frame),
-            m_matrix));
+          matrix::inner<Scalar_T>(basis_element(index_set_t(idx)),
+          m_matrix));
     return result;
   }
 
@@ -717,7 +763,7 @@ namespace glucat
   operator+= (const pair_t& term)
   {
     if (term.second != Scalar_T(0))
-      m_matrix += basis_element<Scalar_T>(term.first, m_frame) * term.second;
+      m_matrix += basis_element(term.first) * term.second;
     return *this;
   }
 
@@ -835,10 +881,10 @@ namespace glucat
   }
 
   /// Table of basis elements used as a cache by basis_element()
-  template< typename Scalar_T, const index_t LO, const index_t HI >
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Matrix_T >
   class basis_table :
   public std::map< std::pair< const index_set<LO,HI>, const index_set<LO,HI> >,
-                   typename matrix_multi<Scalar_T, LO, HI>::matrix_t >
+                   Matrix_T >
   {
   public:
     /// Single instance of basis table
@@ -857,10 +903,11 @@ namespace glucat
     friend class friend_for_private_destructor;
   };
 
-  /// Create a basis element matrix within a frame
+  /// Create a basis element matrix within the current frame
   template< typename Scalar_T, const index_t LO, const index_t HI >
   const typename matrix_multi<Scalar_T,LO,HI>::matrix_t
-  basis_element(const index_set<LO,HI>& ist, const index_set<LO,HI>& m_frame)
+  matrix_multi<Scalar_T,LO,HI>::
+  basis_element(const index_set<LO,HI>& ist) const
   {
     typedef matrix_multi<Scalar_T,LO,HI>           multivector_t;
     typedef typename multivector_t::matrix_t       matrix_t;
@@ -876,7 +923,7 @@ namespace glucat
     const int p = std::max( int(folded_max), 0);
     const int q = std::max(-int(folded_min), 0);
 
-    typedef basis_table<Scalar_T,LO,HI>                     basis_table_t;
+    typedef basis_table<Scalar_T,LO,HI,matrix_t>            basis_table_t;
     typedef std::pair<const index_set_t, const index_set_t> index_set_pair_t;
     typedef std::pair<const index_set_pair_t, matrix_t>     basis_pair_t;
     typedef typename basis_table_t::const_iterator          basis_const_iterator_t;
