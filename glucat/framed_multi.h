@@ -27,6 +27,7 @@ namespace glucat
 {
   template< typename Scalar_T, const index_t LO, const index_t HI >
   class framed_multi; // forward
+
   template< typename Scalar_T, const index_t LO, const index_t HI >
   class matrix_multi; // forward
 
@@ -58,10 +59,10 @@ namespace glucat
   class framed_multi :
 #ifdef _GLUCAT_USE_GNU_CXX_HASH_MAP
   public clifford_algebra< Scalar_T, index_set<LO,HI>, framed_multi<Scalar_T,LO,HI> >,
-  _GLUCAT_PRIVATE __gnu_cxx::hash_map< const index_set<LO,HI>, Scalar_T, hash<LO,HI> >
+  private __gnu_cxx::hash_map< const index_set<LO,HI>, Scalar_T, hash<LO,HI> >
 #else
   public clifford_algebra< Scalar_T, index_set<LO,HI>, framed_multi<Scalar_T,LO,HI> >,
-  _GLUCAT_PRIVATE std::map< const index_set<LO,HI>, Scalar_T >
+  private std::map< const index_set<LO,HI>, Scalar_T >
 #endif  
   {
   public:
@@ -86,10 +87,9 @@ namespace glucat
     friend class _GLUCAT_USE_STRUCT_NAME(friend_maker) matrix_multi_t;
   private:
     typedef typename matrix_multi_t::matrix_t          matrix_t;
-    typedef std::map< const index_set_t, Scalar_T >             
-                                                       sorted_map_t;
+    typedef std::map< const index_set_t, Scalar_T >    sorted_map_t;
 #ifdef _GLUCAT_USE_GNU_CXX_HASH_MAP
-    typedef __gnu_cxx::hash_map< const index_set_t, Scalar_T, hash<LO,HI> >  
+    typedef __gnu_cxx::hash_map< const index_set_t, Scalar_T, hash<LO,HI> >
                                                        map_t;
 #else
     typedef sorted_map_t                               map_t;
@@ -135,6 +135,7 @@ namespace glucat
     const framed_multi_t fast_framed_multi() const;
 
     _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
+
     friend std::istream&
       operator>> <>(std::istream& s, multivector_t& val);
     friend std::ostream&
@@ -159,8 +160,8 @@ namespace glucat
     /// Generalized FFT from framed_multi_t to matrix_t
     const matrix_t      fast(const index_t level, const bool odd) const;
   };
-  // non-members
 
+  // non-members
   /// Product of terms
   template< typename Scalar_T, const index_t LO, const index_t HI >
   const std::pair<const index_set<LO,HI>, Scalar_T>
