@@ -65,14 +65,15 @@
 #include "glucat/long_double.h"
 #include "glucat/scalar.h"
 
-#include <boost/numeric/ublas/config.hpp>
+#include <iostream>
+
 #include <boost/numeric/ublas/vector.hpp>
+#include <boost/numeric/ublas/vector_proxy.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
+#include <boost/numeric/ublas/matrix_proxy.hpp>
 #include <boost/numeric/ublas/triangular.hpp>
-#include <boost/numeric/ublas/vector_sparse.hpp>
 #include <boost/numeric/ublas/matrix_sparse.hpp>
 #include <boost/numeric/ublas/operation_sparse.hpp>
-#include <boost/numeric/ublas/io.hpp>
 #ifdef   _GLUCAT_HAVE_UBLAS_LU_H
 #include <boost/numeric/ublas/operation.hpp>
 #include <boost/numeric/ublas/lu.hpp>
