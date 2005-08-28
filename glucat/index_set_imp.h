@@ -607,7 +607,7 @@ namespace glucat
   index_set<LO,HI>::
   hash_fn() const
   {
-    static const index_set_t lo_mask = bitset_t((1UL << sizeof(size_t)) - 1);
+    static const index_set_t lo_mask = bitset_t((1UL << -LO) - 1);
     const index_set_t neg_part = *this & lo_mask;
     const index_set_t pos_part = *this >> -LO;
     const bitset_t* pneg_part = &neg_part;
