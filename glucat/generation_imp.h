@@ -52,13 +52,11 @@ namespace glucat { namespace gen
     case 2:
       // Construct generators
       return &(gen_vector(p, q)[q]);
-      break;
     default:
       // Select generators from the vector for a larger frame
       const index_t super_p = p + std::max(offset_to_super[bott],0);
       const index_t super_q = q - std::min(offset_to_super[bott],0);
       return &(gen_vector(super_p, super_q)[super_q]);
-      break;
     }
   }
 
