@@ -28,15 +28,8 @@
 #define ios_base ios // scope is different for standard C++
 #endif
 
-//***************************** workaround for ICC and G++ 3.3+
-#if defined (__ICL) || defined (__ICC) || defined (__GNUG__) && (__GNUC__ >= 3) && (__GNUC_MINOR__ >= 3)
-#define _GLUCAT_PRIVATE public
-#else
-#define _GLUCAT_PRIVATE private
-#endif
-
 //***************************** workaround for G++ 3.2 typename bug
-#if defined (__GNUG__) && (__GNUC__ >= 3) && (__GNUC_MINOR__ <= 2)
+#if defined (__GNUG__) && (__GNUC__ == 3) && (__GNUC_MINOR__ <= 2)
 #define _GLUCAT_USE_STRUCT_NAME(T)
 #else
 #define _GLUCAT_USE_STRUCT_NAME(T) T::
