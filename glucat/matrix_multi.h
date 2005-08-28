@@ -28,6 +28,19 @@ namespace glucat
   template< typename Scalar_T, const index_t LO, const index_t HI >
   class framed_multi;  // forward
 
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  class matrix_multi;  // forward
+
+  /// Read multivector from input
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  std::istream&
+  operator>> (std::istream& s, matrix_multi<Scalar_T,LO,HI>& val);
+
+  /// Write multivector to output
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  std::ostream&
+  operator<< (std::ostream& os, const matrix_multi<Scalar_T,LO,HI>& val);
+
   /// A matrix_multi<Scalar_T,LO,HI> is a matrix approximation to a multivector
   template< typename Scalar_T, const index_t LO = DEFAULT_LO, const index_t HI = DEFAULT_HI >
   class matrix_multi :
@@ -53,8 +66,7 @@ namespace glucat
       typedef framed_multi<Scalar_T,LO,HI>             framed_multi_t;
     };
     friend class _GLUCAT_USE_STRUCT_NAME(friend_maker) framed_multi_t;
-    
-  _GLUCAT_PRIVATE:
+  private:
     typedef ublas::row_major                           orientation_t;
     typedef ublas::compressed_matrix< Scalar_T, orientation_t >
                                                        matrix_t;
@@ -91,43 +103,34 @@ namespace glucat
     /// Construct a multivector, within a given frame, from a framed_multi_t
     matrix_multi(const framed_multi_t& val,
                  const index_set_t& frm, const bool prechecked = false);
-  private:
-    /// Construct a multivector within a given frame from a given matrix
-    matrix_multi(const matrix_t& mtx, const index_set_t& frm);
-  public:
-    _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
-    /// Assignment operator
-    multivector_t&     operator= (const multivector_t& rhs);
     /// Use generalized FFT to construct a matrix_multi_t 
     const matrix_multi_t fast_matrix_multi(const index_set_t& frm) const;
     /// Use inverse generalized FFT to construct a framed_multi_t
     const framed_multi_t fast_framed_multi() const;
   private:
+    /// Construct a multivector within a given frame from a given matrix
+    matrix_multi(const matrix_t& mtx, const index_set_t& frm);
+    /// Create a basis element matrix within the current frame
+    const matrix_t     basis_element(const index_set<LO,HI>& ist) const;
+  public:
+    _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
+
+    /// Assignment operator
+    multivector_t&     operator= (const multivector_t& rhs);
+    friend std::istream&
+      operator>> <>(std::istream& s, multivector_t& val);
+    friend std::ostream&
+      operator<< <>(std::ostream& os, const multivector_t& val);
+    friend std::ostream&
+      operator<< <>(std::ostream& os, const pair_t& term);
+  private:
     /// Add a term, if non-zero
     multivector_t&     operator+= (const pair_t& rhs);
-  _GLUCAT_PRIVATE:
     // Data members
     /// Index set representing the frame for the subalgebra which contains the multivector
     index_set_t        m_frame;
     /// Matrix value representing the multivector within the folded frame
     matrix_t           m_matrix;
   };
-  // non-members
-
-  /// Write multivector to output
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  std::ostream&
-  operator << (std::ostream& os, const matrix_multi<Scalar_T,LO,HI>& val);
-
-  /// Read multivector from input
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  std::istream&
-  operator >> (std::istream& s, matrix_multi<Scalar_T,LO,HI>& val);
-
-  /// Create a basis element matrix within a frame
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  const 
-  typename matrix_multi<Scalar_T,LO,HI>::matrix_t
-  basis_element(const index_set<LO,HI>& ist, const index_set<LO,HI>& sub);
 }
 #endif  // _GLUCAT_MATRIX_MULTI_H
