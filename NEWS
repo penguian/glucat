@@ -1,3 +1,9 @@
+2005-08-31: 0.1.9
+GluCat continues to track changes in g++ and Boost.
+The code is now even closer to Standard C++, and a little cleaner.
+This version of GluCat requires Boost 1.31.0, 1.33.0 or later.
+See the Changelog for a detailed list of changes.
+
 2004-08-11: 0.1.8
 GluCat has had a few bugs fixed, and a few minor enhancements. 
 The constuctor for index_set<> from string and the corresponding stream input
