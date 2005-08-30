@@ -175,7 +175,7 @@ AC_DEFUN(AC_GLUCAT_CHECK_COMPILERS,
         else 
          CXXFLAGS="-O3 -finline-limit=2400 $CXXFLAGS"
         fi
-        if test "$cxxversion" \> "4" && test "$cxxversion" \< "4.1" ; then
+        if test "$cxxversion" \> "4" && test "$cxxversion" \< "4.0.2" ; then
           KDE_CHECK_COMPILER_FLAG(fno-strict-aliasing, [CXXFLAGS="-fno-strict-aliasing $CXXFLAGS"])
         fi
         GLUCAT_CXX_DEBUG_FLAG="-g"
@@ -224,22 +224,6 @@ AC_DEFUN(AC_GLUCAT_CHECK_COMPILERS,
   if test "$GCC" = "yes" && test "$kde_use_strict_options" = "yes"; then
     CXXFLAGS="-Wcast-qual -Wshadow -Wcast-align $CXXFLAGS"
   fi
-
-  OLDCXXFLAGS="$CXXFLAGS"
-  CXXFLAGS="$CXXFLAGS -I. -I.. $USER_INCLUDES"
-  AC_CHECK_HEADERS([boost/numeric/ublas/lu.hpp],
-  [CXXFLAGS="$OLDCXXFLAGS -D_GLUCAT_HAVE_UBLAS_LU_H"],
-  [CXXFLAGS="$OLDCXXFLAGS"],
-  [
-    #include <boost/numeric/ublas/vector.hpp>
-    #include <boost/numeric/ublas/matrix.hpp>
-    #include <boost/numeric/ublas/triangular.hpp>
-    #include <boost/numeric/ublas/vector_sparse.hpp>
-    #include <boost/numeric/ublas/matrix_sparse.hpp>
-    #include <boost/numeric/ublas/operation_sparse.hpp>
-    #include <boost/numeric/ublas/io.hpp>
-    #include <boost/numeric/ublas/operation.hpp>
-  ] )
 
   if test "$GXX" = "yes" && test "$glucat_use_hash_map" != "no"; then
   AC_CHECK_HEADERS([ext/hash_map],
