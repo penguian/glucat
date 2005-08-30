@@ -5,17 +5,38 @@ Before You Begin
  Use the instructions at http://www.boost.org/more/download.html
  to obtain the Boost Library.
 
- If you are using g++ 3.X.Y, make sure that you have installed Boost with the
-same version of g++.
+ Make sure that you have installed Boost with the same version of g++ as you
+will be using with GluCat.
 
- The headers need a compiler which correctly handles template template classes.
- 
- The code has so far been tested using:
- 1) Red Hat Linux 8.0, g++ 3.2,   Boost 1.30.2         on Intel(R) Pentium(R) 4.
- 2) SuSE SEL 8,        g++ 3.2.2, Boost 1.30.2         on dual AMD Opteron(tm).
- 3) SuSE Linux 9.1,    g++ 3.3.3, Boost CVS 2004-05-09 on AMD Athlon(tm) 64.
+ The headers need a compiler which correctly handles template template classes,
+such as g++ 3.X and 4.X.
 
- Note: Boost 1.31.0 uBLAS does NOT compile under g++ 3.4. 
+ GluCat 0.1.9 has so far been tested using:
+
+1) Intel(R) Pentium(R) 4 with
+1.1) SuSE Linux 9.2, g++ 3.3.4 (pre 3.3.5 20040809),    Boost 1.31.0
+1.2) SuSE Linux 9.2, g++ 3.3.4 (pre 3.3.5 20040809),    Boost 1.33.0
+
+2) AMD Athlon(tm) 64 with
+2.1) SuSE Linux 9.3, g++ 3.3.5 20050117 (prerelease),   Boost 1.31.0
+2.2) SuSE Linux 9.3, g++ 3.3.5 20050117 (prerelease),   Boost 1.33.0
+2.3) SuSE Linux 9.3, g++ 4.0.1,                         Boost 1.33.0
+2.4) SuSE Linux 9.3, g++ 4.0.2 20050825 (prerelease),   Boost 1.33.0
+2.5) SuSE Linux 9.3, g++ 4.1.0 20050813 (experimental), Boost 1.33.0
+
+3) Dual AMD Opteron(tm) with
+3.1) SuSE SLES 9,    g++ 3.3.3,                         Boost 1.31.0
+
+   Notes: 
+1. GluCat 0.1.9 does not work with Boost versions before 1.31.0 or with Boost
+   1.32.0. Boost uBLAS before 1.31.0 has different semantics for operator= for
+   compressed matrices, and also does not provide LU solvers for compressed
+   matrices. With Boost 1.32.0, GluCat seems to compile OK, but gives incorrect
+   results due to changes in Boost uBLAS semantics. This has been fixed with
+   Boost 1.33.0.
+2. Boost 1.31.0 uBLAS does NOT compile under g++ 3.4.X or g++ 4.X.
+3. With g++ 4.0.0 and g++ 4.0.1, optimization with -O3 may corrupt iterators.
+   Use -O3 -fno-strict-aliasing instead. See gcc bug 23599.
 
 To Test
 =======
@@ -30,7 +51,8 @@ The Test Programs
 -----------------
  The test script ./test/test.sh takes any number (including zero) of numeric 
  parameters. Positive numbers in the range 1 to 16 correspond to coding examples
- ./test01/peg01.h to ./test16/peg16.h. These examples are run in numerical order.
+ ./test01/peg01.h to ./test16/peg16.h. These examples are run in numerical
+order.
  With zero parameters, all examples from 1 to 16 are run in order. Many of 
  the examples are run twice - once with framed_multi<Scalar_T> and once with 
  matrix_multi<Scalar_T>. 
@@ -44,7 +66,8 @@ The Test Programs
  by frames limited by the value of n.
 
  The test program ./transforms/transforms takes a parameter n, and transforms
- larger and larger multivectors within the subalgebras defined by  frames limited
+ larger and larger multivectors within the subalgebras defined by  frames
+limited
  by the value of n.
  
 To Make the Test Programs
@@ -60,7 +83,8 @@ To Make the Test Programs
  
  Once you have created the test programs, copy the runtime directory
  ./test_runtime to a convenient place. ./test_runtime contains the test input
- file eg8.txt. This file is needed by programming example 8 (reading multivectors
+ file eg8.txt. This file is needed by programming example 8 (reading
+multivectors
  from input).
 
  The sample test output files are eg3.res, test.out, gfft_test-10.out,
@@ -86,34 +110,14 @@ To Make the Test Programs
  o create a version for profiling:
    run ./configure --enable-profile, then make. 
    
- WARNINGS:
+ Further warnings:
  1) The optimized compilation may take a long time to complete.
  See http://www.garloff.de/kurt/freesoft/gcc/
 
- 2) With Red Hat g++ 2.96, do no try to set -finline-limit higher than
- 900. Setting eg. -finline-limit=1000 resulted in a segmentation
- fault in uBLAS at runtime. This seems to be related to this bug:
- Bug 3777 Segmentation fault in simple program
- http://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=3777
+ 2) Many Clifford algebra algorithms are exponential in both time and
+ space complexity.
 
- 3) On Compaq Alpha, the -g flag for g++ 3.0.3 fails with "string too big".
- This problem seems similar to eg,
- http://gcc.gnu.org/ml/gcc-bugs/2000-06/msg00557.html
- http://gcc.gnu.org/ml/gcc-bugs/1998-04/msg00700.html
- Running ./configure --enable-debug=full will work, but will not use the -g 
- flag. 
- 
- 4) On Compaq Alpha, if the compilation does not use -mieee, Test 11 will fail,
- with a floating point exception.  GluCat is written for IEEE arithmetic
- and Compaq Alpha does not  use strict IEEE arithmetic unless you tell
- it to via -mieee. 
- ./configure automatically detects Compaq Alpha and uses the -mieee flag.
- 
- 5) Many Clifford algebra algorithms are exponential in both time and
- space complexity. In particular, programming example 7 (triality) may run
- very slowly.
-
- 6) Detailed generic instructions for ./configure are given in "Basic
+ 3) Detailed generic instructions for ./configure are given in "Basic
  Installation" below. See also ./configure --help
 
 To Install
@@ -290,4 +294,3 @@ operates.
      script, and exit.
 
 `configure' also accepts some other, not widely useful, options.
-
