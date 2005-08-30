@@ -1,3 +1,164 @@
+2005-08-31 08:14  leopardi
+
+	* glucat/ublas_imp.h: Ensure this file is removed.
+
+2005-08-31 00:50  leopardi
+
+	* README: Remove references to	_GLUCAT_HAS_UBLAS_LU_H
+
+2005-08-31 00:34  leopardi
+
+	* NEWS: News for version 0.1.9.
+
+2005-08-31 00:27  leopardi
+
+	* INSTALL: Bring instructions up to date with changes to g++ and
+	  Boost.
+
+2005-08-30 22:20  leopardi
+
+	* glucat/ublas.h: Ensure this file has been removed.
+
+2005-08-30 22:18  leopardi
+
+	* config.h.in: Remove reference to HAVE_BOOST_NUMERIC_UBLAS_LU_HPP
+
+2005-08-30 22:15  leopardi
+
+	* configure.in, configure.in.in: Only use -fno-strict-aliasing with
+	  g++ 4.0.0 and g++ 4.0.1. Gcc bug 23599 has apparently been fixed
+	  for g++ 4.0.2.  Remove tests for and references to
+	  _GLUCAT_HAVE_UBLAS_LU_H
+
+2005-08-30 22:10  leopardi
+
+	* glucat/glucat_imp.h: Remove reference to ublas_imp.h
+
+2005-08-30 22:10  leopardi
+
+	* glucat/glucat.h: Remove references to ublas.h and
+	  _GLUCAT_HAVE_UBLAS_LU_H
+
+2005-08-28 22:41  leopardi
+
+	* test_runtime/: gfft_test-10.out, squaring-8.out, test.out,
+	  transforms-6.out: Update tests using g++ 3.3.5 and Boost 1.31.0.
+
+2005-08-28 22:36  leopardi
+
+	* Makefile.am: Update to current KDevelop.
+
+2005-08-28 22:35  leopardi
+
+	* glucat.lsm: Update to version 0.1.9.
+
+2005-08-28 22:35  leopardi
+
+	* glucat.kdevelop: Update to version 0.1.9.  Update to current
+	  KDevelop.
+
+2005-08-28 22:34  leopardi
+
+	* Doxyfile: Fix project name to read "glucat".	Fix
+	  STRIP_FROM_PATH.  Update to version 0.1.9.
+
+2005-08-28 22:31  leopardi
+
+	* configure.in, configure.in.in: Use -fno-strict-aliasing with g++
+	  4.0.X.  Use Wstrict-aliasing=2 with g++ 4.X.	Update to version
+	  0.1.9.
+
+2005-08-28 22:26  leopardi
+
+	* test02/Makefile.in, test03/Makefile.in, test04/Makefile.in,
+	  test05/Makefile.in, test06/Makefile.in, test07/Makefile.in,
+	  test08/Makefile.in, test09/Makefile.in, test10/Makefile.in,
+	  test11/Makefile.in, test12/Makefile.in, test13/Makefile.in,
+	  test14/Makefile.in, test15/Makefile.in, aclocal.m4,
+	  test16/Makefile.in, transforms/Makefile.in,
+	  gfft_test/Makefile.in, squaring/Makefile.in, test/Makefile.in,
+	  test01/Makefile.in: Use new version of automake (1.9.5).
+
+2005-08-28 22:23  leopardi
+
+	* test16/peg16.cpp: Add #include required for Boost 1.33.0.
+
+2005-08-28 22:22  leopardi
+
+	* glucat/framed_multi_imp.h: In constructor from matrix_multi,
+	  invoke basis_element() as a member function of matrix_multi, and
+	  remove unnecessary <Scalar_T> qualifier.  In operator==(), use
+	  the name this_it consistently.  In operator*=(), do not assume
+	  that stv gives an index_set within our_frame.  In operator>>(),
+	  define multivector_t and pair_t, and add terms by using pair_t
+	  rather than multivector_t.  Make frame(), fold() and unfold()
+	  into inline functions.  Cosmetic changes.
+
+2005-08-28 21:58  leopardi
+
+	* glucat/framed_multi.h: Use private rather than public / private
+	  workaround.  Cosmetic changes.
+
+2005-08-28 21:56  leopardi
+
+	* glucat/clifford_algebra.h: Make some comments visible to Doxygen.
+
+2005-08-28 21:56  leopardi
+
+	* glucat/matrix_multi_imp.h: Interface changes: Make
+	  basis_element() into a private member function of matrix_multi,
+	  remove the parameter m_frame and replace with this->m_frame.	Add
+	  the template parameter Matrix_T to basis_table.  Implementation
+	  changes.  In constructor from matrix_multi, remove the
+	  unnecessary call to resize.  In operator==(), since Boost 1.33.0
+	  no longer defines ublas::equals, use iterators to compare
+	  matrices.  In operator+=(), if neither this nor rhs has same
+	  frame as the common frame, then do the addition using
+	  framed_multi.  Similarly for operator-=().  In operator[](),
+	  vector_part() and operator+=(const pair_t&), remove the
+	  unnecessary <Scalar_T> qualifier from basis_element().
+
+2005-08-28 21:55  leopardi
+
+	* glucat/matrix_multi.h: Make basis_element() into a private member
+	  function of matrix_multi, remove the parameter m_frame and
+	  replace with this->m_frame.  Cosmetic changes.
+
+2005-08-28 21:30  leopardi
+
+	* glucat/index_set_imp.h: In hash_fn(), change the definition of
+	  lo_mask to match the shift given to pos_part.
+
+2005-08-28 21:26  leopardi
+
+	* glucat/matrix_multi.h: Rearrange declarations to avoid problems
+	  with public / private.
+
+2005-08-28 21:23  leopardi
+
+	* glucat/portability.h: Remove incorrect workaround for public /
+	  private with different compiler versions.  Restrict workaround
+	  for g++ 3.2 typename bug to g++ 3.X only.
+
+2005-08-28 21:20  leopardi
+
+	* glucat/glucat.h: Add #includes for compatibility with Boost
+	  1.33.0.
+
+2005-08-28 21:15  leopardi
+
+	* glucat/generation_imp.h: In generator_table<Matrix_T>::operator()
+	  delete superfluous break statements from switch: these gave
+	  warning messages in g++ 4.XX.
+
+2005-07-17 18:23  leopardi
+
+	* config.h.in: Re-add forgotten file
+
+2004-08-11 00:04  leopardi
+
+	* ChangeLog: Changes for GluCat 0.1.8
+
 2004-08-11 00:03  leopardi
 
 	* NEWS: Reflect chage in inlining
