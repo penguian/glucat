@@ -26,10 +26,10 @@
 namespace glucat
 {
   /// Compile time assertion
-  // Reference: A. Alexandrescu, "Modern C++ Design", Addison-Wesley, 2001, p25
+  // Reference: A. Alexandrescu, "Modern C++ Design", Addison-Wesley, 2001, p. 25
   template<bool> struct CTAssertion;
   template<> struct CTAssertion<true> { };
-  #define _GLUCAT_CTAssert(expr, msg) namespace { CTAssertion<(expr)> ERROR_##msg; }
+  #define _GLUCAT_CTAssert(expr, msg) namespace { glucat::CTAssertion<(expr)> ERROR_##msg; }
 
   /// Type comparison
   // Reference: A. Alexandrescu, "Modern C++ Design", Addison-Wesley, 2001, pp. 34--37
@@ -44,11 +44,20 @@ namespace glucat
   {
   public:
     enum { are_same = true };
-  };  
-  
+  };
+
+  /// Bool to type
+  // Reference: A. Alexandrescu, "Modern C++ Design", Addison-Wesley, 2001, 2.4, p. 29
+  template< bool truth_value >
+  class bool_to_type
+  {
+  private:
+    enum { value = truth_value };
+  };
+
   // Global types which determine sizes
   /// Size of index_t should be enough to represent LO, HI
-  typedef short         index_t;
+  typedef int           index_t;
   /// Size of set_value_t should be enough to contain index_set<LO,HI>
   typedef unsigned long set_value_t;
 
@@ -129,5 +138,29 @@ namespace glucat
   pos_mod(LHS_T lhs, RHS_T rhs)
   { return lhs > 0? lhs % rhs : (-lhs) % rhs == 0 ? 0 : rhs - (-lhs) % rhs; }
 
+  /// Extra traits which extend numeric limits
+  // Reference: A. Alexandrescu, ibid, 2.4, p. 30-31
+  template< typename T >
+  class numeric_traits
+  {
+  private:
+    /// Smart isnan specialised for T without quiet NaN
+    static bool
+    isNaN(T val, bool_to_type<false>)
+    { return false; }
+    /// Smart isnan specialised for T with quiet NaN
+    static bool
+    isNaN(T val, bool_to_type<true>)
+    { return isnan(val); }
+
+  public:
+    /// Smart isnan
+    static bool
+    isNaN(T val)
+    {
+      return isNaN(val,
+             bool_to_type< std::numeric_limits<T>::has_quiet_NaN >() );
+    }
+  };
 }
 #endif // _GLUCAT_GLOBAL_H
