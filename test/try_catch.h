@@ -27,10 +27,16 @@ namespace glucat
 {
   /// For exception catching: pointer to function returning int
   typedef int (*intfn)();
-  
+
   /// For exception catching: pointer to function of int returning int
   typedef int (*intintfn)(int);
-  
+
+  /// Exception catching for functions returning int
+  int try_catch(intfn f);
+
+  /// Exception catching for functions of int returning int
+  int try_catch(intintfn f, int arg);
+
   /// Exception catching for functions returning int
   int try_catch(intfn f)
   {
@@ -45,7 +51,7 @@ namespace glucat
       { std::cerr << "unexpected exception" << std::endl; }
     return result;
   }
-  
+
   /// Exception catching for functions of int returning int
   int try_catch(intintfn f, int arg)
   {
