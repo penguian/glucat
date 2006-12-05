@@ -35,6 +35,7 @@ namespace glucat
     typedef Multivector_T                 multivector_t;
     typedef std::pair< const index_set_t, Scalar_T > pair_t;
     typedef std::vector<Scalar_T>         vector_t;
+
     static  const std::string   classname();
 
     virtual ~clifford_algebra() {};
@@ -136,9 +137,9 @@ namespace glucat
     const index_set_t   frame()     const;                            \
     Scalar_T            max_abs()   const;                            \
     const multivector_t truncated                                     \
-          (const Scalar_T& limit = Scalar_T(DEFAULT_TRUNCATION)) const; \
+         (const Scalar_T& limit = Scalar_T(DEFAULT_TRUNCATION)) const;\
     bool                isnan       () const;                         \
-    void                write       (const std::string& msg="") const;             \
+    void                write       (const std::string& msg="") const;\
     void                write       (std::ofstream& ofile, const std::string& msg="") const;
 #endif // _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
 
