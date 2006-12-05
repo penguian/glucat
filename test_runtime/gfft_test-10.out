@@ -1,11 +1,11 @@
 Clifford algebra transform test:
-Cl( 1, 1) in Cl( 1, 1) CPU = mm:       0.05 fm:       0.20 trials mm: 1000 fm: 1000  diff: 0.00e+00
-Cl( 2, 2) in Cl( 2, 2) CPU = mm:       0.24 fm:       0.46 trials mm: 1000 fm: 1000  diff: 6.24e-17
-Cl( 3, 3) in Cl( 3, 3) CPU = mm:       0.92 fm:       2.09 trials mm: 1000 fm: 1000  diff: 1.25e-16
-Cl( 4, 4) in Cl( 4, 4) CPU = mm:       3.99 fm:       9.05 trials mm: 1000 fm: 1000  diff: 1.19e-16
-Cl( 5, 5) in Cl( 5, 5) CPU = mm:      17.20 fm:      39.20 trials mm:   50 fm:   25  diff: 1.47e-16
-Cl( 6, 6) in Cl( 6, 6) CPU = mm:      75.38 fm:     166.67 trials mm:   13 fm:    6  diff: 1.48e-16
-Cl( 7, 7) in Cl( 7, 7) CPU = mm:     330.00 fm:     730.00 trials mm:    4 fm:    2  diff: 1.61e-16
-Cl( 8, 8) in Cl( 8, 8) CPU = mm:    1440.00 fm:    3220.00 trials mm:    1 fm:    1  diff: 1.75e-16
-Cl( 9, 9) in Cl( 9, 9) CPU = mm:    6240.00 fm:   14180.00 trials mm:    1 fm:    1  diff: 1.83e-16
-Cl(10,10) in Cl(10,10) CPU = mm:   28460.00 fm:   65010.00 trials mm:    1 fm:    1  diff: 1.94e-16
+Cl( 1, 1) in Cl( 1, 1) CPU = mm:       0.05 fm:       0.19 trials mm: 1000 fm: 1000  diff: 0.00e+00
+Cl( 2, 2) in Cl( 2, 2) CPU = mm:       0.46 fm:       0.86 trials mm: 1000 fm: 1000  diff: 6.24e-17
+Cl( 3, 3) in Cl( 3, 3) CPU = mm:       0.90 fm:       2.03 trials mm: 1000 fm: 1000  diff: 1.25e-16
+Cl( 4, 4) in Cl( 4, 4) CPU = mm:       4.15 fm:       8.92 trials mm: 1000 fm: 1000  diff: 1.19e-16
+Cl( 5, 5) in Cl( 5, 5) CPU = mm:      18.20 fm:      38.80 trials mm:   50 fm:   25  diff: 1.47e-16
+Cl( 6, 6) in Cl( 6, 6) CPU = mm:      80.00 fm:     170.00 trials mm:   12 fm:    7  diff: 1.48e-16
+Cl( 7, 7) in Cl( 7, 7) CPU = mm:     346.67 fm:     720.00 trials mm:    3 fm:    2  diff: 1.61e-16
+Cl( 8, 8) in Cl( 8, 8) CPU = mm:    1520.00 fm:    3120.00 trials mm:    1 fm:    1  diff: 1.75e-16
+Cl( 9, 9) in Cl( 9, 9) CPU = mm:    6550.00 fm:   13440.00 trials mm:    1 fm:    1  diff: 1.83e-16
+Cl(10,10) in Cl(10,10) CPU = mm:   28830.00 fm:   58100.00 trials mm:    1 fm:    1  diff: 1.94e-16
