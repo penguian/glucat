@@ -29,6 +29,17 @@
 #include <sstream>
 #include "glucat/index_set_imp.h"
 #include "glucat/clifford_algebra_imp.h"
+
+#include <boost/numeric/ublas/vector.hpp>
+#include <boost/numeric/ublas/vector_proxy.hpp>
+#include <boost/numeric/ublas/matrix.hpp>
+#include <boost/numeric/ublas/matrix_proxy.hpp>
+#include <boost/numeric/ublas/triangular.hpp>
+#include <boost/numeric/ublas/matrix_sparse.hpp>
+#include <boost/numeric/ublas/operation_sparse.hpp>
+#include <boost/numeric/ublas/operation.hpp>
+#include <boost/numeric/ublas/lu.hpp>
+
 #include "glucat/framed_multi_imp.h"
 #include "glucat/matrix_imp.h"
 #include "glucat/generation_imp.h"
