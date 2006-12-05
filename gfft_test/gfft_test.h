@@ -24,9 +24,12 @@
  ***************************************************************************/
 
 #include "glucat/glucat.h"
+// If radix of int is not 2, we can't easily set thresholds
+_GLUCAT_CTAssert(std::numeric_limits<int>::radix == 2, CannotSetThresholds)
+
 const int DRIVER_BASIS_MAX_COUNT        = 1;
-const int DRIVER_FAST_SIZE_THRESHOLD    = 1 << 31;
-const int DRIVER_INV_FAST_DIM_THRESHOLD = 1 << 31;
+const int DRIVER_FAST_SIZE_THRESHOLD    = 1 << (std::numeric_limits<int>::digits - 1);
+const int DRIVER_INV_FAST_DIM_THRESHOLD = 1 << (std::numeric_limits<int>::digits - 1);
 typedef glucat::tuning
   <
     glucat::DEFAULT_Mult_Matrix_Threshold,
@@ -47,15 +50,18 @@ namespace glucat_gfft_test
 {
   using namespace glucat;
   using namespace std;
+
   const index_t max_n = DEFAULT_HI;
 
   inline
+  static
   double
   elapsed( clock_t cpu_time )
   { return ((clock() - cpu_time)*MS_PER_S) / CLOCKS_PER_SEC; }
 
   template< typename Index_Set_T >
   inline
+  static
   void
   print_times(const Index_Set_T& frame1, const Index_Set_T& frame2,
               const double mm_cpu_time,  const double fm_cpu_time,
@@ -68,9 +74,9 @@ namespace glucat_gfft_test
                   << setw(index_width) << -min_neg(frame2) << ")"
          << " CPU = ";
     const ios::fmtflags& old_flags = cout.flags();
-    const int width = 10;
-    const int old_prec = cout.precision();
-    const int prec = 2;
+    const streamsize width = 10;
+    const streamsize old_prec = cout.precision();
+    const streamsize prec = 2;
     const int trial_width = 4;
     cout.setf(ios_base::fixed);
     cout.setf(ios_base::showpoint);
@@ -89,6 +95,7 @@ namespace glucat_gfft_test
   }
 
   template< typename Multivector_T >
+  static
   void
   time_fast(Multivector_T& a, const Multivector_T& b,
             const typename Multivector_T::index_set_t& inner_frame,
@@ -146,9 +153,9 @@ namespace glucat_gfft_test
     }
     print_times(inner_frame, outer_frame, mm_cpu_time, fm_cpu_time, mm_trials, fm_trials);
     const ios::fmtflags& old_flags = cout.flags();
-    const int width = 8;
-    const int old_prec = cout.precision();
-    const int prec = 2;
+    const streamsize width = 8;
+    const streamsize old_prec = cout.precision();
+    const streamsize prec = 2;
     cout.setf(ios_base::scientific);
     cout.setf(ios_base::showpoint);
     cout << setprecision(prec)
@@ -158,6 +165,7 @@ namespace glucat_gfft_test
   }
 
   template< class Multivector_T >
+  static
   void
   fast_test(const index_t n, const index_t max_n)
   {
@@ -182,16 +190,6 @@ namespace glucat_gfft_test
   }
 }
 
-int gfft_test(const int n)
-{
-  using namespace glucat_gfft_test;
-  if (n > max_n)
-  {
-    cout << "Value " << n << " is too big." << endl;
-    cout << "Maximum value allowed is " << max_n << "." << endl;
-    return 1;
-  }
-  fast_test< framed_multi<double> >(n, max_n);
-  return 0;
-}
+int gfft_test(const int n);
+
 #endif // GLUCAT_GFFT_TEST_H
