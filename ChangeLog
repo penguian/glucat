@@ -1,3 +1,229 @@
+2006-12-06 02:22  leopardi
+
+	* test01/peg01.cpp, test02/peg02.cpp, test03/peg03.cpp,
+	  test04/peg04.cpp, test05/peg05.cpp, test06/peg06.cpp,
+	  test07/peg07.cpp, test08/peg08.cpp, test09/peg09.cpp,
+	  test10/peg10.cpp, test12/peg12.cpp, test13/peg13.cpp,
+	  test15/peg15.cpp, test16/peg16.cpp: Move test function from
+	  header file to source file.
+
+2006-12-06 02:19  leopardi
+
+	* transforms/transforms.h: Move test function from header to source
+	  file.  Define template functions as static.  Use streamsize.	Use
+	  cout.precision().
+
+2006-12-06 02:19  leopardi
+
+	* transforms/transforms.cpp: Move test function from header to
+	  source file.
+
+2006-12-06 02:18  leopardi
+
+	* test_runtime/: gfft_test-10.out, squaring-8.out, test.out,
+	  transforms-6.out: Update test results.
+
+2006-12-06 02:17  leopardi
+
+	* test11/peg11.cpp: Move test function from header to source file.
+	  Force NDEBUG to be defined, to turn off spurious checking in
+	  uBLAS sparse_prod().
+
+2006-12-06 02:17  leopardi
+
+	* test01/peg01.h, test02/peg02.h, test03/peg03.h, test04/peg04.h,
+	  test05/peg05.h, test06/peg06.h, test07/peg07.h, test08/peg08.h,
+	  test09/peg09.h, test10/peg10.h, test11/peg11.h, test12/peg12.h,
+	  test13/peg13.h, test14/peg14.h, test15/peg15.h, test16/peg16.h:
+	  Move test function from header to source file.  Define template
+	  functions as static.
+
+2006-12-06 02:16  leopardi
+
+	* test14/peg14.cpp: Move test function from header file to source
+	  file.
+
+2006-12-06 02:14  leopardi
+
+	* test/try_catch.h: Define function prototypes.
+
+2006-12-06 02:14  leopardi
+
+	* squaring/squaring.h: Move test function from header to source
+	  file.  Define template functions as static.  Define and use const
+	  RAND_SCALE.  Use streamsize.
+
+2006-12-06 02:14  leopardi
+
+	* squaring/squaring.cpp: Move test function from header to source
+	  file.
+
+2006-12-06 02:14  leopardi
+
+	* glucat/scalar.h: Add Doxygen description of log2().  Do not use
+	  const for results of functions which return a scalar.
+
+2006-12-06 02:13  leopardi
+
+	* glucat/portability.h: Remove workarounds for old compilers.
+	  Suppress spurious Intel compiler warnings.  Define ISNAN(x) macro
+	  which uses isnan(x) macro if available, and otherwise uses
+	  std:isnan(x).
+
+2006-12-06 02:13  leopardi
+
+	* glucat/matrix_multi_imp.h: Use index_t for bott.  Define template
+	  functions as static if they are intended to be used only within
+	  the header file.  In calls to resize, use third parameter set to
+	  false.  Use std::numeric_limits<Scalar_T>::has_quiet_NaN and
+	  numeric_traits<Scalar_T>::isNaN().  Use index_t for variables p,
+	  q, orig_p, orig_q, old_p.  Use explicit casts to index_t.
+	  Cosmetics.
+
+2006-12-06 02:13  leopardi
+
+	* glucat/matrix_multi.h: Do not use friend_maker.  Define
+	  numeric_limits< glucat::matrix_multi<Scalar_T,LO,HI> >.
+	  Cosmetics.
+
+2006-12-06 02:12  leopardi
+
+	* glucat/matrix_imp.h: Do not use const for results of functions
+	  which return a scalar.
+
+2006-12-06 02:12  leopardi
+
+	* glucat/matrix.h: Do not use const for results of functions which
+	  return a scalar.  Cosmetics.
+
+2006-12-06 02:12  leopardi
+
+	* glucat/long_double.h: Cosmetics.
+
+2006-12-06 02:11  leopardi
+
+	* glucat/index_set_imp.h: Pass bitset_t, index_t, index_set_t and
+	  set_value_t by value.  Consistently use index_set_t rather than
+	  index_set.  Use const parameters where appropriate.  Use explicit
+	  casts to index_t.  Cosmetics.
+
+2006-12-06 02:11  leopardi
+
+	* glucat/index_set.h: Pass bitset_t, index_t, index_set_t and
+	  set_value_t by value.  Consistently use index_set_t rather than
+	  index_set.  Use const parameters where appropriate.
+
+2006-12-06 02:11  leopardi
+
+	* glucat/glucat_imp.h: Move ublas includes from glucat/glucat.h.
+
+2006-12-06 02:10  leopardi
+
+	* glucat/glucat.h: Include <boost/config.hpp>.	Include <cmath>
+	  rather than <math.h> Move includes for glucat/long_double.h and
+	  glucat/scalar.h closer to the start.	Move ublas includes to
+	  glucat/glucat_imp.h and replace with include for
+	  <boost/numeric/ublas/fwd.hpp>.
+
+2006-12-06 02:10  leopardi
+
+	* glucat/global.h: Use glucat::CTAssertion<(expr)> instead of
+	  CTAssertion<(expr)>.	Define template class bool_to_type<>.
+	  Define template class numeric_traits<T>, including function
+	  isNaN().  Define type index_t to be int rather than short.
+	  Cosmetics.
+
+2006-12-06 02:09  leopardi
+
+	* glucat/generation_imp.h: Use index_t for offset_to_super[].  In
+	  calls to resize, use third parameter set to false.
+
+2006-12-06 02:08  leopardi
+
+	* glucat/generation.h: Use index_t for offset_to_super[].
+
+2006-12-06 02:08  leopardi
+
+	* glucat/framed_multi_imp.h: In operator<<(), use isnan() and
+	  std::numeric_limits<Scalar_T>::quiet_NaN().  In isnan(), use
+	  std::numeric_limits<Scalar_T>::has_quiet_NaN and
+	  numeric_traits<Scalar_T>::isNaN().  In operator>>(), use int c to
+	  hold the result of s.peek().	In truncated(), use isnan().  In
+	  centre_pm4_qp4(), centre_pp4_qm4(), centre_qp1_pm1(), use index_t
+	  for arguments p and q.  Consistently use Scalar_T rather than
+	  scalar_t.  Cosmetics.
+
+2006-12-06 02:08  leopardi
+
+	* glucat/framed_multi.h: Do not use friend_maker.  In
+	  centre_pm4_qp4(), centre_pp4_qm4(), centre_qp1_pm1(), use index_t
+	  for arguments p and q.  Tidy use of _GLUCAT_USE_GNU_CXX_HASH_MAP.
+	  Define numeric_limits< glucat::framed_multi<Scalar_T,LO,HI> >.
+	  Cosmetics.
+
+2006-12-06 02:07  leopardi
+
+	* glucat/clifford_algebra_imp.h: Define template functions as
+	  static if they are intended to be used only within the header
+	  file.
+
+2006-12-06 02:07  leopardi
+
+	* glucat/clifford_algebra.h: Cosmetics.
+
+2006-12-06 02:06  leopardi
+
+	* gfft_test/gfft_test.h: Move test function from header to source
+	  file.  Define template functions as static.  Use
+	  std::numeric_limits<int>.  Use streamsize.
+
+2006-12-06 02:06  leopardi
+
+	* gfft_test/gfft_test.cpp: Move test function from header to source
+	  file.
+
+2006-12-06 02:05  leopardi
+
+	* gfft_test/Makefile.in, squaring/Makefile.in, test01/Makefile.in,
+	  test02/Makefile.in, test03/Makefile.in, test04/Makefile.in,
+	  test05/Makefile.in, test06/Makefile.in, test07/Makefile.in,
+	  test08/Makefile.in, test09/Makefile.in, test10/Makefile.in,
+	  test11/Makefile.in, test/Makefile.in, test12/Makefile.in,
+	  test13/Makefile.in, test14/Makefile.in, test15/Makefile.in,
+	  test16/Makefile.in, transforms/Makefile.in: Update to automake
+	  1.9.6.
+
+2006-12-06 02:04  leopardi
+
+	* glucat.lsm: Update to GluCat 0.2.0.  Update author contact.
+
+2006-12-06 02:03  leopardi
+
+	* glucat.kdevelop: Update to GluCat 0.2.0.  Update author contact.
+	  Set main program to gfft_test/gfft_test.
+
+2006-12-06 02:02  leopardi
+
+	* aclocal.m4: Update to aclocal 1.9.6, automake 1.9.6.
+
+2006-12-06 02:01  leopardi
+
+	* INSTALL, NEWS, README, TODO, configure.in, configure.in.in:
+	  Update to GluCat 0.2.0.
+
+2006-12-06 02:00  leopardi
+
+	* Doxyfile: Update to GluCat 0.2.0.  Use source browser.  Generate
+	  LaTeX.
+
+2005-08-31 08:24  leopardi
+
+	* ChangeLog: Re-add changes logged prior to the use of CVS.
+
+2005-08-31 08:16  leopardi
+
+	* ChangeLog: Log changes for version 0.1.9.
+
 2005-08-31 08:14  leopardi
 
 	* glucat/ublas_imp.h: Ensure this file is removed.
@@ -1793,16 +2019,3 @@
 	  test/templates/cpp_template, test/templates/header_template:
 	  Initial revision
 
-2002-01-12 Updated version to 0.0.2
-2002-01-12 ./test/test.out, test6.out: Added sample output
-2002-01-12 Added all relevant files to CVS
-2002-01-12 ./glucat/doc: removed unused directory
-
-2002-01-11 ./glucat/clifford_algebra_imp.h: Fixed elliptic() to give a result which commutes
-2002-01-11 ./test/peg12.cpp: Changed example name from "basis group" to "frame group"
-2002-01-11 ./test/peg13.cpp, peg14.cpp, peg15.cpp: Added cout << example name
-2002-01-11 ./test/peg16.cpp: Fixed example name to read: Matrices of multivectors
-
-2002-01-10 ./README: Added -finline-limit-400
-
-2002-01-09 Released glucat-0.0.1
