@@ -2,8 +2,8 @@
 <kdevelop>
   <general>
     <author>Paul C. Leopardi</author>
-    <email>leopardi@bigpond.net.au</email>
-    <version>glucat-0.1.9</version>
+    <email>paul.leopardi@iinet.net.au</email>
+    <version>glucat-0.2.0</version>
     <projectmanagement>KDevAutoProject</projectmanagement>
     <primarylanguage>C++</primarylanguage>
     <ignoreparts/>
@@ -19,10 +19,10 @@
       <useconfiguration>optimized</useconfiguration>
     </general>
     <run>
-      <mainprogram>src/glucat</mainprogram>
+      <mainprogram>gfft_test/gfft_test</mainprogram>
       <directoryradio>executable</directoryradio>
       <customdirectory>/</customdirectory>
-      <programargs/>
+      <programargs>1</programargs>
       <terminal>false</terminal>
       <autocompile>true</autocompile>
       <envvars/>
@@ -35,14 +35,14 @@
         <f77compiler>kdevpgf77options</f77compiler>
         <cxxflags>-O2 -g0</cxxflags>
         <configargs>--with-hash-map --enable-debug=no</configargs>
-        <topsourcedir></topsourcedir>
-        <cppflags></cppflags>
-        <ldflags></ldflags>
-        <ccompilerbinary></ccompilerbinary>
-        <cxxcompilerbinary></cxxcompilerbinary>
-        <f77compilerbinary></f77compilerbinary>
-        <cflags></cflags>
-        <f77flags></f77flags>
+        <topsourcedir/>
+        <cppflags/>
+        <ldflags/>
+        <ccompilerbinary/>
+        <cxxcompilerbinary/>
+        <f77compilerbinary/>
+        <cflags/>
+        <f77flags/>
         <envvars/>
       </optimized>
       <debug>
@@ -59,7 +59,9 @@
       <abortonerror>false</abortonerror>
       <numberofjobs>1</numberofjobs>
       <dontact>false</dontact>
-      <makebin/>
+      <makebin></makebin>
+      <runmultiplejobs>false</runmultiplejobs>
+      <prio>0</prio>
     </make>
   </kdevautoproject>
   <kdevdebugger>
@@ -163,6 +165,11 @@
       <inlineGet>true</inlineGet>
       <inlineSet>true</inlineSet>
     </creategettersetter>
+    <qt>
+      <used>false</used>
+      <version>3</version>
+      <root>/usr/lib/qt3</root>
+    </qt>
   </kdevcppsupport>
   <kdevfileview>
     <groups>
@@ -190,9 +197,13 @@
   </kdevcvsservice>
   <kdevdocumentation>
     <projectdoc>
-      <docsystem></docsystem>
-      <docurl></docurl>
+      <docsystem>Doxygen Documentation Collection</docsystem>
+      <docurl>glucat-api/</docurl>
       <usermanualurl></usermanualurl>
     </projectdoc>
   </kdevdocumentation>
+  <ctagspart>
+    <customArguments></customArguments>
+    <customTagfilePath></customTagfilePath>
+  </ctagspart>
 </kdevelop>
