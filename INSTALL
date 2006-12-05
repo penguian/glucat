@@ -6,37 +6,45 @@ Before You Begin
  to obtain the Boost Library.
 
  Make sure that you have installed Boost with the same version of g++ as you
-will be using with GluCat.
+ will be using with GluCat.
 
  The headers need a compiler which correctly handles template template classes,
-such as g++ 3.X and 4.X.
+ such as g++ 3.X and 4.X.
 
- GluCat 0.1.9 has so far been tested using:
+ The headers also need an include library which either defines the macro isnan
+ or defines std::isnan.
+
+ GluCat 0.2.0 has so far been tested using:
 
 1) Intel(R) Pentium(R) 4 with
-1.1) SuSE Linux 9.2, g++ 3.3.4 (pre 3.3.5 20040809),    Boost 1.31.0
-1.2) SuSE Linux 9.2, g++ 3.3.4 (pre 3.3.5 20040809),    Boost 1.33.0
+1.1) SuSE Linux 9.2, g++ 3.3.4 (pre 3.3.5 20040809),          Boost 1.31.0
+1.2) SuSE Linux 9.2, g++ 3.3.4 (pre 3.3.5 20040809),          Boost 1.33.0
+1.3) SuSE Linux 9.2, Intel icc 8.1,                           Boost 1.31.0
 
-2) AMD Athlon(tm) 64 with
-2.1) SuSE Linux 9.3, g++ 3.3.5 20050117 (prerelease),   Boost 1.31.0
-2.2) SuSE Linux 9.3, g++ 3.3.5 20050117 (prerelease),   Boost 1.33.0
-2.3) SuSE Linux 9.3, g++ 4.0.1,                         Boost 1.33.0
-2.4) SuSE Linux 9.3, g++ 4.0.2 20050825 (prerelease),   Boost 1.33.0
-2.5) SuSE Linux 9.3, g++ 4.1.0 20050813 (experimental), Boost 1.33.0
+2) Dual Intel(R) Pentium(R) 4 with
+2.1) RHEL 4, g++ version 3.4.6 20060404 (Red Hat 3.4.6-3),    Boost 1.33.1
+2.2) RHEL 4, Intel icc 7.1,                                   Boost 1.33.1
 
-3) Dual AMD Opteron(tm) with
-3.1) SuSE SLES 9,    g++ 3.3.3,                         Boost 1.31.0
+3) AMD Athlon(tm) 64 with
+3.1) SuSE Linux 10.1, g++ 3.4.1,                        Boost 1.33.0
+3.2) SuSE Linux 10.1, g++ 4.1.0,                        Boost 1.33.1
+
+4) Dual AMD Opteron(tm) with
+4.1) SuSE SLES 9,    g++ 3.3.3,                         Boost 1.31.0
 
    Notes: 
-1. GluCat 0.1.9 does not work with Boost versions before 1.31.0 or with Boost
+1. GluCat 0.2.0 does not work with Boost versions before 1.31.0 or with Boost
    1.32.0. Boost uBLAS before 1.31.0 has different semantics for operator= for
    compressed matrices, and also does not provide LU solvers for compressed
    matrices. With Boost 1.32.0, GluCat seems to compile OK, but gives incorrect
-   results due to changes in Boost uBLAS semantics. This has been fixed with
-   Boost 1.33.0.
-2. Boost 1.31.0 uBLAS does NOT compile under g++ 3.4.X or g++ 4.X.
+   results due to changes in Boost uBLAS semantics. See the uBLAS thread 
+   "Changes in uBLAS between Boost 1.31 and Boost 1.32?" at
+   http://lists.boost.org/MailArchives/ublas/2005/07/0552.php
+   This problem has been fixed with Boost 1.33.0. See
+   http://lists.boost.org/MailArchives/ublas/2005/08/0664.php
+2. Boost 1.31.0 uBLAS does not compile under g++ 3.4.X or g++ 4.X.
 3. With g++ 4.0.0 and g++ 4.0.1, optimization with -O3 may corrupt iterators.
-   Use -O3 -fno-strict-aliasing instead. See gcc bug 23599.
+   Use -O3 -fno-strict-aliasing instead. See gcc bugs 23599 and 23192.
 
 To Test
 =======
@@ -52,9 +60,8 @@ The Test Programs
  The test script ./test/test.sh takes any number (including zero) of numeric 
  parameters. Positive numbers in the range 1 to 16 correspond to coding examples
  ./test01/peg01.h to ./test16/peg16.h. These examples are run in numerical
-order.
- With zero parameters, all examples from 1 to 16 are run in order. Many of 
- the examples are run twice - once with framed_multi<Scalar_T> and once with 
+ order. With zero parameters, all examples from 1 to 16 are run in order. Many
+ of the examples are run twice - once with framed_multi<Scalar_T> and once with 
  matrix_multi<Scalar_T>. 
 
  The test program ./gfft_test/gfft_test takes a parameter n, and transforms
@@ -67,8 +74,7 @@ order.
 
  The test program ./transforms/transforms takes a parameter n, and transforms
  larger and larger multivectors within the subalgebras defined by  frames
-limited
- by the value of n.
+ limited by the value of n.
  
 To Make the Test Programs
 -------------------------
@@ -84,8 +90,7 @@ To Make the Test Programs
  Once you have created the test programs, copy the runtime directory
  ./test_runtime to a convenient place. ./test_runtime contains the test input
  file eg8.txt. This file is needed by programming example 8 (reading
-multivectors
- from input).
+ multivectors from input).
 
  The sample test output files are eg3.res, test.out, gfft_test-10.out,
  squaring-6.out and transforms-6.out

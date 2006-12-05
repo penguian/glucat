@@ -24,7 +24,9 @@ o Rafal Ablamowitz
 o Pertti Lounesto
   http://www.hut.fi/~ppuska/mirror/Lounesto/
 o The Clifford Research Group at Ghent
-  http://cage.rug.ac.be/~krauss/clg/cliffrug.html
+  http://cage.ugent.be/clg/
+o Soeren Krausshar
+  http://cage.rug.ac.be/~krauss
 o The Geometric Algebra Research Group at Cambridge:
   http://www.mrao.cam.ac.uk/~clifford/
 o William Baylis:
@@ -32,7 +34,7 @@ o William Baylis:
 o Leo Dorst
   http://carol.wins.uva.nl/~leo/clifford/
 o John Fletcher
-  http://www.ceac.aston.ac.uk/personal_pages/fletcher_john/
+  http://www.ceac.aston.ac.uk/research/staff/jpf/clifford/index.php
 o David Hestenes
   http://modelingnts.la.asu.edu/
 o Christian Perwass
@@ -41,7 +43,7 @@ o Christian Perwass
 Books:
 o Rafal Ablamowicz, Pertti Lounesto, Josep Parra (eds.),
   "Clifford Algebras with Numeric and Symbolic Computations",
-  Birkh�ser, 1996.
+  Birkhauser, 1996.
 o David Hestenes, Garret Sobczyk, "Clifford Algebra to Geometric Calculus"
   Kluwer, first published in 1984; reprinted with corrections in 1992.
 o Pertti Lounesto, "Clifford Algebras and Spinors",
@@ -51,13 +53,13 @@ o Ian R. Porteous, "Clifford Algebras and the Classical groups",
 
 Software:
  o CLU, a C++ library with OPEN-GL graphics
-   http://www.perwass.de/cbup/clu.html 
+   http://www.clucalc.info/
  o GAIGEN, a C++ code optimized generator   
    http://www.science.uva.nl/ga/gaigen/
  o CLICAL, a Clifford algebra calculator
    http://www.hut.fi/~ppuska/mirror/Lounesto/CLICAL.htm
- o CLIFFORD for Maple 9
-   http://math.tntech.edu/rafal/cliff9/index.html
+ o CLIFFORD for Maple 10
+   http://math.tntech.edu/rafal/cliff10/index.html
  o GA Package for Maple V
    http://www.mrao.cam.ac.uk/~clifford/software/GA/
  o GABLE, a Matlab package with visualization

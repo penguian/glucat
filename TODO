@@ -1,9 +1,7 @@
 There is plenty of testing, cleanup, packaging and documentation work yet to do.
-o Try defining Boost concepts, numeric limits and traits, so that GluCat can
-  eventually become a Boost library.
-o Try moving the names in glucat:: which shadow names in std:: into std:: itself
-  so that eg. std::abs() will work for multivector_t within other template
-  libraries, such as MTL.
+o Simplify and improve the use of automake and autoconf in building GluCat.
+o Try defining Boost concepts and more numeric traits so that GluCat can eventually 
+  become a Boost library.
 o Test and suggest improvements to John Fletcher's SWIG bindings to Ruby and 
   Henk Jansen's SWIG bindings to Python.
 o Investigate if GluCat could be used as the back-end to Christian Perwass' CLU.
@@ -15,11 +13,7 @@ o Fix sqrt() and log() so that they deal properly with negative real
 o Devise better algorithms and better implementations of existing algorithms for
   the transcendental functions. In particular, pay more attention to radius of
   convergence, condition number of matrices and poking out of the subalgebra.
-o Try making set_value_t into a class template parameter, ie.
-  framed_multi<Scalar_T,LO,HI,Set_Value_T>, etc., to more easily support 64 bit 
-  index sets.
 o Try making Tune_P into a mixin policy class template parameter, ie.
-o Support IEEE NaN properly. 
 o Port to other architectures and compilers which support template template
   parameters.
 o Add operator| for geometric operations: return rhs * lhs * involute(inv(rhs))
@@ -35,3 +29,11 @@ o Try replacing multiplication by +/-1 within inner products by addition and
 o Try creating a class, vector_multi<>, which uses std::vector rather than
   std::map. This should be faster than framed_multi<>, if tuned properly, for
   full multivectors. For sparse multivectors, it may be slower.
+
+Done in GluCat 0.2.0:
+o Define numeric limits and traits.
+o Move the names in glucat:: which shadow names in std:: into std:: itself
+  so that eg. std::abs() will work for multivector_t within other template
+  libraries, such as MTL.
+o Support IEEE NaN properly.
+
