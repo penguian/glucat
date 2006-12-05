@@ -21,8 +21,23 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
+#if !defined(NDEBUG)
+#define NDEBUG
+#endif
 #include "test/driver.h"
 #include "test11/peg11.h"
+
+int test11()
+{
+  using namespace peg11;
+  cout << "Programming example 11 : Square root and transcendental functions" << endl;
+  cout << endl;
+  cout << "framed_multi<double>" << endl;
+  do_test11< framed_multi<double> >();
+  cout << "matrix_multi<double>" << endl;
+  do_test11< matrix_multi<double> >();
+  return 0;
+}
 
 using namespace glucat;
 
