@@ -27,8 +27,11 @@ namespace peg16
 {
   using namespace glucat;
   using namespace std;
+
   template< class Multivector_T >
-  void do_test16()
+  static
+  void 
+  do_test16()
   {
     typedef Multivector_T number;
     typedef typename number::index_set_t index_set_t;
@@ -57,15 +60,6 @@ namespace peg16
   }
 }
 
-int test16()
-{
-  using namespace peg16;
-  cout << "Programming example 16 : Matrices of multivectors" << endl;
-  cout << endl;
-  cout << "framed_multi<double,-3,3>" << endl;
-  do_test16< framed_multi<double,-3,3> >();
-  cout << "matrix_multi<double,-3,3>" << endl;
-  do_test16< matrix_multi<double,-3,3> >();
-  return 0;
-}
+int test16();
+
 #endif

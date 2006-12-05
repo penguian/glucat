@@ -27,8 +27,11 @@ namespace peg06
 {
   using namespace glucat;
   using namespace std;
+
   template< class Multivector_T >
-  Multivector_T expo(const Multivector_T& f)
+  static
+  Multivector_T 
+  expo(const Multivector_T& f)
   {
     typedef Multivector_T number;
     const number ff = f^f;
@@ -36,7 +39,9 @@ namespace peg06
   }
 
   template< class Multivector_T >
-  void do_test6()
+  static
+  void 
+  do_test6()
   {
     typedef Multivector_T number;
 
@@ -48,17 +53,6 @@ namespace peg06
   }
 }
 
-int test06()
-{
-  using namespace peg06;
-  cout << "Programming example 6 : outer exponential" << endl;
-  cout << endl;
-  cout << "Compute the outer exponential of the bivector B = q1*q2 + q3*q4 + q5*q6" << endl;
-  cout << endl;
-  cout << "framed_multi<double>" << endl;
-  do_test6< framed_multi<double> >();
-  cout << "matrix_multi<double>" << endl;
-  do_test6< matrix_multi<double> >();
-  return 0;
-}
+int test06();
+
 #endif

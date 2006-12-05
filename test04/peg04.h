@@ -27,8 +27,11 @@ namespace peg04
 {
   using namespace glucat;
   using namespace std;
+
   template< class Multivector_T >
-  void do_test4()
+  static
+  void 
+  do_test4()
   {
     typedef Multivector_T number;
     const number p1("{1}"), p2("{2}"), p3("{3}");
@@ -132,23 +135,6 @@ namespace peg04
   }
 }
 
-int test04()
-{
-  using namespace peg04;
-  cout << "Programming example 4 : Rotations and electromagnetic fields" << endl;
-  cout << endl;
-  cout << "Demonstration calculations from P. Lounesto," << endl;
-  cout << "''Clifford algebra calculations with a microcomputer'' in" << endl;
-  cout << "A. Micali, R. Boudet, J. Helmstetter, (eds)," << endl;
-  cout << "Clifford algebras and their applications in mathematical physics" << endl;
-  cout << "Kluwer, 1992, pp44-46." << endl;
-  cout << "See also: P. Lounesto, et. al., Clical demo" << endl;
-  cout << "http://www.teli.stadia.fi/~lounesto/CLICAL.htm" << endl;
-  cout << endl;
-  cout << "framed_multi<double>" << endl;
-  do_test4< framed_multi<double> >();
-  cout << "matrix_multi<double>" << endl;
-  do_test4< matrix_multi<double> >();
-  return 0;
-}
+int test04();
+
 #endif

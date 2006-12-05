@@ -30,7 +30,9 @@ namespace peg09
   using namespace glucat;
   using namespace std;
   template< class Multivector_T >
-  void do_test9()
+  static
+  void 
+  do_test9()
   {
     typedef Multivector_T number;
     typedef typename number::vector_t vector_t;
@@ -60,15 +62,6 @@ namespace peg09
   }
 }
 
-int test09()
-{
-  using namespace peg09;
-  cout << "Programming example 9 : vector_part" << endl;
-  cout << endl;
-  cout << "framed_multi<double>" << endl;
-  do_test9< framed_multi<double> >();
-  cout << "matrix_multi<double>" << endl;
-  do_test9< matrix_multi<double> >();
-  return 0;
-}
+int test09();
+
 #endif

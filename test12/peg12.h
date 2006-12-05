@@ -27,8 +27,11 @@ namespace peg12
 {
   using namespace glucat;
   using namespace std;
+
   template< class Multivector_T >
-  void mult_table(const Multivector_T& e1, const Multivector_T& e2)
+  static
+  void 
+  mult_table(const Multivector_T& e1, const Multivector_T& e2)
   {
     typedef Multivector_T e;
     const char* spaces("        ");
@@ -55,7 +58,9 @@ namespace peg12
   }
 
   template< class Multivector_T >
-  void do_test12()
+  static
+  void 
+  do_test12()
   {
     typedef Multivector_T e;
     cout << "{-2}, {-1}" << endl;
@@ -69,15 +74,6 @@ namespace peg12
   }
 }
 
-int test12()
-{
-  using namespace peg12;
-  cout << "Programming example 12 : Frame group multiplication tables" << endl;
-  cout << endl;
-  cout << "framed_multi<float,-2,2>" << endl;
-  do_test12< framed_multi<float,-2,2> >();
-  cout << "matrix_multi<float,-2,2>" << endl;
-  do_test12< matrix_multi<float,-2,2> >();
-  return 0;
-}
+int test12();
+
 #endif

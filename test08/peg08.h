@@ -29,8 +29,11 @@ namespace peg08
 {
   using namespace glucat;
   using namespace std;
+
   template< class Multivector_T >
-  void do_test8()
+  static
+  void 
+  do_test8()
   {
     typedef Multivector_T number;
     string str;
@@ -45,15 +48,6 @@ namespace peg08
   }
 }
 
-int test08()
-{
-  using namespace peg08;
-  cout << "Programming example 8 : Reading multivectors from input" << endl;
-  cout << endl;
-  cout << "framed_multi<double>" << endl;
-  do_test8< framed_multi<double> >();
-  cout << "matrix_multi<double>" << endl;
-  do_test8< matrix_multi<double> >();
-  return 0;
-}
+int test08();
+
 #endif

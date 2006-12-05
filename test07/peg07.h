@@ -27,7 +27,9 @@ namespace peg07
 {
   using namespace glucat;
   using namespace std;
+
   template< class Multivector_T >
+  static
   Multivector_T operator| (const Multivector_T& lhs, const Multivector_T& rhs)
   {
     typedef Multivector_T number;
@@ -40,6 +42,7 @@ namespace peg07
   }
 
   template< class Multivector_T >
+  static
   Multivector_T expo(const Multivector_T& f)
   {
     typedef Multivector_T number;
@@ -48,6 +51,7 @@ namespace peg07
   }
 
   template< class Multivector_T >
+  static
   void do_test7()
   {
     typedef Multivector_T number;
@@ -64,15 +68,6 @@ namespace peg07
   }
 }
 
-int test07()
-{
-  using namespace peg07;
-  cout << "Programming example 7 : Triality" << endl;
-  cout << endl;
-  cout << "framed_multi<double>" << endl;
-  do_test7< framed_multi<double> >();
-  cout << "matrix_multi<double>" << endl;
-  do_test7< matrix_multi<double> >();
-  return 0;
-}
+int test07();
+
 #endif

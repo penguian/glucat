@@ -27,8 +27,11 @@ namespace peg05
 {
   using namespace glucat;
   using namespace std;
+
   template< class Multivector_T >
-  Multivector_T operator| (const Multivector_T& lhs, const Multivector_T& rhs)
+  static
+  Multivector_T 
+  operator| (const Multivector_T& lhs, const Multivector_T& rhs)
   {
     typedef Multivector_T number;
     const number o = number("1+{-4,-2,-1}") * number("1+{-5,-3,-2}") *
@@ -38,7 +41,9 @@ namespace peg05
   }
 
   template< class Multivector_T >
-  void do_test5()
+  static
+  void 
+  do_test5()
   {
     typedef Multivector_T number;
     const number a("3+{-1}+4{-2}"),
@@ -50,18 +55,6 @@ namespace peg05
   }
 }
 
-int test05()
-{
-  using namespace peg05;
-  cout << "Programming example 5 : Octonions" << endl;
-  cout << endl;
-  cout << "In the Cayley algebra (=Cl(0,7)) compute the octonion product ab, where" << endl;
-  cout << "a = 3 + e1 + 4e2 and b = 2 + 3e2 + 5e3." << endl;
-  cout << endl;
-  cout << "framed_multi<double>" << endl;
-  do_test5< framed_multi<double> >();
-  cout << "matrix_multi<double>" << endl;
-  do_test5< matrix_multi<double> >();
-  return 0;
-}
+int test05();
+
 #endif
