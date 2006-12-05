@@ -25,9 +25,10 @@
 
 namespace glucat
 {
+  /// Log base 2 for Scalar_T
   template< typename Scalar_T >
   inline
-  const Scalar_T
+  Scalar_T
   log2(const Scalar_T x)
   { return std::log(x)/Scalar_T(l_ln2); }
 }
