@@ -23,16 +23,23 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
-//***************************** fix to `ios_base':
-#if defined (__GNUG__) && (__GNUC__ <= 2) && (__GNUC_MINOR__ <= 96)
-#define ios_base ios // scope is different for standard C++
+//***************************** workarounds for ICC
+#if defined (BOOST_INTEL) || defined (__ICL) || defined (__ICC)
+# pragma warning( disable: 177 ) // variable was declared but never referenced
+# pragma warning( disable: 279 ) // controlling expression is constant
+# pragma warning( disable: 383 ) // value copied to temporary, reference to temporary ...
+# pragma warning( disable: 444 ) // destructor for base is not virtual
+# pragma warning( disable: 810 ) // conversion from "double" to "int" may lose significant bits
+# pragma warning( disable: 869 ) // parameter was never referenced
+# pragma warning( disable: 981 ) // operands are evaluated in unspecified order
+# pragma warning( disable: 1572 ) // floating-point equality and inequality comparisons ...
 #endif
 
-//***************************** workaround for G++ 3.2 typename bug
-#if defined (__GNUG__) && (__GNUC__ == 3) && (__GNUC_MINOR__ <= 2)
-#define _GLUCAT_USE_STRUCT_NAME(T)
+//***************************** workarounds for isnan
+#if defined (isnan)
+#define ISNAN(x) isnan(x)
 #else
-#define _GLUCAT_USE_STRUCT_NAME(T) T::
+#define ISNAN(x) std::isnan(x)
 #endif
 
 #endif // _GLUCAT_PORTABILITY_H
