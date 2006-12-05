@@ -44,7 +44,6 @@ namespace glucat
 
     /// Number of non-zeros
     template< typename Matrix_T >
-    const
     typename Matrix_T::size_type
     nnz(const Matrix_T& m);
 
@@ -56,13 +55,15 @@ namespace glucat
 
     /// Product of monomial matrices
     template< typename LHS_T, typename RHS_T >
-    const typename RHS_T::expression_type
+    const 
+    typename RHS_T::expression_type
     mono_prod(const ublas::matrix_expression<LHS_T>& lhs,
               const ublas::matrix_expression<RHS_T>& rhs);
 
     /// Product of sparse matrices
     template< typename LHS_T, typename RHS_T >
-    const typename RHS_T::expression_type
+    const 
+    typename RHS_T::expression_type
     sparse_prod(const ublas::matrix_expression<LHS_T>& lhs,
                 const ublas::matrix_expression<RHS_T>& rhs);
 
