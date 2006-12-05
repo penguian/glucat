@@ -34,19 +34,19 @@ namespace glucat
   /// Constructor from index value
   template<const index_t LO, const index_t HI>
   index_set<LO,HI>::
-  index_set(const index_t& idx)
+  index_set(const index_t idx)
   { this->set(idx); }
 
   /// Constructor from bitset_t
   template<const index_t LO, const index_t HI>
   index_set<LO,HI>::
-  index_set(const bitset_t& bst)
+  index_set(const bitset_t bst)
   { *this = *static_cast<const index_set_t*>(&bst); }
 
   /// Constructor from set value of an index set folded within the given frame
   template<const index_t LO, const index_t HI>
   index_set<LO,HI>::
-  index_set(const set_value_t& folded_val, const index_set_t& frm, const bool prechecked)
+  index_set(const set_value_t folded_val, const index_set_t frm, const bool prechecked)
   {
     if (!prechecked)
       if (folded_val > set_value_t(1 << frm.count()))
@@ -72,7 +72,7 @@ namespace glucat
   inline
   bool
   index_set<LO,HI>::
-  operator== (const index_set& rhs) const
+  operator== (const index_set_t rhs) const
   {
     const bitset_t* pthis = this;
     const bitset_t* pthat = &rhs;
@@ -84,7 +84,7 @@ namespace glucat
   inline
   bool
   index_set<LO,HI>::
-  operator!= (const index_set& rhs) const
+  operator!= (const index_set_t rhs) const
   {
     const bitset_t* pthis = this;
     const bitset_t* pthat = &rhs;
@@ -110,7 +110,7 @@ namespace glucat
   inline
   index_set<LO,HI>&
   index_set<LO,HI>::
-  operator^= (const index_set<LO,HI>& rhs)
+  operator^= (const index_set_t rhs)
   {
     bitset_t* pthis = this;
     const bitset_t* pthat = &rhs;
@@ -135,7 +135,7 @@ namespace glucat
   inline
   index_set<LO,HI>&
   index_set<LO,HI>::
-  operator&= (const index_set<LO,HI>& rhs)
+  operator&= (const index_set_t rhs)
   {
     bitset_t* pthis = this;
     const bitset_t* pthat = &rhs;
@@ -160,7 +160,7 @@ namespace glucat
   inline
   index_set<LO,HI>&
   index_set<LO,HI>::
-  operator|= (const index_set<LO,HI>& rhs)
+  operator|= (const index_set_t rhs)
   {
     bitset_t* pthis = this;
     const bitset_t* pthat = &rhs;
@@ -185,7 +185,7 @@ namespace glucat
   inline
   bool
   index_set<LO,HI>::
-  operator[] (index_t idx) const
+  operator[] (const index_t idx) const
   { return idx > 0 ? bitset_t::test(idx-LO-1) :
            idx < 0 ? bitset_t::test(idx-LO) : false; }
 
@@ -194,7 +194,7 @@ namespace glucat
   inline
   typename index_set<LO,HI>::reference
   index_set<LO,HI>::
-  operator[] (index_t idx)
+  operator[] (const index_t idx)
   { return reference(*this, idx); }
 
   /// Test idx for membership: test value of bit idx
@@ -202,7 +202,7 @@ namespace glucat
   inline
   bool
   index_set<LO,HI>::
-  test(index_t idx) const
+  test(const index_t idx) const
   { return idx > 0 ? bitset_t::test(idx-LO-1) :
            idx < 0 ? bitset_t::test(idx-LO) : false; }
 
@@ -236,7 +236,7 @@ namespace glucat
   inline
   index_set<LO,HI>&
   index_set<LO,HI>::
-  set(index_t idx, int val)
+  set(const index_t idx, const int val)
   {
     if (idx > 0)
       bitset_t::set(idx-LO-1, val);
@@ -261,7 +261,7 @@ namespace glucat
   inline
   index_set<LO,HI>&
   index_set<LO,HI>::
-  reset(index_t idx)
+  reset(const index_t idx)
   {
     if (idx > 0)
       bitset_t::reset(idx-LO-1);
@@ -286,7 +286,7 @@ namespace glucat
   inline
   index_set<LO,HI>&
   index_set<LO,HI>::
-  flip(index_t idx)
+  flip(const index_t idx)
   {
     if (idx > 0)
       bitset_t::flip(idx-LO-1);
@@ -349,13 +349,13 @@ namespace glucat
         idx != -LO; 
         ++idx)
       if (bitset_t::test(idx))
-        return idx+LO;
+        return index_t(idx)+LO;
     for (size_t 
         idx = -LO; 
         idx != HI-LO; 
         ++idx)
       if (bitset_t::test(idx))
-        return idx+LO+1;
+        return index_t(idx)+LO+1;
     return 0;
   }
 
@@ -371,13 +371,13 @@ namespace glucat
         idx != -LO-1; 
         --idx)
       if (bitset_t::test(idx))
-        return idx+LO+1;
+        return index_t(idx)+LO+1;
     for (size_t 
         idx = -LO; 
         idx != 0; 
         --idx)
       if (bitset_t::test(idx))
-        return idx+LO;
+        return index_t(idx)+LO;
     if (bitset_t::test(0))
       return LO;
     return 0;
@@ -394,7 +394,7 @@ namespace glucat
         i = LO; 
         i <= HI; 
         i++)
-      if(a[i] != b[i])
+      if (a[i] != b[i])
         return( (a[i] < b[i]) ? -1 : +1 );
     return 0;    // all elements are equal => a == b
   }
@@ -405,14 +405,14 @@ namespace glucat
   inline
   bool
   index_set<LO,HI>::
-  lex_less_than(const index_set<LO,HI>& rhs) const
+  lex_less_than(const index_set_t rhs) const
   {
     const bitset_t* prhs = &rhs;
     for (size_t 
         idx = 0; 
         idx != HI - LO; 
         ++idx)
-      if(bitset_t::test(idx) != prhs->test(idx))
+      if (bitset_t::test(idx) != prhs->test(idx))
         return bitset_t::test(idx) > prhs->test(idx);
     return false;
   }
@@ -423,7 +423,7 @@ namespace glucat
   inline
   bool
   index_set<LO,HI>::
-  operator< (const index_set<LO,HI>& rhs) const
+  operator< (const index_set_t rhs) const
   {
     index_t this_grade = this->count();
     index_t rhs_grade  = rhs.count();
@@ -443,12 +443,12 @@ namespace glucat
         (i <= HI) && !(ist[i]); 
         ++i)
     { }
-    if(i <= HI)
+    if (i <= HI)
       os << i;
     for (++i; 
         i <= HI; 
         ++i)
-      if(ist[i])
+      if (ist[i])
         os << ',' << i;
     os << '}';
     return os;
@@ -507,7 +507,7 @@ namespace glucat
   const
   index_set<LO,HI>
   index_set<LO,HI>::
-  fold(const index_set& frm, const bool prechecked) const
+  fold(const index_set_t frm, const bool prechecked) const
   {
     if (!prechecked && ((*this | frm) != frm))
       throw error_t("fold(frm): cannot fold from outside of frame");
@@ -533,7 +533,7 @@ namespace glucat
   const
   index_set<LO,HI>
   index_set<LO,HI>::
-  unfold(const index_set& frm, const bool prechecked) const
+  unfold(const index_set_t frm, const bool prechecked) const
   {
     const char* msg =
       "unfold(frm): cannot unfold into a smaller frame";
@@ -562,7 +562,7 @@ namespace glucat
   template<const index_t LO, const index_t HI>
   set_value_t
   index_set<LO,HI>::
-  value_of_fold(const index_set& frm) const
+  value_of_fold(const index_set_t frm) const
   {
     const index_set_t folded_set = this->fold(frm);
     const index_t min_index = frm.fold().min();
@@ -579,7 +579,7 @@ namespace glucat
   template<const index_t LO, const index_t HI>
   int
   index_set<LO,HI>::
-  sign_of_mult(const index_set<LO,HI>& ist) const
+  sign_of_mult(const index_set_t ist) const
   {
     bool h = false;
     bool negative = false;
