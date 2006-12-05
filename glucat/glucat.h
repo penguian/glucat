@@ -31,12 +31,13 @@
 // ref: S. Meyers, "Effective C++ ", Addison-Wesley, 1992.
  ***************************************************************************/
 
+#include <boost/config.hpp>
 #include "glucat/portability.h"
 
 // Declarations
 #define HAVE_STD_ABS
 #include <boost/limits.hpp>
-
+#include <cmath>
 #include "glucat/global.h"
 
 #include <exception>
@@ -45,6 +46,12 @@
 
 #include <bitset>
 #include "glucat/index_set.h"
+
+// Add real equivalents to complex functions
+#include "glucat/long_double.h"
+
+// Improve IEEE NaN support
+#include "glucat/scalar.h"
 
 // Include <utility> to define pair<>
 #include <utility>
@@ -60,22 +67,9 @@
 #include <complex>
 #include "glucat/framed_multi.h"
 
-// Add real equivalents to complex functions
-#include <math.h>
-#include "glucat/long_double.h"
-#include "glucat/scalar.h"
-
 #include <iostream>
 
-#include <boost/numeric/ublas/vector.hpp>
-#include <boost/numeric/ublas/vector_proxy.hpp>
-#include <boost/numeric/ublas/matrix.hpp>
-#include <boost/numeric/ublas/matrix_proxy.hpp>
-#include <boost/numeric/ublas/triangular.hpp>
-#include <boost/numeric/ublas/matrix_sparse.hpp>
-#include <boost/numeric/ublas/operation_sparse.hpp>
-#include <boost/numeric/ublas/operation.hpp>
-#include <boost/numeric/ublas/lu.hpp>
+#include <boost/numeric/ublas/fwd.hpp>
 
 #include "glucat/matrix.h"
 
