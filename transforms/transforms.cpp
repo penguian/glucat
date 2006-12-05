@@ -22,6 +22,23 @@
  ***************************************************************************/
 
 #include "transforms/transforms.h"
+
+int transforms(const int n)
+{
+  using namespace glucat_fast_test;
+  if (n > max_n)
+  {
+    cout << "Value " << n << " is too big." << endl;
+    cout << "Maximum value allowed is " << max_n << "." << endl;
+    return 1;
+  }
+  cout << "framed_multi<double>" << endl;
+  fast_test< framed_multi<double> >(n, max_n);
+  cout << "matrix_multi<double>" << endl;
+  fast_test< matrix_multi<double> >(n, max_n);
+  return 0;
+}
+
 using namespace glucat;
 
 int main(int argc, char ** argv)
