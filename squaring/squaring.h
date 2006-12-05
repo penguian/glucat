@@ -37,8 +37,10 @@ namespace glucat_mult_test
   const index_t max_n = DEFAULT_HI;
   typedef double Scalar_T;
   typedef index_set< -max_n, max_n > index_set_t;
+  const Scalar_T RAND_SCALE = 1.0/RAND_MAX;
 
   inline
+  static
   double
   elapsed( clock_t cpu_time )
   { return ((clock() - cpu_time)*MS_PER_S) / CLOCKS_PER_SEC; }
@@ -55,9 +57,9 @@ namespace glucat_mult_test
                   << setw(index_width) << -min_neg(frame2) << ")"
          << " CPU = ";
     const ios::fmtflags& old_flags = cout.flags();
-    const int width = 12;
-    const int old_prec = cout.precision();
-    const int new_prec = 2;
+    const streamsize width = 12;
+    const streamsize old_prec = cout.precision();
+    const streamsize new_prec = 2;
     cout.setf(ios_base::fixed);
     cout.setf(ios_base::showpoint);
     cout << setprecision(new_prec)
@@ -70,6 +72,7 @@ namespace glucat_mult_test
   }
 
   template< typename Multivector_T >
+  static
   void
   time_mult(Multivector_T& a, const Multivector_T& b,
             const index_set_t& inner_frame,
@@ -78,7 +81,7 @@ namespace glucat_mult_test
     const int min_trials_if_zero = 1000;
     Multivector_T c;
     clock_t cpu_time = clock();
-     c = a * b*(Scalar_T(1.0*rand())/RAND_MAX) + a*(Scalar_T(1.0*rand())/RAND_MAX);
+     c = a * b * (rand()*RAND_SCALE) + a * (rand()*RAND_SCALE);
     double setup_cpu_time = elapsed(cpu_time);
     if (setup_cpu_time < MS_PER_S)
     {
@@ -89,7 +92,7 @@ namespace glucat_mult_test
       clock_t cpu_time = clock();
       int trials;
       for (trials = 0; trials != max_trials; ++trials)
-        c = a * b*(Scalar_T(1.0*rand())/RAND_MAX) + a*(Scalar_T(1.0*rand())/RAND_MAX);
+        c = a * b * (rand()*RAND_SCALE) + a * (rand()*RAND_SCALE);
       setup_cpu_time = elapsed(cpu_time)/trials;
     }
     a = c;
@@ -112,6 +115,7 @@ namespace glucat_mult_test
   }
 
   template< class Multivector_T >
+  static
   void
   mult_test(const index_t n, const index_t max_n)
   {
@@ -123,17 +127,17 @@ namespace glucat_mult_test
     static const index_t v_hi = e_::v_hi;
     const index_t max_index = min(n, max_n);
     const e_ outer_frame = index_range<v_lo,v_hi>(-max_index, max_index);
-    
+
     clock_t cpu_time = clock();
     multivector_t a = multivector_t(outer_frame, 1);
     const double setup_cpu_time = elapsed(cpu_time);
-    
+
     cout << "Square of unit pseudoscalar (" << a << ")" << endl;
-    
+
     cpu_time = clock();
      a *= a;
     const double mult_cpu_time = elapsed(cpu_time);
-    
+
     print_times(outer_frame, outer_frame, setup_cpu_time, mult_cpu_time);
     cout << "Square is " << a << endl;
     e_ inner_frame;
@@ -149,20 +153,6 @@ namespace glucat_mult_test
   }
 }
 
-int squaring(const int n)
-{
-  using namespace glucat_mult_test;
-  if (n > max_n)
-  {
-    cout << "Value " << n << " is too big." << endl;
-    cout << "Maximum value allowed is " << max_n << "." << endl;
-    return 1;
-  }
-  cout << "framed_multi<double>" << endl;
-  mult_test< framed_multi<double> >(n, max_n);
-  cout << "matrix_multi<double>" << endl;
-  mult_test< matrix_multi<double> >(n, max_n);
+int squaring(const int n);
 
-  return 0;
-}
 #endif // GLUCAT_TEST_SQUARING_H
