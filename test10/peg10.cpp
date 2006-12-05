@@ -24,6 +24,24 @@
 #include "test/driver.h"
 #include "test10/peg10.h"
 
+int test10()
+{
+  using namespace peg10;
+  cout << "Programming example 10 : Norms and involutions" << endl;
+  string a_str = "1{-3,-2}+10{-3,-1}+100{-2,-1}+1000{-3,-2,-1}";
+  string b_str = "41{-3,-2}+43{-3,-1}+47{-2,-1}+53{-3,-2,-1}";
+  cout << endl;
+  cout << "framed_multi<double>" << endl;
+  const framed_multi<double> a(a_str);
+  const framed_multi<double> b(b_str);
+  test_norms_and_involutions< framed_multi<double> >(a, b);
+  cout << "matrix_multi<double>" << endl;
+  const framed_multi<double> A(a_str);
+  const framed_multi<double> B(b_str);
+  test_norms_and_involutions< matrix_multi<double> >(A, B);
+  return 0;
+}
+
 using namespace glucat;
 
 int main(int argc, char ** argv)

@@ -24,6 +24,18 @@
 #include "test/driver.h"
 #include "test12/peg12.h"
 
+int test12()
+{
+  using namespace peg12;
+  cout << "Programming example 12 : Frame group multiplication tables" << endl;
+  cout << endl;
+  cout << "framed_multi<float,-2,2>" << endl;
+  do_test12< framed_multi<float,-2,2> >();
+  cout << "matrix_multi<float,-2,2>" << endl;
+  do_test12< matrix_multi<float,-2,2> >();
+  return 0;
+}
+
 using namespace glucat;
 
 int main(int argc, char ** argv)

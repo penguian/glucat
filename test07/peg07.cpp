@@ -24,6 +24,18 @@
 #include "test/driver.h"
 #include "test07/peg07.h"
 
+int test07()
+{
+  using namespace peg07;
+  cout << "Programming example 7 : Triality" << endl;
+  cout << endl;
+  cout << "framed_multi<double>" << endl;
+  do_test7< framed_multi<double> >();
+  cout << "matrix_multi<double>" << endl;
+  do_test7< matrix_multi<double> >();
+  return 0;
+}
+
 using namespace glucat;
 
 int main(int argc, char ** argv)

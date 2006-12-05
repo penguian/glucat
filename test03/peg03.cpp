@@ -24,6 +24,23 @@
 #include "test/driver.h"
 #include "test03/peg03.h"
 
+int test03()
+{
+  using namespace peg03;
+  cout << "Programming example 3 : Powers, output to file" << endl;
+  cout << endl;
+  cout << "In Cl_{2,1} let x = 2e1 + 6.2e2 - 4.1e23 and" << endl;
+  cout << "                y = 7e1 - 2.1e2 + 9.6e12 + 6e23." << endl;
+  cout << "Compute 2x + 3y, x to the power 5, y to the outer power 3." << endl;
+  cout << "Find the even part of x*y and write the result to a file called eg3.res" << endl;
+  cout << endl;
+  cout << "framed_multi<double>" << endl;
+  do_test3< framed_multi<double> >();
+  cout << "matrix_multi<double>" << endl;
+  do_test3< matrix_multi<double> >();
+  return 0;
+}
+
 using namespace glucat;
 
 int main(int argc, char ** argv)

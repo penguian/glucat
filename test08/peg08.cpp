@@ -24,6 +24,18 @@
 #include "test/driver.h"
 #include "test08/peg08.h"
 
+int test08()
+{
+  using namespace peg08;
+  cout << "Programming example 8 : Reading multivectors from input" << endl;
+  cout << endl;
+  cout << "framed_multi<double>" << endl;
+  do_test8< framed_multi<double> >();
+  cout << "matrix_multi<double>" << endl;
+  do_test8< matrix_multi<double> >();
+  return 0;
+}
+
 using namespace glucat;
 
 int main(int argc, char ** argv)

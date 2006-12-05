@@ -24,6 +24,21 @@
 #include "test/driver.h"
 #include "test01/peg01.h"
 
+int test01()
+{
+  using namespace peg01;
+  cout << "Programming example 1 : 2D lengths and areas" << endl;
+  cout << endl;
+  cout << "Let OPQ be a triangle, where P=(4,3), Q=(2,3) and O is the origin (0,0)." << endl;
+  cout << "Calculate the length r of side OP and the area A of the triangle." << endl;
+  cout << "framed_multi<double>" << endl;
+  cout << endl;
+  do_test1< framed_multi<double> >();
+  cout << "matrix_multi<double>" << endl;
+  do_test1< matrix_multi<double> >();
+  return 0;
+}
+
 using namespace glucat;
 
 int main(int argc, char ** argv)

@@ -24,6 +24,18 @@
 #include "test/driver.h"
 #include "test09/peg09.h"
 
+int test09()
+{
+  using namespace peg09;
+  cout << "Programming example 9 : vector_part" << endl;
+  cout << endl;
+  cout << "framed_multi<double>" << endl;
+  do_test9< framed_multi<double> >();
+  cout << "matrix_multi<double>" << endl;
+  do_test9< matrix_multi<double> >();
+  return 0;
+}
+
 using namespace glucat;
 
 int main(int argc, char ** argv)

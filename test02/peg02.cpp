@@ -24,6 +24,22 @@
 #include "test/driver.h"
 #include "test02/peg02.h"
 
+int test02()
+{
+  using namespace peg02;
+  cout << "Programming example 2 : inner, outer and geometric products, contraction" << endl;
+  cout << endl;
+  cout << "Let a, b be elements in Cl(3,0) where" << endl;
+  cout << "a = 2{1} + 3{2} + 3{3} and b = 3{1} + {2} + 4{3}." << endl;
+  cout << "Determine ab, a.b, a^b; Verify that ab == a.b + a^b." << endl;
+  cout << endl;
+  cout << "framed_multi<double>" << endl;
+  do_test2< framed_multi<double> >();
+  cout << "matrix_multi<double>" << endl;
+  do_test2< matrix_multi<double> >();
+  return 0;
+}
+
 using namespace glucat;
 
 int main(int argc, char ** argv)

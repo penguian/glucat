@@ -24,6 +24,20 @@
 #include "test/driver.h"
 #include "test06/peg06.h"
 
+int test06()
+{
+  using namespace peg06;
+  cout << "Programming example 6 : outer exponential" << endl;
+  cout << endl;
+  cout << "Compute the outer exponential of the bivector B = q1*q2 + q3*q4 + q5*q6" << endl;
+  cout << endl;
+  cout << "framed_multi<double>" << endl;
+  do_test6< framed_multi<double> >();
+  cout << "matrix_multi<double>" << endl;
+  do_test6< matrix_multi<double> >();
+  return 0;
+}
+
 using namespace glucat;
 
 int main(int argc, char ** argv)

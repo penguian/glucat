@@ -24,6 +24,21 @@
 #include "test/driver.h"
 #include "test05/peg05.h"
 
+int test05()
+{
+  using namespace peg05;
+  cout << "Programming example 5 : Octonions" << endl;
+  cout << endl;
+  cout << "In the Cayley algebra (=Cl(0,7)) compute the octonion product ab, where" << endl;
+  cout << "a = 3 + e1 + 4e2 and b = 2 + 3e2 + 5e3." << endl;
+  cout << endl;
+  cout << "framed_multi<double>" << endl;
+  do_test5< framed_multi<double> >();
+  cout << "matrix_multi<double>" << endl;
+  do_test5< matrix_multi<double> >();
+  return 0;
+}
+
 using namespace glucat;
 
 int main(int argc, char ** argv)

@@ -25,6 +25,18 @@
 #include <boost/numeric/ublas/io.hpp>
 #include "test16/peg16.h"
 
+int test16()
+{
+  using namespace peg16;
+  cout << "Programming example 16 : Matrices of multivectors" << endl;
+  cout << endl;
+  cout << "framed_multi<double,-3,3>" << endl;
+  do_test16< framed_multi<double,-3,3> >();
+  cout << "matrix_multi<double,-3,3>" << endl;
+  do_test16< matrix_multi<double,-3,3> >();
+  return 0;
+}
+
 using namespace glucat;
 
 int main(int argc, char ** argv)
