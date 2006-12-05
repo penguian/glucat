@@ -29,7 +29,7 @@ namespace glucat
   // [M]: Scott Meyers, "Effective C++" Second Edition, Addison-Wesley, 1998.
   // [P]: Ian R. Porteous, "Clifford algebras and the classical groups", Cambridge UP, 1995.
   // [L]: Pertti Lounesto, "Clifford algebras and spinors", Cambridge UP, 1997.
-  
+
   /// Class name used in messages
   template< typename Scalar_T, const index_t LO, const index_t HI >
   const std::string
@@ -46,14 +46,16 @@ namespace glucat
     // Offsets between the log2 of the matrix dimension for the current signature
     // and that of the real superalgebra
     static const int offset_log2_dim[] = {0, 1, 0, 1, 1, 2, 1, 1};
-    const int bott = pos_mod(p-q, 8);
+    const index_t bott = pos_mod(p-q, 8);
     return (p+q)/2 + offset_log2_dim[bott];
   }
 
   /// Determine the matrix dimension of the fold of a subalegbra
   // Reference: [P] Table 15.27, p 133
   template< typename Matrix_Index_T, const index_t LO, const index_t HI >
-  const Matrix_Index_T
+  inline
+  static
+  Matrix_Index_T
   folded_dim( const index_set<LO,HI>& sub )
   { return 1 << offset_level(sub.count_pos(), sub.count_neg()); }
 
@@ -86,7 +88,7 @@ namespace glucat
   : m_frame( ist )
   {
     const matrix_index_t dim = folded_dim<matrix_index_t>(m_frame);
-    m_matrix.resize(dim, dim);
+    m_matrix.resize(dim, dim, false);
     *this += pair_t(ist, crd);
   }
 
@@ -99,7 +101,7 @@ namespace glucat
     if (!prechecked && (ist | frm) != frm)
       throw error_t("multivector_t(ist,crd,frm): cannot initialize with value outside of frame");
     const matrix_index_t dim = folded_dim<matrix_index_t>(m_frame);
-    m_matrix.resize(dim, dim);
+    m_matrix.resize(dim, dim, false);
     *this += pair_t(ist, crd);
   }
 
@@ -110,7 +112,7 @@ namespace glucat
   : m_frame( frm )
   {
     const matrix_index_t dim = folded_dim<matrix_index_t>(m_frame);
-    m_matrix.resize(dim, dim);
+    m_matrix.resize(dim, dim, false);
     *this += pair_t(index_set_t(), scr);
   }
 
@@ -130,14 +132,14 @@ namespace glucat
     if (!prechecked && index_t(vec.size()) != frm.count())
       throw error_t("multivector_t(vec,frm): cannot initialize with vector not matching frame");
     const matrix_index_t dim = folded_dim<matrix_index_t>(m_frame);
-    m_matrix.resize(dim, dim);
+    m_matrix.resize(dim, dim, false);
     typename vector_t::const_iterator vec_it = vec.begin();
     const index_t begin_index = m_frame.min();
     const index_t end_index = m_frame.max()+1;
 
-    for (index_t 
-        idx = begin_index; 
-        idx != end_index; 
+    for (index_t
+        idx = begin_index;
+        idx != end_index;
         ++idx)
       if (m_frame[idx])
       {
@@ -173,11 +175,11 @@ namespace glucat
       catch (const glucat_error& e)
       { }
     const matrix_index_t dim = folded_dim<matrix_index_t>(m_frame);
-    m_matrix.resize(dim, dim);
+    m_matrix.resize(dim, dim, false);
 
     for (typename framed_multi_t::const_iterator
-        val_it = val.begin(); 
-        val_it != val.end(); 
+        val_it = val.begin();
+        val_it != val.end();
         ++val_it)
       *this += *val_it;
   }
@@ -199,11 +201,11 @@ namespace glucat
       catch (const glucat_error& e)
       { }
     const matrix_index_t dim = folded_dim<matrix_index_t>(m_frame);
-    m_matrix.resize(dim, dim);
+    m_matrix.resize(dim, dim, false);
 
     for (typename framed_multi_t::const_iterator
-        val_it = val.begin(); 
-        val_it != val.end(); 
+        val_it = val.begin();
+        val_it != val.end();
         ++val_it)
       *this += *val_it;
   }
@@ -215,7 +217,7 @@ namespace glucat
   : m_frame( frm )
   {
     const matrix_index_t dim = folded_dim<matrix_index_t>(m_frame);
-    m_matrix.resize(dim, dim);
+    m_matrix.resize(dim, dim, false);
     m_matrix = mtx;
   }
 
@@ -229,7 +231,7 @@ namespace glucat
     if (this == &rhs)
       return *this;
     m_frame = rhs.m_frame;
-    m_matrix.resize( rhs.m_matrix.size1(), rhs.m_matrix.size2() );
+    m_matrix.resize(rhs.m_matrix.size1(), rhs.m_matrix.size2(), false);
     m_matrix = rhs.m_matrix;
     return *this;
   }
@@ -247,42 +249,42 @@ namespace glucat
     {
       typedef typename matrix_t::const_iterator1 const_iterator1;
       typedef typename matrix_t::const_iterator2 const_iterator2;
-      // If either matrix contains zero entries, 
+      // If either matrix contains zero entries,
       // compare using subtraction and ublas::norm_inf
-      for (const_iterator1 
-          it1 = m_matrix.begin1(); 
-          it1 != m_matrix.end1(); 
+      for (const_iterator1
+          it1 = m_matrix.begin1();
+          it1 != m_matrix.end1();
           ++it1)
-        for (const_iterator2 
-            it2 = it1.begin(); 
-            it2 != it1.end(); 
+        for (const_iterator2
+            it2 = it1.begin();
+            it2 != it1.end();
             ++it2)
           if (*it2 == 0)
             return ublas::norm_inf(m_matrix - rhs.m_matrix) == 0;
-      for (const_iterator1 
-          it1 = rhs.m_matrix.begin1(); 
-          it1 != rhs.m_matrix.end1(); 
+      for (const_iterator1
+          it1 = rhs.m_matrix.begin1();
+          it1 != rhs.m_matrix.end1();
           ++it1)
-        for (const_iterator2 
-            it2 = it1.begin(); 
-            it2 != it1.end(); 
+        for (const_iterator2
+            it2 = it1.begin();
+            it2 != it1.end();
             ++it2)
           if (*it2 == 0)
             return ublas::norm_inf(m_matrix - rhs.m_matrix) == 0;
       // Neither matrix contains zero entries.
       // Compare by iterating over both matrices in lock step.
       const_iterator1 this_it1 = m_matrix.begin1();
-      const_iterator1 it1 = rhs.m_matrix.begin1(); 
+      const_iterator1 it1 = rhs.m_matrix.begin1();
       for (;
-          (this_it1 != m_matrix.end1()) && (it1 != rhs.m_matrix.end1()); 
+          (this_it1 != m_matrix.end1()) && (it1 != rhs.m_matrix.end1());
           ++this_it1, ++it1)
       {
         if ( this_it1.index1() != it1.index1() )
           return false;
         const_iterator2 this_it2 = this_it1.begin();
-        const_iterator2 it2 = it1.begin(); 
+        const_iterator2 it2 = it1.begin();
         for (;
-            (this_it2 != this_it1.end()) && (it2 != it1.end()); 
+            (this_it2 != this_it1.end()) && (it2 != it1.end());
             ++this_it2, ++it2)
           if ( (this_it2.index2() != it2.index2()) || (*this_it2 != *it2) )
             return false;
@@ -447,7 +449,7 @@ namespace glucat
   matrix_multi<Scalar_T,LO,HI>::
   operator/= (const multivector_t& rhs)
   {
-    if( m_frame != rhs.m_frame )
+    if (m_frame != rhs.m_frame)
       return *this = framed_multi_t(*this) /
                      framed_multi_t(rhs);
     else
@@ -473,12 +475,11 @@ namespace glucat
           const matrix_t& BT = ublas::trans(m_matrix);
           matrix_t R = matrix::sparse_prod(AT, XT) - BT;
           Scalar_T nr = ublas::norm_inf(R);
-          // (nr == nr) below is to exclude NaN
-          if ( nr != Scalar_T(0) && nr == nr )
+          if ( nr != Scalar_T(0) && !numeric_traits<Scalar_T>::isNaN(nr) )
           {
             matrix_t XTnew = XT;
             Scalar_T nrold = nr + Scalar_T(1);
-            for (int 
+            for (int
                 step = 0;
                 step != Tune_P::div_max_steps &&
                 nr < nrold &&
@@ -526,10 +527,10 @@ namespace glucat
   operator[] (const index_set_t& ist) const
   {
     // Use matrix inner product only if ist is in frame
-    if ( (ist | m_frame) == m_frame) 
+    if ( (ist | m_frame) == m_frame)
       return matrix::inner<Scalar_T>(basis_element(ist), m_matrix);
     else
-      return Scalar_T(0); 
+      return Scalar_T(0);
   }
 
   /// Main involution, each {i} is replaced by -{i} in each term
@@ -589,8 +590,8 @@ namespace glucat
     else
       a = *this;
     multivector_t result = 1;
-    for (; 
-        m != 0; 
+    for (;
+        m != 0;
         m >>= 1)
     {
       if (m & 1)
@@ -609,8 +610,8 @@ namespace glucat
       throw error_t("outer_pow(m): negative exponent");
     multivector_t result = 1;
     multivector_t a = *this;
-    for (; 
-        m != 0; 
+    for (;
+        m != 0;
         m >>= 1)
     {
       if (m & 1)
@@ -661,9 +662,9 @@ namespace glucat
     vector_t result;
     const index_t begin_index = m_frame.min();
     const index_t end_index = m_frame.max()+1;
-    for (index_t 
-        idx = begin_index; 
-        idx != end_index; 
+    for (index_t
+        idx = begin_index;
+        idx != end_index;
         ++idx)
       if (m_frame[idx])
         // Frame may contain indices which do not correspond to a grade 1 term but
@@ -727,17 +728,18 @@ namespace glucat
   bool
   matrix_multi<Scalar_T,LO,HI>::
   isnan() const
-  { // The distinguishing feature is that NaN != NaN
-    for (typename matrix_t::const_iterator1 
-        i = m_matrix.begin1(); 
-        i != m_matrix.end1(); 
-        ++i)
-      for (typename matrix_t::const_iterator2 
-          j = i.begin(); 
-          j != i.end(); 
-          ++j)
-        if (*j != *j)
-          return true;
+  {
+    if (std::numeric_limits<Scalar_T>::has_quiet_NaN)
+      for (typename matrix_t::const_iterator1
+          i = m_matrix.begin1();
+          i != m_matrix.end1();
+          ++i)
+        for (typename matrix_t::const_iterator2
+            j = i.begin();
+            j != i.end();
+            ++j)
+          if (numeric_traits<Scalar_T>::isNaN(*j))
+            return true;
     return false;
   }
 
@@ -769,6 +771,7 @@ namespace glucat
 
   /// Inverse generalized Fast Fourier Transform
   template< typename Multivector_T, typename Matrix_T >
+  static
   Multivector_T
   fast(const Matrix_T& X, index_t level)
   {
@@ -838,22 +841,22 @@ namespace glucat
   fast_framed_multi() const
   {
     // Determine the amount of off-centering needed
-    int p = m_frame.count_pos();
-    int q = m_frame.count_neg();
+    index_t p = m_frame.count_pos();
+    index_t q = m_frame.count_neg();
 
     const index_t bott = pos_mod(p-q, 8);
-    p += std::max(gen::offset_to_super[bott],0);
-    q -= std::min(gen::offset_to_super[bott],0);
+    p += std::max(gen::offset_to_super[bott],index_t(0));
+    q -= std::min(gen::offset_to_super[bott],index_t(0));
 
-    const int orig_p = p;
-    const int orig_q = q;
+    const index_t orig_p = p;
+    const index_t orig_q = q;
     while (p-q > 4)
       { p -= 4; q += 4; }
     while (p-q < -3)
       { p += 4; q -= 4; }
     if (p-q > 1)
     {
-      int old_p = p;
+      index_t old_p = p;
       p = q+1;
       q = old_p-1;
     }
@@ -920,8 +923,8 @@ namespace glucat
     const index_t folded_min = folded_frame.min();
     const matrix_index_t dim = folded_dim<matrix_index_t>(m_frame);
 
-    const int p = std::max( int(folded_max), 0);
-    const int q = std::max(-int(folded_min), 0);
+    const index_t p = std::max(folded_max,           index_t(0));
+    const index_t q = std::max(index_t(-folded_min), index_t(0));
 
     typedef basis_table<Scalar_T,LO,HI,matrix_t>            basis_table_t;
     typedef std::pair<const index_set_t, const index_set_t> index_set_pair_t;
@@ -937,9 +940,9 @@ namespace glucat
     }
     const matrix_t* e = (gen::generator_table<matrix_t>::generator())(p,q);
     matrix_t result = matrix::unit<matrix_t>(dim);
-    for (index_t 
-        k = folded_min; 
-        k <= folded_max; 
+    for (index_t
+        k = folded_min;
+        k <= folded_max;
         ++k)
       if (folded_set[k])
         result = matrix::mono_prod(result, e[k]);
