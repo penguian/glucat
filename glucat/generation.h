@@ -64,7 +64,7 @@ namespace glucat { namespace gen
   };
 
   /// Offsets between the current signature and that of the real superalgebra
-  static const int offset_to_super[] = {0,-1, 0,-1,-2, 3, 2, 1};
+  static const index_t offset_to_super[] = {0,-1, 0,-1,-2, 3, 2, 1};
 
 } }
 #endif  // _GLUCAT_GENERATION_H
