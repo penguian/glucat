@@ -54,8 +54,8 @@ namespace glucat { namespace gen
       return &(gen_vector(p, q)[q]);
     default:
       // Select generators from the vector for a larger frame
-      const index_t super_p = p + std::max(offset_to_super[bott],0);
-      const index_t super_q = q - std::min(offset_to_super[bott],0);
+      const index_t super_p = p + std::max(offset_to_super[bott],index_t(0));
+      const index_t super_q = q - std::min(offset_to_super[bott],index_t(0));
       return &(gen_vector(super_p, super_q)[super_q]);
     }
   }
@@ -83,7 +83,7 @@ namespace glucat { namespace gen
         else if (card == 0)
         { // Base case. Save a generator vector containing one matrix, size 1.
           std::vector<Matrix_T> result(1);
-          result[0].resize(1, 1);
+          result[0].resize(1, 1, false);
           this->insert(make_pair(sig, result));
         }
         else
@@ -136,8 +136,8 @@ namespace glucat { namespace gen
         k = 0; 
         k != new_size; 
         ++k)
-      result[k].resize(new_dim, new_dim);
-    
+      result[k].resize(new_dim, new_dim, false);
+
     result[0] = matrix::kron(neg, eye);
     for (int 
         k = 1; 
@@ -173,7 +173,7 @@ namespace glucat { namespace gen
         k != 4; 
         ++k)
     {
-      result[k+old_size-4].resize( dim, dim );
+      result[k+old_size-4].resize(dim, dim, false);
       result[k+old_size-4] = matrix::mono_prod(old[k], h);
     }
     for (int 
@@ -181,7 +181,7 @@ namespace glucat { namespace gen
         k != old_size; 
         ++k)
     {
-      result[k-4].resize(dim, dim);
+      result[k-4].resize(dim, dim, false);
       result[k-4] = old[k];
     }
     // Save the resulting generator array.
@@ -211,7 +211,7 @@ namespace glucat { namespace gen
         k != 4; 
         ++k)
     {
-      result[k].resize(dim, dim);
+      result[k].resize(dim, dim, false);
       result[k] = matrix::mono_prod(old[k+old_size-4], h);
     }
     for (int 
@@ -219,7 +219,7 @@ namespace glucat { namespace gen
         k != old_size; 
         ++k)
     {
-      result[k].resize(dim, dim);
+      result[k].resize(dim, dim, false);
       result[k] = old[k-4];
     }
     // Save the resulting generator array.
@@ -243,10 +243,10 @@ namespace glucat { namespace gen
         k != 0; 
         --k, ++m)
     {
-      result[m].resize(dim, dim);
+      result[m].resize(dim, dim, false);
       result[m] = matrix::mono_prod(old[k-1], a);
     }
-    result[old_size-1].resize(dim, dim);
+    result[old_size-1].resize(dim, dim, false);
     result[old_size-1] = a;
 
     // Save the resulting generator array.
