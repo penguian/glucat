@@ -40,74 +40,74 @@ namespace glucat
 
     static const std::string  classname();
     /// Default constructor creates an empty set
-    index_set     () { }
+    index_set    () { }
     /// Constructor from bitset_t
-    index_set(const bitset_t& bst);
+    index_set    (const bitset_t bst);
     /// Constructor from index
-    index_set     (const index_t& idx);
+    index_set    (const index_t idx);
     /// Constructor from set value of an index set folded within the given frame
-    index_set     (const set_value_t& folded_val, const index_set& frm, const bool prechecked = false);
+    index_set    (const set_value_t folded_val, const index_set_t frm, const bool prechecked = false);
     /// Constructor from string
-    index_set     (const std::string& str);
+    index_set    (const std::string& str);
 
     /// Equality
-    bool           operator==  (const index_set& rhs) const;
+    bool         operator==  (const index_set_t rhs) const;
     /// Inequality
-    bool           operator!=  (const index_set& rhs) const;
+    bool         operator!=  (const index_set_t rhs) const;
     /// Set complement: not
-    index_set      operator~   () const;
+    index_set_t  operator~   () const;
     /// Symmetric set difference: exclusive or
-    index_set&     operator^=  (const index_set& rhs);
+    index_set_t& operator^=  (const index_set_t rhs);
     /// Set intersection: and
-    index_set&     operator&=  (const index_set& rhs);
+    index_set_t& operator&=  (const index_set_t rhs);
     /// Set union: or
-    index_set&     operator|=  (const index_set& rhs);
+    index_set_t& operator|=  (const index_set_t rhs);
     /// Subscripting: Test idx for membership: test value of bit idx
-    bool          operator[]  (index_t idx) const;
+    bool         operator[]  (const index_t idx) const;
     /// Test idx for membership: test value of bit idx
-    bool          test(index_t idx) const;
+    bool         test(const index_t idx) const;
     /// Include all indices except 0: set all bits except 0
-    index_set&    set();
+    index_set_t& set();
     /// Include idx: Set bit at idx if idx != 0
-    index_set&    set(index_t idx);
+    index_set_t& set(const index_t idx);
     /// Set membership of idx to val if idx != 0: Set bit at idx to val if idx != 0
-    index_set&    set(index_t idx, int val);
+    index_set_t& set(const index_t idx, const int val);
     /// Make set empty: Set all bits to 0
-    index_set&    reset();
+    index_set_t& reset();
     /// Exclude idx:  Set bit at idx to 0
-    index_set&    reset(index_t idx);
+    index_set_t& reset(const index_t idx);
     /// Set complement, except 0: flip all bits, except 0
-    index_set&    flip();
+    index_set_t& flip();
     /// Complement membership of idx if idx != 0: flip bit at idx if idx != 0
-    index_set&    flip(index_t idx);
+    index_set_t& flip(const index_t idx);
     /// Cardinality: Number of indices included in set
-    index_t       count() const;
+    index_t      count() const;
     /// Number of positive indices included in set
-    index_t       count_pos() const;
+    index_t      count_pos() const;
     /// Number of negative indices included in set
-    index_t       count_neg() const;
+    index_t      count_neg() const;
     /// Minimum member
-    index_t       min() const;
+    index_t      min() const;
     /// Maximum member
-    index_t       max() const;
+    index_t      max() const;
 
   // Functions which support Clifford algebra operations
     /// Less than operator used for comparisons, map, etc.
-    bool                operator<     (const index_set& rhs) const;
+    bool                  operator<     (const index_set_t rhs) const;
     /// Fold this index set within itself as a frame
-    const index_set     fold          () const;
+    const index_set_t     fold          () const;
     /// Fold this index set within the given frame
-    const index_set     fold          (const index_set& frm, const bool prechecked = false) const;
+    const index_set_t     fold          (const index_set_t frm, const bool prechecked = false) const;
     /// Unfold this index set within the given frame
-    const index_set     unfold        (const index_set& frm, const bool prechecked = false) const;
+    const index_set_t     unfold        (const index_set_t frm, const bool prechecked = false) const;
     /// The set value of the fold of this index set within the given frame
-    set_value_t         value_of_fold (const index_set& frm) const;
-    int                 sign_of_mult  (const index_set& ist) const;
-    size_t              hash_fn       ()                     const;
+    set_value_t           value_of_fold (const index_set_t frm) const;
+    int                   sign_of_mult  (const index_set_t ist) const;
+    size_t                hash_fn       ()                     const;
 
   // Member reference:
     class reference;
-    friend class  reference;
+    friend class reference;
 
     /// Index set member reference
     class reference {
@@ -116,10 +116,10 @@ namespace glucat
       /// Private default constructor is left undefined
       reference();
     public:
-      reference   ( index_set& ist, index_t idx );
+      reference   (index_set_t& ist, index_t idx);
       ~reference  () {}
       /// for b[i] = x;
-      reference&  operator= (bool x);
+      reference&  operator= (const bool x);
       /// for b[i] = b[j];
       reference&  operator= (const reference& j);
       /// Flips a bit
@@ -127,17 +127,17 @@ namespace glucat
       /// for x = b[i];
                   operator bool () const;
       /// for b[i].flip();
-      reference& flip();
+      reference&  flip();
 
     private:
-      index_set*  m_pst;
-      index_t     m_idx;
+      index_set_t* m_pst;
+      index_t      m_idx;
     };
     /// Subscripting: Element access
     reference     operator[](index_t idx);
   private:
     /// Lexicographic ordering of two sets: *this < rhs
-    bool                lex_less_than (const index_set& rhs) const;
+    bool          lex_less_than (const index_set_t rhs) const;
   };
 
   /// Size of set_value_t should be enough to contain bitset<DEFAULT_HI-DEFAULT_LO>
