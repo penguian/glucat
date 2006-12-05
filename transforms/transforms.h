@@ -52,11 +52,13 @@ namespace glucat_fast_test
   typedef index_set< -max_n, max_n > index_set_t;
 
   inline
+  static
   double
   elapsed( clock_t cpu_time )
   { return ((clock() - cpu_time)*MS_PER_S) / CLOCKS_PER_SEC; }
 
   inline
+  static
   void
   print_times(const index_set_t& frame1, const index_set_t& frame2,
               const double old_mm_cpu_time,
@@ -71,23 +73,22 @@ namespace glucat_fast_test
                   << setw(index_width) << -min_neg(frame2) << ")"
          << " CPU = ";
     const ios::fmtflags& old_flags = cout.flags();
-    const int width = 10;
-    const int old_prec = cout.precision();
-    const int new_prec = 2;
+    const streamsize width = 10;
     cout.setf(ios_base::fixed);
     cout.setf(ios_base::showpoint);
-    cout << setprecision(new_prec)
-         << "mm: "
+    const streamsize old_prec = cout.precision(2);
+    cout << "mm: "
          << setw(width) << old_mm_cpu_time << " (old) "
          << setw(width) << new_mm_cpu_time << " (new) "
          << "fm: "
          << setw(width) << old_fm_cpu_time << " (old) "
-         << setw(width) << new_fm_cpu_time << " (new) "
-         << setprecision(old_prec);
+         << setw(width) << new_fm_cpu_time << " (new) ";
+    cout.precision(old_prec);
     cout.flags(old_flags);
   }
 
   template< typename Multivector_T >
+  static
   void
   time_fast(Multivector_T& a, const Multivector_T& b,
             const index_set_t& inner_frame,
@@ -157,21 +158,21 @@ namespace glucat_fast_test
     print_times(inner_frame, outer_frame,
       old_mm_cpu_time, new_mm_cpu_time, old_fm_cpu_time, new_fm_cpu_time);
     const ios::fmtflags& old_flags = cout.flags();
-    const int width = 8;
-    const int old_prec = cout.precision();
-    const int new_prec = 2;
+    const streamsize width = 8;
     cout.setf(ios_base::scientific);
     cout.setf(ios_base::showpoint);
-    cout << setprecision(new_prec)
-         << " diff: old: " << setw(width) << abs(old_A - old_a)/abs(old_a) 
+    const streamsize old_prec = cout.precision(2);
+    cout << " diff: old: " << setw(width) << abs(old_A - old_a)/abs(old_a)
                << " new: " << setw(width) << abs(new_A - new_a)/abs(new_a)
                << " fm: "  << setw(width) << abs(new_A - old_A)/abs(old_A)
                << " mm: "  << setw(width) << abs(new_a - old_a)/abs(old_a)
-               << setprecision(old_prec)  << endl;
+               << endl;
+    cout.precision(old_prec);
     cout.flags(old_flags);
   }
 
   template< class Multivector_T >
+  static
   void
   fast_test(const index_t n, const index_t max_n)
   {
@@ -218,19 +219,6 @@ namespace glucat_fast_test
   }
 }
 
-int transforms(const int n)
-{
-  using namespace glucat_fast_test;
-  if (n > max_n)
-  {
-    cout << "Value " << n << " is too big." << endl;
-    cout << "Maximum value allowed is " << max_n << "." << endl;
-    return 1;
-  }
-  cout << "framed_multi<double>" << endl;
-  fast_test< framed_multi<double> >(n, max_n);
-  cout << "matrix_multi<double>" << endl;
-  fast_test< matrix_multi<double> >(n, max_n);
-  return 0;
-}
+int transforms(const int n);
+
 #endif // GLUCAT_TRANSFORMS_H
