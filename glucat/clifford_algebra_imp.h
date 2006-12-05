@@ -460,6 +460,7 @@ namespace glucat
   template< template<typename, const index_t, const index_t> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI >
   inline
+  static
   const Multivector<Scalar_T,LO,HI>
   pade_approx(const Scalar_T a[], const Scalar_T b[], const Multivector<Scalar_T,LO,HI>& A)
   {
@@ -482,6 +483,7 @@ namespace glucat
   template< template<typename, const index_t, const index_t> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI >
   inline
+  static
   void
   db_step(Multivector<Scalar_T,LO,HI>& M, Multivector<Scalar_T,LO,HI>& Y)
   {
@@ -495,6 +497,7 @@ namespace glucat
   /// Product form of Denman-Beavers square root iteration
   template< template<typename, const index_t, const index_t> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI >
+  static
   const Multivector<Scalar_T,LO,HI>
   db_sqrt(const Multivector<Scalar_T,LO,HI>& val)
   {
@@ -597,6 +600,7 @@ namespace glucat
   /// Scaled Pade' approximation of log
   template< template<typename, const index_t, const index_t> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI >
+  static
   const Multivector<Scalar_T,LO,HI>
   pade_log(const Multivector<Scalar_T,LO,HI>& val)
   {
@@ -629,6 +633,7 @@ namespace glucat
   /// Incomplete square root cascade and scaled Pade' approximation of log
   template< template<typename, const index_t, const index_t> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI >
+  static
   const Multivector<Scalar_T,LO,HI>
   cascade_log(const Multivector<Scalar_T,LO,HI>& val)
   {
