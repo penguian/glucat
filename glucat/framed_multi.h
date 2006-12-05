@@ -57,11 +57,10 @@ namespace glucat
   /// A framed_multi<Scalar_T,LO,HI> is a framed approximation to a multivector
   template< typename Scalar_T, const index_t LO = DEFAULT_LO, const index_t HI = DEFAULT_HI >
   class framed_multi :
-#ifdef _GLUCAT_USE_GNU_CXX_HASH_MAP
   public clifford_algebra< Scalar_T, index_set<LO,HI>, framed_multi<Scalar_T,LO,HI> >,
+#ifdef _GLUCAT_USE_GNU_CXX_HASH_MAP
   private __gnu_cxx::hash_map< const index_set<LO,HI>, Scalar_T, hash<LO,HI> >
 #else
-  public clifford_algebra< Scalar_T, index_set<LO,HI>, framed_multi<Scalar_T,LO,HI> >,
   private std::map< const index_set<LO,HI>, Scalar_T >
 #endif  
   {
@@ -70,22 +69,12 @@ namespace glucat
     typedef multivector_t                              framed_multi_t;
     typedef Scalar_T                                   scalar_t;
     typedef index_set<LO,HI>                           index_set_t;
-    typedef std::pair< const index_set_t, Scalar_T >   pair_t;
+    typedef std::pair<const index_set_t, Scalar_T>     pair_t;
     typedef std::vector<Scalar_T>                      vector_t;
     typedef error<multivector_t>                       error_t;
-
-//  Use friend_maker to make friendship into legal C++
-//  Ref: Matthew Wilson, "Friendly Templates", 
-//  C/C++ Users Journal > CUJ Web Exclusives > 2003 > December 2003
-//  http://www.cuj.com/documents/s=8942/cujweb0312wilson/
-//
-    typedef matrix_multi<Scalar_T,LO,HI>               matrix_multi_t;
-    struct friend_maker
-    {
-      typedef matrix_multi<Scalar_T,LO,HI>             matrix_multi_t;
-    };
-    friend class _GLUCAT_USE_STRUCT_NAME(friend_maker) matrix_multi_t;
-  private:
+    typedef      matrix_multi<Scalar_T,LO,HI>          matrix_multi_t;
+    friend class matrix_multi<Scalar_T,LO,HI>;
+private:
     typedef typename matrix_multi_t::matrix_t          matrix_t;
     typedef std::map< const index_set_t, Scalar_T >    sorted_map_t;
 #ifdef _GLUCAT_USE_GNU_CXX_HASH_MAP
@@ -150,11 +139,11 @@ namespace glucat
     /// Subalgebra isomorphism: unfold each term within the given frame
     multivector_t       unfold(const index_set_t& frm) const;
     /// Subalgebra isomorphism: R_{p,q} to R_{p-4,q+4}
-    multivector_t&      centre_pm4_qp4(int& p, int& q);
+    multivector_t&      centre_pm4_qp4(index_t& p, index_t& q);
     /// Subalgebra isomorphism: R_{p,q} to R_{p+4,q-4}
-    multivector_t&      centre_pp4_qm4(int& p, int& q);
+    multivector_t&      centre_pp4_qm4(index_t& p, index_t& q);
     /// Subalgebra isomorphism: R_{p,q} to R_{q+1,p-1}
-    multivector_t&      centre_qp1_pm1(int& p, int& q);
+    multivector_t&      centre_qp1_pm1(index_t& p, index_t& q);
     /// Divide multivector into part divisible by index_set and remainder
     const framed_pair_t divide(const index_set_t& ist) const;
     /// Generalized FFT from framed_multi_t to matrix_t
@@ -175,5 +164,14 @@ namespace glucat
   operator*
    (const std::pair<index_set<LO,HI>, Scalar_T>& lhs,
     const std::pair<index_set<LO,HI>, Scalar_T>& rhs);
+}
+
+namespace std 
+{
+  /// Numeric limits for framed_multi inherit limits for the corresponding scalar type
+  template <typename Scalar_T, const glucat::index_t LO, const glucat::index_t HI>
+  struct numeric_limits< glucat::framed_multi<Scalar_T,LO,HI> > :
+  public numeric_limits<Scalar_T>
+  { };
 }
 #endif  // _GLUCAT_FRAMED_MULTI_H
