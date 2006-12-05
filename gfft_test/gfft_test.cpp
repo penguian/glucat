@@ -22,6 +22,20 @@
  ***************************************************************************/
 
 #include "gfft_test/gfft_test.h"
+
+int gfft_test(const int n)
+{
+  using namespace glucat_gfft_test;
+  if (n > max_n)
+  {
+    cout << "Value " << n << " is too big." << endl;
+    cout << "Maximum value allowed is " << max_n << "." << endl;
+    return 1;
+  }
+  fast_test< framed_multi<double> >(n, max_n);
+  return 0;
+}
+
 using namespace glucat;
 
 int main(int argc, char ** argv)
