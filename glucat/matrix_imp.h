@@ -121,7 +121,6 @@ namespace glucat { namespace matrix
   /// Number of non-zeros
   template< typename Matrix_T >
   inline
-  const
   typename Matrix_T::size_type
   nnz(const Matrix_T& m)
   {
