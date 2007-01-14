@@ -5,8 +5,7 @@
     index_set_imp.h : Implement a class for a set of non-zero integer indices
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001 by Paul C. Leopardi
-    email                : leopardi@bigpond.net.au
+    copyright            : (C) 2001-2007 by Paul C. Leopardi
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Lesser General Public License as        *
@@ -40,8 +39,9 @@ namespace glucat
   /// Constructor from bitset_t
   template<const index_t LO, const index_t HI>
   index_set<LO,HI>::
-  index_set(const bitset_t bst)
-  { *this = *static_cast<const index_set_t*>(&bst); }
+  index_set(const bitset_t bst):
+  bitset_t(bst)
+  { }
 
   /// Constructor from set value of an index set folded within the given frame
   template<const index_t LO, const index_t HI>
@@ -311,9 +311,9 @@ namespace glucat
   count_neg() const
   {
     index_t result = 0;
-    for (size_t 
-        idx = 0; 
-        idx != -LO; 
+    for (size_t
+        idx = 0;
+        idx != -LO;
         ++idx)
       if (bitset_t::test(idx))
         ++result;
@@ -328,9 +328,9 @@ namespace glucat
   count_pos() const
   {
     index_t result = 0;
-    for (size_t 
-        idx = HI-LO-1; 
-        idx != -LO-1; 
+    for (size_t
+        idx = HI-LO-1;
+        idx != -LO-1;
         --idx)
       if (bitset_t::test(idx))
         ++result;
@@ -344,15 +344,15 @@ namespace glucat
   index_set<LO,HI>::
   min() const
   {
-    for (size_t 
-        idx = 0; 
-        idx != -LO; 
+    for (size_t
+        idx = 0;
+        idx != -LO;
         ++idx)
       if (bitset_t::test(idx))
         return index_t(idx)+LO;
-    for (size_t 
-        idx = -LO; 
-        idx != HI-LO; 
+    for (size_t
+        idx = -LO;
+        idx != HI-LO;
         ++idx)
       if (bitset_t::test(idx))
         return index_t(idx)+LO+1;
@@ -366,15 +366,15 @@ namespace glucat
   index_set<LO,HI>::
   max() const
   {
-    for (size_t 
-        idx = HI-LO-1; 
-        idx != -LO-1; 
+    for (size_t
+        idx = HI-LO-1;
+        idx != -LO-1;
         --idx)
       if (bitset_t::test(idx))
         return index_t(idx)+LO+1;
-    for (size_t 
-        idx = -LO; 
-        idx != 0; 
+    for (size_t
+        idx = -LO;
+        idx != 0;
         --idx)
       if (bitset_t::test(idx))
         return index_t(idx)+LO;
@@ -390,9 +390,9 @@ namespace glucat
   int
   compare(const index_set<LO,HI>& a, const index_set<LO,HI>& b)
   {
-    for (index_t 
-        i = LO; 
-        i <= HI; 
+    for (index_t
+        i = LO;
+        i <= HI;
         i++)
       if (a[i] != b[i])
         return( (a[i] < b[i]) ? -1 : +1 );
@@ -408,9 +408,9 @@ namespace glucat
   lex_less_than(const index_set_t rhs) const
   {
     const bitset_t* prhs = &rhs;
-    for (size_t 
-        idx = 0; 
-        idx != HI - LO; 
+    for (size_t
+        idx = 0;
+        idx != HI - LO;
         ++idx)
       if (bitset_t::test(idx) != prhs->test(idx))
         return bitset_t::test(idx) > prhs->test(idx);
@@ -439,14 +439,14 @@ namespace glucat
   {
     index_t i;
     os << '{';
-    for (i= LO; 
-        (i <= HI) && !(ist[i]); 
+    for (i= LO;
+        (i <= HI) && !(ist[i]);
         ++i)
     { }
     if (i <= HI)
       os << i;
-    for (++i; 
-        i <= HI; 
+    for (++i;
+        i <= HI;
         ++i)
       if (ist[i])
         os << ',' << i;
@@ -469,8 +469,8 @@ namespace glucat
     bracketed = (c == '{');
     if (!bracketed)
       s.putback(c);
-    for (s >> i; 
-        !s.fail() && !s.bad(); 
+    for (s >> i;
+        !s.fail() && !s.bad();
         s >> i)
     {
       if ((i < LO) || (i > HI))
@@ -491,6 +491,20 @@ namespace glucat
       ist = local;
     }
     return s;
+  }
+
+  /// Determine if the index set is contiguous, ie. has no gaps
+  template<const index_t LO, const index_t HI>
+  inline
+  bool
+  index_set<LO,HI>::
+  is_contiguous () const
+  {
+    const index_t min_index = this->min();
+    const index_t max_index = this->max();
+    return (min_index < 0 && max_index > 0)
+         ? max_index - min_index == this->count()
+         : max_index - min_index == this->count() - 1;
   }
 
   /// Fold this index set within itself as a frame
@@ -514,14 +528,14 @@ namespace glucat
     index_set_t result;
     index_t fold_idx = -1;
     index_t unfold_idx;
-    for (unfold_idx = -1; 
-        unfold_idx >= LO; 
+    for (unfold_idx = -1;
+        unfold_idx >= LO;
         --unfold_idx)
       if (frm[unfold_idx])
         result.set(fold_idx--, this->test(unfold_idx));
     fold_idx = 1;
-    for (unfold_idx = 1; 
-        unfold_idx <= HI; 
+    for (unfold_idx = 1;
+        unfold_idx <= HI;
         ++unfold_idx)
       if (frm[unfold_idx])
         result.set(fold_idx++, this->test(unfold_idx));
@@ -540,16 +554,16 @@ namespace glucat
     index_set_t result;
     index_t fold_idx = -1;
     index_t unfold_idx;
-    for (unfold_idx = -1; 
-        unfold_idx >= LO; 
+    for (unfold_idx = -1;
+        unfold_idx >= LO;
         --unfold_idx)
       if (frm[unfold_idx])
         result.set(unfold_idx, this->test(fold_idx--));
     if (!prechecked && ((fold_idx+1) > this->min()))
       throw error_t(msg);
     fold_idx = 1;
-    for (unfold_idx = 1; 
-        unfold_idx <= HI; 
+    for (unfold_idx = 1;
+        unfold_idx <= HI;
         ++unfold_idx)
       if (frm[unfold_idx])
         result.set(unfold_idx, this->test(fold_idx++));
@@ -572,9 +586,8 @@ namespace glucat
     const bitset_t* pfolded = &folded_set;
     return ((*pfolded) >> (min_index - skip - LO)).to_ulong();
   }
-  
-  /// Sign of product of index sets, 
-  // using Walsh functions and Gray codes.
+
+  /// Sign of product of index sets, using Walsh functions and Gray codes.
   // Reference: [L] Chapter 21, 21.3
   template<const index_t LO, const index_t HI>
   int
@@ -583,7 +596,7 @@ namespace glucat
   {
     bool h = false;
     bool negative = false;
-    for (index_t 
+    for (index_t
         j = LO;
         j <= HI;
         ++j)
@@ -595,8 +608,8 @@ namespace glucat
         negative ^= h;
         if (j > 0)
           negative ^= b;
-      }  
-    }    
+      }
+    }
     return negative ? -1 : 1;
   }
 
@@ -622,14 +635,14 @@ namespace glucat
   sign_of_square(index_t j)
   { return j < 0 ? -1 : 1; }
 
-  /// maximum positive index, or 0 if none
+  /// Maximum positive index, or 0 if none
   template<const index_t LO, const index_t HI>
   inline
   index_t
   max_pos(const index_set<LO,HI>& ist)
   { return std::max(ist.max(), index_t(0)); }
 
-  /// minimum negative index, or 0 if none
+  /// Minimum negative index, or 0 if none
   template<const index_t LO, const index_t HI>
   inline
   index_t
@@ -645,9 +658,9 @@ namespace glucat
     const index_t safe_min = std::max(range_min, LO);
     const index_t safe_max = std::min(range_max, HI);
     index_set_t result;
-    for (index_t 
-        idx = safe_min; 
-        idx <= safe_max; 
+    for (index_t
+        idx = safe_min;
+        idx <= safe_max;
         ++idx)
       if (idx != 0)
         result |= index_set_t(idx);
@@ -656,6 +669,7 @@ namespace glucat
 
 // index_set reference
 
+  /// index_set reference
   template<const index_t LO, const index_t HI>
   index_set<LO,HI>::reference::
   reference( index_set<LO,HI>& ist, index_t idx ) :
