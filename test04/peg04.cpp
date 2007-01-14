@@ -3,8 +3,7 @@
     peg04.cpp : Driver for test 04
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2003 by Paul C. Leopardi
-    email                : leopardi@bigpond.net.au
+    copyright            : (C) 2001-2007 by Paul C. Leopardi
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Lesser General Public License as        *

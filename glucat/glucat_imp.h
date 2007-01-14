@@ -5,8 +5,7 @@
     glucat_imp.h : Organize GluCat template definitions which cannot be compiled separately
                              -------------------
     begin                : Sun 2001-12-25
-    copyright            : (C) 2001 by Paul C. Leopardi
-    email                : leopardi@bigpond.net.au
+    copyright            : (C) 2001-2007 by Paul C. Leopardi
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Lesser General Public License as        *
