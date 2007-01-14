@@ -5,8 +5,7 @@
     generation_imp.h : Implement functions for generation of the matrix representation
                              -------------------
     begin                : Wed Jan 23 2002
-    copyright            : (C) 2002 by Paul C. Leopardi
-    email                : leopardi@bigpond.net.au
+    copyright            : (C) 2002-2007 by Paul C. Leopardi
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Lesser General Public License as        *
@@ -82,7 +81,7 @@ namespace glucat { namespace gen
           gen_from_pm4_qp4(gen_vector(p-4, q+4), sig);
         else if (card == 0)
         { // Base case. Save a generator vector containing one matrix, size 1.
-          std::vector<Matrix_T> result(1);
+          std::vector<Matrix_T> result = std::vector<Matrix_T>(1);
           result[0].resize(1, 1, false);
           this->insert(make_pair(sig, result));
         }
@@ -114,34 +113,28 @@ namespace glucat { namespace gen
   generator_table<Matrix_T>::
   gen_from_pm1_qm1(const std::vector<Matrix_T>& old, const signature_t sig)
   {
-    Matrix_T pos(2,2);
+    Matrix_T pos = Matrix_T(2,2);
     pos(0,1) =     1;
     pos(1,0) = 1;
 
-    Matrix_T dup(2,2);
+    Matrix_T dup = Matrix_T(2,2);
     dup(0,0) = 1;
     dup(1,1) =    -1;
 
-    Matrix_T neg(2,2);
+    Matrix_T neg = Matrix_T(2,2);
     neg(0,1) =    -1;
     neg(1,0) = 1;
 
     const int new_size = old.size() + 2;
     const int old_dim = old[0].size1();
-    const int new_dim = old_dim*2;
     const Matrix_T& eye = matrix::unit<Matrix_T>(old_dim);
 
-    std::vector<Matrix_T> result(new_size);
-    for (int 
-        k = 0; 
-        k != new_size; 
-        ++k)
-      result[k].resize(new_dim, new_dim, false);
+    std::vector<Matrix_T> result = std::vector<Matrix_T>(new_size);
 
     result[0] = matrix::kron(neg, eye);
-    for (int 
-        k = 1; 
-        k != new_size-1; 
+    for (int
+        k = 1;
+        k != new_size-1;
         ++k)
       result[k] = matrix::kron(dup, old[k-1]);
     result[new_size-1] = matrix::kron(pos, eye);
@@ -159,31 +152,25 @@ namespace glucat { namespace gen
   {
     const int dim = old[0].size1();
     const int old_size = old.size();
-    Matrix_T h(dim, dim);
+    Matrix_T h = Matrix_T(dim, dim);
     h = old[0];
-    for (int 
-        k = 1; 
-        k != 4; 
+    for (int
+        k = 1;
+        k != 4;
         ++k)
       h = matrix::mono_prod(old[k], h);
 
-    std::vector<Matrix_T> result(old_size);
-    for (int 
-        k = 0; 
-        k != 4; 
+    std::vector<Matrix_T> result = std::vector<Matrix_T>(old_size);
+    for (int
+        k = 0;
+        k != 4;
         ++k)
-    {
-      result[k+old_size-4].resize(dim, dim, false);
       result[k+old_size-4] = matrix::mono_prod(old[k], h);
-    }
-    for (int 
-        k = 4; 
-        k != old_size; 
+    for (int
+        k = 4;
+        k != old_size;
         ++k)
-    {
-      result[k-4].resize(dim, dim, false);
       result[k-4] = old[k];
-    }
     // Save the resulting generator array.
     this->insert(make_pair(sig, result));
   }
@@ -197,31 +184,25 @@ namespace glucat { namespace gen
   {
     const int dim = old[0].size1();
     const int old_size = old.size();
-    Matrix_T h(dim, dim);
+    Matrix_T h = Matrix_T(dim, dim);
     h = old[old_size-1];
-    for (int 
-        k = 1; 
-        k != 4; 
+    for (int
+        k = 1;
+        k != 4;
         ++k)
       h = matrix::mono_prod(old[old_size-1-k], h);
 
-    std::vector<Matrix_T> result(old_size);
-    for (int 
-        k = 0; 
-        k != 4; 
+    std::vector<Matrix_T> result = std::vector<Matrix_T>(old_size);
+    for (int
+        k = 0;
+        k != 4;
         ++k)
-    {
-      result[k].resize(dim, dim, false);
       result[k] = matrix::mono_prod(old[k+old_size-4], h);
-    }
-    for (int 
-        k = 4; 
-        k != old_size; 
+    for (int
+        k = 4;
+        k != old_size;
         ++k)
-    {
-      result[k].resize(dim, dim, false);
       result[k] = old[k-4];
-    }
     // Save the resulting generator array.
     this->insert(make_pair(sig, result));
   }
@@ -233,20 +214,15 @@ namespace glucat { namespace gen
   generator_table<Matrix_T>::
   gen_from_qp1_pm1(const std::vector<Matrix_T>& old, const signature_t sig)
   {
-    const int dim = old[0].size1();
     const int old_size = old.size();
     const Matrix_T& a = old[old_size-1];
-    std::vector<Matrix_T> result(old_size);
+    std::vector<Matrix_T> result = std::vector<Matrix_T>(old_size);
     int m = 0;
-    for (int 
-        k = old_size-1; 
-        k != 0; 
+    for (int
+        k = old_size-1;
+        k != 0;
         --k, ++m)
-    {
-      result[m].resize(dim, dim, false);
       result[m] = matrix::mono_prod(old[k-1], a);
-    }
-    result[old_size-1].resize(dim, dim, false);
     result[old_size-1] = a;
 
     // Save the resulting generator array.
