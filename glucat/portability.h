@@ -5,8 +5,7 @@
     portability.h : Work around non-standard compilers and libraries
                              -------------------
     begin                : Sun 2001-08-18
-    copyright            : (C) 2001 by Paul C. Leopardi
-    email                : leopardi@bigpond.net.au
+    copyright            : (C) 2001-2007 by Paul C. Leopardi
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Lesser General Public License as        *
@@ -29,17 +28,11 @@
 # pragma warning( disable: 279 ) // controlling expression is constant
 # pragma warning( disable: 383 ) // value copied to temporary, reference to temporary ...
 # pragma warning( disable: 444 ) // destructor for base is not virtual
+# pragma warning( disable: 593 ) // variable was set but never used
 # pragma warning( disable: 810 ) // conversion from "double" to "int" may lose significant bits
 # pragma warning( disable: 869 ) // parameter was never referenced
 # pragma warning( disable: 981 ) // operands are evaluated in unspecified order
 # pragma warning( disable: 1572 ) // floating-point equality and inequality comparisons ...
-#endif
-
-//***************************** workarounds for isnan
-#if defined (isnan)
-#define ISNAN(x) isnan(x)
-#else
-#define ISNAN(x) std::isnan(x)
 #endif
 
 #endif // _GLUCAT_PORTABILITY_H
