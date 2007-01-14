@@ -5,8 +5,7 @@
     peg07.cpp : programming example 7 : Triality
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001 by Paul C. Leopardi
-    email                : leopardi@bigpond.net.au
+    copyright            : (C) 2001-2007 by Paul C. Leopardi
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Lesser General Public License as        *
@@ -63,7 +62,7 @@ namespace peg07
     const number x = number("3{1}+4{3}+5{5}", R8);
     const number y = number("2{2}+3{4}+7{7}", R8);
     (u*x*reverse(u) | u*y*reverse(u)).write
-      ("u*y*reverse(u) | u*y*reverse(u) =");
+      ("u*x*reverse(u) | u*y*reverse(u) =");
     cout << endl;
   }
 }
