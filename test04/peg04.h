@@ -5,8 +5,7 @@
     peg04.cpp : programming example 4 : Rotations and electromagnetic fields
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001 by Paul C. Leopardi
-    email                : leopardi@bigpond.net.au
+    copyright            : (C) 2001-2007 by Paul C. Leopardi
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Lesser General Public License as        *
@@ -86,14 +85,14 @@ namespace peg04
     E.write("E =");
     number B = 3.0*p1 + 5.0*p2 + 7.0*p3;
     B.write("B =");
-    number F = E - j*B;
-    F.write("Electromagnetic field: F = E - j*B =");
-    (F*F / 2.0).write
-      ("Lorentz invariants: F*F / 2.0 =");
-    // Correction below comes from Clical demo http://www.teli.stadia.fi/~lounesto/CLICAL.zip
-    (-involute(F)*F / 2.0).write
-      ("Energy density and Poynting vector: -involute(F)*F / 2.0 =");
     {
+      number F = E - j*B;
+      F.write("Electromagnetic field: F = E - j*B =");
+      (F*F / 2.0).write
+        ("Lorentz invariants: F*F / 2.0 =");
+      // Correction below comes from Clical demo http://www.teli.stadia.fi/~lounesto/CLICAL.zip
+      (-involute(F)*F / 2.0).write
+        ("Energy density and Poynting vector: -involute(F)*F / 2.0 =");
       cout << "Boost at half the velocity of light" << endl;
       const number v = 0.5*p1;
       v.write("v =");
