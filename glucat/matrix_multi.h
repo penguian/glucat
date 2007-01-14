@@ -5,8 +5,7 @@
     matrix_multi.h : Declare a class for the matrix representation of a multivector
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001 by Paul C. Leopardi
-    email                : leopardi@bigpond.net.au
+    copyright            : (C) 2001-2007 by Paul C. Leopardi
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Lesser General Public License as        *
@@ -51,7 +50,7 @@ namespace glucat
     typedef multivector_t                              matrix_multi_t;
     typedef Scalar_T                                   scalar_t;
     typedef index_set<LO,HI>                           index_set_t;
-    typedef std::pair<const index_set_t, Scalar_T>     pair_t;
+    typedef std::pair<const index_set_t, Scalar_T>     term_t;
     typedef std::vector<Scalar_T>                      vector_t;
     typedef error<multivector_t>                       error_t;
     typedef      framed_multi<Scalar_T,LO,HI>          framed_multi_t;
@@ -60,6 +59,7 @@ namespace glucat
     typedef ublas::row_major                           orientation_t;
     typedef ublas::compressed_matrix< Scalar_T, orientation_t >
                                                        matrix_t;
+    typedef ublas::matrix< Scalar_T, orientation_t >   dense_matrix_t;
     typedef typename matrix_t::size_type               matrix_index_t;
   public:
     /// Class name used in messages
@@ -69,37 +69,37 @@ namespace glucat
     /// Default constructor
     matrix_multi();
     /// Construct a multivector, within a given frame, from a given multivector
-    matrix_multi(const multivector_t& val, 
-                 const index_set_t& frm, const bool prechecked = false);
+    matrix_multi(const multivector_t& val,
+                 const index_set_t frm, const bool prechecked = false);
     /// Construct a multivector from an index set and a scalar coordinate
-    matrix_multi(const index_set_t& ist, const Scalar_T& crd);
+    matrix_multi(const index_set_t ist, const Scalar_T& crd = Scalar_T(1));
     /// Construct a multivector, within a given frame, from an index set and a scalar coordinate
-    matrix_multi(const index_set_t& ist, const Scalar_T& crd,
-                 const index_set_t& frm, const bool prechecked = false);
+    matrix_multi(const index_set_t ist, const Scalar_T& crd,
+                 const index_set_t frm, const bool prechecked = false);
     /// Construct a multivector from a scalar (within a frame, if given)
-    matrix_multi(const Scalar_T& scr, const index_set_t& frm = index_set_t());
+    matrix_multi(const Scalar_T& scr, const index_set_t frm = index_set_t());
     /// Construct a multivector from an int (within a frame, if given)
-    matrix_multi(const int scr, const index_set_t& frm = index_set_t());
+    matrix_multi(const int scr, const index_set_t frm = index_set_t());
     /// Construct a multivector, within a given frame, from a given vector
     matrix_multi(const vector_t& vec,
-                 const index_set_t& frm, const bool prechecked = false);
+                 const index_set_t frm, const bool prechecked = false);
     /// Construct a multivector from a string: eg: "3+2{1,2}-6.1e-2{2,3}"
     matrix_multi(const std::string& str);
     /// Construct a multivector, within a given frame, from a string: eg: "3+2{1,2}-6.1e-2{2,3}"
     matrix_multi(const std::string& str,
-                 const index_set_t& frm, const bool prechecked = false);
+                 const index_set_t frm, const bool prechecked = false);
     /// Construct a multivector from a framed_multi_t
     matrix_multi(const framed_multi_t& val);
     /// Construct a multivector, within a given frame, from a framed_multi_t
     matrix_multi(const framed_multi_t& val,
-                 const index_set_t& frm, const bool prechecked = false);
-    /// Use generalized FFT to construct a matrix_multi_t 
-    const matrix_multi_t fast_matrix_multi(const index_set_t& frm) const;
+                 const index_set_t frm, const bool prechecked = false);
+    /// Use generalized FFT to construct a matrix_multi_t
+    const matrix_multi_t fast_matrix_multi(const index_set_t frm) const;
     /// Use inverse generalized FFT to construct a framed_multi_t
     const framed_multi_t fast_framed_multi() const;
   private:
     /// Construct a multivector within a given frame from a given matrix
-    matrix_multi(const matrix_t& mtx, const index_set_t& frm);
+    matrix_multi(const matrix_t& mtx, const index_set_t frm);
     /// Create a basis element matrix within the current frame
     const matrix_t     basis_element(const index_set<LO,HI>& ist) const;
   public:
@@ -112,10 +112,10 @@ namespace glucat
     friend std::ostream&
       operator<< <>(std::ostream& os, const multivector_t& val);
     friend std::ostream&
-      operator<< <>(std::ostream& os, const pair_t& term);
-  private:
+      operator<< <>(std::ostream& os, const term_t& term);
     /// Add a term, if non-zero
-    multivector_t&     operator+= (const pair_t& rhs);
+    multivector_t&     operator+= (const term_t& rhs);
+  private:
     // Data members
     /// Index set representing the frame for the subalgebra which contains the multivector
     index_set_t        m_frame;
@@ -124,7 +124,7 @@ namespace glucat
   };
 }
 
-namespace std 
+namespace std
 {
   /// Numeric limits for matrix_multi inherit limits for the corresponding scalar type
   template <typename Scalar_T, const glucat::index_t LO, const glucat::index_t HI>
