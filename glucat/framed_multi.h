@@ -5,8 +5,7 @@
     framed_multi.h : Declare a class for the framed representation of a multivector
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001 by Paul C. Leopardi
-    email                : leopardi@bigpond.net.au
+    copyright            : (C) 2001-2007 by Paul C. Leopardi
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Lesser General Public License as        *
@@ -62,19 +61,21 @@ namespace glucat
   private __gnu_cxx::hash_map< const index_set<LO,HI>, Scalar_T, hash<LO,HI> >
 #else
   private std::map< const index_set<LO,HI>, Scalar_T >
-#endif  
+#endif
   {
   public:
     typedef framed_multi                               multivector_t;
     typedef multivector_t                              framed_multi_t;
     typedef Scalar_T                                   scalar_t;
     typedef index_set<LO,HI>                           index_set_t;
-    typedef std::pair<const index_set_t, Scalar_T>     pair_t;
+    typedef std::pair<const index_set_t, Scalar_T>     term_t;
     typedef std::vector<Scalar_T>                      vector_t;
     typedef error<multivector_t>                       error_t;
     typedef      matrix_multi<Scalar_T,LO,HI>          matrix_multi_t;
     friend class matrix_multi<Scalar_T,LO,HI>;
-private:
+  private:
+    class                                              var_term; // forward
+    typedef class var_term                             var_term_t;
     typedef typename matrix_multi_t::matrix_t          matrix_t;
     typedef std::map< const index_set_t, Scalar_T >    sorted_map_t;
 #ifdef _GLUCAT_USE_GNU_CXX_HASH_MAP
@@ -82,11 +83,10 @@ private:
                                                        map_t;
 #else
     typedef sorted_map_t                               map_t;
-#endif  
-    typedef std::pair< index_set_t, Scalar_T >         var_pair_t;
+#endif
     typedef std::pair< const multivector_t, const multivector_t >
                                                        framed_pair_t;
-  public:
+    typedef typename map_t::size_type                  size_type;
     typedef typename map_t::iterator                   iterator;
     typedef typename map_t::const_iterator             const_iterator;
   public:
@@ -98,28 +98,28 @@ private:
     framed_multi();
     /// Construct a multivector, within a given frame, from a given multivector
     framed_multi(const multivector_t& val,
-                 const index_set_t& frm, const bool prechecked = false);
+                 const index_set_t frm, const bool prechecked = false);
     /// Construct a multivector from an index set and a scalar coordinate
-    framed_multi(const index_set_t& ist, const Scalar_T& crd);
+    framed_multi(const index_set_t ist, const Scalar_T& crd = Scalar_T(1));
     /// Construct a multivector, within a given frame, from an index set and a scalar coordinate
-    framed_multi(const index_set_t& ist, const Scalar_T& crd,
-                 const index_set_t& frm, const bool prechecked = false);
+    framed_multi(const index_set_t ist, const Scalar_T& crd,
+                 const index_set_t frm, const bool prechecked = false);
     /// Construct a multivector from a scalar (within a frame, if given)
-    framed_multi(const Scalar_T& scr, const index_set_t& frm = index_set_t());
+    framed_multi(const Scalar_T& scr, const index_set_t frm = index_set_t());
     /// Construct a multivector from an int (within a frame, if given)
-    framed_multi(const int scr, const index_set_t& frm = index_set_t());
+    framed_multi(const int scr, const index_set_t frm = index_set_t());
     /// Construct a multivector, within a given frame, from a given vector
     framed_multi(const vector_t& vec,
-                 const index_set_t& frm, const bool prechecked = false);
+                 const index_set_t frm, const bool prechecked = false);
     /// Construct a multivector from a string: eg: "3+2{1,2}-6.1e-2{2,3}"
     framed_multi(const std::string& str);
     /// Construct a multivector, within a given frame, from a string: eg: "3+2{1,2}-6.1e-2{2,3}"
     framed_multi(const std::string& str,
-                 const index_set_t& frm, const bool prechecked = false);
+                 const index_set_t frm, const bool prechecked = false);
     /// Construct a multivector from a matrix_multi_t
     framed_multi(const matrix_multi_t& val);
-    /// Use generalized FFT to construct a matrix_multi_t 
-    const matrix_multi_t fast_matrix_multi(const index_set_t& frm) const;
+    /// Use generalized FFT to construct a matrix_multi_t
+    const matrix_multi_t fast_matrix_multi(const index_set_t frm) const;
     /// Use inverse generalized FFT to construct a framed_multi_t
     const framed_multi_t fast_framed_multi() const;
 
@@ -130,14 +130,14 @@ private:
     friend std::ostream&
       operator<< <>(std::ostream& os, const multivector_t& val);
     friend std::ostream&
-      operator<< <>(std::ostream& os, const pair_t& term);
-  private:
+      operator<< <>(std::ostream& os, const term_t& term);
     /// Add a term, if non-zero
-    multivector_t&      operator+= (const pair_t& term);
+    multivector_t&      operator+= (const term_t& term);
+  private:
     /// Subalgebra isomorphism: fold each term within the given frame
-    multivector_t       fold(const index_set_t& frm) const;
+    multivector_t       fold(const index_set_t frm) const;
     /// Subalgebra isomorphism: unfold each term within the given frame
-    multivector_t       unfold(const index_set_t& frm) const;
+    multivector_t       unfold(const index_set_t frm) const;
     /// Subalgebra isomorphism: R_{p,q} to R_{p-4,q+4}
     multivector_t&      centre_pm4_qp4(index_t& p, index_t& q);
     /// Subalgebra isomorphism: R_{p,q} to R_{p+4,q-4}
@@ -145,9 +145,28 @@ private:
     /// Subalgebra isomorphism: R_{p,q} to R_{q+1,p-1}
     multivector_t&      centre_qp1_pm1(index_t& p, index_t& q);
     /// Divide multivector into part divisible by index_set and remainder
-    const framed_pair_t divide(const index_set_t& ist) const;
+    const framed_pair_t divide(const index_set_t ist) const;
     /// Generalized FFT from framed_multi_t to matrix_t
     const matrix_t      fast(const index_t level, const bool odd) const;
+
+    /// Variable term
+    class var_term :
+    public std::pair<index_set<LO,HI>, Scalar_T>
+    {
+    public:
+      typedef std::pair<index_set<LO,HI>, Scalar_T>      var_pair_t;
+
+      /// Class name used in messages
+      static const std::string classname();
+      /// Destructor
+      ~var_term() {};
+      /// Default constructor
+      var_term();
+      /// Construct a variable term from an index set and a scalar coordinate
+      var_term(const index_set_t ist, const Scalar_T& crd = Scalar_T(1));
+      /// Product of variable term and term
+      var_term_t& operator*= (const term_t& term);
+    };
   };
 
   // non-members
@@ -157,16 +176,9 @@ private:
   operator*
    (const std::pair<const index_set<LO,HI>, Scalar_T>& lhs,
     const std::pair<const index_set<LO,HI>, Scalar_T>& rhs);
-
-  /// Product of variable terms
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  const std::pair<index_set<LO,HI>, Scalar_T>
-  operator*
-   (const std::pair<index_set<LO,HI>, Scalar_T>& lhs,
-    const std::pair<index_set<LO,HI>, Scalar_T>& rhs);
 }
 
-namespace std 
+namespace std
 {
   /// Numeric limits for framed_multi inherit limits for the corresponding scalar type
   template <typename Scalar_T, const glucat::index_t LO, const glucat::index_t HI>
