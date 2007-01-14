@@ -5,8 +5,7 @@
     clifford_algebra_imp.h : Implement common Clifford algebra functions
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001 by Paul C. Leopardi
-    email                : leopardi@bigpond.net.au
+    copyright            : (C) 2001-2007 by Paul C. Leopardi
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Lesser General Public License as        *
@@ -543,12 +542,12 @@ namespace glucat
 
     if (val == 0)
       return val;
-    const Scalar_T realval = real(val);
+    const Scalar_T& realval = real(val);
     if (val == realval && realval < Scalar_T(0))
       return Scalar_T(std::sqrt(-realval)) * elliptic(val);
 
     // Scale val towards circle abs(val) == 1
-    const Scalar_T scale = abs(val);
+    const Scalar_T& scale = abs(val);
     const multivector_t& unitval = val / scale;
     if (norm(unitval - Scalar_T(1)) < Scalar_T(1))
       // Pade' approximation of square root
@@ -685,13 +684,13 @@ namespace glucat
       // Return IEEE NaN or -Inf
       return std::numeric_limits<Scalar_T>::has_quiet_NaN ?
         std::numeric_limits<Scalar_T>::quiet_NaN() : Scalar_T(std::log(0.0));
-    const Scalar_T realval = real(val);
+    const Scalar_T& realval = real(val);
     if (val == realval && realval < Scalar_T(0))
       return Scalar_T(std::log(-realval)) + elliptic(val) * Scalar_T(l_pi);
 
     // Scale val towards abs(A) == 1
-    const Scalar_T scale = abs(val);
-    const Scalar_T logscale = std::log(scale);
+    const Scalar_T& scale = abs(val);
+    const Scalar_T& logscale = std::log(scale);
     if (val == scale)
       return logscale;
     else
@@ -705,8 +704,8 @@ namespace glucat
   cos(const Multivector<Scalar_T,LO,HI>& val)
   {
     typedef Multivector<Scalar_T,LO,HI> multivector_t;
-    const Scalar_T s = scalar(val);
-    const Scalar_T twopi = Scalar_T(2) * Scalar_T(l_pi);
+    const Scalar_T& s = scalar(val);
+    const Scalar_T& twopi = Scalar_T(2) * Scalar_T(l_pi);
     const multivector_t& i = elliptic(val);
     const multivector_t& z = i *
       (val - s + Scalar_T(std::fmod(Scalar_T(std::real(s)), twopi)) +
@@ -747,8 +746,8 @@ namespace glucat
   sin(const Multivector<Scalar_T,LO,HI>& val)
   {
     typedef Multivector<Scalar_T,LO,HI> multivector_t;
-    const Scalar_T s = scalar(val);
-    const Scalar_T twopi = Scalar_T(2) * Scalar_T(l_pi);
+    const Scalar_T& s = scalar(val);
+    const Scalar_T& twopi = Scalar_T(2) * Scalar_T(l_pi);
     const multivector_t& i = elliptic(val);
     const multivector_t& z = i *
       (val - s + Scalar_T(std::fmod(Scalar_T(std::real(s)), twopi)) +
