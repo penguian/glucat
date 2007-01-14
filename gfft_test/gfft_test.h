@@ -5,8 +5,7 @@
     gfft_test.h: GFFT test
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001 by Paul C. Leopardi
-    email                : leopardi@bigpond.net.au
+    copyright            : (C) 2001-2007 by Paul C. Leopardi
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Lesser General Public License as        *
@@ -67,12 +66,9 @@ namespace glucat_gfft_test
               const double mm_cpu_time,  const double fm_cpu_time,
               const int mm_trials,       const int fm_trials)
   {
-    const int index_width = 2;
-    cout << "Cl(" << setw(index_width) <<  max_pos(frame1) << ","
-                  << setw(index_width) << -min_neg(frame1) << ") in "
-         << "Cl(" << setw(index_width) <<  max_pos(frame2) << ","
-                  << setw(index_width) << -min_neg(frame2) << ")"
-         << " CPU = ";
+    cout << "R_" << frame1 << " in " 
+         << "R_" << frame2 << ":" << endl;
+    cout << " CPU = ";
     const ios::fmtflags& old_flags = cout.flags();
     const streamsize width = 10;
     const streamsize old_prec = cout.precision();
@@ -178,14 +174,17 @@ namespace glucat_gfft_test
     typedef typename m_::scalar_t    scalar_t;
 
     const index_t max_index = min(n, max_n);
-    m_ a = 1;
-    e_ inner_frame = e_();
-    for (index_t i = 1; i != max_index+1; i++)
+    for (index_t k = max_index; k != 0; --k)
     {
-      inner_frame |= e_(i);
-      a = a*m_(e_(i) , 1.0)*(scalar_t(1.0*rand())/RAND_MAX) + a*(scalar_t(1.0*rand())/RAND_MAX);
-      inner_frame |= e_(-i);
-      time_fast(a, m_(e_(-i), 1.0), inner_frame, inner_frame);
+      m_ a = 1;
+      e_ inner_frame = e_();
+      for (index_t i = k; i < max_index+1; i += k)
+      {
+        inner_frame |= e_(i);
+        a = a*m_(e_(i) , 1.0)*(scalar_t(1.0*rand())/RAND_MAX) + a*(scalar_t(1.0*rand())/RAND_MAX);
+        inner_frame |= e_(-i);
+        time_fast(a, m_(e_(-i), 1.0), inner_frame, inner_frame);
+      }
     }
   }
 }
