@@ -5,8 +5,7 @@
     squaring.h : multiplication speed test
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001 by Paul C. Leopardi
-    email                : leopardi@bigpond.net.au
+    copyright            : (C) 2001-2007 by Paul C. Leopardi
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Lesser General Public License as        *
@@ -89,7 +88,7 @@ namespace glucat_mult_test
        setup_cpu_time == 0.0 ?
          min_trials_if_zero :
          int(floor(MS_PER_S/setup_cpu_time));
-      clock_t cpu_time = clock();
+      cpu_time = clock();
       int trials;
       for (trials = 0; trials != max_trials; ++trials)
         c = a * b * (rand()*RAND_SCALE) + a * (rand()*RAND_SCALE);
@@ -105,7 +104,7 @@ namespace glucat_mult_test
        mult_cpu_time == 0.0 ?
          min_trials_if_zero :
          int(floor(MS_PER_S/mult_cpu_time));
-      clock_t cpu_time = clock();
+      cpu_time = clock();
       int trials;
       for (trials = 0; trials != max_trials; ++trials)
         c = a * a;
