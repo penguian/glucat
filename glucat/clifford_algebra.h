@@ -5,8 +5,7 @@
     clifford_algebra.h : Declare the operations of a Clifford algebra
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001 by Paul C. Leopardi
-    email                : leopardi@bigpond.net.au
+    copyright            : (C) 2001-2007 by Paul C. Leopardi
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Lesser General Public License as        *
@@ -74,7 +73,7 @@ namespace glucat
     /// Outer product power
     virtual const multivector_t outer_pow   (int m) const =0;
     /// Subscripting: map from index set to scalar coordinate
-    virtual Scalar_T            operator[]  (const index_set_t& ist) const =0;
+    virtual Scalar_T            operator[]  (const index_set_t ist) const =0;
     /// Pure grade-vector part
     virtual const multivector_t operator()  (index_t grade) const =0;
     /// Even part of multivector, sum of even grade terms
@@ -124,7 +123,7 @@ namespace glucat
     const multivector_t inv         () const;                         \
     const multivector_t pow         (int m) const;                    \
     const multivector_t outer_pow   (int m) const;                    \
-    Scalar_T            operator[]  (const index_set_t& ist) const;   \
+    Scalar_T            operator[]  (const index_set_t ist) const;    \
     const multivector_t operator()  (index_t grade) const;            \
     const multivector_t even()      const;                            \
     const multivector_t odd()       const;                            \
