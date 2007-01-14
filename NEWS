@@ -1,9 +1,53 @@
+2007-01-14: 0.2.1
+GluCat fifth anniversary edition is now faster.
+
+A brief list of changes includes:
+
+Configuration:
+o Add optional argument --with-dense-mult corresponding to variable glucat_use_dense_matrix_mult.
+o Use variable glucat_use_dense_matrix_mult to decide when to add -D_GLUCAT_USE_DENSE_MATRIX_MULT to CXXFLAGS.
+o Drop support for KAI C++. GluCat was never tested with KAI C++, and Intel has effectively replaced it with Intel C++.
+o Change preferred name for Intel C++ from "icc" to "icpc" as per Intel documentation.
+o Check Intel C++ version and store it in icpcversion.
+o When icpcversion is between "8" and "9" use -fabi-version=1 rather than -fabi-version=0.
+o Remove -I/usr/local/include from CXXFLAGS. GluCat configure has never checked if this include helped.
+
+Library:
+Overall:
+o Prefer const index_set_t to const index_set_t& - ie. pass index_set_t by value rather than reference.
+o Rename pair_t to term_t.
+o Give "Construct a multivector from an index set and a scalar coordinate" a default value of Scalar_T(1) for the coordinate.
+
+glucat/glucat/framed_multi.h
+o Make var_pair_t into the nested class var_term_t, including operator*= which multiplies by a term_t.
+o Delete operator* for var_pair_t.
+o Define size_type.
+o Make operator+= ("Add a term, if non-zero") public rather than private, to allow fast() in matrix_multi_imp.h to use this operator.
+
+glucat/index_set.h
+o Add bool member function is_contiguous ("Determine if the index set is contiguous, ie. has no gaps").
+
+glucat/matrix_multi.h
+o Define the type dense_matrix_t to use for dense matrices.
+
+glucat/matrix_multi_imp.h
+o In operator*= for matrix_multi_t use dense ublas::prod based on _GLUCAT_USE_DENSE_MATRIX_MULT but only if both *this and rhs are both "dense enough" -- defined as nnz is at least half the number of entries in the matrix.
+
+glucat/portability.h
+o Drop ISNAN macro -- never used.
+
+Tests:
+glucat/gfft_test/gfft_test.h
+o Test GFFT for frames which are not contiguous.
+
+See the Changelog for a detailed list of changes.
+
 2006-12-06: 0.2.0
 Glucat now properly defines and uses numeric_limits and isnan().
 A brief list of changes includes:
 
 o Define ISNAN(x) macro which uses isnan(x) macro if available, and otherwise
-  uses std:isnan(x).
+  uses std::isnan(x).
 o Define numeric_limits<> and numeric_traits<>.
 o Use std::numeric_limits<Scalar_T>::has_quiet_NaN and
   numeric_traits<Scalar_T>::isNaN().

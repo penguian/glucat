@@ -30,10 +30,3 @@ o Try creating a class, vector_multi<>, which uses std::vector rather than
   std::map. This should be faster than framed_multi<>, if tuned properly, for
   full multivectors. For sparse multivectors, it may be slower.
 
-Done in GluCat 0.2.0:
-o Define numeric limits and traits.
-o Move the names in glucat:: which shadow names in std:: into std:: itself
-  so that eg. std::abs() will work for multivector_t within other template
-  libraries, such as MTL.
-o Support IEEE NaN properly.
-
