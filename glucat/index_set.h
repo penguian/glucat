@@ -5,8 +5,7 @@
     index_set.h : Declare a class for a set of non-zero integer indices
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001 by Paul C. Leopardi
-    email                : leopardi@bigpond.net.au
+    copyright            : (C) 2001-2007 by Paul C. Leopardi
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Lesser General Public License as        *
@@ -94,6 +93,8 @@ namespace glucat
   // Functions which support Clifford algebra operations
     /// Less than operator used for comparisons, map, etc.
     bool                  operator<     (const index_set_t rhs) const;
+    /// Determine if the index set is contiguous, ie. has no gaps
+    bool                  is_contiguous () const;
     /// Fold this index set within itself as a frame
     const index_set_t     fold          () const;
     /// Fold this index set within the given frame
