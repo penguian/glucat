@@ -1,3 +1,237 @@
+2007-01-14 20:34  leopardi
+
+	* glucat/portability.h: Disable 593 "variable was set but never
+	  used".  Drop ISNAN macro -- never used.  Update copyright notice.
+	  Drop old email address.
+
+2007-01-14 20:34  leopardi
+
+	* glucat/matrix_multi_imp.h: In operator= drop call to resize() --
+	  it was redundant.  Make operator*= faster: In operator*=
+	  recursively call *= to "represent rhs in our_frame via conversion
+	  through framed_multi_t".  In operator*= use dense ublas::prod
+	  based on _GLUCAT_USE_DENSE_MATRIX_MULT but only if both *this and
+	  rhs are both "dense enough" -- defined as nnz is at least half
+	  the number of entries in the matrix.	Make fast() faster: In
+	  fast() define I_x, j_x, k_x, jk_x to be Scalar_T when possible.
+	  In fast() use framed_multi_t operator+= with term_t. and use
+	  framed_multi_t operator+= with framed_multi_t.  Cosmetic: Prefer
+	  T a = T(..) form of non-default construction; the form T a(..) is
+	  sometimes confused with a function declaration.  Prefer const
+	  index_set_t to const index_set_t& - ie. pass index_set_t by value
+	  rather than reference.  Prefer const matrix_t& to const matrix_t,
+	  ie. use const references for constant matrices.  Cosmetic: In
+	  constructors which use the constant frame parameter frm, prefer
+	  using this parameter to using m_frame.  Cosmetic: Rename pair_t
+	  to term_t.  Cosmetic: Prefer Scalar_T to scalar_t.  Cosmetic:
+	  Prefer Scalar_T(1) to 1 etc., where applicable.  Cosmetic: Use
+	  this-> more consistently.  Update copyright notice.  Drop old
+	  email address.
+
+2007-01-14 20:33  leopardi
+
+	* glucat/matrix_multi.h: Give "Construct a multivector from an
+	  index set and a scalar coordinate" a default value of Scalar_T(1)
+	  for the coordinate.  Define the type dense_matrix_t to use for
+	  dense matrices.  Rename pair_t to term_t.  Prefer const
+	  index_set_t to const index_set_t& - ie. pass index_set_t by value
+	  rather than reference.  Update copyright notice.  Drop old email
+	  address.
+
+2007-01-14 20:33  leopardi
+
+	* glucat/matrix_imp.h: Make nork faster: iterate over sparse
+	  rhs_range rather than scaling and adding whole range.  Make kron
+	  and inner match naming conventions used by nork.  Prefer const
+	  Scalar_T& to const Scalar_T, ie. use const references for
+	  constant scalars.  Cosmetic: Prefer T a = T(..) form of
+	  non-default construction; the form T a(..) is sometimes confused
+	  with a function declaration.	Cosmetic: Prefer Scalar_T to
+	  scalar_t.  Cosmetic: Prefer Scalar_T(-1) to Scalar_T(-1.0) etc.
+	  Cosmetic: In nork, using "ublas::range" rather than "using
+	  namespace ublas".  Update copyright notice.  Drop old email
+	  address.
+
+2007-01-14 20:33  leopardi
+
+	* glucat/index_set_imp.h: Add bool member function is_contiguous
+	  ("Determine if the index set is contiguous, ie. has no gaps").
+	  Use more efficient form of construcor from bitset_t.	Update
+	  copyright notice.  Drop old email address.  Cosmetics.
+
+2007-01-14 20:33  leopardi
+
+	* glucat/index_set.h: Add bool member function is_contiguous
+	  ("Determine if the index set is contiguous, ie. has no gaps").
+	  Update copyright notice.  Drop old email address.
+
+2007-01-14 20:32  leopardi
+
+	* glucat/generation_imp.h: Drop calls to resize() -- these were
+	  redundant.  Cosmetic: Prefer T a = T(..) form of non-default
+	  construction; the form T a(..) is sometimes confused with a
+	  function declaration.  Update copyright notice.  Drop old email
+	  address.
+
+2007-01-14 20:32  leopardi
+
+	* glucat/framed_multi_imp.h: "Construct a multivector from an index
+	  set and a scalar coordinate" now has a default value of
+	  Scalar_T(1) for the coordinate.  Cosmetic: Rename pair_t to
+	  term_t.  Make var_pair_t into the nested class var_term_t,
+	  including operator*= which multiplies by a term_t.  Delete
+	  operator* for var_pair_t.  Make operator*= faster: use direct
+	  multiply whenever product is sparse and hash_map is being used;
+	  use this->clear() in array mult; In operator*= rename array_size
+	  to algebra_dim and rename result_pair to result_term.  Make
+	  operator== ("Test for equality of multivector and scalar")
+	  faster: Switch on this->size() and avoid calling this->frame().
+	  Make fold and unfold faster: test if frame is contiguous and
+	  return *this if it is.  Make centre_pm4_qp4, centre_pp4_qm4,
+	  centre_qp1_pm1 faster: use var_pair_t, operator*=, and const
+	  references.  Make fast_matrix_multi faster: use bott_offset
+	  rather than bott, use a constructor rather than a variable to
+	  return result.  In fast_matrix_multi, use correct function name
+	  in error messages.  Prefer const index_set_t to const
+	  index_set_t& - ie. pass index_set_t by value rather than
+	  reference.  Prefer const Scalar_T& to const Scalar_T, ie. use
+	  const references for constant scalars.  Prefer const matrix_t& to
+	  const matrix_t, ie. use const references for constant matrices.
+	  Prefer index_t to int where applicable.  Rely on default
+	  contruction of multivector_t as 0, where applicable.	Prefer
+	  const const_iterator& to const_iterator where applicable.  Use a
+	  more efficient form of constructor for sorted_range.	Cosmetic:
+	  Prefer T a = T(..) form of non-default construction; the form T
+	  a(..) is sometimes confused with a function declaration.
+	  Cosmetic: Prefer Scalar_T(-1) to Scalar_T(-1.0) etc.	Cosmetic:
+	  Prefer Scalar_T(1) to 1 etc., where applicable.  Cosmetic: Use
+	  Map_T and Sorted_Map_T as template parameter names.  Cosmetic:
+	  Use this-> more consistently.  Update copyright notice.  Drop old
+	  email address.  Cosmetics.
+
+2007-01-14 20:32  leopardi
+
+	* glucat/framed_multi.h: Give "Construct a multivector from an
+	  index set and a scalar coordinate" a default value of Scalar_T(1)
+	  for the coordinate.  Cosmetic: Rename pair_t to term_t.  Make
+	  var_pair_t into the nested class var_term_t, including operator*=
+	  which multiplies by a term_t.  Delete operator* for var_pair_t.
+	  Define size_type.  Make operator+= ("Add a term, if non-zero")
+	  public rather than private, to allow fast() in matrix_multi_imp.h
+	  to use this operator.  Prefer const index_set_t to const
+	  index_set_t& - ie. pass index_set_t by value rather than
+	  reference.  Update copyright notice.	Drop old email address.
+
+2007-01-14 20:31  leopardi
+
+	* glucat/clifford_algebra_imp.h: Prefer const Scalar_T& to const
+	  Scalar_T, ie. use const references for scalars.  Update copyright
+	  notice.  Drop old email address.
+
+2007-01-14 20:31  leopardi
+
+	* glucat/clifford_algebra.h: Prefer const index_set_t to const
+	  index_set_t& - ie. pass index_set_t by value rather than
+	  reference.  Update copyright notice.	Drop old email address.
+
+2007-01-14 20:30  leopardi
+
+	* gfft_test/gfft_test.cpp, glucat/errors.h, glucat/errors_imp.h,
+	  glucat/generation.h, glucat/global.h, glucat/glucat.h,
+	  glucat/glucat_imp.h, glucat/long_double.h, glucat/matrix.h,
+	  glucat/scalar.h, squaring/squaring.cpp, squaring/tuning.h,
+	  test01/peg01.cpp, test01/peg01.h, test02/peg02.cpp,
+	  test02/peg02.h, test03/peg03.cpp, test03/peg03.h,
+	  test04/peg04.cpp, test05/peg05.cpp, test05/peg05.h,
+	  test06/peg06.cpp, test06/peg06.h, test07/peg07.cpp,
+	  test08/peg08.cpp, test08/peg08.h, test09/peg09.cpp,
+	  test09/peg09.h, test10/peg10.cpp, test10/peg10.h,
+	  test11/peg11.cpp, test11/peg11.h, test12/peg12.cpp,
+	  test12/peg12.h, test13/peg13.cpp, test13/peg13.h,
+	  test14/peg14.cpp, test14/peg14.h, test15/peg15.cpp,
+	  test15/peg15.h, test/driver.h, test/try_catch.h,
+	  test16/peg16.cpp, test16/peg16.h, transforms/transforms.cpp,
+	  transforms/transforms.h: Update copyright notice.  Drop old email
+	  address.
+
+2007-01-14 20:29  leopardi
+
+	* test07/peg07.h: Correct write statement to read "u*x*reverse(u) |
+	  u*y*reverse(u) =".  Update copyright notice.	Drop old email
+	  address.
+
+2007-01-14 20:28  leopardi
+
+	* test04/peg04.h: Move declaration of F into block to prevent
+	  shadowing.  Update copyright notice.	Drop old email address.
+
+2007-01-14 20:28  leopardi
+
+	* squaring/squaring.h: Use only one cpu_time variable to prevent
+	  shadowing.  Update copyright notice.	Drop old email address.
+
+2007-01-14 20:27  leopardi
+
+	* gfft_test/gfft_test.h: Test GFFT with frames which are not
+	  contiguous.
+
+2007-01-14 20:26  leopardi
+
+	* test_runtime/: gfft_test-10.out, squaring-8.out, test.out,
+	  transforms-6.out: Update to GluCat 0.2.1.
+
+2007-01-14 20:25  leopardi
+
+	* Makefile.am: Remove glucat.kdevelop from EXTRA_DIST.
+
+2007-01-14 20:24  leopardi
+
+	* NEWS, TODO, glucat.kdevelop, glucat.lsm: Update to GluCat version
+	  0.2.1.
+
+2007-01-14 20:24  leopardi
+
+	* INSTALL, README: Update to GluCat version 0.2.1.  Describe
+	  --with-dense-mult and _GLUCAT_USE_DENSE_MATRIX_MULT.
+
+2007-01-14 20:23  leopardi
+
+	* Doxyfile: Update to GluCat version 0.2.1.  Clean up paths.
+
+2007-01-14 20:22  leopardi
+
+	* configure.in, configure.in.in: Extensive changes: Update to
+	  GluCat version 0.2.1.  Quote names used in AC_DEFUN.	Add
+	  optional argument --with-dense-mult corresponding to variable
+	  glucat_use_dense_matrix_mult.  Use variable
+	  glucat_use_dense_matrix_mult to decide when to add
+	  -D_GLUCAT_USE_DENSE_MATRIX_MULT to CXXFLAGS.	Drop support for
+	  KAI C++. GluCat was never tested with KAI C++, and Intel has
+	  effectively replaced it with Intel C++.  Change preferred name
+	  for Intel C++ from "icc" to "icpc" as per Intel documentation.
+	  Check Intel C++ version and store it in icpcversion.	When
+	  icpcversion is between "8" and "9" use -fabi-version=1 rather
+	  than -fabi-version=0.  Use AC_CONFIG_HEADERS rather than obsolete
+	  AM_CONFIG_HEADER.  Change name of GLUCAT_PROG_LIBTOOL to
+	  AC_GLUCAT_PROG_LIBTOOL.  Move AC_PROG_PP after test for
+	  kde_use_debug_code.  Remove -I/usr/local/include from CXXFLAGS.
+	  GluCat configure has never checked if this include helped.
+	  Change references to $GCC to $GXX in tests which affect CXXFLAGS.
+	  Clean up lines which were commented out.
+
+2007-01-14 20:22  leopardi
+
+	* aclocal.m4: (auto generated file) Remove reference to
+	  AM_CONFIG_HEADER.
+
+2007-01-14 20:21  leopardi
+
+	* acinclude.m4: Quote names used in AC_DEFUN.
+
+2006-12-06 02:28  leopardi
+
+	* ChangeLog: Update to GluCat 0.2.0.
+
 2006-12-06 02:22  leopardi
 
 	* test01/peg01.cpp, test02/peg02.cpp, test03/peg03.cpp,
@@ -2019,3 +2253,16 @@
 	  test/templates/cpp_template, test/templates/header_template:
 	  Initial revision
 
+2002-01-12 Updated version to 0.0.2
+2002-01-12 ./test/test.out, test6.out: Added sample output
+2002-01-12 Added all relevant files to CVS
+2002-01-12 ./glucat/doc: removed unused directory
+
+2002-01-11 ./glucat/clifford_algebra_imp.h: Fixed elliptic() to give a result which commutes
+2002-01-11 ./test/peg12.cpp: Changed example name from "basis group" to "frame group"
+2002-01-11 ./test/peg13.cpp, peg14.cpp, peg15.cpp: Added cout << example name
+2002-01-11 ./test/peg16.cpp: Fixed example name to read: Matrices of multivectors
+
+2002-01-10 ./README: Added -finline-limit-400
+
+2002-01-09 Released glucat-0.0.1
