@@ -121,6 +121,15 @@ using namespace glucat;
  -D_GLUCAT_USE_GNU_CXX_HASH_MAP to your own Makefile if you want to use
  __gnu_cxx::hash_map<>.
 
+ _GLUCAT_USE_DENSE_MATRIX_MULT controls dense matrix multiplication.
+ If _GLUCAT_USE_DENSE_MATRIX_MULT is defined, then the function operation*= in 
+ matrix_multi_imp.h will use the dense product ublas::prod when both matrices
+ are large enough and dense enough.
+ 
+ The configure script flag --with-dense-mult adds -D_GLUCAT_USE_DENSE_MATRIX_MULT
+ to CXXFLAGS in the test Makefiles. For your own compilation you will need to add
+ -D_GLUCAT_USE_DENSE_MATRIX_MULT to your own Makefile.
+
 Coding standards
 ----------------
  
