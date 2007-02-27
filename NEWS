@@ -1,3 +1,18 @@
+2007-02-28: 0.2.2
+GluCat, now with Bit Wizardry, is even faster.
+
+Various functions in glucat/index_set_imp.h now use bitwise algorithms whose
+time is proportional to the log of the number of bits, or proportional to the 
+number of bits set to true.
+ 
+These algorithms are taken from and inspired by Joerg Arndt,  
+"Algorithms for programmers", http://www.jjj.de/fxt/fxtbook.pdf 
+Chapter 1, Bit wizardry, http://www.jjj.de/bitwizardry/bitwizardrypage.html
+
+The file glucat/glucat.h now defines the macro _GLUCAT_BITS_PER_ULONG, 
+which is used in glucat/index_set_imp.h to enable the proprocessor to select 
+the 32-bit or 64-bit versions of some of the bitwise algorithms.
+
 2007-01-14: 0.2.1
 GluCat fifth anniversary edition is now faster.
 

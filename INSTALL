@@ -14,7 +14,7 @@ Before You Begin
  The headers also need an include library which either defines the macro isnan
  or defines std::isnan.
 
- GluCat 0.2.1 has so far been tested using:
+ GluCat 0.2.2 has so far been tested using:
 
 1) Intel(R) Pentium(R) 4 with
 1.1) SuSE Linux 9.2,  g++ 3.3.4 (pre 3.3.5 20040809),      Boost 1.33.0
@@ -29,12 +29,10 @@ Before You Begin
 3.1) SuSE Linux 10.1, g++ 4.1.0,                           Boost 1.33.0
 3.2) SuSE Linux 10.1, g++ 4.1.0,                           Boost 1.33.1
 
-4) Dual AMD Opteron(tm) with
-4.1) SuSE SLES 9,     g++ 3.3.3 (SuSE Linux),              Boost 1.33.1
-4.2) SuSE SLES 9,     Intel icpc 8.1 Build 20040803Z,      Boost 1.33.1
-
    Notes: 
-1. GluCat 0.2.1 does not work with Boost versions before 1.31.0 or with Boost
+0. For gfft_test compiled with Intel icpc 7.1 on Intel Pentium 4, GluCat 0.2.2 
+   is slower than GluCat 0.2.1.
+1. GluCat 0.2.2 does not work with Boost versions before 1.31.0 or with Boost
    1.32.0. Boost uBLAS before 1.31.0 has different semantics for operator= for
    compressed matrices, and also does not provide LU solvers for compressed
    matrices. With Boost 1.32.0, GluCat seems to compile OK, but gives incorrect

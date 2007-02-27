@@ -42,6 +42,8 @@ Algorithms
 ----------
 Milton Abramowicz and Irene A. Stegun, Gene H. Golub, Charles F. van Loan, C.F. Gerald,  P.O. Wheatley:
   Transcendental functions.
+Joerg Arndt:
+  Bit functions on index sets.
 Sheung Hun Cheng, Nicholas J. Higham, Charles S. Kenney, Alan J. Laub :
   Product form of Denman-Beavers square root iteration, incomplete square root cascade logarithm.
 Leo Dorst: Left contraction.
