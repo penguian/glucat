@@ -24,20 +24,16 @@
 
 namespace std 
 {
-#ifndef HAVE_STD_ABS
-  inline 
-  long double 
-  abs(long double a)
-  { return a > 0 ? a : -a; }
-#endif
   inline 
   long double 
   conj(long double a)
   { return a; }
+
   inline 
   long double 
   real(long double a)
   { return a; }
+
   inline 
   long double 
   imag(long double)
