@@ -31,11 +31,12 @@
  ***************************************************************************/
 
 #include <boost/config.hpp>
+#include <boost/cstdint.hpp>
+#include <boost/limits.hpp>
 #include "glucat/portability.h"
 
 // Declarations
-#define HAVE_STD_ABS
-#include <boost/limits.hpp>
+
 #include <cmath>
 #include "glucat/global.h"
 
@@ -73,6 +74,7 @@
 #include "glucat/matrix.h"
 
 #include "glucat/generation.h"
+
 #include "glucat/matrix_multi.h"
 
 #endif  // _GLUCAT_GLUCAT_H
