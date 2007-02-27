@@ -9,7 +9,7 @@ These algorithms are taken from and inspired by Joerg Arndt,
 "Algorithms for programmers", http://www.jjj.de/fxt/fxtbook.pdf 
 Chapter 1, Bit wizardry, http://www.jjj.de/bitwizardry/bitwizardrypage.html
 
-The file glucat/glucat.h now defines the macro _GLUCAT_BITS_PER_ULONG, 
+The file glucat/global.h now defines the macro _GLUCAT_BITS_PER_ULONG, 
 which is used in glucat/index_set_imp.h to enable the proprocessor to select 
 the 32-bit or 64-bit versions of some of the bitwise algorithms.
 
