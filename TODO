@@ -1,4 +1,14 @@
 There is plenty of testing, cleanup, packaging and documentation work yet to do.
+o Try refactoring the relationship between matrix_multi, framed_multi and 
+  clifford_algebra to allow more flexibility with template parameters.
+  Possibly use enable_if and SFINAE to do this.
+o Try splitting the type matrix_t into basis_matrix_t, which is compressed, 
+  and matrix_t, which may be compressed, dense, etc.
+o Try adding a Matrix_Tag template parameter to framed_multi and matrix_multi,
+  to determine if matrix_t is compressed, dense, etc.
+o Try removing the template parameters LO and HI from framed_multi and 
+  matrix_multi, and using DEFAULT_LO and DEFAULT_HI where these are needed in 
+  framed_multi.h, matrx_multi.h, etc.
 o Simplify and improve the use of automake and autoconf in building GluCat.
 o Try defining Boost concepts and more numeric traits so that GluCat can eventually 
   become a Boost library.
@@ -8,12 +18,11 @@ o Investigate if GluCat could be used as the back-end to Christian Perwass' CLU.
 o Improve the packaging of the example and test programs.
 o Write a programmer's guide with descriptions of the API.
 o Test with Blitz++, deal.II, MTL, POOMA and uBLAS and adjust accordingly.
-o Fix sqrt() and log() so that they deal properly with negative real
-  eigenvalues.
+o Fix sqrt() and log() so that they deal properly with negative real eigenvalues.
 o Devise better algorithms and better implementations of existing algorithms for
   the transcendental functions. In particular, pay more attention to radius of
   convergence, condition number of matrices and poking out of the subalgebra.
-o Try making Tune_P into a mixin policy class template parameter, ie.
+o Try making Tune_P into a mixin policy class template parameter.
 o Port to other architectures and compilers which support template template
   parameters.
 o Add operator| for geometric operations: return rhs * lhs * involute(inv(rhs))
