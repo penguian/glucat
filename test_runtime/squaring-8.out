@@ -3,40 +3,40 @@ Clifford algebra squaring test:
 Square of unit pseudoscalar ({-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8})
 Cl( 8, 8) in Cl( 8, 8) CPU =         0.00 ms:         0.00 (setup) +         0.00 (mult). 
 Square is 1
-Cl( 1, 0) in Cl( 1, 0) CPU =         0.12 ms:         0.08 (setup) +         0.04 (mult). 
-Cl( 1, 1) in Cl( 1, 1) CPU =         0.16 ms:         0.09 (setup) +         0.07 (mult). 
-Cl( 2, 1) in Cl( 2, 1) CPU =         0.28 ms:         0.10 (setup) +         0.18 (mult). 
-Cl( 2, 2) in Cl( 2, 2) CPU =         0.71 ms:         0.12 (setup) +         0.59 (mult). 
-Cl( 3, 2) in Cl( 3, 2) CPU =         0.91 ms:         0.08 (setup) +         0.83 (mult). 
-Cl( 3, 3) in Cl( 3, 3) CPU =         1.90 ms:         0.00 (setup) +         1.90 (mult). 
-Cl( 4, 3) in Cl( 4, 3) CPU =         6.88 ms:         0.22 (setup) +         6.66 (mult). 
-Cl( 4, 4) in Cl( 4, 4) CPU =         9.14 ms:         0.44 (setup) +         8.70 (mult). 
-Cl( 5, 4) in Cl( 5, 4) CPU =        46.45 ms:         0.85 (setup) +        45.60 (mult). 
-Cl( 5, 5) in Cl( 5, 5) CPU =        52.35 ms:         1.73 (setup) +        50.62 (mult). 
-Cl( 6, 5) in Cl( 6, 5) CPU =       203.30 ms:         3.30 (setup) +       200.00 (mult). 
-Cl( 6, 6) in Cl( 6, 6) CPU =       237.00 ms:         7.00 (setup) +       230.00 (mult). 
-Cl( 7, 6) in Cl( 7, 6) CPU =       925.10 ms:        15.10 (setup) +       910.00 (mult). 
-Cl( 7, 7) in Cl( 7, 7) CPU =      1051.20 ms:        31.20 (setup) +      1020.00 (mult). 
-Cl( 8, 7) in Cl( 8, 7) CPU =      4006.43 ms:        66.43 (setup) +      3940.00 (mult). 
-Cl( 8, 8) in Cl( 8, 8) CPU =      4714.29 ms:       134.29 (setup) +      4580.00 (mult). 
+Cl( 1, 0) in Cl( 1, 0) CPU =         0.11 ms:         0.08 (setup) +         0.03 (mult). 
+Cl( 1, 1) in Cl( 1, 1) CPU =         0.14 ms:         0.09 (setup) +         0.05 (mult). 
+Cl( 2, 1) in Cl( 2, 1) CPU =         0.19 ms:         0.09 (setup) +         0.10 (mult). 
+Cl( 2, 2) in Cl( 2, 2) CPU =         0.38 ms:         0.12 (setup) +         0.26 (mult). 
+Cl( 3, 2) in Cl( 3, 2) CPU =         0.40 ms:         0.08 (setup) +         0.32 (mult). 
+Cl( 3, 3) in Cl( 3, 3) CPU =         1.92 ms:         0.10 (setup) +         1.82 (mult). 
+Cl( 4, 3) in Cl( 4, 3) CPU =         6.68 ms:         0.18 (setup) +         6.50 (mult). 
+Cl( 4, 4) in Cl( 4, 4) CPU =         8.94 ms:         0.34 (setup) +         8.60 (mult). 
+Cl( 5, 4) in Cl( 5, 4) CPU =        43.50 ms:         0.70 (setup) +        42.80 (mult). 
+Cl( 5, 5) in Cl( 5, 5) CPU =        49.80 ms:         1.30 (setup) +        48.50 (mult). 
+Cl( 6, 5) in Cl( 6, 5) CPU =       192.73 ms:         2.73 (setup) +       190.00 (mult). 
+Cl( 6, 6) in Cl( 6, 6) CPU =       223.11 ms:         5.61 (setup) +       217.50 (mult). 
+Cl( 7, 6) in Cl( 7, 6) CPU =       862.20 ms:        12.20 (setup) +       850.00 (mult). 
+Cl( 7, 7) in Cl( 7, 7) CPU =      1005.45 ms:        25.45 (setup) +       980.00 (mult). 
+Cl( 8, 7) in Cl( 8, 7) CPU =      3754.00 ms:        54.00 (setup) +      3700.00 (mult). 
+Cl( 8, 8) in Cl( 8, 8) CPU =      4430.00 ms:       110.00 (setup) +      4320.00 (mult). 
 matrix_multi<double>
 Clifford algebra squaring test:
 Square of unit pseudoscalar ({-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8})
-Cl( 8, 8) in Cl( 8, 8) CPU =        10.00 ms:        10.00 (setup) +         0.00 (mult). 
+Cl( 8, 8) in Cl( 8, 8) CPU =         0.00 ms:         0.00 (setup) +         0.00 (mult). 
 Square is 1
 Cl( 1, 0) in Cl( 1, 0) CPU =         0.03 ms:         0.03 (setup) +         0.00 (mult). 
-Cl( 1, 1) in Cl( 1, 1) CPU =         0.08 ms:         0.07 (setup) +         0.01 (mult). 
+Cl( 1, 1) in Cl( 1, 1) CPU =         0.07 ms:         0.07 (setup) +         0.00 (mult). 
 Cl( 2, 1) in Cl( 2, 1) CPU =         0.13 ms:         0.12 (setup) +         0.01 (mult). 
-Cl( 2, 2) in Cl( 2, 2) CPU =         0.25 ms:         0.25 (setup) +         0.00 (mult). 
-Cl( 3, 2) in Cl( 3, 2) CPU =         0.60 ms:         0.58 (setup) +         0.02 (mult). 
-Cl( 3, 3) in Cl( 3, 3) CPU =         1.31 ms:         1.28 (setup) +         0.03 (mult). 
-Cl( 4, 3) in Cl( 4, 3) CPU =         3.71 ms:         3.60 (setup) +         0.11 (mult). 
-Cl( 4, 4) in Cl( 4, 4) CPU =         7.70 ms:         7.60 (setup) +         0.10 (mult). 
-Cl( 5, 4) in Cl( 5, 4) CPU =        25.89 ms:        25.45 (setup) +         0.44 (mult). 
-Cl( 5, 5) in Cl( 5, 5) CPU =        56.69 ms:        56.25 (setup) +         0.44 (mult). 
-Cl( 6, 5) in Cl( 6, 5) CPU =       136.41 ms:       134.29 (setup) +         2.12 (mult). 
-Cl( 6, 6) in Cl( 6, 6) CPU =       247.20 ms:       245.00 (setup) +         2.20 (mult). 
-Cl( 7, 6) in Cl( 7, 6) CPU =       680.00 ms:       660.00 (setup) +        20.00 (mult). 
-Cl( 7, 7) in Cl( 7, 7) CPU =      1089.80 ms:      1070.00 (setup) +        19.80 (mult). 
-Cl( 8, 7) in Cl( 8, 7) CPU =      4670.00 ms:      4530.00 (setup) +       140.00 (mult). 
-Cl( 8, 8) in Cl( 8, 8) CPU =      4720.00 ms:      4580.00 (setup) +       140.00 (mult). 
+Cl( 2, 2) in Cl( 2, 2) CPU =         0.23 ms:         0.23 (setup) +         0.00 (mult). 
+Cl( 3, 2) in Cl( 3, 2) CPU =         0.56 ms:         0.53 (setup) +         0.03 (mult). 
+Cl( 3, 3) in Cl( 3, 3) CPU =         1.24 ms:         1.22 (setup) +         0.02 (mult). 
+Cl( 4, 3) in Cl( 4, 3) CPU =         3.70 ms:         3.60 (setup) +         0.10 (mult). 
+Cl( 4, 4) in Cl( 4, 4) CPU =         7.51 ms:         7.40 (setup) +         0.11 (mult). 
+Cl( 5, 4) in Cl( 5, 4) CPU =        24.99 ms:        24.55 (setup) +         0.44 (mult). 
+Cl( 5, 5) in Cl( 5, 5) CPU =        53.56 ms:        53.12 (setup) +         0.44 (mult). 
+Cl( 6, 5) in Cl( 6, 5) CPU =       130.67 ms:       128.57 (setup) +         2.10 (mult). 
+Cl( 6, 6) in Cl( 6, 6) CPU =       234.56 ms:       232.50 (setup) +         2.06 (mult). 
+Cl( 7, 6) in Cl( 7, 6) CPU =       659.80 ms:       640.00 (setup) +        19.80 (mult). 
+Cl( 7, 7) in Cl( 7, 7) CPU =      1019.40 ms:      1000.00 (setup) +        19.40 (mult). 
+Cl( 8, 7) in Cl( 8, 7) CPU =      4571.43 ms:      4430.00 (setup) +       141.43 (mult). 
+Cl( 8, 8) in Cl( 8, 8) CPU =      4438.57 ms:      4300.00 (setup) +       138.57 (mult). 
