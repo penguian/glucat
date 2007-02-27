@@ -24,14 +24,17 @@
 
 namespace glucat
 {
+  // References:
+  // [AA]: A. Alexandrescu, "Modern C++ Design", Addison-Wesley, 2001.
+
   /// Compile time assertion
-  // Reference: A. Alexandrescu, "Modern C++ Design", Addison-Wesley, 2001, p. 25
+  // Reference: [AA], p. 25
   template<bool> struct CTAssertion;
   template<> struct CTAssertion<true> { };
   #define _GLUCAT_CTAssert(expr, msg) namespace { glucat::CTAssertion<(expr)> ERROR_##msg; }
 
   /// Type comparison
-  // Reference: A. Alexandrescu, "Modern C++ Design", Addison-Wesley, 2001, pp. 34--37
+  // Reference: [AA], pp. 34--37
   template < typename LHS_T, typename RHS_T >
   class compare_types
   {
@@ -46,7 +49,7 @@ namespace glucat
   };
 
   /// Bool to type
-  // Reference: A. Alexandrescu, "Modern C++ Design", Addison-Wesley, 2001, 2.4, p. 29
+  // Reference: [AA], 2.4, p. 29
   template< bool truth_value >
   class bool_to_type
   {
@@ -64,6 +67,16 @@ namespace glucat
   const double MS_PER_S = 1000.0;
 
   // Constants which determine sizes
+
+  // Bits per unsigned long
+  #if   (ULONG_MAX == (4294967295UL))
+  #define _GLUCAT_BITS_PER_ULONG 32
+  #elif (ULONG_MAX == (18446744073709551615UL))
+  #define _GLUCAT_BITS_PER_ULONG 64
+  #elif defined(__WORDSIZE)
+  #define _GLUCAT_BITS_PER_ULONG __WORDSIZE
+  #endif
+
   /// If radix of unsigned char is not 2, we can't easily determine number of bits from sizeof
   _GLUCAT_CTAssert(std::numeric_limits<unsigned char>::radix == 2, CannotDetermineBitsPerChar)
 
@@ -71,7 +84,9 @@ namespace glucat
   const index_t BITS_PER_CHAR = std::numeric_limits<unsigned char>::digits;
 
   /// Number of bits in set_value_t
-  const index_t BITS_PER_SET_VALUE = BITS_PER_CHAR * index_t(sizeof(set_value_t));
+  const index_t BITS_PER_SET_VALUE = std::numeric_limits<set_value_t>::digits;
+
+  _GLUCAT_CTAssert(_GLUCAT_BITS_PER_ULONG == BITS_PER_SET_VALUE, BitsPerULongDoesNotMatchSetValueT)
 
   // Constants which are determined by size
   /// Default lowest index in an index set
@@ -138,7 +153,7 @@ namespace glucat
   { return lhs > 0? lhs % rhs : (-lhs) % rhs == 0 ? 0 : rhs - (-lhs) % rhs; }
 
   /// Extra traits which extend numeric limits
-  // Reference: A. Alexandrescu, ibid, 2.4, p. 30-31
+  // Reference: [AA], 2.4, p. 30-31
   template< typename T >
   class numeric_traits
   {
