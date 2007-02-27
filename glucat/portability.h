@@ -22,7 +22,7 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
-//***************************** workarounds for ICC
+// Workarounds for ICC
 #if defined (BOOST_INTEL) || defined (__ICL) || defined (__ICC)
 # pragma warning( disable: 177 ) // variable was declared but never referenced
 # pragma warning( disable: 279 ) // controlling expression is constant
