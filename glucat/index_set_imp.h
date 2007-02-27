@@ -24,6 +24,11 @@
 
 namespace glucat
 {
+  // References for algorithms:
+  // [JA]: Joerg Arndt,  "Algorithms for programmers", http://www.jjj.de/fxt/fxtbook.pdf
+  //      Chapter 1, Bit wizardry, http://www.jjj.de/bitwizardry/bitwizardrypage.html
+  // [L]: Pertti Lounesto, "Clifford algebras and spinors", Cambridge UP, 1997.
+
   template<const index_t LO, const index_t HI>
   const std::string
   index_set<LO,HI>::
@@ -97,13 +102,7 @@ namespace glucat
   index_set<LO,HI>
   index_set<LO,HI>::
   operator~ () const
-  {
-    index_set_t result;
-    bitset_t* presult = &result;
-    const bitset_t* pthis = this;
-    *presult = ~(*pthis);
-    return result;
-  }
+  { return bitset_t::operator~(); }
 
   /// Symmetric set difference: exclusive or
   template<const index_t LO, const index_t HI>
@@ -180,15 +179,6 @@ namespace glucat
     return result |= rhs;
   }
 
-  /// Subscripting: Test idx for membership: test value of bit idx
-  template<const index_t LO, const index_t HI>
-  inline
-  bool
-  index_set<LO,HI>::
-  operator[] (const index_t idx) const
-  { return idx > 0 ? bitset_t::test(idx-LO-1) :
-           idx < 0 ? bitset_t::test(idx-LO) : false; }
-
   /// Subscripting: Element access
   template<const index_t LO, const index_t HI>
   inline
@@ -197,14 +187,42 @@ namespace glucat
   operator[] (const index_t idx)
   { return reference(*this, idx); }
 
+  /// Subscripting: Test idx for membership: test value of bit idx
+  template<const index_t LO, const index_t HI>
+  inline
+  bool
+  index_set<LO,HI>::
+  operator[] (const index_t idx) const
+  { return this->test(idx); }
+
   /// Test idx for membership: test value of bit idx
   template<const index_t LO, const index_t HI>
   inline
   bool
   index_set<LO,HI>::
   test(const index_t idx) const
-  { return idx > 0 ? bitset_t::test(idx-LO-1) :
-           idx < 0 ? bitset_t::test(idx-LO) : false; }
+  { 
+    return idx < 0 
+         ? bitset_t::test(idx-LO) 
+         : idx > 0 
+         ? bitset_t::test(idx-LO-1)
+         : false; 
+  }
+
+  /// Test idx for membership: test value of bit idx
+  template< >
+  inline
+  bool
+  index_set<DEFAULT_LO,DEFAULT_HI>::
+  test(const index_t idx) const
+  {
+    // Reference: [JA], 1.2.1
+    return idx < 0 
+         ? bool(bitset_t::to_ulong() & (1UL << (idx-DEFAULT_LO)))
+         : idx > 0 
+         ? bool(bitset_t::to_ulong() & (1UL << (idx-DEFAULT_LO-1)))
+         : false; 
+  }
 
   /// Include all indices except 0: set all bits except 0
   template<const index_t LO, const index_t HI>
@@ -303,6 +321,26 @@ namespace glucat
   count() const
   { return bitset_t::count(); }
 
+  /// Cardinality: Number of indices included in set
+  template< >
+  inline
+  index_t
+  index_set<DEFAULT_LO,DEFAULT_HI>::
+  count() const
+  { 
+    // Reference: [JA], 1.3
+    set_value_t val = bitset_t::to_ulong();
+    if (val == 0)
+      return 0;
+    else
+    {
+      index_t result = 1;
+      while (val &= val-1)
+        ++result;
+      return result;
+    }
+  }
+
   /// Number of negative indices included in set
   template<const index_t LO, const index_t HI>
   inline
@@ -310,14 +348,9 @@ namespace glucat
   index_set<LO,HI>::
   count_neg() const
   {
-    index_t result = 0;
-    for (size_t
-        idx = 0;
-        idx != -LO;
-        ++idx)
-      if (bitset_t::test(idx))
-        ++result;
-    return result;
+    static const index_set_t lo_mask = bitset_t((1UL << -LO) - 1UL);
+    const index_set_t neg_part = *this & lo_mask;
+    return neg_part.count();
   }
 
   /// Number of positive indices included in set
@@ -327,14 +360,22 @@ namespace glucat
   index_set<LO,HI>::
   count_pos() const
   {
-    index_t result = 0;
-    for (size_t
-        idx = HI-LO-1;
-        idx != -LO-1;
-        --idx)
-      if (bitset_t::test(idx))
-        ++result;
-    return result;
+    static const index_set_t hi_mask = bitset_t((1UL <<  HI) - 1UL);
+    const bitset_t* pthis = this;
+    const index_set_t pos_part = (*pthis >> -LO) & hi_mask;
+    return pos_part.count();
+  }
+
+  /// Number of positive indices included in set
+  template< >
+  inline
+  index_t
+  index_set<DEFAULT_LO,DEFAULT_HI>::
+  count_pos() const
+  {
+    const bitset_t* pthis = this;
+    const index_set_t pos_part = *pthis >> -DEFAULT_LO;
+    return pos_part.count();
   }
 
   /// Minimum member, or 0 if none
@@ -344,20 +385,88 @@ namespace glucat
   index_set<LO,HI>::
   min() const
   {
-    for (size_t
-        idx = 0;
-        idx != -LO;
+    for (index_t
+        idx = LO;
+        idx != 0;
         ++idx)
-      if (bitset_t::test(idx))
-        return index_t(idx)+LO;
-    for (size_t
-        idx = -LO;
-        idx != HI-LO;
+      if (this->test(idx))
+        return idx;
+    for (index_t
+        idx = 1;
+        idx <= HI;
         ++idx)
-      if (bitset_t::test(idx))
-        return index_t(idx)+LO+1;
+      if (this->test(idx))
+        return idx;
     return 0;
   }
+
+#if (_GLUCAT_BITS_PER_ULONG == 64)
+  /// Minimum member, or 0 if none: default for 64-bit cpus
+  template< >
+  inline
+  index_t
+  index_set<-32,32>::
+  min() const
+  {
+    // Reference: [JA], 1.3
+    unsigned long val = bitset_t::to_ulong();
+    if (val == 0)
+      return 0;
+    else
+    {
+      val -= val & (val-1); // isolate lowest bit
+
+      index_t idx = -32;
+      if (val & 0xffffffff00000000)
+        idx  =  1;
+      if (val & 0xffff0000ffff0000)
+        idx += 16;
+      if (val & 0xff00ff00ff00ff00)
+        idx +=  8;
+      if (val & 0xf0f0f0f0f0f0f0f0)
+        idx +=  4;
+      if (val & 0xcccccccccccccccc)
+        idx +=  2;
+      if (val & 0xaaaaaaaaaaaaaaaa)
+        idx +=  1;
+
+      return idx;
+    }
+  }
+#endif
+
+#if (_GLUCAT_BITS_PER_ULONG == 32)
+  /// Minimum member, or 0 if none: default for 32-bit cpus
+  template< >
+  inline
+  index_t
+  index_set<-16,16>::
+  min() const
+  {
+    // Reference: [JA], 1.3
+    unsigned long val = bitset_t::to_ulong();
+    if (val == 0)
+      return 0;
+    else
+    {
+      val -= val & (val-1); // isolate lowest bit
+
+      index_t idx = -16;
+      if (val & 0xffff0000)
+        idx  =  1;
+      if (val & 0xff00ff00)
+        idx +=  8;
+      if (val & 0xf0f0f0f0)
+        idx +=  4;
+      if (val & 0xcccccccc)
+        idx +=  2;
+      if (val & 0xaaaaaaaa)
+        idx +=  1;
+
+      return idx;
+    }
+  }
+#endif
 
   /// Maximum member, or 0 if none
   template<const index_t LO, const index_t HI>
@@ -366,22 +475,82 @@ namespace glucat
   index_set<LO,HI>::
   max() const
   {
-    for (size_t
-        idx = HI-LO-1;
-        idx != -LO-1;
-        --idx)
-      if (bitset_t::test(idx))
-        return index_t(idx)+LO+1;
-    for (size_t
-        idx = -LO;
+    for (index_t
+        idx = HI;
         idx != 0;
         --idx)
-      if (bitset_t::test(idx))
-        return index_t(idx)+LO;
-    if (bitset_t::test(0))
-      return LO;
+      if (this->test(idx))
+        return idx;
+    for (index_t
+        idx = -1;
+        idx >= LO;
+        --idx)
+      if (this->test(idx))
+        return idx;
     return 0;
   }
+
+#if (_GLUCAT_BITS_PER_ULONG == 64)
+  /// Maximum member, or 0 if none: default for 64-bit cpus
+  template< >
+  inline
+  index_t
+  index_set<-32,32>::
+  max() const
+  {
+    // Reference: [JA], 1.6
+    unsigned long val = bitset_t::to_ulong();
+    if (val == 0)
+      return 0;
+    else
+    {
+      index_t idx = -32;
+      if (val & 0xffffffff00000000)
+        { val >>= 32; idx  =  1; }
+      if (val & 0x00000000ffff0000)
+        { val >>= 16; idx += 16; }
+      if (val & 0x000000000000ff00)
+        { val >>=  8; idx +=  8; }
+      if (val & 0x00000000000000f0)
+        { val >>=  4; idx +=  4; }
+      if (val & 0x000000000000000c)
+        { val >>=  2; idx +=  2; }
+      if (val & 0x0000000000000002)
+        {             idx +=  1; }
+      return idx;
+    }
+  }
+#endif
+
+#if (_GLUCAT_BITS_PER_ULONG == 32)
+  /// Maximum member, or 0 if none: default for 32-bit cpus
+  template< >
+  inline
+  index_t
+  index_set<-16,16>::
+  max() const
+  {
+    // Reference: [JA], 1.6
+    unsigned long val = bitset_t::to_ulong();
+    if (val == 0)
+      return 0;
+    else
+    {
+      index_t idx = -16;
+      if (val & 0xffff0000)
+        { val >>= 16; idx  =  1; }
+      if (val & 0x0000ff00)
+        { val >>=  8; idx +=  8; }
+      if (val & 0x000000f0)
+        { val >>=  4; idx +=  4; }
+      if (val & 0x0000000c)
+        { val >>=  2; idx +=  2; }
+      if (val & 0x00000002)
+        {             idx +=  1; }
+      return idx;
+    }
+  }
+#endif
 
   /// Lexicographic ordering of two sets: -1 if a<b, +1 if a>b, 0 if a==b
   //  eg. {3,4,5} is less than {3,7,8}
@@ -395,7 +564,7 @@ namespace glucat
         i <= HI;
         i++)
       if (a[i] != b[i])
-        return( (a[i] < b[i]) ? -1 : +1 );
+        return( a[i] < b[i] ? -1 : +1 );
     return 0;    // all elements are equal => a == b
   }
 
@@ -407,13 +576,18 @@ namespace glucat
   index_set<LO,HI>::
   lex_less_than(const index_set_t rhs) const
   {
-    const bitset_t* prhs = &rhs;
-    for (size_t
-        idx = 0;
-        idx != HI - LO;
+    for (index_t
+        idx = LO;
+        idx != 0;
         ++idx)
-      if (bitset_t::test(idx) != prhs->test(idx))
-        return bitset_t::test(idx) > prhs->test(idx);
+      if (this->test(idx) != rhs.test(idx))
+        return this->test(idx) > rhs.test(idx);
+    for (index_t
+        idx = 1;
+        idx != HI;
+        ++idx)
+      if (this->test(idx) != rhs.test(idx))
+        return this->test(idx) > rhs.test(idx);
     return false;
   }
 
@@ -427,9 +601,11 @@ namespace glucat
   {
     index_t this_grade = this->count();
     index_t rhs_grade  = rhs.count();
-    return this_grade < rhs_grade ? true :
-           this_grade > rhs_grade ? false:
-           this->lex_less_than(rhs);
+    return this_grade < rhs_grade 
+         ? true 
+         : this_grade > rhs_grade 
+         ? false
+         : this->lex_less_than(rhs);
   }
 
   /// Write out index set
@@ -525,20 +701,30 @@ namespace glucat
   {
     if (!prechecked && ((*this | frm) != frm))
       throw error_t("fold(frm): cannot fold from outside of frame");
+    const index_t frm_min = frm.min();
+    const index_t frm_max = frm.max();
     index_set_t result;
     index_t fold_idx = -1;
     index_t unfold_idx;
     for (unfold_idx = -1;
-        unfold_idx >= LO;
+        unfold_idx >= frm_min;
         --unfold_idx)
-      if (frm[unfold_idx])
-        result.set(fold_idx--, this->test(unfold_idx));
+      if (frm.test(unfold_idx))
+      { 
+        if (this->test(unfold_idx))
+          result.set(fold_idx);
+        fold_idx--;
+      } 
     fold_idx = 1;
     for (unfold_idx = 1;
-        unfold_idx <= HI;
+        unfold_idx <= frm_max;
         ++unfold_idx)
-      if (frm[unfold_idx])
-        result.set(fold_idx++, this->test(unfold_idx));
+      if (frm.test(unfold_idx))
+      { 
+        if (this->test(unfold_idx))
+          result.set(fold_idx);
+        fold_idx++;
+      } 
     return result;
   }
 
@@ -551,22 +737,26 @@ namespace glucat
   {
     const char* msg =
       "unfold(frm): cannot unfold into a smaller frame";
+    const index_t frm_min = frm.min();
+    const index_t frm_max = frm.max();
     index_set_t result;
     index_t fold_idx = -1;
     index_t unfold_idx;
     for (unfold_idx = -1;
-        unfold_idx >= LO;
+        unfold_idx >= frm_min;
         --unfold_idx)
-      if (frm[unfold_idx])
-        result.set(unfold_idx, this->test(fold_idx--));
+      if (frm.test(unfold_idx))
+        if (this->test(fold_idx--))
+          result.set(unfold_idx);
     if (!prechecked && ((fold_idx+1) > this->min()))
       throw error_t(msg);
     fold_idx = 1;
     for (unfold_idx = 1;
-        unfold_idx <= HI;
+        unfold_idx <= frm_max;
         ++unfold_idx)
-      if (frm[unfold_idx])
-        result.set(unfold_idx, this->test(fold_idx++));
+      if (frm.test(unfold_idx))
+        if (this->test(fold_idx++))
+          result.set(unfold_idx);
     if (!prechecked && ((fold_idx-1) < this->max()))
       throw error_t(msg);
     return result;
@@ -578,13 +768,15 @@ namespace glucat
   index_set<LO,HI>::
   value_of_fold(const index_set_t frm) const
   {
-    const index_set_t folded_set = this->fold(frm);
     const index_t min_index = frm.fold().min();
     if (min_index == 0)
       return 0;
-    const index_t skip = min_index > 0 ? 1 : 0;
-    const bitset_t* pfolded = &folded_set;
-    return ((*pfolded) >> (min_index - skip - LO)).to_ulong();
+    else
+    {
+      const index_set_t folded_set = this->fold(frm);
+      const index_t skip = min_index > 0 ? 1 : 0;
+      return folded_set.bitset_t::to_ulong() >> (min_index-LO-skip);
+    }
   }
 
   /// Sign of product of index sets, using Walsh functions and Gray codes.
@@ -598,23 +790,63 @@ namespace glucat
     bool negative = false;
     for (index_t
         j = LO;
+        j != 0;
+        ++j)
+    {
+      h ^= ist.test(j);
+      if (this->test(j))
+        negative ^= h;
+    }
+    for (index_t
+        j = 1;
         j <= HI;
         ++j)
     {
-      const bool b = ist[j];
+      const bool b = ist.test(j);
       h ^= b;
       if (this->test(j))
       {
         negative ^= h;
-        if (j > 0)
-          negative ^= b;
+        negative ^= b;
       }
     }
     return negative ? -1 : 1;
   }
 
+  /// Sign of product of index sets, using Walsh functions and Gray codes.
+  // Reference: [L] Chapter 21, 21.3
+  template< >
+  int
+  index_set<DEFAULT_LO,DEFAULT_HI>::
+  sign_of_mult(const index_set_t ist) const
+  {
+    // Reference: [JA]
+    unsigned long uthis =    bitset_t::to_ulong();
+    unsigned long uist = ist.bitset_t::to_ulong();
+    unsigned long h = 0;
+    unsigned long negative = 0;
+    for (index_t
+        j = 0;
+        j != -DEFAULT_LO;
+        ++j)
+    {
+      h ^= uist >> j;
+      negative ^= h & (uthis >> j);
+    }
+    for (index_t
+        j = -DEFAULT_LO;
+        j != DEFAULT_HI-DEFAULT_LO;
+        ++j)
+    {
+      const unsigned long b = uist >> j;
+      h ^= b;
+      negative ^= (h ^ b) & (uthis >> j);
+    }
+    return (negative & 1) ? -1 : 1;
+  }
+
   /// Hash function
-  template< const index_t LO, const index_t HI>
+  template<const index_t LO, const index_t HI>
   inline
   size_t
   index_set<LO,HI>::
@@ -622,11 +854,24 @@ namespace glucat
   {
     static const index_set_t lo_mask = bitset_t((1UL << -LO) - 1);
     const index_set_t neg_part = *this & lo_mask;
-    const index_set_t pos_part = *this >> -LO;
-    const bitset_t* pneg_part = &neg_part;
-    const bitset_t* ppos_part = &pos_part;
-    return size_t((*pneg_part).to_ulong() ^
-                  (*ppos_part).to_ulong());
+    static const index_set_t hi_mask = bitset_t((1UL <<  HI) - 1);
+    const index_set_t pos_part = (*this >> -LO) & hi_mask;
+    return size_t(neg_part.bitset_t::to_ulong() ^
+                  pos_part.bitset_t::to_ulong());
+  }
+
+  /// Hash function
+  template< >
+  inline
+  size_t
+  index_set<DEFAULT_LO,DEFAULT_HI>::
+  hash_fn() const
+  {
+    static const unsigned long lo_mask = (1UL << -DEFAULT_LO) - 1UL;
+    const unsigned long uthis = bitset_t::to_ulong();
+    const unsigned long neg_part = uthis & lo_mask;
+    const unsigned long pos_part = uthis >> -DEFAULT_LO;
+    return size_t(neg_part ^ pos_part);
   }
 
   /// Square of generator index j
@@ -640,14 +885,14 @@ namespace glucat
   inline
   index_t
   max_pos(const index_set<LO,HI>& ist)
-  { return std::max(ist.max(), index_t(0)); }
+  { return std::max(ist.max(), 0); }
 
   /// Minimum negative index, or 0 if none
   template<const index_t LO, const index_t HI>
   inline
   index_t
   min_neg(const index_set<LO,HI>& ist)
-  { return std::min(ist.min(), index_t(0)); }
+  { return std::min(ist.min(), 0); }
 
   /// Set containing a range of indices from range_min to range_max
   template<const index_t LO, const index_t HI>
@@ -663,7 +908,7 @@ namespace glucat
         idx <= safe_max;
         ++idx)
       if (idx != 0)
-        result |= index_set_t(idx);
+        result.set(idx);
     return result;
   }
 
