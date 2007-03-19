@@ -967,7 +967,7 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   fold(const index_set_t frm) const
   {
-    if (this->size() > 1 && frm.is_contiguous())
+    if (frm.is_contiguous())
       return *this;
     else
     {
@@ -988,7 +988,7 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   unfold(const index_set_t frm) const
   {
-    if (this->size() > 1 && frm.is_contiguous())
+    if (frm.is_contiguous())
       return *this;
     else
     {
