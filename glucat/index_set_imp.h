@@ -669,7 +669,7 @@ namespace glucat
     return s;
   }
 
-  /// Determine if the index set is contiguous, ie. has no gaps
+  /// Determine if the index set is contiguous, ie. has no gaps when 0 is included
   template<const index_t LO, const index_t HI>
   inline
   bool
@@ -679,8 +679,9 @@ namespace glucat
     const index_t min_index = this->min();
     const index_t max_index = this->max();
     return (min_index < 0 && max_index > 0)
-         ? max_index - min_index == this->count()
-         : max_index - min_index == this->count() - 1;
+         ?  max_index - min_index == this->count()
+         : (min_index == 1 || max_index == -1) && 
+           (max_index - min_index == this->count() - 1);
   }
 
   /// Fold this index set within itself as a frame
