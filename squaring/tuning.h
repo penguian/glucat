@@ -7,11 +7,20 @@
     begin                : Sun 2001-12-09
     copyright            : (C) 2001-2007 by Paul C. Leopardi
  ***************************************************************************
- *   This library is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU Lesser General Public License as        *
- *   published by the Free Software Foundation; either version 2.1 of the  *
- *   License, or (at your option) any later version.                       *
- *   See http://www.fsf.org/copyleft/lesser.html for details               *
+
+    This library is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with this library.  If not, see <http://www.gnu.org/licenses/>.
+
  ***************************************************************************
  This library is based on a prototype written by Arvind Raja and was
  licensed under the LGPL with permission of the author. See Arvind Raja,
@@ -26,18 +35,23 @@
 #if defined ( _GLUCAT_SQUARING_SLOW )
 const unsigned int Driver_Mult_Matrix_Threshold  =      64;
 const unsigned int Driver_Basis_Max_Count        =       1;
-const unsigned int Driver_Fast_Size_Threshold    = 1 << 31;
-const unsigned int Driver_Inv_Fast_Dim_Threshold = 1 << 31;
+const unsigned int Driver_Fast_Size_Threshold    = 1 << 30;
+const unsigned int Driver_Inv_Fast_Dim_Threshold = 1 << 30;
 #elif defined ( _GLUCAT_SQUARING_MEDIUM )
 const unsigned int Driver_Mult_Matrix_Threshold  =       0;
-const unsigned int Driver_Basis_Max_Count        =       1;
-const unsigned int Driver_Fast_Size_Threshold    = 1 << 31;
-const unsigned int Driver_Inv_Fast_Dim_Threshold = 1 << 31;
+const unsigned int Driver_Basis_Max_Count        = 1 << 30;
+const unsigned int Driver_Fast_Size_Threshold    = 1 << 30;
+const unsigned int Driver_Inv_Fast_Dim_Threshold = 1 << 30;
 #elif defined ( _GLUCAT_SQUARING_FAST )
 const unsigned int Driver_Mult_Matrix_Threshold  =       0;
 const unsigned int Driver_Basis_Max_Count        =       1;
 const unsigned int Driver_Fast_Size_Threshold    = 1 <<  0;
 const unsigned int Driver_Inv_Fast_Dim_Threshold = 1 <<  0;
+#elif defined ( _GLUCAT_SQUARING_OPT )
+const unsigned int Driver_Mult_Matrix_Threshold  =       8;
+const unsigned int Driver_Basis_Max_Count        = 1 << 30;
+const unsigned int Driver_Fast_Size_Threshold    = 1 <<  7;
+const unsigned int Driver_Inv_Fast_Dim_Threshold = 1 <<  5;
 #else
 const unsigned int Driver_Mult_Matrix_Threshold  = glucat::DEFAULT_Mult_Matrix_Threshold;
 const unsigned int Driver_Basis_Max_Count        = glucat::DEFAULT_Basis_Max_Count;
