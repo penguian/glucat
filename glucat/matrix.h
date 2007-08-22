@@ -8,11 +8,20 @@
     copyright            : (C) 2001-2007 by Paul C. Leopardi
                          : uBLAS interface contributed by Joerg Walter
  ***************************************************************************
- *   This library is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU Lesser General Public License as        *
- *   published by the Free Software Foundation; either version 2.1 of the  *
- *   License, or (at your option) any later version.                       *
- *   See http://www.fsf.org/copyleft/lesser.html for details               *
+
+    This library is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with this library.  If not, see <http://www.gnu.org/licenses/>.
+
  ***************************************************************************
  This library is based on a prototype written by Arvind Raja and was
  licensed under the LGPL with permission of the author. See Arvind Raja,
@@ -30,21 +39,26 @@ namespace glucat
   namespace matrix
   {
     /// Kronecker tensor product of matrices - as per Matlab kron
-    template< typename Matrix_T >
+    template< typename LHS_T, typename RHS_T >
     const
-    Matrix_T
-    kron(const Matrix_T& lhs, const Matrix_T& rhs);
+    RHS_T
+    kron(const LHS_T& lhs, const RHS_T& rhs);
 
     /// Left inverse of Kronecker product
-    template< typename Matrix_T >
+    template< typename LHS_T, typename RHS_T >
     const
-    Matrix_T
-    nork(const Matrix_T& lhs, const Matrix_T& rhs, const bool mono = true);
+    RHS_T
+    nork(const LHS_T& lhs, const RHS_T& rhs, const bool mono = true);
 
     /// Number of non-zeros
     template< typename Matrix_T >
     typename Matrix_T::size_type
     nnz(const Matrix_T& m);
+
+    /// Not a Number
+    template< typename Matrix_T >
+    bool
+    isnan(const Matrix_T& m);
 
     /// Unit matrix - as per Matlab eye
     template< typename Matrix_T >
@@ -66,10 +80,17 @@ namespace glucat
     sparse_prod(const ublas::matrix_expression<LHS_T>& lhs,
                 const ublas::matrix_expression<RHS_T>& rhs);
 
+    /// Product of matrices
+    template< typename LHS_T, typename RHS_T >
+    const 
+    typename RHS_T::expression_type
+    prod(const ublas::matrix_expression<LHS_T>& lhs,
+         const ublas::matrix_expression<RHS_T>& rhs);
+
     /// Inner product: sum(x(i,j)*y(i,j))/x.nrows()
-    template< typename Scalar_T, typename Matrix_T >
+    template< typename Scalar_T, typename LHS_T, typename RHS_T >
     Scalar_T
-    inner(const Matrix_T& lhs, const Matrix_T& rhs);
+    inner(const LHS_T& lhs, const RHS_T& rhs);
   }
 }
 
