@@ -7,11 +7,20 @@
     begin                : Sun 2001-12-09
     copyright            : (C) 2001-2007 by Paul C. Leopardi
  ***************************************************************************
- *   This library is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU Lesser General Public License as        *
- *   published by the Free Software Foundation; either version 2.1 of the  *
- *   License, or (at your option) any later version.                       *
- *   See http://www.fsf.org/copyleft/lesser.html for details               *
+
+    This library is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with this library.  If not, see <http://www.gnu.org/licenses/>.
+
  ***************************************************************************
  This library is based on a prototype written by Arvind Raja and was
  licensed under the LGPL with permission of the author. See Arvind Raja,
@@ -393,7 +402,26 @@ namespace glucat
   inline
   const Multivector<Scalar_T,LO,HI>
   pow(const Multivector<Scalar_T,LO,HI>& lhs, int rhs)
-  { return lhs.pow(rhs); }
+  { 
+    typedef Multivector<Scalar_T,LO,HI> multivector_t;
+    multivector_t a;
+    if (rhs < 0)
+    {
+      if (lhs == Scalar_T(0))
+        return numeric_traits<Scalar_T>::NaN();
+      rhs = -rhs;
+      a = lhs.inv();
+    }
+    else
+      a = lhs;
+    multivector_t result = Scalar_T(1);
+    for (;
+        rhs != 0;
+        rhs >>= 1, a *= a)
+      if (rhs & 1)
+        result *= a;
+    return result;
+  } 
 
   /// Multivector power of multivector
   template
@@ -405,7 +433,21 @@ namespace glucat
   inline
   const Multivector<Scalar_T,LO,HI>
   pow(const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs)
-  { return exp(log(lhs) * rhs); }
+  { 
+    if (lhs == Scalar_T(0))
+    {
+      const Scalar_T m = rhs.scalar();
+      if (rhs == m)
+        return (m < 0)
+               ? numeric_traits<Scalar_T>::NaN()
+               : (m == 0)
+                 ? Scalar_T(1)
+                 : Scalar_T(0);
+      else
+        return Scalar_T(0);
+    }
+    return exp(log(lhs) * rhs); 
+  }
 
   /// Square root of -1 which commutes with all members of the frame of the given multivector
   template< template<typename, const index_t, const index_t> class Multivector,
@@ -451,8 +493,7 @@ namespace glucat
       return multivector_t(frm, Scalar_T(1));
     else
       // Return IEEE NaN or -Inf
-      return std::numeric_limits<Scalar_T>::has_quiet_NaN ?
-        std::numeric_limits<Scalar_T>::quiet_NaN() : Scalar_T(std::log(0.0));
+      return numeric_traits<Scalar_T>::NaN();
   }
 
   /// Pade' approximation
@@ -468,6 +509,9 @@ namespace glucat
     // Reference: [GL], Section 11.3, p572-576.
 
     typedef Multivector<Scalar_T,LO,HI> multivector_t;
+
+    if (A.isnan())
+      return numeric_traits<Scalar_T>::NaN();
 
     const multivector_t& A2 = A*A;
     const multivector_t& A4 = A2*A2;
@@ -505,6 +549,10 @@ namespace glucat
 
     if (val == 0)
       return val;
+
+    if (val.isnan())
+      return numeric_traits<Scalar_T>::NaN();
+
     multivector_t M = val;
     multivector_t Y = val;
     int step = 0;
@@ -512,9 +560,14 @@ namespace glucat
         step != Tune_P::sqrt_max_steps && norm(Scalar_T(1) - M) > 0; 
         ++step)
       db_step(M, Y);
+
     if (step == Tune_P::sqrt_max_steps && norm(Scalar_T(1) - M) > 0)
       std::cerr << "Warning: sqrt iteration did not converge. norm = "
            << norm(Scalar_T(1) - M) << std::endl;
+
+    if (Y.isnan())
+      return numeric_traits<Scalar_T>::NaN();
+
     return Y;
   }
 
@@ -527,6 +580,7 @@ namespace glucat
     // Reference: [GW], Section 4.3, pp318-322
     // Reference: [GL], Section 11.3, p572-576.
     typedef Multivector<Scalar_T,LO,HI> multivector_t;
+
     static const Scalar_T a[] =
     {
        1.0,          17.0/4.0,      119.0/16.0,
@@ -542,19 +596,30 @@ namespace glucat
 
     if (val == 0)
       return val;
+
+    if (val.isnan())
+      return numeric_traits<Scalar_T>::NaN();
+
     const Scalar_T& realval = real(val);
     if (val == realval && realval < Scalar_T(0))
       return Scalar_T(std::sqrt(-realval)) * elliptic(val);
 
     // Scale val towards circle abs(val) == 1
     const Scalar_T& scale = abs(val);
+    const Scalar_T& sqrtscale = Scalar_T(std::sqrt(scale));
+    if (numeric_traits<Scalar_T>::isNaN_or_isInf(sqrtscale))
+      return numeric_traits<Scalar_T>::NaN();
+
     const multivector_t& unitval = val / scale;
+    if (unitval == 0)
+      return numeric_traits<Scalar_T>::NaN();
+
     if (norm(unitval - Scalar_T(1)) < Scalar_T(1))
       // Pade' approximation of square root
-      return pade_approx(a, b, unitval - Scalar_T(1)) * Scalar_T(std::sqrt(scale));
+      return pade_approx(a, b, unitval - Scalar_T(1)) * sqrtscale;
     else
       // Product form of Denman-Beavers square root iteration
-      return db_sqrt(unitval) * Scalar_T(std::sqrt(scale));
+      return db_sqrt(unitval) * sqrtscale;
   }
 
   /// Exponential of multivector
@@ -566,10 +631,26 @@ namespace glucat
     // Scaling and squaring Pade' approximation of matrix exponential
     // Reference: [GL], Section 11.3, p572-576.
     typedef Multivector<Scalar_T,LO,HI> multivector_t;
+
+    const Scalar_T scalar_exp = Scalar_T(std::exp(scalar(val)));
+    if (numeric_traits<Scalar_T>::isNaN_or_isInf(scalar_exp))
+      return numeric_traits<Scalar_T>::NaN();
+
+    if (val.isnan())
+      return numeric_traits<Scalar_T>::NaN();
+
     multivector_t A = pure(val);
-    const int j = std::max(0, 1 + int(floor(log2(A.max_abs()))));
-    A /= Scalar_T(std::pow(Scalar_T(2),j));
-    multivector_t result;
+    const Scalar_T pure_scale = A.max_abs();
+    if (numeric_traits<Scalar_T>::isNaN_or_isInf(pure_scale))
+      return numeric_traits<Scalar_T>::NaN();
+
+    const int ilog2_scale = std::max(0, 1 + int(floor(log2(pure_scale))));
+    const Scalar_T i_scale = Scalar_T(std::pow(Scalar_T(2), ilog2_scale));
+    if (numeric_traits<Scalar_T>::isNaN_or_isInf(i_scale))
+      return numeric_traits<Scalar_T>::NaN();
+
+    A /= i_scale;
+    multivector_t pure_exp;
     {
       const int q = 8;
       static Scalar_T c[q+1];
@@ -586,14 +667,14 @@ namespace glucat
       const multivector_t& A4 = A2*A2;
       const multivector_t& U =     c[0]+A2*c[2]+(c[4]+A2*c[6]+A4*c[8])*A4;
       const multivector_t& AV = A*(c[1]+A2*c[3]+(c[5]+A2*c[7])*A4);
-      result = (U+AV) / (U-AV);
+      pure_exp = (U+AV) / (U-AV);
     }
     for (int 
         k = 0; 
-        k != j && !result.isnan(); 
+        k != ilog2_scale; 
         ++k)
-      result *= result;
-    return Scalar_T(std::exp(scalar(val))) * result;
+      pure_exp *= pure_exp;
+    return pure_exp * scalar_exp;
   }
 
   /// Scaled Pade' approximation of log
@@ -620,12 +701,12 @@ namespace glucat
     };
     typedef Multivector<Scalar_T,LO,HI> multivector_t;
 
-    if (val == 0)
-      // Return IEEE NaN or -Inf
-      return std::numeric_limits<Scalar_T>::has_quiet_NaN ?
-        std::numeric_limits<Scalar_T>::quiet_NaN() : Scalar_T(std::log(0.0));
+    if (val == 0 || val.isnan())
+      return numeric_traits<Scalar_T>::NaN();
+
     // Scale val towards circle abs(A) == 1
     Scalar_T scale = abs(val);
+
     return pade_approx(a, b, Scalar_T(1) - val / scale) + Scalar_T(std::log(scale)) ;
   }
 
@@ -639,10 +720,9 @@ namespace glucat
     // Reference: [CHKL]
     typedef Multivector<Scalar_T,LO,HI> multivector_t;
 
-    if (val == 0)
-      // Return IEEE NaN or -Inf
-      return std::numeric_limits<Scalar_T>::has_quiet_NaN ?
-        std::numeric_limits<Scalar_T>::quiet_NaN() : Scalar_T(std::log(0.0));
+    if (val == 0 || val.isnan())
+      return numeric_traits<Scalar_T>::NaN();
+
     multivector_t Y = val;
     multivector_t E = Scalar_T(0);
     int outer_step;
@@ -651,10 +731,9 @@ namespace glucat
         norm(Scalar_T(1) - Y) > Scalar_T(0.5);
         ++outer_step)
     {
-      if (Y == 0)
-        // Return IEEE NaN or -Inf
-        return std::numeric_limits<Scalar_T>::has_quiet_NaN ?
-          std::numeric_limits<Scalar_T>::quiet_NaN() : Scalar_T(std::log(0.0));
+      if (Y == 0 || val.isnan())
+        return numeric_traits<Scalar_T>::NaN();
+
       // Incomplete product form of Denman-Beavers square root iteration
       multivector_t M = Y;
       for (int 
@@ -680,10 +759,10 @@ namespace glucat
     // Scaled incomplete square root cascade and scaled Pade' approximation of log
     // Reference: [CHKL]
     typedef Multivector<Scalar_T,LO,HI> multivector_t;
-    if (val == 0)
-      // Return IEEE NaN or -Inf
-      return std::numeric_limits<Scalar_T>::has_quiet_NaN ?
-        std::numeric_limits<Scalar_T>::quiet_NaN() : Scalar_T(std::log(0.0));
+
+    if (val == 0 || val.isnan())
+      return numeric_traits<Scalar_T>::NaN();
+
     const Scalar_T& realval = real(val);
     if (val == realval && realval < Scalar_T(0))
       return Scalar_T(std::log(-realval)) + elliptic(val) * Scalar_T(l_pi);
@@ -704,6 +783,10 @@ namespace glucat
   cos(const Multivector<Scalar_T,LO,HI>& val)
   {
     typedef Multivector<Scalar_T,LO,HI> multivector_t;
+
+    if (val.isnan())
+      return numeric_traits<Scalar_T>::NaN();
+
     const Scalar_T& s = scalar(val);
     const Scalar_T& twopi = Scalar_T(2) * Scalar_T(l_pi);
     const multivector_t& i = elliptic(val);
@@ -720,7 +803,11 @@ namespace glucat
   inline
   const Multivector<Scalar_T,LO,HI>
   acos(const Multivector<Scalar_T,LO,HI>& val)
-  { return elliptic(val)*acosh(val); }
+  { 
+    return val.isnan()
+         ? numeric_traits<Scalar_T>::NaN()
+         : elliptic(val)*acosh(val); 
+  }
 
   /// Hyperbolic cosine of multivector
   template< template<typename, const index_t, const index_t> class Multivector,
@@ -728,7 +815,11 @@ namespace glucat
   inline
   const Multivector<Scalar_T,LO,HI>
   cosh(const Multivector<Scalar_T,LO,HI>& val)
-  { return (exp(val)+exp(-val)) / Scalar_T(2); }
+  { 
+    return val.isnan()
+         ? numeric_traits<Scalar_T>::NaN()
+         : (exp(val)+exp(-val)) / Scalar_T(2); 
+  }
 
   /// Inverse hyperbolic cosine of multivector
   // Reference: [AS], Section 4.6, p86-89
@@ -737,7 +828,11 @@ namespace glucat
   inline
   const Multivector<Scalar_T,LO,HI>
   acosh(const Multivector<Scalar_T,LO,HI>& val)
-  { return log(val + sqrt(val*val - Scalar_T(1))); }
+  { 
+    return val.isnan()
+         ? numeric_traits<Scalar_T>::NaN()
+         : log(val + sqrt(val*val - Scalar_T(1))); 
+  }
 
   /// Sine of multivector
   template< template<typename, const index_t, const index_t> class Multivector,
@@ -746,6 +841,10 @@ namespace glucat
   sin(const Multivector<Scalar_T,LO,HI>& val)
   {
     typedef Multivector<Scalar_T,LO,HI> multivector_t;
+
+    if (val.isnan())
+      return numeric_traits<Scalar_T>::NaN();
+
     const Scalar_T& s = scalar(val);
     const Scalar_T& twopi = Scalar_T(2) * Scalar_T(l_pi);
     const multivector_t& i = elliptic(val);
@@ -764,6 +863,10 @@ namespace glucat
   asin(const Multivector<Scalar_T,LO,HI>& val)
   {
     typedef Multivector<Scalar_T,LO,HI> multivector_t;
+
+    if (val.isnan())
+      return numeric_traits<Scalar_T>::NaN();
+
     const multivector_t& i = elliptic(val);
     return -i*asinh(i*val);
   }
@@ -774,7 +877,11 @@ namespace glucat
   inline
   const Multivector<Scalar_T,LO,HI>
   sinh(const Multivector<Scalar_T,LO,HI>& val)
-  { return (exp(val)-exp(-val)) / Scalar_T(2); }
+  { 
+    return val.isnan()
+         ? numeric_traits<Scalar_T>::NaN()
+         : (exp(val)-exp(-val)) / Scalar_T(2); 
+  }
 
   /// Inverse hyperbolic sine of multivector
   // Reference: [AS], Section 4.6, p86-89
@@ -783,7 +890,11 @@ namespace glucat
   inline
   const Multivector<Scalar_T,LO,HI>
   asinh(const Multivector<Scalar_T,LO,HI>& val)
-  { return log(val + sqrt(val*val + Scalar_T(1))); }
+  { 
+    return val.isnan()
+         ? numeric_traits<Scalar_T>::NaN()
+         : log(val + sqrt(val*val + Scalar_T(1))); 
+  }
 
   /// Tangent of multivector
   template< template<typename, const index_t, const index_t> class Multivector,
@@ -791,7 +902,11 @@ namespace glucat
   inline
   const Multivector<Scalar_T,LO,HI>
   tan(const Multivector<Scalar_T,LO,HI>& val)
-  { return sin(val) / cos(val); }
+  { 
+    return val.isnan()
+         ? numeric_traits<Scalar_T>::NaN()
+         : sin(val) / cos(val); 
+  }
 
   /// Inverse tangent of multivector
   // Reference: [AS], Section 4.4, p79-83
@@ -802,6 +917,10 @@ namespace glucat
   atan(const Multivector<Scalar_T,LO,HI>& val)
   {
     typedef Multivector<Scalar_T,LO,HI> multivector_t;
+
+    if (val.isnan())
+      return numeric_traits<Scalar_T>::NaN();
+
     const multivector_t& i = elliptic(val);
     return -i*atanh(i*val);
   }
@@ -812,7 +931,11 @@ namespace glucat
   inline
   const Multivector<Scalar_T,LO,HI>
   tanh(const Multivector<Scalar_T,LO,HI>& val)
-  { return sinh(val) / cosh(val); }
+  { 
+    return val.isnan()
+         ? numeric_traits<Scalar_T>::NaN()
+         : sinh(val) / cosh(val); 
+  }
 
   /// Inverse hyperbolic tangent of multivector
   // Reference: [AS], Section 4.6, p86-89
@@ -821,6 +944,10 @@ namespace glucat
   inline
   const Multivector<Scalar_T,LO,HI>
   atanh(const Multivector<Scalar_T,LO,HI>& val)
-  { return log((Scalar_T(1) + val) / (Scalar_T(1) - val)) / Scalar_T(2); }
+  { 
+    return val.isnan()
+         ? numeric_traits<Scalar_T>::NaN()
+         : log((Scalar_T(1) + val) / (Scalar_T(1) - val)) / Scalar_T(2); 
+  }
 }
 #endif  // _GLUCAT_CLIFFORD_ALGEBRA_IMP_H
