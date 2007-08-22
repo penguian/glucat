@@ -8,11 +8,20 @@
     begin                : Sun 2001-12-09
     copyright            : (C) 2001-2007 by Paul C. Leopardi
  ***************************************************************************
- *   This library is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU Lesser General Public License as        *
- *   published by the Free Software Foundation; either version 2.1 of the  *
- *   License, or (at your option) any later version.                       *
- *   See http://www.fsf.org/copyleft/lesser.html for details               *
+
+    This library is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with this library.  If not, see <http://www.gnu.org/licenses/>.
+
  ***************************************************************************
  This library is based on a prototype written by Arvind Raja and was
  licensed under the LGPL with permission of the author. See Arvind Raja,
@@ -269,8 +278,13 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   operator*= (const Scalar_T& scr)
   { // multiply coordinates of all terms by scalar
+    if (numeric_traits<Scalar_T>::isNaN_or_isInf(scr))
+      return *this = numeric_traits<Scalar_T>::NaN();
     if (scr == Scalar_T(0))
-      this->clear();
+      if (this->isnan())
+        *this = numeric_traits<Scalar_T>::NaN();
+      else
+        this->clear();
     else
       for (iterator
           this_it = this->begin();
@@ -427,11 +441,19 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   operator/= (const Scalar_T& scr)
   { // Divide coordinates of all terms by scr
-    for (iterator
-        this_it = this->begin();
-        this_it != this->end();
-        ++this_it)
-      this_it->second /= scr;
+    if (numeric_traits<Scalar_T>::isNaN(scr))
+      return *this = numeric_traits<Scalar_T>::NaN();
+    if (numeric_traits<Scalar_T>::isInf(scr))
+      if (this->isnan())
+        *this = numeric_traits<Scalar_T>::NaN();
+      else
+        this->clear();
+    else
+      for (iterator
+          this_it = this->begin();
+          this_it != this->end();
+          ++this_it)
+        this_it->second /= scr;
     return *this;
   }
 
@@ -587,23 +609,7 @@ namespace glucat
   const framed_multi<Scalar_T,LO,HI>
   framed_multi<Scalar_T,LO,HI>::
   pow(int m) const
-  {
-    multivector_t a;
-    if (m < 0)
-    {
-      m = -m;
-      a = this->inv();
-    }
-    else
-      a = *this;
-    multivector_t result = Scalar_T(1);
-    for (;
-        m != 0;
-        m >>= 1, a *= a)
-      if (m & 1)
-        result *= a;
-    return result;
-  }
+  { return glucat::pow(*this, m); }
 
   /// Outer product power
   template< typename Scalar_T, const index_t LO, const index_t HI >
@@ -1160,14 +1166,15 @@ namespace glucat
     if (level == 0)
       return matrix::unit<matrix_t>(1) * scalar(*this);
 
-    const matrix_t& I = matrix::unit<matrix_t>(2);
-    matrix_t J(2,2);
+    typedef typename matrix_multi_t::basis_matrix_t basis_matrix_t;
+    const basis_matrix_t& I = matrix::unit<basis_matrix_t>(2);
+    basis_matrix_t J(2,2);
     J(0,1)  = Scalar_T(-1);
     J(1,0)  = Scalar_T( 1);
-    matrix_t K(2,2);
+    basis_matrix_t K(2,2);
     K(0,1)  = Scalar_T( 1);
     K(1,0)  = Scalar_T( 1);
-    matrix_t JK(2,2);
+    basis_matrix_t JK(2,2);
     JK(0,0) = Scalar_T(-1);
     JK(1,1) = Scalar_T( 1);
 
