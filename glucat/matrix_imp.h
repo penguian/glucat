@@ -8,11 +8,20 @@
     copyright            : (C) 2001-2007 by Paul C. Leopardi
                          : uBLAS interface contributed by Joerg Walter
  ***************************************************************************
- *   This library is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU Lesser General Public License as        *
- *   published by the Free Software Foundation; either version 2.1 of the  *
- *   License, or (at your option) any later version.                       *
- *   See http://www.fsf.org/copyleft/lesser.html for details               *
+
+    This library is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with this library.  If not, see <http://www.gnu.org/licenses/>.
+
  ***************************************************************************
  This library is based on a prototype written by Arvind Raja and was
  licensed under the LGPL with permission of the author. See Arvind Raja,
@@ -26,26 +35,27 @@
 namespace glucat { namespace matrix
 {
   /// Kronecker tensor product of matrices - as per Matlab kron
-  template< typename Matrix_T >
+  template< typename LHS_T, typename RHS_T >
   const
-  Matrix_T
-  kron(const Matrix_T& lhs, const Matrix_T& rhs)
+  RHS_T
+  kron(const LHS_T& lhs, const RHS_T& rhs)
   {
-    typedef Matrix_T matrix_t;
+    typedef RHS_T matrix_t;
     typedef typename matrix_t::size_type matrix_index_t;
-    const matrix_index_t lhs_s1 = lhs.size1();
-    const matrix_index_t lhs_s2 = lhs.size2();
     const matrix_index_t rhs_s1 = rhs.size1();
     const matrix_index_t rhs_s2 = rhs.size2();
-    matrix_t result(lhs_s1*rhs_s1, lhs_s2*rhs_s2);
+    matrix_t result(lhs.size1()*rhs_s1, lhs.size2()*rhs_s2);
+    result.clear();
     typedef typename matrix_t::value_type Scalar_T;
-    typedef typename matrix_t::const_iterator1 const_iterator1;
-    typedef typename matrix_t::const_iterator2 const_iterator2;
-    for (const_iterator1
+    typedef typename LHS_T::const_iterator1 lhs_const_iterator1;
+    typedef typename LHS_T::const_iterator2 lhs_const_iterator2;
+    typedef typename RHS_T::const_iterator1 rhs_const_iterator1;
+    typedef typename RHS_T::const_iterator2 rhs_const_iterator2;
+    for (lhs_const_iterator1
         lhs_it1 = lhs.begin1();
         lhs_it1 != lhs.end1();
         ++lhs_it1)
-      for (const_iterator2
+      for (lhs_const_iterator2
           lhs_it2 = lhs_it1.begin();
           lhs_it2 != lhs_it1.end();
           ++lhs_it2)
@@ -53,11 +63,11 @@ namespace glucat { namespace matrix
         const matrix_index_t start1 = rhs_s1 * lhs_it2.index1();
         const matrix_index_t start2 = rhs_s2 * lhs_it2.index2();
         const Scalar_T& lhs_val = (*lhs_it2);
-        for (const_iterator1
+        for (rhs_const_iterator1
             rhs_it1 = rhs.begin1();
             rhs_it1 != rhs.end1();
             ++rhs_it1)
-          for (const_iterator2
+          for (rhs_const_iterator2
               rhs_it2 = rhs_it1.begin();
               rhs_it2 != rhs_it1.end();
               ++rhs_it2)
@@ -67,16 +77,17 @@ namespace glucat { namespace matrix
   }
 
   /// Left inverse of Kronecker product
-  template< typename Matrix_T >
+  template< typename LHS_T, typename RHS_T >
   const
-  Matrix_T
-  nork(const Matrix_T& lhs, const Matrix_T& rhs, const bool mono)
+  RHS_T
+  nork(const LHS_T& lhs, const RHS_T& rhs, const bool mono)
   {
     // nork(A, kron(A, B)) is close to B
-    typedef Matrix_T matrix_t;
+    typedef RHS_T matrix_t;
+    typedef typename LHS_T::size_type lhs_index_t;
     typedef typename matrix_t::size_type matrix_index_t;
-    const matrix_index_t lhs_s1 = lhs.size1();
-    const matrix_index_t lhs_s2 = lhs.size2();
+    const lhs_index_t lhs_s1 = lhs.size1();
+    const lhs_index_t lhs_s2 = lhs.size2();
     const matrix_index_t rhs_s1 = rhs.size1();
     const matrix_index_t rhs_s2 = rhs.size2();
     const matrix_index_t res_s1 = rhs_s1 / lhs_s1;
@@ -95,11 +106,12 @@ namespace glucat { namespace matrix
     if (nnz_lhs == Scalar_T(0))
       throw error_t("matrix", "nork: LHS must not be 0");
     matrix_t result = matrix_t(res_s1, res_s2);
-    for (typename matrix_t::const_iterator1
+    result.clear();
+    for (typename LHS_T::const_iterator1
         lhs_it1 = lhs.begin1();
         lhs_it1 != lhs.end1();
         ++lhs_it1)
-      for (typename matrix_t::const_iterator2
+      for (typename LHS_T::const_iterator2
           lhs_it2 = lhs_it1.begin();
           lhs_it2 != lhs_it1.end();
           ++lhs_it2)
@@ -150,6 +162,30 @@ namespace glucat { namespace matrix
     return result;
   }
 
+  /// Not a Number
+  template< typename Matrix_T >
+  inline
+  bool
+  isnan(const Matrix_T& m)
+  {
+    typedef Matrix_T matrix_t;
+    typedef typename matrix_t::value_type Scalar_T;
+    typedef typename matrix_t::size_type matrix_index_t;
+    typedef typename matrix_t::const_iterator1 const_iterator1;
+    typedef typename matrix_t::const_iterator2 const_iterator2;
+    for (const_iterator1
+        it1 = m.begin1();
+        it1 != m.end1();
+        ++it1)
+      for (const_iterator2
+          it2 = it1.begin();
+          it2 != it1.end();
+          ++it2)
+        if (numeric_traits<Scalar_T>::isNaN(*it2))
+          return true;
+    return false;
+  }
+
   /// Unit matrix - as per Matlab eye
   template< typename Matrix_T >
   inline
@@ -179,6 +215,7 @@ namespace glucat { namespace matrix
 
     const matrix_index_t dim = lhs().size1();
     matrix_t result = matrix_t(dim, dim);
+    result.clear();
     for (lhs_const_iterator1
         lhs_row = lhs().begin1();
         lhs_row != lhs().end1();
@@ -207,17 +244,36 @@ namespace glucat { namespace matrix
     return ublas::sparse_prod<expression_t>(lhs(), rhs());
   }
 
+  /// Product of matrices
+  template< typename LHS_T, typename RHS_T >
+  inline
+  const typename RHS_T::expression_type
+  prod(const ublas::matrix_expression<LHS_T>& lhs,
+       const ublas::matrix_expression<RHS_T>& rhs)
+  {
+    typedef typename RHS_T::expression_type expression_t;
+#ifdef _GLUCAT_USE_DENSE_MATRICES
+    typedef typename RHS_T::size_type matrix_index_t;
+    const matrix_index_t dim = lhs().size1();
+    RHS_T result(dim, dim);
+    ublas::axpy_prod(lhs, rhs, result, true);
+    return result;
+#else
+    return ublas::sparse_prod<expression_t>(lhs(), rhs());
+#endif
+  }
+
   /// Inner product: sum(lhs(i,j)*rhs(i,j))/lhs.nrows()
-  template< typename Scalar_T, typename Matrix_T >
+  template< typename Scalar_T, typename LHS_T, typename RHS_T >
   Scalar_T
-  inner(const Matrix_T& lhs, const Matrix_T& rhs)
+  inner(const LHS_T& lhs, const RHS_T& rhs)
   {
     Scalar_T result = Scalar_T(0);
-    for (typename Matrix_T::const_iterator1
+    for (typename LHS_T::const_iterator1
         lhs_it1 = lhs.begin1();
         lhs_it1 != lhs.end1();
         ++lhs_it1)
-      for (typename Matrix_T::const_iterator2
+      for (typename LHS_T::const_iterator2
           lhs_it2 = lhs_it1.begin();
           lhs_it2 != lhs_it1.end();
           ++lhs_it2)
