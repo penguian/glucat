@@ -7,11 +7,20 @@
     begin                : Sun Dec 9 2001
     copyright            : (C) 2001-2007 by Paul C. Leopardi
  ***************************************************************************
- *   This library is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU Lesser General Public License as        *
- *   published by the Free Software Foundation; either version 2.1 of the  *
- *   License, or (at your option) any later version.                       *
- *   See http://www.fsf.org/copyleft/lesser.html for details               *
+
+    This library is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with this library.  If not, see <http://www.gnu.org/licenses/>.
+
  ***************************************************************************
  This library is based on a prototype written by Arvind Raja and was
  licensed under the LGPL with permission of the author. See Arvind Raja,
@@ -98,13 +107,18 @@ namespace glucat
   const double DEFAULT_TRUNCATION = std::numeric_limits<float>::epsilon();
 
   // Tuning policy default constants
-  const unsigned int DEFAULT_Mult_Matrix_Threshold  =      6;
-  const unsigned int DEFAULT_Div_Max_Steps          =      4;
+  const unsigned int DEFAULT_Mult_Matrix_Threshold  =      8;
+  const unsigned int DEFAULT_Div_Max_Steps          =      5;
   const unsigned int DEFAULT_Sqrt_Max_Steps         =      7;
   const unsigned int DEFAULT_Log_Max_Outer_Steps    =    256;
   const unsigned int DEFAULT_Log_Max_Inner_Steps    =      8;
   const unsigned int DEFAULT_Basis_Max_Count        =      8;
-  const unsigned int DEFAULT_Fast_Size_Threshold    = 1 << 7;
+  const unsigned int DEFAULT_Fast_Size_Threshold    =
+#ifdef _GLUCAT_USE_DENSE_MATRICES
+                                                      1 << 6;
+#else
+                                                      1 << 7;
+#endif
   const unsigned int DEFAULT_Inv_Fast_Dim_Threshold = 1 << 5;
 
   /// Tuning policy
@@ -152,29 +166,5 @@ namespace glucat
   pos_mod(LHS_T lhs, RHS_T rhs)
   { return lhs > 0? lhs % rhs : (-lhs) % rhs == 0 ? 0 : rhs - (-lhs) % rhs; }
 
-  /// Extra traits which extend numeric limits
-  // Reference: [AA], 2.4, p. 30-31
-  template< typename T >
-  class numeric_traits
-  {
-  private:
-    /// Smart isnan specialised for T without quiet NaN
-    static bool
-    isNaN(T val, bool_to_type<false>)
-    { return false; }
-    /// Smart isnan specialised for T with quiet NaN
-    static bool
-    isNaN(T val, bool_to_type<true>)
-    { return isnan(val); }
-
-  public:
-    /// Smart isnan
-    static bool
-    isNaN(T val)
-    {
-      return isNaN(val,
-             bool_to_type< std::numeric_limits<T>::has_quiet_NaN >() );
-    }
-  };
 }
 #endif // _GLUCAT_GLOBAL_H
