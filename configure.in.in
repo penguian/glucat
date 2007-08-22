@@ -94,9 +94,9 @@ AC_DEFUN([AC_GLUCAT_CHECK_COMPILERS],
     [glucat_use_hash_map="no"]
   )
 
-  AC_ARG_WITH(dense-mult,[  --with-dense-mult       uses dense matrix multiplication [default=no]],
-    [glucat_use_dense_matrix_mult=$withval],
-    [glucat_use_dense_matrix_mult="no"]
+  AC_ARG_WITH(dense-mat,[  --with-dense-mat         uses dense matrices [default=no]],
+    [glucat_use_dense_mat=$withval],
+    [glucat_use_dense_mat="no"]
   )
 
   dnl this prevents stupid AC_PROG_CC to add "-g" to the default CFLAGS
@@ -149,12 +149,16 @@ AC_DEFUN([AC_GLUCAT_CHECK_COMPILERS],
       AC_SUBST(WOVERLOADED_VIRTUAL)
     else
        if test "$CXX" = "icpc"; then
-        CXXFLAGS="-O3 $CXXFLAGS"
+          CXXFLAGS="-O3 $CXXFLAGS"
        else
         if test "$cxxversion" \< "3.3" ; then
-         CXXFLAGS="-O3 -finline-limit=1200 $CXXFLAGS"
+          CXXFLAGS="-O3 -finline-limit=1200 $CXXFLAGS"
         else 
-         CXXFLAGS="-O3 -finline-limit=2400 $CXXFLAGS"
+         if test "$cxxversion" \< "4.1" ; then
+          CXXFLAGS="-O3 -finline-limit=2400 $CXXFLAGS"
+         else
+          CXXFLAGS="-O3 --param max-inline-insns-single=2700 $CXXFLAGS"
+         fi
         fi
         if test "$cxxversion" \> "4" && test "$cxxversion" \< "4.0.2" ; then
           KDE_CHECK_COMPILER_FLAG(fno-strict-aliasing, [CXXFLAGS="-fno-strict-aliasing $CXXFLAGS"])
@@ -208,8 +212,8 @@ AC_DEFUN([AC_GLUCAT_CHECK_COMPILERS],
     [#include <map>])
   fi
 
-  if test "$glucat_use_dense_matrix_mult" != "no"; then
-    CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_DENSE_MATRIX_MULT"
+  if test "$glucat_use_dense_mat" != "no"; then
+    CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_DENSE_MATRICES"
   fi
 
   if test "$GXX" = "yes"; then
@@ -272,7 +276,7 @@ dnl Perform program name transformation
 AC_ARG_PROGRAM
 
 dnl Automake doc recommends to do this only here. (Janos)
-AM_INIT_AUTOMAKE(glucat,0.2.2)
+AM_INIT_AUTOMAKE(glucat,0.2.3)
 
 dnl almost the same like KDE_SET_PREFIX but the path is /usr/local
 dnl
