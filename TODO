@@ -2,8 +2,6 @@ There is plenty of testing, cleanup, packaging and documentation work yet to do.
 o Try refactoring the relationship between matrix_multi, framed_multi and 
   clifford_algebra to allow more flexibility with template parameters.
   Possibly use enable_if and SFINAE to do this.
-o Try splitting the type matrix_t into basis_matrix_t, which is compressed, 
-  and matrix_t, which may be compressed, dense, etc.
 o Try adding a Matrix_Tag template parameter to framed_multi and matrix_multi,
   to determine if matrix_t is compressed, dense, etc.
 o Try removing the template parameters LO and HI from framed_multi and 
@@ -28,7 +26,6 @@ o Port to other architectures and compilers which support template template
 o Add operator| for geometric operations: return rhs * lhs * involute(inv(rhs))
 o Add convenience constructors to index_set<>: index_set<>(int, int),
   index_set<>(int, int, int), ... etc.
-o Provide better support and testing for framed_multi< complex<> > etc.
 o Try using the complex matrix representations. These use smaller matrices,
   which should be faster. This would mean changes to basis_element(),
   folded_dim() and others. Possibly deliver this as an additional template class

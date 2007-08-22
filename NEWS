@@ -1,3 +1,31 @@
+2007-08-23: 0.2.3
+GluCat now uses either dense or compressed matrices; LGPLv3.
+
+If _GLUCAT_USE_DENSE_MATRICES is defined, matrix_multi<> uses a a dense 
+matrix. Otherwise matrix_multi<> uses a compressed matrix type. In either 
+case, basis matrices always use a compressed matrix type.
+
+The ublas noalias assignment has been used where possible, to reduce the
+creation of temporary copies of matrices.
+
+The use of IEEE NaN has been improved to ensure that dense and compressed
+matrices give the same result even if one or more entry is NaN. 
+IEEE Inf is now also used where appropriate.
+
+The pow() functions have been fixed to yield the correct powers of 0.
+
+The following fixes which were in CVS are included in this release.
+index_set_imp.h: 
+Correct is_contiguous() so that it matches the requirements of
+framed_multi<>::fold() and framed_multi<>::unfold().
+
+framed_multi_imp.h: 
+Fix fold() and unfold().
+
+GluCat is now licenced using LGPLv3 or later. See COPYING.
+
+See the Changelog for a detailed list of changes.
+
 2007-02-28: 0.2.2
 GluCat, now with Bit Wizardry, is even faster.
 
