@@ -7,11 +7,20 @@
     begin                : Wed Jan 23 2002
     copyright            : (C) 2002-2007 by Paul C. Leopardi
  ***************************************************************************
- *   This library is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU Lesser General Public License as        *
- *   published by the Free Software Foundation; either version 2.1 of the  *
- *   License, or (at your option) any later version.                       *
- *   See http://www.fsf.org/copyleft/lesser.html for details               *
+
+    This library is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with this library.  If not, see <http://www.gnu.org/licenses/>.
+
  ***************************************************************************
  This library is based on a prototype written by Arvind Raja and was
  licensed under the LGPL with permission of the author. See Arvind Raja,
@@ -150,22 +159,26 @@ namespace glucat { namespace gen
   generator_table<Matrix_T>::
   gen_from_pm4_qp4(const std::vector<Matrix_T>& old, const signature_t sig)
   {
-    const int dim = old[0].size1();
-    const int old_size = old.size();
-    Matrix_T h = Matrix_T(dim, dim);
-    h = old[0];
+    typedef typename Matrix_T::size_type matrix_index_t;
+    Matrix_T h = old[0];
+    const matrix_index_t dim = h.size1();
     for (int
         k = 1;
         k != 4;
         ++k)
       h = matrix::mono_prod(old[k], h);
 
+    const int old_size = old.size();
     std::vector<Matrix_T> result = std::vector<Matrix_T>(old_size);
+    int m = old_size-4;
     for (int
         k = 0;
         k != 4;
-        ++k)
-      result[k+old_size-4] = matrix::mono_prod(old[k], h);
+        ++k, ++m)
+    {
+      result[m].resize(dim, dim, false);
+      noalias(result[m]) = matrix::mono_prod(old[k], h);
+    }
     for (int
         k = 4;
         k != old_size;
@@ -182,10 +195,10 @@ namespace glucat { namespace gen
   generator_table<Matrix_T>::
   gen_from_pp4_qm4(const std::vector<Matrix_T>& old, const signature_t sig)
   {
-    const int dim = old[0].size1();
+    typedef typename Matrix_T::size_type matrix_index_t;
     const int old_size = old.size();
-    Matrix_T h = Matrix_T(dim, dim);
-    h = old[old_size-1];
+    Matrix_T h = old[old_size-1];
+    const matrix_index_t dim = h.size1();
     for (int
         k = 1;
         k != 4;
@@ -197,7 +210,10 @@ namespace glucat { namespace gen
         k = 0;
         k != 4;
         ++k)
-      result[k] = matrix::mono_prod(old[k+old_size-4], h);
+    {
+      result[k].resize(dim, dim, false);
+      noalias(result[k]) = matrix::mono_prod(old[k+old_size-4], h);
+    }
     for (int
         k = 4;
         k != old_size;
@@ -214,15 +230,20 @@ namespace glucat { namespace gen
   generator_table<Matrix_T>::
   gen_from_qp1_pm1(const std::vector<Matrix_T>& old, const signature_t sig)
   {
+    typedef typename Matrix_T::size_type matrix_index_t;
     const int old_size = old.size();
     const Matrix_T& a = old[old_size-1];
+    const matrix_index_t dim = a.size1();
     std::vector<Matrix_T> result = std::vector<Matrix_T>(old_size);
     int m = 0;
     for (int
         k = old_size-1;
         k != 0;
         --k, ++m)
-      result[m] = matrix::mono_prod(old[k-1], a);
+    {
+      result[m].resize(dim, dim, false);
+      noalias(result[m]) = matrix::mono_prod(old[k-1], a);
+    }
     result[old_size-1] = a;
 
     // Save the resulting generator array.
