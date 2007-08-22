@@ -1,3 +1,157 @@
+2007-08-22 22:09  leopardi
+
+	* test_runtime/: gfft_test-10.out, squaring-8.out,
+	  transforms-6.out: Remove old, redundant test results to avoid
+	  confusion.
+
+2007-08-22 22:06  leopardi
+
+	* test_runtime/: gfft_test-11.out, squaring-11.out,
+	  transforms-8.out: Test results for version 0.2.3.
+
+2007-08-22 22:03  leopardi
+
+	* test_runtime/test.out: Update to test results for version 0.2.3.
+
+2007-08-22 22:01  leopardi
+
+	* gfft_test/gfft_test.cpp, gfft_test/gfft_test.h,
+	  glucat/clifford_algebra.h, glucat/errors.h, glucat/errors_imp.h,
+	  glucat/framed_multi.h, glucat/generation.h, glucat/glucat.h,
+	  glucat/glucat_imp.h, glucat/index_set.h, glucat/index_set_imp.h,
+	  glucat/long_double.h, squaring/squaring.cpp, squaring/squaring.h,
+	  test01/peg01.cpp, test01/peg01.h, test02/peg02.cpp,
+	  test02/peg02.h, test03/peg03.cpp, test03/peg03.h,
+	  test04/peg04.cpp, test04/peg04.h, test05/peg05.cpp,
+	  test05/peg05.h, test06/peg06.cpp, test06/peg06.h,
+	  test07/peg07.cpp, test07/peg07.h, test08/peg08.cpp,
+	  test08/peg08.h, test09/peg09.cpp, test09/peg09.h,
+	  test10/peg10.cpp, test10/peg10.h, test11/peg11.cpp,
+	  test11/peg11.h, test12/peg12.cpp, test12/peg12.h, test/driver.h,
+	  test/try_catch.h, test13/peg13.cpp, test13/peg13.h,
+	  test14/peg14.cpp, test14/peg14.h, test15/peg15.cpp,
+	  test15/peg15.h, test16/peg16.cpp, test16/peg16.h,
+	  transforms/transforms.cpp, transforms/transforms.h: Relicense
+	  under LGPLv3.
+
+2007-08-22 21:58  leopardi
+
+	* squaring/tuning.h: Relicense under LGPLv3.  Tweak test tuning
+	  policies.  Try new tuning policies using new define
+	  _GLUCAT_SQUARING_OPT.
+
+2007-08-22 21:58  leopardi
+
+	* glucat/scalar.h: Relicense under LGPLv3.  Move definition of
+	  numeric_traits<> here.  Define smart isInf(), smart
+	  isNaN_or_isInf() and NaN().
+
+2007-08-22 21:57  leopardi
+
+	* glucat/portability.h: Relicense under LGPLv3.  Disable Intel
+	  warning "zero used for undefined preprocessing identifier"
+
+2007-08-22 21:57  leopardi
+
+	* glucat/matrix_multi_imp.h: Relicense under LGPLv3.  Correctly
+	  initialize matrices.	Use ublas noalias assignment where
+	  appropriate.	Improve the use of IEEE NaN.  Use IEEE Inf where
+	  appropriate.	Use matrix::prod() in operator*=().  Use
+	  ublas::axpy_prod() in operator/=().  Fix the pow() functions to
+	  yield the correct powers of 0.  Use basis_matrix_t for generator
+	  and basis matrices.
+
+2007-08-22 21:57  leopardi
+
+	* glucat/matrix_multi.h: Relicense under LGPLv3.  If
+	  _GLUCAT_USE_DENSE_MATRICES is defined, matrix_multi<> uses a a
+	  dense matrix.  Otherwise matrix_multi<> uses a compressed matrix
+	  type.  Basis matrices always use a compressed matrix type.
+
+2007-08-22 21:56  leopardi
+
+	* glucat/matrix_imp.h: Relicense under LGPLv3.	For functions
+	  kron(), nork(), inner(), allow LHS_T and RHS_T to differ.  New
+	  function isnan() for matrices.  New function prod() for both
+	  dense and compressed matrices.  Correctly initialize matrices.
+
+2007-08-22 21:56  leopardi
+
+	* glucat/matrix.h: Relicense under LGPLv3.  For functions kron(),
+	  nork(), inner(), allow LHS_T and RHS_T to differ.  New function
+	  isnan() for matrices.  New function prod() for both dense and
+	  compressed matrices.
+
+2007-08-22 21:55  leopardi
+
+	* glucat/global.h: Relicense under LGPLv3.  Optimize default tuning
+	  policy for both dense and compressed matrices.  Move definition
+	  of numeric_traits<> to scalar.h.
+
+2007-08-22 21:55  leopardi
+
+	* glucat/generation_imp.h: Relicense under LGPLv3.  Remove
+	  redundant initializations.  Use ublas noalias assignment where
+	  appropriate.
+
+2007-08-22 21:55  leopardi
+
+	* glucat/framed_multi_imp.h: Relicense under LGPLv3.  Improve the
+	  use of IEEE NaN.  Use IEEE Inf where appropriate.  Fix the pow()
+	  functions to yield the correct powers of 0.  Use basis_matrix_t
+	  for generators I, J, K, JK in fast().
+
+2007-08-22 21:54  leopardi
+
+	* glucat/clifford_algebra_imp.h: Relicense under LGPLv3.  Fix the
+	  pow() functions to yield the correct powers of 0.  Improve the
+	  use of IEEE NaN.  Use IEEE Inf where appropriate.
+
+2007-08-22 21:53  leopardi
+
+	* COPYING: Relicense under LGPLv3.
+
+2007-08-22 21:53  leopardi
+
+	* configure.in.in: Remove option --with-dense-mult controlling
+	  _GLUCAT_USE_DENSE_MATRIX_MULT.  Add new option --with-dense-mat
+	  controlling _GLUCAT_USE_DENSE_MATRICES.  For g++ 4.1 and later
+	  use --param max-inline-insns-single=2700 instead of
+	  -finline-limit=2400.	Update to version 0.2.3.
+
+2007-08-22 21:52  leopardi
+
+	* configure.in: This file is now redundant and will be removed from
+	  CVS at a later date.
+
+2007-08-22 21:50  leopardi
+
+	* configure.in.end: New file: To use, cat configure.in.in
+	  configure.in.end > configure.in
+
+2007-08-22 21:48  leopardi
+
+	* Doxyfile, INSTALL, glucat.kdevelop, glucat.lsm, NEWS, README,
+	  TODO: Update to version 0.2.3.
+
+2007-03-19 21:57  leopardi
+
+	* glucat/framed_multi_imp.h: Fix fold() and unfold(). The test
+	  which determines whether to short-circuit the function should
+	  depend on the frame only and not on *this.
+
+2007-03-19 21:55  leopardi
+
+	* glucat/index_set_imp.h: Correct is_contiguous() so that it
+	  matches the requirements of framed_multi<>::fold() and
+	  framed_multi<>::unfold(). The set which is tested for contiguity
+	  is *this with the index value 0 (notionally) added, so that
+	  {1,2,3} is contiguous, but {2,3} is not.
+
+2007-02-28 01:39  leopardi
+
+	* ChangeLog: Update to version 0.2.2.
+
 2007-02-28 01:33  leopardi
 
 	* glucat/index_set_imp.h: Bit wizardry. Hand optimize various
@@ -2305,16 +2459,17 @@
 	  test/templates/cpp_template, test/templates/header_template:
 	  Initial revision
 
-2002-01-12 Updated version to 0.0.2
-2002-01-12 ./test/test.out, test6.out: Added sample output
-2002-01-12 Added all relevant files to CVS
-2002-01-12 ./glucat/doc: removed unused directory
 
-2002-01-11 ./glucat/clifford_algebra_imp.h: Fixed elliptic() to give a result which commutes
-2002-01-11 ./test/peg12.cpp: Changed example name from "basis group" to "frame group"
-2002-01-11 ./test/peg13.cpp, peg14.cpp, peg15.cpp: Added cout << example name
-2002-01-11 ./test/peg16.cpp: Fixed example name to read: Matrices of multivectors
+2002-01-12 Update version to 0.0.2
+2002-01-12 ./test/test.out, test6.out: Add sample output
+2002-01-12 Add all relevant files to CVS
+2002-01-12 ./glucat/doc: remove unused directory
 
-2002-01-10 ./README: Added -finline-limit-400
+2002-01-11 ./glucat/clifford_algebra_imp.h: Fix elliptic() to give a result which commutes
+2002-01-11 ./test/peg12.cpp: Change example name from "basis group" to "frame group"
+2002-01-11 ./test/peg13.cpp, peg14.cpp, peg15.cpp: Add cout << example name
+2002-01-11 ./test/peg16.cpp: Fix example name to read: Matrices of multivectors
 
-2002-01-09 Released glucat-0.0.1
+2002-01-10 ./README: Add -finline-limit-400
+
+2002-01-09 Release glucat-0.0.1
