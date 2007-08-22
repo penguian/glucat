@@ -7,11 +7,20 @@
     begin                : Sun 2001-08-18
     copyright            : (C) 2001-2007 by Paul C. Leopardi
  ***************************************************************************
- *   This library is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU Lesser General Public License as        *
- *   published by the Free Software Foundation; either version 2.1 of the  *
- *   License, or (at your option) any later version.                       *
- *   See http://www.fsf.org/copyleft/lesser.html for details               *
+
+    This library is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with this library.  If not, see <http://www.gnu.org/licenses/>.
+
  ***************************************************************************
  This library is based on a prototype written by Arvind Raja and was
  licensed under the LGPL with permission of the author. See Arvind Raja,
@@ -25,6 +34,7 @@
 // Workarounds for ICC
 #if defined (BOOST_INTEL) || defined (__ICL) || defined (__ICC)
 # pragma warning( disable: 177 ) // variable was declared but never referenced
+# pragma warning( disable: 193 ) // zero used for undefined preprocessing identifier
 # pragma warning( disable: 279 ) // controlling expression is constant
 # pragma warning( disable: 383 ) // value copied to temporary, reference to temporary ...
 # pragma warning( disable: 444 ) // destructor for base is not virtual
