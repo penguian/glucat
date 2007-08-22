@@ -7,11 +7,20 @@
     begin                : Sun 2001-12-09
     copyright            : (C) 2001-2007 by Paul C. Leopardi
  ***************************************************************************
- *   This library is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU Lesser General Public License as        *
- *   published by the Free Software Foundation; either version 2.1 of the  *
- *   License, or (at your option) any later version.                       *
- *   See http://www.fsf.org/copyleft/lesser.html for details               *
+
+    This library is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with this library.  If not, see <http://www.gnu.org/licenses/>.
+
  ***************************************************************************
  This library is based on a prototype written by Arvind Raja and was
  licensed under the LGPL with permission of the author. See Arvind Raja,
@@ -58,8 +67,12 @@ namespace glucat
   private:
     typedef ublas::row_major                           orientation_t;
     typedef ublas::compressed_matrix< Scalar_T, orientation_t >
-                                                       matrix_t;
-    typedef ublas::matrix< Scalar_T, orientation_t >   dense_matrix_t;
+                                                       basis_matrix_t;
+#ifdef _GLUCAT_USE_DENSE_MATRICES
+    typedef ublas::matrix< Scalar_T, orientation_t >   matrix_t;
+#else
+    typedef basis_matrix_t                             matrix_t;
+#endif
     typedef typename matrix_t::size_type               matrix_index_t;
   public:
     /// Class name used in messages
@@ -101,7 +114,7 @@ namespace glucat
     /// Construct a multivector within a given frame from a given matrix
     matrix_multi(const matrix_t& mtx, const index_set_t frm);
     /// Create a basis element matrix within the current frame
-    const matrix_t     basis_element(const index_set<LO,HI>& ist) const;
+    const basis_matrix_t basis_element(const index_set<LO,HI>& ist) const;
   public:
     _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
 
