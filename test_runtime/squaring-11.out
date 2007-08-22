@@ -1,0 +1,54 @@
+framed_multi<double>
+Clifford algebra squaring test:
+Square of unit pseudoscalar ({-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10,11})
+Cl(11,11) in Cl(11,11) CPU =         0.00 ms:         0.00 (setup) +         0.00 (mult). 
+Square is 1
+Cl( 1, 0) in Cl( 1, 0) CPU =         0.08 ms:         0.06 (setup) +         0.02 (mult). 
+Cl( 1, 1) in Cl( 1, 1) CPU =         0.12 ms:         0.07 (setup) +         0.05 (mult). 
+Cl( 2, 1) in Cl( 2, 1) CPU =         0.16 ms:         0.08 (setup) +         0.08 (mult). 
+Cl( 2, 2) in Cl( 2, 2) CPU =         0.33 ms:         0.11 (setup) +         0.22 (mult). 
+Cl( 3, 2) in Cl( 3, 2) CPU =         0.87 ms:         0.15 (setup) +         0.72 (mult). 
+Cl( 3, 3) in Cl( 3, 3) CPU =         2.23 ms:         0.13 (setup) +         2.10 (mult). 
+Cl( 4, 3) in Cl( 4, 3) CPU =         4.86 ms:         0.16 (setup) +         4.70 (mult). 
+Cl( 4, 4) in Cl( 4, 4) CPU =         6.51 ms:         0.31 (setup) +         6.20 (mult). 
+Cl( 5, 4) in Cl( 5, 4) CPU =        34.58 ms:         0.64 (setup) +        33.94 (mult). 
+Cl( 5, 5) in Cl( 5, 5) CPU =        38.87 ms:         1.27 (setup) +        37.60 (mult). 
+Cl( 6, 5) in Cl( 6, 5) CPU =       157.53 ms:         2.53 (setup) +       155.00 (mult). 
+Cl( 6, 6) in Cl( 6, 6) CPU =       177.17 ms:         5.17 (setup) +       172.00 (mult). 
+Cl( 7, 6) in Cl( 7, 6) CPU =       691.00 ms:        11.00 (setup) +       680.00 (mult). 
+Cl( 7, 7) in Cl( 7, 7) CPU =       803.94 ms:        23.94 (setup) +       780.00 (mult). 
+Cl( 8, 7) in Cl( 8, 7) CPU =      3100.62 ms:        50.62 (setup) +      3050.00 (mult). 
+Cl( 8, 8) in Cl( 8, 8) CPU =      3582.22 ms:       102.22 (setup) +      3480.00 (mult). 
+Cl( 9, 8) in Cl( 9, 8) CPU =     13900.00 ms:       210.00 (setup) +     13690.00 (mult). 
+Cl( 9, 9) in Cl( 9, 9) CPU =     16215.00 ms:       425.00 (setup) +     15790.00 (mult). 
+Cl(10, 9) in Cl(10, 9) CPU =     62860.00 ms:       910.00 (setup) +     61950.00 (mult). 
+Cl(10,10) in Cl(10,10) CPU =     74010.00 ms:      1910.00 (setup) +     72100.00 (mult). 
+Cl(11,10) in Cl(11,10) CPU =    298210.00 ms:      3880.00 (setup) +    294330.00 (mult). 
+Cl(11,11) in Cl(11,11) CPU =    361010.00 ms:     13000.00 (setup) +    348010.00 (mult). 
+matrix_multi<double>
+Clifford algebra squaring test:
+Square of unit pseudoscalar ({-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10,11})
+Cl(11,11) in Cl(11,11) CPU =     31330.00 ms:       700.00 (setup) +     30630.00 (mult). 
+Square is 1
+Cl( 1, 0) in Cl( 1, 0) CPU =         0.02 ms:         0.02 (setup) +         0.00 (mult). 
+Cl( 1, 1) in Cl( 1, 1) CPU =         0.06 ms:         0.06 (setup) +         0.00 (mult). 
+Cl( 2, 1) in Cl( 2, 1) CPU =         0.11 ms:         0.11 (setup) +         0.00 (mult). 
+Cl( 2, 2) in Cl( 2, 2) CPU =         0.22 ms:         0.22 (setup) +         0.00 (mult). 
+Cl( 3, 2) in Cl( 3, 2) CPU =         0.69 ms:         0.69 (setup) +         0.00 (mult). 
+Cl( 3, 3) in Cl( 3, 3) CPU =         1.37 ms:         1.36 (setup) +         0.01 (mult). 
+Cl( 4, 3) in Cl( 4, 3) CPU =         6.41 ms:         6.40 (setup) +         0.01 (mult). 
+Cl( 4, 4) in Cl( 4, 4) CPU =         5.51 ms:         5.50 (setup) +         0.01 (mult). 
+Cl( 5, 4) in Cl( 5, 4) CPU =        19.29 ms:        19.20 (setup) +         0.09 (mult). 
+Cl( 5, 5) in Cl( 5, 5) CPU =        42.10 ms:        42.00 (setup) +         0.10 (mult). 
+Cl( 6, 5) in Cl( 6, 5) CPU =       103.68 ms:       103.00 (setup) +         0.68 (mult). 
+Cl( 6, 6) in Cl( 6, 6) CPU =       184.68 ms:       184.00 (setup) +         0.68 (mult). 
+Cl( 7, 6) in Cl( 7, 6) CPU =       457.28 ms:       450.00 (setup) +         7.28 (mult). 
+Cl( 7, 7) in Cl( 7, 7) CPU =       827.28 ms:       820.00 (setup) +         7.28 (mult). 
+Cl( 8, 7) in Cl( 8, 7) CPU =      2064.38 ms:      2010.00 (setup) +        54.38 (mult). 
+Cl( 8, 8) in Cl( 8, 8) CPU =      3665.00 ms:      3610.00 (setup) +        55.00 (mult). 
+Cl( 9, 8) in Cl( 9, 8) CPU =      9540.00 ms:      9050.00 (setup) +       490.00 (mult). 
+Cl( 9, 9) in Cl( 9, 9) CPU =     16575.00 ms:     16080.00 (setup) +       495.00 (mult). 
+Cl(10, 9) in Cl(10, 9) CPU =     44670.00 ms:     40770.00 (setup) +      3900.00 (mult). 
+Cl(10,10) in Cl(10,10) CPU =     75190.00 ms:     71280.00 (setup) +      3910.00 (mult). 
+Cl(11,10) in Cl(11,10) CPU =    221880.00 ms:    191070.00 (setup) +     30810.00 (mult). 
+Cl(11,11) in Cl(11,11) CPU =    356950.00 ms:    326150.00 (setup) +     30800.00 (mult). 
