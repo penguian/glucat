@@ -55,6 +55,8 @@ namespace glucat
     index_set    (const index_t idx);
     /// Constructor from set value of an index set folded within the given frame
     index_set    (const set_value_t folded_val, const index_set_t frm, const bool prechecked = false);
+    /// Constructor from range of indices from range.first to range.second
+    index_set    (const std::pair<index_t,index_t>& range, const bool prechecked = false);
     /// Constructor from string
     index_set    (const std::string& str);
 
