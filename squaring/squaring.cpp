@@ -40,9 +40,9 @@ int squaring(const int n)
     cout << "Maximum value allowed is " << max_n << "." << endl;
     return 1;
   }
-  cout << "framed_multi<double>" << endl;
+  cout << endl << "framed_multi<double>" << endl;
   mult_test< framed_multi<double> >(n, max_n);
-  cout << "matrix_multi<double>" << endl;
+  cout << endl << "matrix_multi<double>" << endl;
   mult_test< matrix_multi<double> >(n, max_n);
 
   return 0;
