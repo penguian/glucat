@@ -14,7 +14,7 @@ Before You Begin
  The headers also need an include library which either defines the macro isnan
  or defines std::isnan.
 
- GluCat 0.2.3 has so far been tested using:
+ GluCat 0.3.0 has so far been tested using:
 
 1) Dual Intel(R) Pentium(R) 4 with
 2.1) Kubuntu 7.04, gcc version 4.1.2 (Ubuntu 4.1.2-0ubuntu4), Boost 1.33.1
@@ -25,17 +25,9 @@ Before You Begin
 3.3) SuSE Linux 10.1, icpc 10.0 Build 20070426,               Boost 1.33.1
 
    Notes: 
-1. GluCat 0.2.3 has not been tested with Boost versions earlier than 1.33.1 
+1. GluCat 0.3.0 has not been tested with Boost versions earlier than 1.33.1 
    and may not work correctly (or at all) with these earlier versions.
-   1.32.0. Boost uBLAS before 1.31.0 has different semantics for operator= for
-   compressed matrices, and also does not provide LU solvers for compressed
-   matrices. With Boost 1.32.0, GluCat 0.2.2 seemed to compile OK, but gave 
-   incorrect    results due to changes in Boost uBLAS semantics. See the uBLAS 
-   thread  "Changes in uBLAS between Boost 1.31 and Boost 1.32?" at
-   http://lists.boost.org/MailArchives/ublas/2005/07/0552.php
-   This problem has been fixed with Boost 1.33.0. See
-   http://lists.boost.org/MailArchives/ublas/2005/08/0664.php
-2. GluCat 0.2.3 has not been tested with g++ versions earlier than 4.1.
+2. GluCat 0.3.0 has not been tested with g++ versions earlier than 4.1.
    With g++ 4.0.0 and g++ 4.0.1, optimization with -O3 may corrupt iterators.
    Use -O3 -fno-strict-aliasing instead. See gcc bugs 23599 and 23192.
 
@@ -51,9 +43,9 @@ To Test
 The Test Programs
 -----------------
  The test script ./test/test.sh takes any number (including zero) of numeric 
- parameters. Positive numbers in the range 1 to 16 correspond to coding examples
- ./test01/peg01.h to ./test16/peg16.h. These examples are run in numerical
- order. With zero parameters, all examples from 1 to 16 are run in order. Many
+ parameters. Parameters in the range "00" to "16" correspond to coding examples
+ ./test00/peg00.h to ./test16/peg16.h. These examples are run in numerical
+ order. With zero parameters, all examples from 00 to 16 are run in order. Many
  of the examples are run twice - once with framed_multi<Scalar_T> and once with 
  matrix_multi<Scalar_T>. 
 
@@ -61,6 +53,10 @@ The Test Programs
  larger and larger multivectors within the subalgebra defined by the frame of
  the index set {-n, ..., -1, 1, ..., n}
  
+ The test program ./products/products takes a parameter n, and runs a timing
+ test which uses the products *, ^, % and & to multply larger and larger 
+ multivectors within subalgebras defined by frames limited by the value of n.
+
  The test program ./squaring/squaring takes a parameter n, and runs a timing
  test which squares larger and larger multivectors within subalgebras defined
  by frames limited by the value of n.
@@ -76,9 +72,9 @@ To Make the Test Programs
  run ./configure, then make.
  
  Make uses the headers in ./glucat and ./test and the source in ./test??,
- ./gfft_test, ./squaring and ./transforms to make the test programs
- ./test??/test??, ./gfft_test/gfft_test, ./squaring/squaring and
- ./transforms/transforms
+ ./gfft_test, ./products, ./squaring and ./transforms to make the test programs
+ ./test??/test??, ./gfft_test/gfft_test, ./products/products, ./squaring/squaring 
+ and  ./transforms/transforms
  
  Once you have created the test programs, copy the runtime directory
  ./test_runtime to a convenient place. ./test_runtime contains the test input
@@ -86,12 +82,12 @@ To Make the Test Programs
  multivectors from input).
 
  The sample test output files are eg3.res, test.out, gfft_test-11.out,
- squaring-11.out and transforms-8.out
+ products-4.out and squaring-11.out and transforms-8.out
 
- The main test script is ./test/test.sh. This runs tests ./test01/test01 to
+ The main test script is ./test/test.sh. This runs tests ./test00/test00 to
  ./test16/test16, using relative pathnames, so it is best to leave test.sh
  where it is and invoke it using the full path name. This allows it to find
- test01 to test16.
+ test00 to test16.
 
  To create meaningful timing tests, run ./configure --enable-debug=no, then 
  make.  Setting --enable-debug=no will invoke the highest optimization level of 
