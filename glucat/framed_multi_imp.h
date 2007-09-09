@@ -365,9 +365,10 @@ namespace glucat
   operator%= (const multivector_t& rhs)
   {
     // Reference: Leo Dorst, "Honing geometric algebra for its use in the computer sciences",
-    // http://carol.wins.uva.nl/~leo/clifford/index.html
-    // also in Geometric Computing with Clifford Algebras, ed. G. Sommer,
-    // Springer 2001, Chapter 6, pp. 127-152
+    // in Geometric Computing with Clifford Algebras, ed. G. Sommer,
+    // Springer 2001, Chapter 6, pp. 127-152.
+    // http://staff.science.uva.nl/~leo/clifford/index.html
+
     multivector_t result;
     for (const_iterator
         this_it = this->begin();
@@ -399,10 +400,15 @@ namespace glucat
           rhs_it != rhs.end();
           rhs_it++)
       {
-        const index_t grade = std::abs(this_it->first.count() - rhs_it->first.count());
-        const term_t& term = (*this_it) * (*rhs_it);
-        if (term.first.count() == grade)
-          result += term;
+        const index_t this_grade = this_it->first.count();
+        const index_t rhs_grade = rhs_it->first.count();
+        if (this_grade > 0 && rhs_grade > 0)
+        {
+          const index_t grade = std::abs(this_grade - rhs_grade);
+          const term_t& term = (*this_it) * (*rhs_it);
+          if (term.first.count() == grade)
+            result += term;
+        }
       }
     return *this = result;
   }
