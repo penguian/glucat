@@ -79,10 +79,10 @@ namespace glucat_gfft_test
          << "R_" << frame2 << ":" << endl;
     cout << " CPU = ";
     const ios::fmtflags& old_flags = cout.flags();
-    const streamsize width = 10;
+    const streamsize width = 12;
     const streamsize old_prec = cout.precision();
-    const streamsize prec = 2;
-    const int trial_width = 4;
+    const streamsize prec = 3;
+    const int trial_width = 5;
     cout.setf(ios_base::fixed);
     cout.setf(ios_base::showpoint);
     cout << setprecision(prec)
@@ -112,19 +112,19 @@ namespace glucat_gfft_test
     typedef typename Multivector_T::scalar_t    scalar_t;
 
     int trials;
-    const double min_cpu_time = 20.0;
-    const int min_trials_if_small = 1000;
+    const double min_cpu_time = 0.1;
+    const int min_trials_if_small = 10000;
     a = a*b*(scalar_t(1.0*rand())/RAND_MAX) + a*(scalar_t(1.0*rand())/RAND_MAX);
     int mm_trials = 1;
     clock_t cpu_time = clock();
      matrix_multi_t A = a.fast_matrix_multi(outer_frame);
     double mm_cpu_time = elapsed(cpu_time);
-    if (mm_cpu_time < MS_PER_S)
+    if (mm_cpu_time < 1000.0)
     {
-      const int max_trials =
-       mm_cpu_time < min_cpu_time ?
-         min_trials_if_small :
-         int(ceil(MS_PER_S/mm_cpu_time));
+      const int max_trials = 
+        (mm_cpu_time < min_cpu_time) 
+        ? min_trials_if_small 
+        : int(ceil(MS_PER_S/mm_cpu_time));
       cpu_time = clock();
       for (trials = 0; trials != max_trials; ++trials)
         A = a.fast_matrix_multi(outer_frame);
@@ -140,12 +140,12 @@ namespace glucat_gfft_test
     cpu_time = clock();
      framed_multi_t new_a = A.fast_framed_multi();
     double fm_cpu_time = elapsed(cpu_time);
-    if (fm_cpu_time < MS_PER_S)
+    if (fm_cpu_time < 1000.0)
     {
       const int max_trials =
-       fm_cpu_time < min_cpu_time ?
-         min_trials_if_small :
-         int(ceil(MS_PER_S/fm_cpu_time));
+        (fm_cpu_time < min_cpu_time)
+        ? min_trials_if_small 
+        : int(ceil(MS_PER_S/fm_cpu_time));
       cpu_time = clock();
       for (trials = 0; trials != max_trials; ++trials)
         new_a = A.fast_framed_multi();
