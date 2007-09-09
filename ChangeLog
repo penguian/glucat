@@ -1,3 +1,109 @@
+2007-09-10 07:34  leopardi
+
+	* test_runtime/: gfft_test-11.out, squaring-11.out, test.out,
+	  transforms-8.out: Test results for version 0.3.0.
+
+2007-09-09 18:16  leopardi
+
+	* squaring/squaring.cpp: Add an extra line after the tests for each
+	  different template class, to make output easier to read.
+
+2007-09-09 18:14  leopardi
+
+	* squaring/squaring.h: Clean up based on products test.  Increase
+	  precision of output and increase number of repetitions to get
+	  more accurate timings for small frame sizes.	Use new
+	  index_set(range) constructor.
+
+2007-09-09 18:12  leopardi
+
+	* gfft_test/gfft_test.h: Increase precision of output and increase
+	  number of repetitions to get more accurate timings for small
+	  frame sizes.
+
+2007-09-09 18:09  leopardi
+
+	* transforms/transforms.h: Use new index_set(range) constructor.
+
+2007-09-09 18:08  leopardi
+
+	* test/test.sh: Add 00 to list of tests.
+
+2007-09-09 18:06  leopardi
+
+	* products/: Makefile.am, Makefile.in, products.cpp, products.h,
+	  tuning.h: New timing test which measures the speed of the *, ^, &
+	  and % products.
+
+2007-09-09 18:04  leopardi
+
+	* test00/: Makefile.am, Makefile.in, peg00.cpp, peg00.h: New
+	  regression test which checks many Geometric Algebra identities.
+
+2007-09-09 17:58  leopardi
+
+	* glucat/framed_multi_imp.h: In operator&(), ensure that the inner
+	  product implements the definition given in Hestenes and Sobczyk,
+	  1984.  According to the definition, a & b == 0 if either a or b
+	  is a scalar.
+
+2007-09-09 17:53  leopardi
+
+	* glucat/index_set_imp.h: Add a new constructor,  index_set(range),
+	  where range is a pair of index_t values.  This is intended to
+	  replace the function index_range(), which is now deprecated and
+	  will be removed from GluCat 0.4.0.  The new constructor is needed
+	  because of differences between the current GNU and Intel
+	  compilers.
+
+	  In lex_less_than(), fix the lexicographical ordering of index
+	  sets.  This affects the ordering of terms both in output and
+	  internally in framed_multi<> when framed multivectors use map<>
+	  rather than hash_map<>, ie. when _GLUCAT_USE_GNU_CXX_HASH_MAP is
+	  not defined.
+
+2007-09-09 17:50  leopardi
+
+	* glucat/index_set.h: Add a new constructor,  index_set(range),
+	  where range is a pair of index_t values.  This is intended to
+	  replace the function index_range(), which is now deprecated and
+	  will be removed from GluCat 0.4.0.  The new constructor is needed
+	  because of differences between the current GNU and Intel
+	  compilers.
+
+2007-09-09 17:18  leopardi
+
+	* configure.in, configure.in.in: Correctly obtain the version of
+	  icpc versions 8 through 10 (and hopefully later versions)
+
+2007-09-09 15:45  leopardi
+
+	* AUTHORS: Update email address.  Fix references to framed_multi<>
+	  and matrix_multi<>.  Add references for identities.
+
+2007-09-09 15:43  leopardi
+
+	* NEWS: Fix typos.
+
+2007-09-09 15:41  leopardi
+
+	* configure.in: Update to version 0.3.0.  New test directories:
+	  ./products, ./test00.
+
+2007-09-09 15:40  leopardi
+
+	* Makefile.am, configure.in.end: New test directories: ./products,
+	  ./test00
+
+2007-09-09 15:39  leopardi
+
+	* Doxyfile, INSTALL, NEWS, configure.in.in, glucat.lsm: Update to
+	  version 0.3.0
+
+2007-08-22 22:18  leopardi
+
+	* ChangeLog: Update to version 0.2.3.
+
 2007-08-22 22:09  leopardi
 
 	* test_runtime/: gfft_test-10.out, squaring-8.out,
@@ -2458,7 +2564,6 @@
 	  test/test-6.out, test/test.out, test/templates/.cvsignore,
 	  test/templates/cpp_template, test/templates/header_template:
 	  Initial revision
-
 
 2002-01-12 Update version to 0.0.2
 2002-01-12 ./test/test.out, test6.out: Add sample output
