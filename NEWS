@@ -3,7 +3,7 @@ Two errors lurking in GluCat versions 0.0.1 through 0.2.3 have been fixed.
 
 1. The inner product was wrong. According to the definition, a & b == 0 if
 either a or b is a scalar. In previous versions of GluCat a & b == a*b == a^b if
-either a or b is a scalar. A new test, test00, checks many Gemetric algebra 
+either a or b is a scalar. A new test, ./test00, checks many Geometric algebra 
 identities, to ensure that this type of error is caught much earlier.
 The increase in version number from 0.2.3 to 0.3.0 is to remind users that the
 value of a & b has changed.
