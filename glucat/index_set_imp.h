@@ -72,6 +72,22 @@ namespace glucat
     *this = folded_set.unfold(frm);
   }
 
+  /// Constructor from range of indices from range.first to range.second
+  template<const index_t LO, const index_t HI>
+  index_set<LO,HI>::
+  index_set(const std::pair<index_t,index_t>& range, const bool prechecked)
+  {
+    if (!prechecked)
+      if ((range.first < LO) || (range.second > HI))
+        throw error_t("index_set(range): cannot create: range is too large");
+    for (index_t
+        idx =  range.first;
+        idx <= range.second;
+        ++idx)
+      if (idx != 0)
+        this->set(idx);
+  }
+
   /// Constructor from string
   template<const index_t LO, const index_t HI>
   index_set<LO,HI>::
@@ -586,17 +602,17 @@ namespace glucat
   lex_less_than(const index_set_t rhs) const
   {
     for (index_t
-        idx = LO;
-        idx != 0;
-        ++idx)
+        idx = HI;
+        idx >= 1;
+        --idx)
       if (this->test(idx) != rhs.test(idx))
-        return this->test(idx) > rhs.test(idx);
+        return this->test(idx) < rhs.test(idx);
     for (index_t
-        idx = 1;
-        idx != HI;
-        ++idx)
+        idx = -1;
+        idx >= LO;
+        --idx)
       if (this->test(idx) != rhs.test(idx))
-        return this->test(idx) > rhs.test(idx);
+        return this->test(idx) < rhs.test(idx);
     return false;
   }
 
