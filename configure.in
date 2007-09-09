@@ -125,7 +125,7 @@ AC_DEFUN([AC_GLUCAT_CHECK_COMPILERS],
     AC_MSG_RESULT( $CXX version $cxxversion )
   fi  
   if test "$CXX" = "icpc"; then
-    icpcversion=`$CXX -V < /dev/null 2>&1 | head -n 1 | awk '{print [\$]8}'`
+    icpcversion=`$CXX -v < /dev/null 2>&1 | head -n 1 | awk '{print [\$]2}'`
     AC_MSG_RESULT( $CXX version $icpcversion )
   fi
   if test "$GXX" = "yes" || test "$CXX" = "icpc"; then
