@@ -50,8 +50,8 @@ const unsigned int Driver_Inv_Fast_Dim_Threshold = 1 <<  0;
 #elif defined ( _GLUCAT_SQUARING_OPT )
 const unsigned int Driver_Mult_Matrix_Threshold  =       8;
 const unsigned int Driver_Basis_Max_Count        = 1 << 30;
-const unsigned int Driver_Fast_Size_Threshold    = 1 <<  7;
-const unsigned int Driver_Inv_Fast_Dim_Threshold = 1 <<  5;
+const unsigned int Driver_Fast_Size_Threshold    = 1 <<  6;
+const unsigned int Driver_Inv_Fast_Dim_Threshold = 1 <<  6;
 #else
 const unsigned int Driver_Mult_Matrix_Threshold  = glucat::DEFAULT_Mult_Matrix_Threshold;
 const unsigned int Driver_Basis_Max_Count        = glucat::DEFAULT_Basis_Max_Count;
