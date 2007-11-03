@@ -105,7 +105,7 @@ namespace peg00
     const scalar_t random_a = rand()*RAND_SCALE;
     const scalar_t random_b = rand()*RAND_SCALE;
     const scalar_t random_c = rand()*RAND_SCALE;
-    const scalar_t tol = std::numeric_limits<scalar_t>::epsilon() * scalar_t(4);
+    const scalar_t tol = std::numeric_limits<scalar_t>::epsilon() * scalar_t(2);
 
     multivector_t lhs;
     multivector_t rhs;
@@ -118,7 +118,6 @@ namespace peg00
 
     const index_t a_grade = a.frame().count();
     const index_t b_grade = b.frame().count();
-    // const index_t c_grade = c.frame().count();
 
     { // Identity [HS] (1.21a)
       for (index_t r = 1;
@@ -200,7 +199,7 @@ namespace peg00
       lhs = (a ^ b) ^ c;
       rhs = a ^ (b ^ c);
   
-      if (std::abs(norm(lhs - rhs)) > tol)
+      if (norm(lhs - rhs) > tol)
       {
         std::cout << "Identity [HS] (1.25a) failed in " << e
                   << std::endl;
@@ -270,7 +269,8 @@ namespace peg00
       const scalar_t scalar_lhs = star(a, b);
       const scalar_t scalar_rhs = scalar(a * b);
   
-      if (std::abs(scalar_lhs - scalar_rhs) > tol)
+      const scalar_t scalar_diff = scalar_lhs - scalar_rhs;
+      if (scalar_diff*scalar_diff > tol)
       {
         std::cout << "Identity [HS] (1.44) failed in " << e
                   << std::endl;
@@ -282,8 +282,9 @@ namespace peg00
     { // Identity [HS] (1.48)
       const scalar_t scalar_lhs = star(a, b);
       const scalar_t scalar_rhs = star(reverse(a), reverse(b));
-  
-      if (std::abs(scalar_lhs - scalar_rhs) > tol)
+
+      const scalar_t scalar_diff = scalar_lhs - scalar_rhs;
+      if (scalar_diff*scalar_diff > tol)
       {
         std::cout << "Identity [HS] (1.48) failed in " << e
                   << std::endl;
@@ -297,7 +298,7 @@ namespace peg00
       lhs = a_0 % b;
       rhs = a_0 * b;
   
-      if (std::abs(norm(lhs - rhs)) > tol)
+      if (norm(lhs - rhs) > tol)
       {
         std::cout << "Identity [D01] (2.5) (a.2) failed in " << e
                   << std::endl;
@@ -312,7 +313,7 @@ namespace peg00
       lhs = a_1 % b_0;
       rhs = scalar_t(0);
   
-      if (std::abs(norm(lhs - rhs)) > tol)
+      if (norm(lhs - rhs) > tol)
       {
         std::cout << "Identity [D01] (2.5) (a.3) failed in " << e
                   << std::endl;
@@ -326,7 +327,7 @@ namespace peg00
       lhs = a_1 % (b ^ c);
       rhs = ((a_1 % b) ^ c) + (involute(b) ^ (a_1 % c));
   
-      if (std::abs(norm(lhs - rhs)) > tol)
+      if (norm(lhs - rhs) > tol)
       {
         std::cout << "Identity [D01] (2.5) (c) failed in " << e
                   << std::endl;
@@ -339,7 +340,7 @@ namespace peg00
       lhs = (a ^ b) % c;
       rhs = a % (b % c);
   
-      if (std::abs(norm(lhs - rhs)) > tol)
+      if (norm(lhs - rhs) > tol)
       {
         std::cout << "Identity [D01] (2.5) (d) failed in " << e
                   << std::endl;
