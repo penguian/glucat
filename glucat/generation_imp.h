@@ -49,6 +49,7 @@ namespace glucat { namespace gen
   /// Pointer to generators for a specific signature
   // Reference: [P] Table 15.27, p 133
   template< class Matrix_T >
+  inline
   const Matrix_T*
   generator_table<Matrix_T>::
   operator() (const index_t p, const index_t q)
@@ -122,17 +123,16 @@ namespace glucat { namespace gen
   generator_table<Matrix_T>::
   gen_from_pm1_qm1(const std::vector<Matrix_T>& old, const signature_t sig)
   {
-    Matrix_T pos = Matrix_T(2,2);
-    pos(0,1) =     1;
-    pos(1,0) = 1;
-
-    Matrix_T dup = Matrix_T(2,2);
-    dup(0,0) = 1;
-    dup(1,1) =    -1;
-
-    Matrix_T neg = Matrix_T(2,2);
+    Matrix_T neg(2,2,2);
     neg(0,1) =    -1;
     neg(1,0) = 1;
+
+    Matrix_T pos = neg;
+    pos(0,1) =     1;
+
+    Matrix_T dup(2,2,2);
+    dup(0,0) = 1;
+    dup(1,1) =    -1;
 
     const int new_size = old.size() + 2;
     const int old_dim = old[0].size1();
@@ -140,13 +140,13 @@ namespace glucat { namespace gen
 
     std::vector<Matrix_T> result = std::vector<Matrix_T>(new_size);
 
-    result[0] = matrix::kron(neg, eye);
+    result[0] = matrix::mono_kron(neg, eye);
     for (int
         k = 1;
         k != new_size-1;
         ++k)
-      result[k] = matrix::kron(dup, old[k-1]);
-    result[new_size-1] = matrix::kron(pos, eye);
+      result[k] = matrix::mono_kron(dup, old[k-1]);
+    result[new_size-1] = matrix::mono_kron(pos, eye);
 
     // Save the resulting generator array.
     this->insert(make_pair(sig, result));
