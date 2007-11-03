@@ -48,6 +48,7 @@
 #include <boost/numeric/ublas/operation.hpp>
 #include <boost/numeric/ublas/lu.hpp>
 
+#include <boost/pool/pool_alloc.hpp>
 #include "glucat/framed_multi_imp.h"
 #include "glucat/matrix_imp.h"
 #include "glucat/generation_imp.h"
