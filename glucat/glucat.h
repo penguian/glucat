@@ -42,18 +42,24 @@
 #include <boost/config.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/limits.hpp>
+#include <boost/static_assert.hpp>
+#include <boost/numeric/ublas/traits.hpp>
+
 #include "glucat/portability.h"
 
 // Declarations
 
 #include <cmath>
+
 #include "glucat/global.h"
 
 #include <exception>
 #include <stdexcept>
+
 #include "glucat/errors.h"
 
 #include <bitset>
+
 #include "glucat/index_set.h"
 
 // Add real equivalents to complex functions
@@ -66,14 +72,25 @@
 #include <utility>
 #include <vector>
 #include <fstream>
+
 #include "glucat/clifford_algebra.h"
 
+// Use the appropriate type of map
 #include <map>
-#ifdef _GLUCAT_USE_GNU_CXX_HASH_MAP
-#include <ext/hash_map>
+#if defined(_GLUCAT_USE_GNU_CXX_HASH_MAP)
+# include <ext/hash_map>
+#elif defined(_GLUCAT_USE_TR1_UNORDERED_MAP)
+# include <tr1/unordered_map>
+#else
+# define _GLUCAT_MAP_IS_ORDERED
 #endif
+
 #include <string>
 #include <complex>
+
+// Use the Boost pool allocator
+#include <boost/pool/poolfwd.hpp>
+
 #include "glucat/framed_multi.h"
 
 #include <iostream>
