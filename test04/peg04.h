@@ -99,7 +99,7 @@ namespace peg04
       F.write("Electromagnetic field: F = E - j*B =");
       (F*F / 2.0).write
         ("Lorentz invariants: F*F / 2.0 =");
-      // Correction below comes from Clical demo http://www.teli.stadia.fi/~lounesto/CLICAL.zip
+      // Correction below comes from Clical demo http://users.tkk.fi/~ppuska/mirror/Lounesto/CLICAL.htm
       (-involute(F)*F / 2.0).write
         ("Energy density and Poynting vector: -involute(F)*F / 2.0 =");
       cout << "Boost at half the velocity of light" << endl;

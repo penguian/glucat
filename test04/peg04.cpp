@@ -43,7 +43,7 @@ int test04()
   cout << "Clifford algebras and their applications in mathematical physics" << endl;
   cout << "Kluwer, 1992, pp44-46." << endl;
   cout << "See also: P. Lounesto, et. al., Clical demo" << endl;
-  cout << "http://www.teli.stadia.fi/~lounesto/CLICAL.htm" << endl;
+  cout << "http://users.tkk.fi/~ppuska/mirror/Lounesto/CLICAL.htm" << endl;
   cout << endl;
   cout << "framed_multi<double>" << endl;
   do_test4< framed_multi<double> >();
