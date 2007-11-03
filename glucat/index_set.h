@@ -33,18 +33,45 @@
 
 namespace glucat
 {
+  template<const index_t LO, const index_t HI>
+  class index_set; // forward
+
+  /// Symmetric set difference: exclusive or
+  template<const index_t LO, const index_t HI>
+  const index_set<LO,HI>
+  operator^ (const index_set<LO,HI>& lhs,
+             const index_set<LO,HI>& rhs);
+
+  /// Set intersection: and
+  template<const index_t LO, const index_t HI>
+  const index_set<LO,HI>
+  operator& (const index_set<LO,HI>& lhs,
+             const index_set<LO,HI>& rhs);
+
+  /// Set union: or
+  template<const index_t LO, const index_t HI>
+  const index_set<LO,HI>
+  operator| (const index_set<LO,HI>& lhs,
+             const index_set<LO,HI>& rhs);
+
   /// Index set class based on std::bitset<> in Gnu standard C++ library
   template<const index_t LO, const index_t HI>
   class index_set :
   private std::bitset<HI-LO>
   {
   private:
-    typedef std::bitset<HI-LO>    bitset_t;
-    typedef error<index_set>      error_t;
+    BOOST_STATIC_ASSERT((LO <= 0) && (0 <= HI) && (LO < HI) && \
+                       (-LO    <  _GLUCAT_BITS_PER_ULONG)   && \
+                       ( HI    <  _GLUCAT_BITS_PER_ULONG)   && \
+                       ( HI-LO <= _GLUCAT_BITS_PER_ULONG));
+    typedef std::bitset<HI-LO>          bitset_t;
+    typedef error<index_set>            error_t;
   public:
-    typedef index_set             index_set_t;
-    static const index_t          v_lo = LO;
-    static const index_t          v_hi = HI;
+    typedef index_set                   index_set_t;
+    typedef std::pair<index_t,index_t>  index_pair_t;
+
+    static const index_t v_lo = LO;
+    static const index_t v_hi = HI;
 
     static const std::string  classname();
     /// Default constructor creates an empty set
@@ -56,7 +83,7 @@ namespace glucat
     /// Constructor from set value of an index set folded within the given frame
     index_set    (const set_value_t folded_val, const index_set_t frm, const bool prechecked = false);
     /// Constructor from range of indices from range.first to range.second
-    index_set    (const std::pair<index_t,index_t>& range, const bool prechecked = false);
+    index_set    (const index_pair_t& range, const bool prechecked = false);
     /// Constructor from string
     index_set    (const std::string& str);
 
@@ -114,8 +141,18 @@ namespace glucat
     const index_set_t     unfold        (const index_set_t frm, const bool prechecked = false) const;
     /// The set value of the fold of this index set within the given frame
     set_value_t           value_of_fold (const index_set_t frm) const;
+    /// Sign of geometric product of two Clifford basis elements
     int                   sign_of_mult  (const index_set_t ist) const;
-    size_t                hash_fn       ()                     const;
+    /// Sign of geometric square of a Clifford basis element
+    int                   sign_of_square()                      const;
+
+    /// Hash function
+    size_t                hash_fn       ()                      const;
+
+  // Friends
+    friend const index_set_t operator^<> (const index_set_t& lhs, const index_set_t& rhs);
+    friend const index_set_t operator&<> (const index_set_t& lhs, const index_set_t& rhs);
+    friend const index_set_t operator|<> (const index_set_t& lhs, const index_set_t& rhs);
 
   // Member reference:
     class reference;
@@ -157,23 +194,6 @@ namespace glucat
            Default_index_set_too_big_for_value)
 
   // non-members
-  /// Symmetric set difference: exclusive or
-  template<const index_t LO, const index_t HI>
-  const index_set<LO,HI>
-  operator^ (const index_set<LO,HI>& lhs,
-             const index_set<LO,HI>& rhs);
-
-  /// Set intersection: and
-  template<const index_t LO, const index_t HI>
-  const index_set<LO,HI>
-  operator& (const index_set<LO,HI>& lhs,
-             const index_set<LO,HI>& rhs);
-
-  /// Set union: or
-  template<const index_t LO, const index_t HI>
-  const index_set<LO,HI>
-  operator| (const index_set<LO,HI>& lhs,
-             const index_set<LO,HI>& rhs);
 
   /// "lexicographic compare" eg. {3,4,5} is less than {3,7,8}
   // -1 if a<b, +1 if a>b, 0 if a==b
@@ -204,10 +224,5 @@ namespace glucat
   template<const index_t LO, const index_t HI>
   index_t
   min_neg(const index_set<LO,HI>& ist);
-
-  /// Set containing a range of indices from range_min to range_max
-  template<const index_t LO, const index_t HI>
-  const index_set<LO,HI>
-  index_range(const index_t range_min, const index_t range_max);
 }
 #endif // _GLUCAT_INDEX_SET_H
