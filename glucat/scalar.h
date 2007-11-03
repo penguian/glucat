@@ -33,42 +33,38 @@
 
 namespace glucat
 {
-  /// Log base 2 for Scalar_T
-  template< typename Scalar_T >
-  inline
-  Scalar_T
-  log2(const Scalar_T x)
-  { return std::log(x)/Scalar_T(l_ln2); }
-
   /// Extra traits which extend numeric limits
   // Reference: [AA], 2.4, p. 30-31
-  template< typename T >
+  template< typename Scalar_T >
   class numeric_traits
   {
   private:
-    /// Smart isinf specialised for T without infinity
+    /// Smart isinf specialised for Scalar_T without infinity
     inline
     static 
     bool
-    isInf(T val, bool_to_type<false>)
+    isInf(Scalar_T val, bool_to_type<false>)
     { return false; }
-    /// Smart isnan specialised for T with quiet NaN
+
+    /// Smart isnan specialised for Scalar_T with quiet NaN
     inline
     static 
     bool
-    isInf(T val, bool_to_type<true>)
+    isInf(Scalar_T val, bool_to_type<true>)
     { return std::isinf(val); }
-    /// Smart isnan specialised for T without quiet NaN
+
+    /// Smart isnan specialised for Scalar_T without quiet NaN
     inline
     static 
     bool
-    isNaN(T val, bool_to_type<false>)
+    isNaN(Scalar_T val, bool_to_type<false>)
     { return false; }
-    /// Smart isnan specialised for T with quiet NaN
+
+    /// Smart isnan specialised for Scalar_T with quiet NaN
     inline
     static 
     bool
-    isNaN(T val, bool_to_type<true>)
+    isNaN(Scalar_T val, bool_to_type<true>)
     { return std::isnan(val); }
 
   public:
@@ -76,40 +72,72 @@ namespace glucat
     inline
     static 
     bool
-    isInf(T val)
+    isInf(Scalar_T val)
     {
       return isInf(val,
-             bool_to_type< std::numeric_limits<T>::has_infinity >() );
+             bool_to_type< std::numeric_limits<Scalar_T>::has_infinity >() );
     }
+
     /// Smart isnan
     inline
     static 
     bool
-    isNaN(T val)
+    isNaN(Scalar_T val)
     {
       return isNaN(val,
-             bool_to_type< std::numeric_limits<T>::has_quiet_NaN >() );
+             bool_to_type< std::numeric_limits<Scalar_T>::has_quiet_NaN >() );
     }
+
     /// Smart isnan or isinf
     inline
     static 
     bool
-    isNaN_or_isInf(T val)
+    isNaN_or_isInf(Scalar_T val)
     {
       return isNaN(val,
-             bool_to_type< std::numeric_limits<T>::has_quiet_NaN >() )
+             bool_to_type< std::numeric_limits<Scalar_T>::has_quiet_NaN >() )
           || isInf(val,
-             bool_to_type< std::numeric_limits<T>::has_infinity >() );
+             bool_to_type< std::numeric_limits<Scalar_T>::has_infinity >() );
     }
+
     /// Smart NaN
-    static const T
+    inline
+    static 
+    const Scalar_T
     NaN()
     {
-      return std::numeric_limits<T>::has_quiet_NaN 
-           ? std::numeric_limits<T>::quiet_NaN() 
-           : T(std::log(0.0));
+      return std::numeric_limits<Scalar_T>::has_quiet_NaN 
+           ? std::numeric_limits<Scalar_T>::quiet_NaN() 
+           : Scalar_T(std::log(0.0));
     }
+
+    /// Absolute value of scalar
+    inline
+    static 
+    const Scalar_T
+    abs(Scalar_T val)
+    { return boost::numeric::ublas::type_traits<Scalar_T>::type_abs(val); }
+
+    /// Square root of scalar
+    inline
+    static 
+    const Scalar_T
+    sqrt(Scalar_T val)
+    { return boost::numeric::ublas::type_traits<Scalar_T>::type_sqrt(val); }
+
+    /// Logarithm of scalar
+    inline
+    static 
+    const Scalar_T
+    log(Scalar_T val)
+    { return std::log(val); }
   };
 
+  /// Log base 2 for Scalar_T
+  template< typename Scalar_T >
+  inline
+  Scalar_T
+  log2(const Scalar_T x)
+  { return std::log(x)/Scalar_T(l_ln2); }
 }
 #endif // _GLUCAT_SCALAR_H
