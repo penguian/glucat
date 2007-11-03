@@ -39,6 +39,36 @@ namespace glucat
   template< typename Scalar_T, const index_t LO, const index_t HI >
   class matrix_multi;  // forward
 
+  /// Geometric product
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const matrix_multi<Scalar_T,LO,HI>
+  operator* (const matrix_multi<Scalar_T,LO,HI>& lhs, const matrix_multi<Scalar_T,LO,HI>& rhs);
+
+  /// Outer product
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const matrix_multi<Scalar_T,LO,HI>
+  operator^ (const matrix_multi<Scalar_T,LO,HI>& lhs, const matrix_multi<Scalar_T,LO,HI>& rhs);
+
+  /// Inner product
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const matrix_multi<Scalar_T,LO,HI>
+  operator& (const matrix_multi<Scalar_T,LO,HI>& lhs, const matrix_multi<Scalar_T,LO,HI>& rhs);
+
+  /// Left contraction
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const matrix_multi<Scalar_T,LO,HI>
+  operator% (const matrix_multi<Scalar_T,LO,HI>& lhs, const matrix_multi<Scalar_T,LO,HI>& rhs);
+
+  /// Hestenes scalar product
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  Scalar_T
+  star(const matrix_multi<Scalar_T,LO,HI>& lhs, const matrix_multi<Scalar_T,LO,HI>& rhs);
+
+  /// Geometric quotient
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const matrix_multi<Scalar_T,LO,HI>
+  operator/ (const matrix_multi<Scalar_T,LO,HI>& lhs, const matrix_multi<Scalar_T,LO,HI>& rhs);
+
   /// Read multivector from input
   template< typename Scalar_T, const index_t LO, const index_t HI >
   std::istream&
@@ -120,6 +150,20 @@ namespace glucat
 
     /// Assignment operator
     multivector_t&     operator= (const multivector_t& rhs);
+
+    friend const matrix_multi_t
+      operator* <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs);
+    friend const matrix_multi_t
+      operator^ <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs);
+    friend const matrix_multi_t
+      operator& <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs);
+    friend const matrix_multi_t
+      operator% <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs);
+    friend Scalar_T
+      star <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs);
+    friend const matrix_multi_t
+      operator/ <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs);
+
     friend std::istream&
       operator>> <>(std::istream& s, multivector_t& val);
     friend std::ostream&
