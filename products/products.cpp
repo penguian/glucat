@@ -29,6 +29,7 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
+#define GLUCAT_TEST_REPEAT
 #include "products/products.h"
 
 int products(const int n)
@@ -45,14 +46,6 @@ int products(const int n)
   prod_test< framed_multi<float,-4,4> >(small_n, max_n);
   cout << endl << "matrix_multi<float,-4,4>" << endl;
   prod_test< matrix_multi<float,-4,4> >(small_n, max_n);
-  cout << endl << "framed_multi<double,-4,4>" << endl;
-  prod_test< framed_multi<double,-4,4> >(small_n, max_n);
-  cout << endl << "matrix_multi<double,-4,4>" << endl;
-  prod_test< matrix_multi<double,-4,4> >(small_n, max_n);
-  cout << endl << "framed_multi<float>" << endl;
-  prod_test< framed_multi<float> >(n, max_n);
-  cout << endl << "matrix_multi<float>" << endl;
-  prod_test< matrix_multi<float> >(n, max_n);
   cout << endl << "framed_multi<double>" << endl;
   prod_test< framed_multi<double> >(n, max_n);
   cout << endl << "matrix_multi<double>" << endl;
