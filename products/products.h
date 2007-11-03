@@ -84,6 +84,7 @@ namespace glucat_prod_test
     cout.flags(old_flags);
   }
 
+#ifdef GLUCAT_TEST_REPEAT
   static
   int
   enough_trials(double cpu_time)
@@ -93,6 +94,7 @@ namespace glucat_prod_test
         ? min_trials_if_zero 
         : int(floor(MS_PER_S/cpu_time));
   }
+#endif
 
   template< typename Multivector_T >
   static
@@ -112,6 +114,7 @@ namespace glucat_prod_test
     clock_t cpu_time = clock();
      c = a * (b * random_scalar + scalar_t(1.0));
     double setup_cpu_time = elapsed(cpu_time);
+#ifdef GLUCAT_TEST_REPEAT
     if (setup_cpu_time < MS_PER_S)
     {
       const int max_trials = enough_trials(setup_cpu_time);
@@ -121,10 +124,12 @@ namespace glucat_prod_test
         c = a * (b * random_scalar + scalar_t(1.0));
       setup_cpu_time = elapsed(cpu_time)/trials;
     }
+#endif
     a = c;
     cpu_time = clock();
      c = a * a;
     double prod_cpu_time = elapsed(cpu_time);
+#ifdef GLUCAT_TEST_REPEAT
     if (prod_cpu_time < MS_PER_S)
     {
       const int max_trials = enough_trials(prod_cpu_time);
@@ -134,9 +139,11 @@ namespace glucat_prod_test
         c = a * a;
       prod_cpu_time = elapsed(cpu_time)/trials;
     }
+#endif
     cpu_time = clock();
      c = a ^ a;
     double outer_cpu_time = elapsed(cpu_time);
+#ifdef GLUCAT_TEST_REPEAT
     if (outer_cpu_time < MS_PER_S)
     {
       const int max_trials = enough_trials(outer_cpu_time);
@@ -146,9 +153,11 @@ namespace glucat_prod_test
         c = a ^ a;
       outer_cpu_time = elapsed(cpu_time)/trials;
     }
+#endif
     cpu_time = clock();
      c = a & a;
     double inner_cpu_time = elapsed(cpu_time);
+#ifdef GLUCAT_TEST_REPEAT
     if (inner_cpu_time < MS_PER_S)
     {
       const int max_trials = enough_trials(inner_cpu_time);
@@ -158,9 +167,11 @@ namespace glucat_prod_test
         c = a & a;
       inner_cpu_time = elapsed(cpu_time)/trials;
     }
+#endif
     cpu_time = clock();
      c = a % a;
     double contract_cpu_time = elapsed(cpu_time);
+#ifdef GLUCAT_TEST_REPEAT
     if (contract_cpu_time < MS_PER_S)
     {
       const int max_trials = enough_trials(contract_cpu_time);
@@ -170,6 +181,7 @@ namespace glucat_prod_test
         c = a % a;
       contract_cpu_time = elapsed(cpu_time)/trials;
     }
+#endif
     print_times(inner_frame, outer_frame, 
                 setup_cpu_time, prod_cpu_time, 
                 outer_cpu_time, inner_cpu_time, contract_cpu_time);

@@ -28,7 +28,7 @@
  ***************************************************************************
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
-
+#define GLUCAT_TEST_REPEAT
 #include "squaring/squaring.h"
 
 int squaring(const int n)
