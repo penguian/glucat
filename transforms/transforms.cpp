@@ -42,8 +42,6 @@ int transforms(const int n)
   }
   cout << "framed_multi<double>" << endl;
   fast_test< framed_multi<double> >(n, max_n);
-  cout << "matrix_multi<double>" << endl;
-  fast_test< matrix_multi<double> >(n, max_n);
   return 0;
 }
 
