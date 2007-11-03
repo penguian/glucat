@@ -40,7 +40,7 @@ namespace glucat
   // Reference: [AA], p. 25
   template<bool> struct CTAssertion;
   template<> struct CTAssertion<true> { };
-  #define _GLUCAT_CTAssert(expr, msg) namespace { glucat::CTAssertion<(expr)> ERROR_##msg; }
+  #define _GLUCAT_CTAssert(expr, msg) namespace { void ERROR_##msg(glucat::CTAssertion<(expr)>) {} }
 
   /// Type comparison
   // Reference: [AA], pp. 34--37
@@ -107,31 +107,28 @@ namespace glucat
   const double DEFAULT_TRUNCATION = std::numeric_limits<float>::epsilon();
 
   // Tuning policy default constants
-  const unsigned int DEFAULT_Mult_Matrix_Threshold  =      8;
-  const unsigned int DEFAULT_Div_Max_Steps          =      5;
-  const unsigned int DEFAULT_Sqrt_Max_Steps         =      7;
-  const unsigned int DEFAULT_Log_Max_Outer_Steps    =    256;
-  const unsigned int DEFAULT_Log_Max_Inner_Steps    =      8;
-  const unsigned int DEFAULT_Basis_Max_Count        =      8;
-  const unsigned int DEFAULT_Fast_Size_Threshold    =
-#ifdef _GLUCAT_USE_DENSE_MATRICES
-                                                      1 << 6;
-#else
-                                                      1 << 7;
-#endif
-  const unsigned int DEFAULT_Inv_Fast_Dim_Threshold = 1 << 5;
+  const unsigned int DEFAULT_Mult_Matrix_Threshold   =         8;
+  const unsigned int DEFAULT_Div_Max_Steps           =         4;
+  const unsigned int DEFAULT_Sqrt_Max_Steps          =        16;
+  const unsigned int DEFAULT_Log_Max_Outer_Steps     =        16;
+  const unsigned int DEFAULT_Log_Max_Inner_Steps     =        16;
+  const unsigned int DEFAULT_Basis_Max_Count         =        10;
+  const unsigned int DEFAULT_Fast_Size_Threshold     = 1UL <<  6;
+  const unsigned int DEFAULT_Inv_Fast_Dim_Threshold  = 1UL <<  6;
+  const unsigned int DEFAULT_Products_Size_Threshold = 1UL << 22;
 
   /// Tuning policy
   template
   <
-    unsigned int Mult_Matrix_Threshold  = DEFAULT_Mult_Matrix_Threshold,
-    unsigned int Div_Max_Steps          = DEFAULT_Div_Max_Steps,
-    unsigned int Sqrt_Max_Steps         = DEFAULT_Sqrt_Max_Steps,
-    unsigned int Log_Max_Outer_Steps    = DEFAULT_Log_Max_Outer_Steps,
-    unsigned int Log_Max_Inner_Steps    = DEFAULT_Log_Max_Inner_Steps,
-    unsigned int Basis_Max_Count        = DEFAULT_Basis_Max_Count,
-    unsigned int Fast_Size_Threshold    = DEFAULT_Fast_Size_Threshold,
-    unsigned int Inv_Fast_Dim_Threshold = DEFAULT_Inv_Fast_Dim_Threshold
+    unsigned int Mult_Matrix_Threshold   = DEFAULT_Mult_Matrix_Threshold,
+    unsigned int Div_Max_Steps           = DEFAULT_Div_Max_Steps,
+    unsigned int Sqrt_Max_Steps          = DEFAULT_Sqrt_Max_Steps,
+    unsigned int Log_Max_Outer_Steps     = DEFAULT_Log_Max_Outer_Steps,
+    unsigned int Log_Max_Inner_Steps     = DEFAULT_Log_Max_Inner_Steps,
+    unsigned int Basis_Max_Count         = DEFAULT_Basis_Max_Count,
+    unsigned int Fast_Size_Threshold     = DEFAULT_Fast_Size_Threshold,
+    unsigned int Inv_Fast_Dim_Threshold  = DEFAULT_Inv_Fast_Dim_Threshold,
+    unsigned int Products_Size_Threshold = DEFAULT_Products_Size_Threshold
   >
   struct tuning
   {
@@ -157,6 +154,9 @@ namespace glucat
     enum { fast_size_threshold = Fast_Size_Threshold };
     /// Minimum matrix dimension needed to invoke inverse generalized FFT
     enum { inv_fast_dim_threshold = Inv_Fast_Dim_Threshold };
+  // Tuning for products (other than geometric product)
+    /// Minimum size needed for to invoke faster products algorithms
+    enum { products_size_threshold = Products_Size_Threshold };
   };
 
   /// Modulo function which works reliably for lhs < 0
