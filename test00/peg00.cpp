@@ -38,17 +38,29 @@ int test00()
   using namespace peg00;
   std::cout << "Programming example 0 : Geometric algebra identities" << std::endl;
 
+  std::cout << std::endl << "framed_multi<float,-3,4>" << std::endl;
+  do_test00< framed_multi<float,-3,4> >(3);
+
+  std::cout << std::endl << "matrix_multi<float,-3,4>" << std::endl;
+  do_test00< matrix_multi<float,-3,4> >(3);
+
   std::cout << std::endl << "framed_multi<float,-4,4>" << std::endl;
   do_test00< framed_multi<float,-4,4> >(4);
 
   std::cout << std::endl << "matrix_multi<float,-4,4>" << std::endl;
   do_test00< matrix_multi<float,-4,4> >(4);
 
+  std::cout << std::endl << "framed_multi<float,-5,6>" << std::endl;
+  do_test00< framed_multi<float,-5,6> >(5);
+
+  std::cout << std::endl << "matrix_multi<float,-5,6>" << std::endl;
+  do_test00< matrix_multi<float,-5,6> >(5);
+
   std::cout << std::endl << "framed_multi<double>" << std::endl;
-  do_test00< framed_multi<double> >(4);
+  do_test00< framed_multi<double> >(5);
 
   std::cout << std::endl << "matrix_multi<double>" << std::endl;
-  do_test00< matrix_multi<double> >(4);
+  do_test00< matrix_multi<double> >(5);
   return 0;
 }
 
