@@ -39,6 +39,36 @@ namespace glucat
   template< typename Scalar_T, const index_t LO, const index_t HI >
   class matrix_multi; // forward
 
+  /// Geometric product
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const framed_multi<Scalar_T,LO,HI>
+  operator* (const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs);
+
+  /// Outer product
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const framed_multi<Scalar_T,LO,HI>
+  operator^ (const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs);
+
+  /// Inner product
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const framed_multi<Scalar_T,LO,HI>
+  operator& (const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs);
+
+  /// Left contraction
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const framed_multi<Scalar_T,LO,HI>
+  operator% (const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs);
+
+  /// Hestenes scalar product
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  Scalar_T
+  star(const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs);
+
+  /// Geometric quotient
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const framed_multi<Scalar_T,LO,HI>
+  operator/ (const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs);
+
   /// Read multivector from input
   template< typename Scalar_T, const index_t LO, const index_t HI >
   std::istream&
@@ -66,10 +96,14 @@ namespace glucat
   template< typename Scalar_T, const index_t LO = DEFAULT_LO, const index_t HI = DEFAULT_HI >
   class framed_multi :
   public clifford_algebra< Scalar_T, index_set<LO,HI>, framed_multi<Scalar_T,LO,HI> >,
-#ifdef _GLUCAT_USE_GNU_CXX_HASH_MAP
-  private __gnu_cxx::hash_map< const index_set<LO,HI>, Scalar_T, hash<LO,HI> >
+#if defined(_GLUCAT_USE_GNU_CXX_HASH_MAP)
+  private     __gnu_cxx::hash_map< const index_set<LO,HI>, Scalar_T, hash<LO,HI> >
+#elif defined(_GLUCAT_USE_TR1_UNORDERED_MAP)
+  private std::tr1::unordered_map< const index_set<LO,HI>, Scalar_T, hash<LO,HI> >
 #else
-  private std::map< const index_set<LO,HI>, Scalar_T >
+  private std::map< const index_set<LO,HI>, Scalar_T,
+                    std::less< const index_set<LO,HI> >,
+                    boost::fast_pool_allocator< std::pair<const index_set<LO,HI>, Scalar_T> > >
 #endif
   {
   public:
@@ -86,13 +120,20 @@ namespace glucat
     class                                              var_term; // forward
     typedef class var_term                             var_term_t;
     typedef typename matrix_multi_t::matrix_t          matrix_t;
-    typedef std::map< const index_set_t, Scalar_T >    sorted_map_t;
-#ifdef _GLUCAT_USE_GNU_CXX_HASH_MAP
-    typedef __gnu_cxx::hash_map< const index_set_t, Scalar_T, hash<LO,HI> >
+    typedef std::map< const index_set_t, Scalar_T, 
+                      std::less<const index_set_t>,
+                      boost::fast_pool_allocator<term_t> >
+                                                       sorted_map_t;
+#if defined(_GLUCAT_USE_GNU_CXX_HASH_MAP)
+    typedef       __gnu_cxx::hash_map< const index_set_t, Scalar_T, hash<LO,HI> >
+                                                       map_t;
+#elif defined(_GLUCAT_USE_TR1_UNORDERED_MAP)
+    typedef std::tr1::unordered_map< const index_set_t, Scalar_T, hash<LO,HI> >
                                                        map_t;
 #else
     typedef sorted_map_t                               map_t;
 #endif
+
     typedef std::pair< const multivector_t, const multivector_t >
                                                        framed_pair_t;
     typedef typename map_t::size_type                  size_type;
@@ -133,6 +174,19 @@ namespace glucat
     const framed_multi_t fast_framed_multi() const;
 
     _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
+
+    friend const framed_multi_t
+      operator* <>(const framed_multi_t& lhs, const framed_multi_t& rhs);
+    friend const framed_multi_t
+      operator^ <>(const framed_multi_t& lhs, const framed_multi_t& rhs);
+    friend const framed_multi_t
+      operator& <>(const framed_multi_t& lhs, const framed_multi_t& rhs);
+    friend const framed_multi_t
+      operator% <>(const framed_multi_t& lhs, const framed_multi_t& rhs);
+    friend Scalar_T
+      star <>(const framed_multi_t& lhs, const framed_multi_t& rhs);
+    friend const framed_multi_t
+      operator/ <>(const framed_multi_t& lhs, const framed_multi_t& rhs);
 
     friend std::istream&
       operator>> <>(std::istream& s, multivector_t& val);
@@ -179,6 +233,14 @@ namespace glucat
   };
 
   // non-members
+  /// Coordinate of product of terms
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
+  static
+  Scalar_T
+  crd_of_mult(const std::pair<const index_set<LO,HI>, Scalar_T>& lhs,
+              const std::pair<const index_set<LO,HI>, Scalar_T>& rhs);
+
   /// Product of terms
   template< typename Scalar_T, const index_t LO, const index_t HI >
   const std::pair<const index_set<LO,HI>, Scalar_T>
