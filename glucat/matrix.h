@@ -44,6 +44,12 @@ namespace glucat
     RHS_T
     kron(const LHS_T& lhs, const RHS_T& rhs);
 
+    /// Sparse Kronecker tensor product of monomial matrices
+    template< typename LHS_T, typename RHS_T >
+    const
+    RHS_T
+    mono_kron(const LHS_T& lhs, const RHS_T& rhs);
+
     /// Left inverse of Kronecker product
     template< typename LHS_T, typename RHS_T >
     const
@@ -91,6 +97,16 @@ namespace glucat
     template< typename Scalar_T, typename LHS_T, typename RHS_T >
     Scalar_T
     inner(const LHS_T& lhs, const RHS_T& rhs);
+
+    /// Square of Frobenius norm
+    template< typename Matrix_T >
+    typename Matrix_T::value_type
+    norm_frob2(const Matrix_T& val);
+
+    /// Matrix trace
+    template< typename Matrix_T >
+    typename Matrix_T::value_type
+    trace(const Matrix_T& val);
   }
 }
 
