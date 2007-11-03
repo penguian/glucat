@@ -46,6 +46,7 @@ namespace glucat { namespace matrix
     const matrix_index_t rhs_s2 = rhs.size2();
     matrix_t result(lhs.size1()*rhs_s1, lhs.size2()*rhs_s2);
     result.clear();
+
     typedef typename matrix_t::value_type Scalar_T;
     typedef typename LHS_T::const_iterator1 lhs_const_iterator1;
     typedef typename LHS_T::const_iterator2 lhs_const_iterator2;
@@ -62,7 +63,7 @@ namespace glucat { namespace matrix
       {
         const matrix_index_t start1 = rhs_s1 * lhs_it2.index1();
         const matrix_index_t start2 = rhs_s2 * lhs_it2.index2();
-        const Scalar_T& lhs_val = (*lhs_it2);
+        const Scalar_T& lhs_val = *lhs_it2;
         for (rhs_const_iterator1
             rhs_it1 = rhs.begin1();
             rhs_it1 != rhs.end1();
@@ -73,6 +74,46 @@ namespace glucat { namespace matrix
               ++rhs_it2)
             result(start1 + rhs_it2.index1(), start2 + rhs_it2.index2()) = lhs_val * *rhs_it2;
       }
+    return result;
+  }
+
+  /// Sparse Kronecker tensor product of monomial matrices
+  template< typename LHS_T, typename RHS_T >
+  const
+  RHS_T
+  mono_kron(const LHS_T& lhs, const RHS_T& rhs)
+  {
+    typedef RHS_T matrix_t;
+    typedef typename matrix_t::size_type matrix_index_t;
+    const matrix_index_t rhs_s1 = rhs.size1();
+    const matrix_index_t rhs_s2 = rhs.size2();
+    const matrix_index_t dim = lhs.size1()*rhs_s1;
+    matrix_t result(dim, dim, dim);
+    result.clear();
+
+    typedef typename matrix_t::value_type Scalar_T;
+    typedef typename LHS_T::const_iterator1 lhs_const_iterator1;
+    typedef typename LHS_T::const_iterator2 lhs_const_iterator2;
+    typedef typename RHS_T::const_iterator1 rhs_const_iterator1;
+    typedef typename RHS_T::const_iterator2 rhs_const_iterator2;
+    for (lhs_const_iterator1
+        lhs_it1 = lhs.begin1();
+        lhs_it1 != lhs.end1();
+        ++lhs_it1)
+    {
+      const lhs_const_iterator2 lhs_it2 = lhs_it1.begin();
+      const matrix_index_t start1 = rhs_s1 * lhs_it2.index1();
+      const matrix_index_t start2 = rhs_s2 * lhs_it2.index2();
+      const Scalar_T& lhs_val = *lhs_it2;
+      for (rhs_const_iterator1
+          rhs_it1 = rhs.begin1();
+          rhs_it1 != rhs.end1();
+          ++rhs_it1)
+      {
+        const rhs_const_iterator2 rhs_it2 = rhs_it1.begin();
+        result(start1 + rhs_it2.index1(), start2 + rhs_it2.index2()) = lhs_val * *rhs_it2;
+      }
+    }
     return result;
   }
 
@@ -92,20 +133,23 @@ namespace glucat { namespace matrix
     const matrix_index_t rhs_s2 = rhs.size2();
     const matrix_index_t res_s1 = rhs_s1 / lhs_s1;
     const matrix_index_t res_s2 = rhs_s2 / lhs_s2;
-    typedef error<matrix_t> error_t;
-    if (rhs_s1 == 0)
-      throw error_t("matrix", "nork: number of rows must not be 0");
-    if (rhs_s2 == 0)
-      throw error_t("matrix", "nork: number of cols must not be 0");
-    if (res_s1 * lhs_s1 != rhs_s1)
-      throw error_t("matrix", "nork: incompatible numbers of rows");
-    if (res_s2 * lhs_s2 != rhs_s2)
-      throw error_t("matrix", "nork: incompatible numbers of cols");
     typedef typename matrix_t::value_type Scalar_T;
     const Scalar_T& nnz_lhs = Scalar_T( mono ? lhs_s1 : nnz(lhs) );
-    if (nnz_lhs == Scalar_T(0))
-      throw error_t("matrix", "nork: LHS must not be 0");
-    matrix_t result = matrix_t(res_s1, res_s2);
+    if (!mono)
+    {
+      typedef error<matrix_t> error_t;
+      if (rhs_s1 == 0)
+        throw error_t("matrix", "nork: number of rows must not be 0");
+      if (rhs_s2 == 0)
+        throw error_t("matrix", "nork: number of cols must not be 0");
+      if (res_s1 * lhs_s1 != rhs_s1)
+        throw error_t("matrix", "nork: incompatible numbers of rows");
+      if (res_s2 * lhs_s2 != rhs_s2)
+        throw error_t("matrix", "nork: incompatible numbers of cols");
+      if (nnz_lhs == Scalar_T(0))
+        throw error_t("matrix", "nork: LHS must not be 0");
+    }
+    matrix_t result(res_s1, res_s2);
     result.clear();
     for (typename LHS_T::const_iterator1
         lhs_it1 = lhs.begin1();
@@ -140,7 +184,6 @@ namespace glucat { namespace matrix
 
   /// Number of non-zeros
   template< typename Matrix_T >
-  inline
   typename Matrix_T::size_type
   nnz(const Matrix_T& m)
   {
@@ -164,7 +207,6 @@ namespace glucat { namespace matrix
 
   /// Not a Number
   template< typename Matrix_T >
-  inline
   bool
   isnan(const Matrix_T& m)
   {
@@ -183,6 +225,7 @@ namespace glucat { namespace matrix
           ++it2)
         if (numeric_traits<Scalar_T>::isNaN(*it2))
           return true;
+
     return false;
   }
 
@@ -214,8 +257,8 @@ namespace glucat { namespace matrix
     typedef typename matrix_row_t::const_iterator        row_const_iterator;
 
     const matrix_index_t dim = lhs().size1();
-    matrix_t result = matrix_t(dim, dim);
-    result.clear();
+    // The following assumes that matrix_t is a sparse matrix type.
+    matrix_t result = matrix_t(dim, dim, dim);
     for (lhs_const_iterator1
         lhs_row = lhs().begin1();
         lhs_row != lhs().end1();
@@ -251,7 +294,6 @@ namespace glucat { namespace matrix
   prod(const ublas::matrix_expression<LHS_T>& lhs,
        const ublas::matrix_expression<RHS_T>& rhs)
   {
-    typedef typename RHS_T::expression_type expression_t;
 #ifdef _GLUCAT_USE_DENSE_MATRICES
     typedef typename RHS_T::size_type matrix_index_t;
     const matrix_index_t dim = lhs().size1();
@@ -259,6 +301,7 @@ namespace glucat { namespace matrix
     ublas::axpy_prod(lhs, rhs, result, true);
     return result;
 #else
+    typedef typename RHS_T::expression_type expression_t;
     return ublas::sparse_prod<expression_t>(lhs(), rhs());
 #endif
   }
@@ -283,6 +326,53 @@ namespace glucat { namespace matrix
           result += (*lhs_it2) * rhs_val;
       }
     return result / lhs.size1();
+  }
+
+  /// Square of Frobenius norm
+  template< typename Matrix_T >
+  typename Matrix_T::value_type
+  norm_frob2(const Matrix_T& val)
+  {
+    typedef typename Matrix_T::value_type Scalar_T;
+    typedef typename Matrix_T::size_type matrix_index_t;
+
+    Scalar_T result = Scalar_T(0);
+    for (typename Matrix_T::const_iterator1
+        val_it1 = val.begin1();
+        val_it1 != val.end1();
+        ++val_it1)
+      for (typename Matrix_T::const_iterator2
+          val_it2 = val_it1.begin();
+          val_it2 != val_it1.end();
+          ++val_it2)
+      {
+        if (numeric_traits<Scalar_T>::isNaN(*val_it2))
+          return numeric_traits<Scalar_T>::NaN();
+        result += (*val_it2) * (*val_it2);
+      } 
+    return result;
+  }
+
+  /// Matrix trace
+  template< typename Matrix_T >
+  typename Matrix_T::value_type
+  trace(const Matrix_T& val)
+  {
+    typedef typename Matrix_T::value_type Scalar_T;
+    typedef typename Matrix_T::size_type matrix_index_t;
+
+    Scalar_T result = Scalar_T(0);
+    matrix_index_t dim = val.size1();
+    for (matrix_index_t ndx=0;
+        ndx != dim;
+        ++ndx)  
+    {
+      const Scalar_T crd = val(ndx, ndx);
+      if (numeric_traits<Scalar_T>::isNaN(crd))
+        return numeric_traits<Scalar_T>::NaN();
+      result += crd;
+    }
+    return result;
   }
 } }
 
