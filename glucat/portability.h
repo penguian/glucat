@@ -45,4 +45,12 @@
 # pragma warning( disable: 1572 ) // floating-point equality and inequality comparisons ...
 #endif
 
+#if BOOST_VERSION >= 103400
+#define UBLAS_ABS  type_abs
+#define UBLAS_SQRT type_sqrt
+#else
+#define UBLAS_ABS  abs
+#define UBLAS_SQRT sqrt
+#endif
+
 #endif // _GLUCAT_PORTABILITY_H
