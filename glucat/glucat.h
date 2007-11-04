@@ -39,6 +39,7 @@
 // ref: S. Meyers, "Effective C++ ", Addison-Wesley, 1992.
  ***************************************************************************/
 
+#include <boost/version.hpp>
 #include <boost/config.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/limits.hpp>
