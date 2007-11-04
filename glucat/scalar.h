@@ -116,14 +116,14 @@ namespace glucat
     static 
     const Scalar_T
     abs(Scalar_T val)
-    { return boost::numeric::ublas::type_traits<Scalar_T>::type_abs(val); }
+    { return boost::numeric::ublas::type_traits<Scalar_T>::UBLAS_ABS(val); }
 
     /// Square root of scalar
     inline
     static 
     const Scalar_T
     sqrt(Scalar_T val)
-    { return boost::numeric::ublas::type_traits<Scalar_T>::type_sqrt(val); }
+    { return boost::numeric::ublas::type_traits<Scalar_T>::UBLAS_SQRT(val); }
 
     /// Logarithm of scalar
     inline
