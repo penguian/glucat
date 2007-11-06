@@ -1,3 +1,40 @@
+2007-11-06: 0.4.0
+Glucat is now faster and more accurate.
+
+Some errors in transcendental functions have been fixed. 
+These errors occured because the functions were inconsistent in their use of
+elliptic(). This has been fixed by creating new versions of the functions
+sqrt, log, acosh, cos, acos, asinh, sin, asin, atanh, tan, atan, 
+with a second parameter i, which is a specified complexifier and 
+a third parameter prechecked which controls a new fnction check_complex().
+The function check_complex(val, i) checks that i is a valid complexifier 
+for val, ie. checks that i and elliptic(val) are consistent.
+
+The functions, exp, log, sqrt and the transcendental functions are more accurate
+in many cases, mostly as a result of better Pade approximation and better default
+tning parameters.
+
+GluCat can now use framed_multi<> based on tr1::unordered_map<> rather than
+map<> or has_map<>.
+
+The new symbol _GLUCAT_USE_TR1_UNORDERED_MAP controls the use of the header 
+file <tr1/unordered_map>. 
+ 
+The new configure script flag --with-unordered-map adds the flag
+ -D_GLUCAT_USE_TR1_UNORDERED_MAP to CXXFLAGS in the test Makefiles.
+
+The functions sign_of_mult(), many of the index_set<> operations, and the
+Clifford algebra multiplication operations ^, % and & have new algorithms,
+which are in some cases much faster both for small and large sizes of
+index_sets and multivectors respectively.
+
+The function index_range(), deprecated in GluCat 0.3.0, has been removed.
+
+There are many other minor changes.
+
+See the files INSTALL, README, glucat-api/refman.pdf and Changelog for more 
+details.
+
 2007-09-09: 0.3.0
 Two errors lurking in GluCat versions 0.0.1 through 0.2.3 have been fixed. 
 
