@@ -2,17 +2,17 @@
 Glucat is now faster and more accurate.
 
 Some errors in transcendental functions have been fixed. 
-These errors occured because the functions were inconsistent in their use of
+These errors occurred because the functions were inconsistent in their use of
 elliptic(). This has been fixed by creating new versions of the functions
 sqrt, log, acosh, cos, acos, asinh, sin, asin, atanh, tan, atan, 
 with a second parameter i, which is a specified complexifier and 
-a third parameter prechecked which controls a new fnction check_complex().
+a third parameter prechecked which controls a new function check_complex().
 The function check_complex(val, i) checks that i is a valid complexifier 
 for val, ie. checks that i and elliptic(val) are consistent.
 
 The functions, exp, log, sqrt and the transcendental functions are more accurate
 in many cases, mostly as a result of better Pade approximation and better default
-tning parameters.
+timing parameters.
 
 GluCat can now use framed_multi<> based on tr1::unordered_map<> rather than
 map<> or has_map<>.
