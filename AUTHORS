@@ -23,6 +23,7 @@ Advice
 ------
 A. Alexandrescu, N. Josuttis, A. Koenig, Scott Meyers, B. Moo, Bjarne Stroustrup, T. Veldhuizen:
   C++ usage.
+Joerg Arndt: Bit wizardry.
 Duraid Madina, Russell Standish: C++, debugging.
 Christian Perwass: Operators, user interface.
 
@@ -71,7 +72,7 @@ Stephan Kulow, Walter Tasin, KDevelop team:
 
 Testing
 -------
-Joerg Walter, John Fletcher, Henk Jansen, Johannes Brunen
+Joerg Walter, John Fletcher, Henk Jansen, Johannes Brunen.
 
 Related Projects
 ----------------

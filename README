@@ -75,7 +75,8 @@ Usage
  follows is a brief summary of usage. See also http://glucat.sourceforge.net
 
  To see brief descriptions of the classes, functions and operators which
- GluCat defines, see the Doxygen API documentation in ./glucat-api/html
+ GluCat defines, see the Doxygen API documentation in ./glucat-api/html or
+ ./glucat-api/refman.pdf.
 
  GluCat is a C++ template library, similar to the C++ Standard Library or the
  Boost uBLAS Library (uBLAS). It consists entirely of source code header
@@ -88,7 +89,7 @@ Usage
    You can also use the convenience headers <glucat/glucat.h> and
    <glucat/glucat_imp.h>
  o Use the test header files ./test/driver.h and ./transforms/transforms.h as
- guides. These contain lines which look something like:
+   guides. These contain lines which look something like:
  
 #include "glucat/glucat.h"
 typedef glucat::tuning<> Tune_P;
@@ -105,15 +106,27 @@ using namespace glucat;
 
  o GluCat uses preprocessor defines to control header files. In glucat.h:
  
- _GLUCAT_USE_GNU_CXX_HASH_MAP controls the use of the header file 
- <ext/hash_map>. 
- If _GLUCAT_USE_GNU_CXX_HASH_MAP is defined, glucat.h includes this file, 
- which contains the GNU definitions and declarations for __gnu_cxx::hash_map. 
+ _GLUCAT_USE_TR1_UNORDERED_MAP controls the use of the header file
+ <tr1/unordered_map>. 
+ If _GLUCAT_USE_TR1_UNORDERED_MAP is defined, glucat.h includes this file, 
+ which contains the declarations and definitions for std::tr1::unordered_map<>. 
  The main purpose of this define is found in framed_multi.h. 
+ If _GLUCAT_USE_TR1_UNORDERED_MAP is defined, framed_multi.h defines 
+ glucat::framed_multi<> using std::tr1::unordered_map<>, which is an unsorted map. 
+ By default framed_multi.h defines glucat::framed_multi<> using std::map<>, 
+ which is a sorted map.
+ 
+ The configure script flag --with-unordered-map adds -D_GLUCAT_USE_TR1_UNORDERED_MAP
+ to CXXFLAGS in the test Makefiles, depending on whether <tr1/unordered_map> can be
+ found.  For your own compilation, check your compiler, and add 
+ -D_GLUCAT_USE_TR1_UNORDERED_MAP to your own Makefile if you want to use
+ std::tr1::unordered_map<>.
+
+ _GLUCAT_USE_GNU_CXX_HASH_MAP controls the use of the header file <ext/hash_map>. 
+ If _GLUCAT_USE_GNU_CXX_HASH_MAP is defined, glucat.h includes this file, 
+ which contains the GNU declarations and definitions for __gnu_cxx::hash_map<>. 
  If _GLUCAT_USE_GNU_CXX_HASH_MAP is defined, framed_multi.h defines 
  glucat::framed_multi<> using __gnu_cxx::hash_map<>, which is an unsorted map. 
- Otherwise framed_multi.h defines glucat::framed_multi<> using std::map<>, 
- which is a sorted map.
  
  The configure script flag --with-hash-map adds -D_GLUCAT_USE_GNU_CXX_HASH_MAP
  to CXXFLAGS in the test Makefiles, depending on whether you are using the g++
