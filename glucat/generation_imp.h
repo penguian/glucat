@@ -91,8 +91,7 @@ namespace glucat { namespace gen
           gen_from_pm4_qp4(gen_vector(p-4, q+4), sig);
         else if (card == 0)
         { // Base case. Save a generator vector containing one matrix, size 1.
-          std::vector<Matrix_T> result = std::vector<Matrix_T>(1);
-          result[0].resize(1, 1, false);
+          std::vector<Matrix_T> result(1, matrix::unit<Matrix_T>(1));
           this->insert(make_pair(sig, result));
         }
         else
@@ -123,6 +122,7 @@ namespace glucat { namespace gen
   generator_table<Matrix_T>::
   gen_from_pm1_qm1(const std::vector<Matrix_T>& old, const signature_t sig)
   {
+    typedef typename Matrix_T::size_type matrix_index_t;
     Matrix_T neg(2,2,2);
     neg(0,1) =    -1;
     neg(1,0) = 1;
@@ -135,10 +135,10 @@ namespace glucat { namespace gen
     dup(1,1) =    -1;
 
     const int new_size = old.size() + 2;
-    const int old_dim = old[0].size1();
+    const matrix_index_t old_dim = old[0].size1();
     const Matrix_T& eye = matrix::unit<Matrix_T>(old_dim);
 
-    std::vector<Matrix_T> result = std::vector<Matrix_T>(new_size);
+    std::vector<Matrix_T> result(new_size);
 
     result[0] = matrix::mono_kron(neg, eye);
     for (int
@@ -161,7 +161,6 @@ namespace glucat { namespace gen
   {
     typedef typename Matrix_T::size_type matrix_index_t;
     Matrix_T h = old[0];
-    const matrix_index_t dim = h.size1();
     for (int
         k = 1;
         k != 4;
@@ -169,16 +168,13 @@ namespace glucat { namespace gen
       h = matrix::mono_prod(old[k], h);
 
     const int old_size = old.size();
-    std::vector<Matrix_T> result = std::vector<Matrix_T>(old_size);
+    std::vector<Matrix_T> result(old_size);
     int m = old_size-4;
     for (int
         k = 0;
         k != 4;
         ++k, ++m)
-    {
-      result[m].resize(dim, dim, false);
-      noalias(result[m]) = matrix::mono_prod(old[k], h);
-    }
+      result[m] = matrix::mono_prod(old[k], h);
     for (int
         k = 4;
         k != old_size;
@@ -198,22 +194,18 @@ namespace glucat { namespace gen
     typedef typename Matrix_T::size_type matrix_index_t;
     const int old_size = old.size();
     Matrix_T h = old[old_size-1];
-    const matrix_index_t dim = h.size1();
     for (int
         k = 1;
         k != 4;
         ++k)
       h = matrix::mono_prod(old[old_size-1-k], h);
 
-    std::vector<Matrix_T> result = std::vector<Matrix_T>(old_size);
+    std::vector<Matrix_T> result(old_size);
     for (int
         k = 0;
         k != 4;
         ++k)
-    {
-      result[k].resize(dim, dim, false);
-      noalias(result[k]) = matrix::mono_prod(old[k+old_size-4], h);
-    }
+      result[k] = matrix::mono_prod(old[k+old_size-4], h);
     for (int
         k = 4;
         k != old_size;
@@ -233,17 +225,13 @@ namespace glucat { namespace gen
     typedef typename Matrix_T::size_type matrix_index_t;
     const int old_size = old.size();
     const Matrix_T& a = old[old_size-1];
-    const matrix_index_t dim = a.size1();
-    std::vector<Matrix_T> result = std::vector<Matrix_T>(old_size);
+    std::vector<Matrix_T> result(old_size);
     int m = 0;
     for (int
         k = old_size-1;
         k != 0;
         --k, ++m)
-    {
-      result[m].resize(dim, dim, false);
-      noalias(result[m]) = matrix::mono_prod(old[k-1], a);
-    }
+      result[m] = matrix::mono_prod(old[k-1], a);
     result[old_size-1] = a;
 
     // Save the resulting generator array.
