@@ -1,3 +1,410 @@
+2007-11-06 20:44  leopardi
+
+	* NEWS: News for version 0.4.0.
+
+2007-11-06 20:23  leopardi
+
+	* glucat/generation_imp.h: Make initialization of generators more
+	  consistent.
+
+2007-11-06 20:22  leopardi
+
+	* test/timing_tests.sh: Shell script for timing tests.
+
+2007-11-06 20:21  leopardi
+
+	* AUTHORS, INSTALL, README, TODO: Update for version 0.4.0.
+
+2007-11-06 20:21  leopardi
+
+	* glucat.lsm: Update entered date.
+
+2007-11-06 20:16  leopardi
+
+	* test_runtime/test.out: Test results for version 0.4.0.
+
+2007-11-05 01:29  leopardi
+
+	* glucat/scalar.h: Work around change in
+	  <boost/numeric/ublas/traits.hpp>.  Use UBLAS_ABS and UBLAS_SQRT
+	  as per portability.h, rather than type_abs and type_sqrt.
+
+2007-11-05 01:26  leopardi
+
+	* glucat/portability.h: Work around change in
+	  <boost/numeric/ublas/traits.hpp>.  If BOOST_VERSION is at least
+	  103400 (ie. Boost 1.34.0) then set UBLAS_ABS to type_abs and
+	  UBLAS_SQRT to type_sqrt, otherwise use abs and sqrt respectively.
+
+2007-11-05 01:11  leopardi
+
+	* glucat/glucat.h: Include <boost/version.hpp>.
+
+2007-11-04 12:42  leopardi
+
+	* glucat.directory, glucat.kdevelop: These files are no longer
+	  used.
+
+2007-11-04 11:19  leopardi
+
+	* test_runtime/products-8.out: Timing test for *, ^, &, % products.
+
+2007-11-04 10:36  leopardi
+
+	* glucat/scalar.h: New member functions abs(), sqrt(), log().
+	  Functions abs() and sqrt() use ublas::type_traits<>.	Function
+	  log2() uses log().  Cosmetics.
+
+2007-11-04 10:35  leopardi
+
+	* glucat/matrix_multi_imp.h: New member function scalar().  New
+	  function star() and new operators *, ^, &, %, / based on code for
+	  *=, ^=, etc.	Make operators *=, ^=, &=, %=, /= depend on new
+	  operators *, ^, &, %, / respectively.  Use this-> more
+	  consistently.
+
+	  In operator ==: o ensure that there is no aliasing; o convert
+	  *this and rhs to a common frame, if necessary; o
+	  if_GLUCAT_USE_DENSE_MATRICES is defined, use ublas::norm_inf().
+
+	  In operator ==(Scalar_T), treat 0 and NaN as special cases.
+
+	  Other optimizations for speed: o Inline functions pow(), write(),
+	  isnan(), fast_matrix_multi() and operators +=, -=, *=, /=, (),
+	  >>.  o In operators += and -=, ensure there is no aliasing, and
+	  use noalias() assignment.  o In operator *, use
+	  ublas::axpy_prod() if _GLUCAT_USE_DENSE_MATRICES is defined,
+	  otherwise use ublas::sparse_prod().  o In operators * and /,
+	  check isnan() only if _GLUCAT_USE_DENSE_MATRICES is not defined.
+	  o In operator /, treat rhs == 0 as a special case; convert *this
+	  and rhs to a common frame, if necessary.  o In function inv(),
+	  use / rather than /=.  o In function isnan(), use new function
+	  matrix::isnan().  o In function fast(), use 3 parameter
+	  constructor for J.  o In operator +=(term_t), use plus_assign().
+	  o In function norm() use new fnction matrix::norm_frob2() rather
+	  than matrix::inner().
+
+	  Cosmetics.
+
+2007-11-04 10:34  leopardi
+
+	* glucat/matrix_multi.h: Optimizations for speed: o Make function
+	  star() and operators *, ^, &, %, / friends of class
+	  matrix_multi<>.
+
+2007-11-04 10:34  leopardi
+
+	* glucat/matrix_imp.h: New functions: o mono_kron(): sparse
+	  Kronecker tensor product of monomial matrices; o norm_frob2():
+	  square of Frobenius norm; o trace(): Matrix trace.
+
+	  Optimizations for speed: o Functions mono_kron() and mono_prod()
+	  assume that their arguments are sparse and use the ublas 3
+	  parameter constructor.  o Function nork() only checks number of
+	  rows, columns etc. if mono is false.
+
+	  Remove inline from functions nnz() and isnan(): they contain
+	  double loops.
+
+	  Cosmetic changes.
+
+2007-11-04 10:33  leopardi
+
+	* glucat/matrix.h: New functions: o mono_kron(): sparse Kronecker
+	  tensor product of monomial matrices; o norm_frob2(): square of
+	  Frobenius norm; o trace(): Matrix trace.
+
+2007-11-04 10:33  leopardi
+
+	* glucat/index_set_imp.h: Optimzations for speed: o In constructor
+	  from index_pair_t, use masks instead of a loop.  o Consolidate
+	  templates for functions test(), count(), count_pos(), use
+	  bitset_t::to_ulong().  o In functions min() and max(), if
+	  _GLUCAT_BITS_PER_ULONG is 32 or 64,	 use the "bit wizardry"
+	  version of the function for all LO, HI, but only include all
+	  cases if HI-LO > 8.  o In function compare(), use
+	  lex_less_than().  o In function lex_less_than() use,
+	  bitset_t::to_ulong().  o Inline functions classname() and
+	  value_of_fold().  o Consolidate templates for sign_of_mult(). Use
+	  bitset_t::to_ulong().    If HI-LO > 8, use "bit wizardry": new
+	  static functions inverse_gray() and inverse_reversed_gray().
+	  Otherwise use slightly faster loops.	o Consolidate templates for
+	  hash_fn().	Shift neg_part into high bits of result, to reduce
+	  collisions.  o Inline short index_set<>::reference functions.
+
+	  Use static_cast<> where appropriate.
+
+	  New member function sign_of_square(): sign of geometric square of
+	  a Clifford basis element.
+
+	  Remove deprecated function index_range().
+
+	  Cosmetics.
+
+2007-11-04 10:32  leopardi
+
+	* glucat/index_set.h: Make operators ^, & and | friends of class
+	  index_set<>.	Use BOOST_STATIC_ASSERT to enforce (LO <= 0) && (HI
+	  >= 0) && (HI > LO) && (-LO < _GLUCAT_BITS_PER_ULONG) && (HI <
+	  _GLUCAT_BITS_PER_ULONG) && (HI-LO <= _GLUCAT_BITS_PER_ULONG).
+	  New typedef index_pair_t for use with index_set<> constructor for
+	  index range.	New member function sign_of_square(): sign of
+	  geometric square of a Clifford basis element.  Remove deprecated
+	  function index_range().
+
+2007-11-04 10:31  leopardi
+
+	* glucat/glucat_imp.h: Use the Boost pool allocator.  Include
+	  <boost/pool/pool_alloc.hpp>
+
+2007-11-04 10:31  leopardi
+
+	* glucat/glucat.h: Include <boost/static_assert.hpp>
+
+	  Include <boost/numeric/ublas/traits.hpp>
+
+	  Use the appropriate type of map, depending on
+	  _GLUCAT_USE_GNU_CXX_HASH_MAP and _GLUCAT_USE_TR1_UNORDERED_MAP.
+	  If neither is defined, define _GLUCAT_MAP_IS_ORDERED.
+
+	  Use the Boost pool allocator.  Include <boost/pool/poolfwd.hpp>
+
+2007-11-04 10:30  leopardi
+
+	* glucat/global.h: Change _GLUCAT_CTAssert so that it does not
+	  generate spurious warnings with gcc 4.2.2.  New tuning parameter
+	  Products_Size_Threshold, default 1UL << 22, to control operators
+	  ^, & and %.  Change defaults for the other tuning parameters:
+	  DEFAULT_Div_Max_Steps 	  =	    4;
+	  DEFAULT_Sqrt_Max_Steps	  =	   16;
+	  DEFAULT_Log_Max_Outer_Steps	  =	   16;
+	  DEFAULT_Log_Max_Inner_Steps	  =	   16;
+	  DEFAULT_Basis_Max_Count	  =	   10;
+	  DEFAULT_Fast_Size_Threshold	  = 1UL <<  6;
+	  DEFAULT_Inv_Fast_Dim_Threshold  = 1UL <<  6;
+
+2007-11-04 10:29  leopardi
+
+	* glucat/generation_imp.h: Optimizations for speed: o Make
+	  generator_table<> operator() inline; o In function
+	  gen_from_pm1_qm1(), use 3 parameter constructor for neg and dup,
+	  copy pos from neg and use function mono_kron().
+
+2007-11-04 10:29  leopardi
+
+	* glucat/framed_multi_imp.h: Inline function classname().
+
+	  In constructor from matrix_multi<>, do not add a term if its
+	  relative contribution to the norm is <= eps*eps.
+
+	  In operator ==, fix the loop so that it terminates if either
+	  this_it or rhs_it has reached its respective end().
+
+	  Use function numeric_traits<Scalar_T>::abs() rather than
+	  std::abs() or ublas::type_traits<Scalar_T>::norm_2().
+
+	  New function star() and new operators *, ^, &, %, / based on code
+	  for *=, ^=, etc.  Make operators *=, ^=, &=, %=, /= depend on new
+	  operators *, ^, &, %, / respectively.
+
+	  In operator *, use _GLUCAT_MAP_IS_ORDERED rather than
+	  _GLUCAT_USE_GNU_CXX_HASH_MAP for conditional compilation.
+
+	  For operators ^, & and %, use an asymptotically faster algorithm
+	  for large sizes, controlled by Tune_P::products_size_threshold.
+
+	  For operator % if _GLUCAT_MAP_IS_ORDERED is defined then use an
+	  algorithm which knows that both lhs and rhs are sorted by
+	  increasing grade, then lexicographically, and a "larger" index
+	  set cannot be a subset of a "smaller" one.
+
+	  New member function scalar().
+
+	  Do not inline functions fold() and unfold(): they contain loops.
+
+	  New non-member function crd_of_mult() gives the coordinate of a
+	  product of terms.  In operator * for product of terms, use
+	  crd_of_mult().
+
+	  Other optimizations for speed: o Use initialization list in copy
+	  constructor.	o In constructor from matrix_multi<>, use shortcuts
+	  for 0 and scalars.  o In operator ==, use _GLUCAT_MAP_IS_ORDERED
+	  rather than an if().	o Use constants this_begin, this_end,
+	  lhs_begin, lhs_end, rhs_begin, rhs_end, with iterators in
+	  operators ==, *, o Inline operators += and -=.  o In function
+	  quad(), use count_neg().  o In functions centre_pm4_qp4() and
+	  centre_pp4_qm4() use the index_set_t constructor which takes an
+	  index range ddefined using an index_pair_t.  o Inline
+	  fast_framed_multi().	o In function fast(), if *this is empty,
+	  return a zero matrix of the appropriate size.    This cuts out
+	  multiple levels of unnecessary recursion.  o In function fast(),
+	  use 3 parameter constructor for J.
+
+	  Cosmetics.
+
+2007-11-04 10:27  leopardi
+
+	* glucat/framed_multi.h: Optimizations for speed: o Make function
+	  star() and operators *, ^, &, %, / friends of class
+	  framed_multi<>; o Use boost::fast_pool_allocator<> with
+	  std::map<>.
+
+	  If _GLUCAT_USE_GNU_CXX_HASH_MAP is not defined and
+	  _GLUCAT_USE_TR1_UNORDERED_MAP is defined, then use
+	  std::tr1::unordered_map<> for map_t.
+
+	  New non-member function crd_of_mult() gives the coordinate of a
+	  product of terms.
+
+2007-11-04 10:26  leopardi
+
+	* glucat/clifford_algebra_imp.h: Optimizations for speed: (1) For
+	  operators *, ^, &, %, use the new corresponding operator for the
+	  left hand side type in preferenece to *=, ^=, &=, %=.  (2) The
+	  function star() uses the corresponding function for the left hand
+	  side type.  (3) The functions scalar() and pure() use the member
+	  function scalar().  The function pow() with int right hand side
+	  is no longer inlined.
+
+	  Overhaul transcendental functions to make them more correct and
+	  more precise:
+
+	  New references: [H] Nicholas J. Higham, "The Scaling and Squaring
+	  Method for the Matrix Exponential Revisited", 2005.  [Z] Doron
+	  Zeilberger, "PADE" (Maple code), 2002.  Make order of products
+	  more consistent: geometric, outer, inner, contraction.
+
+	  New function check_complex(val, i) checks that i is a valid
+	  complexifier for val, ie. checks that i and elliptic(val) are
+	  consistent.
+
+	  New versions of sqrt, log, acosh, cos, acos, asinh, sin, asin,
+	  atanh, tan, atan, with a second parameter i, which is a specified
+	  complexifier and a third parameter prechecked which controls
+	  check_complex.  The functions F(val), where F == sqrt, ... atan
+	  call F(val, elliptic(val), true).
+
+	  Increase degree of pade_approx() from 8 to 10; cosmetic changes.
+
+	  In function abs(), use numeric_traits<Scalar_T>::sqrt rather than
+	  std::sqrt().
+
+	  In function db_sqrt(): o use the tolerance tol = epsilon()/2; o
+	  check norm(1-M) > tol*tol rather than norm(1-M) > 0; o remove the
+	  warning if convergence fails and return NaN instead.
+
+	  In function sqrt(val, i, prechecked): o use a degree 10 Pade
+	  approximation obtained using [Z]; o use pade_approx() only for
+	  norm(unitval-1) < 1/4 rather than norm(unitval-1) < 1; o if
+	  db_sqrt(unitval) returns NaN, try db_sqrt(-unival),  if this does
+	  not return NaN, multiply result by i; o Use
+	  numeric_traits<Scalar_T>::sqrt rather than std::sqrt().
+
+	  In function exp(): o use norm() rather than max_abs(); o change
+	  ilog2_scale to take the A.frame() into account; o increase the
+	  degree of Pade approximation from 8 to 13, per [H].
+
+	  In function pade_log() use a degree 10 Pade approximation
+	  obtained using [Z].  In function cascade_log(): o try to iterate
+	  until norm(1-Y) > 1/8 rather than norm(1-Y) > 1/2; o check
+	  Y.isnan() rather than val.isnan().  In function log(), if
+	  cascade_log(unitval) returns NaN, try cascade_log(-unitval) and
+	  add i * l_pi to the result.
+
+	  Function acosh() uses log(val + sqrt(val*val-1,i,true),i,true).
+	  Function acos() uses acosh(val,i,true).  Function asinh() uses
+	  log(val + sqrt(val*val+1,i,true),i,true).  Function sin uses
+	  i*(cos(val)-exp(i*val)).  Function asin() uses
+	  -i*asinh(i*val,i,true).  Function atanh() uses
+	  log((1+val)/(1-val),i,true)/2.  Function tan() uses
+	  sin(val,i,true)/cos(val,i,true).  Function atan() uses
+	  -i*atanh(i*val,i,true).
+
+2007-11-04 10:24  leopardi
+
+	* glucat/clifford_algebra.h: New const member function scalar().
+	  Make order of products more consistent: geometric, outer, inner,
+	  contraction.	New versions of sqrt, log, cos, acos, acosh, sin,
+	  asin, asinh, tan, atan, atanh with a second parameter i, which is
+	  a specified complexifier and a third parameter prechecked which
+	  controls check_complex.
+
+2007-11-04 10:08  leopardi
+
+	* transforms/transforms.cpp: Remove the test for
+	  matrix_multi<double>.
+
+2007-11-04 10:07  leopardi
+
+	* test11/peg11.h: Make test11 into a regression test which uses the
+	  new function check() to compare results.  Use many more test
+	  cases with function transcendtest().
+
+2007-11-04 10:07  leopardi
+
+	* test04/: peg04.cpp, peg04.h: Correct the URL of the Clical demo.
+
+2007-11-04 10:07  leopardi
+
+	* test00/peg00.h: Tighten tol from eps*4 to eps*2.  Do not use
+	  std::abs(). It is not needed when Scalar_T is float or double.
+
+2007-11-04 10:06  leopardi
+
+	* test00/peg00.cpp: Use more test cases with function do_test00():
+	  < *_multi<float,-3,4> >(3),  < *_multi<float,-5,6> >(5), <
+	  *_multi<double> >(5).
+
+2007-11-04 10:05  leopardi
+
+	* products/products.h, squaring/squaring.cpp, squaring/squaring.h:
+	  Use GLUCAT_TEST_REPEAT to control whether to repeat the timing
+	  tests.
+
+2007-11-04 10:05  leopardi
+
+	* products/products.cpp: Use GLUCAT_TEST_REPEAT to control whether
+	  to repeat the timing tests.  Remove the tests for
+	  *_multi<double,-4,4>, and *_multi<float>.
+
+2007-11-04 10:04  leopardi
+
+	* products/tuning.h, squaring/tuning.h: Change
+	  Driver_Fast_Size_Threshold and Driver_Inv_Fast_Dim_Threshold for
+	  _GLUCAT_SQUARING_OPT to match the default value of 1 << 6.
+
+2007-11-04 10:01  leopardi
+
+	* configure.in, configure.in.in: Update to version 0.4.0.  New
+	  configure option --with-unordered-map which controls
+	  -D_GLUCAT_USE_TR1_UNORDERED_MAP.  Reorder compiler flags for the
+	  sake of consistency.	Remove some commands which were commented
+	  out.	For gcc between 4 and 4.0.2, move the test for and use of
+	  the flag -fno-strict-aliasing.  Confine the test for and use of
+	  -fabi-version=0 to gcc between 4 and 4.0.2 only.  Confine the
+	  test for and use of -Wstrict-aliasing=2 to gcc between 4 and 4.1
+	  only.  If --enable-strict is selected, for gcc later than 4.1,
+	  test and use the flags  -pedantic  -Wextra -Wno-unused-parameter.
+	  If --enable-debug=no is selected: (1) For gcc 4.1 and later,
+	  test and use the flags  -O3 --param max-inline-insns-single=5400
+	  --param large-function-insns=5400  -funroll-loops
+	  -fvariable-expansion-in-unroller -fno-math-errno
+	  -fno-trapping-math.  (2) For gcc later than 4.2.1, for host
+	  x86_64-*-*, also use the flag -march=k8.
+
+2007-11-04 10:01  leopardi
+
+	* config.h.in: HAVE_TR1_UNORDERED_MAP is to be defined to 1 if
+	  <tr1/unordered_map> exists.
+
+2007-11-04 09:59  leopardi
+
+	* Doxyfile, glucat.lsm: Update to version 0.4.0.
+
+2007-09-10 07:38  leopardi
+
+	* ChangeLog: Changes for version 0.3.0.
+
 2007-09-10 07:34  leopardi
 
 	* test_runtime/: gfft_test-11.out, squaring-11.out, test.out,
