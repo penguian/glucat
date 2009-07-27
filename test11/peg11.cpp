@@ -40,10 +40,19 @@ int test11()
   using namespace peg11;
   cout << "Programming example 11 : Square root and transcendental functions" << endl;
   cout << endl;
+  cout << "framed_multi<float>" << endl;
+  do_test11< framed_multi<float> >();
+  cout << "matrix_multi<float>" << endl;
+  do_test11< matrix_multi<float> >();
   cout << "framed_multi<double>" << endl;
   do_test11< framed_multi<double> >();
   cout << "matrix_multi<double>" << endl;
   do_test11< matrix_multi<double> >();
+  cout << "framed_multi<long double>" << endl;
+  do_test11< framed_multi<long double> >();
+  cout << "matrix_multi<long double>" << endl;
+  do_test11< matrix_multi<long double> >();
+
   return 0;
 }
 
