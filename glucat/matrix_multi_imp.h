@@ -5,7 +5,7 @@
     matrix_multi_imp.h : Implement the matrix representation of a multivector
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2007 by Paul C. Leopardi
+    copyright            : (C) 2001-2009 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -678,7 +678,7 @@ namespace glucat
   scalar() const
   { 
     const matrix_index_t dim = this->m_matrix.size1();
-    return matrix::trace(this->m_matrix) / Scalar_T(dim); 
+    return matrix::trace(this->m_matrix) / Scalar_T( double(dim) ); 
   }
 
   /// Main involution, each {i} is replaced by -{i} in each term
@@ -724,7 +724,7 @@ namespace glucat
   norm() const
   { 
     const matrix_index_t dim = this->m_matrix.size1();
-    return matrix::norm_frob2(this->m_matrix) / Scalar_T(dim); 
+    return matrix::norm_frob2(this->m_matrix) / Scalar_T( double(dim) ); 
   }
 
   template< typename Scalar_T, const index_t LO, const index_t HI >
