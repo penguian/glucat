@@ -5,7 +5,7 @@
     matrix_imp.h : Implement common matrix functions
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2007 by Paul C. Leopardi
+    copyright            : (C) 2001-2009 by Paul C. Leopardi
                          : uBLAS interface contributed by Joerg Walter
  ***************************************************************************
 
@@ -134,7 +134,7 @@ namespace glucat { namespace matrix
     const matrix_index_t res_s1 = rhs_s1 / lhs_s1;
     const matrix_index_t res_s2 = rhs_s2 / lhs_s2;
     typedef typename matrix_t::value_type Scalar_T;
-    const Scalar_T& nnz_lhs = Scalar_T( mono ? lhs_s1 : nnz(lhs) );
+    const Scalar_T& nnz_lhs = Scalar_T( double(mono ? lhs_s1 : nnz(lhs)) );
     if (!mono)
     {
       typedef error<matrix_t> error_t;
