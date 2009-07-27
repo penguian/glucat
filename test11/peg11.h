@@ -5,7 +5,7 @@
     peg11.cpp : programming example 11 : Square root and transcendental functions
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2007 by Paul C. Leopardi
+    copyright            : (C) 2001-2009 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -43,42 +43,46 @@ namespace peg11
   {
     typedef Multivector_T m_;
     typedef typename m_::scalar_t s_;
-    const s_ tol = s_(numeric_limits<s_>::epsilon()) * s_(1 << 7);
+    static const s_ tol = numeric_traits<s_>::sqrt(numeric_limits<s_>::epsilon());
     const s_ tol2 = tol*tol;
-    const s_ norm_diff = (norm(A) < tol2 || norm(B) < tol2) ? norm(A-B) : norm(A-B)/norm(A);
+    const bool relative = norm(A) > tol2 && norm(B) > tol2;
+
+    const s_ abs_norm_diff = norm(A-B);
+    const s_ norm_diff = (relative) ? abs_norm_diff/norm(A) : abs_norm_diff;
     const bool A_isnan = A.isnan();
     const bool B_isnan = B.isnan();
     if ((A_isnan && !B_isnan) 
      ||(!A_isnan && !need_inv && B_isnan) 
      ||(!A_isnan && need_inv && !inv(A).isnan() && B_isnan) 
      || norm_diff > tol2)
+      std::cout << "Test failed: " << msg << std::endl;
+    if (norm_diff > tol2)
     {
-      std::cout << "Test failed: ";
-      B.write(msg);
-      if (norm_diff > tol2)
-      {
-        if (norm(A) < tol2 || norm(B) < tol2)
-          std::cout << "Norm";
-        else
-          std::cout << "Relative norm";
-        std::cout << " of difference == " << sqrt(norm_diff) << std::endl;
-      }
-    } 
+      const streamsize prec = cout.precision(10);
+      std::cout <<   "Absolute norm of difference == " << sqrt(abs_norm_diff) << std::endl;
+      if (relative)
+        std::cout << "Relative norm of difference == " << sqrt(norm_diff) << std::endl;
+      cout.precision(prec);
+    }
   }
 
   template< class Multivector_T >
   static
   void 
-  transcendtest(const Multivector_T& A)
+  transcendtest(const Multivector_T& A, const bool random=false)
   {
     typedef Multivector_T m_;
     typedef typename m_::scalar_t s_;
     const streamsize prec = cout.precision(numeric_limits<s_>::digits10);
-    A.write("A");
+    if (random)
+      cout << "Random A in " << A.frame() << endl;
+    else
+      A.write("A");
+
     check(m_(1), exp(A)*exp(-A),    "exp(A)*exp(-A) != 1");
     check(m_(1), exp(-A)*exp(A),    "exp(-A)*exp(A) != 1");
-    check(exp(A), std::exp(scalar(A))*exp(pure(A)),
-                                    "std::exp(scalar(A))*exp(pure(A)) != exp(A)");
+    check(exp(A), exp(scalar(A))*exp(pure(A)),
+                                    "exp(scalar(A))*exp(pure(A)) != exp(A)");
     check(exp(elliptic(A)*A), cos(A)+elliptic(A)*sin(A), 
                                     "cos(A)+elliptic(A)*sin(A) != exp(elliptic(A)*A)");
     check(exp(A), cosh(A)+sinh(A),  "cosh(A)+sinh(A) != exp(A)");
@@ -99,12 +103,40 @@ namespace peg11
 
   template< class Multivector_T >
   static
+  void
+  rand_transcendtest(int n)
+  {
+    typedef Multivector_T m_;
+    typedef typename m_::scalar_t s_;
+    typedef typename m_::index_set_t e_;
+    static const index_t v_lo = e_::v_lo;
+    static const index_t v_hi = e_::v_hi;
+    static const index_t max_n = std::min(-v_lo, v_hi);
+    const index_t max_index = index_t(n);
+    if (max_index > max_n)
+    {
+      cout << "Value " << max_index << " is too big." << endl;
+      cout << "Maximum value possible is " << max_n << "." << endl;
+      return;
+    }
+    m_ a = s_(1);
+    const s_ RAND_SCALE = 1.0/RAND_MAX;
+    for (index_t i = 1; i != max_index+1; ++i)
+      for (int k = 0; k != 2; ++k)
+      {
+        a *= (m_(e_((2*k-1)*i),  s_(rand()*RAND_SCALE)) + s_(rand()*RAND_SCALE*2.0));
+        transcendtest(a, true);
+      }
+  }
+
+  template< class Multivector_T >
+  static
   void 
   do_test11()
   {
     typedef Multivector_T m_;
     typedef typename m_::scalar_t s_;
-    const s_ pi = s_(l_pi);
+    const s_ pi = numeric_traits<s_>::pi();
     const m_ i("{-1}");
     transcendtest(m_(0));
     transcendtest(m_(1));
@@ -137,6 +169,7 @@ namespace peg11
     transcendtest(m_("{-1}+{1}"));
     // the following should produce NaN values
     transcendtest(m_("{-1}+{1}")*s_(numeric_limits<s_>::max()));
+    rand_transcendtest<m_>(4);
   }
 }
 
