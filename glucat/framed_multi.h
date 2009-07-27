@@ -5,7 +5,7 @@
     framed_multi.h : Declare a class for the framed representation of a multivector
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2007 by Paul C. Leopardi
+    copyright            : (C) 2001-2009 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -166,6 +166,13 @@ namespace glucat
     /// Construct a multivector, within a given frame, from a string: eg: "3+2{1,2}-6.1e-2{2,3}"
     framed_multi(const std::string& str,
                  const index_set_t frm, const bool prechecked = false);
+    /// Construct a multivector from a char*: eg: "3+2{1,2}-6.1e-2{2,3}"
+    framed_multi(const char* str)
+    { *this = framed_multi(std::string(str)); };
+    /// Construct a multivector, within a given frame, from a char*: eg: "3+2{1,2}-6.1e-2{2,3}"
+    framed_multi(const char* str,
+                 const index_set_t frm, const bool prechecked = false)
+    { *this = framed_multi(std::string(str), frm, prechecked); };
     /// Construct a multivector from a matrix_multi_t
     framed_multi(const matrix_multi_t& val);
     /// Use generalized FFT to construct a matrix_multi_t

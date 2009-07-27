@@ -5,7 +5,7 @@
     matrix_multi.h : Declare a class for the matrix representation of a multivector
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2007 by Paul C. Leopardi
+    copyright            : (C) 2001-2009 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -131,6 +131,13 @@ namespace glucat
     /// Construct a multivector, within a given frame, from a string: eg: "3+2{1,2}-6.1e-2{2,3}"
     matrix_multi(const std::string& str,
                  const index_set_t frm, const bool prechecked = false);
+    /// Construct a multivector from a char*: eg: "3+2{1,2}-6.1e-2{2,3}"
+    matrix_multi(const char* str)
+    { *this = matrix_multi(std::string(str)); };
+    /// Construct a multivector, within a given frame, from a char*: eg: "3+2{1,2}-6.1e-2{2,3}"
+    matrix_multi(const char* str,
+                 const index_set_t frm, const bool prechecked = false)
+    { *this = matrix_multi(std::string(str), frm, prechecked); };
     /// Construct a multivector from a framed_multi_t
     matrix_multi(const framed_multi_t& val);
     /// Construct a multivector, within a given frame, from a framed_multi_t
