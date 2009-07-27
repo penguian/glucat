@@ -58,5 +58,21 @@ namespace glucat
   static const long double l_pi = 3.1415926535897932384626433832795029L;
   static const long double l_ln2 = 0.6931471805599453094172321214581766L;
 #endif
+
+  /// Pi for long double
+  template<> 
+  inline
+  const long double 
+  numeric_traits<long double>::
+  pi()
+  { return l_pi; }
+
+  /// log(2) for long double
+  template<> 
+  inline
+  const long double 
+  numeric_traits<long double>::
+  ln_2()
+  { return l_ln2; }
 }
 #endif // _GLUCAT_LONG_DOUBLE_H
