@@ -163,16 +163,17 @@ namespace glucat
       catch (const glucat_error& e)
       { }
 
+    typedef numeric_traits<Scalar_T> traits_t;
     const index_set_t frm = val.frame();
     const set_value_t algebra_dim = 1 << frm.count();
     const Scalar_T val_norm = val.norm();
-    if (numeric_traits<Scalar_T>::isNaN_or_isInf(val_norm))
+    if (traits_t::isNaN_or_isInf(val_norm))
     {
-      *this = numeric_traits<Scalar_T>::NaN();
+      *this = traits_t::NaN();
       return;
     }
     const Scalar_T eps = std::numeric_limits<Scalar_T>::epsilon();
-    const Scalar_T tol = numeric_traits<Scalar_T>::abs(val_norm * eps * eps);
+    const Scalar_T tol = traits_t::abs(val_norm * eps * eps);
     for (set_value_t
         stv = 0;
         stv != algebra_dim;
@@ -181,7 +182,7 @@ namespace glucat
       const index_set_t ist = index_set_t(stv, frm, true);
       const Scalar_T crd =
         matrix::inner<Scalar_T>(val.basis_element(ist), val.m_matrix);
-      const Scalar_T abs_crd = numeric_traits<Scalar_T>::abs(crd); 
+      const Scalar_T abs_crd = traits_t::abs(crd); 
       if ((abs_crd * abs_crd) > tol)
         this->insert(term_t(ist, crd));
     }
@@ -300,11 +301,13 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   operator*= (const Scalar_T& scr)
   { // multiply coordinates of all terms by scalar
-    if (numeric_traits<Scalar_T>::isNaN_or_isInf(scr))
-      return *this = numeric_traits<Scalar_T>::NaN();
+    typedef numeric_traits<Scalar_T> traits_t;
+
+    if (traits_t::isNaN_or_isInf(scr))
+      return *this = traits_t::NaN();
     if (scr == Scalar_T(0))
       if (this->isnan())
-        *this = numeric_traits<Scalar_T>::NaN();
+        *this = traits_t::NaN();
       else
         this->clear();
     else
@@ -322,13 +325,14 @@ namespace glucat
   operator* (const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs)
   {
     typedef framed_multi<Scalar_T,LO,HI> multivector_t;
+    typedef numeric_traits<Scalar_T> traits_t;
     typedef typename multivector_t::index_set_t index_set_t;
     typedef typename multivector_t::term_t term_t;
     typedef typename multivector_t::map_t map_t;
     typedef typename map_t::const_iterator const_iterator;
 
     if (lhs.isnan() || rhs.isnan())
-      return numeric_traits<Scalar_T>::NaN();
+      return traits_t::NaN();
 
     const index_set_t our_frame = lhs.frame() | rhs.frame();
     const index_t frm_count = our_frame.count();
@@ -781,11 +785,13 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   operator/= (const Scalar_T& scr)
   { // Divide coordinates of all terms by scr
-    if (numeric_traits<Scalar_T>::isNaN(scr))
-      return *this = numeric_traits<Scalar_T>::NaN();
-    if (numeric_traits<Scalar_T>::isInf(scr))
+    typedef numeric_traits<Scalar_T> traits_t;
+
+    if (traits_t::isNaN(scr))
+      return *this = traits_t::NaN();
+    if (traits_t::isInf(scr))
       if (this->isnan())
-        *this = numeric_traits<Scalar_T>::NaN();
+        *this = traits_t::NaN();
       else
         this->clear();
     else
@@ -804,11 +810,12 @@ namespace glucat
   operator/ (const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs)
   {
     typedef framed_multi<Scalar_T,LO,HI> multivector_t;
+    typedef numeric_traits<Scalar_T> traits_t;
     typedef typename multivector_t::index_set_t index_set_t;
     typedef typename multivector_t::matrix_multi_t matrix_multi_t;
 
     if (rhs == Scalar_T(0))
-      return numeric_traits<Scalar_T>::NaN();
+      return traits_t::NaN();
 
     const index_set_t our_frame = lhs.frame() | rhs.frame();
     return matrix_multi_t(lhs, our_frame, true) / matrix_multi_t(rhs, our_frame, true);
@@ -951,13 +958,15 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   norm() const
   {
+    typedef numeric_traits<Scalar_T> traits_t;
+
     Scalar_T result = Scalar_T(0);
     for (const_iterator
         this_it = this->begin();
         this_it != this->end();
         ++this_it)
     {
-      const Scalar_T abs_crd = numeric_traits<Scalar_T>::abs(this_it->second);
+      const Scalar_T abs_crd = traits_t::abs(this_it->second);
       result +=  abs_crd * abs_crd;
     }
     return result;
@@ -1134,6 +1143,7 @@ namespace glucat
     else
     {
       typedef framed_multi<Scalar_T,LO,HI>  multivector_t;
+      typedef numeric_traits<Scalar_T> traits_t;
       typedef typename multivector_t::map_t map_t;
       typedef typename multivector_t::sorted_map_t sorted_map_t;
       typedef typename sorted_map_t::const_iterator sorted_iterator;
@@ -1145,8 +1155,9 @@ namespace glucat
           sorted_it != sorted_val_range.sorted_end;
           ++sorted_it)
       {
-        Scalar_T scr = sorted_it->second;
-        if ((scr != std::real(scr)) || (std::real(scr) >= 0.0))
+        const Scalar_T& scr = sorted_it->second;
+        const Scalar_T& real_scr = traits_t::real(scr);
+        if ((scr != real_scr) || (real_scr >= 0.0))
           os << '+';
         os << *sorted_it;
       }
@@ -1277,13 +1288,15 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   max_abs() const
   {
+    typedef numeric_traits<Scalar_T> traits_t;
+
     Scalar_T result = Scalar_T(0);
     for (const_iterator
         this_it = this->begin();
         this_it != this->end();
         ++this_it)
     {
-      const Scalar_T abs_crd = numeric_traits<Scalar_T>::abs(this_it->second);
+      const Scalar_T abs_crd = traits_t::abs(this_it->second);
       if (abs_crd > result)
         result = abs_crd;
     }
@@ -1296,12 +1309,14 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   isnan() const
   {
+    typedef numeric_traits<Scalar_T> traits_t;
+
     if (std::numeric_limits<Scalar_T>::has_quiet_NaN)
       for (const_iterator
           this_it = this->begin();
           this_it != this->end();
           ++this_it)
-          if (numeric_traits<Scalar_T>::isNaN(this_it->second))
+          if (traits_t::isNaN(this_it->second))
             return true;
     return false;
   }
@@ -1311,7 +1326,9 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   truncated(const Scalar_T& limit) const
   {
-    const Scalar_T abs_limit = numeric_traits<Scalar_T>::abs(limit);
+    typedef numeric_traits<Scalar_T> traits_t;
+
+    const Scalar_T abs_limit = traits_t::abs(limit);
     if (this->isnan())
       return *this;
     Scalar_T top = max_abs();
@@ -1321,7 +1338,7 @@ namespace glucat
           this_it = this->begin();
           this_it != this->end();
           ++this_it)
-        if (numeric_traits<Scalar_T>::abs(this_it->second / top) > abs_limit)
+        if (traits_t::abs(this_it->second / top) > abs_limit)
           result.insert(term_t(this_it->first, this_it->second));
     return result;
   }
