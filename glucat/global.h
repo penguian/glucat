@@ -4,8 +4,8 @@
     GluCat : Generic library of universal Clifford algebra templates
     global.h : Global declarations
                              -------------------
-    begin                : Sun Dec 9 2001
-    copyright            : (C) 2001-2007 by Paul C. Leopardi
+    begin                : Sun 2001-12-09
+    copyright            : (C) 2001-2009 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -109,11 +109,11 @@ namespace glucat
   // Tuning policy default constants
   const unsigned int DEFAULT_Mult_Matrix_Threshold   =         8;
   const unsigned int DEFAULT_Div_Max_Steps           =         4;
-  const unsigned int DEFAULT_Sqrt_Max_Steps          =        16;
+  const unsigned int DEFAULT_Sqrt_Max_Steps          =        64;
   const unsigned int DEFAULT_Log_Max_Outer_Steps     =        16;
   const unsigned int DEFAULT_Log_Max_Inner_Steps     =        16;
   const unsigned int DEFAULT_Basis_Max_Count         =        10;
-  const unsigned int DEFAULT_Fast_Size_Threshold     = 1UL <<  6;
+  const unsigned int DEFAULT_Fast_Size_Threshold     = 1UL <<  7;
   const unsigned int DEFAULT_Inv_Fast_Dim_Threshold  = 1UL <<  6;
   const unsigned int DEFAULT_Products_Size_Threshold = 1UL << 22;
 
