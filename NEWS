@@ -1,3 +1,30 @@
+2009-07-28: 0.4.1
+Glucat has improved transcendental functions and better support for scalars.
+
+Extensive changes have been made to the implementation of trancendental functions,
+primilarily to improve accuracy. The Pade' approximations now use degree 13. For
+the sqrt() and log() functions, number of cases of negative eigenvalues are 
+detected and avoided. More minor changes have been also made to improve speed.
+For details, see the Changelog for clifford_algebra_imp.h. See also
+Approximating functions in Clifford algebras, ANZMC 2008. 
+http://wwwmaths.anu.edu.au/~leopardi/ANZMC-2008-Leopardi-clifford-functions-talk.pdf
+
+A number of changes have been made to provide better support for more diverse
+scalars, primarily to allow new versions of Glucat to support the QD package. 
+In particular, there are new constructors for framed_multi<> and
+matrix_multi<> from character strings, and more static functions defined via
+numeric_traits<Scalar_T>. For details, see the Changelog.
+
+Warning: The standalone function glucat::log2() defined in scalar.h and the 
+functions std::conj(), std::real() and std::imag() defined in long_double.h are
+now deprecated and will be removed in future versions of GluCat.
+
+For the QD package, see http://crd.lbl.gov/~dhbailey/mpdist/ 
+and Y. Hida, X. S. Li, and D. H. Bailey, 
+Algorithms for Quad-Double Precision Floating Point Arithmetic. 
+In Proceedings of the 15th IEEE Symposium on Computer Arithmetic (2001). 
+ARITH. IEEE Computer Society, 2001.
+
 2007-11-06: 0.4.0
 Glucat is now faster and more accurate.
 
