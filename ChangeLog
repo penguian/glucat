@@ -1,3 +1,187 @@
+2009-07-28 22:52  leopardi
+
+	* INSTALL, TODO: Update to version 0.4.1.
+
+2009-07-28 22:52  leopardi
+
+	* NEWS: News for version 0.4.1.
+
+2009-07-27 11:05  leopardi
+
+	* Doxyfile: Updated to Doxygen version 1.5.9.
+
+2009-07-27 11:00  leopardi
+
+	* test_runtime/: gfft_test-11.out, products-8.out, squaring-11.out,
+	  test.out, transforms-8.out: Test results for version 0.4.1.
+
+2009-07-27 10:59  leopardi
+
+	* gfft_test/Makefile.in, products/Makefile.in,
+	  squaring/Makefile.in, test/Makefile.in, test00/Makefile.in,
+	  test01/Makefile.in, test02/Makefile.in, test03/Makefile.in,
+	  test04/Makefile.in, test05/Makefile.in, test06/Makefile.in,
+	  test07/Makefile.in, test08/Makefile.in, test09/Makefile.in,
+	  test10/Makefile.in, test11/Makefile.in, test12/Makefile.in,
+	  test13/Makefile.in, test14/Makefile.in, test15/Makefile.in,
+	  test16/Makefile.in, transforms/Makefile.in: Files created
+	  automatically by automake.
+
+2009-07-27 10:56  leopardi
+
+	* configure.in: File created by cat configure.in.in
+	  configure.in.end Update to version 0.4.1.  Change ./Makefile to
+	  Makefile to prevent error message.
+
+2009-07-27 10:54  leopardi
+
+	* Doxyfile, configure.in.in, glucat.lsm: Update to version 0.4.1.
+
+2009-07-27 10:51  leopardi
+
+	* aclocal.m4: Update autotools.
+
+2009-07-27 10:50  leopardi
+
+	* configure.in.end: Change ./Makefile to Makefile to prevent
+	  warning message.
+
+2009-07-27 10:48  leopardi
+
+	* test11/peg11.h: Set tol to sqrt(epsilon()).  If tests fails,
+	  always print absolute norm of difference, and also print relative
+	  norm when this makes sense.  In transcendtest():    New bool
+	  parameter random,    use exp() rather than std::exp().  New
+	  function rand_transcendtest(): test using random values.  In
+	  do_test11():	  Use numeric_traits<s_>::pi(),    use
+	  rand_transcendtest().
+
+2009-07-27 10:47  leopardi
+
+	* test11/peg11.cpp: Test using framed_multi<float>,
+	  matrix_multi<float>, framed_multi<long double> and
+	  matrix_multi<long double>, as well as framed_multi<double> and
+	  matrix_multi<double>.
+
+2009-07-27 10:45  leopardi
+
+	* glucat/clifford_algebra_imp.h: Consistently use Scalar_T to cast
+	  integer constants.  Use static consts where possible.  Reorder
+	  expressions for more efficiency.  Use new form of
+	  check_complex().  Use numeric_traits<Scalar_T>:: abs(), exp(),
+	  fmod(), log(), pi(), pow(), to_int().  Use traits_t for
+	  numeric_traits<Scalar_T>.
+
+	  Make transcendental functions more accurate: In check_complex():
+	  add a bool parameter prechecked, defaulting to false.
+
+	  In pade_approx(): use arrays a and b of length 14 rather than 10.
+
+	  In db_sqrt(): reduce tolerance tol from epsilon()/2 to
+	  epsilon()/1024; use variable norm_M_1 = norm(M - 1); check
+	  Y.isnan() inside loop and leave early if true.
+
+	  In sqrt(): use Pade approximation produced by
+	  Pade1(sqrt(1+x),x,13,13); if val*val is real and val is not real
+	  then the matrix for val has negative eigenvalues, so return
+	  sqrt(-i*val)*(i+1)/sqrt_2; scale val towards val == 1 or towards
+	  abs(val) == 1 as appropriate: if norm(val/real(val) - 1) < 1,
+	  then scale by real(val) [towards val == 1], else if real(val)<0
+	  then scale by -abs(val) otherwise scale by abs(val) [towards
+	  circle abs(val) == 1]; use unitval=val/scale with either Pade'
+	  approximation or product form of Denman-Beavers square root
+	  iteration to obtain scaled_result, if scaled_result.isnan() then
+	  try again, this time multiplying unitval by -i to try to rotate
+	  eigenvalues away from negative real axis.
+
+	  In exp(): make 0 a special case; test for NaN earlier; test for
+	  pure_scale==0;
+
+	  In pade_log(): use Pade approximation produced by
+	  Pade1(log(1-x),x,13,13); do not scale val towards circle abs(A)
+	  == 1 (now done in log() instead);
+
+	  In cascade_log(): use variable norm_Y_1 = norm(Y - 1); use
+	  pow_2_outer_step [==pow(2,outer-step)], pow_4_outer_step
+	  [==pow(4,outer-step)], max_outer_norm and max_inner_norm to
+	  control the nested loops; remove "Warning: log iteration did not
+	  converge..." and instead return NaN if iteration does not
+	  converge;
+
+	  In log(): check for special case where val is not scalar but
+	  val*val is positive scalar, and return log(-i*val)+i*pi/2; scale
+	  val towards val == 1 or towards abs(val) == 1 as appropriate: if
+	  norm(val/real(val) - 1) < 1.0/9.0, then scale by real(val)
+	  [towards val == 1], else if real(val)<0 then scale by -abs(val)
+	  otherwise scale by abs(val) [towards circle abs(val) == 1]; check
+	  for special case where scale==0, and return NaN;
+	  [log_scale==log(abs(scale))]: check for special case where
+	  scale<0, and set rescale=i*pi+log_scale, otherwise
+	  rescale=log_scale; [scaled_result==cascade_log(val/scale)]: if
+	  scaled_result.isnan() just return NaN, otherwise return
+	  scaled_result+rescale.
+
+	  In sin(): use pi() and fmod() to bring real part of val into the
+	  interval [0, 2*pi), defining z, and return i * (exp(-z)-exp(z)) /
+	  Scalar_T(2).
+
+	  In atan(): if val is closer to 1 than it is to -1, return
+	  (log(val+1) - log(-val+1)))/2, otherwise return log((val+1) /
+	  (-val+1))/2.
+
+2009-07-27 10:44  leopardi
+
+	* glucat/framed_multi_imp.h: Use traits_t for
+	  numeric_traits<Scalar_T>.  Use traits_t::real() rather than
+	  std::real().
+
+2009-07-27 10:42  leopardi
+
+	* glucat/global.h: Increase DEFAULT_Sqrt_Max_Steps from 16 to 64;
+	  Increase DEFAULT_Fast_Size_Threshold from 6 to 7.
+
+2009-07-27 10:40  leopardi
+
+	* glucat/glucat.h: Include long_double.h after scalar.h.
+
+2009-07-27 10:40  leopardi
+
+	* glucat/long_double.h: Specializations of numeric_traits<long
+	  double>::pi() and ln_2().
+
+2009-07-27 10:39  leopardi
+
+	* glucat/matrix_imp.h: In nork(): explicitly cast the expression
+	  for nnz_lhs to double before casting to Scalar_T.
+
+2009-07-27 10:38  leopardi
+
+	* glucat/: framed_multi.h, matrix_multi.h: Construct a multivector
+	  from a char*; Construct a multivector, within a given frame, from
+	  a char*.
+
+2009-07-27 10:37  leopardi
+
+	* glucat/matrix_multi_imp.h: In scalar() and norm(): explicitly
+	  cast dim to double before casting to Scalar_T.
+
+2009-07-27 10:36  leopardi
+
+	* glucat/scalar.h: Use const Scalar_T& instead of Scalar_T for
+	  parameters where possible.  Fix comment describing IsInf().  New
+	  static member functions for numeric_traits<Scalar_T>:
+	  to_int(), fmod(), conj(), real(), imag(), pi(), ln_2(), log2(),
+	  pow(), exp().  Existing log2() function now uses static member
+	  function log2().
+
+2007-11-06 23:01  leopardi
+
+	* NEWS: Fix typos.
+
+2007-11-06 20:47  leopardi
+
+	* ChangeLog: Update to version 0.4.0.
+
 2007-11-06 20:44  leopardi
 
 	* NEWS: News for version 0.4.0.
