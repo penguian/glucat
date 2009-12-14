@@ -1,16 +1,17 @@
-As at GluCat 0.4.1, 2009-07-28:
+As at GluCat 0.4.2, 2009-12-15:
 
+Support for higher precision arithmentic:
 o Add support for qd_real and dd_real from the QD library. See 
   http://crd.lbl.gov/~dhbailey/mpdist/ and Y. Hida, X. S. Li, and D. H. Bailey, 
   Algorithms for Quad-Double Precision Floating Point Arithmetic. 
   In Proceedings of the 15th IEEE Symposium on Computer Arithmetic (2001). 
   ARITH. IEEE Computer Society, 2001.
 
-There is plenty of testing, cleanup, packaging and documentation work yet to do.
-o Publish the experimental Cython interface developed during Sage Days 10.
-o Expand the Cython interface into a Sage interface.
+Improve testing, packaging and documentation:
 o Improve the packaging of the example and test programs.
 o Write a programmer's guide with descriptions of the API.
+o Publish the experimental Cython interface developed during Sage Days 10.
+o Expand the Cython interface into a Sage interface.
 o Test and suggest improvements to John Fletcher's SWIG bindings to Ruby and 
   Henk Jansen's SWIG bindings to Python.
 o Simplify and improve the use of automake and autoconf in building GluCat.
@@ -19,23 +20,27 @@ o Test with Blitz++, deal.II, MTL, POOMA and uBLAS and adjust accordingly.
 o Port to other architectures and compilers which support template template
   parameters.
 
-Transcendental functions still need improvement.
+Improve transcendental functions:
 o See Approximating functions in Clifford algebras, ANZMC 2008. 
 http://wwwmaths.anu.edu.au/~leopardi/ANZMC-2008-Leopardi-clifford-functions-talk.pdf
+o See Approximating functions in Clifford algebras: 
+  What to do with negative eigenvalues? AustMS 2009.
+http://wwwmaths.anu.edu.au/~leopardi/AustMS-2009-Leopardi-clifford-functions-talk.pdf
 o Fix sqrt() and log() so that they deal properly with negative real eigenvalues.
 o Devise better algorithms and better implementations of existing algorithms for
   the transcendental functions. In particular, pay more attention to radius of
   convergence, condition number of matrices and poking out of the subalgebra.
 o Investigate the use of matrix decompositions in the evaluation of transcentental
   functions. See N. J. Higham, Functions of Matrices: Theory and Computation, 2008.
+
+The interface and library could be further improved in a number of different ways.
+o Investigate the use of Eigen as a replacement for uBLAS.
 o Try using the complex matrix representations. These use smaller matrices,
   which should be faster. This would mean changes to basis_element(),
   folded_dim() and others. Possibly deliver this as an additional template class
   rather than a change to matrix_multi<>.
 o Try defining Boost concepts and more numeric traits so that GluCat can eventually 
   become a Boost library.
-
-The interface and library could be further improved in a number of different ways.
 o Try refactoring the relationship between matrix_multi, framed_multi and 
   clifford_algebra to allow more flexibility with template parameters.
   Possibly use enable_if and SFINAE to do this.
