@@ -68,6 +68,19 @@ int test14()
   cout << "scalar(A * B) = " << scalar(A * B) << endl;
   cout << "star(B, A)    = " << star(B, A)    << endl;;
   cout << "scalar(B * A) = " << scalar(B * A) << endl;
+
+  framed_multi<double> d( 2.0, sub );
+  cout << "d " << ((d == 2.0) ? "==" : "!=") << " 2.0; ";
+  cout << "d " << ((d != 2.0) ? "!=" : "==") << " 2.0" << endl;
+  cout << "d " << ((d == 4.0) ? "==" : "!=") << " 4.0; ";
+  cout << "d " << ((d != 4.0) ? "!=" : "==") << " 4.0" << endl;
+
+  matrix_multi<double> D( 2.0, sub );
+  cout << "D " << ((D == 2.0) ? "==" : "!=") << " 2.0; ";
+  cout << "D " << ((D != 2.0) ? "!=" : "==") << " 2.0" << endl;
+  cout << "D " << ((D == 4.0) ? "==" : "!=") << " 4.0; ";
+  cout << "D " << ((D != 4.0) ? "!=" : "==") << " 4.0" << endl;
+
   return 0;
 }
 
