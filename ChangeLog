@@ -1,3 +1,51 @@
+2009-12-14 23:43  leopardi
+
+	* test_runtime/: gfft_test-11.out, products-8.out, squaring-11.out,
+	  test.out, transforms-8.out: Test results for version 0.4.2.
+
+2009-12-14 23:42  leopardi
+
+	* TODO: Add some TODO items, including investigating the use of
+	  Eigen as a replacement for uBLAS.  Rearrange some of the existing
+	  TODO items.
+
+2009-12-14 23:41  leopardi
+
+	* NEWS: News for version 0.4.2.
+
+2009-12-14 23:39  leopardi
+
+	* configure.in.in, Doxyfile, INSTALL, glucat.lsm: Update to version
+	  0.4.2.
+
+2009-12-14 23:39  leopardi
+
+	* configure.in: File created by cat configure.in.in
+	  configure.in.end Update to version 0.4.2.
+
+2009-12-14 23:38  leopardi
+
+	* test14/peg14.cpp: Test bug fix 2847758: "operator!=(lhs,scr)
+	  sometimes wrongly returns true".
+
+	  Add tests to test14 to ensure that operator==(lhs,scr) and
+	  operator!=(lhs,scr) return the correct values.
+
+2009-12-14 23:35  leopardi
+
+	* glucat/clifford_algebra_imp.h: Fix bug 2847758:
+	  "operator!=(lhs,scr) sometimes wrongly returns true".
+
+	  In operator!= (const Multivector<Scalar_T,LO,HI>& lhs, const
+	  Scalar_T& scr)., with GluCat 0.4.1 and earlier, when lhs is of
+	  type matrix_multi_t, it is possible that lhs.frame().count() !=0
+	  and yet the matrix is scr times the identity matrix.	In this
+	  case operator!=() returns false when it should return true.
+
+2009-07-28 23:09  leopardi
+
+	* ChangeLog: Update to version 0.4.1.
+
 2009-07-28 22:52  leopardi
 
 	* INSTALL, TODO: Update to version 0.4.1.
@@ -3169,3 +3217,4 @@
 2002-01-10 ./README: Add -finline-limit-400
 
 2002-01-09 Release glucat-0.0.1
+
