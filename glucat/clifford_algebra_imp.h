@@ -81,7 +81,7 @@ namespace glucat
   inline
   bool
   operator!= (const Multivector<Scalar_T,LO,HI>& lhs, const Scalar_T& scr)
-  { return lhs.frame().count() != 0 || scalar(lhs) != scr; }
+  { return !(lhs == scr); }
 
   /// Test for inequality of scalar and multivector
   template< template<typename, const index_t, const index_t> class Multivector,
