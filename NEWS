@@ -1,3 +1,11 @@
+2009-12-21: 0.4.3
+Glucat has a fix for another comparison operator.
+
+For operator!= (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI>& rhs),
+there was essentially the same bug as was fixed in GluCat 0.4.2, but this was 
+missed by Bug 2847758. GluCat 0.4.3 fixes this operator, and there are more tests
+in test14 to check this case as well.
+
 2009-12-15: 0.4.2
 Bug 2847758: "operator!=(lhs,scr) sometimes wrongly returns true" has been fixed.
 
