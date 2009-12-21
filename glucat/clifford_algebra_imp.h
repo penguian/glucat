@@ -89,7 +89,7 @@ namespace glucat
   inline
   bool
   operator!= (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI>& rhs)
-  { return rhs.frame().count() != 0 || scalar(rhs) != scr; }
+  { return !(rhs == scr); }
 
   /// Geometric sum of multivector and scalar
   template< template<typename, const index_t, const index_t> class Multivector,
