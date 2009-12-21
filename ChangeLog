@@ -1,3 +1,35 @@
+2009-12-21 11:03  leopardi
+
+	* test_runtime/test.out: Test results for version 0.4.3.
+
+2009-12-21 11:02  leopardi
+
+	* test14/peg14.cpp: For operator!= (const Scalar_T& scr, const
+	  Multivector<Scalar_T,LO,HI>& rhs), there was essentially the same
+	  bug as was fixed in GluCat 0.4.2, but this was missed by Bug
+	  2847758. This change add more tests to test14 to check this case
+	  as well.
+
+2009-12-21 11:01  leopardi
+
+	* glucat/clifford_algebra_imp.h: For operator!= (const Scalar_T&
+	  scr, const Multivector<Scalar_T,LO,HI>& rhs), there was
+	  essentially the same bug as was fixed in GluCat 0.4.2, but this
+	  was missed by Bug 2847758. This change fixes this operator.
+
+2009-12-21 10:58  leopardi
+
+	* NEWS: NEWS for version 0.4.3.
+
+2009-12-21 10:57  leopardi
+
+	* configure.in, Doxyfile, INSTALL, configure.in.in, glucat.lsm:
+	  Update to Version 0.4.3.
+
+2009-12-14 23:47  leopardi
+
+	* ChangeLog: Update to version 0.4.2.
+
 2009-12-14 23:43  leopardi
 
 	* test_runtime/: gfft_test-11.out, products-8.out, squaring-11.out,
@@ -3217,4 +3249,3 @@
 2002-01-10 ./README: Add -finline-limit-400
 
 2002-01-09 Release glucat-0.0.1
-
