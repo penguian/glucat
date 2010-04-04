@@ -1,3 +1,112 @@
+2010-04-04 23:42  leopardi
+
+	* INSTALL: Describe the use of -with-qd and _GLUCAT_USE_QD to
+	  control the use of QD.  Remove reference to www.garloff.de web
+	  page, now possibly obsolete.	Update to version 0.4.4.
+
+2010-04-04 23:39  leopardi
+
+	* README: Describe the use of _GLUCAT_USE_QD to control the use of
+	  QD.  Fix various grammatical errors.	Make references to header
+	  files more consistent.  Update to version 0.4.4.
+
+2010-04-04 23:34  leopardi
+
+	* TODO: Add some TODO items describing the use of random numbers
+	  with normal distribution.  Rearrange some of the existing TODO
+	  items.
+
+2010-04-04 23:33  leopardi
+
+	* NEWS: NEWS for version 0.4.4.
+
+2010-04-04 21:18  leopardi
+
+	* test_runtime/: gfft_test-11.out, products-8.out, squaring-11.out,
+	  test.out, transforms-8.out: Test results for version 0.4.4.
+
+2010-04-04 21:17  leopardi
+
+	* glucat.lsm: Update to Version 0.4.4.
+
+2010-04-04 21:17  leopardi
+
+	* Doxyfile: Define _GLUCAT_USE_DENSE_MAT _GLUCAT_USE_QD
+	  _GLUCAT_USE_TR1_UNORDERED_MAP Expand
+	  _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS macro.  Define include path
+	  so that glucat/clifford_algebra.h is used for definition of
+	  _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS.	Update to Version 0.4.4.
+
+2010-04-04 21:16  leopardi
+
+	* configure.in: Generated from configure.in.in and
+	  configure.in.end.  See changes to configure.in.in.
+
+2010-04-04 21:16  leopardi
+
+	* configure.in.in: Support QD classes dd_real and qd_real: Add
+	  option --with-qd which sets glucat_use_qd, checks qd/qd_config.h,
+	  defines _GLUCAT_USE_QD, and adds -ldq to all_libraries.  Quote
+	  help comments properly.  Append $USER_LDFLAGS to all_libraries,
+	  and $USER_INCLUDES to all_includes before calling
+	  AC_GLUCAT_CHECK_COMPILERS to allow user definition of extra
+	  libraries and includes before checking starts.  Update to Version
+	  0.4.4.
+
+2010-04-04 21:16  leopardi
+
+	* aclocal.m4: Generated automatically by aclocal-1.11.	See changes
+	  to acinclude.m4.
+
+2010-04-04 21:15  leopardi
+
+	* acinclude.m4: Update to aclocal-1.11.  Avoid warning messages
+	  about serial.  Use _cv_ in names to avoid a warning message.
+
+2010-04-04 21:14  leopardi
+
+	* test11/peg11.cpp: Support QD classes dd_real and qd_real: If
+	  _GLUCAT_USE_QD is defined, test using dd_real and qd_real.
+
+2010-04-04 21:14  leopardi
+
+	* test00/peg00.h: Use value scalar_t(1) instead of 1.0 to ensure
+	  correct use of scalar values.
+
+2010-04-04 21:13  leopardi
+
+	* test00/peg00.cpp: Support QD classes dd_real and qd_real: If
+	  _GLUCAT_USE_QD is defined, test using dd_real and qd_real.  Test
+	  using long_double.
+
+2010-04-04 21:11  leopardi
+
+	* glucat/: framed_multi.h, matrix_multi.h: Include
+	  glucat/clifford_algebra.h so that Doxygen can see definition of
+	  _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS.
+
+2010-04-04 21:11  leopardi
+
+	* glucat/long_double.h: Remove unneeded definitions of std::conj,
+	  std::real and std::imag.  The equivalent functions are available
+	  via numeric_traits defined in scalar.h.
+
+2010-04-04 21:10  leopardi
+
+	* glucat/qd.h: New source file to support QD classes dd_real and
+	  qd_real.  Define specializations for numeric_traits<dd_real> and
+	  numeric_traits<qd_real>.
+
+2010-04-04 21:09  leopardi
+
+	* glucat/glucat.h: Support QD classes dd_real and qd_real: If
+	  _GLUCAT_USE_QD is defined, include qd/qd_real.h and glucat/qd.h.
+	  Improve comment for glucat/scalar.h.
+
+2009-12-21 11:06  leopardi
+
+	* ChangeLog: ChangeLog for version 0.4.3.
+
 2009-12-21 11:03  leopardi
 
 	* test_runtime/test.out: Test results for version 0.4.3.
