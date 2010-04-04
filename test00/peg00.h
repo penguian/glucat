@@ -5,7 +5,7 @@
     peg00.cpp : programming example 00 : Geometric algebra identities
                              -------------------
     begin                : Sat 2007-09-01
-    copyright            : (C) 2007 by Paul C. Leopardi
+    copyright            : (C) 2007-2010 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -374,9 +374,9 @@ namespace peg00
     for (index_t i = 1; i != max_index+1; i++)
     {
       inner_frame |= index_set_t(i);
-      success &= test_idents(a, b, c, multivector_t(index_set_t(i) , 1.0));
+      success &= test_idents(a, b, c, multivector_t(index_set_t(i) , scalar_t(1)));
       inner_frame |= index_set_t(-i);
-      success &= test_idents(a, b, c, multivector_t(index_set_t(-i), 1.0));
+      success &= test_idents(a, b, c, multivector_t(index_set_t(-i), scalar_t(1)));
     }
     if (success)
       std::cout << "All tests passed." << std::endl;
