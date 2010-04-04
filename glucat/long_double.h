@@ -5,7 +5,7 @@
     long_double.h : Define std functions for long double
                              -------------------
     begin                : 2001-12-18
-    copyright            : (C) 2001-2007 by Paul C. Leopardi
+    copyright            : (C) 2001-2010 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -30,24 +30,6 @@
  ***************************************************************************
  See also Arvind Raja's original header comments and references in glucat.h
  ***************************************************************************/
-
-namespace std 
-{
-  inline 
-  long double 
-  conj(long double a)
-  { return a; }
-
-  inline 
-  long double 
-  real(long double a)
-  { return a; }
-
-  inline 
-  long double 
-  imag(long double)
-  { return 0.0; }
-}
 
 namespace glucat
 {
