@@ -1,24 +1,14 @@
-As at GluCat 0.4.2, 2009-12-15:
+As at GluCat 0.4.4, 2010-04-04:
 
-Support for higher precision arithmentic:
-o Add support for qd_real and dd_real from the QD library. See 
-  http://crd.lbl.gov/~dhbailey/mpdist/ and Y. Hida, X. S. Li, and D. H. Bailey, 
-  Algorithms for Quad-Double Precision Floating Point Arithmetic. 
-  In Proceedings of the 15th IEEE Symposium on Computer Arithmetic (2001). 
-  ARITH. IEEE Computer Society, 2001.
-
-Improve testing, packaging and documentation:
-o Improve the packaging of the example and test programs.
-o Write a programmer's guide with descriptions of the API.
-o Publish the experimental Cython interface developed during Sage Days 10.
-o Expand the Cython interface into a Sage interface.
-o Test and suggest improvements to John Fletcher's SWIG bindings to Ruby and 
-  Henk Jansen's SWIG bindings to Python.
-o Simplify and improve the use of automake and autoconf in building GluCat.
-o Investigate if GluCat could be used as the back-end to Christian Perwass' CLU.
-o Test with Blitz++, deal.II, MTL, POOMA and uBLAS and adjust accordingly.
-o Port to other architectures and compilers which support template template
-  parameters.
+Use normal random numbers instead of uniform random numbers.
+o Use the capability of tr1::random or GSL to produce pseudorandom numbers
+  with a normal distribution, in order to generate multivectors where each
+  coefficient is drawn from such a distribution, and where the mean norm is 1.
+o Use these random multivectors to improve testing, especially test11,
+  transcendental functions, to provide a baseline for improvment of the functions.
+o See Approximating functions in Clifford algebras:
+  What to do with negative eigenvalues? AustMS 2009.
+http://wwwmaths.anu.edu.au/~leopardi/AustMS-2009-Leopardi-clifford-functions-talk.pdf
 
 Improve transcendental functions:
 o See Approximating functions in Clifford algebras, ANZMC 2008. 
@@ -33,13 +23,22 @@ o Devise better algorithms and better implementations of existing algorithms for
 o Investigate the use of matrix decompositions in the evaluation of transcentental
   functions. See N. J. Higham, Functions of Matrices: Theory and Computation, 2008.
 
+Improve testing, packaging and documentation:
+o Improve the packaging of the example and test programs.
+o Write a programmer's guide with descriptions of the API.
+o Publish the experimental Cython interface developed during Sage Days 10.
+o Expand the Cython interface into a Sage interface.
+o Test and suggest improvements to John Fletcher's SWIG bindings to Ruby and
+  Henk Jansen's SWIG bindings to Python.
+o Simplify and improve the use of automake and autoconf in building GluCat.
+o Investigate if GluCat could be used as the back-end to Christian Perwass' CLU.
+o Test with Blitz++, deal.II, MTL, POOMA and uBLAS and adjust accordingly.
+o Port to other architectures and compilers which support template template
+  parameters.
+
 The interface and library could be further improved in a number of different ways.
 o Investigate the use of Eigen as a replacement for uBLAS.
-o Try using the complex matrix representations. These use smaller matrices,
-  which should be faster. This would mean changes to basis_element(),
-  folded_dim() and others. Possibly deliver this as an additional template class
-  rather than a change to matrix_multi<>.
-o Try defining Boost concepts and more numeric traits so that GluCat can eventually 
+o Try defining Boost concepts and more numeric traits so that GluCat can eventually
   become a Boost library.
 o Try refactoring the relationship between matrix_multi, framed_multi and 
   clifford_algebra to allow more flexibility with template parameters.
@@ -58,4 +57,8 @@ o Try replacing multiplication by +/-1 within inner products by addition and
 o Try creating a class, vector_multi<>, which uses std::vector rather than
   std::map. This should be faster than framed_multi<>, if tuned properly, for
   full multivectors. For sparse multivectors, it may be slower.
+o Try using the complex matrix representations. These use smaller matrices,
+  which should be faster. This would mean changes to basis_element(),
+  folded_dim() and others. Possibly deliver this as an additional template class
+  rather than a change to matrix_multi<>.
 
