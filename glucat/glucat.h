@@ -5,7 +5,7 @@
     glucat.h : Organize GluCat header files for applications
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2009 by Paul C. Leopardi
+    copyright            : (C) 2001-2010 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -63,11 +63,13 @@
 
 #include "glucat/index_set.h"
 
-// Improve IEEE NaN support
+// Improve IEEE NaN support, add numeric traits, including real equivalents to complex functions
 #include "glucat/scalar.h"
-
-// Add real equivalents to complex functions
 #include "glucat/long_double.h"
+#if defined(_GLUCAT_USE_QD)
+# include <qd/qd_real.h>
+# include "glucat/qd.h"
+#endif
 
 // Include <utility> to define pair<>
 #include <utility>
