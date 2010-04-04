@@ -1,3 +1,17 @@
+2010-04-04: 0.4.4
+GluCat supports QD high precision arithmetic.
+
+GluCat now supports the high precision floating point classes
+qd_real and dd_real from the QD library.
+The test directories test00 and test11 have been updated to
+test support for dd_real and qd_real.
+
+See http://crd.lbl.gov/~dhbailey/mpdist/ and
+Y. Hida, X. S. Li, and D. H. Bailey,
+Algorithms for Quad-Double Precision Floating Point Arithmetic.
+In Proceedings of the 15th IEEE Symposium on Computer Arithmetic (2001).
+ARITH. IEEE Computer Society, 2001.
+
 2009-12-21: 0.4.3
 Glucat has a fix for another comparison operator.
 
