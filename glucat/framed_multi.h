@@ -5,7 +5,7 @@
     framed_multi.h : Declare a class for the framed representation of a multivector
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2009 by Paul C. Leopardi
+    copyright            : (C) 2001-2010 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -30,6 +30,8 @@
  ***************************************************************************
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
+
+#include "glucat/clifford_algebra.h"
 
 namespace glucat
 {
