@@ -98,22 +98,22 @@ typedef glucat::tuning<> Tune_P;
  Tune_P is the tuning policy class. It may be included as a template parameter
  in future versions, but for now, you will need to define it as a typedef before
  including <glucat/glucat_imp.h>.
- The tuning<> template class is defined in <glucat/global.h>
+ The tuning<> template class is defined in glucat/global.h.
  Glucat defines and uses the glucat:: namespace. You can use names from this
  namespace by using the glucat:: prefix or by using the following declaration:
 
 using namespace glucat;
 
- o GluCat uses preprocessor defines to control header files. In glucat.h:
+ o GluCat uses preprocessor defines to control header files. In glucat/glucat.h:
  
  _GLUCAT_USE_TR1_UNORDERED_MAP controls the use of the header file
  <tr1/unordered_map>. 
- If _GLUCAT_USE_TR1_UNORDERED_MAP is defined, glucat.h includes this file, 
+ If _GLUCAT_USE_TR1_UNORDERED_MAP is defined, glucat/glucat.h includes this file, 
  which contains the declarations and definitions for std::tr1::unordered_map<>. 
- The main purpose of this define is found in framed_multi.h. 
- If _GLUCAT_USE_TR1_UNORDERED_MAP is defined, framed_multi.h defines 
+ The main purpose of this definition is found in glucat/framed_multi.h.
+ If _GLUCAT_USE_TR1_UNORDERED_MAP is defined, glucat/framed_multi.h defines 
  glucat::framed_multi<> using std::tr1::unordered_map<>, which is an unsorted map. 
- By default framed_multi.h defines glucat::framed_multi<> using std::map<>, 
+ By default glucat/framed_multi.h defines glucat::framed_multi<> using std::map<>, 
  which is a sorted map.
  
  The configure script flag --with-unordered-map adds -D_GLUCAT_USE_TR1_UNORDERED_MAP
@@ -123,9 +123,9 @@ using namespace glucat;
  std::tr1::unordered_map<>.
 
  _GLUCAT_USE_GNU_CXX_HASH_MAP controls the use of the header file <ext/hash_map>. 
- If _GLUCAT_USE_GNU_CXX_HASH_MAP is defined, glucat.h includes this file, 
+ If _GLUCAT_USE_GNU_CXX_HASH_MAP is defined, glucat/glucat.h includes this file, 
  which contains the GNU declarations and definitions for __gnu_cxx::hash_map<>. 
- If _GLUCAT_USE_GNU_CXX_HASH_MAP is defined, framed_multi.h defines 
+ If _GLUCAT_USE_GNU_CXX_HASH_MAP is defined, glucat/framed_multi.h defines 
  glucat::framed_multi<> using __gnu_cxx::hash_map<>, which is an unsorted map. 
  
  The configure script flag --with-hash-map adds -D_GLUCAT_USE_GNU_CXX_HASH_MAP
@@ -135,8 +135,8 @@ using namespace glucat;
  __gnu_cxx::hash_map<>.
 
  _GLUCAT_USE_DENSE_MATRICES controls the use of dense matrices.
- The main purpose of this define is found in matrix_multi.h. 
- If _GLUCAT_USE_DENSE_MATRICES is defined, matrix_multi.h defines 
+ The main purpose of this definition is found in glucat/matrix_multi.h.
+ If _GLUCAT_USE_DENSE_MATRICES is defined, glucat/matrix_multi.h defines 
  glucat::matrix_multi<> using ublas::matrix<>, which is a dense matrix.
  Otherwise matrix_multi.h defines glucat::matrix_multi<> using 
  ublas::compressed_matrix<>, which a compressed matrix type. In either case,
@@ -145,6 +145,17 @@ using namespace glucat;
  The configure script flag --with-dense-mat adds -D_GLUCAT_USE_DENSE_MATRICES
  to CXXFLAGS in the test Makefiles. For your own compilation you will need to add
  -D_GLUCAT_USE_DENSE_MATRICES to your own Makefile.
+
+ _GLUCAT_USE_QD controls the use of the QD high precision floating point library.
+ If _GLUCAT_USE_QD is defined, glucat/glucat.h includes qd/qd_config.h and glucat/qd.h.
+ The file glucat/qd.h supports the use of QD in GluCat by defining specializations for
+ numeric_traits<dd_real> and numeric_traits<qd_real>.
+
+ The configure script flag --with-qd adds -D_GLUCAT_USE_QD to CXXFLAGS and adds
+ the flag -lqd to the list of libraries all_libraries in the test Makefiles.
+ For your own compilation you will need to add -D_GLUCAT_USE_QD and -lqd to
+ your own Makefile. You will also need to ensure that the include path used by
+ the compiler sees qd/qd_config.h and the library path sees libqd.a.
 
 Coding standards
 ----------------
