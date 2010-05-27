@@ -35,6 +35,8 @@
 
 namespace glucat
 {
+  // Forward declarations for friends
+
   template< typename Scalar_T, const index_t LO, const index_t HI >
   class framed_multi;  // forward
 
@@ -160,6 +162,11 @@ namespace glucat
     /// Assignment operator
     multivector_t&     operator= (const multivector_t& rhs);
 
+    /// Random multivector within a frame
+    static const matrix_multi_t random(const index_set_t frm);
+
+    // Friend declarations
+
     friend const matrix_multi_t
       operator* <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs);
     friend const matrix_multi_t
@@ -183,6 +190,7 @@ namespace glucat
     multivector_t&     operator+= (const term_t& rhs);
   private:
     // Data members
+
     /// Index set representing the frame for the subalgebra which contains the multivector
     index_set_t        m_frame;
     /// Matrix value representing the multivector within the folded frame
