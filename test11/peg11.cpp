@@ -33,6 +33,7 @@
 #define NDEBUG
 #endif
 #include "test/driver.h"
+#include "test/control.h"
 #include "test11/peg11.h"
 
 int test11()
@@ -68,4 +69,10 @@ int test11()
 using namespace glucat;
 
 int main(int argc, char ** argv)
-{ return try_catch(test11); }
+{
+  test_control = control_t(argc, argv);
+  if (test_control.m_valid)
+    return try_catch(test11);
+  else
+    return 1;
+}
