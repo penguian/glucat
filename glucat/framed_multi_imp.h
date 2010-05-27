@@ -6,7 +6,7 @@
     Clifford algebra element
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2007 by Paul C. Leopardi
+    copyright            : (C) 2001-2010 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -1072,6 +1072,33 @@ namespace glucat
     return result;
   }
 
+  /// Random multivector within a frame
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const framed_multi<Scalar_T,LO,HI>
+  framed_multi<Scalar_T,LO,HI>::
+  random(const index_set<LO,HI> frm)
+  {
+    typedef framed_multi<Scalar_T,LO,HI> multivector_t;
+    typedef typename multivector_t::index_set_t index_set_t;
+    typedef typename multivector_t::term_t term_t;
+
+    typedef random_generator<Scalar_T> random_generator_t;
+    random_generator_t& generator = random_generator_t::generator();
+
+    const set_value_t algebra_dim = 1 << frm.count();
+    const Scalar_T mean_abs = numeric_traits<Scalar_T>::sqrt(Scalar_T(double(algebra_dim)));
+    multivector_t result;
+    for (set_value_t
+        stv = 0;
+        stv != algebra_dim;
+        ++stv)
+    {
+      const Scalar_T& result_crd = generator.normal() / mean_abs;
+      result.insert(term_t(index_set_t(stv, frm, true), result_crd));
+    }
+    return result;
+  }
+
   /// Write multivector to output
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
@@ -1187,6 +1214,7 @@ namespace glucat
     return os;
   }
 
+  /// Read multivector from input
   template< typename Scalar_T, const index_t LO, const index_t HI >
   std::istream&
   operator>> (std::istream& s, framed_multi<Scalar_T,LO,HI> & val)
@@ -1631,40 +1659,6 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   fast_framed_multi() const
   { return *this; }
-
-  /// Class name used in messages
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  inline
-  const std::string
-  framed_multi<Scalar_T,LO,HI>::var_term_t::
-  classname()
-  { return "var_term"; }
-
-  /// Default constructor
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  framed_multi<Scalar_T,LO,HI>::var_term_t::
-  var_term() :
-  var_pair_t(index_set_t(), Scalar_T(1))
-  { }
-
-  /// Construct a variable term from an index set and a scalar coordinate
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  framed_multi<Scalar_T,LO,HI>::var_term_t::
-  var_term(const index_set_t ist, const Scalar_T& crd) :
-  var_pair_t(ist, crd)
-  { }
-
-  /// Product of variable term and term
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  inline
-  typename framed_multi<Scalar_T,LO,HI>::var_term_t&
-           framed_multi<Scalar_T,LO,HI>::var_term_t::
-  operator*= (const term_t& rhs)
-  {
-    this->second *= rhs.second * this->first.sign_of_mult(rhs.first);
-    this->first  ^= rhs.first;
-    return *this;
-  }
 
   /// Coordinate of product of terms
   template< typename Scalar_T, const index_t LO, const index_t HI >
