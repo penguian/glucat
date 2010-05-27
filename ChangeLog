@@ -1,3 +1,7 @@
+2010-05-28 01:08  leopardi
+
+	* ChangeLog: ChangeLog for version 0.5.0.
+
 2010-05-28 01:01  leopardi
 
 	* test11/peg11.h: In all functions: o Do not use explicit std::,
@@ -3714,4 +3718,3 @@
 2002-01-10 ./README: Add -finline-limit-400
 
 2002-01-09 Release glucat-0.0.1
-
