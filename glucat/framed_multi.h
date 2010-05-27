@@ -35,6 +35,8 @@
 
 namespace glucat
 {
+  // Forward declarations for friends
+
   template< typename Scalar_T, const index_t LO, const index_t HI >
   class framed_multi; // forward
 
@@ -184,6 +186,11 @@ namespace glucat
 
     _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
 
+    /// Random multivector within a frame
+    static const framed_multi_t random(const index_set_t frm);
+
+    // Friend declarations
+
     friend const framed_multi_t
       operator* <>(const framed_multi_t& lhs, const framed_multi_t& rhs);
     friend const framed_multi_t
@@ -229,19 +236,30 @@ namespace glucat
       typedef std::pair<index_set<LO,HI>, Scalar_T>      var_pair_t;
 
       /// Class name used in messages
-      static const std::string classname();
+      static const std::string classname()
+      { return "var_term"; };
       /// Destructor
       ~var_term() {};
       /// Default constructor
-      var_term();
+      var_term()
+      : var_pair_t(index_set_t(), Scalar_T(1))
+      { };
       /// Construct a variable term from an index set and a scalar coordinate
-      var_term(const index_set_t ist, const Scalar_T& crd = Scalar_T(1));
+      var_term(const index_set_t ist, const Scalar_T& crd = Scalar_T(1))
+      : var_pair_t(ist, crd)
+      { };
       /// Product of variable term and term
-      var_term_t& operator*= (const term_t& term);
+      var_term_t& operator*= (const term_t& rhs)
+      {
+        this->second *= rhs.second * this->first.sign_of_mult(rhs.first);
+        this->first  ^= rhs.first;
+        return *this;
+      }
     };
   };
 
-  // non-members
+  // Non-members
+
   /// Coordinate of product of terms
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
