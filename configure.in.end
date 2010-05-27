@@ -23,4 +23,7 @@ AC_CONFIG_FILES([ test14/Makefile ])
 AC_CONFIG_FILES([ test15/Makefile ])
 AC_CONFIG_FILES([ test16/Makefile ])
 AC_CONFIG_FILES([ transforms/Makefile ])
+if test "$glucat_use_pyclical" == "yes"; then
+  AC_CONFIG_FILES([ pyclical/Makefile ])
+fi
 AC_OUTPUT
