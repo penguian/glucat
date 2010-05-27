@@ -1,3 +1,355 @@
+2010-05-28 01:01  leopardi
+
+	* test11/peg11.h: In all functions: o Do not use explicit std::,
+	  since we already are "using namespace std;" o Use typenames
+	  scalar_t instead of s_, and index_set_t instead of e_,   for
+	  greater clarity.
+
+	  In check(): o Set squared tolerance tol2 to either 0 (if
+	  test_control.m_verbose_output is true)   or otherwise to the
+	  larger of std::numeric_limits<scalar_t>::epsilon(), and the
+	  square of numeric_limits<double>::epsilon(). When nonzero,
+	  tolerance is then the   larger of
+	  sqrt(std::numeric_limits<scalar_t>::epsilon()) and
+	  numeric_limits<double>::epsilon().  o Use relative norm of A-B if
+	  norm(A) > tol2, otherwise use absolute norm of A-B.  o Use
+	  numeric_traits<scalar_t>::sqrt() to obtain the size of the error.
+	   o If test failed but norm of A-B <= tol2, print B.
+
+	  In rand_transcendtest(): o For p from 0 to max_index (==n), for q
+	  from the greater of 0 and p-2 to p, call   transcendtest() twice
+	  with a random multivector in the Clifford algebra R_{p,q}.  o Use
+	  m_::random() to obtain the random multivector.
+
+	  In do_test11(): o Print the value of
+	  numeric_limits<scalar_t>::epsilon(), for better   comparison of
+	  errors.  o Call rand_transcendtest<m_>(n) with n==3 rather than
+	  4, to reduce test runtime.
+
+2010-05-28 01:01  leopardi
+
+	* test11/peg11.cpp: Use program arguments "--help" and "--verbose":
+	  Create the object test_control, of type control_t, constructed
+	  from the program arguments, argc and argv.  Call test11() only if
+	  test_control.m_valid is true, that is, only if the program
+	  arguments are valid.
+
+2010-05-28 01:00  leopardi
+
+	* test00/peg00.h: Change print_a_b_lhs_rhs() to
+	  print_error_lhs_rhs(), delete print_a_b_c_lhs_rhs(): o The new
+	  routine print_error_lhs_rhs() prints only the relative error
+	  (assuming   rhs is not 0) and the error tolerance, if this is not
+	  0. The previous routines   produced output which was too verbose.
+
+	  In test_idents(): o Change last parameter from multivector_t e to
+	  index_set_t e: the frame   containing a, b and c.  o Set
+	  tolerance tol to either 0 (if test_control.m_verbose_output is
+	  true)   or otherwise to
+	  512.0*std::numeric_limits<scalar_t>::epsilon().  o Change most
+	  tests to call print_error_lhs_rhs() if abs(lhs - rhs) >
+	  abs(rhs)*tol.    When test_control.m_verbose_output is true, this
+	  calls print_error_lhs_rhs()	 whenever lhs != rhs.  o Those
+	  tests which create scalar expressions call print_error_lhs_rhs()
+	  if   scalar_diff*scalar_diff > tol*tol. When
+	  test_control.m_verbose_output is true,   this calls
+	  print_error_lhs_rhs() whenever scalar_diff != 0.
+
+	  In do_test00(): o Use new static multivector_t::random() function
+	  to give random values to   multivector_t variables a, b and c,
+	  instead of calling rand().  o Call test_idents() with paramaters
+	  a, b, c, and e: the frame containing	 a, b and c.
+
+2010-05-28 01:00  leopardi
+
+	* test00/peg00.cpp: Use program arguments "--help" and "--verbose":
+	  Create the object test_control, of type control_t, constructed
+	  from the program arguments, argc and argv.  Call test00() only if
+	  test_control.m_valid is true, that is, only if the program
+	  arguments are valid.
+
+2010-05-28 00:59  leopardi
+
+	* glucat/matrix_multi_imp.h: New static member function
+	  random(const index_set_t frm).
+
+	  Add missing comments.
+
+2010-05-28 00:59  leopardi
+
+	* glucat/matrix_multi.h: New static member function random(const
+	  index_set_t frm).
+
+	  Add comments for some groups of declarations.
+
+2010-05-28 00:59  leopardi
+
+	* glucat/framed_multi_imp.h: Define new static member function
+	  random(const index_set_t frm).  This uses
+	  random_generator_t::generator(), defined in glucat/random.h.
+
+	  Move definition of var_term from here to framed_multi.h: this
+	  improves standard C++ compliance and allows Intel C++ to work.
+
+	  Add some missing comments.
+
+2010-05-28 00:58  leopardi
+
+	* glucat/framed_multi.h: New static member function random(const
+	  index_set_t frm).
+
+	  Move definition of var_term from framed_multi_imp.h to here: this
+	  improves standard C++ compliance and allows Intel C++ to work.
+
+	  Add comments for some groups of declarations.
+
+2010-05-28 00:58  leopardi
+
+	* glucat/qd.h: Separate the definitions for dd_real and qd_real,
+	  rather than interleaving them.
+
+	  Define macro _GLUCAT_QD_F(_T, _F) to reduce duplication in this
+	  file.  Here _T is a type and _F is a function.
+
+	  For numeric_traits<dd_real> and numeric_traits<qd_real>: o Use
+	  _GLUCAT_QD_F() to define new functions cos(), acos(), cosh(),
+	  sin(),   asin(), sinh(), tan(), atan(), tanh().  o Also use
+	  _GLUCAT_QD_F() to define log() and exp() functions.  o Define new
+	  function to_double().
+
+2010-05-28 00:57  leopardi
+
+	* glucat/scalar.h: For numeric_traits<Scalar_T>isInf(), use the
+	  macro _GLUCAT_ISINF().  For numeric_traits<Scalar_T>isNaN(), use
+	  the macro _GLUCAT_ISNAN().
+
+	  Define new functions to_double(), cos(), acos(), cosh(), sin(),
+	  asin(), sinh(), tan(), atan(), tanh() for
+	  numeric_traits<Scalar_T>.
+
+2010-05-28 00:57  leopardi
+
+	* glucat/portability.h: Recognize the __INTEL_COMPILER macro name.
+
+	  Disable warning 858: type qualifier on return type is
+	  meaningless.	Disable warning 2259: non-pointer conversion from
+	  "double" to "...={float}" may lose significant bits.
+
+	  Define macros _GLUCAT_ISNAN() and _GLUCAT_ISINF(), because icpc
+	  does not have std::tr1::isnan() or std:tr1::isinf().
+
+2010-05-28 00:57  leopardi
+
+	* glucat/glucat_imp.h: If _GLUCAT_USE_GSL_RANDOM is defined, then
+	  include <gsl/gsl_rng.h> and  <gsl/gsl_randist.h>, otherwise
+	  include  <tr1/random>.
+
+	  Include new file "glucat/random.h".
+
+2010-05-28 00:56  leopardi
+
+	* glucat/glucat.h: If _GLUCAT_USE_GNU_CXX_HASH_MAP is defined, if
+	  _GLUCAT_USE_BACKWARD_HASH_MAP is also defined, then include
+	  <backward/hash_map> otherwise include <ext/hash_map>.
+
+2010-05-28 00:55  leopardi
+
+	* test/try_catch.h: Fix initial comment which names the file.
+
+2010-05-28 00:54  leopardi
+
+	* test_runtime/: gfft_test-11.out, products-8.out, squaring-11.out,
+	  test.out, transforms-8.out: Test results for version 0.5.0.
+
+2010-05-28 00:54  leopardi
+
+	* README: Update README file to version 0.5.0:
+
+	  Describe problems with the current sqrt() and log() functions,
+	  and their effects.
+
+	  The PDF version of the API documentation is now called
+	  ./glucat-api/glucat-api-refman.pdf.
+
+	  Describe the new --enable-pyclical, --with-map[=ARG],
+	  --with-random[=ARG] options to ./configure, and their associated
+	  macro definitions.
+
+	  Describe PyCliCal.
+
+2010-05-28 00:53  leopardi
+
+	* INSTALL: Update installation instructions to version 0.5.0:
+
+	  Include a description and installation instructions for PyCliCal.
+
+	  Describe test/test_optional.sh and the program arguments --help
+	  and --verbose for ./test00 and ./test11.
+
+	  Describe the new --with-map[=ARG], --with-random[=ARG] options to
+	  ./configure.
+
+2010-05-28 00:53  leopardi
+
+	* NEWS: NEWS for version 0.5.0.
+
+2010-05-28 00:52  leopardi
+
+	* TODO: TODO for version 0.5.0.
+
+2010-05-28 00:52  leopardi
+
+	* glucat.lsm: Update to version 0.5.0.
+
+2010-05-28 00:51  leopardi
+
+	* Doxyfile: Update to version 0.5.0.  Add  _GLUCAT_USE_TR1_RANDOM
+	  to "PREDFINED".  This allows doxygen to see code in
+	  glucat/random.h.
+
+2010-05-28 00:49  leopardi
+
+	* Makefile.am: Append pyclical to SUBDIRS (and therefor build
+	  pyclical) only if the conditional make_pyclical is set.  Remove
+	  obsolete comments mentioning kdevelop.
+
+2010-05-28 00:49  leopardi
+
+	* config.h.in: Add macro defines: HAVE_BACKWARD_HASH_MAP for
+	  <backward/hash_map> HAVE_GSL_GSL_RNG_H for <gsl/gsl_rng.h>
+	  HAVE_QD_QD_CONFIG_H for <qd/qd_config.h> HAVE_TR1_RANDOM for
+	  <tr1/random>
+
+2010-05-28 00:47  leopardi
+
+	* configure.in.end: Create pyclical/Makefile if
+	  "$glucat_use_pyclical" == "yes".
+
+2010-05-28 00:47  leopardi
+
+	* configure.in.in: Update to version 0.5.0.
+
+	  Options for framed_multi map: Make these more sensible: Change
+	  options "--with-hash-map" and "--with-unordered-map" to
+	  "--with-map=(map|hash|unordered)". Make "unordered" the default
+	  value.  When "hash" is selected, check and add compiler flag
+	  "-Wno-deprecated", check header files <ext/hash_map> and define
+	  _GLUCAT_USE_GNU_CXX_HASH_MAP.  If <backward/hash_map> is also
+	  found, define _GLUCAT_USE_BACKWARD_HASH_MAP.
+
+	  Options for random number generation: Add new option
+	  "--with-random=(tr1|gsl)", with "tr1" the default value.  This
+	  selects the type of random number generator to use.  If "gsl" was
+	  selected, use AC_CHECK_LIB to check for libgsl.a and
+	  libgslcblas.a, if found, check header file <gsl/gsl_rng.h>, and
+	  if that is found, define _GLUCAT_USE_GSL_RANDOM and append "-lgsl
+	  -lgslcblas" to the variable all_libraries. If "tr1" was selected,
+	  or in the default case, check headr file <tr1/random>, but do not
+	  define any macros.
+
+	  Option for PyCliCal: Add new option "--enable-pyclical". This
+	  uses Cython to build the PyCliCal prototype. If
+	  "--disable-pyclical" was selected, or in the default case, append
+	  "pyclical" to the variable DO_NOT_COMPILE. If "-enable-pyclical"
+	  was selected, use AM_CONDITIONAL to set the condition
+	  make_pyclical.
+
+	  Compilation with Intel C++: For icpc version 11 or greater, check
+	  and add compiler flag "-fp-model precise" rather than "-mp1".
+
+	  Option for QD: Make this more consistent with others: If
+	  "--with-qd" was selected, use AC_CHECK_LIB to check for libqd.a,
+	  if found, check header file <qd/qd_config.h>, and if that is
+	  found, define _GLUCAT_USE_QD and append "-lqd" to the variable
+	  all_libraries.
+
+	  Do not append USER_INCLUDES to all_includes twice.  Do not append
+	  USER_LDFLAGS to all_libraries twice.
+
+	  Move parentheses on a separate line back to the end of the
+	  previous line.
+
+2010-05-28 00:46  leopardi
+
+	* configure.in: See changes to configure.in.in and
+	  configure.in.end.
+
+2010-05-28 00:32  leopardi
+
+	* subdirs: New in CVS: Include only those directories for which
+	  Makefiles can be created.
+
+2010-05-28 00:31  leopardi
+
+	* test/test_optional.sh: New file: Shell script which passes
+	  program arguments to each test.
+
+2010-05-28 00:31  leopardi
+
+	* test/control.h: New file: Define and set parameters to control
+	  tests.  Defines struct control_t, constructed from the program
+	  arguments, argc and argv.
+
+2010-05-28 00:27  leopardi
+
+	* glucat/random.h: New file: Random number generator with single
+	  instance per Scalar_T.  Uses either TR1 or GSL random numbers.
+
+2010-05-28 00:24  leopardi
+
+	* pyclical/sqrt_log_demo.out: New file for PyCliCal: prototype
+	  Clifford algebra extension to Python.  Output from
+	  sqrt_log_demo.py: Demonstration of sqrt and log using PyCliCal.
+
+2010-05-28 00:24  leopardi
+
+	* pyclical/sqrt_log_demo.py: New file for PyCliCal: prototype
+	  Clifford algebra extension to Python.  Demonstration of sqrt and
+	  log using PyCliCal.
+
+2010-05-28 00:24  leopardi
+
+	* pyclical/pyclical_demo.out: New file for PyCliCal: prototype
+	  Clifford algebra extension to Python.  Output from
+	  pyclical_demo.py: Python version of CLICAL demo, using PyCliCal.
+
+2010-05-28 00:23  leopardi
+
+	* pyclical/pyclical_demo.py: New file for PyCliCal: prototype
+	  Clifford algebra extension to Python.  Python version of CLICAL
+	  demo, using PyCliCal.
+
+2010-05-28 00:22  leopardi
+
+	* pyclical/setup.py: New file for PyCliCal: prototype Clifford
+	  algebra extension to Python.	Python setup script for PyCliCal.
+	  Designed to be run from make.  Uses distutils and Cython.
+
+2010-05-28 00:22  leopardi
+
+	* pyclical/PyCliCal.pyx: New file for PyCliCal: prototype Clifford
+	  algebra extension to Python.	Python extension file for use with
+	  Cython.  Wraps most of the C++ interface for classes IndexSet and
+	  Clifford.
+
+2010-05-28 00:19  leopardi
+
+	* pyclical/PyCliCal.h: New file for PyCliCal: prototype Clifford
+	  algebra extension to Python.	C++ header file for Cython to use
+	  with PyCliCal.pyx.  Specifies that class IndexSet is
+	  index_set<DEFAULT_LO,DEFAULT_HI>, scalar_t is double, and class
+	  Clifford is framed_multi<scalar_t>.
+
+2010-05-28 00:18  leopardi
+
+	* pyclical/Makefile.am: New file for PyCliCal: prototype Clifford
+	  algebra extension to Python.	Automake input file to create
+	  Makefile for PyCliCal.
+
+2010-04-09 19:02  leopardi
+
+	* ChangeLog: ChangeLog for version 0.4.4.
+
 2010-04-04 23:47  leopardi
 
 	* ChangeLog: ChangeLog for version 0.4.4.
@@ -3362,3 +3714,4 @@
 2002-01-10 ./README: Add -finline-limit-400
 
 2002-01-09 Release glucat-0.0.1
+
