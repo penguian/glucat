@@ -2,10 +2,10 @@
 #define _GLUCAT_TRY_CATCH_H
 /***************************************************************************
     GluCat : Generic library of universal Clifford algebra templates
-    errors_imp.h : Define error functions
+    try_catch.h : Catch exceptions
                              -------------------
     begin                : Sun 2001-12-20
-    copyright            : (C) 2001-2007 by Paul C. Leopardi
+    copyright            : (C) 2001-2010 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
