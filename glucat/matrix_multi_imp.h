@@ -5,7 +5,7 @@
     matrix_multi_imp.h : Implement the matrix representation of a multivector
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2009 by Paul C. Leopardi
+    copyright            : (C) 2001-2010 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -262,11 +262,11 @@ namespace glucat
 
     // Operate only within a common frame
     const index_set_t our_frame = this->m_frame | rhs.m_frame;
-    const multivector_t& lhs_ref = 
+    const multivector_t& lhs_ref =
       (this->m_frame == our_frame)
       ? *this
       : multivector_t(framed_multi_t(*this), our_frame, true);
-    const multivector_t& rhs_ref = 
+    const multivector_t& rhs_ref =
       (rhs.m_frame == our_frame)
       ? rhs
       : multivector_t(framed_multi_t(rhs), our_frame, true);
@@ -328,9 +328,9 @@ namespace glucat
   bool
   matrix_multi<Scalar_T,LO,HI>::
   operator==  (const Scalar_T& scr) const
-  { 
+  {
     if (scr != Scalar_T(0))
-      return *this == multivector_t(framed_multi_t(scr), this->m_frame, true); 
+      return *this == multivector_t(framed_multi_t(scr), this->m_frame, true);
     else if (ublas::norm_inf(this->m_matrix) != 0)
       return false;
     else
@@ -364,7 +364,7 @@ namespace glucat
     if (this->m_frame != our_frame)
       // Represent *this in our_frame via conversion through framed_multi_t
       *this = multivector_t(framed_multi_t(*this), our_frame, true);
-    const multivector_t& rhs_ref = 
+    const multivector_t& rhs_ref =
       (rhs.m_frame == our_frame)
       ? rhs
       : multivector_t(framed_multi_t(rhs), our_frame, true);
@@ -389,7 +389,7 @@ namespace glucat
     if (this->m_frame != our_frame)
       // Represent *this in our_frame via conversion through framed_multi_t
       *this = multivector_t(framed_multi_t(*this), our_frame, true);
-    const multivector_t& rhs_ref = 
+    const multivector_t& rhs_ref =
       (rhs.m_frame == our_frame)
       ? rhs
       : multivector_t(framed_multi_t(rhs), our_frame, true);
@@ -476,10 +476,10 @@ namespace glucat
   inline
   const matrix_multi<Scalar_T,LO,HI>
   operator^ (const matrix_multi<Scalar_T,LO,HI>& lhs, const matrix_multi<Scalar_T,LO,HI>& rhs)
-  { 
+  {
     typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
     typedef typename multivector_t::framed_multi_t framed_multi_t;
-    return framed_multi_t(lhs) ^ framed_multi_t(rhs); 
+    return framed_multi_t(lhs) ^ framed_multi_t(rhs);
   }
 
   /// Outer product
@@ -495,10 +495,10 @@ namespace glucat
   inline
   const matrix_multi<Scalar_T,LO,HI>
   operator& (const matrix_multi<Scalar_T,LO,HI>& lhs, const matrix_multi<Scalar_T,LO,HI>& rhs)
-  { 
+  {
     typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
     typedef typename multivector_t::framed_multi_t framed_multi_t;
-    return framed_multi_t(lhs) & framed_multi_t(rhs); 
+    return framed_multi_t(lhs) & framed_multi_t(rhs);
   }
 
   /// Inner product
@@ -514,10 +514,10 @@ namespace glucat
   inline
   const matrix_multi<Scalar_T,LO,HI>
   operator% (const matrix_multi<Scalar_T,LO,HI>& lhs, const matrix_multi<Scalar_T,LO,HI>& rhs)
-  { 
+  {
     typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
     typedef typename multivector_t::framed_multi_t framed_multi_t;
-    return framed_multi_t(lhs) % framed_multi_t(rhs); 
+    return framed_multi_t(lhs) % framed_multi_t(rhs);
   }
 
   /// Left contraction
@@ -676,9 +676,9 @@ namespace glucat
   Scalar_T
   matrix_multi<Scalar_T,LO,HI>::
   scalar() const
-  { 
+  {
     const matrix_index_t dim = this->m_matrix.size1();
-    return matrix::trace(this->m_matrix) / Scalar_T( double(dim) ); 
+    return matrix::trace(this->m_matrix) / Scalar_T( double(dim) );
   }
 
   /// Main involution, each {i} is replaced by -{i} in each term
@@ -722,9 +722,9 @@ namespace glucat
   Scalar_T
   matrix_multi<Scalar_T,LO,HI>::
   norm() const
-  { 
+  {
     const matrix_index_t dim = this->m_matrix.size1();
-    return matrix::norm_frob2(this->m_matrix) / Scalar_T( double(dim) ); 
+    return matrix::norm_frob2(this->m_matrix) / Scalar_T( double(dim) );
   }
 
   template< typename Scalar_T, const index_t LO, const index_t HI >
@@ -805,30 +805,16 @@ namespace glucat
     return result;
   }
 
+  /// Random multivector within a frame
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  inline
-  std::ostream&
-  operator<< (std::ostream& os, const matrix_multi<Scalar_T,LO,HI>& val)
+  const matrix_multi<Scalar_T,LO,HI>
+  matrix_multi<Scalar_T,LO,HI>::
+  random(const index_set<LO,HI> frm)
   {
-    os << typename matrix_multi<Scalar_T,LO,HI>::framed_multi_t(val);
-    return os;
+    return framed_multi<Scalar_T,LO,HI>::random(frm);
   }
 
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  inline
-  std::istream&
-  operator>> (std::istream& s, matrix_multi<Scalar_T,LO,HI>& val)
-  { // Input looks like 1.0-2.0{1,2}+3.2{3,4}
-    framed_multi<Scalar_T,LO,HI> local;
-    s >> local;
-    // If s.bad() then we have a corrupt input
-    // otherwise we are fine and can copy the resulting matrix_multi
-    if (!s.bad())
-      val = local;
-    return s;
-  }
-
-  /// Write out multivector
+  /// Write multivector to output
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
   void
@@ -846,6 +832,31 @@ namespace glucat
     if (!ofile)
       throw error_t("write(ofile,msg): cannot write to output file");
     framed_multi_t(*this).write(ofile, msg);
+  }
+
+  /// Write multivector to output
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
+  std::ostream&
+  operator<< (std::ostream& os, const matrix_multi<Scalar_T,LO,HI>& val)
+  {
+    os << typename matrix_multi<Scalar_T,LO,HI>::framed_multi_t(val);
+    return os;
+  }
+
+  /// Read multivector from input
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
+  std::istream&
+  operator>> (std::istream& s, matrix_multi<Scalar_T,LO,HI>& val)
+  { // Input looks like 1.0-2.0{1,2}+3.2{3,4}
+    framed_multi<Scalar_T,LO,HI> local;
+    s >> local;
+    // If s.bad() then we have a corrupt input
+    // otherwise we are fine and can copy the resulting matrix_multi
+    if (!s.bad())
+      val = local;
+    return s;
   }
 
   template< typename Scalar_T, const index_t LO, const index_t HI >
