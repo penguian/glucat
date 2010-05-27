@@ -553,16 +553,19 @@ Test 11:
 Programming example 11 : Square root and transcendental functions
 
 framed_multi<float>
+Epsilon ==1.19209e-07
 A
   0
 
 A
   1
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -1
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   2
@@ -609,131 +612,161 @@ A
 A
   1.5708{-1}
 Test failed: cosh(A)*tanh(A) != sinh(A)
+Result == nan
 
 A
   -1.5708{-1}
 Test failed: cosh(A)*tanh(A) != sinh(A)
+Result == nan
 
 A
   314.159{-1}
 Test failed: cos(A)+elliptic(A)*sin(A) != exp(elliptic(A)*A)
+Result == nan
 Test failed: sin(asin(A)) != A
-Absolute norm of difference == 0.916809082
 Relative norm of difference == 0.002918293932
 
 A
   -314.159{-1}
 Test failed: cos(acos(A)) != A
-Absolute norm of difference == 0.916809082
 Relative norm of difference == 0.002918293932
 Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 0.916809082
 Relative norm of difference == 0.002918293932
 Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 0.9183959961
 Relative norm of difference == 0.002923345193
 
 A
   {1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-1,1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{-1,1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-2,-1,1,2}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{-2,-1,1,2}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-1}+{1}
 Test failed: sqrt(A)*sqrt(A) != A
+Result == nan
 
 A
   3.40282e+38{-1}+3.40282e+38{1}
 Test failed: exp(A)*exp(-A) != 1
+Result == nan
 Test failed: exp(-A)*exp(A) != 1
+Result == nan
 Test failed: sqrt(A)*sqrt(A) != A
+Result == nan
 
-Random A in {-1}
+Random A in {}
+
+Random A in {}
+
+Random A in {1}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 2.30802989
+
+Random A in {1}
+Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 1
 
 Random A in {-1,1}
+Test failed: exp(log(A)) != A
+Relative norm of difference == inf
 
-Random A in {-2,-1,1}
+Random A in {-1,1}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 0.5703445077
+
+Random A in {1,2}
+
+Random A in {1,2}
+
+Random A in {-1,1,2}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 41274.03906
+
+Random A in {-1,1,2}
+Test failed: exp(log(A)) != A
+Result == nan
+Test failed: tanh(atanh(A)) != A
+Result == nan
 
 Random A in {-2,-1,1,2}
 Test failed: exp(log(A)) != A
-Absolute norm of difference == 2.438423395
-Relative norm of difference == 0.4297405183
-Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 3.142756126e+13
 
-Random A in {-3,-2,-1,1,2}
+Random A in {-2,-1,1,2}
+
+Random A in {-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 22190008
+
+Random A in {-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 21406.10156
+
+Random A in {-2,-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 5.798129559
+
+Random A in {-2,-1,1,2,3}
+Test failed: exp(log(A)) != A
+Result == nan
+Test failed: cos(acos(A)) != A
+Relative norm of difference == 2.92764163
+Test failed: cosh(acosh(A)) != A
+Relative norm of difference == 2.927641392
+Test failed: sin(asin(A)) != A
+Relative norm of difference == 0.0006611907156
+Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 0.9130067229
 
 Random A in {-3,-2,-1,1,2,3}
 Test failed: exp(log(A)) != A
-Absolute norm of difference == inf
 Relative norm of difference == inf
-Test failed: tanh(atanh(A)) != A
 
-Random A in {-4,-3,-2,-1,1,2,3}
+Random A in {-3,-2,-1,1,2,3}
 Test failed: exp(log(A)) != A
-Absolute norm of difference == 0.003456373233
-Relative norm of difference == 0.0007612465415
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 0.005273253657
-Relative norm of difference == 0.00116140407
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 0.005273192655
-Relative norm of difference == 0.001161390683
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 0.003309520427
-Relative norm of difference == 0.0007289030473
+Relative norm of difference == 0.8916404247
 Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 0.003218947677
-Relative norm of difference == 0.0007089549326
-
-Random A in {-4,-3,-2,-1,1,2,3,4}
-Test failed: exp(A)*exp(-A) != 1
-Absolute norm of difference == 0.5353672504
-Relative norm of difference == 0.5353672504
-Test failed: exp(-A)*exp(A) != 1
-Absolute norm of difference == 0.1451837718
-Relative norm of difference == 0.1451837718
-Test failed: cosh(A)*tanh(A) != sinh(A)
-Absolute norm of difference == 1612.817383
-Relative norm of difference == 0.01046644896
-Test failed: exp(log(A)) != A
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 4.067019162e+10
-Relative norm of difference == 4238411776
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 4.067019162e+10
-Relative norm of difference == 4238411776
-Test failed: tanh(atanh(A)) != A
+Result == nan
 
 matrix_multi<float>
+Epsilon ==1.19209e-07
 A
   0
 
 A
   1
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -1
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   2
@@ -780,95 +813,177 @@ A
 A
   1.5708{-1}
 Test failed: cosh(A)*tanh(A) != sinh(A)
+Result == 0
 
 A
   -1.5708{-1}
 Test failed: cosh(A)*tanh(A) != sinh(A)
+Result == 0
 
 A
   314.159{-1}
 Test failed: cos(A)+elliptic(A)*sin(A) != exp(elliptic(A)*A)
+Result == 0
 Test failed: sin(asin(A)) != A
-Absolute norm of difference == 0.916809082
 Relative norm of difference == 0.002918293932
 
 A
   -314.159{-1}
 Test failed: cos(acos(A)) != A
-Absolute norm of difference == 0.9169616699
 Relative norm of difference == 0.002918779617
 Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 0.9169616699
 Relative norm of difference == 0.002918779617
 Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 0.918548584
 Relative norm of difference == 0.002923830878
 
 A
   {1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-1,1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{-1,1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-2,-1,1,2}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{-2,-1,1,2}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-1}+{1}
 Test failed: sqrt(A)*sqrt(A) != A
+Result == nan
 
 A
   nan
 Test failed: exp(A)*exp(-A) != 1
+Result == nan
 Test failed: exp(-A)*exp(A) != 1
+Result == nan
 Test failed: sqrt(A)*sqrt(A) != A
+Result == nan
 
-Random A in {-1}
+Random A in {}
+
+Random A in {}
+
+Random A in {1}
+Test failed: tanh(atanh(A)) != A
+Result == nan
+
+Random A in {1}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 10.79472351
+Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 0.2173223197
 
 Random A in {-1,1}
 Test failed: exp(log(A)) != A
-Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 0.3722550273
 
-Random A in {-2,-1,1}
+Random A in {-1,1}
+
+Random A in {1,2}
+Test failed: exp(log(A)) != A
+Result == nan
+Test failed: cos(acos(A)) != A
+Relative norm of difference == 5.992480755
+Test failed: cosh(acosh(A)) != A
+Relative norm of difference == 5.992480755
+
+Random A in {1,2}
+Test failed: exp(log(A)) != A
+Result == nan
+Test failed: cos(acos(A)) != A
+Relative norm of difference == 1.605819464
+Test failed: cosh(acosh(A)) != A
+Relative norm of difference == 1.605819464
+Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 1.409263968
+
+Random A in {-1,1,2}
+Test failed: exp(log(A)) != A
+Result == nan
+Test failed: tanh(atanh(A)) != A
+Result == 0
+
+Random A in {-1,1,2}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 98542.28906
+Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 1.424687743
 
 Random A in {-2,-1,1,2}
-Test failed: exp(log(A)) != A
 
-Random A in {-3,-2,-1,1,2}
+Random A in {-2,-1,1,2}
+Test failed: sqrt(A)*sqrt(A) != A
+Relative norm of difference == 0.0004966430133
+Test failed: exp(log(A)) != A
+Relative norm of difference == 2.438120604e+12
+
+Random A in {-1,1,2,3}
+Test failed: sqrt(A)*sqrt(A) != A
+Relative norm of difference == 0.0008902086993
+Test failed: exp(log(A)) != A
+Relative norm of difference == 0.01599851064
+
+Random A in {-1,1,2,3}
+
+Random A in {-2,-1,1,2,3}
+Test failed: exp(log(A)) != A
+Result == nan
+Test failed: tanh(atanh(A)) != A
+Result == nan
+
+Random A in {-2,-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 3042.44873
 
 Random A in {-3,-2,-1,1,2,3}
-
-Random A in {-4,-3,-2,-1,1,2,3}
-
-Random A in {-4,-3,-2,-1,1,2,3,4}
 Test failed: exp(log(A)) != A
+Relative norm of difference == 0.868914187
+Test failed: cos(acos(A)) != A
+Relative norm of difference == 1.357177496
+Test failed: cosh(acosh(A)) != A
+Relative norm of difference == 1.357177496
+Test failed: tanh(atanh(A)) != A
+Result == nan
+
+Random A in {-3,-2,-1,1,2,3}
+Test failed: exp(log(A)) != A
+Result == nan
 
 framed_multi<double>
+Epsilon ==2.22045e-16
 A
   0
 
 A
   1
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -1
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   2
@@ -915,10 +1030,12 @@ A
 A
   1.5707963267949{-1}
 Test failed: cosh(A)*tanh(A) != sinh(A)
+Result == nan
 
 A
   -1.5707963267949{-1}
 Test failed: cosh(A)*tanh(A) != sinh(A)
+Result == nan
 
 A
   314.159265358979{-1}
@@ -929,76 +1046,133 @@ A
 A
   {1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-1,1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{-1,1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-2,-1,1,2}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{-2,-1,1,2}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-1}+{1}
 Test failed: sqrt(A)*sqrt(A) != A
+Result == nan
 
 A
   1.79769313486232e+308{-1}+1.79769313486232e+308{1}
 Test failed: exp(A)*exp(-A) != 1
+Result == nan
 Test failed: exp(-A)*exp(A) != 1
+Result == nan
 Test failed: sqrt(A)*sqrt(A) != A
+Result == nan
 
-Random A in {-1}
+Random A in {}
+
+Random A in {}
+
+Random A in {1}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 2.330193093
+
+Random A in {1}
+Test failed: tanh(atanh(A)) != A
+Result == nan
 
 Random A in {-1,1}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 2.156386172e+40
 
-Random A in {-2,-1,1}
+Random A in {-1,1}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 0.5711436524
+
+Random A in {1,2}
+
+Random A in {1,2}
+
+Random A in {-1,1,2}
+Test failed: exp(log(A)) != A
+Result == nan
+
+Random A in {-1,1,2}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 1.458857416e+13
+Test failed: tanh(atanh(A)) != A
+Result == nan
 
 Random A in {-2,-1,1,2}
 Test failed: exp(log(A)) != A
-Absolute norm of difference == 1607360.932
-Relative norm of difference == 689327.0226
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 2.868302265
-Relative norm of difference == 1.230089783
+Relative norm of difference == 6.285895244e+21
 
-Random A in {-3,-2,-1,1,2}
+Random A in {-2,-1,1,2}
+
+Random A in {-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 22240480.84
+
+Random A in {-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 162038841.2
+
+Random A in {-2,-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == inf
+
+Random A in {-2,-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 2.11953565e+30
+Test failed: cos(acos(A)) != A
+Relative norm of difference == 0.9742223954
+Test failed: cosh(acosh(A)) != A
+Relative norm of difference == 0.9742223954
+Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 0.9129937018
 
 Random A in {-3,-2,-1,1,2,3}
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 2.743068161
-Relative norm of difference == 0.7524557295
+Test failed: exp(log(A)) != A
+Relative norm of difference == 9.844328779e+51
 
-Random A in {-4,-3,-2,-1,1,2,3}
-
-Random A in {-4,-3,-2,-1,1,2,3,4}
+Random A in {-3,-2,-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 8.044800431e+44
 Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 4.659033868
-Relative norm of difference == 1.030473409
+Relative norm of difference == 1.934994552
 
 matrix_multi<double>
+Epsilon ==2.22045e-16
 A
   0
 
 A
   1
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -1
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   2
@@ -1057,64 +1231,145 @@ A
 A
   {1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-1,1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{-1,1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-2,-1,1,2}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{-2,-1,1,2}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-1}+{1}
 Test failed: sqrt(A)*sqrt(A) != A
+Result == nan
 
 A
   nan
 Test failed: exp(A)*exp(-A) != 1
+Result == nan
 Test failed: exp(-A)*exp(A) != 1
+Result == nan
 Test failed: sqrt(A)*sqrt(A) != A
+Result == nan
 
-Random A in {-1}
+Random A in {}
+
+Random A in {}
+
+Random A in {1}
+Test failed: tanh(atanh(A)) != A
+Result == 0
+
+Random A in {1}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 10.73187469
+Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 0.2171477459
+
+Random A in {-1,1}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 0.3922731566
 
 Random A in {-1,1}
 
-Random A in {-2,-1,1}
+Random A in {1,2}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 80.2622933
+Test failed: cos(acos(A)) != A
+Relative norm of difference == 220.9534793
+Test failed: cosh(acosh(A)) != A
+Relative norm of difference == 220.9534793
+
+Random A in {1,2}
+Test failed: exp(log(A)) != A
+Result == nan
+Test failed: cos(acos(A)) != A
+Relative norm of difference == 1.582865932
+Test failed: cosh(acosh(A)) != A
+Relative norm of difference == 1.582865932
+Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 1.6373498
+
+Random A in {-1,1,2}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 56286973.36
+Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 1.183638098
+
+Random A in {-1,1,2}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 1.140294243e+26
+Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 1.365944338
 
 Random A in {-2,-1,1,2}
 
-Random A in {-3,-2,-1,1,2}
+Random A in {-2,-1,1,2}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 0.01052870276
+
+Random A in {-1,1,2,3}
+
+Random A in {-1,1,2,3}
+
+Random A in {-2,-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 3.274593955e+90
+Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 1.555271473
+
+Random A in {-2,-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 3598.254369
 
 Random A in {-3,-2,-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 1.07410969
+Test failed: cos(acos(A)) != A
+Relative norm of difference == 7.055579945e+16
+Test failed: cosh(acosh(A)) != A
+Relative norm of difference == 7.055579945e+16
+Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 1.019016849
 
-Random A in {-4,-3,-2,-1,1,2,3}
-
-Random A in {-4,-3,-2,-1,1,2,3,4}
+Random A in {-3,-2,-1,1,2,3}
+Test failed: exp(log(A)) != A
+Result == nan
 
 framed_multi<long double>
+Epsilon ==1.0842e-19
 A
   0
 
 A
   1
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -1
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   2
@@ -1161,10 +1416,12 @@ A
 A
   1.57079632679489662{-1}
 Test failed: cosh(A)*tanh(A) != sinh(A)
+Result == nan
 
 A
   -1.57079632679489662{-1}
 Test failed: cosh(A)*tanh(A) != sinh(A)
+Result == nan
 
 A
   314.159265358979324{-1}
@@ -1175,67 +1432,133 @@ A
 A
   {1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-1,1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{-1,1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-2,-1,1,2}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{-2,-1,1,2}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-1}+{1}
 Test failed: sqrt(A)*sqrt(A) != A
+Result == nan
 
 A
   1.18973149535723177e+4932{-1}+1.18973149535723177e+4932{1}
 Test failed: exp(A)*exp(-A) != 1
+Result == nan
 Test failed: exp(-A)*exp(A) != 1
+Result == nan
 Test failed: sqrt(A)*sqrt(A) != A
+Result == nan
 
-Random A in {-1}
+Random A in {}
+
+Random A in {}
+
+Random A in {1}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 2.330193093
+
+Random A in {1}
+Test failed: tanh(atanh(A)) != A
+Result == nan
 
 Random A in {-1,1}
 Test failed: exp(log(A)) != A
-Absolute norm of difference == 0.01086773639
-Relative norm of difference == 0.01340749671
+Relative norm of difference == 2.156386209e+40
 
-Random A in {-2,-1,1}
+Random A in {-1,1}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 0.5711436524
+
+Random A in {1,2}
+
+Random A in {1,2}
+
+Random A in {-1,1,2}
+Test failed: exp(log(A)) != A
+Relative norm of difference == inf
+
+Random A in {-1,1,2}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 1.169194883e+17
+Test failed: tanh(atanh(A)) != A
+Result == nan
+
+Random A in {-2,-1,1,2}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 6.28589549e+21
 
 Random A in {-2,-1,1,2}
 
-Random A in {-3,-2,-1,1,2}
+Random A in {-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 22240480.85
+
+Random A in {-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 162035889.1
+
+Random A in {-2,-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 5.120778344e+197
+
+Random A in {-2,-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 2.119325629e+30
+Test failed: cos(acos(A)) != A
+Relative norm of difference == 0.9742388915
+Test failed: cosh(acosh(A)) != A
+Relative norm of difference == 0.9742388915
+Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 0.9129937018
 
 Random A in {-3,-2,-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 9.844335457e+51
 
-Random A in {-4,-3,-2,-1,1,2,3}
-
-Random A in {-4,-3,-2,-1,1,2,3,4}
+Random A in {-3,-2,-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 7.400581314e+39
+Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 1.502326876
 
 matrix_multi<long double>
+Epsilon ==1.0842e-19
 A
   0
 
 A
   1
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -1
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   2
@@ -1282,10 +1605,12 @@ A
 A
   1.57079632679489662{-1}
 Test failed: cosh(A)*tanh(A) != sinh(A)
+Result == 0
 
 A
   -1.57079632679489662{-1}
 Test failed: cosh(A)*tanh(A) != sinh(A)
+Result == 0
 
 A
   314.159265358979324{-1}
@@ -1296,100 +1621,145 @@ A
 A
   {1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-1,1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{-1,1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-2,-1,1,2}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{-2,-1,1,2}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-1}+{1}
 Test failed: sqrt(A)*sqrt(A) != A
+Result == nan
 
 A
   nan
 Test failed: exp(A)*exp(-A) != 1
+Result == nan
 Test failed: exp(-A)*exp(A) != 1
+Result == nan
 Test failed: sqrt(A)*sqrt(A) != A
+Result == nan
 
-Random A in {-1}
+Random A in {}
+
+Random A in {}
+
+Random A in {1}
+Test failed: tanh(atanh(A)) != A
+Result == nan
+
+Random A in {1}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 10.73187469
+Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 0.2171477459
 
 Random A in {-1,1}
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 1.170579418
-Relative norm of difference == 0.6786788119
+Test failed: exp(log(A)) != A
+Relative norm of difference == 0.3922731565
 
-Random A in {-2,-1,1}
+Random A in {-1,1}
+
+Random A in {1,2}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 80.26159617
+Test failed: cos(acos(A)) != A
+Relative norm of difference == 220.9590825
+Test failed: cosh(acosh(A)) != A
+Relative norm of difference == 220.9590825
+
+Random A in {1,2}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 3.991514938e+219
+Test failed: cos(acos(A)) != A
+Relative norm of difference == 1.582865932
+Test failed: cosh(acosh(A)) != A
+Relative norm of difference == 1.582865932
 Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 0.8071092199
-Relative norm of difference == 0.2767302958
+Relative norm of difference == 1.409714066
+
+Random A in {-1,1,2}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 285327144.9
+Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 1.181874743
+
+Random A in {-1,1,2}
+Test failed: exp(log(A)) != A
+Result == nan
+Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 1.365944338
+
+Random A in {-2,-1,1,2}
 
 Random A in {-2,-1,1,2}
 Test failed: exp(log(A)) != A
-Absolute norm of difference == 1.885012493e+31
-Relative norm of difference == 6.437943383e+30
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 4.087805754
-Relative norm of difference == 1.396121357
+Result == nan
 
-Random A in {-3,-2,-1,1,2}
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 7.965882246e-07
-Relative norm of difference == 2.773070352e-07
+Random A in {-1,1,2,3}
+
+Random A in {-1,1,2,3}
+
+Random A in {-2,-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 3.274593795e+90
+Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 1.555271473
+
+Random A in {-2,-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 3598.25437
 
 Random A in {-3,-2,-1,1,2,3}
 Test failed: exp(log(A)) != A
-Absolute norm of difference == 5.812651608e+15
-Relative norm of difference == 1.011009894e+15
+Relative norm of difference == 1.074109694
 Test failed: cos(acos(A)) != A
-Absolute norm of difference == 34.99993366
-Relative norm of difference == 6.087631188
+Relative norm of difference == 7.055321176e+16
 Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 34.99993366
-Relative norm of difference == 6.087631188
+Relative norm of difference == 7.055321176e+16
 Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 6.834017695
-Relative norm of difference == 1.188658803
+Relative norm of difference == 1.019016985
 
-Random A in {-4,-3,-2,-1,1,2,3}
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 2.371720699e-07
-Relative norm of difference == 2.6271837e-08
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 1.499907153
-Relative norm of difference == 0.1661465292
-
-Random A in {-4,-3,-2,-1,1,2,3,4}
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 12.12321729
-Relative norm of difference == 1.052950994
+Random A in {-3,-2,-1,1,2,3}
+Test failed: exp(log(A)) != A
+Result == nan
 
 framed_multi<dd_real>
+Epsilon ==4.93038e-32
 A
   0
 
 A
   1.0000000000000000000000000000000e+00
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -1.0000000000000000000000000000000e+00
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   2.0000000000000000000000000000000e+00
@@ -1427,7 +1797,6 @@ A
 A
   3.1415926535897932384626433832795e+01{-2,-1,1,2,3,4,5}
 Test failed: cos(A)+elliptic(A)*sin(A) != exp(elliptic(A)*A)
-Absolute norm of difference == 1.0935752580e-20
 Relative norm of difference == 4.8151765381e-07
 
 A
@@ -1451,66 +1820,133 @@ A
 A
   {1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-1,1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{-1,1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-2,-1,1,2}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{-2,-1,1,2}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-1}+{1}
 Test failed: sqrt(A)*sqrt(A) != A
+Result == nan
 
 A
   nan
 Test failed: exp(A)*exp(-A) != 1
+Result == nan
 Test failed: exp(-A)*exp(A) != 1
+Result == nan
 
-Random A in {-1}
+Random A in {}
+
+Random A in {}
+
+Random A in {1}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 2.3301930927e+00
+
+Random A in {1}
+Test failed: tanh(atanh(A)) != A
+Result == nan
 
 Random A in {-1,1}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 2.1563862087e+40
 
-Random A in {-2,-1,1}
+Random A in {-1,1}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 5.7114365236e-01
+Test failed: sinh(asinh(A)) != A
+Relative norm of difference == 3.8202299414e-16
+
+Random A in {1,2}
+
+Random A in {1,2}
+
+Random A in {-1,1,2}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 1.2813922558e+30
+Test failed: sinh(asinh(A)) != A
+Relative norm of difference == 1.7946107387e-15
+
+Random A in {-1,1,2}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 2.1192568240e+15
+Test failed: tanh(atanh(A)) != A
+Result == nan
 
 Random A in {-2,-1,1,2}
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 1.3290846076e-01
-Relative norm of difference == 3.3976252305e-02
+Test failed: exp(log(A)) != A
+Relative norm of difference == 6.2858954901e+21
 
-Random A in {-3,-2,-1,1,2}
+Random A in {-2,-1,1,2}
+
+Random A in {-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 2.2240480854e+07
+
+Random A in {-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 1.6203589083e+08
+
+Random A in {-2,-1,1,2,3}
+
+Random A in {-2,-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 2.1193258103e+30
+Test failed: cos(acos(A)) != A
+Relative norm of difference == 9.7423889159e-01
+Test failed: cosh(acosh(A)) != A
+Relative norm of difference == 9.7423889159e-01
+Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 9.1299370181e-01
 
 Random A in {-3,-2,-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 9.8443354552e+51
 
-Random A in {-4,-3,-2,-1,1,2,3}
-
-Random A in {-4,-3,-2,-1,1,2,3,4}
+Random A in {-3,-2,-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 7.4100554796e+39
+Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 2.5499256417e+00
 
 matrix_multi<dd_real>
+Epsilon ==4.93038e-32
 A
   0
 
 A
   1.0000000000000000000000000000000e+00
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -1.0000000000000000000000000000000e+00
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   2.0000000000000000000000000000000e+00
@@ -1548,7 +1984,6 @@ A
 A
   3.1415926535897932384626433832795e+01{-2,-1,1,2,3,4,5}
 Test failed: cos(A)+elliptic(A)*sin(A) != exp(elliptic(A)*A)
-Absolute norm of difference == 1.0935752580e-20
 Relative norm of difference == 4.8151765381e-07
 
 A
@@ -1572,1377 +2007,514 @@ A
 A
   {1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-1,1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{-1,1}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-2,-1,1,2}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{-2,-1,1,2}
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-1}+{1}
 Test failed: sqrt(A)*sqrt(A) != A
+Result == nan
 
 A
   0
 Test failed: exp(scalar(A))*exp(pure(A)) != exp(A)
+Result == nan
 Test failed: cos(A)+elliptic(A)*sin(A) != exp(elliptic(A)*A)
+Result == 0
 Test failed: cosh(A)+sinh(A) != exp(A)
+Result == nan
 
-Random A in {-1}
+Random A in {}
+
+Random A in {}
+
+Random A in {1}
+Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 1.9772583865e+00
+
+Random A in {1}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 1.0731874688e+01
+Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 2.1714774591e-01
+
+Random A in {-1,1}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 3.9227315653e-01
 
 Random A in {-1,1}
 
-Random A in {-2,-1,1}
+Random A in {1,2}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 8.0261595786e+01
+Test failed: cos(acos(A)) != A
+Relative norm of difference == 2.2095908197e+02
+Test failed: cosh(acosh(A)) != A
+Relative norm of difference == 2.2095908197e+02
+
+Random A in {1,2}
+Test failed: exp(log(A)) != A
+Result == nan
+Test failed: cos(acos(A)) != A
+Relative norm of difference == 1.5828659320e+00
+Test failed: cosh(acosh(A)) != A
+Relative norm of difference == 1.5828659320e+00
+Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 1.4092640651e+00
+
+Random A in {-1,1,2}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 2.8478675744e+08
+Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 1.1818753487e+00
+
+Random A in {-1,1,2}
+Test failed: exp(log(A)) != A
+Result == nan
+Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 1.3659443381e+00
 
 Random A in {-2,-1,1,2}
 
-Random A in {-3,-2,-1,1,2}
+Random A in {-2,-1,1,2}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 3.1307754108e-02
+
+Random A in {-1,1,2,3}
+
+Random A in {-1,1,2,3}
+
+Random A in {-2,-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 3.2745937954e+90
+Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 1.8820125141e+00
+
+Random A in {-2,-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 3.5982543699e+03
 
 Random A in {-3,-2,-1,1,2,3}
 Test failed: exp(log(A)) != A
-Absolute norm of difference == 1.9977475712e+06
-Relative norm of difference == 1.3383414542e+07
-
-Random A in {-4,-3,-2,-1,1,2,3}
+Relative norm of difference == 1.0741096938e+00
+Test failed: cos(acos(A)) != A
+Relative norm of difference == 7.0553207427e+16
+Test failed: cosh(acosh(A)) != A
+Relative norm of difference == 7.0553207427e+16
 Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 3.2434661506e-16
-Relative norm of difference == 9.9665247375e-16
+Relative norm of difference == 1.0190169850e+00
 
-Random A in {-4,-3,-2,-1,1,2,3,4}
+Random A in {-3,-2,-1,1,2,3}
 Test failed: exp(log(A)) != A
-Absolute norm of difference == 2.9116933005e+56
-Relative norm of difference == 6.2940445706e+56
+Result == nan
 
 framed_multi<qd_real>
+Epsilon ==1.21543e-63
 A
   0
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 2.3153512097e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 2.3153512097e-18
 
 A
   1.00000000000000000000000000000000000000000000000000000000000000e+00
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 2.3153512097e-18
-Relative norm of difference == 2.3153512097e-18
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -1.00000000000000000000000000000000000000000000000000000000000000e+00
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 2.1331755352e-22
-Relative norm of difference == 2.1331755352e-22
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 2.3153512097e-18
-Relative norm of difference == 2.3153512097e-18
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   2.00000000000000000000000000000000000000000000000000000000000000e+00
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 4.0103059326e-18
-Relative norm of difference == 2.0051529663e-18
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 2.1678168211e-17
-Relative norm of difference == 1.0839084106e-17
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 5.1089954754e-30
-Relative norm of difference == 2.5544977377e-30
 
 A
   -2.00000000000000000000000000000000000000000000000000000000000000e+00
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 4.2663510704e-22
-Relative norm of difference == 2.1331755352e-22
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 3.6947684084e-22
-Relative norm of difference == 1.8473842042e-22
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 3.6947684084e-22
-Relative norm of difference == 1.8473842042e-22
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 4.0103059326e-18
-Relative norm of difference == 2.0051529663e-18
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 2.1678168216e-17
-Relative norm of difference == 1.0839084108e-17
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 5.1089954754e-30
-Relative norm of difference == 2.5544977377e-30
 
 A
   5.00000000000000000000000000000000000000000000000000000000000000e-01
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 2.4344405371e-18
-Relative norm of difference == 4.8688810742e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 2.4344405371e-18
-Relative norm of difference == 4.8688810742e-18
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 5.6147204557e-18
-Relative norm of difference == 1.1229440911e-17
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 5.4195420528e-18
-Relative norm of difference == 1.0839084106e-17
 
 A
   -5.00000000000000000000000000000000000000000000000000000000000000e-01
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 1.0665877676e-22
-Relative norm of difference == 2.1331755352e-22
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 2.4344405342e-18
-Relative norm of difference == 4.8688810685e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 2.4344405342e-18
-Relative norm of difference == 4.8688810685e-18
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 5.6147204557e-18
-Relative norm of difference == 1.1229440911e-17
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 5.4195420528e-18
-Relative norm of difference == 1.0839084106e-17
 
 A
   3.14159265358979323846264338327950288419716939937510582097494459e+00
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 6.8955514364e-18
-Relative norm of difference == 2.1949221929e-18
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 6.1126033818e-17
-Relative norm of difference == 1.9457020868e-17
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 1.5104922918e-29
-Relative norm of difference == 4.8080462949e-30
 
 A
   3.14159265358979323846264338327950288419716939937510582097494459e+00{1,2,3}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 7.2738903508e-18
-Relative norm of difference == 2.3153512097e-18
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 7.6335006426e-18
-Relative norm of difference == 2.4298187207e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 7.6335006426e-18
-Relative norm of difference == 2.4298187207e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 6.8955514364e-18
-Relative norm of difference == 2.1949221929e-18
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 1.5104922918e-29
-Relative norm of difference == 4.8080462949e-30
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 6.1126033818e-17
-Relative norm of difference == 1.9457020868e-17
 
 A
   -3.14159265358979323846264338327950288419716939937510582097494459e+00{1,2,3}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 7.2738903508e-18
-Relative norm of difference == 2.3153512097e-18
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 7.6335006426e-18
-Relative norm of difference == 2.4298187207e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 7.6335006426e-18
-Relative norm of difference == 2.4298187207e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 6.8955514364e-18
-Relative norm of difference == 2.1949221929e-18
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 1.5104922918e-29
-Relative norm of difference == 4.8080462949e-30
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 6.1126033819e-17
-Relative norm of difference == 1.9457020868e-17
 
 A
   3.14159265358979323846264338327950288419716939937510582097494459e+00{-1,1,2,3,4}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 7.2738903508e-18
-Relative norm of difference == 2.3153512097e-18
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 7.6335006426e-18
-Relative norm of difference == 2.4298187207e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 7.6335006426e-18
-Relative norm of difference == 2.4298187207e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 6.8955514364e-18
-Relative norm of difference == 2.1949221929e-18
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 6.1126033818e-17
-Relative norm of difference == 1.9457020868e-17
 
 A
   -3.14159265358979323846264338327950288419716939937510582097494459e+00{-1,1,2,3,4}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 7.2738903508e-18
-Relative norm of difference == 2.3153512097e-18
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 7.6335006426e-18
-Relative norm of difference == 2.4298187207e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 7.6335006426e-18
-Relative norm of difference == 2.4298187207e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 6.8955514364e-18
-Relative norm of difference == 2.1949221929e-18
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 6.1126033818e-17
-Relative norm of difference == 1.9457020868e-17
 
 A
   3.14159265358979323846264338327950288419716939937510582097494459e+00{-2,-1,1,2,3,4,5}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 7.2738903508e-18
-Relative norm of difference == 2.3153512097e-18
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 7.6335006426e-18
-Relative norm of difference == 2.4298187207e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 7.6335006426e-18
-Relative norm of difference == 2.4298187207e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 6.8955514364e-18
-Relative norm of difference == 2.1949221929e-18
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 6.1126033818e-17
-Relative norm of difference == 1.9457020868e-17
 
 A
   -3.14159265358979323846264338327950288419716939937510582097494459e+00{-2,-1,1,2,3,4,5}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 7.2738903508e-18
-Relative norm of difference == 2.3153512097e-18
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 7.6335006426e-18
-Relative norm of difference == 2.4298187207e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 7.6335006426e-18
-Relative norm of difference == 2.4298187207e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 6.8955514364e-18
-Relative norm of difference == 2.1949221929e-18
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 6.1126033818e-17
-Relative norm of difference == 1.9457020868e-17
 
 A
   3.14159265358979323846264338327950288419716939937510582097494459e+01{-2,-1,1,2,3,4,5}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 7.2738903508e-17
-Relative norm of difference == 2.3153512097e-18
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 7.2775744138e-17
-Relative norm of difference == 2.3165238833e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 7.2775744138e-17
-Relative norm of difference == 2.3165238833e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 7.2702044210e-17
-Relative norm of difference == 2.3141779418e-18
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 7.8308011493e-17
-Relative norm of difference == 2.4926214226e-18
 
 A
   -3.14159265358979323846264338327950288419716939937510582097494459e+01{-2,-1,1,2,3,4,5}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 7.2738903508e-17
-Relative norm of difference == 2.3153512097e-18
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 7.2775744138e-17
-Relative norm of difference == 2.3165238833e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 7.2775744138e-17
-Relative norm of difference == 2.3165238833e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 7.2702044210e-17
-Relative norm of difference == 2.3141779418e-18
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 7.8308011493e-17
-Relative norm of difference == 2.4926214226e-18
 
 A
   3.14159265358979323846264338327950288419716939937510582097494459e+00{1,2}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 7.2738903508e-18
-Relative norm of difference == 2.3153512097e-18
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 5.4956836504e-18
-Relative norm of difference == 1.7493304373e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 5.4956836504e-18
-Relative norm of difference == 1.7493304373e-18
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 2.0211491240e-17
-Relative norm of difference == 6.4335174761e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 4.5777559205e-18
-Relative norm of difference == 1.4571449660e-18
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 7.8385871854e-17
-Relative norm of difference == 2.4950997948e-17
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 6.1126033819e-17
-Relative norm of difference == 1.9457020868e-17
 
 A
   1.57079632679489661923132169163975144209858469968755291048747230e+00{-1}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 3.6369451754e-18
-Relative norm of difference == 2.3153512097e-18
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 4.3114059694e-18
-Relative norm of difference == 2.7447262868e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 4.3114059694e-18
-Relative norm of difference == 2.7447262868e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 2.8047315352e-18
-Relative norm of difference == 1.7855475515e-18
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 2.4989818607e-30
-Relative norm of difference == 1.5909012633e-30
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 6.2430194900e-18
-Relative norm of difference == 3.9744296466e-18
 
 A
   -1.57079632679489661923132169163975144209858469968755291048747230e+00{-1}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 3.6369451754e-18
-Relative norm of difference == 2.3153512097e-18
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 4.3114059694e-18
-Relative norm of difference == 2.7447262868e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 4.3114059694e-18
-Relative norm of difference == 2.7447262868e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 2.8047315352e-18
-Relative norm of difference == 1.7855475515e-18
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 2.4989818607e-30
-Relative norm of difference == 1.5909012633e-30
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 6.2430195093e-18
-Relative norm of difference == 3.9744296589e-18
 
 A
   3.14159265358979323846264338327950288419716939937510582097494459e+02{-1}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 7.2738903508e-16
-Relative norm of difference == 2.3153512097e-18
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 7.2739272007e-16
-Relative norm of difference == 2.3153629394e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 7.2739272007e-16
-Relative norm of difference == 2.3153629394e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 7.2738535008e-16
-Relative norm of difference == 2.3153394800e-18
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 1.6807751110e-25
-Relative norm of difference == 5.3500733428e-28
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 7.5420844742e-18
-Relative norm of difference == 2.4007200506e-20
 
 A
   -3.14159265358979323846264338327950288419716939937510582097494459e+02{-1}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 7.2738903508e-16
-Relative norm of difference == 2.3153512097e-18
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 7.2739272007e-16
-Relative norm of difference == 2.3153629394e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 7.2739272007e-16
-Relative norm of difference == 2.3153629394e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 7.2738535008e-16
-Relative norm of difference == 2.3153394800e-18
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 1.6807751110e-25
-Relative norm of difference == 5.3500733428e-28
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 7.5420848101e-18
-Relative norm of difference == 2.4007201575e-20
 
 A
   {1}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 2.3154478625e-18
-Relative norm of difference == 2.3154478625e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 1.3878874263e-17
-Relative norm of difference == 1.3878874263e-17
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 2.3153512097e-18
-Relative norm of difference == 2.3153512097e-18
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{1}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 2.3154478625e-18
-Relative norm of difference == 2.3154478625e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 1.3878874263e-17
-Relative norm of difference == 1.3878874263e-17
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 2.3153512097e-18
-Relative norm of difference == 2.3153512097e-18
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-1,1}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 2.3154478625e-18
-Relative norm of difference == 2.3154478625e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 1.3878874263e-17
-Relative norm of difference == 1.3878874263e-17
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 2.3153512097e-18
-Relative norm of difference == 2.3153512097e-18
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{-1,1}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 2.3154478625e-18
-Relative norm of difference == 2.3154478625e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 1.3878874263e-17
-Relative norm of difference == 1.3878874263e-17
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 2.3153512097e-18
-Relative norm of difference == 2.3153512097e-18
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-2,-1,1,2}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 2.3153512097e-18
-Relative norm of difference == 2.3153512097e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 1.3878874263e-17
-Relative norm of difference == 1.3878874263e-17
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 2.3153512097e-18
-Relative norm of difference == 2.3153512097e-18
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{-2,-1,1,2}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 2.3153512097e-18
-Relative norm of difference == 2.3153512097e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 1.3878874263e-17
-Relative norm of difference == 1.3878874263e-17
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 2.3153512097e-18
-Relative norm of difference == 2.3153512097e-18
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-1}+{1}
 Test failed: sqrt(A)*sqrt(A) != A
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 2.0397329976e-18
-Relative norm of difference == 1.4423090344e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 2.0397329976e-18
-Relative norm of difference == 1.4423090344e-18
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 9.0955096857e-19
-Relative norm of difference == 6.4314965771e-19
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 9.0955096857e-19
-Relative norm of difference == 6.4314965771e-19
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 2.0636117324e-19
-Relative norm of difference == 1.4591938497e-19
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 2.0636117324e-19
-Relative norm of difference == 1.4591938497e-19
+Result == nan
 
 A
   nan
 Test failed: exp(A)*exp(-A) != 1
+Result == nan
 Test failed: exp(-A)*exp(A) != 1
+Result == nan
 
-Random A in {-1}
+Random A in {}
+
+Random A in {}
+
+Random A in {1}
 Test failed: exp(log(A)) != A
-Absolute norm of difference == 1.8312232577e-17
-Relative norm of difference == 1.1858756272e-17
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 3.5075845478e-17
-Relative norm of difference == 2.2714647207e-17
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 3.5075845478e-17
-Relative norm of difference == 2.2714647207e-17
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 6.3195600589e-18
-Relative norm of difference == 4.0924623565e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 1.1941582433e-17
-Relative norm of difference == 7.7332086616e-18
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 6.0210478551e-18
-Relative norm of difference == 3.8991498560e-18
+Relative norm of difference == 2.3301930927e+00
+
+Random A in {1}
 Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 8.1100962771e-18
-Relative norm of difference == 5.2519896024e-18
+Relative norm of difference == 1.5663141792e+00
 
 Random A in {-1,1}
 Test failed: exp(log(A)) != A
-Absolute norm of difference == 6.1572220640e-18
-Relative norm of difference == 6.3040037761e-18
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 5.8350267735e-18
-Relative norm of difference == 5.9741276880e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 5.8350267735e-18
-Relative norm of difference == 5.9741276880e-18
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 1.1796131307e-18
-Relative norm of difference == 1.2077338697e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 4.3643471144e-17
-Relative norm of difference == 4.4683885693e-17
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 3.1630015454e-18
-Relative norm of difference == 3.2384041827e-18
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 1.9247281820e+00
-Relative norm of difference == 1.9706116819e+00
+Relative norm of difference == 2.1563862087e+40
 
-Random A in {-2,-1,1}
+Random A in {-1,1}
 Test failed: exp(log(A)) != A
-Absolute norm of difference == 5.9214342998e-18
-Relative norm of difference == 5.0764664859e-18
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 2.3879880060e-18
-Relative norm of difference == 2.0472305302e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 2.3879880060e-18
-Relative norm of difference == 2.0472305302e-18
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 2.4441956837e-18
-Relative norm of difference == 2.0954175703e-18
+Relative norm of difference == 5.7114365236e-01
 Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 1.2651465346e-17
-Relative norm of difference == 1.0846145811e-17
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 5.2701575390e-18
-Relative norm of difference == 4.5181246245e-18
+Relative norm of difference == 3.8202299414e-16
+
+Random A in {1,2}
+
+Random A in {1,2}
+
+Random A in {-1,1,2}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 1.2813922558e+30
+Test failed: sinh(asinh(A)) != A
+Relative norm of difference == 1.7946107387e-15
+
+Random A in {-1,1,2}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 2.1192568240e+15
 Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 1.5705544099e-18
-Relative norm of difference == 1.3464418285e-18
+Result == nan
 
 Random A in {-2,-1,1,2}
 Test failed: exp(log(A)) != A
-Absolute norm of difference == 1.7519612351e+02
-Relative norm of difference == 1.8939008528e+02
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 3.4632831131e-18
-Relative norm of difference == 3.7438698472e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 3.4632831131e-18
-Relative norm of difference == 3.7438698472e-18
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 3.4012043788e-18
-Relative norm of difference == 3.6767616455e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 2.7303290894e-17
-Relative norm of difference == 2.9515336797e-17
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 2.4367339861e-18
-Relative norm of difference == 2.6341522187e-18
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 1.2522701792e+00
-Relative norm of difference == 1.3537260488e+00
+Relative norm of difference == 6.2858954901e+21
 
-Random A in {-3,-2,-1,1,2}
+Random A in {-2,-1,1,2}
+
+Random A in {-1,1,2,3}
 Test failed: exp(log(A)) != A
-Absolute norm of difference == 2.0310210751e-19
-Relative norm of difference == 2.6382442839e-19
+Relative norm of difference == 2.2240480854e+07
+
+Random A in {-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 1.6203589083e+08
+
+Random A in {-2,-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == nan
+
+Random A in {-2,-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 2.1193258103e+30
 Test failed: cos(acos(A)) != A
-Absolute norm of difference == 4.1478448002e-18
-Relative norm of difference == 5.3879440094e-18
+Relative norm of difference == 9.7423889159e-01
 Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 4.1478448002e-18
-Relative norm of difference == 5.3879440094e-18
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 6.5431276812e-18
-Relative norm of difference == 8.4993550364e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 2.2353099839e-17
-Relative norm of difference == 2.9036103367e-17
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 1.2617768230e-18
-Relative norm of difference == 1.6390157303e-18
+Relative norm of difference == 9.7423889159e-01
 Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 1.6610956887e-17
-Relative norm of difference == 2.1577206950e-17
+Relative norm of difference == 9.1299370181e-01
 
 Random A in {-3,-2,-1,1,2,3}
 Test failed: exp(log(A)) != A
-Absolute norm of difference == 3.3407962875e+116
-Relative norm of difference == 5.3301964699e+116
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 3.6118754767e-18
-Relative norm of difference == 5.7626997455e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 3.6118754767e-18
-Relative norm of difference == 5.7626997455e-18
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 3.7739072139e-18
-Relative norm of difference == 6.0212192478e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 7.8900964273e-17
-Relative norm of difference == 1.2588544917e-16
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 3.7479519445e-18
-Relative norm of difference == 5.9798079573e-18
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 7.4523148461e-17
-Relative norm of difference == 1.1890070171e-16
+Relative norm of difference == 9.8443354552e+51
 
-Random A in {-4,-3,-2,-1,1,2,3}
+Random A in {-3,-2,-1,1,2,3}
 Test failed: exp(log(A)) != A
-Absolute norm of difference == 1.4257185332e-19
-Relative norm of difference == 2.3652430204e-19
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 3.7844837041e-18
-Relative norm of difference == 6.2783946892e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 3.7844837041e-18
-Relative norm of difference == 6.2783946892e-18
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 1.3059249952e-17
-Relative norm of difference == 2.1665075597e-17
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 4.2150674127e-17
-Relative norm of difference == 6.9927258056e-17
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 2.3140761497e-18
-Relative norm of difference == 3.8390133357e-18
+Relative norm of difference == 7.4100554796e+39
 Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 3.3077058399e-17
-Relative norm of difference == 5.4874282472e-17
-
-Random A in {-4,-3,-2,-1,1,2,3,4}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 1.6695165846e+10
-Relative norm of difference == 5.2058197232e+10
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 2.8254752301e-18
-Relative norm of difference == 8.8102836569e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 2.8254752301e-18
-Relative norm of difference == 8.8102836569e-18
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 8.0727244243e-17
-Relative norm of difference == 2.5172045858e-16
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 2.7329691419e-16
-Relative norm of difference == 8.5218348791e-16
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 1.0983363462e-17
-Relative norm of difference == 3.4247883888e-17
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 5.2296278947e-16
-Relative norm of difference == 1.6306816171e-15
+Relative norm of difference == 2.1107874280e+00
 
 matrix_multi<qd_real>
+Epsilon ==1.21543e-63
 A
   0
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 2.3153512097e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 2.3153512097e-18
 
 A
   1.00000000000000000000000000000000000000000000000000000000000000e+00
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 2.3153512097e-18
-Relative norm of difference == 2.3153512097e-18
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -1.00000000000000000000000000000000000000000000000000000000000000e+00
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 2.1331755352e-22
-Relative norm of difference == 2.1331755352e-22
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 2.3153512097e-18
-Relative norm of difference == 2.3153512097e-18
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   2.00000000000000000000000000000000000000000000000000000000000000e+00
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 4.0103059326e-18
-Relative norm of difference == 2.0051529663e-18
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 2.1678168211e-17
-Relative norm of difference == 1.0839084106e-17
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 5.1089954754e-30
-Relative norm of difference == 2.5544977377e-30
 
 A
   -2.00000000000000000000000000000000000000000000000000000000000000e+00
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 4.2663510704e-22
-Relative norm of difference == 2.1331755352e-22
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 3.6947684084e-22
-Relative norm of difference == 1.8473842042e-22
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 3.6947684084e-22
-Relative norm of difference == 1.8473842042e-22
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 4.0103059326e-18
-Relative norm of difference == 2.0051529663e-18
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 2.1678168216e-17
-Relative norm of difference == 1.0839084108e-17
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 5.1089954754e-30
-Relative norm of difference == 2.5544977377e-30
 
 A
   5.00000000000000000000000000000000000000000000000000000000000000e-01
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 2.4344405371e-18
-Relative norm of difference == 4.8688810742e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 2.4344405371e-18
-Relative norm of difference == 4.8688810742e-18
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 5.6147204557e-18
-Relative norm of difference == 1.1229440911e-17
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 5.4195420528e-18
-Relative norm of difference == 1.0839084106e-17
 
 A
   -5.00000000000000000000000000000000000000000000000000000000000000e-01
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 1.0665877676e-22
-Relative norm of difference == 2.1331755352e-22
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 2.4344405342e-18
-Relative norm of difference == 4.8688810685e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 2.4344405342e-18
-Relative norm of difference == 4.8688810685e-18
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 5.6147204557e-18
-Relative norm of difference == 1.1229440911e-17
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 5.4195420528e-18
-Relative norm of difference == 1.0839084106e-17
 
 A
   3.14159265358979323846264338327950288419716939937510582097494459e+00
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 6.8955514364e-18
-Relative norm of difference == 2.1949221929e-18
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 6.1126033818e-17
-Relative norm of difference == 1.9457020868e-17
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 1.5104922918e-29
-Relative norm of difference == 4.8080462949e-30
 
 A
   3.14159265358979323846264338327950288419716939937510582097494459e+00{1,2,3}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 7.2738903508e-18
-Relative norm of difference == 2.3153512097e-18
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 7.6335006426e-18
-Relative norm of difference == 2.4298187207e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 7.6335006426e-18
-Relative norm of difference == 2.4298187207e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 6.8955514364e-18
-Relative norm of difference == 2.1949221929e-18
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 1.5104922918e-29
-Relative norm of difference == 4.8080462949e-30
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 6.1126033818e-17
-Relative norm of difference == 1.9457020868e-17
 
 A
   -3.14159265358979323846264338327950288419716939937510582097494459e+00{1,2,3}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 7.2738903508e-18
-Relative norm of difference == 2.3153512097e-18
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 7.6335006426e-18
-Relative norm of difference == 2.4298187207e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 7.6335006426e-18
-Relative norm of difference == 2.4298187207e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 6.8955514364e-18
-Relative norm of difference == 2.1949221929e-18
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 1.5104922918e-29
-Relative norm of difference == 4.8080462949e-30
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 6.1126033819e-17
-Relative norm of difference == 1.9457020868e-17
 
 A
   3.14159265358979323846264338327950288419716939937510582097494459e+00{-1,1,2,3,4}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 7.2738903508e-18
-Relative norm of difference == 2.3153512097e-18
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 7.6335006426e-18
-Relative norm of difference == 2.4298187207e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 7.6335006426e-18
-Relative norm of difference == 2.4298187207e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 6.8955514364e-18
-Relative norm of difference == 2.1949221929e-18
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 1.0268124640e-17
-Relative norm of difference == 3.2684455854e-18
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 6.1126033818e-17
-Relative norm of difference == 1.9457020868e-17
 
 A
   -3.14159265358979323846264338327950288419716939937510582097494459e+00{-1,1,2,3,4}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 7.2738903508e-18
-Relative norm of difference == 2.3153512097e-18
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 7.6335006426e-18
-Relative norm of difference == 2.4298187207e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 7.6335006426e-18
-Relative norm of difference == 2.4298187207e-18
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 7.6335006426e-18
-Relative norm of difference == 2.4298187207e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 6.8955514364e-18
-Relative norm of difference == 2.1949221929e-18
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 6.1126033818e-17
-Relative norm of difference == 1.9457020868e-17
 
 A
   3.14159265358979323846264338327950288419716939937510582097494459e+00{-2,-1,1,2,3,4,5}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 7.2738903508e-18
-Relative norm of difference == 2.3153512097e-18
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 7.6335006426e-18
-Relative norm of difference == 2.4298187207e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 7.6335006426e-18
-Relative norm of difference == 2.4298187207e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 6.8955514364e-18
-Relative norm of difference == 2.1949221929e-18
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 6.1126033818e-17
-Relative norm of difference == 1.9457020868e-17
 
 A
   -3.14159265358979323846264338327950288419716939937510582097494459e+00{-2,-1,1,2,3,4,5}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 7.2738903508e-18
-Relative norm of difference == 2.3153512097e-18
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 7.6335006426e-18
-Relative norm of difference == 2.4298187207e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 7.6335006426e-18
-Relative norm of difference == 2.4298187207e-18
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 7.6335006426e-18
-Relative norm of difference == 2.4298187207e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 6.8955514364e-18
-Relative norm of difference == 2.1949221929e-18
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 1.0268124640e-17
-Relative norm of difference == 3.2684455854e-18
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 6.1126033818e-17
-Relative norm of difference == 1.9457020868e-17
 
 A
   3.14159265358979323846264338327950288419716939937510582097494459e+01{-2,-1,1,2,3,4,5}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 7.2738903508e-17
-Relative norm of difference == 2.3153512097e-18
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 7.2775744138e-17
-Relative norm of difference == 2.3165238833e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 7.2775744138e-17
-Relative norm of difference == 2.3165238833e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 7.2702044210e-17
-Relative norm of difference == 2.3141779418e-18
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 7.8308011493e-17
-Relative norm of difference == 2.4926214226e-18
 
 A
   -3.14159265358979323846264338327950288419716939937510582097494459e+01{-2,-1,1,2,3,4,5}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 7.2738903508e-17
-Relative norm of difference == 2.3153512097e-18
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 7.2775744138e-17
-Relative norm of difference == 2.3165238833e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 7.2775744138e-17
-Relative norm of difference == 2.3165238833e-18
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 7.2775744138e-17
-Relative norm of difference == 2.3165238833e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 7.2702044210e-17
-Relative norm of difference == 2.3141779418e-18
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 7.8308011493e-17
-Relative norm of difference == 2.4926214226e-18
 
 A
   3.14159265358979323846264338327950288419716939937510582097494459e+00{1,2}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 7.2738903508e-18
-Relative norm of difference == 2.3153512097e-18
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 5.4956836504e-18
-Relative norm of difference == 1.7493304373e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 5.4956836504e-18
-Relative norm of difference == 1.7493304373e-18
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 2.0211491240e-17
-Relative norm of difference == 6.4335174761e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 4.5777559205e-18
-Relative norm of difference == 1.4571449660e-18
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 7.8385871854e-17
-Relative norm of difference == 2.4950997948e-17
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 6.1126033819e-17
-Relative norm of difference == 1.9457020868e-17
 
 A
   1.57079632679489661923132169163975144209858469968755291048747230e+00{-1}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 3.6369451754e-18
-Relative norm of difference == 2.3153512097e-18
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 4.3114059694e-18
-Relative norm of difference == 2.7447262868e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 4.3114059694e-18
-Relative norm of difference == 2.7447262868e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 2.8047315352e-18
-Relative norm of difference == 1.7855475515e-18
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 2.4989818607e-30
-Relative norm of difference == 1.5909012633e-30
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 6.2430194900e-18
-Relative norm of difference == 3.9744296466e-18
 
 A
   -1.57079632679489661923132169163975144209858469968755291048747230e+00{-1}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 3.6369451754e-18
-Relative norm of difference == 2.3153512097e-18
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 4.3114059694e-18
-Relative norm of difference == 2.7447262868e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 4.3114059694e-18
-Relative norm of difference == 2.7447262868e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 2.8047315352e-18
-Relative norm of difference == 1.7855475515e-18
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 2.4989818607e-30
-Relative norm of difference == 1.5909012633e-30
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 6.2430195093e-18
-Relative norm of difference == 3.9744296589e-18
 
 A
   3.14159265358979323846264338327950288419716939937510582097494459e+02{-1}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 7.2738903508e-16
-Relative norm of difference == 2.3153512097e-18
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 7.2739272007e-16
-Relative norm of difference == 2.3153629394e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 7.2739272007e-16
-Relative norm of difference == 2.3153629394e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 7.2738535008e-16
-Relative norm of difference == 2.3153394800e-18
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 1.6807751110e-25
-Relative norm of difference == 5.3500733428e-28
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 7.5420844742e-18
-Relative norm of difference == 2.4007200506e-20
 
 A
   -3.14159265358979323846264338327950288419716939937510582097494459e+02{-1}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 7.2738903508e-16
-Relative norm of difference == 2.3153512097e-18
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 7.2739272007e-16
-Relative norm of difference == 2.3153629394e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 7.2739272007e-16
-Relative norm of difference == 2.3153629394e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 7.2738535008e-16
-Relative norm of difference == 2.3153394800e-18
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 1.6807751110e-25
-Relative norm of difference == 5.3500733428e-28
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 7.5420848101e-18
-Relative norm of difference == 2.4007201575e-20
 
 A
   {1}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 2.3154478625e-18
-Relative norm of difference == 2.3154478625e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 1.3878874263e-17
-Relative norm of difference == 1.3878874263e-17
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 2.3153512097e-18
-Relative norm of difference == 2.3153512097e-18
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{1}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 2.3154478625e-18
-Relative norm of difference == 2.3154478625e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 1.3878874263e-17
-Relative norm of difference == 1.3878874263e-17
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 2.3153512097e-18
-Relative norm of difference == 2.3153512097e-18
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-1,1}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 2.3154478625e-18
-Relative norm of difference == 2.3154478625e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 1.3878874263e-17
-Relative norm of difference == 1.3878874263e-17
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 2.3153512097e-18
-Relative norm of difference == 2.3153512097e-18
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{-1,1}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 2.3154478625e-18
-Relative norm of difference == 2.3154478625e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 1.3878874263e-17
-Relative norm of difference == 1.3878874263e-17
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 2.3153512097e-18
-Relative norm of difference == 2.3153512097e-18
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-2,-1,1,2}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 2.3153512097e-18
-Relative norm of difference == 2.3153512097e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 1.3878874263e-17
-Relative norm of difference == 1.3878874263e-17
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 2.3153512097e-18
-Relative norm of difference == 2.3153512097e-18
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   -{-2,-1,1,2}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 2.3153512097e-18
-Relative norm of difference == 2.3153512097e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 1.3878874263e-17
-Relative norm of difference == 1.3878874263e-17
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 2.3153512097e-18
-Relative norm of difference == 2.3153512097e-18
 Test failed: tanh(atanh(A)) != A
+Result == nan
 
 A
   {-1}+{1}
 Test failed: sqrt(A)*sqrt(A) != A
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 2.0397329976e-18
-Relative norm of difference == 1.4423090344e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 2.0397329976e-18
-Relative norm of difference == 1.4423090344e-18
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 9.0955096857e-19
-Relative norm of difference == 6.4314965771e-19
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 9.0955096857e-19
-Relative norm of difference == 6.4314965771e-19
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 2.0636117324e-19
-Relative norm of difference == 1.4591938497e-19
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 2.0636117324e-19
-Relative norm of difference == 1.4591938497e-19
+Result == nan
 
 A
   0
 Test failed: exp(scalar(A))*exp(pure(A)) != exp(A)
+Result == nan
 Test failed: cos(A)+elliptic(A)*sin(A) != exp(elliptic(A)*A)
+Result == 0
 Test failed: cosh(A)+sinh(A) != exp(A)
+Result == nan
 
-Random A in {-1}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 4.3257832160e-18
-Relative norm of difference == 1.0144510987e-17
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 4.4385520417e-18
-Relative norm of difference == 1.0408968205e-17
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 4.4385520417e-18
-Relative norm of difference == 1.0408968205e-17
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 8.3754460376e-18
-Relative norm of difference == 1.9641484585e-17
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 1.0119699696e-17
-Relative norm of difference == 2.3731980923e-17
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 1.9863990315e-18
-Relative norm of difference == 4.6583579884e-18
+Random A in {}
+
+Random A in {}
+
+Random A in {1}
 Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 2.4398577243e-18
-Relative norm of difference == 5.7217762094e-18
+Relative norm of difference == 1.9423773991e+00
+
+Random A in {1}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 1.0731874688e+01
+Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 2.1714774591e-01
 
 Random A in {-1,1}
 Test failed: exp(log(A)) != A
-Absolute norm of difference == 5.8358510495e-19
-Relative norm of difference == 7.7947873207e-19
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 5.3015715122e-18
-Relative norm of difference == 7.0811646926e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 5.3015715122e-18
-Relative norm of difference == 7.0811646926e-18
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 7.0731807624e-18
-Relative norm of difference == 9.4474549224e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 4.5318006613e-18
-Relative norm of difference == 6.0530027300e-18
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 5.9650344321e-18
-Relative norm of difference == 7.9673340468e-18
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 9.8889740493e-19
-Relative norm of difference == 1.3208433334e-18
+Relative norm of difference == 3.9227315653e-01
 
-Random A in {-2,-1,1}
+Random A in {-1,1}
+
+Random A in {1,2}
 Test failed: exp(log(A)) != A
-Absolute norm of difference == 1.5862556346e-18
-Relative norm of difference == 1.2990266525e-18
+Relative norm of difference == 8.0261595786e+01
 Test failed: cos(acos(A)) != A
-Absolute norm of difference == 3.6060345715e-18
-Relative norm of difference == 2.9530769921e-18
+Relative norm of difference == 2.2095908197e+02
 Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 3.6060345715e-18
-Relative norm of difference == 2.9530769921e-18
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 1.5954019693e-17
-Relative norm of difference == 1.3065168277e-17
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 3.5610640398e-18
-Relative norm of difference == 2.9162494354e-18
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 1.8677668867e-18
-Relative norm of difference == 1.5295636551e-18
+Relative norm of difference == 2.2095908197e+02
+
+Random A in {1,2}
+Test failed: exp(log(A)) != A
+Result == nan
+Test failed: cos(acos(A)) != A
+Relative norm of difference == 1.5828659320e+00
+Test failed: cosh(acosh(A)) != A
+Relative norm of difference == 1.5828659320e+00
 Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 3.2320824286e-18
-Relative norm of difference == 2.6468377014e-18
+Relative norm of difference == 1.4092640651e+00
+
+Random A in {-1,1,2}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 2.8478675744e+08
+Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 1.1818753487e+00
+
+Random A in {-1,1,2}
+Test failed: exp(log(A)) != A
+Result == nan
+Test failed: tanh(atanh(A)) != A
+Relative norm of difference == 1.3659443381e+00
+
+Random A in {-2,-1,1,2}
 
 Random A in {-2,-1,1,2}
 Test failed: exp(log(A)) != A
-Absolute norm of difference == 1.1000443244e-18
-Relative norm of difference == 6.0559396769e-19
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 2.8293277049e-18
-Relative norm of difference == 1.5575952284e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 2.8293277049e-18
-Relative norm of difference == 1.5575952284e-18
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 3.2130429496e-18
-Relative norm of difference == 1.7688372959e-18
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 2.5698787160e-18
-Relative norm of difference == 1.4147639450e-18
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 1.3057700062e-18
-Relative norm of difference == 7.1884961489e-19
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 1.2827324596e-18
-Relative norm of difference == 7.0616703571e-19
+Relative norm of difference == 3.1307754108e-02
 
-Random A in {-3,-2,-1,1,2}
+Random A in {-1,1,2,3}
+
+Random A in {-1,1,2,3}
+
+Random A in {-2,-1,1,2,3}
 Test failed: exp(log(A)) != A
-Absolute norm of difference == 3.6846642133e-19
-Relative norm of difference == 8.7984291252e-19
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 2.1336699459e-18
-Relative norm of difference == 5.0948859133e-18
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 2.1336699459e-18
-Relative norm of difference == 5.0948859133e-18
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 6.0200151560e-17
-Relative norm of difference == 1.4374899208e-16
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 3.9916558553e-18
-Relative norm of difference == 9.5314794245e-18
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 9.5140998367e-18
-Relative norm of difference == 2.2718252806e-17
+Relative norm of difference == 3.2745937954e+90
 Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 1.3899435915e-17
-Relative norm of difference == 3.3189781945e-17
+Relative norm of difference == 1.6143494116e+00
+
+Random A in {-2,-1,1,2,3}
+Test failed: exp(log(A)) != A
+Relative norm of difference == 3.5982543699e+03
 
 Random A in {-3,-2,-1,1,2,3}
 Test failed: exp(log(A)) != A
-Absolute norm of difference == 3.8722528208e-19
-Relative norm of difference == 8.8621254487e-19
+Relative norm of difference == 1.0741096938e+00
 Test failed: cos(acos(A)) != A
-Absolute norm of difference == 2.1495166696e-18
-Relative norm of difference == 4.9194325013e-18
+Relative norm of difference == 7.0553207427e+16
 Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 2.1495166696e-18
-Relative norm of difference == 4.9194325013e-18
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 6.5300167493e-17
-Relative norm of difference == 1.4944744130e-16
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 4.5309954493e-18
-Relative norm of difference == 1.0369738738e-17
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 1.0116199381e-17
-Relative norm of difference == 2.3152162870e-17
+Relative norm of difference == 7.0553207427e+16
 Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 4.4738970639e-18
-Relative norm of difference == 1.0239062081e-17
+Relative norm of difference == 1.0190169850e+00
 
-Random A in {-4,-3,-2,-1,1,2,3}
+Random A in {-3,-2,-1,1,2,3}
 Test failed: exp(log(A)) != A
-Absolute norm of difference == 4.8955468741e-20
-Relative norm of difference == 4.5204375178e-19
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 2.2476355769e-18
-Relative norm of difference == 2.0754159749e-17
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 2.2476355769e-18
-Relative norm of difference == 2.0754159749e-17
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 1.4616377225e-18
-Relative norm of difference == 1.3496432918e-17
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 6.6319304498e-19
-Relative norm of difference == 6.1237749309e-18
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 1.2405502995e-17
-Relative norm of difference == 1.1454961541e-16
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 4.2324103322e-19
-Relative norm of difference == 3.9081121984e-18
-
-Random A in {-4,-3,-2,-1,1,2,3,4}
-Test failed: exp(log(A)) != A
-Absolute norm of difference == 1.3122660031e-20
-Relative norm of difference == 9.8170050442e-20
-Test failed: cos(acos(A)) != A
-Absolute norm of difference == 2.2850487503e-18
-Relative norm of difference == 1.7094350578e-17
-Test failed: cosh(acosh(A)) != A
-Absolute norm of difference == 2.2850487503e-18
-Relative norm of difference == 1.7094350578e-17
-Test failed: sin(asin(A)) != A
-Absolute norm of difference == 2.4682952912e-18
-Relative norm of difference == 1.8465210001e-17
-Test failed: sinh(asinh(A)) != A
-Absolute norm of difference == 8.2852193456e-19
-Relative norm of difference == 6.1981366519e-18
-Test failed: tan(atan(A)) != A
-Absolute norm of difference == 2.2693100313e-17
-Relative norm of difference == 1.6976609904e-16
-Test failed: tanh(atanh(A)) != A
-Absolute norm of difference == 7.9432958584e-19
-Relative norm of difference == 5.9423451744e-18
+Result == nan
 
 
 Test 12:
