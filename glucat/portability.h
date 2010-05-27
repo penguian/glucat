@@ -31,8 +31,8 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
-// Workarounds for ICC
-#if defined (BOOST_INTEL) || defined (__ICL) || defined (__ICC)
+// Workarounds for ICC and ICPC
+#if defined (BOOST_INTEL) || defined (__INTEL_COMPILER) || defined (__ICL) || defined (__ICC)
 # pragma warning( disable: 177 ) // variable was declared but never referenced
 # pragma warning( disable: 193 ) // zero used for undefined preprocessing identifier
 # pragma warning( disable: 279 ) // controlling expression is constant
@@ -40,9 +40,20 @@
 # pragma warning( disable: 444 ) // destructor for base is not virtual
 # pragma warning( disable: 593 ) // variable was set but never used
 # pragma warning( disable: 810 ) // conversion from "double" to "int" may lose significant bits
+# pragma warning( disable: 858 ) // type qualifier on return type is meaningless
 # pragma warning( disable: 869 ) // parameter was never referenced
 # pragma warning( disable: 981 ) // operands are evaluated in unspecified order
 # pragma warning( disable: 1572 ) // floating-point equality and inequality comparisons ...
+# pragma warning( disable: 2259 ) // non-pointer conversion from "double" to "...={float}" may lose significant bits
+#endif
+
+// ICPC does not have std::tr1::isnan() or std:tr1::isinf()
+#if defined (BOOST_INTEL) || defined (__INTEL_COMPILER) || defined (__ICL) || defined (__ICC)
+#define _GLUCAT_ISNAN(x) (x != x)
+#define _GLUCAT_ISINF(x) (!_GLUCAT_ISNAN(x) && _GLUCAT_ISNAN(x-x))
+#else
+#define _GLUCAT_ISNAN(x) (std::isnan(x))
+#define _GLUCAT_ISINF(x) (std::isinf(x))
 #endif
 
 #if BOOST_VERSION >= 103400
