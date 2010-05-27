@@ -30,7 +30,7 @@
  ***************************************************************************/
 
 #include "test/driver.h"
-#include <boost/numeric/ublas/io.hpp>
+#include "test/control.h"
 #include "test00/peg00.h"
 
 int test00()
@@ -89,4 +89,10 @@ int test00()
 using namespace glucat;
 
 int main(int argc, char ** argv)
-{ return try_catch(test00); }
+{
+  test_control = control_t(argc, argv);
+  if (test_control.m_valid)
+    return try_catch(test00);
+  else
+    return 1;
+}
