@@ -1,3 +1,33 @@
+2010-05-28: 0.5.0
+Introducing PyCliCal: a Python interface to GluCat.
+
+GluCat now includes PyCliCal: a prototype Python interface to GluCat,
+implemented via Cython. The included files pyclical/pyclical_demo.py and
+pyclical/pyclical_demo.out highlight some of its capabilities.
+
+The framed_multi<> and matrix_multi<> classes now also have a new
+static member function random(frm), which returns a random multivector
+within the given frame frm, with each coordinate independently distributed
+according to the standard normal distribution, rescaled by dividing by the
+square root of the dimension ofthe frame. The random() function uses either
+TR1 or GSL normal random numbers, via the random_generator<> class defined
+in glucat/random.h.
+
+The ./configure options have changed. See ./INSTALL for details.
+
+The tests, ./test00 (Geometric algebra identities) and ./test11 (Square root
+and transcendental functions) have been updated to take advantage of the new
+random() function. Other tests may be updated later.
+
+A new header file, test/control.h, defines a new struct, control_t, which is
+used for control parameters defined via program arguments. Only the arguments
+--help and --verbose are defined via control_t. Both ./test00 and ./test1 use
+control_t and the --verbose flag.
+
+The C++ code has been updated to support the Intel C++ compiler, version 11.1.
+This involved updateing glucat/portability.h and moving the definitions of
+var_term member fnctions from glucat/framed_multi_imp.h to glucat/framed_multi.h.
+
 2010-04-04: 0.4.4
 GluCat supports QD high precision arithmetic.
 
