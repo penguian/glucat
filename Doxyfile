@@ -31,7 +31,7 @@ PROJECT_NAME           = glucat
 # This could be handy for archiving the generated documentation or 
 # if some version control system is used.
 
-PROJECT_NUMBER         = glucat-0.4.4
+PROJECT_NUMBER         = glucat-0.5.0
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) 
 # base path where the generated documentation will be put. 
@@ -1292,7 +1292,7 @@ INCLUDE_FILE_PATTERNS  =
 # undefined via #undef or recursively expanded use the := operator 
 # instead of the = operator.
 
-PREDEFINED             = _GLUCAT_USE_DENSE_MAT _GLUCAT_USE_QD _GLUCAT_USE_TR1_UNORDERED_MAP
+PREDEFINED             = _GLUCAT_USE_DENSE_MAT _GLUCAT_USE_QD _GLUCAT_USE_TR1_UNORDERED_MAP _GLUCAT_USE_TR1_RANDOM
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then 
 # this tag can be used to specify a list of macro names that should be expanded. 
