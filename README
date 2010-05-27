@@ -69,6 +69,13 @@ Dependencies, Installation and Testing
 ------------------------
  See INSTALL.
 
+Note
+----
+ The sqrt and log functions, and functions based on them, such as acos, acosh, etc.
+ may give incorrect results. This is because the algorithms used in GluCat 0.5.0
+ for sqrt(x) and log(x) fail if x is represented as a matrix having a negative real
+ eigenvalue. This will be fixed in GluCat 0.5.1.
+
 Usage
 -----
  As of the current version there are no detailed usage instructions. What
@@ -76,7 +83,7 @@ Usage
 
  To see brief descriptions of the classes, functions and operators which
  GluCat defines, see the Doxygen API documentation in ./glucat-api/html or
- ./glucat-api/refman.pdf.
+ ./glucat-api/glucat-api-refman.pdf.
 
  GluCat is a C++ template library, similar to the C++ Standard Library or the
  Boost uBLAS Library (uBLAS). It consists entirely of source code header
@@ -116,11 +123,12 @@ using namespace glucat;
  By default glucat/framed_multi.h defines glucat::framed_multi<> using std::map<>, 
  which is a sorted map.
  
- The configure script flag --with-unordered-map adds -D_GLUCAT_USE_TR1_UNORDERED_MAP
+ The configure script option --with-map=unordered adds -D_GLUCAT_USE_TR1_UNORDERED_MAP
  to CXXFLAGS in the test Makefiles, depending on whether <tr1/unordered_map> can be
- found.  For your own compilation, check your compiler, and add 
- -D_GLUCAT_USE_TR1_UNORDERED_MAP to your own Makefile if you want to use
- std::tr1::unordered_map<>.
+ found. The default argument to --with-map is unordered, so ./configure with no
+ options has the same effect as ./configure --with-map=unordered. For your own
+ compilation, check your compiler, and add -D_GLUCAT_USE_TR1_UNORDERED_MAP to your own
+ Makefile if you want to use std::tr1::unordered_map<>.
 
  _GLUCAT_USE_GNU_CXX_HASH_MAP controls the use of the header file <ext/hash_map>. 
  If _GLUCAT_USE_GNU_CXX_HASH_MAP is defined, glucat/glucat.h includes this file, 
@@ -128,7 +136,7 @@ using namespace glucat;
  If _GLUCAT_USE_GNU_CXX_HASH_MAP is defined, glucat/framed_multi.h defines 
  glucat::framed_multi<> using __gnu_cxx::hash_map<>, which is an unsorted map. 
  
- The configure script flag --with-hash-map adds -D_GLUCAT_USE_GNU_CXX_HASH_MAP
+ The configure script option --with-map=hash adds -D_GLUCAT_USE_GNU_CXX_HASH_MAP
  to CXXFLAGS in the test Makefiles, depending on whether you are using the g++
  compiler.  For your own compilation, check your compiler, and add 
  -D_GLUCAT_USE_GNU_CXX_HASH_MAP to your own Makefile if you want to use
@@ -143,8 +151,10 @@ using namespace glucat;
  basis matrices always use ublas::compressed_matrix<>.
  
  The configure script flag --with-dense-mat adds -D_GLUCAT_USE_DENSE_MATRICES
- to CXXFLAGS in the test Makefiles. For your own compilation you will need to add
- -D_GLUCAT_USE_DENSE_MATRICES to your own Makefile.
+ to CXXFLAGS in the test Makefiles. This is the default. If you do not want
+ dense matrices, you can use the configure script flag --without-dense-mat.
+ For your own compilation, you will need to add -D_GLUCAT_USE_DENSE_MATRICES
+ to your own Makefile, if you want to use dense matrices.
 
  _GLUCAT_USE_QD controls the use of the QD high precision floating point library.
  If _GLUCAT_USE_QD is defined, glucat/glucat.h includes qd/qd_config.h and glucat/qd.h.
@@ -152,11 +162,33 @@ using namespace glucat;
  numeric_traits<dd_real> and numeric_traits<qd_real>.
 
  The configure script flag --with-qd adds -D_GLUCAT_USE_QD to CXXFLAGS and adds
- the flag -lqd to the list of libraries all_libraries in the test Makefiles.
+ the flag -lqd to the list of libraries, all_libraries in the test Makefiles.
  For your own compilation you will need to add -D_GLUCAT_USE_QD and -lqd to
  your own Makefile. You will also need to ensure that the include path used by
  the compiler sees qd/qd_config.h and the library path sees libqd.a.
 
+ _GLUCAT_USE_GSL_RANDOM controls which random number generators are used by the class
+ random_generator<> defined in glucat/generator.h. If _GLUCAT_USE_GSL_RANDOM is defined,
+ the GSL random number generators are used, and glucat/glucat.h includes <gsl/gsl_rng.h>
+ and <gsl/gsl_randist.h> before glucat/generator.h. Otherwise the TR1 random number
+ generator are used, and glucat/glucat.h includes <tr1/random> before glucat/generator.h.
+
+ The configure script option --with-random[=ARG] is used to control _GLUCAT_USE_GSL_RANDOM
+ and determine which libraries to use. The default is tr1, in other words, the configure
+ script flag --with-random is equivalent to --with-random=tr1, and omitting this option
+ altogether has the same effect, which is to leave _GLUCAT_USE_GSL_RANDOM undefined. The
+ configure script option --with-random=gsl adds -D_GLUCAT_USE_GSL_RANDOM to CXXFLAGS and adds
+ the flags -lgsl and -lgslcblas to the list of libraries, all_libraries in the test Makefiles.
+ For your own compilation you will need to add -D_GLUCAT_USE_GSL_RANDOM, -lgsl and -lgslcblas
+ to your own Makefile, if you want to use GSL random nunbers instead of TR1. You will also
+ need to ensure that the include path used by the compiler sees gsl/gsl_rng.h and the library
+ path sees libgsl.a and libgslcblas.a.
+
+PyCliCal Python extension
+
+Glucat now includes a proptotype Python extension called PyCliCal. PyCliCal is written in
+C++ and Cython, and is defined in the files pyclical/PyCliCal.h and pyclical/PyClical.pyx.
+PyCliCal is designed to be installed using make. For details on building PyCliCal, see INSTALL.
 Coding standards
 ----------------
  
