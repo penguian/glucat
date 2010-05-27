@@ -1,16 +1,25 @@
 /* config.h.in.  Generated from configure.in by autoheader.  */
 
+/* Define to 1 if you have the <backward/hash_map> header file. */
+#undef HAVE_BACKWARD_HASH_MAP
+
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 
 /* Define to 1 if you have the <ext/hash_map> header file. */
 #undef HAVE_EXT_HASH_MAP
 
+/* Define to 1 if you have the <gsl/gsl_rng.h> header file. */
+#undef HAVE_GSL_GSL_RNG_H
+
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
+
+/* Define to 1 if you have the <qd/qd_config.h> header file. */
+#undef HAVE_QD_QD_CONFIG_H
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
@@ -32,6 +41,9 @@
 
 /* C++ compiler supports template repository */
 #undef HAVE_TEMPLATE_REPOSITORY
+
+/* Define to 1 if you have the <tr1/random> header file. */
+#undef HAVE_TR1_RANDOM
 
 /* Define to 1 if you have the <tr1/unordered_map> header file. */
 #undef HAVE_TR1_UNORDERED_MAP
