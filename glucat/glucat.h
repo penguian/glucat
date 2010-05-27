@@ -81,7 +81,11 @@
 // Use the appropriate type of map
 #include <map>
 #if defined(_GLUCAT_USE_GNU_CXX_HASH_MAP)
-# include <ext/hash_map>
+# if defined(_GLUCAT_USE_BACKWARD_HASH_MAP)
+#  include <backward/hash_map>
+# else
+#  include <ext/hash_map>
+# endif
 #elif defined(_GLUCAT_USE_TR1_UNORDERED_MAP)
 # include <tr1/unordered_map>
 #else
