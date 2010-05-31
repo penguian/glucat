@@ -16,7 +16,7 @@ ref: Stroustrup B., "The C++ Programming Language", 2nd ed.,
 ref: R. Sedgewick, "Algorithms in C++", Addison-Wesley, 1992.
 ref: S. Meyers, "Effective C++ ", Addison-Wesley, 1992.
 
-Arvind Raja's prototype was modelled on Clical, by Pertti Lounesto, R. Mikkola, 
+Arvind Raja's prototype was modelled on Clical, by Pertti Lounesto, R. Mikkola,
 V. Vierros.
 
 Advice
@@ -58,16 +58,27 @@ Arvind Raja: framed_multi<> sum, difference, inner product, outer product,
   geometric product, involutions and anti-involutions, norms.
 Joerg Walter, uBLAS project: LU factor and solve, matrix algorithms and linear algebra.
 Jan Cnops: Recursive expressions for matrix representations of Clifford algebras.
-Michael Clausen, Ulrich Baum, David K. Maslen, Daniel N. Rockmore: 
+Michael Clausen, Ulrich Baum, David K. Maslen, Daniel N. Rockmore:
   Generalized FFTs for finite groups.
 
 uBLAS Interface
 ---------------
 Joerg Walter: uBLAS interface.
 
+QD Interface
+------------
+David H. Bailey and QD team: Changes to constructors in QD 2.3.10.
+
+PyCliCal Python Extension
+-------------------------
+Paul Zimmermann: Hosting Sage Days 10 in Nancy, 2008
+William Stein: Sage Days 10 in Nancy, 2008
+Attendees of Sage Days 10 in Nancy, 2008:
+  Advice on use of Cython with C++.
+
 Configuration
 -------------
-Stephan Kulow, Walter Tasin, KDevelop team: 
+Stephan Kulow, Walter Tasin, KDevelop team:
   Configuration code used in config.in.in
 
 Testing
@@ -91,8 +102,8 @@ in Geometric Computing with Clifford Algebras, (G. Sommer, ed.)
 Springer 2001, Chapter 6, pp. 127-152.
 http://staff.science.uva.nl/~leo/clifford/index.html
 
-L. Dorst, "The inner products of geometric algebra", in 
-Applications of Geometric Algebra in Computer Science and Engineering 
+L. Dorst, "The inner products of geometric algebra", in
+Applications of Geometric Algebra in Computer Science and Engineering
 (Dorst, Doran, Lasenby, eds), Birkhauser, 2002.
 http://staff.science.uva.nl/~leo/clifford/index.html
 
@@ -100,37 +111,37 @@ D. Hestenes, G. Sobczyk, Clifford Algebra to Geometric Calculus, D. Reidel, 1984
 
 References for generalized FFTs on finite groups
 ------------------------------------------------
-L. Babai, L. Ronyai, "Computing irreducible representations of finite groups", 
+L. Babai, L. Ronyai, "Computing irreducible representations of finite groups",
 Math. Comp. 55 (1990), 705--722.
 
-U. Baum, M. Clausen, "Computing irreducible representations of supersolvable 
+U. Baum, M. Clausen, "Computing irreducible representations of supersolvable
 groups", Math. Comp. 63, 1994, pp. 351--359.
 
-T. Beth, "On the computational complexity of the general discrete Fourier 
+T. Beth, "On the computational complexity of the general discrete Fourier
 transform", Theoretical Computer Science, 51 (1987), no. 3, 331--339.
 
-G. S. Chirikjian, A. B. Kyatkin, Engineering applications of noncommutative 
+G. S. Chirikjian, A. B. Kyatkin, Engineering applications of noncommutative
 harmonic analysis. With emphasis on rotation and motion groups. CRC Press, 2001.
 
-M. Clausen, "Fast generalized Fourier transforms", Theoretical Computer 
+M. Clausen, "Fast generalized Fourier transforms", Theoretical Computer
 Science 67, 1989, 55-63. MR 91f:68081.
 
-M. Clausen, U. Baum, "Fast Fourier Transforms," Bibliographisches Institut & 
+M. Clausen, U. Baum, "Fast Fourier Transforms," Bibliographisches Institut &
 F. A. Brockhaus AG, Mannheim, 1993.
 
-P. Diaconis, D. Rockmore, "Efficient computation of the Fourier transform 
+P. Diaconis, D. Rockmore, "Efficient computation of the Fourier transform
 of finite groups," J. Amer. Math. Soc., 3(2), 297--332, 1990.
 
-D. Maslen, D. Rockmore, "Generalized FFTs: A survey of some recent results", 
-In L. Finkelstein and W. Kantor, editors, Proc. 1995 DIMACS Workshop in Groups 
-and Computation. 
+D. Maslen, D. Rockmore, "Generalized FFTs: A survey of some recent results",
+In L. Finkelstein and W. Kantor, editors, Proc. 1995 DIMACS Workshop in Groups
+and Computation.
 
-D. Maslen, D. Rockmore, "Separation of variables and the computation of 
-Fourier transforms on finite groups", I. J. of the Amer. Math. Soc., 10, 
+D. Maslen, D. Rockmore, "Separation of variables and the computation of
+Fourier transforms on finite groups", I. J. of the Amer. Math. Soc., 10,
 No. 1, 1997, pp. 169--214.
 
-D. Rockmore, "Some applications of generalized FFTs" (Appendix with D. 
-Healy), in Groups and Computation II, DIMACS Series in Discrete Math and 
-Computer Science, Vol. 28, L. Finkelstein and W. Kantor (eds.), 1997, pp. 
+D. Rockmore, "Some applications of generalized FFTs" (Appendix with D.
+Healy), in Groups and Computation II, DIMACS Series in Discrete Math and
+Computer Science, Vol. 28, L. Finkelstein and W. Kantor (eds.), 1997, pp.
 329--369.
 
