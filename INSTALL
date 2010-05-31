@@ -14,43 +14,55 @@ Before You Begin
  The headers also need an include library which either defines the macro isnan
  or defines std::isnan.
 
- GluCat 0.5.0 has so far been tested using:
+ GluCat 0.5.1 has so far been tested using:
 
 1) Dual Intel(R) Pentium(R) 4 with
 o Kubuntu 9.10 (Karmic), with
-  * gcc version 4.4.1, Boost 1.38.0, QD 2.3.10.
+  * gcc 4.4.1, Boost 1.38.0, QD 2.3.10,
+    Boost Numeric Bindings V1 20081116
 
 2) AMD Athlon(tm) 64 with
 o openSUSE Linux 11.2, with
-  * gcc version 4.4.1, Boost 1.37.0, 1.39.0, 1.40.0, 1.41.0, QD 2.3.10.
-  * Intel C++ version 11.1, Boost 1.39.0, no QD.
+  * gcc 4.4.1, Boost 1.37.0, 1.39.0, 1.40.0, 1.41.0, 1.42.0, 1.43.0, QD 2.3.10.
+    Alglib 2.5.0 C++
+    Boost Numeric Bindings V1 SVN 2010-04-20,
+    Boost Numeric Bindings SVN 2010-04-19.
+  * Intel C++ version 11.1, Boost 1.39.0, GSL 1.12 (random numbers), no QD.
+    Boost Numeric Bindings V1 20081116
 
 3) Quad-Core AMD Opteron(tm) Processor 8360 SE with
 o Debian Linux 5.0.4 (Lenny), with
-  * gcc version 4.3.4, Boost 1.34.1, no QD.
+  * gcc 4.3.4, Boost 1.34.1, no QD.
+    Boost Numeric Bindings V1 20081116
 
- PyCliCal for GluCat 0.5.0 has so far been tested using:
+ PyCliCal for GluCat 0.5.1 has so far been tested using:
 
 1) Dual Intel(R) Pentium(R) 4 with
 o Kubuntu 9.10 (Karmic), with
-  * gcc version 4.4.1, Boost 1.38.0, Python 2.6.4, Cython 0.11.2.
+  * gcc 4.4.1, Boost 1.38.0, Python 2.6.4, Cython 0.11.2.
+    Boost Numeric Bindings V1 20081116
 
 2) AMD Athlon(tm) 64 with
 o openSUSE Linux 11.2, with
-  * gcc version 4.4.1, Boost 1.39.0, Python 2.6.2, Cython 0.10.3.
+  * gcc 4.4.1, Boost 1.39.0, Python 2.6.2, Cython 0.10.3.
+    Alglib 2.5.0 C++
+    Boost Numeric Bindings V1 SVN 2010-04-20,
+    Boost Numeric Bindings SVN 2010-04-19.
 
    Notes:
-1. GluCat 0.5.0 will not work with QD versions earlier than 2.3.10,
+1. GluCat 0.5.1 will not work with QD versions earlier than 2.3.10,
    because older versions do not zero-initialize dd_real and qd_real
    as required by ublas::clear().
-2. GluCat 0.5.0 has not been tested with gcc versions earlier than 4.4.1.
+2. GluCat 0.5.1 has not been tested with gcc versions earlier than 4.3.4.
 3. With gcc version 4.4.1 and Boost versions earlier than 1.37.0, compilation
-   may result in error messages like: 
+   may result in error messages like:
 boost/mpl/apply_wrap.hpp:81:31: error: missing binary operator before token "("
    See https://svn.boost.org/trac/boost/ticket/2069 (fixed in Boost 1.37.0).
-4. GluCat 0.5.0 with QD 2.3.10 cannot be built with the Intel C++ compiler
+4. GluCat 0.5.1 with QD 2.3.10 cannot be built with the Intel C++ compiler
    (tested with icpc version 11.1) The problem is with isnan() and isinf(),
    which are std:: functions with g++ but macros with icpc.
+5. The current sandbox version of Boost Numeric Bindings does not work with
+   Boost versions earlier than Boost 1.41.0.
 
 To Test
 =======
@@ -63,19 +75,19 @@ To Test
 
 The Test Programs
 -----------------
- The test script ./test/test.sh takes any number (including zero) of numeric 
+ The test script ./test/test.sh takes any number (including zero) of numeric
  parameters. Parameters in the range "00" to "16" correspond to coding examples
  ./test00/peg00.h to ./test16/peg16.h. These examples are run in numerical
  order. With zero parameters, all examples from 00 to 16 are run in order. Many
- of the examples are run twice - once with framed_multi<Scalar_T> and once with 
- matrix_multi<Scalar_T>. 
+ of the examples are run twice - once with framed_multi<Scalar_T> and once with
+ matrix_multi<Scalar_T>.
 
  The test program ./gfft_test/gfft_test takes a parameter n, and transforms
  larger and larger multivectors within the subalgebra defined by the frame of
  the index set {-n, ..., -1, 1, ..., n}
- 
+
  The test program ./products/products takes a parameter n, and runs a timing
- test which uses the products *, ^, % and & to multply larger and larger 
+ test which uses the products *, ^, % and & to multply larger and larger
  multivectors within subalgebras defined by frames limited by the value of n.
 
  The test program ./squaring/squaring takes a parameter n, and runs a timing
@@ -85,7 +97,7 @@ The Test Programs
  The test program ./transforms/transforms takes a parameter n, and transforms
  larger and larger multivectors within the subalgebras defined by  frames
  limited by the value of n.
- 
+
  The test script ./test/timing_tests.sh takes up to 4 numeric parameters.
  The command "./test/timing_tests.sh $a $b $c $d" runs
   ./products/products $a
@@ -113,16 +125,16 @@ pyclical_demo.out.
 
 To Make the Test Programs
 -------------------------
- To create the GluCat test programs, set the environment variable CXX to 
+ To create the GluCat test programs, set the environment variable CXX to
  indicate your C++ compiler, eg. "g++" for GNU C++, "icc" for Intel C++, then
  run ./configure, then make. Some options to ./configure are described below.
  See "Usage" in README for more details.
 
  Make uses the headers in ./glucat and ./test and the source in ./test??,
  ./gfft_test, ./products, ./squaring and ./transforms to make the test programs
- ./test??/test??, ./gfft_test/gfft_test, ./products/products, ./squaring/squaring 
+ ./test??/test??, ./gfft_test/gfft_test, ./products/products, ./squaring/squaring
  and  ./transforms/transforms
- 
+
  Once you have created the test programs, copy the runtime directory
  ./test_runtime to a convenient place. ./test_runtime contains the test input
  file eg8.txt. This file is needed by programming example 8 (reading
@@ -136,9 +148,9 @@ To Make the Test Programs
  where it is and invoke it using the full path name. This allows it to find
  test00 to test16.
 
- To create meaningful timing tests, run ./configure --enable-debug=no, then 
- make.  Setting --enable-debug=no will invoke the highest optimization level of 
- the relevant compiler. 
+ To create meaningful timing tests, run ./configure --enable-debug=no, then
+ make.  Setting --enable-debug=no will invoke the highest optimization level of
+ the relevant compiler.
 
  To compile the tests using std::map for glucat::framed_multi<>,
  run ./configure --with-map=map, then make.
@@ -152,7 +164,7 @@ To Make the Test Programs
  run ./configure --with-map=unordered, or just run ./configure, then make.
  The default argument to --with-map is unordered, so ./configure with no options
  has the same effect as ./configure --with-map=unordered. This adds
- -D_GLUCAT_USE_TR1_UNORDERED_MAP to CXXFLAGS in the test Makefiles. 
+ -D_GLUCAT_USE_TR1_UNORDERED_MAP to CXXFLAGS in the test Makefiles.
 
  To compile the tests using compressed matrices, run ./configure --without-dense-mat,
  then make. This prevents -D_GLUCAT_USE_DENSE_MATRIX_MATRICES from being added to
@@ -169,15 +181,27 @@ To Make the Test Programs
  or just run ./configure, then make. The default argument to --with-random is tr1,
  so ./configure with no options has the same effect as ./configure --with-random=tr1.
 
+ To compile the tests using eigenvalues provided by Alglib,
+ run ./configure --with-eig=alglib, then make. This adds -D_GLUCAT_USE_EIGENVALUES
+ -D_GLUCAT_USE_ALGLIB to CXXFLAGS, and adds -lalglib to all_libraries.
+
+ To compile the tests using eigenvalues provided by LAPACK via Boost Numeric Bindings V1,
+ run ./configure --with-eig=bindingsv1, then make. This adds -D_GLUCAT_USE_EIGENVALUES
+ -D_GLUCAT_USE_BINDINGS_V1 to CXXFLAGS, and adds -llapack -lblas to all_libraries.
+
+ To compile the tests using eigenvalues provided by LAPACK via Boost Numeric Bindings,
+ run ./configure --with-eig=bindings, then make. This adds -D_GLUCAT_USE_EIGENVALUES
+ -D_GLUCAT_USE_BINDINGS to CXXFLAGS, and adds -llapack -lblas to all_libraries.
+
  The sample timing test results in ./test_runtime were built and run using
  ./configure --with-unordered-map --with-dense-mat --enable-debug=no
  on AMD Athlon(tm) 64 3200+, openSUSE Linux 11.2, g++ 4.4.1, Boost 1.39.0.
- 
+
  If you are using Linux on Intel, you can also:
- o create a full debug version of the tests: 
+ o create a full debug version of the tests:
    run ./configure --enable-debug=full, then make.
  o create a version for profiling:
-   run ./configure --enable-profile, then make. 
+   run ./configure --enable-profile, then make.
 
  Further warnings:
  1) The optimized compilation may take a long time to complete.

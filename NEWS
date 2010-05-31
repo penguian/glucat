@@ -1,3 +1,18 @@
+2010-05-31: 0.5.1
+GluCat 0.5.1 fixes sqrt and transcendental functions.
+
+The sqrt and log functions, and functions based on them, such as acos, acosh, etc.
+may give incorrect results when using GluCat 0.5.0 and earlier. This is because
+the algorithms used in GluCat 0.5.0 and earlier for sqrt(x) and log(x) fail if
+x is represented as a matrix having a negative real eigenvalue.
+
+This has now been fixed in GluCat 0.5.1, with the aid of external libraries
+which contain eigenvalue functions.
+
+o See Approximating functions in Clifford algebras:
+  What to do with negative eigenvalues? AGACSE 2010.
+( To be posted on http://www.maths.anu.edu.au/~leopardi )
+
 2010-05-28: 0.5.0
 Introducing PyCliCal: a Python interface to GluCat.
 
@@ -46,7 +61,7 @@ ARITH. IEEE Computer Society, 2001.
 Glucat has a fix for another comparison operator.
 
 For operator!= (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI>& rhs),
-there was essentially the same bug as was fixed in GluCat 0.4.2, but this was 
+there was essentially the same bug as was fixed in GluCat 0.4.2, but this was
 missed by Bug 2847758. GluCat 0.4.3 fixes this operator, and there are more tests
 in test14 to check this case as well.
 
@@ -54,7 +69,7 @@ in test14 to check this case as well.
 Bug 2847758: "operator!=(lhs,scr) sometimes wrongly returns true" has been fixed.
 
 In operator!= (const Multivector<Scalar_T,LO,HI>& lhs, const Scalar_T& scr).,
-with GluCat 0.4.1 and earlier, when lhs is of type matrix_multi_t, 
+with GluCat 0.4.1 and earlier, when lhs is of type matrix_multi_t,
 it is possible that lhs.frame().count() !=0 and yet the matrix is scr times the
 identity matrix. In this case operator!=() returns false when it should return true.
 
@@ -66,38 +81,38 @@ Glucat has improved transcendental functions and better support for scalars.
 
 Extensive changes have been made to the implementation of trancendental functions,
 primilarily to improve accuracy. The Pade' approximations now use degree 13. For
-the sqrt() and log() functions, number of cases of negative eigenvalues are 
+the sqrt() and log() functions, number of cases of negative eigenvalues are
 detected and avoided. More minor changes have been also made to improve speed.
 For details, see the Changelog for clifford_algebra_imp.h. See also
-Approximating functions in Clifford algebras, ANZMC 2008. 
+Approximating functions in Clifford algebras, ANZMC 2008.
 http://wwwmaths.anu.edu.au/~leopardi/ANZMC-2008-Leopardi-clifford-functions-talk.pdf
 
 A number of changes have been made to provide better support for more diverse
-scalars, primarily to allow new versions of Glucat to support the QD package. 
+scalars, primarily to allow new versions of Glucat to support the QD package.
 In particular, there are new constructors for framed_multi<> and
 matrix_multi<> from character strings, and more static functions defined via
 numeric_traits<Scalar_T>. For details, see the Changelog.
 
-Warning: The standalone function glucat::log2() defined in scalar.h and the 
+Warning: The standalone function glucat::log2() defined in scalar.h and the
 functions std::conj(), std::real() and std::imag() defined in long_double.h are
 now deprecated and will be removed in future versions of GluCat.
 
-For the QD package, see http://crd.lbl.gov/~dhbailey/mpdist/ 
-and Y. Hida, X. S. Li, and D. H. Bailey, 
-Algorithms for Quad-Double Precision Floating Point Arithmetic. 
-In Proceedings of the 15th IEEE Symposium on Computer Arithmetic (2001). 
+For the QD package, see http://crd.lbl.gov/~dhbailey/mpdist/
+and Y. Hida, X. S. Li, and D. H. Bailey,
+Algorithms for Quad-Double Precision Floating Point Arithmetic.
+In Proceedings of the 15th IEEE Symposium on Computer Arithmetic (2001).
 ARITH. IEEE Computer Society, 2001.
 
 2007-11-06: 0.4.0
 Glucat is now faster and more accurate.
 
-Some errors in transcendental functions have been fixed. 
+Some errors in transcendental functions have been fixed.
 These errors occurred because the functions were inconsistent in their use of
 elliptic(). This has been fixed by creating new versions of the functions
-sqrt, log, acosh, cos, acos, asinh, sin, asin, atanh, tan, atan, 
-with a second parameter i, which is a specified complexifier and 
+sqrt, log, acosh, cos, acos, asinh, sin, asin, atanh, tan, atan,
+with a second parameter i, which is a specified complexifier and
 a third parameter prechecked which controls a new function check_complex().
-The function check_complex(val, i) checks that i is a valid complexifier 
+The function check_complex(val, i) checks that i is a valid complexifier
 for val, ie. checks that i and elliptic(val) are consistent.
 
 The functions, exp, log, sqrt and the transcendental functions are more accurate
@@ -107,9 +122,9 @@ timing parameters.
 GluCat can now use framed_multi<> based on tr1::unordered_map<> rather than
 map<> or has_map<>.
 
-The new symbol _GLUCAT_USE_TR1_UNORDERED_MAP controls the use of the header 
-file <tr1/unordered_map>. 
- 
+The new symbol _GLUCAT_USE_TR1_UNORDERED_MAP controls the use of the header
+file <tr1/unordered_map>.
+
 The new configure script flag --with-unordered-map adds the flag
  -D_GLUCAT_USE_TR1_UNORDERED_MAP to CXXFLAGS in the test Makefiles.
 
@@ -122,15 +137,15 @@ The function index_range(), deprecated in GluCat 0.3.0, has been removed.
 
 There are many other minor changes.
 
-See the files INSTALL, README, glucat-api/refman.pdf and Changelog for more 
+See the files INSTALL, README, glucat-api/refman.pdf and Changelog for more
 details.
 
 2007-09-09: 0.3.0
-Two errors lurking in GluCat versions 0.0.1 through 0.2.3 have been fixed. 
+Two errors lurking in GluCat versions 0.0.1 through 0.2.3 have been fixed.
 
 1. The inner product was wrong. According to the definition, a & b == 0 if
 either a or b is a scalar. In previous versions of GluCat a & b == a*b == a^b if
-either a or b is a scalar. A new test, ./test00, checks many Geometric algebra 
+either a or b is a scalar. A new test, ./test00, checks many Geometric algebra
 identities, to ensure that this type of error is caught much earlier.
 The increase in version number from 0.2.3 to 0.3.0 is to remind users that the
 value of a & b has changed.
@@ -155,25 +170,25 @@ See the Changelog for a detailed list of changes.
 2007-08-23: 0.2.3
 GluCat now uses either dense or compressed matrices; LGPLv3.
 
-If _GLUCAT_USE_DENSE_MATRICES is defined, matrix_multi<> uses a a dense 
-matrix. Otherwise matrix_multi<> uses a compressed matrix type. In either 
+If _GLUCAT_USE_DENSE_MATRICES is defined, matrix_multi<> uses a a dense
+matrix. Otherwise matrix_multi<> uses a compressed matrix type. In either
 case, basis matrices always use a compressed matrix type.
 
 The ublas noalias assignment has been used where possible, to reduce the
 creation of temporary copies of matrices.
 
 The use of IEEE NaN has been improved to ensure that dense and compressed
-matrices give the same result even if one or more entry is NaN. 
+matrices give the same result even if one or more entry is NaN.
 IEEE Inf is now also used where appropriate.
 
 The pow() functions have been fixed to yield the correct powers of 0.
 
 The following fixes which were in CVS are included in this release.
-index_set_imp.h: 
+index_set_imp.h:
 Correct is_contiguous() so that it matches the requirements of
 framed_multi<>::fold() and framed_multi<>::unfold().
 
-framed_multi_imp.h: 
+framed_multi_imp.h:
 Fix fold() and unfold().
 
 GluCat is now licenced using LGPLv3 or later. See COPYING.
@@ -184,15 +199,15 @@ See the Changelog for a detailed list of changes.
 GluCat, now with Bit Wizardry, is even faster.
 
 Various functions in glucat/index_set_imp.h now use bitwise algorithms whose
-time is proportional to the log of the number of bits, or proportional to the 
+time is proportional to the log of the number of bits, or proportional to the
 number of bits set to true.
- 
-These algorithms are taken from and inspired by Joerg Arndt,  
-"Algorithms for programmers", http://www.jjj.de/fxt/fxtbook.pdf 
+
+These algorithms are taken from and inspired by Joerg Arndt,
+"Algorithms for programmers", http://www.jjj.de/fxt/fxtbook.pdf
 Chapter 1, Bit wizardry, http://www.jjj.de/bitwizardry/bitwizardrypage.html
 
-The file glucat/global.h now defines the macro _GLUCAT_BITS_PER_ULONG, 
-which is used in glucat/index_set_imp.h to enable the proprocessor to select 
+The file glucat/global.h now defines the macro _GLUCAT_BITS_PER_ULONG,
+which is used in glucat/index_set_imp.h to enable the proprocessor to select
 the 32-bit or 64-bit versions of some of the bitwise algorithms.
 
 2007-01-14: 0.2.1
@@ -284,13 +299,13 @@ This version of GluCat requires Boost 1.31.0, 1.33.0 or later.
 See the Changelog for a detailed list of changes.
 
 2004-08-11: 0.1.8
-GluCat has had a few bugs fixed, and a few minor enhancements. 
+GluCat has had a few bugs fixed, and a few minor enhancements.
 The constuctor for index_set<> from string and the corresponding stream input
 operator >> now work properly with strings of the form "1,2" as well as
-"{1,2}". 
+"{1,2}".
 The sign_of_mult() function for index_set<> has been improved.
 The subscripting operator [] for matrix_multi<> now works properly for index
-sets not contained in m_frame. 
+sets not contained in m_frame.
 Programs which use GluCat can now invoke GluCat classes and functions from
 separately compiled modules. To allow for this, the try_catch functions have
 been moved from glucat/errors.h and glucat/errors_imp.h to the new file
@@ -301,22 +316,22 @@ improvement.
 Compilation using g++ versions older than 3.3 now uses less agressive inlining.
 
 2004-06-20: 0.1.7
-GluCat now has an improved ./configure script which is better able to 
+GluCat now has an improved ./configure script which is better able to
 determine whether you have <boost/numeric/ublas/lu.hpp> available.
 
 2004-05-09: 0.1.6
 Glucat now compiles under gcc 3.4.
 Note that the uBLAS in Boost 1.31.0 does NOT compile under gcc 3.4.
 This has been fixed in Boost CVS.
- 
+
 2004-05-05: 0.1.5
-GluCat has further optimizations. The fast conversion between framed_multi<> 
+GluCat has further optimizations. The fast conversion between framed_multi<>
 and matrix_multi<> and its inverse are now implementations of the matrix
 representation algorithms described in the paper, "A generalized FFT for
 Clifford algebras". The optimized fast conversion uses the new function odd(),
 which gives the odd part of a multivector. A new configure option
 "--with-hash-map" replaces the separate hash_map version of GluCat.
-Note: This version of GluCat does NOT compile under gcc 3.4. 
+Note: This version of GluCat does NOT compile under gcc 3.4.
 
 2003-07-05: 0.1.4-hash_map
 This is a hack to glucat-0.1.4 which uses __gnu_cxx::hash_map<> instead of
@@ -328,7 +343,7 @@ GluCat has gained two bits. The mapping of index_set_t to bitset_t now treats
 index 0 of index_set_t as a "virtual" bit rather than a real dead bit of
 bitset_t. This allows DEFAULT_LO to be reduced by 1, and DEFAULT_HI to be
 increased by 1. For a 32 bit unsigned long, the default index_set_t is
-now index_set<-16,16>, using std::bitset<32> rather than index_set<-15,15>, 
+now index_set<-16,16>, using std::bitset<32> rather than index_set<-15,15>,
 which used std::bitset<31>.
 
 2003-06-23: 0.1.3

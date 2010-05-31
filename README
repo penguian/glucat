@@ -7,7 +7,7 @@ Purpose
  the user.
 
  GluCat classes are designed for use as numeric class template parameters with
- other template libraries, such as Blitz++, deal.II, Matrix Template Library 
+ other template libraries, such as Blitz++, deal.II, Matrix Template Library
  and POOMA. These template libraries expect a numeric class which implements
  "appropriate numeric semantics". To provide these semantics, the GluCat
  interface matches float or complex<> as much as possible. Yet the GluCat
@@ -16,7 +16,7 @@ Purpose
 
 Before you go any further
 -------------------------
- Before you use this template library, become familiar with geometric and 
+ Before you use this template library, become familiar with geometric and
  Clifford algebras.
 Web sites:
 o Rafal Ablamowitz
@@ -54,7 +54,7 @@ o Ian R. Porteous, "Clifford Algebras and the Classical groups",
 Software:
  o CLU, a C++ library with OPEN-GL graphics
    http://www.clucalc.info/
- o GAIGEN, a C++ code optimized generator   
+ o GAIGEN, a C++ code optimized generator
    http://www.science.uva.nl/ga/gaigen/
  o CLICAL, a Clifford algebra calculator
    http://www.hut.fi/~ppuska/mirror/Lounesto/CLICAL.htm
@@ -63,18 +63,11 @@ Software:
  o GA Package for Maple V
    http://www.mrao.cam.ac.uk/~clifford/software/GA/
  o GABLE, a Matlab package with visualization
-   http://carol.wins.uva.nl/~leo/GABLE/index.html 
+   http://carol.wins.uva.nl/~leo/GABLE/index.html
 
 Dependencies, Installation and Testing
 ------------------------
  See INSTALL.
-
-Note
-----
- The sqrt and log functions, and functions based on them, such as acos, acosh, etc.
- may give incorrect results. This is because the algorithms used in GluCat 0.5.0
- for sqrt(x) and log(x) fail if x is represented as a matrix having a negative real
- eigenvalue. This will be fixed in GluCat 0.5.1.
 
 Usage
 -----
@@ -97,7 +90,7 @@ Usage
    <glucat/glucat_imp.h>
  o Use the test header files ./test/driver.h and ./transforms/transforms.h as
    guides. These contain lines which look something like:
- 
+
 #include "glucat/glucat.h"
 typedef glucat::tuning<> Tune_P;
 #include "glucat/glucat_imp.h"
@@ -112,17 +105,17 @@ typedef glucat::tuning<> Tune_P;
 using namespace glucat;
 
  o GluCat uses preprocessor defines to control header files. In glucat/glucat.h:
- 
+
  _GLUCAT_USE_TR1_UNORDERED_MAP controls the use of the header file
- <tr1/unordered_map>. 
- If _GLUCAT_USE_TR1_UNORDERED_MAP is defined, glucat/glucat.h includes this file, 
- which contains the declarations and definitions for std::tr1::unordered_map<>. 
+ <tr1/unordered_map>.
+ If _GLUCAT_USE_TR1_UNORDERED_MAP is defined, glucat/glucat.h includes this file,
+ which contains the declarations and definitions for std::tr1::unordered_map<>.
  The main purpose of this definition is found in glucat/framed_multi.h.
- If _GLUCAT_USE_TR1_UNORDERED_MAP is defined, glucat/framed_multi.h defines 
- glucat::framed_multi<> using std::tr1::unordered_map<>, which is an unsorted map. 
- By default glucat/framed_multi.h defines glucat::framed_multi<> using std::map<>, 
+ If _GLUCAT_USE_TR1_UNORDERED_MAP is defined, glucat/framed_multi.h defines
+ glucat::framed_multi<> using std::tr1::unordered_map<>, which is an unsorted map.
+ By default glucat/framed_multi.h defines glucat::framed_multi<> using std::map<>,
  which is a sorted map.
- 
+
  The configure script option --with-map=unordered adds -D_GLUCAT_USE_TR1_UNORDERED_MAP
  to CXXFLAGS in the test Makefiles, depending on whether <tr1/unordered_map> can be
  found. The default argument to --with-map is unordered, so ./configure with no
@@ -130,26 +123,26 @@ using namespace glucat;
  compilation, check your compiler, and add -D_GLUCAT_USE_TR1_UNORDERED_MAP to your own
  Makefile if you want to use std::tr1::unordered_map<>.
 
- _GLUCAT_USE_GNU_CXX_HASH_MAP controls the use of the header file <ext/hash_map>. 
- If _GLUCAT_USE_GNU_CXX_HASH_MAP is defined, glucat/glucat.h includes this file, 
- which contains the GNU declarations and definitions for __gnu_cxx::hash_map<>. 
- If _GLUCAT_USE_GNU_CXX_HASH_MAP is defined, glucat/framed_multi.h defines 
- glucat::framed_multi<> using __gnu_cxx::hash_map<>, which is an unsorted map. 
- 
+ _GLUCAT_USE_GNU_CXX_HASH_MAP controls the use of the header file <ext/hash_map>.
+ If _GLUCAT_USE_GNU_CXX_HASH_MAP is defined, glucat/glucat.h includes this file,
+ which contains the GNU declarations and definitions for __gnu_cxx::hash_map<>.
+ If _GLUCAT_USE_GNU_CXX_HASH_MAP is defined, glucat/framed_multi.h defines
+ glucat::framed_multi<> using __gnu_cxx::hash_map<>, which is an unsorted map.
+
  The configure script option --with-map=hash adds -D_GLUCAT_USE_GNU_CXX_HASH_MAP
  to CXXFLAGS in the test Makefiles, depending on whether you are using the g++
- compiler.  For your own compilation, check your compiler, and add 
+ compiler.  For your own compilation, check your compiler, and add
  -D_GLUCAT_USE_GNU_CXX_HASH_MAP to your own Makefile if you want to use
  __gnu_cxx::hash_map<>.
 
  _GLUCAT_USE_DENSE_MATRICES controls the use of dense matrices.
  The main purpose of this definition is found in glucat/matrix_multi.h.
- If _GLUCAT_USE_DENSE_MATRICES is defined, glucat/matrix_multi.h defines 
+ If _GLUCAT_USE_DENSE_MATRICES is defined, glucat/matrix_multi.h defines
  glucat::matrix_multi<> using ublas::matrix<>, which is a dense matrix.
- Otherwise matrix_multi.h defines glucat::matrix_multi<> using 
+ Otherwise matrix_multi.h defines glucat::matrix_multi<> using
  ublas::compressed_matrix<>, which a compressed matrix type. In either case,
  basis matrices always use ublas::compressed_matrix<>.
- 
+
  The configure script flag --with-dense-mat adds -D_GLUCAT_USE_DENSE_MATRICES
  to CXXFLAGS in the test Makefiles. This is the default. If you do not want
  dense matrices, you can use the configure script flag --without-dense-mat.
@@ -180,24 +173,67 @@ using namespace glucat;
  configure script option --with-random=gsl adds -D_GLUCAT_USE_GSL_RANDOM to CXXFLAGS and adds
  the flags -lgsl and -lgslcblas to the list of libraries, all_libraries in the test Makefiles.
  For your own compilation you will need to add -D_GLUCAT_USE_GSL_RANDOM, -lgsl and -lgslcblas
- to your own Makefile, if you want to use GSL random nunbers instead of TR1. You will also
+ to your own Makefile, if you want to use GSL random numbers instead of TR1. You will also
  need to ensure that the include path used by the compiler sees gsl/gsl_rng.h and the library
  path sees libgsl.a and libgslcblas.a.
 
-PyCliCal Python extension
+ _GLUCAT_USE_EIGENVALUES controls whether the sqrt() and log() functions in matrix_multi_imp.h
+ detect and handle negative and imaginary eigenvalues correctly. If _GLUCAT_USE_EIGENVALUES is
+ defined, then sqrt() and log() call the function classify_eigenvalues(), defined in
+ matrix_imp.h, to detect negative and imaginary eigenvalues, and handle negative eigenvalues
+ by expanding the algebra. Otherwise, sqrt() and log() operate as per GluCat 0.5.0 and earlier,
+ which gives incorrect results in the case of negative eigenvalues.
 
-Glucat now includes a proptotype Python extension called PyCliCal. PyCliCal is written in
-C++ and Cython, and is defined in the files pyclical/PyCliCal.h and pyclical/PyClical.pyx.
-PyCliCal is designed to be installed using make. For details on building PyCliCal, see INSTALL.
+ The function eigenvalues() in matrix_imp.h calls an external function to obtain the
+ eigenvalues of a matrix. Which function is used depends on one of a number of preprocessor
+ defines:
+
+ _GLUCAT_USE_ALGLIB uses the Alglib library of Bochkanov and Bystritsky: http://www.alglib.net/
+ In this case, matrix_imp.h includes <alglib/evd.h>.
+
+ _GLUCAT_USE_BINDINGS_V1 uses version 1 of the Boost Numeric Bindings library, as packaged by
+ Klöckner: http://mathema.tician.de/software/boost-numeric-bindings
+ In this case, matrix_imp.h includes <boost/numeric/bindings/lapack/gees.hpp>.
+
+ _GLUCAT_USE_BINDINGS uses the SVN sandbox version of the Boost Numeric Bindings library,
+ as per http://svn.boost.org/svn/boost/sandbox/numeric_bindings/
+ In this case, matrix_imp.h includes <boost/numeric/bindings/lapack/driver/gees.hpp>.
+
+ The configure script option --with-eig[=ARG]: is used to control _GLUCAT_USE_EIGENVALUES
+ and determine which libraries to use. ARG can be "no", "alglib", "bindingsv1" or "bindings".
+ The default is "no". The configure script option --with-eig=alglib adds
+ -D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_ALGLIB to CXXFLAGS and adds the flag -lalglib to
+ the list of libraries, all_libraries in the test Makefiles.
+ The configure script option --with-eig=bindingsv1 adds -D_GLUCAT_USE_EIGENVALUES
+ -D_GLUCAT_USE_BINDINGS_V1 to  CXXFLAGS and adds the flags -llapack -lblas to the list of
+ libraries, all_libraries in the test Makefiles.
+ The configure script option --with-eig=bindings adds -D_GLUCAT_USE_EIGENVALUES
+ -D_GLUCAT_USE_BINDINGS to  CXXFLAGS and adds the flags -llapack -lblas to the list of
+ libraries, all_libraries in the test Makefiles.
+
+ For your own compilation you will need to add -D_GLUCAT_USE_EIGENVALUES, one of
+ -D_GLUCAT_USE_ALGLIB, -D_GLUCAT_USE_BINDINGS_V1 or -D_GLUCAT_USE_BINDINGS, and either
+ "-lalglib" or "-llapack -lblas" to to your own Makefile, if you want sqrt() and log() to use
+ eigenvalues to avoid incorrect results. You will also need to ensure that the include path
+ used by the compiler sees the appropriate header files as above, and the library path sees
+ the appropriate libraries: either libalglib.a or liblapack.a and libblas.a.
+
+PyCliCal Python extension
+-------------------------
+
+ Glucat includes a prototype Python extension called PyCliCal. PyCliCal is written in C++ and
+ Cython, and is defined in the files pyclical/PyCliCal.h and pyclical/PyClical.pyx.
+ PyCliCal is designed to be installed using make. For details on building PyCliCal, see INSTALL.
+
 Coding standards
 ----------------
- 
+
  The headers are split into declarations and definitions. The software was
  developed using the g++ compiler, which does not implement the "export" keyword.
  Separate compilation is possible, if you include both the declarations and
  definitions in each compilation unit, but compilation is slow and the resulting
  binary is large.
- 
+
  The code follows many, but not all of the guidelines in the
  GNU C++ Standard Library Style Guidelines at
  http://gcc.gnu.org/onlinedocs/libstdc++/17_intro/C++STYLE

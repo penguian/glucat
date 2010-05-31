@@ -1,17 +1,6 @@
-As at GluCat 0.5.0, 2010-05-28:
+As at GluCat 0.5.1, 2010-05-31:
 
 Improve transcendental functions:
-The sqrt and log functions, and functions based on them, such as acos, acosh, etc.
-may give incorrect results. This is because the algorithms used in GluCat 0.5.0
-for sqrt(x) and log(x) fail if x is represented as a matrix having a negative real
-eigenvalue. This will be fixed in GluCat 0.5.1.
-
-o See Approximating functions in Clifford algebras, ANZMC 2008. 
-http://wwwmaths.anu.edu.au/~leopardi/ANZMC-2008-Leopardi-clifford-functions-talk.pdf
-o See Approximating functions in Clifford algebras: 
-  What to do with negative eigenvalues? AustMS 2009.
-http://wwwmaths.anu.edu.au/~leopardi/AustMS-2009-Leopardi-clifford-functions-talk.pdf
-o Fix sqrt() and log() so that they deal properly with negative real eigenvalues.
 o Devise better algorithms and better implementations of existing algorithms for
   the transcendental functions. In particular, pay more attention to radius of
   convergence, condition number of matrices and poking out of the subalgebra.
@@ -29,7 +18,6 @@ o Redevelop the configure srcript and Makefiles, using more up-to-date
 o Build and test using Intel C++.
 o Improve the packaging of the example and test programs.
 o Write a programmer's guide with descriptions of the API.
-o Publish the experimental Cython interface developed during Sage Days 10.
 o Expand the Cython interface into a Sage interface.
 o Test and suggest improvements to John Fletcher's SWIG bindings to Ruby and
   Henk Jansen's SWIG bindings to Python.
@@ -44,13 +32,13 @@ o Ensure better adherence to C++ standards.
 o Investigate the use of Eigen as a replacement for uBLAS.
 o Try defining Boost concepts and more numeric traits so that GluCat can eventually
   become a Boost library.
-o Try refactoring the relationship between matrix_multi, framed_multi and 
+o Try refactoring the relationship between matrix_multi, framed_multi and
   clifford_algebra to allow more flexibility with template parameters.
   Possibly use enable_if and SFINAE to do this.
 o Try adding a Matrix_Tag template parameter to framed_multi and matrix_multi,
   to determine if matrix_t is compressed, dense, etc.
-o Try removing the template parameters LO and HI from framed_multi and 
-  matrix_multi, and using DEFAULT_LO and DEFAULT_HI where these are needed in 
+o Try removing the template parameters LO and HI from framed_multi and
+  matrix_multi, and using DEFAULT_LO and DEFAULT_HI where these are needed in
   framed_multi.h, matrx_multi.h, etc.
 o Try making Tune_P into a mixin policy class template parameter.
 o Add operator| for geometric operations: return rhs * lhs * involute(inv(rhs))
@@ -65,4 +53,3 @@ o Try using the complex matrix representations. These use smaller matrices,
   which should be faster. This would mean changes to basis_element(),
   folded_dim() and others. Possibly deliver this as an additional template class
   rather than a change to matrix_multi<>.
-
