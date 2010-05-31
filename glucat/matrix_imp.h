@@ -32,6 +32,20 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
+#include <set>
+#if defined(_GLUCAT_USE_ALGLIB)
+#include <alglib/evd.h>
+#endif
+#if defined(_GLUCAT_USE_BINDINGS_V1)
+#include <boost/numeric/bindings/lapack/workspace.hpp>
+#include <boost/numeric/bindings/lapack/gees.hpp>
+#include <boost/numeric/bindings/traits/ublas_matrix.hpp>
+#endif
+#if defined(_GLUCAT_USE_BINDINGS)
+#include <boost/numeric/bindings/lapack/driver/gees.hpp>
+#include <boost/numeric/bindings/ublas.hpp>
+#endif
+
 namespace glucat { namespace matrix
 {
   /// Kronecker tensor product of matrices - as per Matlab kron
@@ -349,7 +363,7 @@ namespace glucat { namespace matrix
         if (numeric_traits<Scalar_T>::isNaN(*val_it2))
           return numeric_traits<Scalar_T>::NaN();
         result += (*val_it2) * (*val_it2);
-      } 
+      }
     return result;
   }
 
@@ -365,12 +379,229 @@ namespace glucat { namespace matrix
     matrix_index_t dim = val.size1();
     for (matrix_index_t ndx=0;
         ndx != dim;
-        ++ndx)  
+        ++ndx)
     {
       const Scalar_T crd = val(ndx, ndx);
       if (numeric_traits<Scalar_T>::isNaN(crd))
         return numeric_traits<Scalar_T>::NaN();
       result += crd;
+    }
+    return result;
+  }
+
+#if defined(_GLUCAT_USE_ALGLIB)
+  /// Convert matrix to ALGLIB format
+  template< typename Matrix_T >
+  static
+  ap::real_2d_array
+  to_alglib(const Matrix_T& val)
+  {
+    typedef typename Matrix_T::size_type matrix_index_t;
+    const matrix_index_t s1 = val.size1();
+    const matrix_index_t s2 = val.size2();
+
+    ap::real_2d_array result;
+    result.setlength(int(s1), int(s2));
+
+    typedef typename Matrix_T::value_type Scalar_T;
+    typedef numeric_traits<Scalar_T> traits_t;
+
+    matrix_index_t j;
+    matrix_index_t k;
+    for (j = 0;
+        j != s1;
+        ++j)
+      for(k = 0;
+          k != s2;
+          ++k)
+         result(int(j), int(k)) = 0.0;
+
+    typedef typename Matrix_T::const_iterator1 const_iterator1;
+    typedef typename Matrix_T::const_iterator2 const_iterator2;
+    for (const_iterator1
+        val_it1 = val.begin1();
+        val_it1 != val.end1();
+        ++val_it1)
+      for (const_iterator2
+          val_it2 = val_it1.begin();
+          val_it2 != val_it1.end();
+          ++val_it2)
+         result(int(val_it2.index1()), int(val_it2.index2())) = traits_t::to_double(*val_it2);
+
+    return result;
+  }
+#endif
+
+#if defined(_GLUCAT_USE_BINDINGS_V1) || defined(_GLUCAT_USE_BINDINGS)
+  /// Convert matrix to LAPACK format
+  template< typename Matrix_T >
+  static
+  ublas::matrix<double, ublas::column_major>
+  to_lapack(const Matrix_T& val)
+  {
+    typedef typename Matrix_T::size_type matrix_index_t;
+    const matrix_index_t s1 = val.size1();
+    const matrix_index_t s2 = val.size2();
+
+    typedef typename ublas::matrix<double, ublas::column_major> lapack_matrix_t;
+    lapack_matrix_t result(s1, s2);
+    result.clear();
+
+    typedef typename Matrix_T::value_type Scalar_T;
+    typedef numeric_traits<Scalar_T> traits_t;
+
+    typedef typename Matrix_T::const_iterator1 const_iterator1;
+    typedef typename Matrix_T::const_iterator2 const_iterator2;
+    for (const_iterator1
+        val_it1 = val.begin1();
+        val_it1 != val.end1();
+        ++val_it1)
+      for (const_iterator2
+          val_it2 = val_it1.begin();
+          val_it2 != val_it1.end();
+          ++val_it2)
+         result(val_it2.index1(), val_it2.index2()) = traits_t::to_double(*val_it2);
+
+      return result;
+  }
+#endif
+
+  /// Eigenvalues of a matrix
+  template< typename Matrix_T >
+  ublas::vector< std::complex<double> >
+  eigenvalues(const Matrix_T& val)
+  {
+    typedef std::complex<double> complex_t;
+    typedef typename ublas::vector<complex_t> complex_vector_t;
+    typedef typename Matrix_T::size_type matrix_index_t;
+
+    const matrix_index_t dim = val.size1();
+    complex_vector_t lambda = complex_vector_t(dim);
+    lambda.clear();
+
+#if defined(_GLUCAT_USE_ALGLIB)
+    ap::real_2d_array T = to_alglib(val);
+    const int n = dim;
+    ap::real_1d_array real_lambda;
+    real_lambda.setlength(n);
+    ap::real_1d_array imag_lambda;
+    imag_lambda.setlength(n);
+    ap::real_2d_array vl;
+    ap::real_2d_array vr;
+
+    rmatrixevd(T, n, 0, real_lambda, imag_lambda, vl, vr);
+
+    lambda.clear();
+    for (int  k=0; k!= n; ++k)
+      lambda[k] = complex_t(real_lambda(k), imag_lambda(k));
+#endif
+#if defined(_GLUCAT_USE_BINDINGS_V1) || defined(_GLUCAT_USE_BINDINGS)
+    namespace lapack = boost::numeric::bindings::lapack;
+    typedef typename ublas::matrix<double, ublas::column_major> lapack_matrix_t;
+
+    lapack_matrix_t T = to_lapack(val);
+    lapack_matrix_t V = T;
+#if defined(_GLUCAT_USE_BINDINGS_V1)
+
+    lapack::gees (T, lambda, V, lapack::optimal_workspace() );
+
+#elif defined(_GLUCAT_USE_BINDINGS)
+    typedef typename ublas::vector<double> vector_t;
+    vector_t real_lambda = vector_t(dim);
+    vector_t imag_lambda = vector_t(dim);
+    fortran_int_t sdim = 0;
+
+    lapack::gees ('N', 'N', (logical_t*)0, T, sdim, real_lambda, imag_lambda, V );
+
+    lambda.clear();
+    for (vector_t::size_type  k=0; k!= dim; ++k)
+      lambda[k] = complex_t(real_lambda[k], imag_lambda[k]);
+#endif
+#endif
+    return lambda;
+  }
+
+  /// Classify the eigenvalues of a matrix
+  template< typename Matrix_T >
+  eig_genus<Matrix_T>
+  classify_eigenvalues(const Matrix_T& val)
+  {
+    typedef typename Matrix_T::value_type Scalar_T;
+    eig_genus<Matrix_T> result;
+    result.m_eig_case = safe_eig_case;
+    result.m_safe_arg = Scalar_T(0);
+
+    typedef std::complex<double> complex_t;
+    typedef typename ublas::vector<complex_t> complex_vector_t;
+    complex_vector_t lambda = eigenvalues(val);
+
+    std::set<double> arg_set;
+
+    typedef typename complex_vector_t::size_type vector_index_t;
+    const vector_index_t dim = lambda.size();
+    static const double epsilon = std::numeric_limits<float>::epsilon();
+
+    bool negative_eig_found = false;
+    bool imaginary_eig_found = false;
+    for (vector_index_t k=0; k != dim; ++k)
+    {
+      const complex_t lambda_k = lambda[k];
+      arg_set.insert(std::arg(lambda_k));
+
+      const double real_lambda_k = std::real(lambda_k);
+      const double imag_lambda_k = std::imag(lambda_k);
+      const double norm_tol = 1024.0*epsilon*epsilon*std::norm(lambda_k);
+
+      if (!negative_eig_found &&
+          real_lambda_k < -epsilon &&
+         (imag_lambda_k == 0.0 ||
+          imag_lambda_k * imag_lambda_k < norm_tol))
+        negative_eig_found = true;
+      if (!imaginary_eig_found &&
+          std::abs(imag_lambda_k) > epsilon &&
+         (real_lambda_k == 0.0 ||
+          real_lambda_k * real_lambda_k < norm_tol))
+        imaginary_eig_found = true;
+    }
+
+    static const double pi = numeric_traits<double>::pi();
+    if (negative_eig_found)
+    {
+      if (imaginary_eig_found)
+        result.m_eig_case = both_eig_case;
+      else
+      {
+        result.m_eig_case = negative_eig_case;
+        result.m_safe_arg = -pi/2.0;
+      }
+    }
+
+    if (result.m_eig_case == both_eig_case)
+    {
+      typename std::set<double>::const_iterator arg_it = arg_set.begin();
+      double first_arg = *arg_it;
+      double best_arg = first_arg;
+      double best_diff = 0.0;
+      double previous_arg = first_arg;
+      for (++arg_it;
+          arg_it != arg_set.end();
+          ++arg_it)
+      {
+        const double arg_diff = *arg_it - previous_arg;
+        if (arg_diff > best_diff)
+        {
+          best_diff = arg_diff;
+          best_arg = previous_arg;
+        }
+        previous_arg = *arg_it;
+      }
+      const double arg_diff = first_arg + 2.0*pi - previous_arg;
+      if (arg_diff > best_diff)
+      {
+        best_diff = arg_diff;
+        best_arg = previous_arg;
+      }
+      result.m_safe_arg = pi - (best_arg + best_diff / 2.0);
     }
     return result;
   }
