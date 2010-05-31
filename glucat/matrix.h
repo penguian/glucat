@@ -74,21 +74,21 @@ namespace glucat
 
     /// Product of monomial matrices
     template< typename LHS_T, typename RHS_T >
-    const 
+    const
     typename RHS_T::expression_type
     mono_prod(const ublas::matrix_expression<LHS_T>& lhs,
               const ublas::matrix_expression<RHS_T>& rhs);
 
     /// Product of sparse matrices
     template< typename LHS_T, typename RHS_T >
-    const 
+    const
     typename RHS_T::expression_type
     sparse_prod(const ublas::matrix_expression<LHS_T>& lhs,
                 const ublas::matrix_expression<RHS_T>& rhs);
 
     /// Product of matrices
     template< typename LHS_T, typename RHS_T >
-    const 
+    const
     typename RHS_T::expression_type
     prod(const ublas::matrix_expression<LHS_T>& lhs,
          const ublas::matrix_expression<RHS_T>& rhs);
@@ -107,6 +107,30 @@ namespace glucat
     template< typename Matrix_T >
     typename Matrix_T::value_type
     trace(const Matrix_T& val);
+
+    /// Eigenvalues of a matrix
+    template< typename Matrix_T >
+    ublas::vector< std::complex<double> >
+    eigenvalues(const Matrix_T& val);
+
+    /// Classification of eigenvalues of a matrix
+    typedef enum {safe_eig_case, negative_eig_case, both_eig_case} eig_case_t;
+
+    ///  Structure containing classification of eigenvalues
+    template< typename Matrix_T >
+    struct eig_genus
+    {
+      typedef typename Matrix_T::value_type Scalar_T;
+      /// What kind of eigenvalues does the matrix contain?
+      eig_case_t m_eig_case;
+      /// Argument such that exp(pi-m_safe_arg) lies between arguments of eigenvalues
+      Scalar_T   m_safe_arg;
+    };
+
+    /// Classify the eigenvalues of a matrix
+    template< typename Matrix_T >
+    eig_genus<Matrix_T>
+    classify_eigenvalues(const Matrix_T& val);
   }
 }
 
