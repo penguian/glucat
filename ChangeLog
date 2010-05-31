@@ -1,3 +1,7 @@
+2010-06-01 01:04  leopardi
+
+	* ChangeLog: ChangeLog for version 0.5.1.
+
 2010-06-01 00:57  leopardi
 
 	* pyclical/: pyclical_demo.out, sqrt_log_demo.out: PyCliCal demo
@@ -3932,4 +3936,3 @@
 2002-01-10 ./README: Add -finline-limit-400
 
 2002-01-09 Release glucat-0.0.1
-
