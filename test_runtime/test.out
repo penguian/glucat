@@ -187,9 +187,9 @@ A =
 s = exp(A/2) =
   -0.642148-0.457031{-1,1}-0.946088{-1,2}+1.40312{1,2}+0.489056{-1,3}+0.457031{1,3}+0.946088{2,3}-1.06861{-1,1,2,3}
 y = s*x/involute(s) =
-  -15.7362{-1}+7.35115{1}-13.6466{2}+6.43102{3}-6.73791e-15{-1,2,3}
+  -15.7362{-1}+7.35115{1}-13.6466{2}+6.43102{3}-1.22125e-14{-1,1,3}-7.34482e-15{-1,2,3}+1.37276e-14{1,2,3}
 y*y =
-  34-8.66633e-14{-1,2}-1.77215e-13{-1,3}-2.05505e-13{2,3}
+  34-1.57077e-13{-1,1}-9.44693e-14{-1,2}+1.76565e-13{1,2}-2.46669e-14{-1,3}-1.19474e-14{1,3}-2.88763e-14{2,3}
 x*x =
   34
 F =
@@ -197,7 +197,7 @@ F =
 G = s*F/s =
   -29.5319{-1,1}-24.8643{-1,2}+39.1467{1,2}-8.42419{-1,3}+0.809417{1,3}-9.70657{2,3}
 G*G =
-  -66-2.84217e-14{-1,3}-46{-1,1,2,3}
+  -66-2.84217e-14{2,3}-46{-1,1,2,3}
 F*F =
   -66-46{-1,1,2,3}
 -F*q1*F / 2 =
@@ -222,11 +222,11 @@ Boost at half the velocity of light
 v =
   0.5{1}
 A =
-  9.4369e-16+0.549306{1}
+  4.996e-16+0.549306{1}
 s = exp(A / 2.0) =
   1.03795+0.278119{1}
 Electric field: G = s * F / s =
-  1{1}-1.73205{2}+7.50555{3}-6.9282{1,2}+8.0829{1,3}-3{2,3}
+  {1}-1.73205{2}+7.50555{3}-6.9282{1,2}+8.0829{1,3}-3{2,3}
 Magnetic induction:
   3{1}+8.0829{2}+6.9282{3}
 x =
@@ -629,11 +629,11 @@ Relative norm of difference == 0.002918293932
 A
   -314.159{-1}
 Test failed: cos(acos(A)) != A
-Relative norm of difference == 0.002918293932
+Relative norm of difference == 0.002918779617
 Test failed: cosh(acosh(A)) != A
-Relative norm of difference == 0.002918293932
+Relative norm of difference == 0.002918779617
 Test failed: sinh(asinh(A)) != A
-Relative norm of difference == 0.002923345193
+Relative norm of difference == 0.002923830878
 
 A
   {1}
@@ -684,74 +684,36 @@ Random A in {}
 Random A in {}
 
 Random A in {1}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 2.30802989
 
 Random A in {1}
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1
 
 Random A in {-1,1}
-Test failed: exp(log(A)) != A
-Relative norm of difference == inf
 
 Random A in {-1,1}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 0.5703445077
 
 Random A in {1,2}
 
 Random A in {1,2}
 
 Random A in {-1,1,2}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 41274.03906
 
 Random A in {-1,1,2}
-Test failed: exp(log(A)) != A
-Result == nan
-Test failed: tanh(atanh(A)) != A
-Result == nan
 
 Random A in {-2,-1,1,2}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 3.142756126e+13
 
 Random A in {-2,-1,1,2}
 
 Random A in {-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 22190008
 
 Random A in {-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 21406.10156
 
 Random A in {-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 5.798129559
 
 Random A in {-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Result == nan
-Test failed: cos(acos(A)) != A
-Relative norm of difference == 2.92764163
-Test failed: cosh(acosh(A)) != A
-Relative norm of difference == 2.927641392
-Test failed: sin(asin(A)) != A
-Relative norm of difference == 0.0006611907156
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 0.9130067229
 
 Random A in {-3,-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == inf
 
 Random A in {-3,-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 0.8916404247
-Test failed: tanh(atanh(A)) != A
-Result == nan
 
 matrix_multi<float>
 Epsilon ==1.19209e-07
@@ -885,58 +847,26 @@ Random A in {}
 Random A in {}
 
 Random A in {1}
-Test failed: tanh(atanh(A)) != A
-Result == nan
 
 Random A in {1}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 10.79472351
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 0.2173223197
 
 Random A in {-1,1}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 0.3722550273
 
 Random A in {-1,1}
 
 Random A in {1,2}
-Test failed: exp(log(A)) != A
-Result == nan
-Test failed: cos(acos(A)) != A
-Relative norm of difference == 5.992480755
-Test failed: cosh(acosh(A)) != A
-Relative norm of difference == 5.992480755
 
 Random A in {1,2}
-Test failed: exp(log(A)) != A
-Result == nan
-Test failed: cos(acos(A)) != A
-Relative norm of difference == 1.605819464
-Test failed: cosh(acosh(A)) != A
-Relative norm of difference == 1.605819464
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1.409263968
 
 Random A in {-1,1,2}
-Test failed: exp(log(A)) != A
-Result == nan
-Test failed: tanh(atanh(A)) != A
-Result == 0
 
 Random A in {-1,1,2}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 98542.28906
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1.424687743
 
 Random A in {-2,-1,1,2}
 
 Random A in {-2,-1,1,2}
-Test failed: sqrt(A)*sqrt(A) != A
-Relative norm of difference == 0.0004966430133
 Test failed: exp(log(A)) != A
-Relative norm of difference == 2.438120604e+12
+Relative norm of difference == 0.0004265057505
 
 Random A in {-1,1,2,3}
 Test failed: sqrt(A)*sqrt(A) != A
@@ -947,28 +877,12 @@ Relative norm of difference == 0.01599851064
 Random A in {-1,1,2,3}
 
 Random A in {-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Result == nan
-Test failed: tanh(atanh(A)) != A
-Result == nan
 
 Random A in {-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 3042.44873
 
 Random A in {-3,-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 0.868914187
-Test failed: cos(acos(A)) != A
-Relative norm of difference == 1.357177496
-Test failed: cosh(acosh(A)) != A
-Relative norm of difference == 1.357177496
-Test failed: tanh(atanh(A)) != A
-Result == nan
 
 Random A in {-3,-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Result == nan
 
 framed_multi<double>
 Epsilon ==2.22045e-16
@@ -1092,72 +1006,36 @@ Random A in {}
 Random A in {}
 
 Random A in {1}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 2.330193093
 
 Random A in {1}
-Test failed: tanh(atanh(A)) != A
-Result == nan
 
 Random A in {-1,1}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 2.156386172e+40
 
 Random A in {-1,1}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 0.5711436524
 
 Random A in {1,2}
 
 Random A in {1,2}
 
 Random A in {-1,1,2}
-Test failed: exp(log(A)) != A
-Result == nan
 
 Random A in {-1,1,2}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 1.458857416e+13
-Test failed: tanh(atanh(A)) != A
-Result == nan
 
 Random A in {-2,-1,1,2}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 6.285895244e+21
 
 Random A in {-2,-1,1,2}
 
 Random A in {-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 22240480.84
 
 Random A in {-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 162038841.2
 
 Random A in {-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == inf
 
 Random A in {-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 2.11953565e+30
-Test failed: cos(acos(A)) != A
-Relative norm of difference == 0.9742223954
-Test failed: cosh(acosh(A)) != A
-Relative norm of difference == 0.9742223954
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 0.9129937018
 
 Random A in {-3,-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 9.844328779e+51
 
 Random A in {-3,-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 8.044800431e+44
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1.934994552
 
 matrix_multi<double>
 Epsilon ==2.22045e-16
@@ -1277,84 +1155,36 @@ Random A in {}
 Random A in {}
 
 Random A in {1}
-Test failed: tanh(atanh(A)) != A
-Result == 0
 
 Random A in {1}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 10.73187469
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 0.2171477459
 
 Random A in {-1,1}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 0.3922731566
 
 Random A in {-1,1}
 
 Random A in {1,2}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 80.2622933
-Test failed: cos(acos(A)) != A
-Relative norm of difference == 220.9534793
-Test failed: cosh(acosh(A)) != A
-Relative norm of difference == 220.9534793
 
 Random A in {1,2}
-Test failed: exp(log(A)) != A
-Result == nan
-Test failed: cos(acos(A)) != A
-Relative norm of difference == 1.582865932
-Test failed: cosh(acosh(A)) != A
-Relative norm of difference == 1.582865932
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1.6373498
 
 Random A in {-1,1,2}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 56286973.36
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1.183638098
 
 Random A in {-1,1,2}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 1.140294243e+26
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1.365944338
 
 Random A in {-2,-1,1,2}
 
 Random A in {-2,-1,1,2}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 0.01052870276
 
 Random A in {-1,1,2,3}
 
 Random A in {-1,1,2,3}
 
 Random A in {-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 3.274593955e+90
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1.555271473
 
 Random A in {-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 3598.254369
 
 Random A in {-3,-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 1.07410969
-Test failed: cos(acos(A)) != A
-Relative norm of difference == 7.055579945e+16
-Test failed: cosh(acosh(A)) != A
-Relative norm of difference == 7.055579945e+16
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1.019016849
 
 Random A in {-3,-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Result == nan
 
 framed_multi<long double>
 Epsilon ==1.0842e-19
@@ -1478,72 +1308,36 @@ Random A in {}
 Random A in {}
 
 Random A in {1}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 2.330193093
 
 Random A in {1}
-Test failed: tanh(atanh(A)) != A
-Result == nan
 
 Random A in {-1,1}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 2.156386209e+40
 
 Random A in {-1,1}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 0.5711436524
 
 Random A in {1,2}
 
 Random A in {1,2}
 
 Random A in {-1,1,2}
-Test failed: exp(log(A)) != A
-Relative norm of difference == inf
 
 Random A in {-1,1,2}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 1.169194883e+17
-Test failed: tanh(atanh(A)) != A
-Result == nan
 
 Random A in {-2,-1,1,2}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 6.28589549e+21
 
 Random A in {-2,-1,1,2}
 
 Random A in {-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 22240480.85
 
 Random A in {-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 162035889.1
 
 Random A in {-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 5.120778344e+197
 
 Random A in {-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 2.119325629e+30
-Test failed: cos(acos(A)) != A
-Relative norm of difference == 0.9742388915
-Test failed: cosh(acosh(A)) != A
-Relative norm of difference == 0.9742388915
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 0.9129937018
 
 Random A in {-3,-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 9.844335457e+51
 
 Random A in {-3,-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 7.400581314e+39
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1.502326876
 
 matrix_multi<long double>
 Epsilon ==1.0842e-19
@@ -1667,84 +1461,36 @@ Random A in {}
 Random A in {}
 
 Random A in {1}
-Test failed: tanh(atanh(A)) != A
-Result == nan
 
 Random A in {1}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 10.73187469
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 0.2171477459
 
 Random A in {-1,1}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 0.3922731565
 
 Random A in {-1,1}
 
 Random A in {1,2}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 80.26159617
-Test failed: cos(acos(A)) != A
-Relative norm of difference == 220.9590825
-Test failed: cosh(acosh(A)) != A
-Relative norm of difference == 220.9590825
 
 Random A in {1,2}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 3.991514938e+219
-Test failed: cos(acos(A)) != A
-Relative norm of difference == 1.582865932
-Test failed: cosh(acosh(A)) != A
-Relative norm of difference == 1.582865932
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1.409714066
 
 Random A in {-1,1,2}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 285327144.9
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1.181874743
 
 Random A in {-1,1,2}
-Test failed: exp(log(A)) != A
-Result == nan
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1.365944338
 
 Random A in {-2,-1,1,2}
 
 Random A in {-2,-1,1,2}
-Test failed: exp(log(A)) != A
-Result == nan
 
 Random A in {-1,1,2,3}
 
 Random A in {-1,1,2,3}
 
 Random A in {-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 3.274593795e+90
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1.555271473
 
 Random A in {-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 3598.25437
 
 Random A in {-3,-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 1.074109694
-Test failed: cos(acos(A)) != A
-Relative norm of difference == 7.055321176e+16
-Test failed: cosh(acosh(A)) != A
-Relative norm of difference == 7.055321176e+16
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1.019016985
 
 Random A in {-3,-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Result == nan
 
 framed_multi<dd_real>
 Epsilon ==4.93038e-32
@@ -1864,20 +1610,12 @@ Random A in {}
 Random A in {}
 
 Random A in {1}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 2.3301930927e+00
 
 Random A in {1}
-Test failed: tanh(atanh(A)) != A
-Result == nan
 
 Random A in {-1,1}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 2.1563862087e+40
 
 Random A in {-1,1}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 5.7114365236e-01
 Test failed: sinh(asinh(A)) != A
 Relative norm of difference == 3.8202299414e-16
 
@@ -1886,52 +1624,26 @@ Random A in {1,2}
 Random A in {1,2}
 
 Random A in {-1,1,2}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 1.2813922558e+30
 Test failed: sinh(asinh(A)) != A
 Relative norm of difference == 1.7946107387e-15
 
 Random A in {-1,1,2}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 2.1192568240e+15
-Test failed: tanh(atanh(A)) != A
-Result == nan
 
 Random A in {-2,-1,1,2}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 6.2858954901e+21
 
 Random A in {-2,-1,1,2}
 
 Random A in {-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 2.2240480854e+07
 
 Random A in {-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 1.6203589083e+08
 
 Random A in {-2,-1,1,2,3}
 
 Random A in {-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 2.1193258103e+30
-Test failed: cos(acos(A)) != A
-Relative norm of difference == 9.7423889159e-01
-Test failed: cosh(acosh(A)) != A
-Relative norm of difference == 9.7423889159e-01
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 9.1299370181e-01
 
 Random A in {-3,-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 9.8443354552e+51
 
 Random A in {-3,-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 7.4100554796e+39
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 2.5499256417e+00
 
 matrix_multi<dd_real>
 Epsilon ==4.93038e-32
@@ -2041,96 +1753,48 @@ Result == nan
 
 A
   0
-Test failed: exp(scalar(A))*exp(pure(A)) != exp(A)
+Test failed: exp(A)*exp(-A) != 1
+Result == nan
+Test failed: exp(-A)*exp(A) != 1
 Result == nan
 Test failed: cos(A)+elliptic(A)*sin(A) != exp(elliptic(A)*A)
 Result == 0
-Test failed: cosh(A)+sinh(A) != exp(A)
-Result == nan
 
 Random A in {}
 
 Random A in {}
 
 Random A in {1}
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1.9772583865e+00
 
 Random A in {1}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 1.0731874688e+01
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 2.1714774591e-01
 
 Random A in {-1,1}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 3.9227315653e-01
 
 Random A in {-1,1}
 
 Random A in {1,2}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 8.0261595786e+01
-Test failed: cos(acos(A)) != A
-Relative norm of difference == 2.2095908197e+02
-Test failed: cosh(acosh(A)) != A
-Relative norm of difference == 2.2095908197e+02
 
 Random A in {1,2}
-Test failed: exp(log(A)) != A
-Result == nan
-Test failed: cos(acos(A)) != A
-Relative norm of difference == 1.5828659320e+00
-Test failed: cosh(acosh(A)) != A
-Relative norm of difference == 1.5828659320e+00
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1.4092640651e+00
 
 Random A in {-1,1,2}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 2.8478675744e+08
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1.1818753487e+00
 
 Random A in {-1,1,2}
-Test failed: exp(log(A)) != A
-Result == nan
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1.3659443381e+00
 
 Random A in {-2,-1,1,2}
 
 Random A in {-2,-1,1,2}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 3.1307754108e-02
 
 Random A in {-1,1,2,3}
 
 Random A in {-1,1,2,3}
 
 Random A in {-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 3.2745937954e+90
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1.8820125141e+00
 
 Random A in {-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 3.5982543699e+03
 
 Random A in {-3,-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 1.0741096938e+00
-Test failed: cos(acos(A)) != A
-Relative norm of difference == 7.0553207427e+16
-Test failed: cosh(acosh(A)) != A
-Relative norm of difference == 7.0553207427e+16
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1.0190169850e+00
 
 Random A in {-3,-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Result == nan
 
 framed_multi<qd_real>
 Epsilon ==1.21543e-63
@@ -2248,20 +1912,12 @@ Random A in {}
 Random A in {}
 
 Random A in {1}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 2.3301930927e+00
 
 Random A in {1}
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1.5663141792e+00
 
 Random A in {-1,1}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 2.1563862087e+40
 
 Random A in {-1,1}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 5.7114365236e-01
 Test failed: sinh(asinh(A)) != A
 Relative norm of difference == 3.8202299414e-16
 
@@ -2270,54 +1926,26 @@ Random A in {1,2}
 Random A in {1,2}
 
 Random A in {-1,1,2}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 1.2813922558e+30
 Test failed: sinh(asinh(A)) != A
 Relative norm of difference == 1.7946107387e-15
 
 Random A in {-1,1,2}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 2.1192568240e+15
-Test failed: tanh(atanh(A)) != A
-Result == nan
 
 Random A in {-2,-1,1,2}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 6.2858954901e+21
 
 Random A in {-2,-1,1,2}
 
 Random A in {-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 2.2240480854e+07
 
 Random A in {-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 1.6203589083e+08
 
 Random A in {-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == nan
 
 Random A in {-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 2.1193258103e+30
-Test failed: cos(acos(A)) != A
-Relative norm of difference == 9.7423889159e-01
-Test failed: cosh(acosh(A)) != A
-Relative norm of difference == 9.7423889159e-01
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 9.1299370181e-01
 
 Random A in {-3,-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 9.8443354552e+51
 
 Random A in {-3,-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 7.4100554796e+39
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 2.1107874280e+00
 
 matrix_multi<qd_real>
 Epsilon ==1.21543e-63
@@ -2425,96 +2053,48 @@ Result == nan
 
 A
   0
-Test failed: exp(scalar(A))*exp(pure(A)) != exp(A)
+Test failed: exp(A)*exp(-A) != 1
+Result == nan
+Test failed: exp(-A)*exp(A) != 1
 Result == nan
 Test failed: cos(A)+elliptic(A)*sin(A) != exp(elliptic(A)*A)
 Result == 0
-Test failed: cosh(A)+sinh(A) != exp(A)
-Result == nan
 
 Random A in {}
 
 Random A in {}
 
 Random A in {1}
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1.9423773991e+00
 
 Random A in {1}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 1.0731874688e+01
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 2.1714774591e-01
 
 Random A in {-1,1}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 3.9227315653e-01
 
 Random A in {-1,1}
 
 Random A in {1,2}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 8.0261595786e+01
-Test failed: cos(acos(A)) != A
-Relative norm of difference == 2.2095908197e+02
-Test failed: cosh(acosh(A)) != A
-Relative norm of difference == 2.2095908197e+02
 
 Random A in {1,2}
-Test failed: exp(log(A)) != A
-Result == nan
-Test failed: cos(acos(A)) != A
-Relative norm of difference == 1.5828659320e+00
-Test failed: cosh(acosh(A)) != A
-Relative norm of difference == 1.5828659320e+00
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1.4092640651e+00
 
 Random A in {-1,1,2}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 2.8478675744e+08
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1.1818753487e+00
 
 Random A in {-1,1,2}
-Test failed: exp(log(A)) != A
-Result == nan
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1.3659443381e+00
 
 Random A in {-2,-1,1,2}
 
 Random A in {-2,-1,1,2}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 3.1307754108e-02
 
 Random A in {-1,1,2,3}
 
 Random A in {-1,1,2,3}
 
 Random A in {-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 3.2745937954e+90
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1.6143494116e+00
 
 Random A in {-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 3.5982543699e+03
 
 Random A in {-3,-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 1.0741096938e+00
-Test failed: cos(acos(A)) != A
-Relative norm of difference == 7.0553207427e+16
-Test failed: cosh(acosh(A)) != A
-Relative norm of difference == 7.0553207427e+16
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1.0190169850e+00
 
 Random A in {-3,-2,-1,1,2,3}
-Test failed: exp(log(A)) != A
-Result == nan
 
 
 Test 12:
