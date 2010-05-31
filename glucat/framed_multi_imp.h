@@ -83,7 +83,7 @@ namespace glucat
   template< typename Scalar_T, const index_t LO, const index_t HI >
   framed_multi<Scalar_T,LO,HI>::
   framed_multi(const Scalar_T& scr, const index_set_t frm)
-  { 
+  {
     if (scr != Scalar_T(0))
       this->insert(term_t(index_set_t(), scr));
   }
@@ -92,7 +92,7 @@ namespace glucat
   template< typename Scalar_T, const index_t LO, const index_t HI >
   framed_multi<Scalar_T,LO,HI>::
   framed_multi(const int scr, const index_set_t frm)
-  { 
+  {
     if (scr != Scalar_T(0))
       this->insert(term_t(index_set_t(), Scalar_T(scr)));
   }
@@ -153,7 +153,7 @@ namespace glucat
     {
       this->insert(term_t(index_set_t(), val.m_matrix(0, 0)));
       return;
-    } 
+    }
     if (dim >= Tune_P::inv_fast_dim_threshold)
       try
       {
@@ -182,7 +182,7 @@ namespace glucat
       const index_set_t ist = index_set_t(stv, frm, true);
       const Scalar_T crd =
         matrix::inner<Scalar_T>(val.basis_element(ist), val.m_matrix);
-      const Scalar_T abs_crd = traits_t::abs(crd); 
+      const Scalar_T abs_crd = traits_t::abs(crd);
       if ((abs_crd * abs_crd) > tol)
         this->insert(term_t(ist, crd));
     }
@@ -230,7 +230,7 @@ namespace glucat
   bool
   framed_multi<Scalar_T,LO,HI>::
   operator==  (const Scalar_T& scr) const
-  { 
+  {
     switch (this->size())
     {
     case 0:
@@ -447,7 +447,7 @@ namespace glucat
     {
       const index_set_t lhs_frame = lhs.frame();
       const index_set_t rhs_frame = rhs.frame();
-  
+
       const index_set_t our_frame = lhs_frame | rhs_frame;
       const set_value_t algebra_dim = 1 << our_frame.count();
       for (set_value_t
@@ -536,7 +536,7 @@ namespace glucat
     {
       const index_set_t lhs_frame = lhs.frame();
       const index_set_t rhs_frame = rhs.frame();
-  
+
       const index_set_t our_frame = lhs_frame | rhs_frame;
       const set_value_t algebra_dim = 1 << our_frame.count();
       for (set_value_t
@@ -586,10 +586,10 @@ namespace glucat
     else
     {
       const index_set_t empty_set = index_set_t();
-  
+
       const const_iterator lhs_begin = lhs.begin();
       const const_iterator rhs_begin = rhs.begin();
-  
+
       for (const_iterator
           lhs_it = lhs_begin;
           lhs_it != lhs_end;
@@ -647,14 +647,14 @@ namespace glucat
     multivector_t result;
 
 #ifdef _GLUCAT_MAP_IS_ORDERED
-    // Both lhs and rhs are sorted by increasing grade, then lexicographically, 
+    // Both lhs and rhs are sorted by increasing grade, then lexicographically,
     // and a "larger" index set cannot be a subset of a "smaller" one.
 
     const const_iterator lhs_begin = lhs.begin();
 
     typedef typename map_t::const_reverse_iterator const_reverse_iterator;
     const const_reverse_iterator rhs_rbegin = rhs.rbegin();
-    const const_reverse_iterator rhs_rlower_bound = 
+    const const_reverse_iterator rhs_rlower_bound =
           static_cast<const_reverse_iterator>(rhs.lower_bound(lhs_begin->first));
 
     for (const_reverse_iterator
@@ -674,7 +674,7 @@ namespace glucat
         const index_set_t lhs_ist = lhs_term.first;
         if ((lhs_ist | rhs_ist) == rhs_ist)
           result += lhs_term * rhs_term;
-      } 
+      }
     }
 #else
     const const_iterator lhs_end   = lhs.end();
@@ -755,7 +755,7 @@ namespace glucat
   template< typename Scalar_T, const index_t LO, const index_t HI >
   Scalar_T
   star(const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs)
-  { 
+  {
     typedef framed_multi<Scalar_T,LO,HI> multivector_t;
     typedef typename multivector_t::map_t map_t;
     typedef typename map_t::const_iterator const_iterator;
@@ -766,7 +766,7 @@ namespace glucat
     const multivector_t* smallp = small_star_large ? &lhs : & rhs;
     const multivector_t* largep = small_star_large ? &rhs : & lhs;
 
-    for (const_iterator 
+    for (const_iterator
          small_it = smallp->begin();
          small_it != smallp->end();
          ++small_it)
@@ -776,7 +776,7 @@ namespace glucat
       if (large_crd != Scalar_T(0))
         result += small_ist.sign_of_square() * small_it->second * large_crd;
     }
-    return result; 
+    return result;
   }
 
   /// Quotient of multivector and scalar
@@ -1678,6 +1678,70 @@ namespace glucat
   {
     typedef std::pair<const index_set<LO,HI>, Scalar_T> term_t;
     return term_t(lhs.first ^ rhs.first, crd_of_mult(lhs, rhs));
+  }
+
+  /// Square root of multivector with specified complexifier
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const framed_multi<Scalar_T,LO,HI>
+  sqrt(const framed_multi<Scalar_T,LO,HI>& val, const framed_multi<Scalar_T,LO,HI>& i, bool prechecked)
+  {
+    typedef numeric_traits<Scalar_T> traits_t;
+    if (val.isnan())
+      return traits_t::NaN();
+
+    check_complex(val, i, prechecked);
+
+    const Scalar_T realval = real(val);
+    if (val == realval)
+    {
+      if (realval < Scalar_T(0))
+        return i * traits_t::sqrt(-realval);
+      else
+        return traits_t::sqrt(realval);
+    }
+    typedef typename framed_multi<Scalar_T,LO,HI>::matrix_multi_t matrix_multi_t;
+    return sqrt(matrix_multi_t(val), matrix_multi_t(i), prechecked);
+  }
+
+  /// Exponential of multivector
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const framed_multi<Scalar_T,LO,HI>
+  exp(const framed_multi<Scalar_T,LO,HI>& val)
+  {
+    typedef numeric_traits<Scalar_T> traits_t;
+    if (val.isnan())
+      return traits_t::NaN();
+
+    const Scalar_T s = scalar(val);
+    if (val == s)
+      return traits_t::exp(s);
+
+    typedef typename framed_multi<Scalar_T,LO,HI>::matrix_multi_t matrix_multi_t;
+    return exp(matrix_multi_t(val));
+  }
+
+  /// Natural logarithm of multivector with specified complexifier
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const framed_multi<Scalar_T,LO,HI>
+  log(const framed_multi<Scalar_T,LO,HI>& val, const framed_multi<Scalar_T,LO,HI>& i, bool prechecked)
+  {
+    typedef numeric_traits<Scalar_T> traits_t;
+    if (val == Scalar_T(0) || val.isnan())
+      return traits_t::NaN();
+
+    const Scalar_T realval = real(val);
+    if (val == realval)
+    {
+      if (realval < Scalar_T(0))
+      {
+        check_complex(val, i, prechecked);
+        return i * traits_t::pi() + traits_t::log(-realval);
+      }
+      else
+        return traits_t::log(realval);
+    }
+    typedef typename framed_multi<Scalar_T,LO,HI>::matrix_multi_t matrix_multi_t;
+    return log(matrix_multi_t(val), matrix_multi_t(i), prechecked);
   }
 }
 #endif  // _GLUCAT_FRAMED_MULTI_IMP_H
