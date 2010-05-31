@@ -1098,5 +1098,463 @@ namespace glucat
       basis_cache.insert(basis_pair_t(folded_pair, result));
     return result;
   }
+
+  /// Pade' approximation
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
+  static
+  const matrix_multi<Scalar_T,LO,HI>
+  pade_approx(const Scalar_T a[], const Scalar_T b[], const matrix_multi<Scalar_T,LO,HI>& X)
+  {
+    // Pade' approximation
+    // Reference: [GW], Section 4.3, pp318-322
+    // Reference: [GL], Section 11.3, p572-576.
+
+    typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
+    typedef numeric_traits<Scalar_T> traits_t;
+
+    if (X.isnan())
+      return traits_t::NaN();
+
+    const multivector_t& X2 = X*X;
+    const multivector_t& X4 = X2*X2;
+    const multivector_t& X6 = X4*X2;
+    const multivector_t& N = a[0]+X2*a[2]+X4*a[4]+X6*(a[6]+X2*a[8]+X4*a[10]+X6*a[12]) +
+                          X*(a[1]+X2*a[3]+X4*a[5]+X6*(a[7]+X2*a[9]+X4*a[11]+X6*a[13]));
+    const multivector_t& D = b[0]+X2*b[2]+X4*b[4]+X6*(b[6]+X2*b[8]+X4*b[10]+X6*b[12]) +
+                          X*(b[1]+X2*b[3]+X4*b[5]+X6*(b[7]+X2*b[9]+X4*b[11]+X6*b[13]));
+    return N / D;
+  }
+
+  /// Single step of product form of Denman-Beavers square root iteration
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
+  static
+  void
+  db_step(matrix_multi<Scalar_T,LO,HI>& M, matrix_multi<Scalar_T,LO,HI>& Y)
+  {
+    // Reference: [CHKL]
+    typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
+    const multivector_t& iM = inv(M);
+    M = ((M + iM)/Scalar_T(2) + Scalar_T(1)) / Scalar_T(2);
+    Y *= (iM + Scalar_T(1)) / Scalar_T(2);
+  }
+
+  /// Product form of Denman-Beavers square root iteration
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  static
+  const matrix_multi<Scalar_T,LO,HI>
+  db_sqrt(const matrix_multi<Scalar_T,LO,HI>& val)
+  {
+    // Reference: [CHKL]
+    typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
+    typedef numeric_traits<Scalar_T> traits_t;
+
+    if (val == Scalar_T(0))
+      return val;
+
+    multivector_t M = val;
+    multivector_t Y = val;
+    static const Scalar_T tol = std::numeric_limits<Scalar_T>::epsilon() / Scalar_T(1024);
+    static const Scalar_T tol2 = tol * tol;
+    static const int sqrt_max_steps = Tune_P::sqrt_max_steps;
+    Scalar_T norm_M_1 = norm(M - Scalar_T(1));
+
+    for (int step = 0;
+        step != sqrt_max_steps && norm_M_1 > tol2;
+        ++step)
+    {
+      if (Y.isnan())
+        return traits_t::NaN();
+      db_step(M, Y);
+      norm_M_1 = norm(M - Scalar_T(1));
+    }
+    if (norm_M_1 > tol2)
+      return traits_t::NaN();
+    else
+      return Y;
+  }
+
+  /// Square root of multivector with specified complexifier
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  static
+  const matrix_multi<Scalar_T,LO,HI>
+  sqrt(const matrix_multi<Scalar_T,LO,HI>& val, const matrix_multi<Scalar_T,LO,HI>& i, bool prechecked)
+  {
+    // Reference: [GW], Section 4.3, pp318-322
+    // Reference: [GL], Section 11.3, p572-576
+    // Reference: [Z], Pade1
+    //std::cout << "Sqrt called" << std::endl;
+
+    // Pade approximation produced by Pade1(sqrt(1+x),x,13,13):
+    // numer := 1+27/4*x+81/4*x^2+2277/64*x^3
+    //          +10395/256*x^4+32319/1024*x^5+8721/512*x^6+26163/4096*x^7
+    //          +53703/32768*x^8+36465/131072*x^9+3861/131072*x^10
+    //          +7371/4194304*x^11+819/16777216*x^12+27/67108864*x^13;
+    // denom := 1+25/4*x+69/4*x^2+1771/64*x^3
+    //          +7315/256*x^4+20349/1024*x^5+4845/512*x^6+12597/4096*x^7
+    //          +21879/32768*x^8+12155/131072*x^9+1001/131072*x^10
+    //          +1365/4194304*x^11+91/16777216*x^12+1/67108864*x^13;
+
+    static const Scalar_T a[] =
+    {
+          1.0,             27.0/4.0,         81.0/4.0,      2277.0/64.0,
+      10395.0/256.0,    32319.0/1024.0,    8721.0/512.0,   26163.0/4096.0,
+      53703.0/32768.0,  36465.0/131072.0,  3861.0/131072.0,
+       7371.0/4194304.0,  819.0/16777216.0,  27.0/67108864.0
+    };
+    static const Scalar_T b[] =
+    {
+          1.0,             25.0/4.0,         69.0/4.0,      1771.0/64.0,
+       7315.0/256.0,    20349.0/1024.0,    4845.0/512.0,   12597.0/4096.0,
+      21879.0/32768.0,  12155.0/131072.0,  1001.0/131072.0,
+       1365.0/4194304.0,   91.0/16777216.0,   1.0/67108864.0
+    };
+
+    typedef numeric_traits<Scalar_T> traits_t;
+    if (val.isnan())
+      return traits_t::NaN();
+
+    check_complex(val, i, prechecked);
+
+    const Scalar_T realval = real(val);
+    if (val == realval)
+    {
+      if (realval < Scalar_T(0))
+        return i * traits_t::sqrt(-realval);
+      else
+        return traits_t::sqrt(realval);
+    }
+
+    typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
+    static const Scalar_T sqrt_2 = traits_t::sqrt(Scalar_T(2));
+
+#if !defined(_GLUCAT_USE_EIGENVALUES)
+    const multivector_t val2 = val*val;
+    const Scalar_T real_val2 = real(val2);
+    if (val2 == real_val2 && real_val2 > Scalar_T(0))
+      return sqrt(-i * val, i, prechecked) * (i + Scalar_T(1)) / sqrt_2;
+#endif
+
+    // Scale val towards abs(A) == 1 or towards A == 1 as appropriate
+    const Scalar_T max_norm = Scalar_T(1.0/9.0);
+    const Scalar_T scale =
+      (realval != Scalar_T(0) && norm(val/realval - Scalar_T(1)) < Scalar_T(1))
+        ? realval
+        : (realval < Scalar_T(0))
+          ? -abs(val)
+          : abs(val);
+    const Scalar_T sqrt_scale = traits_t::sqrt(traits_t::abs(scale));
+    if (traits_t::isNaN_or_isInf(sqrt_scale))
+      return traits_t::NaN();
+
+    multivector_t rescale = sqrt_scale;
+    if (scale < Scalar_T(0))
+      rescale = i * sqrt_scale;
+
+    const multivector_t& unitval = val / scale;
+
+#if defined(_GLUCAT_USE_EIGENVALUES)
+    multivector_t scaled_result;
+    typedef typename multivector_t::matrix_t matrix_t;
+
+    // What kind of eigenvalues does the matrix contain?
+    matrix::eig_genus<matrix_t> genus = matrix::classify_eigenvalues(unitval.m_matrix);
+    switch (genus.m_eig_case)
+    {
+    case matrix::negative_eig_case:
+      scaled_result = sqrt(-i * unitval, i, prechecked) * (i + Scalar_T(1)) / sqrt_2;
+      break;
+    case matrix::both_eig_case:
+      {
+        const Scalar_T safe_arg = genus.m_safe_arg;
+        scaled_result = sqrt(exp(i*safe_arg) * unitval, i, prechecked) * exp(-i*safe_arg/Scalar_T(2));
+      }
+      break;
+    default:
+      scaled_result =
+          (norm(unitval - Scalar_T(1)) < max_norm)
+            // Pade' approximation of square root
+            ? pade_approx(a, b, unitval - Scalar_T(1))
+            // Product form of Denman-Beavers square root iteration
+            : db_sqrt(unitval);
+      break;
+    }
+    if (scaled_result.isnan())
+      return traits_t::NaN();
+    else
+      return scaled_result * rescale;
+#else
+    const multivector_t& scaled_result =
+          (norm(unitval - Scalar_T(1)) < max_norm)
+            // Pade' approximation of square root
+            ? pade_approx(a, b, unitval - Scalar_T(1))
+            // Product form of Denman-Beavers square root iteration
+            : db_sqrt(unitval);
+    if (scaled_result.isnan())
+    {
+      if (inv(unitval).isnan())
+        return traits_t::NaN();
+
+      const multivector_t& mi_unitval = -i * unitval;
+
+      const multivector_t& scaled_mi_result =
+        (norm(mi_unitval - Scalar_T(1)) < max_norm)
+          // Pade' approximation of square root
+          ? pade_approx(a, b, mi_unitval - Scalar_T(1))
+          // Product form of Denman-Beavers square root iteration
+          : db_sqrt(mi_unitval);
+      if (scaled_mi_result.isnan())
+        return traits_t::NaN();
+      else
+        return scaled_mi_result * rescale * (i + Scalar_T(1)) / sqrt_2;
+    }
+    else
+      return scaled_result * rescale;
+#endif
+  }
+
+  /// Exponential of multivector
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const matrix_multi<Scalar_T,LO,HI>
+  exp(const matrix_multi<Scalar_T,LO,HI>& val)
+  {
+    // Scaling and squaring Pade' approximation of matrix exponential
+    // Reference: [GL], Section 11.3, p572-576
+    // Reference: [H]
+
+    typedef numeric_traits<Scalar_T> traits_t;
+
+    if (val.isnan())
+      return traits_t::NaN();
+
+    const Scalar_T scalar_val = scalar(val);
+    const Scalar_T scalar_exp = traits_t::exp(scalar_val);
+    if (traits_t::isNaN_or_isInf(scalar_exp))
+      return traits_t::NaN();
+    if (val == scalar_val)
+      return scalar_exp;
+
+    typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
+    multivector_t A = val - scalar_val;
+    const Scalar_T pure_scale = A.norm();
+
+    if (traits_t::isNaN_or_isInf(pure_scale))
+      return traits_t::NaN();
+    if (pure_scale == Scalar_T(0))
+      return scalar_exp;
+
+    const int ilog2_scale =
+      std::max(0, traits_t::to_int(ceil((log2(pure_scale) + Scalar_T(A.frame().count()))/Scalar_T(2)) - 3));
+    const Scalar_T i_scale = traits_t::pow(Scalar_T(2), ilog2_scale);
+    if (traits_t::isNaN_or_isInf(i_scale))
+      return traits_t::NaN();
+
+    A /= i_scale;
+    multivector_t pure_exp;
+    {
+      const int q = 13;
+      static Scalar_T c[q+1];
+      if (c[0] != Scalar_T(1))
+      {
+        c[0] = Scalar_T(1);
+        for (int
+            k = 0;
+            k != q;
+            ++k)
+          c[k+1] = c[k]*(q-k) / ((2*q-k)*(k+1));
+      }
+      const multivector_t& A2 = A*A;
+      const multivector_t& A4 = A2*A2;
+      const multivector_t& A6 = A4*A2;
+      const multivector_t& U =     c[0]+A2*c[2]+A4*c[4]+A6*(c[6]+A2*c[8]+A4*c[10]+A6*c[12]);
+      const multivector_t& AV = A*(c[1]+A2*c[3]+A4*c[5]+A6*(c[7]+A2*c[9]+A4*c[11]+A6*c[13]));
+      pure_exp = (U+AV) / (U-AV);
+    }
+    for (int
+        k = 0;
+        k != ilog2_scale;
+        ++k)
+      pure_exp *= pure_exp;
+    return pure_exp * scalar_exp;
+  }
+
+  /// Pade' approximation of log
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  static
+  const matrix_multi<Scalar_T,LO,HI>
+  pade_log(const matrix_multi<Scalar_T,LO,HI>& val)
+  {
+    // Reference: [GW], Section 4.3, pp318-322
+    // Reference: [CHKL]
+    // Reference: [GL], Section 11.3, p572-576
+    // Reference: [Z], Pade1
+
+    // Pade approximation produced by Pade1(log(1-x),x,13,13):
+    // numer := -x+6*x^2-4741/300*x^3
+    //          +1441/60*x^4-107091/4600*x^5+8638/575*x^6-263111/40250*x^7
+    //          +153081/80500*x^8-395243/1101240*x^9+28549/688275*x^10
+    //          -605453/228813200*x^11+785633/10296594000*x^12
+    //          -1145993/1873980108000*x^13;
+    // denom := 1-13/2*x+468/25*x^2-1573/50*x^3
+    //          +1573/46*x^4-11583/460*x^5+10296/805*x^6-2574/575*x^7
+    //          +11583/10925*x^8-143/874*x^9+572/37145*x^10
+    //          -117/148580*x^11+13/742900*x^12-1/10400600*x^13;
+
+    static const Scalar_T a[] =
+    {
+            0.0,                  -1.0,                      6.0,            -4741.0/300.0,
+         1441.0/60.0,        -107091.0/4600.0,            8638.0/575.0,    -263111.0/40250.0,
+       153081.0/80500.0,     -395243.0/1101240.0,        28549.0/688275.0,
+      -605453.0/228813200.0,  785633.0/10296594000.0, -1145993.0/1873980108000.0
+    };
+    static const Scalar_T b[] =
+    {
+         1.0,                    -13.0/2.0,                468.0/25.0,       -1573.0/50.0,
+      1573.0/46.0,            -11583.0/460.0,            10296.0/805.0,      -2574.0/575.0,
+     11583.0/10925.0,           -143.0/874.0,              572.0/37145.0,
+      -117.0/148580.0,            13.0/742900.0,            -1.0/10400600.0
+    };
+    typedef numeric_traits<Scalar_T> traits_t;
+
+    if (val == Scalar_T(0) || val.isnan())
+      return traits_t::NaN();
+    else
+      return pade_approx(a, b, -val + Scalar_T(1));
+  }
+
+  /// Incomplete square root cascade and Pade' approximation of log
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  static
+  const matrix_multi<Scalar_T,LO,HI>
+  cascade_log(const matrix_multi<Scalar_T,LO,HI>& val)
+  {
+    // Reference: [CHKL]
+    typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
+    typedef numeric_traits<Scalar_T> traits_t;
+
+    if (val == Scalar_T(0) || val.isnan())
+      return traits_t::NaN();
+
+    multivector_t Y = val;
+    multivector_t E = Scalar_T(0);
+    static const Scalar_T epsilon = std::numeric_limits<Scalar_T>::epsilon();
+    static const Scalar_T max_inner_norm = traits_t::pow(epsilon, 4);
+    static const Scalar_T max_outer_norm = Scalar_T(1.0/9.0);
+    Scalar_T norm_Y_1;
+    int outer_step;
+    Scalar_T pow_2_outer_step = Scalar_T(1);
+    Scalar_T pow_4_outer_step = Scalar_T(1);
+    for (outer_step = 0, norm_Y_1 = norm(Y - Scalar_T(1));
+        outer_step != Tune_P::log_max_outer_steps && norm_Y_1 * pow_2_outer_step > max_outer_norm;
+        ++outer_step,    norm_Y_1 = norm(Y - Scalar_T(1)))
+    {
+      if (Y == Scalar_T(0) || Y.isnan())
+        return traits_t::NaN();
+
+      // Incomplete product form of Denman-Beavers square root iteration
+      multivector_t M = Y;
+      for (int
+          inner_step = 0;
+          inner_step != Tune_P::log_max_inner_steps &&
+            norm(M - Scalar_T(1)) * pow_4_outer_step > max_inner_norm;
+          ++inner_step)
+        db_step(M, Y);
+
+      E += (M - Scalar_T(1)) * pow_2_outer_step;
+      pow_2_outer_step *= Scalar_T(2);
+      pow_4_outer_step *= Scalar_T(4);
+    }
+    if (outer_step == Tune_P::log_max_outer_steps && norm_Y_1 * pow_2_outer_step > max_outer_norm)
+      return traits_t::NaN();
+    else
+      return pade_log(Y) * pow_2_outer_step - E;
+  }
+
+  /// Natural logarithm of multivector with specified complexifier
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const matrix_multi<Scalar_T,LO,HI>
+  log(const matrix_multi<Scalar_T,LO,HI>& val, const matrix_multi<Scalar_T,LO,HI>& i, bool prechecked)
+  {
+    // Scaled incomplete square root cascade and scaled Pade' approximation of log
+    // Reference: [CHKL]
+    //std::cout << "Log called" << std::endl;
+    typedef numeric_traits<Scalar_T> traits_t;
+
+    if (val == Scalar_T(0) || val.isnan())
+      return traits_t::NaN();
+
+    static const Scalar_T pi = traits_t::pi();
+    const Scalar_T realval = real(val);
+    if (val == realval)
+    {
+      if (realval < Scalar_T(0))
+      {
+        check_complex(val, i, prechecked);
+        return i * pi + traits_t::log(-realval);
+      }
+      else
+        return traits_t::log(realval);
+    }
+    typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
+#if !defined(_GLUCAT_USE_EIGENVALUES)
+    const multivector_t val2 = val*val;
+    const Scalar_T real_val2 = real(val2);
+    if (val2 == real_val2 && real_val2 > 0)
+    {
+      check_complex(val, i, prechecked);
+      return log(-i * val, i, prechecked) + i * pi/Scalar_T(2);
+    }
+#endif
+    // Scale val towards abs(A) == 1 or towards A == 1 as appropriate
+    const Scalar_T max_norm = Scalar_T(1.0/9.0);
+    const Scalar_T scale =
+      (realval != Scalar_T(0) && norm(val/realval - Scalar_T(1)) < max_norm)
+        ? realval
+        : (realval < Scalar_T(0))
+          ? -abs(val)
+          : abs(val);
+    if (scale == Scalar_T(0))
+      return traits_t::NaN();
+
+    const Scalar_T log_scale = traits_t::log(traits_t::abs(scale));
+    multivector_t rescale = log_scale;
+    if (scale < Scalar_T(0))
+    {
+      check_complex(val, i, prechecked);
+      rescale = i * pi + log_scale;
+    }
+    const multivector_t unitval = val/scale;
+    if (inv(unitval).isnan())
+      return traits_t::NaN();
+#if defined(_GLUCAT_USE_EIGENVALUES)
+    multivector_t scaled_result;
+    typedef typename multivector_t::matrix_t matrix_t;
+
+    // What kind of eigenvalues does the matrix contain?
+    matrix::eig_genus<matrix_t> genus = matrix::classify_eigenvalues(unitval.m_matrix);
+    switch (genus.m_eig_case)
+    {
+    case matrix::negative_eig_case:
+      scaled_result = log(-i * unitval, i, prechecked) + i * pi/Scalar_T(2);
+      break;
+    case matrix::both_eig_case:
+      {
+        const Scalar_T safe_arg = genus.m_safe_arg;
+        scaled_result = log(exp(i*safe_arg) * unitval, i, prechecked) - i * safe_arg;
+      }
+      break;
+    default:
+      scaled_result = cascade_log(unitval);
+      break;
+    }
+#else
+    multivector_t scaled_result = cascade_log(unitval);
+#endif
+    if (scaled_result.isnan())
+      return traits_t::NaN();
+    else
+      return scaled_result + rescale;
+  }
 }
 #endif  // _GLUCAT_MATRIX_MULTI_IMP_H
