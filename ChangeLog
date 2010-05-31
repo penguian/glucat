@@ -1,3 +1,217 @@
+2010-06-01 00:57  leopardi
+
+	* pyclical/: pyclical_demo.out, sqrt_log_demo.out: PyCliCal demo
+	  output for version 0.5.1.
+
+2010-06-01 00:51  leopardi
+
+	* test_runtime/: gfft_test-11.out, products-8.out, squaring-11.out,
+	  test.out, transforms-8.out: Test results for version 0.5.1.
+
+2010-06-01 00:49  leopardi
+
+	* INSTALL, NEWS, README, TODO, glucat.lsm: Update to version 0.5.1.
+
+2010-06-01 00:48  leopardi
+
+	* Doxyfile: Update to version 0.5.1.  Append
+	  "_GLUCAT_USE_EIGENVALUES _GLUCAT_USE_BINDINGS" to PREDEFINED.
+
+2010-06-01 00:48  leopardi
+
+	* configure.in.in: Update to version 0.5.1:
+
+	  Define new macro GLUCAT_CHECK_LIB, which saves LDFLAGS, appends
+	  $all_libraries to LDFLAGS before calling AC_CHECK_LIB, then
+	  restores LDFLAGS.  This allows AC_CHECK_LIB to find libraries
+	  whose location is defined via the configure option
+	  --with-extra-libs.
+
+	  Use GLUCAT_CHECK_LIB instead of AC_CHECK_LIB throughout the rest
+	  of the file.
+
+	  Change name of all "AC_GLUCAT_*" macros to just "GLUCAT_*" for
+	  consistency.
+
+	  Set all_includes to "-I. -I.. $all_includes $USER_INCLUDES"
+	  before calling GLUCAT_CHECK_COMPILERS. This ensures that
+	  compilation always has "-I. -I.." before other includes, and
+	  specifically helps when both uBLAS and Boost numeric bindings are
+	  being used.
+
+	  New configure option --with-eig[=ARG]:  library to use for
+	  eigenvalues ARG can be (no|alglib|bindingsv1|bindings). This sets
+	  glucat_use_eigenvalues to the corresponding value.
+
+	  If $glucat_use_eigenvalues is "alglib", check for the gamma()
+	  function in libalglib.a (there is apparently no "main" function),
+	  check for <alglib/evd.h> and if both are found, append
+	  "-D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_ALGLIB" to CXXFLAGS and
+	  append "-lalglib" to all_libraries.
+
+	  If $glucat_use_eigenvalues is "bindingsv1" or "bindings", check
+	  liblapack.a and libblas.a.  If both are found, append "-llapack
+	  -lblas" to all_libraries.  If $glucat_use_eigenvalues is
+	  "bindingsv1", check for <boost/numeric/bindings/lapack/gees.hpp>,
+	  and if found, append "-D_GLUCAT_USE_EIGENVALUES
+	  -D_GLUCAT_USE_BINDINGS_V1" to CXXFLAGS.  If
+	  $glucat_use_eigenvalues is "bindings", check for
+	  <boost/numeric/bindings/lapack/driver/gees.hpp>, and if found,
+	  append "-D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BINDINGS" to
+	  CXXFLAGS.
+
+2010-06-01 00:48  leopardi
+
+	* configure.in: See changes for ./configure.in.in
+
+2010-06-01 00:47  leopardi
+
+	* glucat/matrix_multi_imp.h: Move static function definitions from
+	  clifford_algebra.h to here: o pade_approx(): Pade' approximation
+	  o db_step(): Single step of product form of Denman-Beavers square
+	  root iteration o db_sqrt(): Product form of Denman-Beavers square
+	  root iteration o pade_log(): Pade' approximation of log o
+	  cascade_log(): Incomplete square root cascade and Pade'
+	  approximation of log
+
+	  Move function definitions from clifford_algebra.h to here (and to
+	  framed_multi_imp.h): o sqrt(val, i, prechecked): square root of
+	  multivector with specified complexifier o log(val, i,
+	  prechecked): natural logarithm of multivector with specified
+	  complexifier o exp(): exponential function
+
+	  In sqrt() and log(), _GLUCAT_USE_EIGENVALUES is not defined,
+	  proceed as per GluCat 0.5.0, including detection of special cases
+	  of negative eigenvalues.
+
+	  If _GLUCAT_USE_EIGENVALUES is defined, call set genus to the
+	  struct returned by matrix::classify_eigenvalues(unitval.m_matrix)
+	  and switch on genus.m_eig_case (the classification of eigenvalues
+	  of unitval.m_matrix):
+
+	  In sqrt(): o negative_eig_case: (unitval.m_matrix has negative
+	  eigenvalues)	 scaled_result = sqrt(-i * unitval, i, prechecked)
+	  * (i + Scalar_T(1)) / sqrt_2; o both_eig_case: (unitval.m_matrix
+	  has both negative and imaginary eigenvalues)	 scaled_result =
+	  sqrt(exp(i*safe_arg) * unitval, i, prechecked) *
+	  exp(-i*safe_arg/2); o otherwise (no negative eigenvalues),
+	  proceed as per GluCat 0.5.0.
+
+	  In log(): o negative_eig_case: (unitval.m_matrix has negative
+	  eigenvalues)	 scaled_result = log(-i * unitval, i, prechecked) +
+	  i * pi/Scalar_T(2); o both_eig_case: (unitval.m_matrix has both
+	  negative and imaginary eigenvalues)	scaled_result =
+	  log(exp(i*safe_arg) * unitval, i, prechecked) - i * safe_arg; o
+	  otherwise (no negative eigenvalues), proceed as per GluCat 0.5.0.
+
+	  In exp(), remove the specific test for Scalar_T(0) and let the
+	  Scalar_T exp() handle it.
+
+2010-06-01 00:47  leopardi
+
+	* glucat/matrix_multi.h: Move function declarations from
+	  clifford_algebra.h to here (and to framed_multi.h): o sqrt(val,
+	  i, prechecked): square root of multivector with specified
+	  complexifier o log(val, i, prechecked): natural logarithm of
+	  multivector with specified complexifier o exp(): exponential
+	  function
+
+	  Make sqrt() and log() friends of class matrix_multi<>.
+
+	  Cosmetic improvements.
+
+2010-06-01 00:46  leopardi
+
+	* glucat/matrix_imp.h: Include headers for external eigenvalue
+	  functions depending on whether _GLUCAT_USE_ALGLIB,
+	  _GLUCAT_USE_BINDINGS_V1 or _GLUCAT_USE_BINDINGS is defined.
+
+	  Define new static functions: * Functions needed for interface to
+	  external eigenvalue functions:   o to_alglib(const Matrix_T&
+	  val): Convert matrix to ALGLIB format.    o to_lapack(const
+	  Matrix_T& val): Convert matrix to LAPACK format.
+
+	  * Functions declared in matrix.h:   o eigenvalues(const Matrix_T&
+	  val): Eigenvalues of a matrix.      The implementation differs
+	  depending on whether _GLUCAT_USE_ALGLIB,
+	  _GLUCAT_USE_BINDINGS_V1 or _GLUCAT_USE_BINDINGS is defined.	 o
+	  classify_eigenvalues(const Matrix_T& val): Classify the
+	  eigenvalues of a matrix.
+
+	  Include <set> so that classify_eigenvalues() can use a set of
+	  eigenvalues.
+
+2010-06-01 00:46  leopardi
+
+	* glucat/matrix.h: New data structures: o eig_case_t:
+	  Classification of eigenvalues of a matrix.  o eig_genus:
+	  Structure containing classification of eigenvalues.
+
+	  Declare new functions: o eigenvalues(const Matrix_T& val):
+	  Eigenvalues of a matrix.  o classify_eigenvalues(const Matrix_T&
+	  val): Classify the eigenvalues of a matrix.
+
+2010-06-01 00:45  leopardi
+
+	* glucat/framed_multi_imp.h: Move function definitions from
+	  clifford_algebra_imp.h to here (and to matrix_multi_imp.h): o
+	  sqrt(val, i, prechecked): square root of multivector with
+	  specified complexifier o log(val, i, prechecked): natural
+	  logarithm of multivector with specified complexifier o exp():
+	  exponential function In the general case, these functions call
+	  the corresponding functions for matri_multi<>.
+
+2010-06-01 00:44  leopardi
+
+	* glucat/framed_multi.h: Move function declarations from
+	  clifford_algebra.h to here (and to matrix_multi.h): o sqrt(val,
+	  i, prechecked): square root of multivector with specified
+	  complexifier o log(val, i, prechecked): natural logarithm of
+	  multivector with specified complexifier o exp(): exponential
+	  function
+
+	  Cosmetic improvements.
+
+2010-06-01 00:44  leopardi
+
+	* glucat/clifford_algebra_imp.h: Move static function definitions
+	  to matrix_multi_imp.h: o pade_approx(): Pade' approximation o
+	  db_step(): Single step of product form of Denman-Beavers square
+	  root iteration o db_sqrt(): Product form of Denman-Beavers square
+	  root iteration o pade_log(): Pade' approximation of log o
+	  cascade_log(): Incomplete square root cascade and Pade'
+	  approximation of log
+
+	  Move function definitions to framed_multi_imp.h and
+	  matrix_multi_imp.h: o sqrt(val, i, prechecked): square root of
+	  multivector with specified complexifier o log(val, i,
+	  prechecked): natural logarithm of multivector with specified
+	  complexifier o exp(): exponential function
+
+	  For functions f() == cosh(), cos(), sinh(), sin(), tanh(), tan(),
+	  atan(): If val is scalar, return value of scalar version of f().
+
+	  For functions f() == acos(), asin(): If val is real and abs(val)
+	  <= 1, return value of scalar version of f().
+
+	  Make comments more accurate.
+
+2010-06-01 00:43  leopardi
+
+	* glucat/clifford_algebra.h: Move function declarations to
+	  framed_multi.h and matrix_multi.h: o sqrt(val, i, prechecked):
+	  square root of multivector with specified complexifier o log(val,
+	  i, prechecked): natural logarithm of multivector with specified
+	  complexifier o exp(): exponential function
+
+2010-06-01 00:38  leopardi
+
+	* AUTHORS: Add acknowledgements for QD and PyClical.
+
+2010-05-28 01:12  leopardi
+
+	* ChangeLog: ChangeLog for version 0.5.0.
+
 2010-05-28 01:08  leopardi
 
 	* ChangeLog: ChangeLog for version 0.5.0.
@@ -3718,3 +3932,4 @@
 2002-01-10 ./README: Add -finline-limit-400
 
 2002-01-09 Release glucat-0.0.1
+
