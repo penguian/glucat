@@ -120,11 +120,12 @@ namespace glucat
     typedef error<multivector_t>                       error_t;
     typedef      matrix_multi<Scalar_T,LO,HI>          matrix_multi_t;
     friend class matrix_multi<Scalar_T,LO,HI>;
+
   private:
     class                                              var_term; // forward
     typedef class var_term                             var_term_t;
     typedef typename matrix_multi_t::matrix_t          matrix_t;
-    typedef std::map< const index_set_t, Scalar_T, 
+    typedef std::map< const index_set_t, Scalar_T,
                       std::less<const index_set_t>,
                       boost::fast_pool_allocator<term_t> >
                                                        sorted_map_t;
@@ -143,6 +144,7 @@ namespace glucat
     typedef typename map_t::size_type                  size_type;
     typedef typename map_t::iterator                   iterator;
     typedef typename map_t::const_iterator             const_iterator;
+
   public:
     /// Class name used in messages
     static const std::string classname();
@@ -200,7 +202,7 @@ namespace glucat
     friend const framed_multi_t
       operator% <>(const framed_multi_t& lhs, const framed_multi_t& rhs);
     friend Scalar_T
-      star <>(const framed_multi_t& lhs, const framed_multi_t& rhs);
+      star      <>(const framed_multi_t& lhs, const framed_multi_t& rhs);
     friend const framed_multi_t
       operator/ <>(const framed_multi_t& lhs, const framed_multi_t& rhs);
 
@@ -210,8 +212,10 @@ namespace glucat
       operator<< <>(std::ostream& os, const multivector_t& val);
     friend std::ostream&
       operator<< <>(std::ostream& os, const term_t& term);
+
     /// Add a term, if non-zero
     multivector_t&      operator+= (const term_t& term);
+
   private:
     /// Subalgebra isomorphism: fold each term within the given frame
     multivector_t       fold(const index_set_t frm) const;
@@ -274,6 +278,21 @@ namespace glucat
   operator*
    (const std::pair<const index_set<LO,HI>, Scalar_T>& lhs,
     const std::pair<const index_set<LO,HI>, Scalar_T>& rhs);
+
+  /// Square root of multivector with specified complexifier
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const framed_multi<Scalar_T,LO,HI>
+  sqrt(const framed_multi<Scalar_T,LO,HI>& val, const framed_multi<Scalar_T,LO,HI>& i, bool prechecked);
+
+  /// Exponential of multivector
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const framed_multi<Scalar_T,LO,HI>
+  exp(const framed_multi<Scalar_T,LO,HI>& val);
+
+  /// Natural logarithm of multivector with specified complexifier
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const framed_multi<Scalar_T,LO,HI>
+  log(const framed_multi<Scalar_T,LO,HI>& val, const framed_multi<Scalar_T,LO,HI>& i, bool prechecked);
 }
 
 namespace std
