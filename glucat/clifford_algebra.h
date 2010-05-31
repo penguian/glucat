@@ -488,15 +488,6 @@ namespace glucat
   const Multivector<Scalar_T,LO,HI>
   elliptic(const Multivector<Scalar_T,LO,HI>& val);
 
-  /// Square root of multivector with specified complexifier
-  template
-  <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
-  >
-  const Multivector<Scalar_T,LO,HI>
-  sqrt(const Multivector<Scalar_T,LO,HI>& val, const Multivector<Scalar_T,LO,HI>& i, const bool prechecked = false);
-
   /// Square root of multivector
   template
   <
@@ -507,24 +498,6 @@ namespace glucat
   sqrt(const Multivector<Scalar_T,LO,HI>& val);
 
   // Transcendental functions
-  /// Exponential of multivector
-  template
-  <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
-  >
-  const Multivector<Scalar_T,LO,HI>
-  exp(const Multivector<Scalar_T,LO,HI>& val);
-
-  /// Natural logarithm of multivector with specified complexifier
-  template
-  <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
-  >
-  const Multivector<Scalar_T,LO,HI>
-  log(const Multivector<Scalar_T,LO,HI>& val, const Multivector<Scalar_T,LO,HI>& i, const bool prechecked = false);
-
   /// Natural logarithm of multivector
   template
   <
