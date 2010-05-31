@@ -83,6 +83,16 @@ namespace glucat
   std::ostream&
   operator<< (std::ostream& os, const matrix_multi<Scalar_T,LO,HI>& val);
 
+  /// Square root of multivector with specified complexifier
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const matrix_multi<Scalar_T,LO,HI>
+  sqrt(const matrix_multi<Scalar_T,LO,HI>& val, const matrix_multi<Scalar_T,LO,HI>& i, bool prechecked);
+
+  /// Natural logarithm of multivector with specified complexifier
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const matrix_multi<Scalar_T,LO,HI>
+  log(const matrix_multi<Scalar_T,LO,HI>& val, const matrix_multi<Scalar_T,LO,HI>& i, bool prechecked);
+
   /// A matrix_multi<Scalar_T,LO,HI> is a matrix approximation to a multivector
   template< typename Scalar_T, const index_t LO = DEFAULT_LO, const index_t HI = DEFAULT_HI >
   class matrix_multi :
@@ -98,6 +108,7 @@ namespace glucat
     typedef error<multivector_t>                       error_t;
     typedef      framed_multi<Scalar_T,LO,HI>          framed_multi_t;
     friend class framed_multi<Scalar_T,LO,HI>;
+
   private:
     typedef ublas::row_major                           orientation_t;
     typedef ublas::compressed_matrix< Scalar_T, orientation_t >
@@ -108,6 +119,7 @@ namespace glucat
     typedef basis_matrix_t                             matrix_t;
 #endif
     typedef typename matrix_t::size_type               matrix_index_t;
+
   public:
     /// Class name used in messages
     static const std::string classname();
@@ -151,11 +163,13 @@ namespace glucat
     const matrix_multi_t fast_matrix_multi(const index_set_t frm) const;
     /// Use inverse generalized FFT to construct a framed_multi_t
     const framed_multi_t fast_framed_multi() const;
+
   private:
     /// Construct a multivector within a given frame from a given matrix
     matrix_multi(const matrix_t& mtx, const index_set_t frm);
     /// Create a basis element matrix within the current frame
     const basis_matrix_t basis_element(const index_set<LO,HI>& ist) const;
+
   public:
     _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
 
@@ -176,7 +190,7 @@ namespace glucat
     friend const matrix_multi_t
       operator% <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs);
     friend Scalar_T
-      star <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs);
+      star      <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs);
     friend const matrix_multi_t
       operator/ <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs);
 
@@ -186,9 +200,16 @@ namespace glucat
       operator<< <>(std::ostream& os, const multivector_t& val);
     friend std::ostream&
       operator<< <>(std::ostream& os, const term_t& term);
+
+    friend const matrix_multi_t
+      sqrt <>(const matrix_multi_t& val, const matrix_multi_t& i, bool prechecked);
+    friend const matrix_multi_t
+      log  <>(const matrix_multi_t& val, const matrix_multi_t& i, bool prechecked);
+
     /// Add a term, if non-zero
     multivector_t&     operator+= (const term_t& rhs);
-  private:
+
+   private:
     // Data members
 
     /// Index set representing the frame for the subalgebra which contains the multivector
@@ -196,6 +217,13 @@ namespace glucat
     /// Matrix value representing the multivector within the folded frame
     matrix_t           m_matrix;
   };
+
+  // Non-members
+
+  /// Exponential of multivector
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const matrix_multi<Scalar_T,LO,HI>
+  exp(const matrix_multi<Scalar_T,LO,HI>& val);
 }
 
 namespace std
