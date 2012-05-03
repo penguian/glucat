@@ -177,7 +177,7 @@ namespace glucat
     multivector_t&     operator= (const multivector_t& rhs);
 
     /// Random multivector within a frame
-    static const matrix_multi_t random(const index_set_t frm);
+    static const matrix_multi_t random(const index_set_t frm, Scalar_T fill = Scalar_T(1));
 
     // Friend declarations
 

@@ -809,9 +809,9 @@ namespace glucat
   template< typename Scalar_T, const index_t LO, const index_t HI >
   const matrix_multi<Scalar_T,LO,HI>
   matrix_multi<Scalar_T,LO,HI>::
-  random(const index_set<LO,HI> frm)
+  random(const index_set<LO,HI> frm, Scalar_T fill)
   {
-    return framed_multi<Scalar_T,LO,HI>::random(frm);
+    return framed_multi<Scalar_T,LO,HI>::random(frm, fill);
   }
 
   /// Write multivector to output

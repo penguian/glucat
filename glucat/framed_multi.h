@@ -189,7 +189,7 @@ namespace glucat
     _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
 
     /// Random multivector within a frame
-    static const framed_multi_t random(const index_set_t frm);
+    static const framed_multi_t random(const index_set_t frm, Scalar_T fill = Scalar_T(1));
 
     // Friend declarations
 

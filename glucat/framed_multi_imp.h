@@ -1076,7 +1076,7 @@ namespace glucat
   template< typename Scalar_T, const index_t LO, const index_t HI >
   const framed_multi<Scalar_T,LO,HI>
   framed_multi<Scalar_T,LO,HI>::
-  random(const index_set<LO,HI> frm)
+  random(const index_set<LO,HI> frm, Scalar_T fill)
   {
     typedef framed_multi<Scalar_T,LO,HI> multivector_t;
     typedef typename multivector_t::index_set_t index_set_t;
@@ -1085,6 +1085,12 @@ namespace glucat
     typedef random_generator<Scalar_T> random_generator_t;
     random_generator_t& generator = random_generator_t::generator();
 
+    fill =
+      (fill < Scalar_T(0))
+      ? Scalar_T(0)
+      : (fill > Scalar_T(1))
+        ? Scalar_T(1)
+        : fill;
     const set_value_t algebra_dim = 1 << frm.count();
     const Scalar_T mean_abs = numeric_traits<Scalar_T>::sqrt(Scalar_T(double(algebra_dim)));
     multivector_t result;
@@ -1092,13 +1098,14 @@ namespace glucat
         stv = 0;
         stv != algebra_dim;
         ++stv)
-    {
-      const Scalar_T& result_crd = generator.normal() / mean_abs;
-      result.insert(term_t(index_set_t(stv, frm, true), result_crd));
-    }
+      if (generator.uniform() < fill)
+      {
+        const Scalar_T& result_crd = generator.normal() / mean_abs;
+        result.insert(term_t(index_set_t(stv, frm, true), result_crd));
+      }
     return result;
   }
-
+  
   /// Write multivector to output
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
