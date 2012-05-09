@@ -5,7 +5,7 @@
     transforms.h : Transforms
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2007 by Paul C. Leopardi
+    copyright            : (C) 2001-2012 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -31,6 +31,7 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
+#define _GLUCAT_TEST_REPEAT
 #include "glucat/glucat.h"
 const int DRIVER_FAST_SIZE_THRESHOLD    = 1 << 30;
 const int DRIVER_INV_FAST_DIM_THRESHOLD = 1 << 15;
@@ -47,6 +48,7 @@ typedef glucat::tuning
   >
   Tune_P;
 #include "glucat/glucat_imp.h"
+#include "test/timing.h"
 #include "test/try_catch.h"
 #include <stdio.h>
 #include <iomanip>
@@ -54,16 +56,11 @@ typedef glucat::tuning
 namespace glucat_fast_test
 {
   using namespace glucat;
+  using namespace glucat::timing;
   using namespace std;
-  const index_t max_n = DEFAULT_HI;
-  typedef double Scalar_T;
-  typedef index_set< -max_n, max_n > index_set_t;
 
-  inline
-  static
-  double
-  elapsed( clock_t cpu_time )
-  { return ((clock() - cpu_time)*MS_PER_S) / CLOCKS_PER_SEC; }
+  const index_t max_n = DEFAULT_HI;
+  typedef index_set< -max_n, max_n > index_set_t;
 
   inline
   static
@@ -95,133 +92,142 @@ namespace glucat_fast_test
     cout.flags(old_flags);
   }
 
+  template< typename Scalar_T >
+  inline
+  static
+  Scalar_T
+  relative(const Scalar_T abs_lhs_minus_rhs, const Scalar_T abs_rhs)
+  {
+    return
+      (abs_rhs == Scalar_T(0))
+      ? abs_lhs_minus_rhs
+      : abs_lhs_minus_rhs / abs_rhs;
+  }
+  
   template< typename Multivector_T >
   static
   void
-  time_fast(Multivector_T& a, const Multivector_T& b,
-            const index_set_t& inner_frame,
-            const index_set_t& outer_frame)
+  time_fast(const index_set_t inner_frame,
+            const index_set_t outer_frame,
+            const typename Multivector_T::scalar_t fill)
   {
     typedef typename Multivector_T::matrix_multi_t matrix_multi_t;
     typedef typename Multivector_T::framed_multi_t framed_multi_t;
-    int trials;
-    const int min_trials_if_zero = 1000;
-    a = a*b*(Scalar_T(1.0*rand())/RAND_MAX) + a*(Scalar_T(1.0*rand())/RAND_MAX);
+
+    Multivector_T a = Multivector_T::random(inner_frame, fill);
     clock_t cpu_time = clock();
-     matrix_multi_t old_A = matrix_multi_t(a, outer_frame);
+      matrix_multi_t old_A = matrix_multi_t(a, outer_frame);
     double old_mm_cpu_time = elapsed(cpu_time);
-    if (old_mm_cpu_time < MS_PER_S)
+#ifdef _GLUCAT_TEST_REPEAT
+    for (int nbr_trials = EXTRA_TRIALS; old_mm_cpu_time == 0.0; nbr_trials *= EXTRA_TRIALS)
     {
-      const int max_trials =
-       old_mm_cpu_time == 0.0 ?
-         min_trials_if_zero :
-         int(floor(MS_PER_S/old_mm_cpu_time));
       cpu_time = clock();
-      for (trials = 0; trials != max_trials; ++trials)
-        old_A = matrix_multi_t(a, outer_frame);
-      old_mm_cpu_time = elapsed(cpu_time)/trials;
+        for (int trials = 0; trials != nbr_trials; ++trials)
+          old_A = matrix_multi_t(a, outer_frame);
+      old_mm_cpu_time = elapsed(cpu_time) / nbr_trials;
     }
+#endif
     cpu_time = clock();
-     matrix_multi_t new_A = a.fast_matrix_multi(outer_frame);
+      matrix_multi_t new_A = a.fast_matrix_multi(outer_frame);
     double new_mm_cpu_time = elapsed(cpu_time);
-    if (new_mm_cpu_time < MS_PER_S)
+#ifdef _GLUCAT_TEST_REPEAT
+    for (int nbr_trials = EXTRA_TRIALS; new_mm_cpu_time == 0.0; nbr_trials *= EXTRA_TRIALS)
     {
-      const int max_trials =
-       new_mm_cpu_time == 0.0 ?
-         min_trials_if_zero :
-         int(floor(MS_PER_S/new_mm_cpu_time));
       cpu_time = clock();
-      for (trials = 0; trials != max_trials; ++trials)
-        new_A = a.fast_matrix_multi(outer_frame);
-      new_mm_cpu_time = elapsed(cpu_time)/trials;
+        for (int trials = 0; trials != nbr_trials; ++trials)
+          new_A = a.fast_matrix_multi(outer_frame);
+      new_mm_cpu_time = elapsed(cpu_time) / nbr_trials;
     }
+#endif
     cpu_time = clock();
-     framed_multi_t old_a = old_A;
+      framed_multi_t old_a = old_A;
     double old_fm_cpu_time = elapsed(cpu_time);
-    if (old_fm_cpu_time < MS_PER_S)
+#ifdef _GLUCAT_TEST_REPEAT
+    for (int nbr_trials = EXTRA_TRIALS; old_fm_cpu_time == 0.0; nbr_trials *= EXTRA_TRIALS)
     {
-      const int max_trials =
-       old_fm_cpu_time == 0.0 ?
-         min_trials_if_zero :
-         int(floor(MS_PER_S/old_fm_cpu_time));
       cpu_time = clock();
-      for (trials = 0; trials != max_trials; ++trials)
-        old_a = old_A;
-      old_fm_cpu_time = elapsed(cpu_time)/trials;
+        for (int trials = 0; trials != nbr_trials; ++trials)
+          old_a = old_A;
+      old_fm_cpu_time = elapsed(cpu_time) / nbr_trials;
     }
+#endif    
     cpu_time = clock();
-     framed_multi_t new_a = new_A.fast_framed_multi();
+      framed_multi_t new_a = new_A.fast_framed_multi();
     double new_fm_cpu_time = elapsed(cpu_time);
-    if (new_fm_cpu_time < MS_PER_S)
+#ifdef _GLUCAT_TEST_REPEAT
+    for (int nbr_trials = EXTRA_TRIALS; new_fm_cpu_time == 0.0; nbr_trials *= EXTRA_TRIALS)
     {
-      const int max_trials =
-       new_fm_cpu_time == 0.0 ?
-         min_trials_if_zero :
-         int(floor(MS_PER_S/new_fm_cpu_time));
       cpu_time = clock();
-      for (trials = 0; trials != max_trials; ++trials)
-        new_a = new_A.fast_framed_multi();
-      new_fm_cpu_time = elapsed(cpu_time)/trials;
+        for (int trials = 0; trials != nbr_trials; ++trials)
+          new_a = new_A.fast_framed_multi();
+      new_fm_cpu_time = elapsed(cpu_time) / nbr_trials;
     }
+#endif
     print_times(inner_frame, outer_frame,
-      old_mm_cpu_time, new_mm_cpu_time, old_fm_cpu_time, new_fm_cpu_time);
+                old_mm_cpu_time, new_mm_cpu_time,
+                old_fm_cpu_time, new_fm_cpu_time);
     const ios::fmtflags& old_flags = cout.flags();
     const streamsize width = 8;
     cout.setf(ios_base::scientific);
     cout.setf(ios_base::showpoint);
     const streamsize old_prec = cout.precision(2);
-    cout << " diff: old: " << setw(width) << abs(old_A - old_a)/abs(old_a)
-               << " new: " << setw(width) << abs(new_A - new_a)/abs(new_a)
-               << " fm: "  << setw(width) << abs(new_A - old_A)/abs(old_A)
-               << " mm: "  << setw(width) << abs(new_a - old_a)/abs(old_a)
+    cout << " diff: old: " << setw(width) << relative(abs(old_A - old_a), abs(old_a))
+               << " new: " << setw(width) << relative(abs(new_A - new_a), abs(new_a))
+               << " fm: "  << setw(width) << relative(abs(new_A - old_A), abs(old_A))
+               << " mm: "  << setw(width) << relative(abs(new_a - old_a), abs(old_a))
                << endl;
     cout.precision(old_prec);
     cout.flags(old_flags);
   }
 
-  template< class Multivector_T >
+  template< typename Multivector_T >
+  static
+  void
+  fast_test_with_fill(const index_t max_pos, const index_t max_index,
+                      const typename Multivector_T::scalar_t fill)
+  {
+    cout << "Fill: " << fill << endl;
+
+    typedef typename Multivector_T::index_set_t index_set_t;
+    const index_set_t pos_frame   = index_set_t(make_pair(1, max_pos));
+    const index_set_t outer_frame = index_set_t(make_pair(-max_index, max_index));
+
+    index_set_t inner_frame = index_set_t();
+    for (index_t i = 1; i != max_pos+1; ++i)
+    {
+      inner_frame |= index_set_t(i);
+      time_fast<Multivector_T>(inner_frame, pos_frame, fill);
+    }
+    inner_frame = index_set_t();
+    for (index_t i = 1; i != max_index+1; ++i)
+    {
+      inner_frame |= index_set_t(i);
+      time_fast<Multivector_T>(inner_frame, outer_frame, fill);
+      inner_frame |= index_set_t(-i);
+      time_fast<Multivector_T>(inner_frame, outer_frame, fill);
+    }
+    inner_frame = index_set_t();
+    for (index_t i = 1; i != max_index+1; ++i)
+    {
+      inner_frame |= index_set_t(i);
+      time_fast<Multivector_T>(inner_frame, inner_frame, fill);
+      inner_frame |= index_set_t(-i);
+      time_fast<Multivector_T>(inner_frame, inner_frame, fill);
+    }
+  }
+
+  template< typename Multivector_T >
   static
   void
   fast_test(const index_t n, const index_t max_n)
   {
     cout << "Clifford algebra transform test:" << endl;
 
-    typedef Multivector_T m_;
-    typedef index_set_t e_;
-    typedef typename m_::matrix_multi_t matrix_multi_t;
-    typedef typename m_::framed_multi_t framed_multi_t;
-
-    m_ a;
     const index_t max_pos = min(index_t(2*n), max_n);
-    const e_ pos_frame = e_(make_pair(1, max_pos));
-
     const index_t max_index = min(n, max_n);
-    const e_ outer_frame = e_(make_pair(-max_index, max_index));
-    a = m_(1, pos_frame);
-    e_ inner_frame;
-    for (index_t i = 1; i != max_pos+1; i++)
-    {
-      inner_frame |= e_(i);
-      time_fast(a, m_(e_(i) , 1.0, pos_frame), inner_frame, pos_frame);
-    }
-    inner_frame = e_();
-    a = m_(1, outer_frame);
-    for (index_t i = 1; i != max_index+1; i++)
-    {
-      inner_frame |= e_(i);
-      time_fast(a, m_(e_(i) , 1.0, outer_frame), inner_frame, outer_frame);
-      inner_frame |= e_(-i);
-      time_fast(a, m_(e_(-i), 1.0, outer_frame), inner_frame, outer_frame);
-    }
-    a = 1;
-    inner_frame = e_();
-    for (index_t i = 1; i != max_index+1; i++)
-    {
-      inner_frame |= e_(i);
-      time_fast(a, m_(e_(i) , 1.0), inner_frame, inner_frame);
-      inner_frame |= e_(-i);
-      time_fast(a, m_(e_(-i), 1.0), inner_frame, inner_frame);
-    }
+
+    fast_test_with_fill<Multivector_T>(max_pos, max_index, 0.5);
+    fast_test_with_fill<Multivector_T>(max_pos, max_index, 1.0);
   }
 }
 

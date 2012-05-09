@@ -5,7 +5,7 @@
     gfft_test.h: GFFT test
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2007 by Paul C. Leopardi
+    copyright            : (C) 2001-2012 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -31,7 +31,9 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
+#define _GLUCAT_TEST_REPEAT
 #include "glucat/glucat.h"
+
 // If radix of int is not 2, we can't easily set thresholds
 _GLUCAT_CTAssert(std::numeric_limits<int>::radix == 2, CannotSetThresholds)
 
@@ -50,22 +52,19 @@ typedef glucat::tuning
     DRIVER_INV_FAST_DIM_THRESHOLD
   >
   Tune_P;
+
 #include "glucat/glucat_imp.h"
+#include "test/timing.h"
 #include "test/try_catch.h"
 #include <iomanip>
 
 namespace glucat_gfft_test
 {
   using namespace glucat;
+  using namespace timing;
   using namespace std;
 
   const index_t max_n = DEFAULT_HI;
-
-  inline
-  static
-  double
-  elapsed( clock_t cpu_time )
-  { return ((clock() - cpu_time)*MS_PER_S) / CLOCKS_PER_SEC; }
 
   template< typename Index_Set_T >
   inline
@@ -99,63 +98,59 @@ namespace glucat_gfft_test
     cout.flags(old_flags);
   }
 
+  template< typename Scalar_T >
+  inline
+  static
+  Scalar_T
+  relative(const Scalar_T abs_lhs_minus_rhs, const Scalar_T abs_rhs)
+  {
+    return
+      (abs_rhs == Scalar_T(0))
+      ? abs_lhs_minus_rhs
+      : abs_lhs_minus_rhs / abs_rhs;
+  }
+
   template< typename Multivector_T >
   static
   void
-  time_fast(Multivector_T& a, const Multivector_T& b,
-            const typename Multivector_T::index_set_t& inner_frame,
-            const typename Multivector_T::index_set_t& outer_frame)
+  time_fast(const typename Multivector_T::index_set_t inner_frame,
+            const typename Multivector_T::index_set_t outer_frame,
+            const typename Multivector_T::scalar_t fill)
   {
-    typedef typename Multivector_T::matrix_multi_t matrix_multi_t;
-    typedef typename Multivector_T::framed_multi_t framed_multi_t;
-    typedef typename Multivector_T::index_set_t index_set_t;
     typedef typename Multivector_T::scalar_t    scalar_t;
+    typedef typename Multivector_T::index_set_t index_set_t;
+    typedef typename Multivector_T::framed_multi_t framed_multi_t;
+    typedef typename Multivector_T::matrix_multi_t matrix_multi_t;
 
-    int trials;
-    const double min_cpu_time = 0.1;
-    const int min_trials_if_small = 10000;
-    a = a*b*(scalar_t(1.0*rand())/RAND_MAX) + a*(scalar_t(1.0*rand())/RAND_MAX);
-    int mm_trials = 1;
+    Multivector_T a = Multivector_T::random(inner_frame, fill);
     clock_t cpu_time = clock();
-     matrix_multi_t A = a.fast_matrix_multi(outer_frame);
+      matrix_multi_t A = a.fast_matrix_multi(outer_frame);
     double mm_cpu_time = elapsed(cpu_time);
-    if (mm_cpu_time < 1000.0)
+    int mm_trials = 1;
+#ifdef _GLUCAT_TEST_REPEAT
+    for (int nbr_trials = EXTRA_TRIALS; mm_cpu_time == 0.0; nbr_trials *= EXTRA_TRIALS)
     {
-      const int max_trials = 
-        (mm_cpu_time < min_cpu_time) 
-        ? min_trials_if_small 
-        : int(ceil(MS_PER_S/mm_cpu_time));
       cpu_time = clock();
-      for (trials = 0; trials != max_trials; ++trials)
-        A = a.fast_matrix_multi(outer_frame);
-      double trial_time = elapsed(cpu_time);
-      matrix_multi_t new_A;
-      cpu_time = clock();
-      for (mm_trials = 0; mm_trials != trials; ++mm_trials)
-        new_A = A;
-      double for_time = elapsed(cpu_time);
-      mm_cpu_time = max(0.0,trial_time - for_time)/trials;
+        for (int trials = 0; trials != nbr_trials; ++trials)
+          A = a.fast_matrix_multi(outer_frame);
+      mm_cpu_time = elapsed(cpu_time) / nbr_trials;
+      mm_trials = nbr_trials;
     }
-    int fm_trials = 1;
+#endif
     cpu_time = clock();
-     framed_multi_t new_a = A.fast_framed_multi();
+      framed_multi_t new_a = A.fast_framed_multi();
     double fm_cpu_time = elapsed(cpu_time);
-    if (fm_cpu_time < 1000.0)
+    int fm_trials = 1;
+#ifdef _GLUCAT_TEST_REPEAT
+    for (int nbr_trials = EXTRA_TRIALS; fm_cpu_time == 0.0; nbr_trials *= EXTRA_TRIALS)
     {
-      const int max_trials =
-        (fm_cpu_time < min_cpu_time)
-        ? min_trials_if_small 
-        : int(ceil(MS_PER_S/fm_cpu_time));
       cpu_time = clock();
-      for (trials = 0; trials != max_trials; ++trials)
-        new_a = A.fast_framed_multi();
-      double trial_time = elapsed(cpu_time);
-      cpu_time = clock();
-      for (fm_trials = 0; fm_trials != trials; ++fm_trials)
-        new_a = a;
-      double for_time = elapsed(cpu_time);
-      fm_cpu_time = max(0.0,trial_time - for_time)/trials;
+        for (int trials = 0; trials != nbr_trials; ++trials)
+          new_a = A.fast_framed_multi();
+      fm_cpu_time = elapsed(cpu_time) / nbr_trials;
+      fm_trials = nbr_trials;
     }
+#endif    
     print_times(inner_frame, outer_frame, mm_cpu_time, fm_cpu_time, mm_trials, fm_trials);
     const ios::fmtflags& old_flags = cout.flags();
     const streamsize width = 8;
@@ -164,37 +159,42 @@ namespace glucat_gfft_test
     cout.setf(ios_base::scientific);
     cout.setf(ios_base::showpoint);
     cout << setprecision(prec)
-         << " diff: " << setw(width) << abs(A.fast_framed_multi() - a)/abs(a)
+         << " diff: " << setw(width) << relative(abs(new_a - a), abs(a))
          << setprecision(old_prec)  << endl;
     cout.flags(old_flags);
   }
 
-  template< class Multivector_T >
+  template< typename Multivector_T >
+  static
+  void
+  fast_test_with_fill(const index_t n, const index_t max_n,
+                      const typename Multivector_T::scalar_t fill)
+  {
+    typedef typename Multivector_T::scalar_t scalar_t;
+    typedef typename Multivector_T::index_set_t index_set_t;
+
+    const index_t max_index = min(n, max_n);
+    cout << "Fill: " << fill << endl;
+    for (index_t k = max_index; k != 0; --k)
+    {
+      index_set_t inner_frame = index_set_t();
+      for (index_t i = k; i < max_index+1; i += k)
+      {
+        inner_frame |= index_set_t(-i) | index_set_t(i);
+        time_fast<Multivector_T>(inner_frame, inner_frame, fill);
+      }
+    }
+  }
+
+  template< typename Multivector_T >
   static
   void
   fast_test(const index_t n, const index_t max_n)
   {
     cout << "Clifford algebra transform test:" << endl;
 
-    typedef Multivector_T m_;
-    typedef typename m_::matrix_multi_t matrix_multi_t;
-    typedef typename m_::framed_multi_t framed_multi_t;
-    typedef typename m_::index_set_t e_;
-    typedef typename m_::scalar_t    scalar_t;
-
-    const index_t max_index = min(n, max_n);
-    for (index_t k = max_index; k != 0; --k)
-    {
-      m_ a = 1;
-      e_ inner_frame = e_();
-      for (index_t i = k; i < max_index+1; i += k)
-      {
-        inner_frame |= e_(i);
-        a = a*m_(e_(i) , 1.0)*(scalar_t(1.0*rand())/RAND_MAX) + a*(scalar_t(1.0*rand())/RAND_MAX);
-        inner_frame |= e_(-i);
-        time_fast(a, m_(e_(-i), 1.0), inner_frame, inner_frame);
-      }
-    }
+    fast_test_with_fill<Multivector_T>(n, max_n, 0.5);
+    fast_test_with_fill<Multivector_T>(n, max_n, 1.0);
   }
 }
 
