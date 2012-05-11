@@ -6,7 +6,7 @@
     Clifford algebra element
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2010 by Paul C. Leopardi
+    copyright            : (C) 2001-2012 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -126,6 +126,12 @@ namespace glucat
   {
     std::istringstream ss(str);
     ss >> *this;
+    if (!ss)
+      throw error_t("multivector_t(str): could not parse string");
+    // Peek to see if the end of the string has been reached.
+    ss.peek();
+    if (!ss.eof())
+      throw error_t("multivector_t(str): could not parse entire string");
   }
 
   /// Construct a multivector, within a given frame, from a string: eg: "3+2{1,2}-6.1e-2{2,3}"
@@ -763,8 +769,14 @@ namespace glucat
 
     Scalar_T result = Scalar_T(0);
     const bool small_star_large = lhs.size() < rhs.size();
-    const multivector_t* smallp = small_star_large ? &lhs : & rhs;
-    const multivector_t* largep = small_star_large ? &rhs : & lhs;
+    const multivector_t* smallp =
+      small_star_large
+      ? &lhs
+      : &rhs;
+    const multivector_t* largep =
+      small_star_large
+      ? &rhs
+      : &lhs;
 
     for (const_iterator
          small_it = smallp->begin();
@@ -829,6 +841,26 @@ namespace glucat
   operator/= (const multivector_t& rhs)
   { return *this = *this / rhs; }
 
+  /// Transformation via twisted adjoint action
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
+  const framed_multi<Scalar_T,LO,HI>
+  operator| (const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs)
+  {
+    typedef framed_multi<Scalar_T,LO,HI> multivector_t;
+    typedef typename multivector_t::matrix_multi_t matrix_multi_t;
+
+    return matrix_multi_t(rhs) * matrix_multi_t(lhs) / matrix_multi_t(rhs.involute());
+  }
+
+  /// Transformation via twisted adjoint action
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
+  framed_multi<Scalar_T,LO,HI>&
+  framed_multi<Scalar_T,LO,HI>::
+  operator|= (const multivector_t& rhs)
+  { return *this = *this | rhs; }
+
   /// Clifford multiplicative inverse
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
@@ -838,6 +870,64 @@ namespace glucat
   {
     matrix_multi_t result = matrix_multi_t(Scalar_T(1), this->frame());
     return result /= matrix_multi_t(*this);
+  }
+
+  /// Integer power of multivector: *this to the m
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const framed_multi<Scalar_T,LO,HI>
+  framed_multi<Scalar_T,LO,HI>::
+  pow(int m) const
+  { return glucat::pow(*this, m); }
+
+  /// Outer product power of multivector
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const
+  framed_multi<Scalar_T,LO,HI>
+  framed_multi<Scalar_T,LO,HI>::
+  outer_pow(int m) const
+  {
+    if (m < 0)
+      throw error_t("outer_pow(int): negative exponent");
+    multivector_t result = Scalar_T(1);
+    multivector_t a = *this;
+    for (;
+        m != 0;
+        m >>= 1, a ^= a)
+      if (m & 1)
+        result ^= a;
+    return result;
+  }
+
+  /// Frame of multivector: union of index sets of terms
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
+  const index_set<LO,HI>
+  framed_multi<Scalar_T,LO,HI>::
+  frame() const
+  {
+    index_set_t result;
+    for (const_iterator
+        this_it = this->begin();
+        this_it != this->end();
+        ++this_it)
+      result |= this_it->first;
+    return result;
+  }
+
+  /// Grade of multivector: maximum of the grades of each term
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
+  const index_t
+  framed_multi<Scalar_T,LO,HI>::
+  grade() const
+  {
+    index_t result = 0;
+    for (const_iterator
+        this_it = this->begin();
+        this_it != this->end();
+        ++this_it)
+      result = std::max( result, this_it->first.count() );
+    return result;
   }
 
   /// Subscripting: map from index set to scalar coordinate
@@ -854,6 +944,27 @@ namespace glucat
       return this_it->second;
   }
 
+  /// Grading: part where each term is a grade-vector
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const framed_multi<Scalar_T,LO,HI>
+  framed_multi<Scalar_T,LO,HI>::
+  operator() (index_t grade) const
+  {
+    if ((grade < 0) || (grade > HI-LO))
+      return Scalar_T(0);
+    else
+    {
+      multivector_t result;
+      for (const_iterator
+          this_it = this->begin();
+          this_it != this->end();
+          ++this_it)
+        if (this_it->first.count() == grade)
+          result += *this_it;
+      return result;
+    }
+  }
+
   /// Scalar part
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
@@ -861,6 +972,67 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   scalar() const
   { return (*this)[index_set_t()]; }
+
+  /// Pure part
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
+  const framed_multi<Scalar_T,LO,HI>
+  framed_multi<Scalar_T,LO,HI>::
+  pure() const
+  { return *this - this->scalar(); }
+
+  /// Even part, sum of the even grade terms
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const framed_multi<Scalar_T,LO,HI>
+  framed_multi<Scalar_T,LO,HI>::
+  even() const
+  { // even part of x, sum of the pure(count) with even count
+    multivector_t result;
+    for (const_iterator
+        this_it = this->begin();
+        this_it != this->end();
+        ++this_it)
+      if ((this_it->first.count() % 2) == 0)
+        result.insert(*this_it);
+    return result;
+  }
+
+  /// Odd part, sum of the odd grade terms
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const framed_multi<Scalar_T,LO,HI>
+  framed_multi<Scalar_T,LO,HI>::
+  odd() const
+  { // even part of x, sum of the pure(count) with even count
+    multivector_t result;
+    for (const_iterator
+        this_it = this->begin();
+        this_it != this->end();
+        ++this_it)
+      if ((this_it->first.count() % 2) == 1)
+        result.insert(*this_it);
+    return result;
+  }
+
+  /// Vector part of multivector, as a vector_t
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const typename framed_multi<Scalar_T,LO,HI>::vector_t
+  framed_multi<Scalar_T,LO,HI>::
+  vector_part() const
+  {
+    const index_set_t frm = this->frame();
+    vector_t result;
+    result.reserve(frm.count());
+    const index_t frm_end = frm.max()+1;
+    for (index_t
+        idx  = frm.min();
+        idx != frm_end;
+        ++idx)
+      // Frame may contain indices which do not correspond to a grade 1 term but
+      // frame cannot omit any index corresponding to a grade 1 term
+      if (frm[idx])
+        result.push_back((*this)[index_set_t(idx)]);
+    return result;
+  }
 
   /// Main involution, each {i} is replaced by -{i} in each term
   template< typename Scalar_T, const index_t LO, const index_t HI >
@@ -944,9 +1116,10 @@ namespace glucat
         this_it != this->end();
         ++this_it)
     {
-      const Scalar_T sign = (this_it->first.count_neg() % 2)
-                          ? -Scalar_T(1)
-                          :  Scalar_T(1);
+      const Scalar_T sign =
+        (this_it->first.count_neg() % 2)
+        ? -Scalar_T(1)
+        :  Scalar_T(1);
       result += sign * (this_it->second) * (this_it->second);
     }
     return result;
@@ -972,103 +1145,24 @@ namespace glucat
     return result;
   }
 
-  /// *this to the m
+  /// Maximum of absolute values of components of multivector: multivector infinity norm
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const framed_multi<Scalar_T,LO,HI>
+  Scalar_T
   framed_multi<Scalar_T,LO,HI>::
-  pow(int m) const
-  { return glucat::pow(*this, m); }
-
-  /// Outer product power
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  const
-  framed_multi<Scalar_T,LO,HI>
-  framed_multi<Scalar_T,LO,HI>::
-  outer_pow(int m) const
+  max_abs() const
   {
-    if (m < 0)
-      throw error_t("outer_pow(int): negative exponent");
-    multivector_t result = Scalar_T(1);
-    multivector_t a = *this;
-    for (;
-        m != 0;
-        m >>= 1, a ^= a)
-      if (m & 1)
-        result ^= a;
-    return result;
-  }
+    typedef numeric_traits<Scalar_T> traits_t;
 
-  /// Grading: part where each term is a grade-vector
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  const framed_multi<Scalar_T,LO,HI>
-  framed_multi<Scalar_T,LO,HI>::
-  operator() (index_t grade) const
-  {
-    if ((grade < 0) || (grade > HI-LO))
-      return Scalar_T(0);
-    else
+    Scalar_T result = Scalar_T(0);
+    for (const_iterator
+        this_it = this->begin();
+        this_it != this->end();
+        ++this_it)
     {
-      multivector_t result;
-      for (const_iterator
-          this_it = this->begin();
-          this_it != this->end();
-          ++this_it)
-        if (this_it->first.count() == grade)
-          result += *this_it;
-      return result;
+      const Scalar_T abs_crd = traits_t::abs(this_it->second);
+      if (abs_crd > result)
+        result = abs_crd;
     }
-  }
-
-  /// Even part, sum of the even grade terms
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  const framed_multi<Scalar_T,LO,HI>
-  framed_multi<Scalar_T,LO,HI>::
-  even() const
-  { // even part of x, sum of the pure(count) with even count
-    multivector_t result;
-    for (const_iterator
-        this_it = this->begin();
-        this_it != this->end();
-        ++this_it)
-      if ((this_it->first.count() % 2) == 0)
-        result.insert(*this_it);
-    return result;
-  }
-
-  /// Odd part, sum of the odd grade terms
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  const framed_multi<Scalar_T,LO,HI>
-  framed_multi<Scalar_T,LO,HI>::
-  odd() const
-  { // even part of x, sum of the pure(count) with even count
-    multivector_t result;
-    for (const_iterator
-        this_it = this->begin();
-        this_it != this->end();
-        ++this_it)
-      if ((this_it->first.count() % 2) == 1)
-        result.insert(*this_it);
-    return result;
-  }
-
-  /// Vector part of multivector, as a vector_t
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  const typename framed_multi<Scalar_T,LO,HI>::vector_t
-  framed_multi<Scalar_T,LO,HI>::
-  vector_part() const
-  {
-    const index_set_t frm = this->frame();
-    vector_t result;
-    result.reserve(frm.count());
-    const index_t frm_end = frm.max()+1;
-    for (index_t
-        idx  = frm.min();
-        idx != frm_end;
-        ++idx)
-      // Frame may contain indices which do not correspond to a grade 1 term but
-      // frame cannot omit any index corresponding to a grade 1 term
-      if (frm[idx])
-        result.push_back((*this)[index_set_t(idx)]);
     return result;
   }
 
@@ -1190,8 +1284,7 @@ namespace glucat
           ++sorted_it)
       {
         const Scalar_T& scr = sorted_it->second;
-        const Scalar_T& real_scr = traits_t::real(scr);
-        if ((scr != real_scr) || (real_scr >= 0.0))
+        if (scr >= 0.0)
           os << '+';
         os << *sorted_it;
       }
@@ -1204,8 +1297,15 @@ namespace glucat
   std::ostream&
   operator<< (std::ostream& os, const std::pair< const index_set<LO,HI>, Scalar_T >& term)
   {
+    const double second_as_double = numeric_traits<Scalar_T>::to_double(term.second);
+    const bool use_double =
+      (os.precision() <= std::numeric_limits<double>::digits10) ||
+      (term.second == Scalar_T(second_as_double));
     if (term.first.count() == 0)
-      os << term.second;
+      if (use_double)
+        os << second_as_double;
+      else
+        os << term.second;
     else if (term.second == Scalar_T(-1))
     {
       os << '-';
@@ -1213,7 +1313,16 @@ namespace glucat
     }
     else if (term.second != Scalar_T(1))
     {
-      os << term.second;
+      if (use_double)
+      {
+        double tol = std::pow(10.0,-os.precision());
+        if ( std::fabs(second_as_double + 1.0) < tol )
+          os << '-';
+        else if ( std::fabs(second_as_double - 1.0) >= tol )
+          os << second_as_double;
+      }
+      else
+        os << term.second;
       os << term.first;
     }
     else
@@ -1225,70 +1334,117 @@ namespace glucat
   template< typename Scalar_T, const index_t LO, const index_t HI >
   std::istream&
   operator>> (std::istream& s, framed_multi<Scalar_T,LO,HI> & val)
-  { // Input looks like 1.0 -2.0{1,2} +3.2{3,4}
+  { // Input looks like 1.0-2.0{1,2}+3.2{3,4}.
     typedef framed_multi<Scalar_T,LO,HI> multivector_t;
-    multivector_t local;
+    // Parsing variables.
+    multivector_t local_val;
     int c = 0;
-    while (s)
-    {  // Default coordinate value is Scalar_T(0)
-      Scalar_T     coordinate = Scalar_T(0);
-      // Default index set is empty
+    // Parsing control variables.
+    bool negative = false;
+    bool expect_term = true;
+    // The multivector may begin with '+' or '-'. Check for this.
+    c = s.peek();
+    if (s.good() && (c == int('+') || c == int('-')))
+    { // A '-' here negates the following term.
+      negative = (c == int('-'));
+      // Consume the '+' or '-'.
+      s.get();
+    }
+    while (s.good())
+    { // Parse a term.
+      // A term consists of an optional scalar, followed by an optional index set.
+      // At least one of the two must be present.
+      // Default coordinate is Scalar_T(1).
+      Scalar_T  coordinate  = Scalar_T(1);
+      // Default index set is empty.
       index_set<LO,HI> ist;
-      ist.reset();
+      // First, check for an opening brace.
       c = s.peek();
-      // Look for a leading '-'
-      const bool negative = (c == int('-'));
-      if (negative)
-      { // consume the '-'
-        c = s.get();
-        if (s)
-          c = s.peek();
+      if (s.good())
+      { // If the character is not an opening brace,
+        // a coordinate value is expected here.
+        if (c != int('{'))
+        { // Try to read a coordinate value.
+          double coordinate_as_double;
+          s >> coordinate_as_double;
+          // Reading the coordinate may have resulted in an end of file condition.
+          // This is not a failure.
+          if (s)
+            coordinate = Scalar_T(coordinate_as_double);
+        }
       }
-      // Look for a leading '{'
-      if (c == int('{') && s)
-        // Index set without explicit coordinate.
-        // Default is Scalar_T(1)
-        coordinate = Scalar_T(1);
-      else if (s)
-        // Try to read a coordinate value
-        s >> coordinate;
-      // coordinate is now Scalar_T(0), Scalar_T(1) or a Scalar_T value
-      // Expect an index set or a '+' or a '-'
-      if (s)
+      else
+      { // End of file here ends parsing while a term may still be expected.
+        break;
+      }
+      // Coordinate is now Scalar_T(1) or a Scalar_T value.
+      // Parse an optional index set.
+      if (s.good())
       {
         c = s.peek();
-        if (c == int('{') && s)
-          // Try to read index set.
+        if (s.good() && c == int('{'))
+        { // Try to read index set.
           s >> ist;
+        }
       }
-      if (!s.bad() && coordinate != Scalar_T(0))
-      { // Insert whatever we have
-        coordinate = negative ? -coordinate : coordinate;
-        typedef typename multivector_t::term_t term_t;
-        local += term_t(ist, coordinate);
-      }
+      // Reading the term may have resulted in an end of file condition.
+      // This is not a failure.
       if (s)
       {
+        // Immediately after parsing a term, another term is not expected.
+        expect_term = false;
+        if (coordinate != Scalar_T(0))
+        {
+          // Add the term to the local multivector.
+          coordinate =
+            negative
+            ? -coordinate
+            :  coordinate;
+          typedef typename multivector_t::term_t term_t;
+          local_val += term_t(ist, coordinate);
+        }
+      }
+      // Check if anything follows the current term.
+      if (s.good())
+      {
         c = s.peek();
-        if (c == int('+'))
-          // consume the '+'
-          c = s.get();
+        if (s.good())
+        { // Only '+' and '-' are valid here.
+          if (c == int('+') || c == int('-'))
+          { // A '-' here negates the following term.
+            negative = (c == int('-'));
+            // Consume the '+' or '-'.
+            s.get();
+            // Immediately after '+' or '-',
+            // expect another term.
+            expect_term = true;
+          }
+          else
+          { // Any other character here is a not failure,
+            // but still ends the parsing of the multivector.
+            break;
+          }
+        }
       }
     }
-    if (!s.bad())
-      // If s.bad() then we have a corrupt input
-      // otherwise we are fine and can copy the resulting framed_multi
-      val = local;
+    // If a term is still expected, this is a failure.
+    if (expect_term)
+      s.clear(std::istream::failbit);
+    // End of file is not a failure.
+    if (s)
+    { // The multivector has been successfully parsed.
+      val = local_val;
+    }
     return s;
   }
 
+  /// Insert a term into a multivector, add terms with same index set.
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
   framed_multi<Scalar_T,LO,HI> &
   framed_multi<Scalar_T,LO,HI>::
   operator+= (const term_t& term)
-  { // Insert a term into a multivector_t, add terms with same index set.
-    // Do not insert terms with 0 coordinate
+  { // Do not insert terms with 0 coordinate
     if (term.second != Scalar_T(0))
     {
       const iterator& this_it = this->find(term.first);
@@ -1301,41 +1457,6 @@ namespace glucat
         this_it->second += term.second;
     }
     return *this;
-  }
-
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  inline
-  const index_set<LO,HI>
-  framed_multi<Scalar_T,LO,HI>::
-  frame() const
-  {
-    index_set_t result;
-    for (const_iterator
-        this_it = this->begin();
-        this_it != this->end();
-        ++this_it)
-      result |= this_it->first;
-    return result;
-  }
-
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  Scalar_T
-  framed_multi<Scalar_T,LO,HI>::
-  max_abs() const
-  {
-    typedef numeric_traits<Scalar_T> traits_t;
-
-    Scalar_T result = Scalar_T(0);
-    for (const_iterator
-        this_it = this->begin();
-        this_it != this->end();
-        ++this_it)
-    {
-      const Scalar_T abs_crd = traits_t::abs(this_it->second);
-      if (abs_crd > result)
-        result = abs_crd;
-    }
-    return result;
   }
 
   /// Check if a multivector contains any IEEE NaN values
@@ -1356,6 +1477,7 @@ namespace glucat
     return false;
   }
 
+  /// Remove all terms with relative size smaller than limit
   template< typename Scalar_T, const index_t LO, const index_t HI >
   const framed_multi<Scalar_T,LO,HI>
   framed_multi<Scalar_T,LO,HI>::
@@ -1698,7 +1820,7 @@ namespace glucat
 
     check_complex(val, i, prechecked);
 
-    const Scalar_T realval = real(val);
+    const Scalar_T realval = val.scalar();
     if (val == realval)
     {
       if (realval < Scalar_T(0))
@@ -1736,7 +1858,7 @@ namespace glucat
     if (val == Scalar_T(0) || val.isnan())
       return traits_t::NaN();
 
-    const Scalar_T realval = real(val);
+    const Scalar_T realval = val.scalar();
     if (val == realval)
     {
       if (realval < Scalar_T(0))
