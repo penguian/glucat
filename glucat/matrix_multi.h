@@ -5,7 +5,7 @@
     matrix_multi.h : Declare a class for the matrix representation of a multivector
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2010 by Paul C. Leopardi
+    copyright            : (C) 2001-2012 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -73,6 +73,11 @@ namespace glucat
   const matrix_multi<Scalar_T,LO,HI>
   operator/ (const matrix_multi<Scalar_T,LO,HI>& lhs, const matrix_multi<Scalar_T,LO,HI>& rhs);
 
+  /// Transformation via twisted adjoint action
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const matrix_multi<Scalar_T,LO,HI>
+  operator| (const matrix_multi<Scalar_T,LO,HI>& lhs, const matrix_multi<Scalar_T,LO,HI>& rhs);
+
   /// Read multivector from input
   template< typename Scalar_T, const index_t LO, const index_t HI >
   std::istream&
@@ -94,7 +99,7 @@ namespace glucat
   log(const matrix_multi<Scalar_T,LO,HI>& val, const matrix_multi<Scalar_T,LO,HI>& i, bool prechecked);
 
   /// A matrix_multi<Scalar_T,LO,HI> is a matrix approximation to a multivector
-  template< typename Scalar_T, const index_t LO = DEFAULT_LO, const index_t HI = DEFAULT_HI >
+  template< typename Scalar_T = double, const index_t LO = DEFAULT_LO, const index_t HI = DEFAULT_HI >
   class matrix_multi :
   public clifford_algebra< Scalar_T, index_set<LO,HI>, matrix_multi<Scalar_T,LO,HI> >
   {
@@ -193,6 +198,8 @@ namespace glucat
       star      <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs);
     friend const matrix_multi_t
       operator/ <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs);
+    friend const matrix_multi_t
+      operator| <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs);
 
     friend std::istream&
       operator>> <>(std::istream& s, multivector_t& val);
