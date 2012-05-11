@@ -5,7 +5,7 @@
     framed_multi.h : Declare a class for the framed representation of a multivector
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2010 by Paul C. Leopardi
+    copyright            : (C) 2001-2012 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -73,6 +73,11 @@ namespace glucat
   const framed_multi<Scalar_T,LO,HI>
   operator/ (const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs);
 
+  /// Transformation via twisted adjoint action
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const framed_multi<Scalar_T,LO,HI>
+  operator| (const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs);
+
   /// Read multivector from input
   template< typename Scalar_T, const index_t LO, const index_t HI >
   std::istream&
@@ -97,13 +102,14 @@ namespace glucat
   };
 
   /// A framed_multi<Scalar_T,LO,HI> is a framed approximation to a multivector
-  template< typename Scalar_T, const index_t LO = DEFAULT_LO, const index_t HI = DEFAULT_HI >
+  template< typename Scalar_T = double,  const index_t LO = DEFAULT_LO, const index_t HI = DEFAULT_HI >
   class framed_multi :
   public clifford_algebra< Scalar_T, index_set<LO,HI>, framed_multi<Scalar_T,LO,HI> >,
 #if defined(_GLUCAT_USE_GNU_CXX_HASH_MAP)
   private     __gnu_cxx::hash_map< const index_set<LO,HI>, Scalar_T, hash<LO,HI> >
 #elif defined(_GLUCAT_USE_TR1_UNORDERED_MAP)
-  private std::tr1::unordered_map< const index_set<LO,HI>, Scalar_T, hash<LO,HI> >
+  private std::tr1::unordered_map< const index_set<LO,HI>, Scalar_T, hash<LO,HI>,
+                    std::equal_to< const index_set<LO,HI> > >
 #else
   private std::map< const index_set<LO,HI>, Scalar_T,
                     std::less< const index_set<LO,HI> >,
@@ -133,7 +139,8 @@ namespace glucat
     typedef       __gnu_cxx::hash_map< const index_set_t, Scalar_T, hash<LO,HI> >
                                                        map_t;
 #elif defined(_GLUCAT_USE_TR1_UNORDERED_MAP)
-    typedef std::tr1::unordered_map< const index_set_t, Scalar_T, hash<LO,HI> >
+    typedef std::tr1::unordered_map< const index_set_t, Scalar_T, hash<LO,HI>,
+                                     std::equal_to<const index_set_t> >
                                                        map_t;
 #else
     typedef sorted_map_t                               map_t;
@@ -205,6 +212,8 @@ namespace glucat
       star      <>(const framed_multi_t& lhs, const framed_multi_t& rhs);
     friend const framed_multi_t
       operator/ <>(const framed_multi_t& lhs, const framed_multi_t& rhs);
+    friend const framed_multi_t
+      operator| <>(const framed_multi_t& lhs, const framed_multi_t& rhs);
 
     friend std::istream&
       operator>> <>(std::istream& s, multivector_t& val);
