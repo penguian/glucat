@@ -5,7 +5,7 @@
     matrix_multi_imp.h : Implement the matrix representation of a multivector
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2010 by Paul C. Leopardi
+    copyright            : (C) 2001-2012 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -439,12 +439,14 @@ namespace glucat
 
     // Operate only within a common frame
     const index_set_t our_frame = lhs.m_frame | rhs.m_frame;
-    const multivector_t& lhs_ref = (lhs.m_frame == our_frame)
-                                 ? lhs
-                                 : multivector_t(framed_multi_t(lhs), our_frame, true);
-    const multivector_t& rhs_ref = (rhs.m_frame == our_frame)
-                                 ? rhs
-                                 : multivector_t(framed_multi_t(rhs), our_frame, true);
+    const multivector_t& lhs_ref =
+      (lhs.m_frame == our_frame)
+      ? lhs
+      : multivector_t(framed_multi_t(lhs), our_frame, true);
+    const multivector_t& rhs_ref =
+      (rhs.m_frame == our_frame)
+      ? rhs
+      : multivector_t(framed_multi_t(rhs), our_frame, true);
 
     typedef typename multivector_t::matrix_t matrix_t;
 #ifdef _GLUCAT_USE_DENSE_MATRICES
@@ -480,7 +482,7 @@ namespace glucat
     typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
     typedef typename multivector_t::framed_multi_t framed_multi_t;
     return framed_multi_t(lhs) ^ framed_multi_t(rhs);
-  }
+  } 
 
   /// Outer product
   template< typename Scalar_T, const index_t LO, const index_t HI >
@@ -562,12 +564,14 @@ namespace glucat
 
     // Operate only within a common frame
     const index_set_t our_frame = lhs.m_frame | rhs.m_frame;
-    const multivector_t& lhs_ref = (lhs.m_frame == our_frame)
-                                 ? lhs
-                                 : multivector_t(framed_multi_t(lhs), our_frame, true);
-    const multivector_t& rhs_ref = (rhs.m_frame == our_frame)
-                                 ? rhs
-                                 : multivector_t(framed_multi_t(rhs), our_frame, true);
+    const multivector_t& lhs_ref =
+      (lhs.m_frame == our_frame)
+      ? lhs
+      : multivector_t(framed_multi_t(lhs), our_frame, true);
+    const multivector_t& rhs_ref =
+      (rhs.m_frame == our_frame)
+      ? rhs
+      : multivector_t(framed_multi_t(rhs), our_frame, true);
 
     // Solve result == lhs_ref/rhs_ref <=> result*rhs_ref == lhs_ref
     // We now solve X == B/A
@@ -647,6 +651,21 @@ namespace glucat
   matrix_multi<Scalar_T,LO,HI>::
   operator/= (const multivector_t& rhs)
   { return *this = *this / rhs; }
+  
+  /// Transformation via twisted adjoint action
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
+  const matrix_multi<Scalar_T,LO,HI>
+  operator| (const matrix_multi<Scalar_T,LO,HI>& lhs, const matrix_multi<Scalar_T,LO,HI>& rhs)
+  { return rhs * lhs / rhs.involute(); }
+
+  /// Transformation via twisted adjoint action
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
+  matrix_multi<Scalar_T,LO,HI>&
+  matrix_multi<Scalar_T,LO,HI>::
+  operator|= (const multivector_t& rhs)
+  { return *this = rhs * *this / rhs.involute(); }
 
   /// Clifford multiplicative inverse
   template< typename Scalar_T, const index_t LO, const index_t HI >
@@ -655,6 +674,51 @@ namespace glucat
   matrix_multi<Scalar_T,LO,HI>::
   inv() const
   { return multivector_t(Scalar_T(1), this->m_frame) / *this; }
+
+  /// Integer power of multivector: *this to the m
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
+  const matrix_multi<Scalar_T,LO,HI>
+  matrix_multi<Scalar_T,LO,HI>::
+  pow(int m) const
+  { return glucat::pow(*this, m); }
+
+  /// Outer product power of multivector
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const matrix_multi<Scalar_T,LO,HI>
+  matrix_multi<Scalar_T,LO,HI>::
+  outer_pow(int m) const
+  {
+    if (m < 0)
+      throw error_t("outer_pow(m): negative exponent");
+    framed_multi_t result = Scalar_T(1);
+    framed_multi_t a = *this;
+    for (;
+        m != 0;
+        m >>= 1)
+    {
+      if (m & 1)
+        result ^= a;
+      a ^= a;
+    }
+    return result;
+  }
+
+  /// Grade of multivector: maximum of the grades of each term
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
+  const index_t
+  matrix_multi<Scalar_T,LO,HI>::
+  grade() const
+  { return framed_multi_t(*this).grade(); }
+
+  /// Frame of multivector: union of index sets of terms
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
+  const index_set<LO,HI>
+  matrix_multi<Scalar_T,LO,HI>::
+  frame() const
+  { return this->m_frame; }
 
   /// Subscripting: map from index set to scalar coordinate
   template< typename Scalar_T, const index_t LO, const index_t HI >
@@ -670,6 +734,19 @@ namespace glucat
       return Scalar_T(0);
   }
 
+  /// Grading: part where each term is a grade-vector
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
+  const matrix_multi<Scalar_T,LO,HI>
+  matrix_multi<Scalar_T,LO,HI>::
+  operator() (index_t grade) const
+  {
+    if ((grade < 0) || (grade > HI-LO))
+      return 0;
+    else
+      return (framed_multi_t(*this))(grade);
+  }
+
   /// Scalar part
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
@@ -679,6 +756,52 @@ namespace glucat
   {
     const matrix_index_t dim = this->m_matrix.size1();
     return matrix::trace(this->m_matrix) / Scalar_T( double(dim) );
+  }
+
+  /// Pure part
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
+  const matrix_multi<Scalar_T,LO,HI>
+  matrix_multi<Scalar_T,LO,HI>::
+  pure() const
+  { return *this - this->scalar(); }
+
+  /// Even part, sum of the even grade terms
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
+  const matrix_multi<Scalar_T,LO,HI>
+  matrix_multi<Scalar_T,LO,HI>::
+  even() const
+  { return framed_multi_t(*this).even(); }
+
+  /// Odd part, sum of the odd grade terms
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
+  const matrix_multi<Scalar_T,LO,HI>
+  matrix_multi<Scalar_T,LO,HI>::
+  odd() const
+  { return framed_multi_t(*this).odd(); }
+
+  /// Vector part of multivector, as a vector_t
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const typename matrix_multi<Scalar_T,LO,HI>::vector_t
+  matrix_multi<Scalar_T,LO,HI>::
+  vector_part() const
+  {
+    vector_t result;
+    const index_t begin_index = this->m_frame.min();
+    const index_t end_index = this->m_frame.max()+1;
+    for (index_t
+        idx = begin_index;
+        idx != end_index;
+        ++idx)
+      if (this->m_frame[idx])
+        // Frame may contain indices which do not correspond to a grade 1 term but
+        // frame cannot omit any index corresponding to a grade 1 term
+        result.push_back(
+          matrix::inner<Scalar_T>(this->basis_element(index_set_t(idx)),
+          this->m_matrix));
+    return result;
   }
 
   /// Main involution, each {i} is replaced by -{i} in each term
@@ -727,83 +850,13 @@ namespace glucat
     return matrix::norm_frob2(this->m_matrix) / Scalar_T( double(dim) );
   }
 
+  /// Maximum of absolute values of components of multivector: multivector infinity norm
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  const matrix_multi<Scalar_T,LO,HI>
+  Scalar_T
   matrix_multi<Scalar_T,LO,HI>::
-  pow(int m) const
-  { return glucat::pow(*this, m); }
-
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  const matrix_multi<Scalar_T,LO,HI>
-  matrix_multi<Scalar_T,LO,HI>::
-  outer_pow(int m) const
-  { // outer product power
-    if (m < 0)
-      throw error_t("outer_pow(m): negative exponent");
-    multivector_t result = Scalar_T(1);
-    multivector_t a = *this;
-    for (;
-        m != 0;
-        m >>= 1)
-    {
-      if (m & 1)
-        result ^= a;
-      a ^= a;
-    }
-    return result;
-  }
-
-  /// Grading: part where each term is a grade-vector
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  inline
-  const matrix_multi<Scalar_T,LO,HI>
-  matrix_multi<Scalar_T,LO,HI>::
-  operator() (index_t grade) const
-  {
-    if ((grade < 0) || (grade > HI-LO))
-      return 0;
-    else
-      return (framed_multi_t(*this))(grade);
-  }
-
-  /// Even part, sum of the even grade terms
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  inline
-  const matrix_multi<Scalar_T,LO,HI>
-  matrix_multi<Scalar_T,LO,HI>::
-  even() const
-  { return framed_multi_t(*this).even(); }
-
-  /// Odd part, sum of the odd grade terms
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  inline
-  const matrix_multi<Scalar_T,LO,HI>
-  matrix_multi<Scalar_T,LO,HI>::
-  odd() const
-  { return framed_multi_t(*this).odd(); }
-
-  /// Vector part of multivector, as a vector_t
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  const typename matrix_multi<Scalar_T,LO,HI>::vector_t
-  matrix_multi<Scalar_T,LO,HI>::
-  vector_part() const
-  {
-    vector_t result;
-    const index_t begin_index = this->m_frame.min();
-    const index_t end_index = this->m_frame.max()+1;
-    for (index_t
-        idx = begin_index;
-        idx != end_index;
-        ++idx)
-      if (this->m_frame[idx])
-        // Frame may contain indices which do not correspond to a grade 1 term but
-        // frame cannot omit any index corresponding to a grade 1 term
-        result.push_back(
-          matrix::inner<Scalar_T>(this->basis_element(index_set_t(idx)),
-          this->m_matrix));
-    return result;
-  }
+  max_abs() const
+  { return framed_multi_t(*this).max_abs(); }
 
   /// Random multivector within a frame
   template< typename Scalar_T, const index_t LO, const index_t HI >
@@ -859,13 +912,6 @@ namespace glucat
     return s;
   }
 
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  inline
-  Scalar_T
-  matrix_multi<Scalar_T,LO,HI>::
-  max_abs() const
-  { return framed_multi_t(*this).max_abs(); }
-
   /// Check if a multivector contains any IEEE NaN values
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
@@ -879,19 +925,13 @@ namespace glucat
       return false;
   }
 
+  /// Remove all terms with relative size smaller than limit
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
   const matrix_multi<Scalar_T,LO,HI>
   matrix_multi<Scalar_T,LO,HI>::
   truncated(const Scalar_T& limit) const
   { return framed_multi_t(*this).truncated(limit); }
-
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  inline
-  const index_set<LO,HI>
-  matrix_multi<Scalar_T,LO,HI>::
-  frame() const
-  { return this->m_frame; }
 
   /// Add a term, if non-zero
   template< typename Scalar_T, const index_t LO, const index_t HI >
@@ -1217,7 +1257,7 @@ namespace glucat
 
     check_complex(val, i, prechecked);
 
-    const Scalar_T realval = real(val);
+    const Scalar_T realval = val.scalar();
     if (val == realval)
     {
       if (realval < Scalar_T(0))
@@ -1231,7 +1271,7 @@ namespace glucat
 
 #if !defined(_GLUCAT_USE_EIGENVALUES)
     const multivector_t val2 = val*val;
-    const Scalar_T real_val2 = real(val2);
+    const Scalar_T real_val2 = val2.scalar();
     if (val2 == real_val2 && real_val2 > Scalar_T(0))
       return sqrt(-i * val, i, prechecked) * (i + Scalar_T(1)) / sqrt_2;
 #endif
@@ -1240,10 +1280,10 @@ namespace glucat
     const Scalar_T max_norm = Scalar_T(1.0/9.0);
     const Scalar_T scale =
       (realval != Scalar_T(0) && norm(val/realval - Scalar_T(1)) < Scalar_T(1))
-        ? realval
-        : (realval < Scalar_T(0))
-          ? -abs(val)
-          : abs(val);
+      ? realval
+      : (realval < Scalar_T(0))
+        ? -abs(val)
+        :  abs(val);
     const Scalar_T sqrt_scale = traits_t::sqrt(traits_t::abs(scale));
     if (traits_t::isNaN_or_isInf(sqrt_scale))
       return traits_t::NaN();
@@ -1273,11 +1313,11 @@ namespace glucat
       break;
     default:
       scaled_result =
-          (norm(unitval - Scalar_T(1)) < max_norm)
-            // Pade' approximation of square root
-            ? pade_approx(a, b, unitval - Scalar_T(1))
-            // Product form of Denman-Beavers square root iteration
-            : db_sqrt(unitval);
+        (norm(unitval - Scalar_T(1)) < max_norm)
+          // Pade' approximation of square root
+        ? pade_approx(a, b, unitval - Scalar_T(1))
+          // Product form of Denman-Beavers square root iteration
+        : db_sqrt(unitval);
       break;
     }
     if (scaled_result.isnan())
@@ -1286,11 +1326,11 @@ namespace glucat
       return scaled_result * rescale;
 #else
     const multivector_t& scaled_result =
-          (norm(unitval - Scalar_T(1)) < max_norm)
-            // Pade' approximation of square root
-            ? pade_approx(a, b, unitval - Scalar_T(1))
-            // Product form of Denman-Beavers square root iteration
-            : db_sqrt(unitval);
+      (norm(unitval - Scalar_T(1)) < max_norm)
+        // Pade' approximation of square root
+      ? pade_approx(a, b, unitval - Scalar_T(1))
+        // Product form of Denman-Beavers square root iteration
+      : db_sqrt(unitval);
     if (scaled_result.isnan())
     {
       if (inv(unitval).isnan())
@@ -1301,9 +1341,9 @@ namespace glucat
       const multivector_t& scaled_mi_result =
         (norm(mi_unitval - Scalar_T(1)) < max_norm)
           // Pade' approximation of square root
-          ? pade_approx(a, b, mi_unitval - Scalar_T(1))
+        ? pade_approx(a, b, mi_unitval - Scalar_T(1))
           // Product form of Denman-Beavers square root iteration
-          : db_sqrt(mi_unitval);
+        : db_sqrt(mi_unitval);
       if (scaled_mi_result.isnan())
         return traits_t::NaN();
       else
@@ -1485,7 +1525,7 @@ namespace glucat
       return traits_t::NaN();
 
     static const Scalar_T pi = traits_t::pi();
-    const Scalar_T realval = real(val);
+    const Scalar_T realval = val.scalar();
     if (val == realval)
     {
       if (realval < Scalar_T(0))
@@ -1499,7 +1539,7 @@ namespace glucat
     typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
 #if !defined(_GLUCAT_USE_EIGENVALUES)
     const multivector_t val2 = val*val;
-    const Scalar_T real_val2 = real(val2);
+    const Scalar_T real_val2 = val2.scalar();
     if (val2 == real_val2 && real_val2 > 0)
     {
       check_complex(val, i, prechecked);
@@ -1510,10 +1550,10 @@ namespace glucat
     const Scalar_T max_norm = Scalar_T(1.0/9.0);
     const Scalar_T scale =
       (realval != Scalar_T(0) && norm(val/realval - Scalar_T(1)) < max_norm)
-        ? realval
-        : (realval < Scalar_T(0))
-          ? -abs(val)
-          : abs(val);
+      ? realval
+      : (realval < Scalar_T(0))
+        ? -abs(val)
+        :  abs(val);
     if (scale == Scalar_T(0))
       return traits_t::NaN();
 
