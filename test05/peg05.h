@@ -5,7 +5,7 @@
     peg05.cpp : programming example 5 : Octonions
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2007 by Paul C. Leopardi
+    copyright            : (C) 2001-2012 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -39,7 +39,7 @@ namespace peg05
   template< class Multivector_T >
   static
   Multivector_T 
-  operator| (const Multivector_T& lhs, const Multivector_T& rhs)
+  operator|| (const Multivector_T& lhs, const Multivector_T& rhs)
   {
     typedef Multivector_T number;
     const number o = number("1+{-4,-2,-1}") * number("1+{-5,-3,-2}") *
@@ -58,7 +58,7 @@ namespace peg05
                  b("2+3{-2}+5{-3}");
     a.write("a = ");
     b.write("b = ");
-    (a | b).write("octonion product of a and b = ");
+    (a || b).write("octonion product of a and b = ");
     cout << endl;
   }
 }

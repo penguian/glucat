@@ -5,7 +5,7 @@
     peg07.cpp : programming example 7 : Triality
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2007 by Paul C. Leopardi
+    copyright            : (C) 2001-2012 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -38,7 +38,7 @@ namespace peg07
 
   template< class Multivector_T >
   static
-  Multivector_T operator| (const Multivector_T& lhs, const Multivector_T& rhs)
+  Multivector_T operator|| (const Multivector_T& lhs, const Multivector_T& rhs)
   {
     typedef Multivector_T number;
     const typename number::index_set_t R8("{1,2,3,4,5,6,7,8}");
@@ -70,8 +70,8 @@ namespace peg07
     u /= abs(u);
     const number x = number("3{1}+4{3}+5{5}", R8);
     const number y = number("2{2}+3{4}+7{7}", R8);
-    (u*x*reverse(u) | u*y*reverse(u)).write
-      ("u*x*reverse(u) | u*y*reverse(u) =");
+    (u*x*reverse(u) || u*y*reverse(u)).write
+      ("u*x*reverse(u) || u*y*reverse(u) =");
     cout << endl;
   }
 }
