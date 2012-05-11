@@ -5,7 +5,7 @@
     global.h : Global declarations
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2009 by Paul C. Leopardi
+    copyright            : (C) 2001-2012 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -73,6 +73,7 @@ namespace glucat
   typedef unsigned long set_value_t;
 
   // Global constants
+  /// Timing constant: deprecated here - moved to test/timing.h
   const double MS_PER_S = 1000.0;
 
   // Constants which determine sizes
