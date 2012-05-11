@@ -437,7 +437,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     glucat_add_libs=""
     GLUCAT_CHECK_LIB(qd, main, [glucat_add_libs="$glucat_add_libs -lqd"], [glucat_have_qd=no])
     if test "$glucat_have_qd" != "no"; then
-      AC_CHECK_HEADERS([qd/qd_config.h],
+      GLUCAT_CHECK_HEADERS([qd/qd_config.h],
       [
         CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_QD";
         all_libraries="$all_libraries $glucat_add_libs"
@@ -454,7 +454,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     GLUCAT_CHECK_LIB(gsl,      main, [glucat_add_libs="$glucat_add_libs -lgsl"],      [glucat_have_gsl=no])
     GLUCAT_CHECK_LIB(gslcblas, main, [glucat_add_libs="$glucat_add_libs -lgslcblas"], [glucat_have_gsl=no])
     if test "$glucat_have_gsl" != "no"; then
-      AC_CHECK_HEADERS([gsl/gsl_rng.h],
+      GLUCAT_CHECK_HEADERS([gsl/gsl_rng.h],
       [
         CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_GSL_RANDOM";
         all_libraries="$all_libraries $glucat_add_libs"
