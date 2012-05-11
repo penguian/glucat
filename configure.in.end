@@ -1,4 +1,4 @@
-KDE_CREATE_SUBDIRSLIST
+
 AC_CONFIG_FILES([ Makefile ])
 AC_CONFIG_FILES([ gfft_test/Makefile ])
 AC_CONFIG_FILES([ glucat/Makefile ])
@@ -24,6 +24,7 @@ AC_CONFIG_FILES([ test15/Makefile ])
 AC_CONFIG_FILES([ test16/Makefile ])
 AC_CONFIG_FILES([ transforms/Makefile ])
 if test "$glucat_use_pyclical" == "yes"; then
+  CXXFLAGS="$glucat_extra_cxxflags_pyclical $CXXFLAGS"
   AC_CONFIG_FILES([ pyclical/Makefile ])
 fi
 AC_OUTPUT
