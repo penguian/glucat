@@ -5,7 +5,7 @@
     peg00.cpp : programming example 00 : Geometric algebra identities
                              -------------------
     begin                : Sat 2007-09-01
-    copyright            : (C) 2007-2010 by Paul C. Leopardi
+    copyright            : (C) 2007-2012 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -53,9 +53,23 @@ namespace peg00
 
   template< typename Multivector_T >
   static
+  bool
+  is_error(const Multivector_T& lhs, const Multivector_T& rhs, typename Multivector_T::scalar_t tol)
+  {
+    return ( (abs(lhs) < tol) || (abs(rhs) < tol) )
+           ? (abs(lhs - rhs) > tol)
+           : (abs(lhs - rhs) > abs(rhs) * tol);
+  }
+
+  template< typename Multivector_T >
+  static
   void
   print_error_lhs_rhs(const Multivector_T& lhs, const Multivector_T& rhs, typename Multivector_T::scalar_t tol)
   {
+    std::cout
+        << "  LHS == " << lhs << std::endl;
+    std::cout
+        << "  RHS == " << rhs << std::endl;
     std::cout
         << "  Relative norm of difference == " << abs(lhs - rhs)/abs(rhs) << std::endl;
     if (tol > 0.0)
@@ -100,7 +114,7 @@ namespace peg00
           lhs = a_r & b_s;
           rhs = (a_r * b_s)(index_t(std::abs(r-s)));
 
-          if ((abs(lhs - rhs) > abs(rhs)*tol))
+          if ( is_error(lhs, rhs, tol) )
           {
             std::cout << "Identity [HS] (1.21a) failed in " << e
                       << ": r == " << r 
@@ -121,7 +135,7 @@ namespace peg00
         lhs = a(0) & b(r);
         rhs = a(r) & b(0);
 
-        if ((abs(lhs) > tol) || (abs(rhs) > tol))
+        if ( (abs(lhs) > tol) || (abs(rhs) > tol) )
         {
           std::cout << "Identity [HS] (1.21b) failed in " << e
                     << ": grade == " << r
@@ -146,7 +160,7 @@ namespace peg00
           lhs = a_r ^ b_s;
           rhs = (a_r * b_s)(r+s);
 
-          if ((abs(lhs - rhs) > abs(rhs)*tol))
+          if ( is_error(lhs, rhs, tol) )
           {
             std::cout << "Identity [HS] (1.22a) failed in " << e
                       << ": r == " << r 
@@ -163,7 +177,7 @@ namespace peg00
       lhs = (a ^ b) ^ c;
       rhs = a ^ (b ^ c);
   
-      if ((abs(lhs - rhs) > abs(rhs)*tol))
+      if ( is_error(lhs, rhs, tol) )
       {
         std::cout << "Identity [HS] (1.25a) failed in " << e
                   << std::endl;
@@ -177,7 +191,7 @@ namespace peg00
       lhs = a_1 * b;
       rhs = (a_1 & b) + (a_1 ^ b);
 
-      if ((abs(lhs - rhs) > abs(rhs)*tol))
+      if ( is_error(lhs, rhs, tol) )
       {
         std::cout << "Identity [HS] (1.31) failed in " << e 
                   << std::endl;
@@ -191,7 +205,7 @@ namespace peg00
       lhs = a_1 * b;
       rhs = (a_1 % b) + (a_1 ^ b);
 
-      if ((abs(lhs - rhs) > abs(rhs)*tol))
+      if ( is_error(lhs, rhs, tol) )
       {
         std::cout << "Identity [D01] (Section 2.3 Example 2, vector) failed in " << e 
                   << std::endl;
@@ -206,7 +220,7 @@ namespace peg00
       lhs =  a_2 * b_m_b_1;
       rhs = (a_2 & b_m_b_1) + (a_2 * b_m_b_1 - b_m_b_1 * a_2)/scalar_t(2) + (a_2 ^ b_m_b_1);
 
-      if ((abs(lhs - rhs) > abs(rhs)*tol))
+      if ( is_error(lhs, rhs, tol) )
       {
         std::cout << "Identity [HS] (1.63) failed in " << e 
                   << std::endl;
@@ -220,7 +234,7 @@ namespace peg00
       lhs =  a_2 * b;
       rhs = (a_2 % b) + (a_2 * b - b * a_2)/scalar_t(2) + (a_2 ^ b);
 
-      if ((abs(lhs - rhs) > abs(rhs)*tol))
+      if ( is_error(lhs, rhs, tol) )
       {
         std::cout << "Identity [D01] (Section 2.3 Example 2, bivector) failed in " << e 
                   << std::endl;
@@ -245,7 +259,7 @@ namespace peg00
 
     { // Identity [HS] (1.48)
       const scalar_t scalar_lhs = star(a, b);
-      const scalar_t scalar_rhs = star(reverse(a), reverse(b));
+      const scalar_t scalar_rhs = star(reverse(a), reverse(b) );
 
       const scalar_t scalar_diff = scalar_lhs - scalar_rhs;
       if (scalar_diff*scalar_diff > tol*tol)
@@ -262,7 +276,7 @@ namespace peg00
       lhs = a_0 % b;
       rhs = a_0 * b;
   
-      if ((abs(lhs - rhs) > abs(rhs)*tol))
+      if ( is_error(lhs, rhs, tol) )
       {
         std::cout << "Identity [D01] (2.5) (a.2) failed in " << e
                   << std::endl;
@@ -277,7 +291,7 @@ namespace peg00
       lhs = a_1 % b_0;
       rhs = 0;
   
-      if ((abs(lhs - rhs) > abs(rhs)*tol))
+      if ( is_error(lhs, rhs, tol) )
       {
         std::cout << "Identity [D01] (2.5) (a.3) failed in " << e
                   << std::endl;
@@ -289,9 +303,9 @@ namespace peg00
     { // Identity [D01] (2.5) (c)
       const multivector_t a_1 = a(1);
       lhs = a_1 % (b ^ c);
-      rhs = ((a_1 % b) ^ c) + (involute(b) ^ (a_1 % c));
+      rhs = ( (a_1 % b) ^ c) + (involute(b) ^ (a_1 % c) );
   
-      if ((abs(lhs - rhs) > abs(rhs)*tol))
+      if ( is_error(lhs, rhs, tol) )
       {
         std::cout << "Identity [D01] (2.5) (c) failed in " << e
                   << std::endl;
@@ -304,7 +318,7 @@ namespace peg00
       lhs = (a ^ b) % c;
       rhs = a % (b % c);
   
-      if ((abs(lhs - rhs) > abs(rhs)*tol))
+      if ( is_error(lhs, rhs, tol) )
       {
         std::cout << "Identity [D01] (2.5) (d) failed in " << e
                   << std::endl;
@@ -326,18 +340,19 @@ namespace peg00
 
     bool success = true;
 
+    scalar_t fill = 0.5;
     index_set_t frm = index_set_t();
     for (index_t i = 1; i != max_index+1; i++)
     {
       frm |= index_set_t(i);
-      multivector_t a = multivector_t::random(frm);
-      multivector_t b = multivector_t::random(frm);
-      multivector_t c = multivector_t::random(frm);
+      multivector_t a = multivector_t::random(frm, fill);
+      multivector_t b = multivector_t::random(frm, fill);
+      multivector_t c = multivector_t::random(frm, fill);
       success &= test_idents(a, b, c, frm);
       frm |= index_set_t(-i);
-      a = multivector_t::random(frm);
-      b = multivector_t::random(frm);
-      c = multivector_t::random(frm);
+      a = multivector_t::random(frm, fill);
+      b = multivector_t::random(frm, fill);
+      c = multivector_t::random(frm, fill);
       success &= test_idents(a, b, c, frm);
     }
     if (success)
