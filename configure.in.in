@@ -1,11 +1,14 @@
-dnl    This file is part of the KDE libraries/packages
+dnl    This file was part of the KDE libraries/packages
 dnl    Copyright (C) 2001 Stephan Kulow (coolo@kde.org)
 dnl                       modified by Walter Tasin (tasin@kdevelop.org)
 dnl                       for c++ console applications
-dnl                       modified by Paul Leopardi (paul.leopardi@unsw.edu.au)
+dnl                       modified by Paul Leopardi (paul.leopardi@anu.edu.au)
 dnl                       for GluCat
 dnl                       includes code from admin/acinclude.m4 also
-dnl                       modified by Paul Leopardi (paul.leopardi@unsw.edu.au)
+dnl                       modified by Paul Leopardi (paul.leopardi@anu.edu.au)
+dnl                       for GluCat
+dnl                       incorporated code from KDE version of acinclude.m4
+dnl                       modified by Paul Leopardi (paul.leopardi@anu.edu.au)
 dnl                       for GluCat
 
 dnl    This file is free software; you can redistribute it and/or
@@ -29,7 +32,10 @@ dnl    Boston, MA 02111-1307, USA.
 
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(acinclude.m4) dnl a source file from your sub dir
+AC_CONFIG_MACRO_DIR([m4])
+AC_INIT(aclocal.m4) dnl a source file from your sub dir
+
+dnl checks originally from include.m4 for KDE:
 
 AC_DEFUN([GLUCAT_CHECK_LIB],
 [
@@ -39,31 +45,139 @@ AC_DEFUN([GLUCAT_CHECK_LIB],
   LDFLAGS="$glucat_saved_ldflags"
 ])
 
+AC_DEFUN([GLUCAT_CHECK_HEADER],
+[
+   AC_LANG_SAVE
+   glucat_safe_cppflags=$CPPFLAGS
+   CPPFLAGS="$CPPFLAGS $all_includes"
+   AC_LANG_CPLUSPLUS
+   AC_CHECK_HEADER($1, $2, $3)
+   CPPFLAGS=$glucat_safe_cppflags
+   AC_LANG_RESTORE
+])
+
+AC_DEFUN([GLUCAT_CHECK_HEADERS],
+[
+   AC_LANG_SAVE
+   glucat_safe_cppflags=$CPPFLAGS
+   CPPFLAGS="$CPPFLAGS $all_includes"
+   AC_LANG_CPLUSPLUS
+   for k_header in $1; do
+      AC_CHECK_HEADER($k_header, $2, $3)
+   done
+   CPPFLAGS=$glucat_safe_cppflags
+   AC_LANG_RESTORE
+])
+
+AC_DEFUN([GLUCAT_CHECK_COMPILER_FLAG],
+[
+AC_MSG_CHECKING(whether $CXX supports -$1)
+glucat_cache=`echo $1 | sed 'y% .=/+-%____p_%'`
+AC_CACHE_VAL(glucat_cv_prog_cxx_$glucat_cache,
+[
+  AC_LANG_SAVE
+  AC_LANG_CPLUSPLUS
+  save_CXXFLAGS="$CXXFLAGS"
+  CXXFLAGS="$CXXFLAGS -$1"
+  AC_TRY_LINK([],[ return 0; ], [eval "glucat_cv_prog_cxx_$glucat_cache=yes"], [])
+  CXXFLAGS="$save_CXXFLAGS"
+  AC_LANG_RESTORE
+])
+if eval "test \"`echo '$glucat_cv_prog_cxx_'$glucat_cache`\" = yes"; then
+ AC_MSG_RESULT(yes)
+ :
+ $2
+else
+ AC_MSG_RESULT(no)
+ :
+ $3
+fi
+])
+
+AC_DEFUN([GLUCAT_CHECK_EXTRA_LIBS],
+[
+AC_MSG_CHECKING(for extra includes)
+AC_ARG_WITH(extra-includes, [  --with-extra-includes=DIR
+                          adds non standard include paths],
+  glucat_use_extra_includes="$withval",
+  glucat_use_extra_includes=NONE
+)
+glucat_extra_includes=
+if test -n "$glucat_use_extra_includes" && \
+   test "$glucat_use_extra_includes" != "NONE"; then
+
+   ac_save_ifs=$IFS
+   IFS=':'
+   for dir in $glucat_use_extra_includes; do
+     glucat_extra_includes="$glucat_extra_includes $dir"
+     USER_INCLUDES="$USER_INCLUDES -I$dir"
+   done
+   IFS=$ac_save_ifs
+   glucat_use_extra_includes="added"
+else
+   glucat_use_extra_includes="no"
+fi
+AC_SUBST(USER_INCLUDES)
+
+AC_MSG_RESULT($glucat_use_extra_includes)
+
+glucat_extra_libs=
+AC_MSG_CHECKING(for extra libs)
+AC_ARG_WITH(extra-libs, [  --with-extra-libs=DIR   adds non standard library paths],
+  glucat_use_extra_libs=$withval,
+  glucat_use_extra_libs=NONE
+)
+if test -n "$glucat_use_extra_libs" && \
+   test "$glucat_use_extra_libs" != "NONE"; then
+
+   ac_save_ifs=$IFS
+   IFS=':'
+   for dir in $glucat_use_extra_libs; do
+     glucat_extra_libs="$glucat_extra_libs $dir"
+     GLUCAT_EXTRA_RPATH="$GLUCAT_EXTRA_RPATH -R $dir"
+     USER_LDFLAGS="$USER_LDFLAGS -L$dir"
+   done
+   IFS=$ac_save_ifs
+   glucat_use_extra_libs="added"
+else
+   glucat_use_extra_libs="no"
+fi
+
+AC_SUBST(USER_LDFLAGS)
+
+AC_MSG_RESULT($glucat_use_extra_libs)
+
+])
+
+dnl checks specific to GluCat
+
 AC_DEFUN([GLUCAT_CHECK_COMPILERS],
 [
+  dnl process the command line arguments
+
   AC_ARG_ENABLE(debug,      [[  --enable-debug[=ARG]    enables debug symbols (yes|no|full) [default=yes]]],
   [
     case $enableval in
       yes)
-        kde_use_debug_code="yes"
-        kde_use_ndebug_define=yes
+        glucat_use_debug_code="yes"
+        glucat_use_ndebug_define=yes
         ;;
       full)
-        kde_use_debug_code="full"
-        kde_use_ndebug_define=no
+        glucat_use_debug_code="full"
+        glucat_use_ndebug_define=no
         ;;
       no)
-        kde_use_debug_code="no"
-        kde_use_ndebug_define=yes
+        glucat_use_debug_code="no"
+        glucat_use_ndebug_define=yes
         ;;
       *)
-        kde_use_debug_code="yes"
-        kde_use_ndebug_define=yes
+        glucat_use_debug_code="yes"
+        glucat_use_ndebug_define=yes
         ;;
     esac
   ],
-    [kde_use_debug_code="yes"
-     kde_use_ndebug_define=yes
+    [glucat_use_debug_code="yes"
+     glucat_use_ndebug_define=yes
   ])
 
   dnl Just for configure --help
@@ -72,29 +186,29 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   AC_ARG_ENABLE(strict,     [[  --enable-strict         compiles with strict compiler options (may not work!)]],
    [
     if test $enableval = "no"; then
-         kde_use_strict_options="no"
+         glucat_use_strict_options="no"
        else
-         kde_use_strict_options="yes"
+         glucat_use_strict_options="yes"
     fi
-   ], [kde_use_strict_options="no"])
+   ], [glucat_use_strict_options="no"])
 
   AC_ARG_ENABLE(warnings,   [[  --disable-warnings      disables compilation with -Wall and similiar]],
    [
     if test $enableval = "no"; then
-         kde_use_warnings="no"
+         glucat_use_warnings="no"
        else
-         kde_use_warnings="yes"
+         glucat_use_warnings="yes"
     fi
-   ], [kde_use_warnings="yes"])
+   ], [glucat_use_warnings="yes"])
 
   dnl enable warnings for debug build
-  if test "$kde_use_debug_code" != "no"; then
-    kde_use_warnings=yes
+  if test "$glucat_use_debug_code" != "no"; then
+    glucat_use_warnings=yes
   fi
 
   AC_ARG_ENABLE(profile,    [[  --enable-profile        creates profiling infos [default=no]]],
-    [kde_use_profiling=$enableval],
-    [kde_use_profiling="no"])
+    [glucat_use_profiling=$enableval],
+    [glucat_use_profiling="no"])
 
   AC_ARG_WITH(map,          [[  --with-map[=ARG]        type of map to use (map|hash|unordered) [default=unordered]]],
     [
@@ -168,9 +282,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   dnl this prevents stupid AC_PROG_CC to add "-g" to the default CFLAGS
   CFLAGS=" $CFLAGS"
 
-  AC_PROG_CC
+  AC_LANG(C++)
 
-  if test -z "$LDFLAGS" && test "$kde_use_debug_code" = "no" && test "$GCC" = "yes"; then
+  if test -z "$LDFLAGS" && test "$glucat_use_debug_code" = "no" && test "$GCC" = "yes"; then
      LDFLAGS=""
   fi
 
@@ -178,8 +292,8 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
 
   CXXFLAGS=" $CXXFLAGS"
 
+  AC_REQUIRE([AC_PROG_CXX])
   AC_PROG_CXX
-  AC_LANG(C++)
 
   if test "$GXX" = "yes"; then
     dnl The following test is borrowed from VXL Project http://vxl.sourceforge.net/
@@ -193,18 +307,18 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   if test "$CXX" = "icpc"; then
     CXXFLAGS="$CXXFLAGS -DBOOST_UBLAS_USE_LONG_DOUBLE"
     if test "$icpcversion" \< "11" ; then
-       KDE_CHECK_COMPILER_FLAG(mp1,[CXXFLAGS="-mp1 $CXXFLAGS"])
+       GLUCAT_CHECK_COMPILER_FLAG(mp1,[CXXFLAGS="-mp1 $CXXFLAGS"])
     else
-       KDE_CHECK_COMPILER_FLAG([fp-model precise],[CXXFLAGS="-fp-model precise $CXXFLAGS"])
+       GLUCAT_CHECK_COMPILER_FLAG([fp-model precise],[CXXFLAGS="-fp-model precise $CXXFLAGS"])
     fi
   fi
   if test "$GXX" = "yes" || test "$CXX" = "icpc"; then
     GLUCAT_CXX_DEBUG_FLAG=""
-    if test "$kde_use_debug_code" != "no"; then
+    if test "$glucat_use_debug_code" != "no"; then
        if test "$CXX" = "icpc"; then
           CXXFLAGS="-O0 $CXXFLAGS"
        else
-        if test "$kde_use_debug_code" = "full"; then
+        if test "$glucat_use_debug_code" = "full"; then
           CXXFLAGS="-O0 -finline-limit=400 $CXXFLAGS"
           GLUCAT_CXX_DEBUG_FLAG="-g3"
         else
@@ -214,7 +328,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
        fi
 
       dnl convenience compiler flags
-      KDE_CHECK_COMPILER_FLAG(Woverloaded-virtual, [WOVERLOADED_VIRTUAL="-Woverloaded-virtual"], [WOVERLOADED_VIRTUAL=""])
+      GLUCAT_CHECK_COMPILER_FLAG(Woverloaded-virtual, [WOVERLOADED_VIRTUAL="-Woverloaded-virtual"], [WOVERLOADED_VIRTUAL=""])
       AC_SUBST(WOVERLOADED_VIRTUAL)
     else
        if test "$CXX" = "icpc"; then
@@ -224,7 +338,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
           CXXFLAGS="$CXXFLAGS -O3 -finline-limit=1200"
         else
          if test "$cxxversion" \> "4" && test "$cxxversion" \< "4.0.2" ; then
-           KDE_CHECK_COMPILER_FLAG(fno-strict-aliasing, [CXXFLAGS="$CXXFLAGS -fno-strict-aliasing"])
+           GLUCAT_CHECK_COMPILER_FLAG(fno-strict-aliasing, [CXXFLAGS="$CXXFLAGS -fno-strict-aliasing"])
          fi
          if test "$cxxversion" \< "4.1" ; then
           CXXFLAGS="$CXXFLAGS -O3 -finline-limit=2400"
@@ -237,10 +351,10 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
             ;;
           esac
           CXXFLAGS="$CXXFLAGS -O3 --param max-inline-insns-single=5400 --param large-function-insns=5400"
-          KDE_CHECK_COMPILER_FLAG(funroll-loops,[CXXFLAGS="$CXXFLAGS -funroll-loops"])
-          KDE_CHECK_COMPILER_FLAG(fvariable-expansion-in-unroller,[CXXFLAGS="$CXXFLAGS -fvariable-expansion-in-unroller"])
-          KDE_CHECK_COMPILER_FLAG(fno-math-errno,[CXXFLAGS="$CXXFLAGS -fno-math-errno"])
-          KDE_CHECK_COMPILER_FLAG(fno-trapping-math,[CXXFLAGS="$CXXFLAGS -fno-trapping-math"])
+          GLUCAT_CHECK_COMPILER_FLAG(funroll-loops,[CXXFLAGS="$CXXFLAGS -funroll-loops"])
+          GLUCAT_CHECK_COMPILER_FLAG(fvariable-expansion-in-unroller,[CXXFLAGS="$CXXFLAGS -fvariable-expansion-in-unroller"])
+          GLUCAT_CHECK_COMPILER_FLAG(fno-math-errno,[CXXFLAGS="$CXXFLAGS -fno-math-errno"])
+          GLUCAT_CHECK_COMPILER_FLAG(fno-trapping-math,[CXXFLAGS="$CXXFLAGS -fno-trapping-math"])
          fi
         fi
         GLUCAT_CXX_DEBUG_FLAG="-g"
@@ -248,25 +362,25 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     fi
 
     case $host in
-      alpha*-*-*)	GLUCAT_CXX_DEBUG_FLAG=""
+      alpha*-*-*) GLUCAT_CXX_DEBUG_FLAG=""
         ;;
     esac
     CXXFLAGS="$CXXFLAGS $GLUCAT_CXX_DEBUG_FLAG"
   fi
 
-  if test "$kde_use_ndebug_define" = "yes"; then
+  if test "$glucat_use_ndebug_define" = "yes"; then
     CXXFLAGS="$CXXFLAGS -DNDEBUG"
   fi
 
-  if test "$kde_use_profiling" = "yes"; then
-    KDE_CHECK_COMPILER_FLAG(pg,
+  if test "$glucat_use_profiling" = "yes"; then
+    GLUCAT_CHECK_COMPILER_FLAG(pg,
     [
       CFLAGS="$CFLAGS -pg"
       CXXFLAGS="$CXXFLAGS -pg"
     ])
   fi
 
-  if test "$kde_use_warnings" = "yes"; then
+  if test "$glucat_use_warnings" = "yes"; then
       if test "$GXX" = "yes"; then
         case $host in
           *-*-linux-gnu)
@@ -277,19 +391,19 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
         CXXFLAGS="-Wall $CXXFLAGS"
         if test "$cxxversion" \> "4" ; then
           if test "$cxxversion" \< "4.1" ; then
-            KDE_CHECK_COMPILER_FLAG(Wstrict-aliasing=2,[CXXFLAGS="$CXXFLAGS -Wstrict-aliasing=2"])
+            GLUCAT_CHECK_COMPILER_FLAG(Wstrict-aliasing=2,[CXXFLAGS="$CXXFLAGS -Wstrict-aliasing=2"])
           fi
         fi
      fi
   fi
 
-  if test "$GXX" = "yes" && test "$kde_use_strict_options" = "yes"; then
+  if test "$GXX" = "yes" && test "$glucat_use_strict_options" = "yes"; then
     if test "$cxxversion" \< "4.1" ; then
       CXXFLAGS="-Wcast-qual -Wshadow -Wcast-align $CXXFLAGS"
     else
-      KDE_CHECK_COMPILER_FLAG(pedantic,[CXXFLAGS="$CXXFLAGS -pedantic"])
-      KDE_CHECK_COMPILER_FLAG(Wextra,[CXXFLAGS="$CXXFLAGS -Wextra"])
-      KDE_CHECK_COMPILER_FLAG(Wno-unused-parameter,[CXXFLAGS="$CXXFLAGS -Wno-unused-parameter"])
+      GLUCAT_CHECK_COMPILER_FLAG(pedantic,[CXXFLAGS="$CXXFLAGS -pedantic"])
+      GLUCAT_CHECK_COMPILER_FLAG(Wextra,[CXXFLAGS="$CXXFLAGS -Wextra"])
+      GLUCAT_CHECK_COMPILER_FLAG(Wno-unused-parameter,[CXXFLAGS="$CXXFLAGS -Wno-unused-parameter"])
     fi
   fi
 
@@ -300,7 +414,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     [#include <map>])
   else
     if test "$GXX" = "yes" && test "$glucat_use_map" = "hash"; then
-    KDE_CHECK_COMPILER_FLAG(Wno-deprecated,[CXXFLAGS="$CXXFLAGS -Wno-deprecated"])
+    GLUCAT_CHECK_COMPILER_FLAG(Wno-deprecated,[CXXFLAGS="$CXXFLAGS -Wno-deprecated"])
     AC_CHECK_HEADERS([ext/hash_map backward/hash_map],
       [
         CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_GNU_CXX_HASH_MAP"
@@ -357,16 +471,26 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     ],[])
   fi
 
+  glucat_extra_cxxflags_pyclical=""
   if test "$glucat_use_pyclical" == "no"; then
     DO_NOT_COMPILE="$DO_NOT_COMPILE pyclical"
+  else
+    AM_PATH_PYTHON
+    if test "$GXX" = "yes"; then
+      GLUCAT_CHECK_COMPILER_FLAG(fno-strict-aliasing,
+      [
+        glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -fno-strict-aliasing"
+      ])
+    fi
   fi
+  AC_SUBST(glucat_extra_cxxflags_pyclical)
 
   if test "$glucat_use_eigenvalues" == "alglib"; then
     glucat_have_alglib=yes
     glucat_add_libs=""
     GLUCAT_CHECK_LIB(alglib, gamma, [glucat_add_libs="$glucat_add_libs -lalglib"], [glucat_have_alglib=no],[-lm])
     if test "$glucat_have_alglib" != "no"; then
-      KDE_CHECK_HEADERS([alglib/evd.h],
+      GLUCAT_CHECK_HEADERS([alglib/evd.h],
       [
         CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_ALGLIB";
         all_libraries="$all_libraries -lalglib"
@@ -382,13 +506,13 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     if test "$glucat_have_lapack" != "no"; then
       all_libraries="$all_libraries $glucat_add_libs"
       if test "$glucat_use_eigenvalues" == "bindingsv1"; then
-        KDE_CHECK_HEADERS([boost/numeric/bindings/lapack/gees.hpp],
+        GLUCAT_CHECK_HEADERS([boost/numeric/bindings/lapack/gees.hpp],
         [
           CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BINDINGS_V1";
         ],[],[])
       fi
       if test "$glucat_use_eigenvalues" == "bindings"; then
-        KDE_CHECK_HEADERS([boost/numeric/bindings/lapack/driver/gees.hpp],
+        GLUCAT_CHECK_HEADERS([boost/numeric/bindings/lapack/driver/gees.hpp],
         [
           CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BINDINGS";
         ],[],[])
@@ -397,13 +521,13 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   fi
 
   if test "$GXX" = "yes"; then
-    KDE_CHECK_COMPILER_FLAG(fno-check-new, [CXXFLAGS="$CXXFLAGS -fno-check-new"])
-    KDE_CHECK_COMPILER_FLAG(fexceptions, [USE_EXCEPTIONS="-fexceptions"], USE_EXCEPTIONS=	)
+    GLUCAT_CHECK_COMPILER_FLAG(fno-check-new, [CXXFLAGS="$CXXFLAGS -fno-check-new"])
+    GLUCAT_CHECK_COMPILER_FLAG(fexceptions, [USE_EXCEPTIONS="-fexceptions"], USE_EXCEPTIONS= )
     if test "$CXX" = "icpc" && test "$icpcversion" \> "8" && test "$icpcversion" \< "9"; then
-      KDE_CHECK_COMPILER_FLAG(fabi-version=1,[CXXFLAGS="$CXXFLAGS -fabi-version=1"])
+      GLUCAT_CHECK_COMPILER_FLAG(fabi-version=1,[CXXFLAGS="$CXXFLAGS -fabi-version=1"])
     else
      if test "$cxxversion" \> "4" && test "$cxxversion" \< "4.0.2" ; then
-      KDE_CHECK_COMPILER_FLAG(fabi-version=0,[CXXFLAGS="$CXXFLAGS -fabi-version=0"])
+      GLUCAT_CHECK_COMPILER_FLAG(fabi-version=0,[CXXFLAGS="$CXXFLAGS -fabi-version=0"])
      fi
     fi
   fi
@@ -427,7 +551,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
         ;;
   esac
 
-  AC_VALIDIFY_CXXFLAGS
+  dnl AC_VALIDIFY_CXXFLAGS
 
   AC_PROG_CXXCPP
 
@@ -439,12 +563,13 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   AC_SUBST(NOOPT_CXXFLAGS)
   AC_SUBST(NOOPT_CFLAGS)
 
-  KDE_CHECK_FINAL
-
-  ifdef([AM_DEPENDENCIES], AC_REQUIRE([KDE_ADD_DEPENDENCIES]), [])
+  ifdef([AM_DEPENDENCIES], AC_REQUIRE([GLUCAT_ADD_DEPENDENCIES]), [])
 ])
 
-dnl CXXFLAGS="$CXXFLAGS $USE_EXCEPTIONS"
+AC_DEFUN([GLUCAT_ADD_DEPENDENCIES],
+[
+   [A]M_DEPENDENCIES(CXX)
+])
 
 dnl This is so we can use kde-common
 AC_CONFIG_AUX_DIR(admin)
@@ -458,9 +583,9 @@ dnl Perform program name transformation
 AC_ARG_PROGRAM
 
 dnl Automake doc recommends to do this only here. (Janos)
-AM_INIT_AUTOMAKE(glucat,0.5.1)
+AM_INIT_AUTOMAKE(glucat,0.6.0)
 
-dnl almost the same like KDE_SET_PREFIX but the path is /usr/local
+dnl almost the same like GLUCAT_SET_PREFIX but the path is /usr/local
 dnl
 unset CDPATH
 dnl make /usr/local the default for the installation
@@ -470,14 +595,12 @@ if test "x$prefix" = "xNONE"; then
   prefix=$ac_default_prefix
   ac_configure_args="$ac_configure_args --prefix $prefix"
 fi
-KDE_FAST_CONFIGURE
-KDE_CONF_FILES
 
 dnl without this order in this file, automake will be confused!
 dnl
 AC_CONFIG_HEADERS([config.h])
 
-KDE_CHECK_EXTRA_LIBS
+GLUCAT_CHECK_EXTRA_LIBS
 all_libraries="$all_libraries $USER_LDFLAGS"
 all_includes="-I. -I.. $all_includes $USER_INCLUDES"
 
@@ -485,84 +608,19 @@ dnl checks for programs.
 dnl first check for c/c++ compilers
 GLUCAT_CHECK_COMPILERS
 
-dnl CXXFLAGS="$NOOPT_CXXFLAGS" dnl __kdevelop[noopt]__
-CFLAGS="$NOOPT_CFLAGS" dnl __kdevelop[noopt]__
-CXXFLAGS="$CXXFLAGS $USE_EXCEPTIONS" dnl __kdevelop[exc]__
+CFLAGS="$NOOPT_CFLAGS"
+CXXFLAGS="$CXXFLAGS $USE_EXCEPTIONS"
 
 dnl create only shared libtool-libraries
 AC_ENABLE_SHARED(yes)
 
-dnl set the following to yes, if you want to create static
-dnl libtool-libraries, too.
+dnl set the following to yes, if you want to create static libtool-libraries, too.
 AC_ENABLE_STATIC(no)
 
-dnl just a wrapper to clean up configure.in
-AC_DEFUN([GLUCAT_PROG_LIBTOOL],
-[
-AC_REQUIRE([GLUCAT_CHECK_COMPILERS])
-AC_REQUIRE([AC_ENABLE_SHARED])
-AC_REQUIRE([AC_ENABLE_STATIC])
-
-AC_REQUIRE([AC_LIBTOOL_DLOPEN])
-
-AC_LANG_SAVE
-AC_LANG_C
-AC_OBJEXT
-AC_EXEEXT
-AC_LANG_RESTORE
-
-AM_PROG_LIBTOOL
-AC_LIBTOOL_CXX
-
-LIBTOOL_SHELL="/bin/sh ./libtool"
-#  LIBTOOL="$LIBTOOL --silent"
-KDE_PLUGIN="-avoid-version -module -no-undefined \$(KDE_RPATH) \$(KDE_MT_LDFLAGS)"
-AC_SUBST(KDE_PLUGIN)
-
-AC_ARG_ENABLE(objprelink, [  --enable-objprelink     prelink apps using objprelink (experimental [only tested on linux/386])],
-       kde_use_objprelink=$enableval, kde_use_objprelink=no)
-  if test "x$kde_use_objprelink" = "xyes"; then
-
-      KDE_FIND_PATH(objprelink, OBJPRELINK, [], [kde_use_objprelink=no])
-
-      if test "x$kde_use_objprelink" = "xyes"; then
-      AC_MSG_CHECKING([Patching libtool to run objprelink.])
-      mv libtool libtool.orig
-      cat > libtool <<\EOF
-#! /bin/sh
-for n ; do case $n in
-  *.o)  test -r $n && echo objprelink $n && objprelink $n ;;
-  *.lo) m=`basename $n .lo`".o" && test -r $m && echo objprelink $m && objprelink $m
-        m=".libs/$m" && test -r $m && echo objprelink $m && objprelink $m ;;
-esac; done
-EOF
-      cat >> libtool libtool.orig
-      rm libtool.orig
-      chmod a+x libtool
-      AC_MSG_RESULT(done)
-	fi
-  fi
-])
-
-dnl create a working libtool-script
-GLUCAT_PROG_LIBTOOL
-
-dnl activate the next macro call for DLOPEN tests and setting LIBDL
-dnl   (n.b. KDE_MISC_TESTS does the same to you, so use either this or the next one)
-dnl KDE_CHECK_DLOPEN
-
-dnl activate the next macro call for some additional tests
-dnl   (compat, crypt, socket, nsl, dlopen, ...)
-dnl KDE_MISC_TESTS dnl __kdevelop__
-
-dnl KDE_NEED_FLEX dnl __kdevelop__
-dnl AC_PROG_YACC dnl __kdevelop__
-
-dnl KDE_CHECK_EXTRA_LIBS
-dnl all_libraries="$all_libraries $USER_LDFLAGS"
-dnl all_includes="$all_includes $USER_INCLUDES"
 AC_SUBST(all_includes)
 AC_SUBST(all_libraries)
+LIBS=$all_libraries
+AC_SUBST(LIBS)
 
 AC_SUBST(AUTODIRS)
 
