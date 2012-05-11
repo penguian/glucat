@@ -1,13 +1,36 @@
 # -*- coding: utf-8 -*-
-import sys
-from PyCliCal import *
-pi = 3.14159265358979
+#
+# PyClical: Python interface to GluCat:
+#           Generic library of universal Clifford algebra templates
+#
+# pyclical_demo.py: This file is an almost complete port of the DEMO file from
+#                   CLICAL by Pertti Lounesto, R. Mikkola, V. Vierros, 1987-1994.
+#
+#    copyright            : (C) 2008-2012 by Paul C. Leopardi
+#
+#    This library is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Lesser General Public License as published
+#    by the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This library is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Lesser General Public License for more details.
+#
+#    You should have received a copy of the GNU Lesser General Public License
+#    along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
+from PyClical import *
+
+import sys
 def pause():
-    if hasattr(sys, 'ps1') or hasattr(sys, 'ipcompleter'):
+    if __name__ != "__main__" or hasattr(sys, 'ps1') or hasattr(sys, 'ipcompleter'):
         if sys.stdin.isatty():
             raw_input("Press ENTER to continue")
 
+print "This file is an almost complete port of the DEMO file from "
+print "CLICAL by Pertti Lounesto, R. Mikkola, V. Vierros, 1987-1994."
 print ""
 print "This demonstration file contains examples on the following topics: "
 print "  -Rotations in three dimensions  R^3"
@@ -630,21 +653,23 @@ pause()
 print "These computations might take a while:"
 print      "> reverse(w)*w"
 print "   ==",reverse(w)*w
-print      "> 10**18*reverse(w)*w"
-print "   ==",1.0e18*reverse(w)*w
+print      "> abs(reverse(w)*w)"
+print "   ==",abs(reverse(w)*w)
 pause()
 print      "> reverse(w)*A1*w"
 print "   ==",reverse(w)*A1*w
-print      "> 10**18*reverse(w)*A1*w"
-print "   ==",1.0e18*reverse(w)*A1*w
+print      "> abs(reverse(w)*A1*w)"
+print "   ==",abs(reverse(w)*A1*w)
 pause()
 print      "> reverse(w)*A2*w"
 print "   ==",reverse(w)*A2*w
-print      "> 10**18*reverse(w)*A2*w"
-print "   ==",1.0e18*reverse(w)*A2*w
+print      "> abs(reverse(w)*A2*w)"
+print "   ==",abs(reverse(w)*A2*w)
 pause()
 print      "> reverse(w)*A3*w"
 print "   ==",reverse(w)*A3*w
+print      "> abs(reverse(w)*A3*w)"
+print "   ==",abs(reverse(w)*A3*w)
 print "> v =",v
 pause()
 print "You have completed the demonstration file pyclical_demo.py."
