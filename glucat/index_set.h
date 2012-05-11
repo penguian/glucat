@@ -5,7 +5,7 @@
     index_set.h : Declare a class for a set of non-zero integer indices
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2007 by Paul C. Leopardi
+    copyright            : (C) 2001-2012 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -53,6 +53,12 @@ namespace glucat
   const index_set<LO,HI>
   operator| (const index_set<LO,HI>& lhs,
              const index_set<LO,HI>& rhs);
+
+  /// "lexicographic compare" eg. {3,4,5} is less than {3,7,8}
+  // -1 if a<b, +1 if a>b, 0 if a==b
+  template<const index_t LO, const index_t HI>
+  int
+  compare(const index_set<LO,HI>& a, const index_set<LO,HI>& b);
 
   /// Index set class based on std::bitset<> in Gnu standard C++ library
   template<const index_t LO, const index_t HI>
@@ -119,10 +125,10 @@ namespace glucat
     index_set_t& flip(const index_t idx);
     /// Cardinality: Number of indices included in set
     index_t      count() const;
-    /// Number of positive indices included in set
-    index_t      count_pos() const;
     /// Number of negative indices included in set
     index_t      count_neg() const;
+    /// Number of positive indices included in set
+    index_t      count_pos() const;
     /// Minimum member
     index_t      min() const;
     /// Maximum member
@@ -153,6 +159,7 @@ namespace glucat
     friend const index_set_t operator^<> (const index_set_t& lhs, const index_set_t& rhs);
     friend const index_set_t operator&<> (const index_set_t& lhs, const index_set_t& rhs);
     friend const index_set_t operator|<> (const index_set_t& lhs, const index_set_t& rhs);
+    friend int compare<>                 (const index_set_t& lhs, const index_set_t& rhs);
 
   // Member reference:
     class reference;
@@ -195,12 +202,6 @@ namespace glucat
 
   // non-members
 
-  /// "lexicographic compare" eg. {3,4,5} is less than {3,7,8}
-  // -1 if a<b, +1 if a>b, 0 if a==b
-  template<const index_t LO, const index_t HI>
-  int
-  compare(const index_set<LO,HI>& a, const index_set<LO,HI>& b);
-
   /// Write out index set
   template<const index_t LO, const index_t HI>
   std::ostream&
@@ -215,14 +216,14 @@ namespace glucat
   /// Square of generator {j}
   int     sign_of_square(index_t j);
 
-  /// maximum positive index, or 0 if none
-  template<const index_t LO, const index_t HI>
-  index_t
-  max_pos(const index_set<LO,HI>& ist);
-
-  /// minimum negative index, or 0 if none
+  /// Minimum negative index, or 0 if none
   template<const index_t LO, const index_t HI>
   index_t
   min_neg(const index_set<LO,HI>& ist);
+
+  /// Maximum positive index, or 0 if none
+  template<const index_t LO, const index_t HI>
+  index_t
+  max_pos(const index_set<LO,HI>& ist);
 }
 #endif // _GLUCAT_INDEX_SET_H
