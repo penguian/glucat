@@ -5,7 +5,7 @@
     index_set_imp.h : Implement a class for a set of non-zero integer indices
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2007 by Paul C. Leopardi
+    copyright            : (C) 2001-2012 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -99,6 +99,12 @@ namespace glucat
   {
     std::istringstream ss(str);
     ss >> *this;
+    if (!ss)
+      throw error_t("index_set_t(str): could not parse string");
+    // Peek to see if the end of the string has been reached.
+    ss.peek();
+    if (!ss.eof())
+      throw error_t("index_set_t(str): could not parse entire string");
   }
 
   /// Equality
@@ -622,36 +628,94 @@ namespace glucat
   std::istream&
   operator>> (std::istream& s, index_set<LO,HI>& ist)
   {
-    char c = 0;
+    // Parsing variables.
+    int c = 0;
     index_t i = 0;
-    index_set<LO,HI> local;
-    bool bracketed;
-    s >> c;
-    if (s.fail() || s.bad())
-      return s;
-    bracketed = (c == '{');
-    if (!bracketed)
-      s.putback(c);
-    for (s >> i;
-        !s.fail() && !s.bad();
-        s >> i)
-    {
-      if ((i < LO) || (i > HI))
-      {
-        s.clear(std::ios_base::badbit); // set state to error
-        break;
+    index_set<LO,HI> local_ist;
+    // Parsing control variables.
+    bool parse_index_list = true;
+    bool expect_closing_brace = false;
+    bool expect_index = false;
+    // Parse an optional opening brace.
+    c = s.peek();
+    // If there is a failure or end of file, this ends parsing.
+    if (!s.good())
+      parse_index_list = false;
+    else
+    { // Check for an opening brace.
+      expect_closing_brace = (c == int('{'));
+      if (expect_closing_brace)
+      { // Consume the opening brace.
+        s.get();
+        // The next character may be a closing brace,
+        // indicating the empty index set.
+        c = s.peek();
+        if (s.good() && (c == int('}')))
+        { // A closing brace has been parsed and is no longer expected.
+          expect_closing_brace = false;
+          // Consume the closing brace.
+          s.get();
+          // This ends parsing.
+          parse_index_list = false;
+        } 
       }
-      local.set(i);
-      s >> c;
-      if (!s.fail() && (c != ','))
-        s.clear(std::ios_base::failbit); // set state to fail
     }
-    if (bracketed && (c != '}'))
-      s.clear(std::ios_base::badbit); // set state to error
-    else if (!s.bad())
-    {
-      s.clear();
-      ist = local;
+    if (s.good() && parse_index_list)
+    { // Parse an optional index list.
+      // The index list starts with a first index.
+      for (s >> i;
+          !s.fail();
+          s >> i)
+      { // An index has been parsed. Check to see if it is in range.
+        if ((i < LO) || (i > HI))
+        { // An index out of range is a failure.
+          s.clear(std::istream::failbit);
+          break;
+        }
+        // Add the index to the index set local_ist.
+        local_ist.set(i);
+        // Immediately after parsing an index, an index is no longer expected.
+        expect_index = false;
+        // Reading the index may have resulted in an end of file condition.
+        // If so, this ends the index list.
+        if (s.eof())
+          break;
+        // The index list continues with a comma, and
+        // may be ended by a closing brace, if it was begun with an opening brace.
+        // Parse a possible comma or closing brace.
+        c = s.peek();
+        if (!s.good())
+          break;
+        // First, test for a closing brace, if expected.
+        if (expect_closing_brace && (c == int('}')))
+        { // Consume the closing brace.
+          s.get();
+          // Immediately after parsing the closing brace, it is no longer expected.
+          expect_closing_brace = false;
+          // A closing brace ends the index list.
+          break;
+        }
+        // Now test for a comma.
+        if (c == int(','))
+        { // Consume the comma.
+          s.get();
+          // A index is expected after the comma.
+          expect_index = true;
+        }
+        else
+        { // Any other character here is a failure.
+          s.clear(std::istream::failbit);
+          break;
+        }
+      }
+    }
+    // If an index or a closing brace is still expected, this is a failure.
+    if (expect_index || expect_closing_brace)
+      s.clear(std::istream::failbit);
+    // End of file is not a failure.
+    if (s)
+    { // The index set has been successfully parsed.
+      ist = local_ist;
     }
     return s;
   }
@@ -881,7 +945,7 @@ namespace glucat
   {
     static const unsigned long lo_mask = (1UL << -LO) - 1UL;
     const unsigned long uthis = bitset_t::to_ulong();
-    const unsigned long neg_part = (uthis & lo_mask) << (LO-DEFAULT_LO);
+    const unsigned long neg_part = uthis & lo_mask;
     const unsigned long pos_part = uthis >> -LO;
     return size_t(neg_part ^ pos_part);
   }
@@ -892,19 +956,19 @@ namespace glucat
   sign_of_square(index_t j)
   { return (j < 0) ? -1 : 1; }
 
-  /// Maximum positive index, or 0 if none
-  template<const index_t LO, const index_t HI>
-  inline
-  index_t
-  max_pos(const index_set<LO,HI>& ist)
-  { return std::max(ist.max(), 0); }
-
   /// Minimum negative index, or 0 if none
   template<const index_t LO, const index_t HI>
   inline
   index_t
   min_neg(const index_set<LO,HI>& ist)
   { return std::min(ist.min(), 0); }
+
+  /// Maximum positive index, or 0 if none
+  template<const index_t LO, const index_t HI>
+  inline
+  index_t
+  max_pos(const index_set<LO,HI>& ist)
+  { return std::max(ist.max(), 0); }
 
 // index_set reference
 
