@@ -1217,7 +1217,6 @@ namespace glucat
 
   /// Square root of multivector with specified complexifier
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  static
   const matrix_multi<Scalar_T,LO,HI>
   sqrt(const matrix_multi<Scalar_T,LO,HI>& val, const matrix_multi<Scalar_T,LO,HI>& i, bool prechecked)
   {
