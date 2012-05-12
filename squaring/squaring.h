@@ -151,7 +151,6 @@ namespace glucat_mult_test
     }
     cout << "Clifford algebra squaring test:" << endl;
     const index_t max_index = min(n, max_n);
-    const index_set_t outer_frame = index_set_t(make_pair(-max_index, max_index));
 
     mult_test_with_fill<multivector_t>(max_index, 0.5);
     mult_test_with_fill<multivector_t>(max_index, 1.0);
