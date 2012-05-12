@@ -92,7 +92,8 @@ def demo(d=4, nbr_curves=2, nbr_points=10000, scaling=200, segment_len=100, aren
             abot = j*segment_len
             atop = abot + segment_len
             for k in xrange(abot, atop):
-                p[:, k] = agc3(u).vector_part()
+                for h in xrange(0, 3):
+                    p[h, k] = agc3(u)[ist(h + 1)]
                 u |= r
             #
             # Plot the curve segment.
