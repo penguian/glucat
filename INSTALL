@@ -1,5 +1,6 @@
 Before You Begin
 ================
+
  GluCat uses the C++ Standard Library and the Boost Library. Make sure
  you have these installed and working before attempting to use GluCat.
  Use the instructions at http://www.boost.org/more/download.html
@@ -14,67 +15,111 @@ Before You Begin
  The headers also need an include library which either defines the macro isnan
  or defines std::isnan.
 
- GluCat 0.5.1 has so far been tested using:
+ GluCat 0.6.0 with PyClical has so far been tested using:
 
-1) Dual Intel(R) Pentium(R) 4 with
-o Kubuntu 9.10 (Karmic), with
-  * gcc 4.4.1, Boost 1.38.0, QD 2.3.10,
-    Boost Numeric Bindings V1 20081116
-
-2) AMD Athlon(tm) 64 with
-o openSUSE Linux 11.2, with
-  * gcc 4.4.1, Boost 1.37.0, 1.39.0, 1.40.0, 1.41.0, 1.42.0, 1.43.0, QD 2.3.10.
+ 1) AMD Athlon(tm) 64 Processor 3200+ with
+    gcc version 4.5.1 (GCC)
+    Boost 1.44.0
     Alglib 2.5.0 C++
-    Boost Numeric Bindings V1 SVN 2010-04-20,
-    Boost Numeric Bindings SVN 2010-04-19.
-  * Intel C++ version 11.1, Boost 1.39.0, GSL 1.12 (random numbers), no QD.
-    Boost Numeric Bindings V1 20081116
+    QD 2.3.10
+    Python 2.7.2 |EPD 7.2-2 (64-bit)| (default, Jul  3 2011, 15:17:51)
+    Cython 0.16
 
-3) Quad-Core AMD Opteron(tm) Processor 8360 SE with
-o Debian Linux 5.0.4 (Lenny), with
-  * gcc 4.3.4, Boost 1.34.1, no QD.
-    Boost Numeric Bindings V1 20081116
+ 2) 2 core AMD E-350 Processor
+    gcc version 4.5.2 (Ubuntu/Linaro 4.5.2-8ubuntu4)
+    Boost 1.42.0
+    Boost Numeric Bindings V1 2008-11-13
+    QD 2.3.10
 
- PyCliCal for GluCat 0.5.1 has so far been tested using:
+ 3) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
+    gcc version 4.6.3 (Ubuntu/Linaro 4.6.3-1ubuntu5)
+    Boost 1.46.1
+    Boost Numeric Bindings V1 2008-11-13
+    QD 2.3.13
+    Python 2.7.3 (default, Apr 20 2012, 22:39:59)
+    Cython 0.15.1
 
-1) Dual Intel(R) Pentium(R) 4 with
-o Kubuntu 9.10 (Karmic), with
-  * gcc 4.4.1, Boost 1.38.0, Python 2.6.4, Cython 0.11.2.
-    Boost Numeric Bindings V1 20081116
-
-2) AMD Athlon(tm) 64 with
-o openSUSE Linux 11.2, with
-  * gcc 4.4.1, Boost 1.39.0, Python 2.6.2, Cython 0.10.3.
-    Alglib 2.5.0 C++
-    Boost Numeric Bindings V1 SVN 2010-04-20,
-    Boost Numeric Bindings SVN 2010-04-19.
+ 4) 8 core Intel(R) Xeon(R) CPU X7550  @ 2.00GHz with
+    gcc version 4.5.2 (Gentoo 4.5.2 p1.1, pie-0.4.5)
+    Boost 1.46.1
+    Boost Numeric Bindings V1 2008-11-13
+    QD 2.3.13
+    Python 2.7.1 (r271:86832, May 30 2011, 14:55:55)
+    Cython 0.14.1
 
    Notes:
-1. GluCat 0.5.1 will not work with QD versions earlier than 2.3.10,
+1. GluCat 0.6.0 will not work with QD versions earlier than 2.3.10,
    because older versions do not zero-initialize dd_real and qd_real
    as required by ublas::clear().
-2. GluCat 0.5.1 has not been tested with gcc versions earlier than 4.3.4.
-3. With gcc version 4.4.1 and Boost versions earlier than 1.37.0, compilation
-   may result in error messages like:
-boost/mpl/apply_wrap.hpp:81:31: error: missing binary operator before token "("
-   See https://svn.boost.org/trac/boost/ticket/2069 (fixed in Boost 1.37.0).
-4. GluCat 0.5.1 with QD 2.3.10 cannot be built with the Intel C++ compiler
-   (tested with icpc version 11.1) The problem is with isnan() and isinf(),
-   which are std:: functions with g++ but macros with icpc.
-5. The current sandbox version of Boost Numeric Bindings does not work with
-   Boost versions earlier than Boost 1.41.0.
+2. GluCat 0.6.0 has not been tested with gcc versions earlier than 4.5.1.
 
-To Test
-=======
+Directory Structure
+===================
+
  Once you have downloaded, unzipped and untarred the source code,
  you should have a directory, glucat-xxx, where xxx is the version number.
  Under glucat-xxx you should see a number of directories, including ./admin,
- ./glucat, ./glucat_gfft, ./glucat-api, ./squaring ./test and ./transforms
+ ./doc, ./glucat, ./gfft_test, ./products, ./squaring ./test and ./transforms.
  The following instructions are meant to be used with glucat-xxx as the current
  directory.
 
+To Build
+========
+
+ GluCat is a C++ template library. There is nothing to build, unless you
+ want to use the PyClical Python extension module.
+
+The PyClical Python extension module
+------------------------------------
+
+ GluCat includes a Python extension module called PyClical.
+
+ The directory ./pyclical contains source code for the PyClical extension
+ module, the example Python files pyclical_demo.py, plotting_demo.py, and
+ sqrt_log_demo.py, and the example output files pyclical_demo.out and
+ sqrt_log_demo.out.
+
+ PyClical is written in C++ and Cython, and is defined in the files
+ pyclical/glucat.pxd, pyclical/PyClical.h, pyclical/PyClical.pdx, and
+ pyclical/PyClical.pyx. PyClical is designed to be installed using make.
+
+ To build the PyClical Python interface, run ./configure --enable-pyclical,
+ then make. This sets the conditional flag make_pyclical in the Makefile
+ for GluCat, and adds the directory ./pyclical to the SUBDIRS list, which is
+ the list of subdirectories to be built. For PyClical to build successfully,
+ you will need recent versions of both Python and Cython. You will need to
+ ensure that the compiler can find the header file Python.h, by using the
+ --with-extra-includes option to ./configure, if necessary.
+
+ If you have run ./configure --enable-pyclical, then when you run make in
+ the top level directory, make will build all of the tests, and then build
+ PyClical. Make builds PyClical by running the command
+
+  ext_name="$(ext_name)" source_pyx="$(ext_name).pyx" CXXFLAGS="$(CXXFLAGS)" \
+  INCLUDES="$(INCLUDES)" LDFLAGS="$(LDFLAGS)" python setup.py build_ext --inplace
+
+ with INCLUDES=$(all_includes), LDFLAGS=$(all_libraries) and the values of
+ CXXFLAGS,  all_includes, all_libraries and ext_name set by ./configure.
+ In particular, ext_name is set to "PyCliCal". You can run pyclical/setup.py
+ yourself, but you must set the environment variables ext_name, cource_pyx,
+ CXXFLAGS, INCLUDES and LDFLAGS to appropriate values.
+
+ Once you have build PyClical, run the doctests. In python or ipython, etc.:
+
+  >>> import PyClical
+  >>> PyClical._test()
+  TestResults(failed=0, attempted=312)
+
+ The example Python files pyclical_demo.py and sqrt_log_demo.py have
+ corresponding output files pyclical_demo.out and sqrt_log_demo.out.
+ Run these files and compare the output.
+
+To Test
+=======
+
 The Test Programs
 -----------------
+
  The test script ./test/test.sh takes any number (including zero) of numeric
  parameters. Parameters in the range "00" to "16" correspond to coding examples
  ./test00/peg00.h to ./test16/peg16.h. These examples are run in numerical
@@ -110,21 +155,18 @@ The Test Programs
   ./gfft_test/gfft_test 11
   ./transforms/transforms 8
 
-Both ./test00 and ./test11 allow the program arguments --help and --verbose.
-The argument --verbose produces verbose output essentially by setting the error
-tolerance to zero. Verbose output can become quite large.
+ Both ./test00 and ./test11 allow the program arguments --help and --verbose.
+ The argument --verbose produces verbose output essentially by setting the error
+ tolerance to zero. Verbose output can become quite large.
 
-The test script ./test/test_optional.sh takes one parameter, and runs all
-examples 00 to 16 in order, with the given parameter as a program argument.
-Right now this is not very useful, because only ./test00 and ./test11 recognize
-program arguments.
-
-The directory ./pyclical contains the PyCliCal prototype interface to Python,
-the example Python file pyclical_demo.py, and the example output file
-pyclical_demo.out.
+ The test script ./test/test_optional.sh takes one parameter, and runs all
+ examples 00 to 16 in order, with the given parameter as a program argument.
+ Right now this is not very useful, because only ./test00 and ./test11 recognize
+ program arguments.
 
 To Make the Test Programs
 -------------------------
+
  To create the GluCat test programs, set the environment variable CXX to
  indicate your C++ compiler, eg. "g++" for GNU C++, "icc" for Intel C++, then
  run ./configure, then make. Some options to ./configure are described below.
@@ -195,7 +237,7 @@ To Make the Test Programs
 
  The sample timing test results in ./test_runtime were built and run using
  ./configure --with-unordered-map --with-dense-mat --enable-debug=no
- on AMD Athlon(tm) 64 3200+, openSUSE Linux 11.2, g++ 4.4.1, Boost 1.39.0.
+ on AMD Athlon(tm) 64 3200+, openSUSE Linux 11.2, g++ 4.5.1, Boost 1.44.0.
 
  If you are using Linux on Intel, you can also:
  o create a full debug version of the tests:
@@ -212,34 +254,9 @@ To Make the Test Programs
  3) Detailed generic instructions for ./configure are given in "Basic
  Installation" below. See also ./configure --help
 
-The PyCliCal Python extension
------------------------------
- Glucat includes a proptotype Python extension called PyCliCal. PyCliCal is written in
- C++ and Cython, and is defined in the files pyclical/PyCliCal.h and pyclical/PyClical.pyx.
- PyCliCal is designed to be installed using make.
-
- To build the PyCliCal prototype Python interface, run ./configure --enable-pyclical,
- then make. This sets the conditional flag make_pyclical in the Makefile for GluCat,
- and adds the directory ./pyclical to the SUBDIRS list, which is the list of
- subdirectories to be built. For PyCliCal to build successfully, you will need recent
- versions of both Python and Cython. You will need to ensure that the compiler can find
- the header file Python.h, by using the --with-extra-includes option to ./configure,
- if necessary.
-
- If you have run ./configure --enable-pyclical, then when you run make in the top level
- directory, make will build all of the tests, and then build pyclical. Make builds
- pyclical by running the command
-
-   CXXFLAGS="$(CXXFLAGS)" INCLUDES="$(INCLUDES)" LDFLAGS="$(LDFLAGS)" \
-   python setup.py build_ext --inplace
-
- with INCLUDES=$(all_includes), LDFLAGS=$(all_libraries) and the values of CXXFLAGS,
- all_includes and all_libraries set by ./configure. You can run pyclical/setup.py
- yourself, but you must set the environment variables CXXFLAGS, INCLUDES and LDFLAGS to
- apppropriate values.
-
 To Install
 ==========
+
  Once you are satisfied that GluCat works, you can run make install.
  What make install does is to install the headers from ./glucat into the
  installation directory, which defaults to /usr/local/include

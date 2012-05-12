@@ -69,12 +69,14 @@ QD Interface
 ------------
 David H. Bailey and QD team: Changes to constructors in QD 2.3.10.
 
-PyCliCal Python Extension
--------------------------
+PyCliCal Python Extension module
+--------------------------------
 Paul Zimmermann: Hosting Sage Days 10 in Nancy, 2008
 William Stein: Sage Days 10 in Nancy, 2008
 Attendees of Sage Days 10 in Nancy, 2008:
   Advice on use of Cython with C++.
+Robert Bradshaw, Mark Florisson, cython-users
+  More advice on use of Cython with C++.
 
 Configuration
 -------------

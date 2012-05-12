@@ -75,8 +75,8 @@ Usage
  follows is a brief summary of usage. See also http://glucat.sourceforge.net
 
  To see brief descriptions of the classes, functions and operators which
- GluCat defines, see the Doxygen API documentation in ./glucat-api/html or
- ./glucat-api/glucat-api-refman.pdf.
+ GluCat defines, see the Doxygen API documentation in ./doc/api/html or
+ ./doc/api/glucat-api-reference-manual.pdf.
 
  GluCat is a C++ template library, similar to the C++ Standard Library or the
  Boost uBLAS Library (uBLAS). It consists entirely of source code header
@@ -218,12 +218,15 @@ using namespace glucat;
  used by the compiler sees the appropriate header files as above, and the library path sees
  the appropriate libraries: either libalglib.a or liblapack.a and libblas.a.
 
-PyCliCal Python extension
--------------------------
+PyClical Python extension module
+--------------------------------
 
- Glucat includes a prototype Python extension called PyCliCal. PyCliCal is written in C++ and
- Cython, and is defined in the files pyclical/PyCliCal.h and pyclical/PyClical.pyx.
- PyCliCal is designed to be installed using make. For details on building PyCliCal, see INSTALL.
+ Glucat includes a Python extension module called PyClical. PyClical is written in
+ C++ and Cython, and is defined in the files pyclical/glucat.pxd, pyclical/PyClical.h,
+ pyclical/PyClical.pdx, and pyclical/PyClical.pyx. PyClical is designed to be
+ installed using make. For details on building PyClical, see INSTALL. For usage
+ examples, see the example Python files pyclical_demo.py, plotting_demo.py, and
+ sqrt_log_demo.py, and the example output files pyclical_demo.out and sqrt_log_demo.out.
 
 Coding standards
 ----------------

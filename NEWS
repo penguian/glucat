@@ -1,3 +1,24 @@
+2012-05-12: 0.6.0
+GluCat 0.6.0 includes the PyClical extension module for Python.
+
+The PyClical extension module is based on the prototype from GluCat 0.5.0,
+but includes a much more comprehensive interface to the GluCat classes
+index_set<> and matrix_multi<>, as Python classes index_set and clifford.
+The functions and member functions defined in PyClical include doctests.
+
+There are some changes to the clifford_algebra<> API:
+o GluCat does not support complex Clifford algebras, so the real() function
+  is now synonymous with scalar() and the imag() function always returns 0.
+o New operators lhs | rhs and lhs |= rhs transform lhs by the twisted adjoint
+  action of rhs.
+o New member functions, grade() : maximum of the grades of each term;
+  pure() : pure part.
+o New function complexifier(val) : square root of -1 which commutes with all
+  members of the frame of the multivector val. The name "elliptic" is now
+  deprecated: use "complexifier" instead.
+o New functions sqrt(val,i,prechecked), and log(val,i,prechecked) :
+  square root and logarithm of multivector with specified complexifier.
+
 2010-05-31: 0.5.1
 GluCat 0.5.1 fixes sqrt and transcendental functions.
 

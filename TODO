@@ -1,37 +1,42 @@
-As at GluCat 0.5.1, 2010-05-31:
+As at GluCat 0.6.0, 2012-05-12:
 
-Improve transcendental functions:
+Documentation:
+o Write a programmer's guide with descriptions of usage via use cases.
+o Provide better user documentation for PyCliCal.
+
+Packaging:
+o Simplify and improve the use of Autotools in configuring, building and
+  installing GluCat and PyClical. Essentially a complete overhaul is needed.
+o Improve the packaging of the example and test programs.
+
+Portability:
+o Build and test GluCat and PyClical using Intel C++, Clang (requested by
+  John Fletcher), and Cygwin on Windows (requested by Alan Bromborsky).
+o Port to other architectures and compilers which support template template
+  parameters.
+
+Interfaces:
+  Downwards:
+o Support later versions of Alglib and Boost numeric bindings
+  (requested by John Fletcher).
+o Support the use of C++11 std::unordered_map (requested by John Fletcher).
+o Support the use of C++11 std:: random number generation
+  (requested by John Fletcher).
+o Investigate the use of Eigen as a replacement for uBLAS.
+
+  Upwards:
+o Expand the Cython-based Python extension module PyCliCal into a Sage interface.
+o Try defining Boost concepts and more numeric traits so that GluCat can eventually
+  become a Boost library.
+
+Transcendental functions:
 o Devise better algorithms and better implementations of existing algorithms for
   the transcendental functions. In particular, pay more attention to radius of
   convergence, condition number of matrices and poking out of the subalgebra.
 o Investigate the use of matrix decompositions in the evaluation of transcentental
   functions. See N. J. Higham, Functions of Matrices: Theory and Computation, 2008.
 
-Further develop PyCliCal from a prototype to a more usable interface.
-o Add doctests to PyCliCal.pyx.
-o Provide better user documentation for PyCliCal.
-o Create more examples, using canonical ordering of generators.
-
-Improve testing, packaging and documentation:
-o Redevelop the configure srcript and Makefiles, using more up-to-date
-  Autotools.
-o Build and test using Intel C++.
-o Improve the packaging of the example and test programs.
-o Write a programmer's guide with descriptions of the API.
-o Expand the Cython interface into a Sage interface.
-o Test and suggest improvements to John Fletcher's SWIG bindings to Ruby and
-  Henk Jansen's SWIG bindings to Python.
-o Simplify and improve the use of automake and autoconf in building GluCat.
-o Investigate if GluCat could be used as the back-end to Christian Perwass' CLU.
-o Test with Blitz++, deal.II, MTL, POOMA and uBLAS and adjust accordingly.
-o Port to other architectures and compilers which support template template
-  parameters.
-
-The interface and library could be further improved in a number of different ways.
-o Ensure better adherence to C++ standards.
-o Investigate the use of Eigen as a replacement for uBLAS.
-o Try defining Boost concepts and more numeric traits so that GluCat can eventually
-  become a Boost library.
+Experimental:
 o Try refactoring the relationship between matrix_multi, framed_multi and
   clifford_algebra to allow more flexibility with template parameters.
   Possibly use enable_if and SFINAE to do this.
@@ -49,7 +54,3 @@ o Try replacing multiplication by +/-1 within inner products by addition and
 o Try creating a class, vector_multi<>, which uses std::vector rather than
   std::map. This should be faster than framed_multi<>, if tuned properly, for
   full multivectors. For sparse multivectors, it may be slower.
-o Try using the complex matrix representations. These use smaller matrices,
-  which should be faster. This would mean changes to basis_element(),
-  folded_dim() and others. Possibly deliver this as an additional template class
-  rather than a change to matrix_multi<>.
