@@ -25,6 +25,8 @@ import math
 import numbers
 import collections
 
+__version__ = "0.6.0"
+
 from PyClical cimport *
 
 # Forward reference
