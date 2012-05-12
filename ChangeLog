@@ -1,3 +1,346 @@
+2012-05-12 22:29  leopardi
+
+	* INSTALL: Specify versions of Boost numeric bindings, Python and
+	  Cython used for testing.
+
+2012-05-12 22:27  leopardi
+
+	* squaring/squaring.h: In mult_test(), do not define outer_frame,
+	  because it is not used.
+
+2012-05-12 16:04  leopardi
+
+	* AUTHORS, INSTALL, NEWS, README, TODO: Update for version 0.6.0.
+
+2012-05-12 16:03  leopardi
+
+	* pyclical/PyClical.pyx: Set __version__ to "0.6.0".
+
+2012-05-12 16:02  leopardi
+
+	* glucat/matrix_multi_imp.h: Remove spurious static property from
+	  definition of sqrt().  This fixes problem w reported by John
+	  Fletcher in email of	2012-04-07.
+
+2012-05-11 19:54  leopardi
+
+	* config.h.in, configure.in, configure.in.in: Use
+	  GLUCAT_CHECK_HEADERS instead of AC_CHECK_HEADERS for non-system
+	  headers.
+
+2012-05-11 10:31  leopardi
+
+	* pyclical/: PyCliCal.h, PyCliCal.pyx: Change module name from
+	  PyCliCal to PyClical.
+
+2012-05-11 10:30  leopardi
+
+	* pyclical/pyclical_demo.out: Output from pyclical_demo.py.
+
+2012-05-11 10:27  leopardi
+
+	* config.h.in: Auto-generated from configure.in.
+
+2012-05-11 10:26  leopardi
+
+	* glucat.lsm: Version 0.6.0.
+
+2012-05-11 10:25  leopardi
+
+	* Doxyfile: Version 0.6.0.  Document ./pyclical and ./test as well
+	  as ./glucat.	Treat *.pxd and *.pyx as Python source -- really
+	  Cython, but Doyxgen doesn't know about Cython.  Change output
+	  directory from ./glucat-api to ./doc/api.  Change tabbing to 2
+	  spaces.
+
+2012-05-11 10:25  leopardi
+
+	* configure.in.end: Conditionally set CXXFLAGS using
+	  $glucat_extra_cxxflags_pyclical before AC_CONFIG_FILES([
+	  pyclical/Makefile ]).  No longer call KDE_CREATE_SUBDIRSLIST.
+
+2012-05-11 10:25  leopardi
+
+	* configure.in: Version 0.6.0.	Explicitly name m4 macro dir.  Use
+	  AC_INT(aclocal.m4) rather than AC_INIT(acinclude.m4) Move various
+	  AC_DEFUN declarations from acinclude.m4 to here, with GLUCAT_*
+	  and glucat_* names.  Rename KDE_* and kde_* to GLUCAT_* and
+	  glucat_* respectively.
+
+	  To assist PyClical build and installation: o Do not define or use
+	  GLUCAT_PROG_LIBTOOL:	o do not patch libtool or create a
+	  libtool-script.  o If the flag $glucat_use_pyclical is set, use
+	  AM_PATH_PYTHON   and add -fno-strict-aliasing to
+	  $glucat_extra_cxxflags_pyclical.  Do not use
+	  AC_VALIDIFY_CXXFLAGS, KDE_CHECK_FINAL, KDE_FAST_CONFIGURE,
+	  KDE_CONF_FILES.  Conditionally set CXXFLAGS using
+	  $glucat_extra_cxxflags_pyclical before AC_CONFIG_FILES([
+	  pyclical/Makefile ]).  No longer call KDE_CREATE_SUBDIRSLIST.
+
+2012-05-11 10:24  leopardi
+
+	* configure.in.in: Version 0.6.0.  Explicitly name m4 macro dir.
+	  Use AC_INT(aclocal.m4) rather than AC_INIT(acinclude.m4) Move
+	  various AC_DEFUN declarations from acinclude.m4 to here, with
+	  GLUCAT_* and glucat_* names.	Rename KDE_* and kde_* to GLUCAT_*
+	  and glucat_* respectively.
+
+	  To assist PyClical build and installation: o Do not define or use
+	  GLUCAT_PROG_LIBTOOL:	o do not patch libtool or create a
+	  libtool-script.  o If the flag $glucat_use_pyclical is set, use
+	  AM_PATH_PYTHON   and add -fno-strict-aliasing to
+	  $glucat_extra_cxxflags_pyclical.  Do not use
+	  AC_VALIDIFY_CXXFLAGS, KDE_CHECK_FINAL, KDE_FAST_CONFIGURE,
+	  KDE_CONF_FILES.
+
+2012-05-11 10:24  leopardi
+
+	* aclocal.m4: Update Autottools.  Define AM_PATH_PYTHON for use by
+	  PyClical.
+
+2012-05-11 10:23  leopardi
+
+	* test_runtime/: gfft_test-11.out, products-8.out, squaring-11.out,
+	  test.out, transforms-8.out: Test results for version 0.6.0.
+
+2012-05-11 10:22  leopardi
+
+	* test05/peg05.h, test07/peg07.h: Change operator|(lhs,rhs) to
+	  operator||(lhs,rhs), since operator|() is now used for twisted
+	  adjoint action.
+
+2012-05-11 10:22  leopardi
+
+	* test00/peg00.h: New function is_error(lhs, rhs) : o test for
+	  relative and absolute error between lhs and rhs
+
+	  Use random(frm, fill) with fill factor 0.5.
+
+2012-05-11 10:22  leopardi
+
+	* admin/ltmain.sh: Update Libtool.  (Libtool is not needed for
+	  installation.)
+
+2012-05-11 10:20  leopardi
+
+	* pyclical/: sqrt_log_demo.out, sqrt_log_demo.py: Add comment block
+	  header.  Do not define pq here - istpq is now defined in
+	  PyClical.  In print statements where output is small, use abs().
+
+2012-05-11 10:20  leopardi
+
+	* pyclical/pyclical_demo.py: Add comment block header.	Do not
+	  define pi here - pi is now defined in PyClical.  In function
+	  pause(), check if __name__ == __main__.  Print output header
+	  lines citing Lounesto et al.	In print statements where output is
+	  small, use abs().
+
+2012-05-11 10:19  leopardi
+
+	* pyclical/plotting_demo.py: New file.	Plot curves obtained by
+	  exponentiating a bivector in Conformal Geometric Algebra.  Based
+	  on agacse_demo.py demonstrated at AGACSE 2010 in Amsterdam.
+
+2012-05-11 10:18  leopardi
+
+	* pyclical/PyClical.pyx: New name for PyCliCal.pyx Complete
+	  overhaul.  Wrap most of the member functions of classes
+	  glucat::index_set<> as Python class index_set and
+	  glucat::matrix_multi<> as Python class clifford, as well as most
+	  glucat:: functions operating on these classes.  Provide Doctests
+	  for all functions and member functions where this works.
+	  Functions index_set_hidden_doctests() and
+	  clifford_hidden_doctests() provide tests for functions that
+	  Doctest cannot see.
+
+2012-05-11 10:18  leopardi
+
+	* pyclical/setup_nocython.py: New file.  Build PyClical.so from
+	  PyCliCal.cpp and PyClical.h without using Cython.
+
+2012-05-11 10:17  leopardi
+
+	* pyclical/setup.py: Add comment block header.	Use
+	  Cython.Build.cythonize New environment variables: o ext_name :
+	  name of extension o sources  : filename of our Cython source
+
+2012-05-11 10:17  leopardi
+
+	* pyclical/: PyClical.pxd, glucat.pxd: New file.  Cython
+	  translation of C++ class and function definitions corresponding
+	  to glucat/glucat.h, especially index_set<> as IndexSet and
+	  matrix_multi<> as Clifford.
+
+2012-05-11 10:16  leopardi
+
+	* pyclical/PyClical.h: New name for PyCliCal.h Complete overhaul to
+	  support new PyClical.
+
+	  New namespace cga3 for 3D Conformal Geometric Algebra based on
+	  definitions in Doran and Lasenby: o cga3() :	Convert Euclidean
+	  3D vector to	 Conformal Geometric Algebra null vector.  o
+	  cga3std() : Convert CGA3 null vector to   standard Conformal
+	  Geometric Algebra  null vector.  o agc3() : Convert CGA3 null
+	  vector to Euclidean 3D vector.
+
+	  Cosmetics: o Add comment header block.  o Add Doxygen comments.
+	  o Put definitions in a more logical order.
+
+2012-05-11 10:15  leopardi
+
+	* pyclical/Makefile.am: Ensure that PyClical.so builds and installs
+	  correctly.  Use setup_nocython.py when PyClical.cpp already
+	  exists, so that Cython is not needed in this case.
+
+2012-05-11 10:14  leopardi
+
+	* glucat/matrix_multi_imp.h: New member functions for
+	  matrix_multi<>: o operator|=(rhs) : Transformation via twisted
+	  adjoint action.  o grade() : Maximum of the grades of each term.
+	  o pure() : Pure part.
+
+	  New operator|(lhs, rhs): o Transformation via twisted adjoint
+	  action.
+
+	  Function real(val) is now a synonym for val.scalar().
+
+	  Cosmetics: o Put matrix_multi<> member functions in same order as
+	  per clifford_algebra<>.  o Neaten up ? : expressions.  o Fix
+	  comment for operator+=(term).
+
+2012-05-11 10:14  leopardi
+
+	* glucat/matrix_multi.h: For matrix_multi<>, make double the
+	  default for Scalar_T.
+
+	  New operator|(lhs, rhs): o Transformation via twisted adjoint
+	  action.
+
+2012-05-11 10:13  leopardi
+
+	* glucat/index_set_imp.h: In constructor index_set_imp(str): o
+	  Check state of stream ss and throw error_t if in failure state.
+	  o Use peek() to see if the end of the string has been reached,
+	  and throw error_t if not.
+
+	  Overhaul operator>>(s, ist): o Parsing errors now set
+	  std::istream::failbit.
+
+	  In function hash(), leave neg_part unshifted.
+
+	  Cosmetic: o Put min_neg() before max_pos().
+
+2012-05-11 10:13  leopardi
+
+	* glucat/index_set.h: Make compare<>(lhs, rhs) a friend of
+	  index_set<>.
+
+	  Cosmetics: o Put count_neg() before count_pos().  o Put min_neg()
+	  before max_pos().  o Fix some comments.
+
+2012-05-11 10:13  leopardi
+
+	* glucat/global.h: Global timing constant MS_PER_S is now
+	  deprecated: moved to test/timing.h
+
+2012-05-11 10:12  leopardi
+
+	* glucat/framed_multi_imp.h: In constructor framed_multi(str): o
+	  Check state of stream ss and throw error_t if in failure state.
+	  o Use peek() to see if the end of the string has been reached,
+	  and throw error_t if not.
+
+	  New member functions for framed_multi<>: o operator|=(rhs) :
+	  Transformation via twisted adjoint action.  o grade() : Maximum
+	  of the grades of each term.  o pure() : Pure part.
+
+	  New operator|(lhs, rhs): o Transformation via twisted adjoint
+	  action.
+
+	  Function real(val) is now a synonym for val.scalar().  In
+	  operator<<(os,term), output as double where possible.
+
+	  Overhaul operator>>(s, val): o Parsing errors now set
+	  std::istream::failbit.
+
+	  Cosmetics: o Put framed_multi<> member functions in same order as
+	  per clifford_algebra<>.  o Neaten up ? : expressions.  o Fix
+	  comment for operator+=(term).
+
+2012-05-11 10:12  leopardi
+
+	* glucat/framed_multi.h: For framed_multi<>, make double the
+	  default for Scalar_T.  Explicitly use std::equal_to<> in
+	  std::tr1:unordered_map<>.
+
+	  New operator|(lhs, rhs): o Transformation via twisted adjoint
+	  action.
+
+2012-05-11 10:12  leopardi
+
+	* glucat/: clifford_algebra.h, clifford_algebra_imp.h: New member
+	  functions for clifford_algebra<>: o operator|=(rhs) :
+	  Transformation via twisted adjoint action.  o grade() : Maximum
+	  of the grades of each term.  o pure() : Pure part.
+
+	  New operator|(lhs, rhs): o Transformation via twisted adjoint
+	  action.
+
+	  Function real(val) is now a synonym for val.scalar().  Function
+	  imag(val) now always returns 0.
+
+	  New function complexifier(val) : o Square root of -1 which
+	  commutes with all members of the frame of the multivector val.  o
+	  The name "elliptic" is now deprecated: use "complexifier"
+	  instead.
+
+	  New function sqrt(val,i,prechecked) : o Square root of
+	  multivector with specified complexifier.
+
+	  New function log(val,i,prechecked) : o Natural logarithm of
+	  multivector with specified complexifier.
+
+	  Cosmetics: o Fix comments for member functions max_abs(),
+	  truncated() and involute().  o Put member functions in a more
+	  sensible order.
+
+2012-05-10 00:26  leopardi
+
+	* products/products.cpp, squaring/squaring.cpp: Remove #define
+	  GLUCAT_TEST_REPEAT. Equivalent define is now in header file.
+
+2012-05-10 00:25  leopardi
+
+	* products/products.h, squaring/squaring.h: Use common definitions
+	  from test/timing.h to standardize timing test.  Define
+	  _GLUCAT_TEST_REPEAT.	Repeated trials in timing tests now
+	  increase by the factor EXTRA_TRIALS until the elapsed time is
+	  non-zero.  Random multivector generation uses
+	  multivector_t::random() with fill values 0.5 and 1.0.
+
+2012-05-10 00:24  leopardi
+
+	* gfft_test/gfft_test.h, transforms/transforms.h: Use common
+	  definitions from test/timing.h to standardize timing test.
+	  Define _GLUCAT_TEST_REPEAT.  Repeated trials in timing tests now
+	  increase by the factor EXTRA_TRIALS until the elapsed time is
+	  non-zero.  Function relative() chooses between relative and
+	  absolute error consistently.	Random multivector generation uses
+	  multivector_t::random() with fill values 0.5 and 1.0.
+
+2012-05-09 10:03  leopardi
+
+	* test/timing.h: Common definitions to support timing tests.
+
+2012-05-03 10:06  leopardi
+
+	* glucat/: framed_multi.h, framed_multi_imp.h, matrix_multi.h,
+	  matrix_multi_imp.h: Add fill parameter to random(), with default
+	  1.0: Probability that the coefficient of each basis element of a
+	  frame is a non-zero normal random scalar rather than 0.  This
+	  gives an average fill factor for the multivector, and is useful
+	  for testing.
+
 2010-06-01 01:04  leopardi
 
 	* ChangeLog: ChangeLog for version 0.5.1.
@@ -3936,3 +4279,4 @@
 2002-01-10 ./README: Add -finline-limit-400
 
 2002-01-09 Release glucat-0.0.1
+
