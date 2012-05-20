@@ -137,6 +137,6 @@ cdef extern from "PyClical.h":
     Clifford atanh(Clifford Clf)
 
 cdef extern from "PyClical.h" namespace "cga3":
-    Clifford agc3(Clifford Clf)
-    Clifford cga3(Clifford Clf)
-    Clifford cga3std(Clifford Clf)
+    Clifford agc3(Clifford Clf) except+
+    Clifford cga3(Clifford Clf) except+
+    Clifford cga3std(Clifford Clf) except+
