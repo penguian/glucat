@@ -1,428 +1,467 @@
-This file is an almost complete port of the DEMO file from 
-CLICAL by Pertti Lounesto, R. Mikkola, V. Vierros, 1987-1994.
+# pyclical_demo.py: This file is an almost complete port of the DEMO file from
+#                   CLICAL by Pertti Lounesto, R. Mikkola, V. Vierros, 1987-1994.
 
-This demonstration file contains examples on the following topics: 
-  -Rotations in three dimensions  R^3
-  -Lorentz transformations of the Minkowski space-time  R^3,1 
-  -Electromagnetism in the Clifford algebras  Cl_3  and  Cl_3,1
-  -Complex Clifford algebra  CxCl_3,1
-  -Cayley algebra of octonions
-  -Conformal transformations and Vahlen matrices
-  -Elementary functions in the exterior algebra
-  -Pure spinors
-  -Conformal covariance of the Maxwell and Dirac equations
+    This demonstration file contains examples on the following topics: 
+      -Rotations in three dimensions  R^3
+      -Lorentz transformations of the Minkowski space-time  R^(3,1) 
+      -Electromagnetism in the Clifford algebras  R_3  and  R_(3,1)
+      -Complex Clifford algebra  CxR_(3,1)
+      -Cayley algebra of octonions
+      -Conformal transformations and Vahlen matrices
+      -Elementary functions in the exterior algebra
+      -Pure spinors
+      -Conformal covariance of the Maxwell and Dirac equations
 
-ROTATIONS IN THREE DIMENSIONS  R^3
-Cl 3:
-> e1 =  {1}
-> e2 =  {2}
-> e3 =  {3}
-> x = 2*e1+3*e2+5*e3
-   == 2{1}+3{2}+5{3}
-> a = (3*e1+2*e2+e3)/10
-   == 0.3{1}+0.2{2}+0.1{3}
-> s = exp(e1*e2*e3*a/2)
-   == 0.9826+0.04971{1,2}-0.09942{1,3}+0.1491{2,3}
+    ROTATIONS IN THREE DIMENSIONS  R^3
 
-Rotate the vector  x  about the axis  a  by the angle  ^a^
-> y = s*x/s
-   == 1.43{1}+4.23{2}+4.25{3}
+>>> x = 2*e(1)+3*e(2)+5*e(3); print x
+2{1}+3{2}+5{3}
+>>> a = (3*e(1)+2*e(2)+e(3))/10; print a
+0.3{1}+0.2{2}+0.1{3}
+>>> s = exp(e({1,2,3})*a/2); print s
+0.9826+0.04971{1,2}-0.09942{1,3}+0.1491{2,3}
 
-Check that the length is preserved by computing the squares of the vectors
-> y*y
-   == 38
-> x*x
-   == 38
+    Rotate the vector  x  about the axis  a  by the angle  |a|:
 
-LORENTZ TRANSFORMATIONS IN THE MINKOWSKI SPACE-TIME  R^3,1
-Cl 3,1:
-> e1 =  {1}
-> e2 =  {2}
-> e3 =  {3}
-> e4 =  {-1}
-> A = 4*e1*e2+3*e1*e3+3*e1*e4+e2*e3+e2*e4+2*e3*e4
-   == -3{-1,1}-{-1,2}+4{1,2}-2{-1,3}+3{1,3}+{2,3}
-> s = exp(A/2)
-   == -0.6421-0.457{-1,1}-0.9461{-1,2}+1.403{1,2}+0.4891{-1,3}+0.457{1,3}+0.9461{2,3}-1.069{-1,1,2,3}
+>>> y = s*x/s; print y
+1.43{1}+4.23{2}+4.25{3}
 
-Lorentz transformation of a space-time point (or event)
-> x = 2*e1+3*e2+5*e3+2*e4
-   == 2{-1}+2{1}+3{2}+5{3}
-> y = s*x/involute(s)
-   == -15.74{-1}+7.351{1}-13.65{2}+6.431{3}
-Check that the square-norm is preserved
-> y*y
-   == 34
-> x*x
-   == 34
-Lorentz transformation of an electromagnetic bivector  F
-> F = 5*e1*e2+e1*e3+2*e1*e4+7*e2*e3+e2*e4+2*e3*e4
-   == -2{-1,1}-{-1,2}+5{1,2}-2{-1,3}+{1,3}+7{2,3}
-> G = s*F/s
-   == -29.53{-1,1}-24.86{-1,2}+39.15{1,2}-8.424{-1,3}+0.8094{1,3}-9.707{2,3}
+    Check that the length is preserved by computing the squares of the vectors
 
-Check that the Lorentz invariants are preserved (j = e1*e2*e3*e4)
-> G*G/2
-   == -33-23{-1,1,2,3}
-> F*F/2
-   == -33-23{-1,1,2,3}
-Compute the Poynting vector and the energy density
-> -F*e4*F/2
-   == 42{-1}-7{1}-4{2}+9{3}
-ELECTROMAGNETISM IN THE CLIFFORD ALGEBRAS  Cl_3  AND  Cl_3,1
+>>> print y*y
+38
+>>> print x*x
+38
 
-First, begin in the three-dimensional Euclidean space  R^3
-> E = e1+2*e2+4*e3
-   == {1}+2{2}+4{3}
-> B = 3*e1+5*e2+7*e3
-   == 3{1}+5{2}+7{3}
+    LORENTZ TRANSFORMATIONS IN THE MINKOWSKI SPACE-TIME  R^(3,1)
 
-The role of the imaginary unit is played by the unit volume element 
-> i = e1*e2*e3
-   == {1,2,3}
-> F = E-i*B
-   == {1}+2{2}+4{3}-7{1,2}+5{1,3}-3{2,3}
-Compute the Lorentz invariants
-> (E*E-B*B)/2
-   == -31
-> E&B
-   == 41
+>>> A = -3*e({-1,1})-e({-1,2})+4*e({1,2})-2*e({-1,3})+3*e({1,3})+e({2,3}); print A
+-3{-1,1}-{-1,2}+4{1,2}-2{-1,3}+3{1,3}+{2,3}
+>>> s = exp(A/2); print s
+-0.6421-0.457{-1,1}-0.9461{-1,2}+1.403{1,2}+0.4891{-1,3}+0.457{1,3}+0.9461{2,3}-1.069{-1,1,2,3}
 
-The above computations can be combined in one formula
-> F*F/2
-   == -31-41{1,2,3}
-Compute the energy density and the Poynting vector
-> (E*E+B*B)/2
-   == 52
-> (E^B)/i
-   == -6{1}+5{2}-{3}
+    Lorentz transformation of a space-time point (or event)
 
-The above computations can be combined in one formula
-> -involute(F)*F/2
-   == 52-6{1}+5{2}-{3}
-Consider a boost at half the velocity of light
-in the direction of the positive  x-axis
-> v = 0.5*e1
-   == 0.5{1}
-> a = atanh(v)
-   == 0.5493{1}
-> s = exp(a/2)
-   == 1.038+0.2781{1}
-Lorentz transformation of the electromagnetic field  F
-> G = s*F/s
-   == {1}-1.732{2}+7.506{3}-6.928{1,2}+8.083{1,3}-3{2,3}
-Extract out of  G  its magnetic induction
-> i*G(2)
-   == 3{1}+8.083{2}+6.928{3}
-Lorentz transformation of a space-time point
-> x = 10+e1+e2
-   == 10+{1}+{2}
-> y = s*x/involute(s)
-   == 12.12+6.928{1}+{2}
-Check that the quadratic form is preserved
-> y*conj(y)
-   == 98
-> x*conj(x)
-   == 98
-Next, perform the same computations in the space-time  R^3,1
-> E = E*e4
-   == -{-1,1}-2{-1,2}-4{-1,3}
-> B = B*e4
-   == -3{-1,1}-5{-1,2}-7{-1,3}
+>>> x = 2*e(-1)+2*e(1)+3*e(2)+5*e(3); print x
+2{-1}+2{1}+3{2}+5{3}
+>>> y = s*x/involute(s); print y
+-15.74{-1}+7.351{1}-13.65{2}+6.431{3}
 
-The role of the imaginary unit is played by the unit volume element
-> i = e1*e2*e3*e4
-   ==  -{-1,1,2,3}
-> F = E-i*B
-   == -{-1,1}-2{-1,2}-7{1,2}-4{-1,3}+5{1,3}-3{2,3}
-Compute the Lorentz invariants
-> F*F/2
-   == -31+41{-1,1,2,3}
-Compute the Poynting vector and the energy density
-> -F*e4*F/2
-   == 52{-1}-6{1}+5{2}-{3}
+    Check that the square-norm is preserved
 
-COMPLEX CLIFFORD ALGEBRA  CxCl_3,1
-Cl 3,3:
-> e1 =  {1}
-> e2 =  {2}
-> e3 =  {3}
-> e4 =  {-3}
-> e5 =  {-2}
-> e6 =  {-1}
+>>> print y*y
+34
+>>> print x*x
+34
 
-The role of the imaginary unit is played by a unit bivector of  Cl_3,3
-> i = e1*e2*e3*e4
-   ==  {-2,-1}
-> x = 3*e1+2*e2+e4
-   == {-3}+3{1}+2{2}
-> y = e3+5*e4
-   == 5{-3}+{3}
+    Lorentz transformation of an electromagnetic bivector  F
 
-> z = x+i*y
-   == {-3}+3{1}+2{2}+5{-3,-2,-1}+{-2,-1,3}
-> A = 2*e1*e2+2*e2*e4+3*e3*e4
-   == -2{-3,2}+2{1,2}-3{-3,3}
-> B = e2*e3+2*e3*e1+3*e1*e4
-   == -3{-3,1}-2{1,3}+{2,3}
+>>> F = -2*e({-1,1})-e({-1,2})+5*e({1,2})-2*e({-1,3})+e({1,3})+7*e({2,3}); print F
+-2{-1,1}-{-1,2}+5{1,2}-2{-1,3}+{1,3}+7{2,3}
+>>> G = s*F/s; print G
+-29.53{-1,1}-24.86{-1,2}+39.15{1,2}-8.424{-1,3}+0.8094{1,3}-9.707{2,3}
 
-> C = A+i*B
-   == -2{-3,2}+2{1,2}-3{-3,3}-3{-3,-2,-1,1}-2{-2,-1,1,3}+{-2,-1,2,3}
-This computation might take a while:
-> s = exp(C/2)
-   == 1.774-0.2832{-2,-1}-0.2699{-3,1}-1.613{-3,2}+1.666{1,2}-1.571{-3,3}-0.3405{1,3}-0.5363{2,3}-1.713{-3,-2,-1,1}+0.3405{-3,-2,-1,2}+0.5089{-2,-1,1,2}+0.4578{-3,-2,-1,3}-1.613{-2,-1,1,3}+1.047{-2,-1,2,3}-0.9385{-3,1,2,3}-1.213{-3,-2,-1,1,2,3}
-Check that taking logarithm returns  C/2
-> log(s)
-   == -{-3,2}+{1,2}-1.5{-3,3}-1.5{-3,-2,-1,1}-{-2,-1,1,3}+0.5{-2,-1,2,3}
-Perform a complex rotation
-> w = s*z/s
-   == 11.23{-3}-12.7{1}-16.86{2}-3.415{3}-32.71{-3,-2,-1}-1.908{-2,-1,1}+16.86{-2,-1,2}+32.81{-2,-1,3}
-Extract the real and imaginary parts
-> u = (w^i)/i
-   == 11.23{-3}-12.7{1}-16.86{2}-3.415{3}
-> v = (w-u)/i
-   == -32.71{-3}-1.908{1}+16.86{2}+32.81{3}
-Check that the invariants of the complex rotation are preserved
-> x*x-y*y
-   == 36
-> u*u-v*v
-   == 36
+    Check that the Lorentz invariants are preserved (j == -{-1,1,2,3})
 
-> x&y
-   == -5
-> u&v
-   == -5
-CAYLEY ALGEBRA OF OCTONIONS
-Cl 0,7:
-> e1 =  {-7}
-> e2 =  {-6}
-> e3 =  {-5}
-> e4 =  {-4}
-> e5 =  {-3}
-> e6 =  {-2}
-> e7 =  {-1}
+>>> print G*G/2
+-33-23{-1,1,2,3}
+>>> print F*F/2
+-33-23{-1,1,2,3}
 
-Define a Cayley product of two paravectors in  R+R7 (= R+R^0,7)
-> f = (1-e1*e2*e4)*(1-e2*e3*e5)*(1-e3*e4*e6)*(1-e4*e5*e7)
-   == 1-{-7,-6,-4}-{-6,-5,-3}-{-5,-4,-2}-{-7,-3,-2}-{-7,-5,-1}-{-4,-3,-1}-{-6,-2,-1}-{-7,-5,-4,-3}+{-7,-6,-5,-2}-{-6,-4,-3,-2}+{-6,-5,-4,-1}-{-7,-6,-3,-1}+{-7,-4,-2,-1}-{-5,-3,-2,-1}-{-7,-6,-5,-4,-3,-2,-1}
-> o(x,y) = real(x*y*f)+(x*y*f)(1)
-> o(e1,2+3*e2)
-   == 2{-7}+3{-4}
-> a = 1+2*e1+4*e2+2*e3
-   == 1+2{-7}+4{-6}+2{-5}
-> b = 2+e1+2*e5
-   == 2+{-7}+2{-3}
-> c = o(a,b)
-   == 5{-7}+12{-6}-4{-5}-4{-4}+2{-3}+4{-2}-2{-1}
-Check that the absolute value is preserved
-> abs(c)
-   == 15.0
-> abs(a)*abs(b)
-   == 15.0
-Consider the associator of three vectors in  R7
-> a = 3*e1+2*e4+e5
-   == 3{-7}+2{-4}+{-3}
-> b = 4*e2+3*e4+e5
-   == 4{-6}+3{-4}+{-3}
-> c = 3*e3+e4+2*e7
-   == 3{-5}+{-4}+2{-1}
+    Compute the Poynting vector and the energy density
 
-This computation might take a while:
-> u = o(o(a,b),c)-o(a,o(b,c))
-   == 22{-7}+12{-6}+26{-5}+18{-4}-102{-3}-28{-2}-48{-1}
-Show that the associator is perpendicular to the factors
-> V = a^b^c
-   == 36{-7,-6,-5}+12{-7,-6,-4}-27{-7,-5,-4}+24{-6,-5,-4}-9{-7,-5,-3}+12{-6,-5,-3}-3{-7,-4,-3}+4{-6,-4,-3}-3{-5,-4,-3}+24{-7,-6,-1}+18{-7,-4,-1}-16{-6,-4,-1}+6{-7,-3,-1}-8{-6,-3,-1}-2{-4,-3,-1}
-> (u&V)/V
-   == 0
-Check the Moufang identity  (ab)*(ca) = a(bc)*a
-> o(o(a,b),o(c,a))
-   == 42-76{-7}-42{-6}-60{-4}+40{-3}-238{-2}-14{-1}
-> o(o(a,o(b,c)),a)
-   == 42-76{-7}-42{-6}-60{-4}+40{-3}-238{-2}-14{-1}
-CONFORMAL TRANSFORMATIONS AND VAHLEN MATRICES
-in the Minkowski space-time  R^3,1
-Cl 4,2:
-> e1 =  {1}
-> e2 =  {2}
-> e3 =  {3}
-> e4 =  {4}
-> e5 =  {-2}
-> e6 =  {-1}
+>>> print -F*e(-1)*F/2
+42{-1}-7{1}-4{2}+9{3}
 
-We choose the two extra dimensions  e4, e6  so that our Minkowski space-time
-has a basis  e1, e2, e3, e5  where  e5*e5 = -1 
-> epos = e4
-      ==  {4}
-> eneg = e6
-      ==  {-1}
-We give entries of a  2x2-matrix in the Lie algebra of the Vahlen group
-> A = 3+4*e1*e2+e2*e3+2*e3*e5
-   == 3+4{1,2}-2{-2,3}+{2,3}
-> B = 7*e1+e2+3*e5
-   == 3{-2}+7{1}+{2}
-> C = 5*e2+e5
-   == {-2}+5{2}
-> D = -reverse(A)
-   == -3+4{1,2}-2{-2,3}+{2,3}
-We give a matrix basis of the Lie algebra of the Vahlen group
-> mat11 = (1+(epos^eneg))/2
-       == 0.5-0.5{-1,4}
-> mat12 = (epos-eneg)/2
-       == -0.5{-1}+0.5{4}
-> mat21 = (epos+eneg)/2
-       == 0.5{-1}+0.5{4}
-> mat22 = (1-(epos^eneg))/2
-       == 0.5+0.5{-1,4}
-We form the following VAHLEN matrix
-in the Lie algebra of the Vahlen group
-> VAHLEN = A*mat11+B*mat12+involute(C)*mat21+involute(D)*mat22
-        == -2{-2,-1}+3.5{-1,1}+3{-1,2}+4{1,2}-2{-2,3}+{2,3}+{-2,4}-3{-1,4}+3.5{1,4}-2{2,4}
-By exponentiation we get the vahlen matrix
-> vahlen = exp(VAHLEN/2)
-        == -9.157+2.302{-2,-1}+1.48{-2,1}-4.176{-1,1}+0.1984{-2,2}-5.541{-1,2}+1.557{1,2}+7.396{-2,3}+0.462{-1,3}+0.8085{1,3}-0.12{2,3}+0.04291{-2,4}+6.571{-1,4}+2.267{1,4}-3.026{2,4}+0.7257{3,4}-1.197{-2,-1,1,2}+3.244{-2,-1,1,3}+4.516{-2,-1,2,3}-1.221{-2,1,2,3}-0.6226{-1,1,2,3}+0.5118{-2,-1,1,4}+0.9291{-2,-1,2,4}+0.5309{-2,1,2,4}-3.869{-1,1,2,4}+5.123{-2,-1,3,4}+1.71{-2,1,3,4}-0.1349{-1,1,3,4}-2.459{-2,2,3,4}+0.3726{-1,2,3,4}-0.3609{1,2,3,4}-2.968{-2,-1,1,2,3,4}
-> Vah11 = (vahlen^epos^eneg)/(epos^eneg)
-       == -9.157+1.48{-2,1}+0.1984{-2,2}+1.557{1,2}+7.396{-2,3}+0.8085{1,3}-0.12{2,3}-1.221{-2,1,2,3}
-> Vah12 = ((vahlen^eneg)/eneg-Vah11)/epos
-       == 0.04291{-2}+2.267{1}-3.026{2}+0.7257{3}+0.5309{-2,1,2}+1.71{-2,1,3}-2.459{-2,2,3}-0.3609{1,2,3}
-> Vah21 = ((vahlen^epos)/epos-Vah11)/eneg
-       == 2.302{-2}+4.176{1}+5.541{2}-0.462{3}-1.197{-2,1,2}+3.244{-2,1,3}+4.516{-2,2,3}+0.6226{1,2,3}
-> Vah22 = (vahlen-Vah11-Vah12*epos-Vah21*eneg)/(epos^eneg)
-       == -6.571+0.5118{-2,1}+0.9291{-2,2}+3.869{1,2}+5.123{-2,3}+0.1349{1,3}-0.3726{2,3}-2.968{-2,1,2,3}
-Here are the entries ot the vahlen matrix
-> a = Vah11+Vah22
-   == -15.73+1.992{-2,1}+1.127{-2,2}+5.426{1,2}+12.52{-2,3}+0.9434{1,3}-0.4926{2,3}-4.189{-2,1,2,3}
-> b = Vah12-Vah21
-   == -2.259{-2}-1.91{1}-8.567{2}+1.188{3}+1.728{-2,1,2}-1.535{-2,1,3}-6.975{-2,2,3}-0.9835{1,2,3}
-> c = involute(Vah12+Vah21)
-   == -2.345{-2}-6.443{1}-2.515{2}-0.2636{3}+0.6658{-2,1,2}-4.954{-2,1,3}-2.057{-2,2,3}-0.2617{1,2,3}
-> d = involute(Vah11-Vah22)
-   == -2.587+0.9683{-2,1}-0.7307{-2,2}-2.312{1,2}+2.274{-2,3}+0.6737{1,3}+0.2525{2,3}+1.747{-2,1,2,3}
-Create a Mobius transformation
-> g(x)= (a*x+b)/(c*x+d)
-> x = 6*e1+e2+3*e3+4*e5
-   == 4{-2}+6{1}+{2}+3{3}
-> y = 3*e1+4*e2+e3+5*e5
-   == 5{-2}+3{1}+4{2}+{3}
-> g(x)
-   == 1.417{-2}+2.266{1}+1.835{2}-0.9257{3}
-> g(y)
-   == 1.894{-2}+2.333{1}+1.986{2}-1.375{3}
-Check the formula  g(x)-g(y) = 1/reverse(c*x+d)*(x-y)/(c*y+d)
-> g(x)-g(y)
-   == -0.4778{-2}-0.06695{1}-0.1508{2}+0.4497{3}
-> 1/reverse(c*x+d)*(x-y)/(c*y+d)
-   == -0.4778{-2}-0.06695{1}-0.1508{2}+0.4497{3}
-ELEMENTARY FUNCTIONS IN THE EXTERIOR ALGEBRA
-of the Minkowski space-time  R^3,1
+    ELECTROMAGNETISM IN THE CLIFFORD ALGEBRAS  R_3  AND  R_(3,1)
 
-Cl 3,1:
-> e1 =  {1}
-> e2 =  {2}
-> e3 =  {3}
-> e4 =  {-1}
-> x = 3*e1+4*e2+2*e3+3*e4
-   == 3{-1}+3{1}+4{2}+2{3}
-> B = pi/2*e1*e2+0.5*e3*e4
-   == 1.571{1,2}-0.5{-1,3}
-Rotate  x  by the angle  pi/2  and perform a boost in the direction  e3
-> u = exp(B/2)
-   == 0.7293+0.7293{1,2}-0.1786{-1,3}-0.1786{-1,1,2,3}
-> y = u*x/u
-   == 2.341{-1}+4{1}-3{2}+0.692{3}
-> y*y
-   == 20
-> x*x
-   == 20
-Compare the above ordinary exponential  exp(A) = 1+A+AA/2+AAA/6+...
-to the following exterior exponential  expo(B) = 1+B+B^B/2+B^B^B/6:
-> v = expo(B)
-   == 1+1.571{1,2}-0.5{-1,3}-0.7854{-1,1,2,3}
-> z = v*x/v
-   == 2.333{-1}+2.355{1}-4.411{2}-0.6667{3}
-> z*z
-   == 20
-> x*x
-   == 20
-Check that ordinary logarithm and exterior logarithm return  B/2  and  B
-log(u)
-   == 0.7854{1,2}-0.25{-1,3}
-> logi(x)= x-(x^x)/2+(x^x^x)/3
-> logo(x)= log(real(x))+logi(x/real(x)-1)
-> logo(v)
-   == 1.571{1,2}-0.5{-1,3}
-> u*reverse(u)
-   == 1
-> v*reverse(v)
-   == 2.601
-PURE SPINORS
-Cl 3,4:
-> e1 =  {1}
-> e2 =  {2}
-> e3 =  {3}
-> e4 =  {-4}
-> e5 =  {-3}
-> e6 =  {-2}
-> e7 =  {-1}
-> v = (e1+e4)*(e2+e5)*(e3+e6)/8
-   == 0.125{-4,-3,-2}+0.125{-3,-2,1}-0.125{-4,-2,2}+0.125{-2,1,2}+0.125{-4,-3,3}-0.125{-3,1,3}+0.125{-4,2,3}+0.125{1,2,3}
-> f = (1+e1*e4)*(1+e2*e5)*(1+e3*e6)/8
-   == 0.125-0.125{-4,1}-0.125{-3,2}-0.125{-2,3}-0.125{-4,-3,1,2}-0.125{-4,-2,1,3}-0.125{-3,-2,2,3}+0.125{-4,-3,-2,1,2,3}
+    First, begin in the three-dimensional Euclidean space  R^3
 
-Here  v = e1*e2*e3 f  as the following computation shows:
-> e1*e2*e3*f
-   == 0.125{-4,-3,-2}+0.125{-3,-2,1}-0.125{-4,-2,2}+0.125{-2,1,2}+0.125{-4,-3,3}-0.125{-3,1,3}+0.125{-4,2,3}+0.125{1,2,3}
-The following bivectors annul  v:
-e1*e4-e2*e5, e2*e5-e3*e6
-e1*e2+e1*e5, e1*e5+e2*e4, e1*e7+e4*e7
-e1*e3+e1*e6, e1*e6+e3*e4, e2*e7+e5*e7
-e2*e3+e2*e6, e2*e6+e3*e5, e3*e7+e6*e7
-and their exponential stabilizes  v.
-As an example, take a linear combination of the above bivectors:
-> B = 4*(e1*e4-e2*e5)+7*(e1*e5+e2*e4)+3*(e3*e7+e6*e7)
-   == 3{-2,-1}-4{-4,1}-7{-3,1}-7{-4,2}+4{-3,2}-3{-1,3}
+>>> E = e(1)+2*e(2)+4*e(3); print E
+{1}+2{2}+4{3}
+>>> B = 3*e(1)+5*e(2)+7*e(3); print B
+3{1}+5{2}+7{3}
 
-and exponentiate:        ... this computation might take a while ...
-> s = exp(B/10)
-   == 1.804+0.5411{-2,-1}-0.5973{-4,1}-1.045{-3,1}-1.045{-4,2}+0.5973{-3,2}-0.5411{-1,3}-0.1792{-4,-2,-1,1}-0.3136{-3,-2,-1,1}-0.3136{-4,-2,-1,2}+0.1792{-3,-2,-1,2}+0.8036{-4,-3,1,2}-0.1792{-4,-1,1,3}-0.3136{-3,-1,1,3}-0.3136{-4,-1,2,3}+0.1792{-3,-1,2,3}+0.2411{-4,-3,-2,-1,1,2}-0.2411{-4,-3,-1,1,2,3}
-Check that  s v = v:
-> s*v
-   == 0.125{-4,-3,-2}+0.125{-3,-2,1}-0.125{-4,-2,2}+0.125{-2,1,2}+0.125{-4,-3,3}-0.125{-3,1,3}+0.125{-4,2,3}+0.125{1,2,3}
-> v = 0.125{-4,-3,-2}+0.125{-3,-2,1}-0.125{-4,-2,2}+0.125{-2,1,2}+0.125{-4,-3,3}-0.125{-3,1,3}+0.125{-4,2,3}+0.125{1,2,3}
-Take an arbitrary bivector:
-> F = 4*e1*e2+7*e2*e5+5*e3*e6+3*e4*e7+2*e5*e6
-   == 2{-3,-2}+3{-4,-1}-7{-3,2}+4{1,2}-5{-2,3}
+    The role of the imaginary unit is played by the unit volume element 
 
-and exponentiate:         ... this computation might take a while ...
-> u = exp(F/10)
-   == 1.24+0.1986{-3,-2}+0.3836{-4,-1}-0.01882{-2,1}-0.7914{-3,2}+0.4469{1,2}-0.5788{-2,3}+0.02353{2,3}+0.06142{-4,-3,-2,-1}+0.005822{-4,-2,-1,1}+0.2448{-4,-3,-1,2}+0.08357{-3,-2,1,2}+0.1382{-4,-1,1,2}+0.179{-4,-2,-1,3}-0.3656{-3,-2,2,3}+0.007278{-4,-1,2,3}-0.2089{-2,1,2,3}+0.02585{-4,-3,-2,-1,1,2}-0.1131{-4,-3,-2,-1,2,3}+0.06463{-4,-2,-1,1,2,3}
-The product  u*v  is a pure spinor
-> w = u*v
-   == -0.02776{-4}+0.008094{-3}-0.02974{-2}-0.008588{-1}-0.02776{1}+0.008094{2}-0.02974{3}+0.02943{-4,-3,-2}-0.002504{-4,-3,-1}+0.009201{-4,-2,-1}+0.009104{-3,-2,-1}+0.008094{-4,-3,1}-0.02974{-4,-2,1}+0.02943{-3,-2,1}-0.008588{-4,-1,1}-0.002504{-3,-1,1}+0.009201{-2,-1,1}+0.02776{-4,-3,2}-0.02943{-4,-2,2}-0.02974{-3,-2,2}+0.002504{-4,-1,2}-0.008588{-3,-1,2}+0.009104{-2,-1,2}-0.008094{-4,1,2}-0.02776{-3,1,2}+0.02943{-2,1,2}-0.002504{-1,1,2}+0.02943{-4,-3,3}+0.02776{-4,-2,3}-0.008094{-3,-2,3}-0.009201{-4,-1,3}-0.009104{-3,-1,3}-0.008588{-2,-1,3}+0.02974{-4,1,3}-0.02943{-3,1,3}-0.02776{-2,1,3}+0.009201{-1,1,3}+0.02943{-4,2,3}+0.02974{-3,2,3}+0.008094{-2,2,3}+0.009104{-1,2,3}+0.02943{1,2,3}+0.009104{-4,-3,-2,-1,1}-0.009201{-4,-3,-2,-1,2}+0.02974{-4,-3,-2,1,2}+0.008588{-4,-3,-1,1,2}-0.009104{-4,-2,-1,1,2}+0.009201{-3,-2,-1,1,2}-0.002504{-4,-3,-2,-1,3}+0.008094{-4,-3,-2,1,3}+0.009104{-4,-3,-1,1,3}+0.008588{-4,-2,-1,1,3}+0.002504{-3,-2,-1,1,3}+0.02776{-4,-3,-2,2,3}-0.009201{-4,-3,-1,2,3}-0.002504{-4,-2,-1,2,3}+0.008588{-3,-2,-1,2,3}+0.02974{-4,-3,1,2,3}+0.008094{-4,-2,1,2,3}+0.02776{-3,-2,1,2,3}+0.009104{-4,-1,1,2,3}-0.009201{-3,-1,1,2,3}-0.002504{-2,-1,1,2,3}+0.008588{-4,-3,-2,-1,1,2,3}
-Check that  reverse(w)*Ak*w  vanishes for a pure spinor  w  and a  k-vector  Ak
-when  k = 0,1,2  but not when  k = 3  (v  and  reverse(w)*A3*w  are parallel)
-> A1 = 2*e1+3*e2+5*e3+7*e4+e5+4*e6
-    == 7{-4}+{-3}+4{-2}+2{1}+3{2}+5{3}
-> A2 = 3*e1*e2+4*e1*e5+2*e2*e3+3*e2*e4+5*e3*e4+e3*e6+e4*e5
-    == {-4,-3}-4{-3,1}-3{-4,2}+3{1,2}-5{-4,3}-{-2,3}+2{2,3}
-> A3 = e1*e2*e3+4*e1*e2*e6+3*e2*e3*e4+2*e2*e4*e5+e3*e4*e5+5*e3*e5*e6+e4*e5*e6
-    == {-4,-3,-2}+2{-4,-3,2}+4{-2,1,2}+{-4,-3,3}+5{-3,-2,3}+3{-4,2,3}+{1,2,3}
-These computations might take a while:
-> reverse(w)*w
-   == 0
-> abs(reverse(w)*w)
-   == 1.69572624632e-17
-> reverse(w)*A1*w
-   == 0
-> abs(reverse(w)*A1*w)
-   == 1.77056215846e-17
-> reverse(w)*A2*w
-   == 0
-> abs(reverse(w)*A2*w)
-   == 1.03963491342e-16
-> reverse(w)*A3*w
-   == 0.03178{-4,-3,-2}+0.03178{-3,-2,1}-0.03178{-4,-2,2}+0.03178{-2,1,2}+0.03178{-4,-3,3}-0.03178{-3,1,3}+0.03178{-4,2,3}+0.03178{1,2,3}
-> abs(reverse(w)*A3*w)
-   == 0.0898934206238
-> v = 0.125{-4,-3,-2}+0.125{-3,-2,1}-0.125{-4,-2,2}+0.125{-2,1,2}+0.125{-4,-3,3}-0.125{-3,1,3}+0.125{-4,2,3}+0.125{1,2,3}
-You have completed the demonstration file pyclical_demo.py.
+>>> i = e({1,2,3}); print i
+{1,2,3}
+>>> F = E-i*B; print F
+{1}+2{2}+4{3}-7{1,2}+5{1,3}-3{2,3}
+
+    Compute the Lorentz invariants
+
+>>> print (E*E-B*B)/2
+-31
+>>> print E&B
+41
+
+    The above computations can be combined in one formula
+
+>>> print F*F/2
+-31-41{1,2,3}
+
+    Compute the energy density and the Poynting vector
+
+>>> print (E*E+B*B)/2
+52
+>>> print (E^B)/i
+-6{1}+5{2}-{3}
+
+    The above computations can be combined in one formula
+
+>>> print -involute(F)*F/2
+52-6{1}+5{2}-{3}
+
+    Consider a boost at half the velocity of light
+    in the direction of the positive  x-axis
+
+>>> v = 0.5*e(1); print v
+0.5{1}
+>>> a = atanh(v); print a
+0.5493{1}
+>>> s = exp(a/2); print s
+1.038+0.2781{1}
+
+    Lorentz transformation of the electromagnetic field  F
+
+>>> G = s*F/s; print G
+{1}-1.732{2}+7.506{3}-6.928{1,2}+8.083{1,3}-3{2,3}
+
+    Extract out of  G  its magnetic induction
+
+>>> print i*G(2)
+3{1}+8.083{2}+6.928{3}
+
+    Lorentz transformation of a space-time point
+
+>>> x = 10+e(1)+e(2); print x
+10+{1}+{2}
+>>> y = s*x/involute(s); print y
+12.12+6.928{1}+{2}
+
+    Check that the quadratic form is preserved
+
+>>> print y*conj(y)
+98
+>>> print x*conj(x)
+98
+
+    Next, perform the same computations in the space-time  R^(3,1)
+
+>>> E = E*e(-1); print E
+-{-1,1}-2{-1,2}-4{-1,3}
+>>> B = B*e(-1); print B
+-3{-1,1}-5{-1,2}-7{-1,3}
+
+    The role of the imaginary unit is played by the unit volume element
+
+>>> i = -e({-1,1,2,3}); print i
+-{-1,1,2,3}
+>>> F = E-i*B; print F
+-{-1,1}-2{-1,2}-7{1,2}-4{-1,3}+5{1,3}-3{2,3}
+
+    Compute the Lorentz invariants
+
+>>> print F*F/2
+-31+41{-1,1,2,3}
+
+    Compute the Poynting vector and the energy density
+
+>>> print -F*e(-1)*F/2
+52{-1}-6{1}+5{2}-{3}
+
+    COMPLEX CLIFFORD ALGEBRA  CxR_(3,1)
+
+    The role of the imaginary unit is played by a unit bivector of  R_(3,3)
+
+>>> i = e({-3,-2}); print i
+{-3,-2}
+>>> x = e(-1)+3*e(1)+2*e(2); print x
+{-1}+3{1}+2{2}
+>>> y = 5*e(-1)+e(3); print y
+5{-1}+{3}
+>>> z = x+i*y; print z
+{-1}+3{1}+2{2}+5{-3,-2,-1}+{-3,-2,3}
+>>> A = -2*e({-1,2})-3*e({-1,3})+2*e({1,2}); print A
+-2{-1,2}+2{1,2}-3{-1,3}
+>>> B = -3*e({-1,1})-2*e({1,3})+e({2,3}); print B
+-3{-1,1}-2{1,3}+{2,3}
+>>> C = A+i*B; print C
+-2{-1,2}+2{1,2}-3{-1,3}-3{-3,-2,-1,1}-2{-3,-2,1,3}+{-3,-2,2,3}
+>>> s = exp(C/2); print s
+1.774-0.2832{-3,-2}-0.2699{-1,1}-1.613{-1,2}+1.666{1,2}-1.571{-1,3}-0.3405{1,3}-0.5363{2,3}-1.713{-3,-2,-1,1}+0.3405{-3,-2,-1,2}+0.5089{-3,-2,1,2}+0.4578{-3,-2,-1,3}-1.613{-3,-2,1,3}+1.047{-3,-2,2,3}-0.9385{-1,1,2,3}-1.213{-3,-2,-1,1,2,3}
+
+    Check that taking logarithm returns  C/2
+
+>>> print log(s)
+-{-1,2}+{1,2}-1.5{-1,3}-1.5{-3,-2,-1,1}-{-3,-2,1,3}+0.5{-3,-2,2,3}
+
+    Perform a complex rotation
+
+>>> w = s*z/s; print w
+11.23{-1}-12.7{1}-16.86{2}-3.415{3}-32.71{-3,-2,-1}-1.908{-3,-2,1}+16.86{-3,-2,2}+32.81{-3,-2,3}
+
+    Extract the real and imaginary parts
+
+>>> u = (w^i)/i; print u
+11.23{-1}-12.7{1}-16.86{2}-3.415{3}
+>>> v = (w-u)/i; print v
+-32.71{-1}-1.908{1}+16.86{2}+32.81{3}
+
+    Check that the invariants of the complex rotation are preserved
+
+>>> print x*x-y*y
+36
+>>> print u*u-v*v
+36
+>>> print x&y
+-5
+>>> print u&v
+-5
+
+    CAYLEY ALGEBRA OF OCTONIONS
+
+    Define a Cayley product of two paravectors in  R+R^(0,7)
+
+>>> f = (1-e({-7,-6,-4}))*(1-e({-6,-5,-3}))*(1-e({-5,-4,-2}))*(1-e({-4,-3,-1})); print f
+1-{-7,-6,-4}-{-6,-5,-3}-{-5,-4,-2}-{-7,-3,-2}-{-7,-5,-1}-{-4,-3,-1}-{-6,-2,-1}-{-7,-5,-4,-3}+{-7,-6,-5,-2}-{-6,-4,-3,-2}+{-6,-5,-4,-1}-{-7,-6,-3,-1}+{-7,-4,-2,-1}-{-5,-3,-2,-1}-{-7,-6,-5,-4,-3,-2,-1}
+>>> o = lambda x,y:   real(x*y*f)+(x*y*f)(1)
+>>> print o(e(-7), 2+3*e(-6))
+2{-7}+3{-4}
+>>> a = 1+2*e(-7)+4*e(-6)+2*e(-5); print a
+1+2{-7}+4{-6}+2{-5}
+>>> b = 2+e(-7)+2*e(-3); print b
+2+{-7}+2{-3}
+>>> c = o(a,b); print c
+5{-7}+12{-6}-4{-5}-4{-4}+2{-3}+4{-2}-2{-1}
+
+    Check that the absolute value is preserved
+
+>>> print abs(c)
+15.0
+>>> print abs(a)*abs(b)
+15.0
+
+    Consider the associator of three vectors in  R^(0,7)
+
+>>> a = 3*e(-7)+2*e(-4)+e(-3); print a
+3{-7}+2{-4}+{-3}
+>>> b = 4*e(-6)+3*e(-4)+e(-3); print b
+4{-6}+3{-4}+{-3}
+>>> c = 3*e(-5)+e(-4)+2*e(-1); print c
+3{-5}+{-4}+2{-1}
+>>> u = o(o(a,b) ,c) - o(a, o(b,c)); print u
+22{-7}+12{-6}+26{-5}+18{-4}-102{-3}-28{-2}-48{-1}
+
+    Show that the associator is perpendicular to the factors
+
+>>> V = a^b^c; print V
+36{-7,-6,-5}+12{-7,-6,-4}-27{-7,-5,-4}+24{-6,-5,-4}-9{-7,-5,-3}+12{-6,-5,-3}-3{-7,-4,-3}+4{-6,-4,-3}-3{-5,-4,-3}+24{-7,-6,-1}+18{-7,-4,-1}-16{-6,-4,-1}+6{-7,-3,-1}-8{-6,-3,-1}-2{-4,-3,-1}
+>>> print (u&V)/V
+0
+
+    Check the Moufang identity (a o b) o (c o a) == (a o (b o c)) o a
+
+>>> print o(o(a,b),o(c,a))
+42-76{-7}-42{-6}-60{-4}+40{-3}-238{-2}-14{-1}
+>>> print o(o(a,o(b,c)),a)
+42-76{-7}-42{-6}-60{-4}+40{-3}-238{-2}-14{-1}
+
+    CONFORMAL TRANSFORMATIONS AND VAHLEN MATRICES
+    in the Minkowski space-time  R^(3,1)
+
+    We choose the two extra dimensions  e(-2), e(4)  so that our Minkowski space-time
+    has a basis  { e(-1), e(1), e(2), e(3) }
+
+>>> eneg = e(-2); print eneg
+{-2}
+>>> epos = e(4); print epos
+{4}
+
+    We give entries of a  2x2-matrix in the Lie algebra of the Vahlen group
+
+>>> A = 3+4*e({1,2})+e({2,3})-2*e({-1,3}); print A
+3+4{1,2}-2{-1,3}+{2,3}
+>>> B = 3*e(-1)+7*e(1)+e(2); print B
+3{-1}+7{1}+{2}
+>>> C = e(-1)+5*e(2); print C
+{-1}+5{2}
+>>> D = -reverse(A); print D
+-3+4{1,2}-2{-1,3}+{2,3}
+
+    We give a matrix basis of the Lie algebra of the Vahlen group
+
+>>> mat11 = (1+(epos^eneg))/2; print mat11
+0.5-0.5{-2,4}
+>>> mat12 = (epos-eneg)/2; print mat12
+-0.5{-2}+0.5{4}
+>>> mat21 = (epos+eneg)/2; print mat21
+0.5{-2}+0.5{4}
+>>> mat22 = (1-(epos^eneg))/2; print mat22
+0.5+0.5{-2,4}
+
+    We form the following VAHLEN matrix
+    in the Lie algebra of the Vahlen group
+
+>>> VAHLEN = A*mat11+B*mat12+involute(C)*mat21+involute(D)*mat22; print VAHLEN
+2{-2,-1}+3.5{-2,1}+3{-2,2}+4{1,2}-2{-1,3}+{2,3}-3{-2,4}+{-1,4}+3.5{1,4}-2{2,4}
+
+    By exponentiation we get the vahlen matrix
+
+>>> vahlen = exp(VAHLEN/2); print vahlen
+-9.157-2.302{-2,-1}-4.176{-2,1}+1.48{-1,1}-5.541{-2,2}+0.1984{-1,2}+1.557{1,2}+0.462{-2,3}+7.396{-1,3}+0.8085{1,3}-0.12{2,3}+6.571{-2,4}+0.04291{-1,4}+2.267{1,4}-3.026{2,4}+0.7257{3,4}+1.197{-2,-1,1,2}-3.244{-2,-1,1,3}-4.516{-2,-1,2,3}-0.6226{-2,1,2,3}-1.221{-1,1,2,3}-0.5118{-2,-1,1,4}-0.9291{-2,-1,2,4}-3.869{-2,1,2,4}+0.5309{-1,1,2,4}-5.123{-2,-1,3,4}-0.1349{-2,1,3,4}+1.71{-1,1,3,4}+0.3726{-2,2,3,4}-2.459{-1,2,3,4}-0.3609{1,2,3,4}+2.968{-2,-1,1,2,3,4}
+>>> Vah11 = (vahlen^epos^eneg)/(epos^eneg); print Vah11
+-9.157+1.48{-1,1}+0.1984{-1,2}+1.557{1,2}+7.396{-1,3}+0.8085{1,3}-0.12{2,3}-1.221{-1,1,2,3}
+>>> Vah12 = ((vahlen^eneg)/eneg-Vah11)/epos; print Vah12
+0.04291{-1}+2.267{1}-3.026{2}+0.7257{3}+0.5309{-1,1,2}+1.71{-1,1,3}-2.459{-1,2,3}-0.3609{1,2,3}
+>>> Vah21 = ((vahlen^epos)/epos-Vah11)/eneg; print Vah21
+2.302{-1}+4.176{1}+5.541{2}-0.462{3}-1.197{-1,1,2}+3.244{-1,1,3}+4.516{-1,2,3}+0.6226{1,2,3}
+>>> Vah22 = (vahlen-Vah11-Vah12*epos-Vah21*eneg)/(epos^eneg); print Vah22
+-6.571+0.5118{-1,1}+0.9291{-1,2}+3.869{1,2}+5.123{-1,3}+0.1349{1,3}-0.3726{2,3}-2.968{-1,1,2,3}
+
+    Here are the entries of the vahlen matrix
+
+>>> a = Vah11+Vah22; print a
+-15.73+1.992{-1,1}+1.127{-1,2}+5.426{1,2}+12.52{-1,3}+0.9434{1,3}-0.4926{2,3}-4.189{-1,1,2,3}
+>>> b = Vah12-Vah21; print b
+-2.259{-1}-1.91{1}-8.567{2}+1.188{3}+1.728{-1,1,2}-1.535{-1,1,3}-6.975{-1,2,3}-0.9835{1,2,3}
+>>> c = involute(Vah12+Vah21); print c
+-2.345{-1}-6.443{1}-2.515{2}-0.2636{3}+0.6658{-1,1,2}-4.954{-1,1,3}-2.057{-1,2,3}-0.2617{1,2,3}
+>>> d = involute(Vah11-Vah22); print d
+-2.587+0.9683{-1,1}-0.7307{-1,2}-2.312{1,2}+2.274{-1,3}+0.6737{1,3}+0.2525{2,3}+1.747{-1,1,2,3}
+
+    Create a Mobius transformation
+
+>>> g = lambda x:  (a*x+b)/(c*x+d)
+>>> x = 4*e(-1)+6*e(1)+e(2)+3*e(3); print x
+4{-1}+6{1}+{2}+3{3}
+>>> y = 5*e(-1)+3*e(1)+4*e(2)+e(3); print y
+5{-1}+3{1}+4{2}+{3}
+>>> print g(x)
+1.417{-1}+2.266{1}+1.835{2}-0.9257{3}
+>>> print g(y)
+1.894{-1}+2.333{1}+1.986{2}-1.375{3}
+
+    Check the formula  g(x)-g(y) == 1/reverse(c*x+d)*(x-y)/(c*y+d)
+
+>>> print g(x)-g(y)
+-0.4778{-1}-0.06695{1}-0.1508{2}+0.4497{3}
+>>> print 1/reverse(c*x+d)*(x-y)/(c*y+d)
+-0.4778{-1}-0.06695{1}-0.1508{2}+0.4497{3}
+
+    ELEMENTARY FUNCTIONS IN THE EXTERIOR ALGEBRA
+    of the Minkowski space-time  R^(3,1)
+
+>>> x = 3*e(-1)+3*e(1)+4*e(2)+2*e(3); print x
+3{-1}+3{1}+4{2}+2{3}
+>>> B = pi/2*e({1,2})-0.5*e({-1,3}); print B
+1.571{1,2}-0.5{-1,3}
+
+    Rotate  x  by the angle  pi/2  and perform a boost in the direction  e(3)
+
+>>> u = exp(B/2); print u
+0.7293+0.7293{1,2}-0.1786{-1,3}-0.1786{-1,1,2,3}
+>>> y = u*x/u; print y
+2.341{-1}+4{1}-3{2}+0.692{3}
+>>> print y*y
+20
+>>> print x*x
+20
+
+    Compare the above ordinary exponential  exp(A) = 1+A+AA/2+AAA/6+...
+    to the following exterior exponential  expo(B) = 1+B+B^B/2+B^B^B/6:
+
+>>> expo = lambda B: 1+B+(B^B)/2+(B^B^B)/6
+>>> v = expo(B); print v
+1+1.571{1,2}-0.5{-1,3}-0.7854{-1,1,2,3}
+>>> z = v*x/v; print z
+2.333{-1}+2.355{1}-4.411{2}-0.6667{3}
+>>> print z*z
+20
+>>> print x*x
+20
+
+    Check that ordinary logarithm and exterior logarithm return  B/2  and  B
+
+>>> print log(u)
+0.7854{1,2}-0.25{-1,3}
+>>> logi = lambda x:  x - (x^x)/2 + (x^x^x)/3
+>>> logo = lambda x:  log(real(x)) + logi(x/real(x)-1)
+>>> print logo(v)
+1.571{1,2}-0.5{-1,3}
+>>> print u*reverse(u)
+1
+>>> print v*reverse(v)
+2.601
+
+    PURE SPINORS
+
+>>> v = (e(-4)+e(1))*(e(-3)+e(2))*(e(-2)+e(3))/8; print v
+0.125{-4,-3,-2}+0.125{-3,-2,1}-0.125{-4,-2,2}+0.125{-2,1,2}+0.125{-4,-3,3}-0.125{-3,1,3}+0.125{-4,2,3}+0.125{1,2,3}
+>>> f = (1-e({-4,1}))*(1-e({-3,2}))*(1-e({-2,3}))/8; print f
+0.125-0.125{-4,1}-0.125{-3,2}-0.125{-2,3}-0.125{-4,-3,1,2}-0.125{-4,-2,1,3}-0.125{-3,-2,2,3}+0.125{-4,-3,-2,1,2,3}
+
+    Here  v == e({1,2,3})*f  as the following computation shows:
+
+>>> print e({1,2,3})*f
+0.125{-4,-3,-2}+0.125{-3,-2,1}-0.125{-4,-2,2}+0.125{-2,1,2}+0.125{-4,-3,3}-0.125{-3,1,3}+0.125{-4,2,3}+0.125{1,2,3}
+
+    The following bivectors annul  v:
+    -{-4,1}+{-3,2}, -{-3,2}+{-2,3},
+    -{-3,1}+{1,2}, -{-3,1}-{-4,2}, {-4,-1}-{-1,1},
+    -{-2,1}+{1,3}, -{-2,1}-{-4,3}, {-3,-1}-{-1,2},
+    -{-2,2}+{2,3}, -{-2,2}-{-3,3}, {-2,-1}-{-1,3},
+    and their exponential stabilizes  v.
+    As an example, take a linear combination of the above bivectors:
+
+>>> B = 3*(e({-2,-1})-e({-1,3}))-4*(e({-4,1})+e({-3,2}))-7*(e({-3,1})-e({-4,2})); print B
+3{-2,-1}-4{-4,1}-7{-3,1}+7{-4,2}-4{-3,2}-3{-1,3}
+
+    and exponentiate:
+
+>>> s = exp(B/10); print s
+1.804+0.5411{-2,-1}-0.5973{-4,1}-1.045{-3,1}+1.045{-4,2}-0.5973{-3,2}-0.5411{-1,3}-0.1792{-4,-2,-1,1}-0.3136{-3,-2,-1,1}+0.3136{-4,-2,-1,2}-0.1792{-3,-2,-1,2}-0.8036{-4,-3,1,2}-0.1792{-4,-1,1,3}-0.3136{-3,-1,1,3}+0.3136{-4,-1,2,3}-0.1792{-3,-1,2,3}-0.2411{-4,-3,-2,-1,1,2}+0.2411{-4,-3,-1,1,2,3}
+
+    Check that  s*v == v:
+
+>>> print s*v
+0.2613{-2}+0.2613{3}+0.1766{-4,-3,-2}+0.2613{-4,-2,1}+0.1766{-3,-2,1}-0.1766{-4,-2,2}+0.2613{-3,-2,2}+0.1766{-2,1,2}+0.1766{-4,-3,3}-0.2613{-4,1,3}-0.1766{-3,1,3}+0.1766{-4,2,3}-0.2613{-3,2,3}+0.1766{1,2,3}-0.2613{-4,-3,-2,1,2}-0.2613{-4,-3,1,2,3}
+>>> print v
+0.125{-4,-3,-2}+0.125{-3,-2,1}-0.125{-4,-2,2}+0.125{-2,1,2}+0.125{-4,-3,3}-0.125{-3,1,3}+0.125{-4,2,3}+0.125{1,2,3}
+
+    Take an arbitrary bivector:
+
+>>> F = 2*e({-3,-2})+3*e({-4,-1})-7*e({-3,2})+4*e({1,2})-5*e({-2,3}); print F
+2{-3,-2}+3{-4,-1}-7{-3,2}+4{1,2}-5{-2,3}
+
+    and exponentiate: 
+
+>>> u = exp(F/10); print u
+1.24+0.1986{-3,-2}+0.3836{-4,-1}-0.01882{-2,1}-0.7914{-3,2}+0.4469{1,2}-0.5788{-2,3}+0.02353{2,3}+0.06142{-4,-3,-2,-1}+0.005822{-4,-2,-1,1}+0.2448{-4,-3,-1,2}+0.08357{-3,-2,1,2}+0.1382{-4,-1,1,2}+0.179{-4,-2,-1,3}-0.3656{-3,-2,2,3}+0.007278{-4,-1,2,3}-0.2089{-2,1,2,3}+0.02585{-4,-3,-2,-1,1,2}-0.1131{-4,-3,-2,-1,2,3}+0.06463{-4,-2,-1,1,2,3}
+
+     The product  u*v  is a pure spinor
+
+>>> w = u*v
+
+     Check that  reverse(w)*Ak*w  vanishes for a pure spinor  w  and a  k-vector  Ak
+     when  k == 0,1,2  but not when  k == 3  (v  and  reverse(w)*A3*w  are parallel)
+
+>>> A1 = 2*e(1)+3*e(2)+5*e(3)+7*e(-4)+e(-3)+4*e(-2); print A1
+7{-4}+{-3}+4{-2}+2{1}+3{2}+5{3}
+>>> A2 = e({-4,-3})-4*e({-3,1})-3*e({-4,2})+3*e({1,2})-5*e({-4,3})-e({-2,3})+2*e({2,3}); print A2
+{-4,-3}-4{-3,1}-3{-4,2}+3{1,2}-5{-4,3}-{-2,3}+2{2,3}
+>>> A3 = e({-4,-3,-2})+2*e({-4,-3,2})+4*e({-2,1,2})+e({-4,-3,3})+5*e({-3,-2,3})+3*e({-4,2,3})+e({1,2,3}); print A3
+{-4,-3,-2}+2{-4,-3,2}+4{-2,1,2}+{-4,-3,3}+5{-3,-2,3}+3{-4,2,3}+{1,2,3}
+>>> print reverse(w)*w
+0
+>>> print reverse(w)*A1*w
+0
+>>> print reverse(w)*A2*w
+0
+>>> print reverse(w)*A3*w
+0.03178{-4,-3,-2}+0.03178{-3,-2,1}-0.03178{-4,-2,2}+0.03178{-2,1,2}+0.03178{-4,-3,3}-0.03178{-3,1,3}+0.03178{-4,2,3}+0.03178{1,2,3}
+>>> print v
+0.125{-4,-3,-2}+0.125{-3,-2,1}-0.125{-4,-2,2}+0.125{-2,1,2}+0.125{-4,-3,3}-0.125{-3,1,3}+0.125{-4,2,3}+0.125{1,2,3}
+
+    You have completed the demonstration file pyclical_demo.py.
