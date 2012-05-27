@@ -196,7 +196,11 @@ pause()
 print ""
 print "    Define atanh2 as per [D+V (5.21)]."
 print ""
-print_exec("atanh2 = lambda s, c : math.asinh(sqrt(scalar(s**2)))/sqrt(scalar(s**2))*s if scalar(s**2) > 0 else s if scalar(s**2) == 0 else math.atan2(sqrt(scalar(-s**2)),c)/sqrt(scalar(-s**2))*s if -1 <= scalar(s**2) < 0 else float('nan')")
+print_exec("atanh2 = lambda s, c :"
+           + " math.asinh(sqrt(scalar(s**2)))/sqrt(scalar(s**2))*s if scalar(s**2) > 0"
+           + " else s if scalar(s**2) == 0"
+           + " else math.atan2(sqrt(scalar(-s**2)),c)/sqrt(scalar(-s**2))*s if -1 <= scalar(s**2) < 0"
+           + " else float('nan')")
 print ""
 print "    Display the values of atanh2 to be used to obtain the logarithm."
 print ""
@@ -210,12 +214,28 @@ print ""
 print_exec("dv_log_R = -(atanh2(S_m,C_m)+atanh2(S_p,C_p))/2")
 print_exec("print dv_log_R")
 print ""
-print "     Check that exp(dv_log_R) == R or -R as per [D+V, p. 97]."
+print "    Check that exp(dv_log_R) == R or -R as per [D+V, p. 97]."
 print ""
 print_exec("print exp(dv_log_R)")
 print_exec("print abs(exp(dv_log_R) - R)")
 print_exec("print abs(exp(dv_log_R) + R)")
-
+print ""
+print "    Use the pseudoscalar i = e({-1,1,2,3,4}) to obtain the log of -R or R."
+print ""
+print_exec("i = e({-1,1,2,3,4})")
+print ""
+print "    First, verify that i has the required properties: squares to -1 and commutes with vectors."
+print ""
+print_exec("print i*i")
+print_exec("print i*e(-1) - e(-1)*i")
+for k in range(1,5):
+    print_exec("print i*e("+str(k)+") - e("+str(k)+")*i")
+print ""
+print "    Now use the properties of i to find an expression for the log of -R or R."
+print ""
+print_exec("print abs(exp(dv_log_R + i*pi) - R)")
+print_exec("print abs(exp(dv_log_R + i*pi) + R)")
+ 
 pause()
 print ""
-print "     You have completed the demonstration file sqrt_log_demo.py."
+print "    You have completed the demonstration file sqrt_log_demo.py."
