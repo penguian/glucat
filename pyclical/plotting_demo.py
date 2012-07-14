@@ -5,6 +5,9 @@
 #
 # plotting_demo.py: Demonstrate the use of Matplotlib plotting with PyClical.
 #
+#    Reference:
+#    [B] Michael F. Barnsley, Superfractals, http://www.superfractals.com/
+#
 #    copyright            : (C) 2010-2012 by Paul C. Leopardi
 #
 #    This library is free software: you can redistribute it and/or modify
@@ -25,27 +28,33 @@ from PyClical import *
 #
 # Default values common to functions draw_orbit and demo.
 #
-default_nbr_points  = 40000
-default_segment_len =  8000
+default_nbr_points  = 20000
+default_segment_len =  5000
+default_figwidth    =    15
+default_figheight   =    12
 default_azimuth     =   210.0
 default_rot_angle   =   360
 default_jitter      =    30
 
-def draw_orbit(r,
+def draw_orbit(r, s,
         nbr_points  = default_nbr_points,
         segment_len = default_segment_len,
+        figwidth    = default_figwidth,
+        figheight   = default_figheight,
         azimuth     = default_azimuth,
         rot_angle   = default_rot_angle,
         jitter      = default_jitter):
     """
-    Plot a curve created by the rotor r,
+    Plot a curve created by a random sequence using the rotors r and s,
 
     Parameters:
-    r           : Rotor, an even element of R_{4,1}.
-                  assumed to be an element of Spin(4,1).
+    r, s        : Rotors, even elements of R_{4,1}.
+                  assumed to be elements of Spin(4,1).
     nbr_points  : Number of points overall.
     segment_len : Number of points in a curve segment.
     azimuth     : Angle about a vertical axis used to define the viewpoint.
+    figwidth    : Width of figure.
+    figheight   : Height of figure.
     rot_angle   : Angle in degrees to use to rotate each curve for display.
     jitter      : Angle in degrees to use for each step in the rotation.
     """
@@ -56,13 +65,38 @@ def draw_orbit(r,
     from mpl_toolkits.mplot3d import Axes3D
     import matplotlib.pyplot as plt
     #
-    # Array of points.
+    # Frame for 3D Euclidean space R^3.
+    #
+    r3frame = istpq(3,0)
+    #
+    # Frame for Conformal Geometric Algebra (CGA).
+    #
+    cga3frame = istpq(4,1)
+    #
+    # Reframe the rotors r and s, for speed.
+    #
+    r = r.reframe(cga3frame)
+    s = s.reframe(cga3frame)
+    #
+    # Initial CGA null vector corresponding to point
+    # on the unit sphere in 3D Euclidean space.
+    #
+    x = random_clifford(r3frame)(1)
+    x = e(1) if x == 0 else x / abs(x)
+    u = cga3(x)(1)
+    #
+    # Find the inverses of the rotors r and s.
+    #
+    invr = inv(r)
+    invs = inv(s)
+    #
+    # Array of points to use in plotting.
     #
     p = np.empty((segment_len, 3))
     #
     # Use a new figure.
     #
-    fig = plt.figure(figsize = (15, 12))
+    fig = plt.figure(figsize = (figwidth, figheight))
     ax  = fig.gca(projection = '3d')
     ax.view_init(azim=azimuth)
     #
@@ -72,23 +106,9 @@ def draw_orbit(r,
     ax.scatter([0], [0], [0], c='white', alpha=0.5, edgecolors='none')
     plt.draw()
     #
-    # Initial CGA null vector corresponding to point
-    # on the unit sphere in 3D Euclidean space.
-    #
-    x = random_clifford(istpq(3,0))(1)
-    x = e(1) if x == 0 else x / abs(x)
-    u = cga3(x)(1)
-    #
-    # Find the inverse of the rotor r.
-    #
-    ir = inv(r)
-    #
-    # Number of segments.
-    #
-    M = nbr_points / segment_len
-    #
     # Split the curve into M segments.
     #
+    M = nbr_points / segment_len
     for j in xrange(M):
         #
         # Find segment_len points forming a curve segment
@@ -99,11 +119,16 @@ def draw_orbit(r,
             # Determine the current 3D Euclidean point
             # corresponding to the CGA null vector u.
             #
-            p[k, :] = agc3(u).vector_part()
+            p[k, :] = agc3(u).vector_part(r3frame)
             #
-            # Act on u via the adjoint action of the rotor r.
+            # Act on u via the adjoint action of either the rotor r or the rotor s.
+            # The rotor is chosen uniformly at random, making this a simple chaos game.
+            # See [B] for related ideas.
             #
-            u = r * u * ir
+            if np.random.rand() < 0.5:
+                u = r * u * invr
+            else:    
+                u = s * u * invs
         #
         # Calculate the norms of the points in p and store them in n.
         #
@@ -113,7 +138,7 @@ def draw_orbit(r,
         #
         n[n==0] = 1.0
         #
-        # Tile the norm n to be a segmen_len by 3 array
+        # Tile the norm n to be a segment_len by 3 array
         # for use in determining colours.
         #
         n3 = np.tile(n, (1, 3))
@@ -139,43 +164,55 @@ def draw_orbit(r,
 #
 # Default values for demo.
 #
-default_nbr_curves  =    10
-default_scaling     =  4000
+default_nbr_curves  =     4
+default_scaling     =  8000
 
-def demo(d=4,
+def demo(
         nbr_curves  = default_nbr_curves,
         nbr_points  = default_nbr_points,
         scaling     = default_scaling,
         segment_len = default_segment_len,
+        figwidth    = default_figwidth,
+        figheight   = default_figheight,
         azimuth     = default_azimuth,
         rot_angle   = default_rot_angle,
         jitter=default_jitter):
     """
-    Plot curves created by exponentiating a random bivector in R_{d,0}.
+    Plot curves created by exponentiating a random bivector and its reciprocal in R_{4,0}.
 
     Parameters:
-    d           : Dimension of bivector.
     nbr_curves  : Number of curves to plot.
     nbr_points  : Number of points overall.
-    scaling     : Scaling constant to use with bivector.
+    scaling     : Scaling constant to use with bivector br.
     segment_len : Number of points in a curve segment.
+    figwidth    : Width of figure.
+    figheight   : Height of figure.
     azimuth     : Angle about a vertical axis used to define the viewpoint.
     rot_angle   : Angle in degrees to use to rotate each curve for display.
     jitter      : Angle in degrees to use for each step in the rotation.
     """
     #
+    # Frame for 4D Euclidean space R^4.
+    #
+    r4frame = istpq(4,0)
+    #
     # Plot nbr_curves curves.
     #
     for i in xrange(nbr_curves):
         #
-        # Use a random bivector in R_{d,0} with appropriate scaling.
+        # Set br to be a random bivector in R_{4,0} with appropriate scaling.
         #
-        b = random_clifford(istpq(d,0))(2) * scaling / nbr_points
+        br = random_clifford(r4frame)(2) * scaling / nbr_points
         #
-        # Exponentiate the bivector to obtain a rotor.
+        # Set bs to be the reciprocal bivector with respect to the pseudoscalar of R_{4,0}.
         #
-        r  = exp(b)
+        bs = cl(r4frame) / br
+        #
+        # Exponentiate the bivectors br and bs to obtain rotors r and s.
+        #
+        r  = exp(br)
+        s  = exp(bs)
         #
         # Draw the curve.
         #
-        draw_orbit(r, nbr_points, segment_len, azimuth, rot_angle, jitter)
+        draw_orbit(r, s, nbr_points, segment_len, figwidth, figheight, azimuth, rot_angle, jitter)
