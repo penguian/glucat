@@ -7,7 +7,7 @@ dnl                       for GluCat
 dnl                       includes code from admin/acinclude.m4 also
 dnl                       modified by Paul Leopardi (paul.leopardi@anu.edu.au)
 dnl                       for GluCat
-dnl                       incorporated code from KDE version of acinclude.m4 
+dnl                       incorporated code from KDE version of acinclude.m4
 dnl                       modified by Paul Leopardi (paul.leopardi@anu.edu.au)
 dnl                       for GluCat
 
@@ -49,7 +49,7 @@ AC_DEFUN([GLUCAT_CHECK_HEADER],
 [
    AC_LANG_SAVE
    glucat_safe_cppflags=$CPPFLAGS
-   CPPFLAGS="$CPPFLAGS $all_includes"
+   CPPFLAGS="$CPPFLAGS $all_includes $CXXFLAGS"
    AC_LANG_CPLUSPLUS
    AC_CHECK_HEADER($1, $2, $3)
    CPPFLAGS=$glucat_safe_cppflags
@@ -60,7 +60,7 @@ AC_DEFUN([GLUCAT_CHECK_HEADERS],
 [
    AC_LANG_SAVE
    glucat_safe_cppflags=$CPPFLAGS
-   CPPFLAGS="$CPPFLAGS $all_includes"
+   CPPFLAGS="$CPPFLAGS $all_includes $CXXFLAGS"
    AC_LANG_CPLUSPLUS
    for k_header in $1; do
       AC_CHECK_HEADER($k_header, $2, $3)
@@ -210,24 +210,27 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     [glucat_use_profiling=$enableval],
     [glucat_use_profiling="no"])
 
-  AC_ARG_WITH(map,          [[  --with-map[=ARG]        type of map to use (map|hash|unordered) [default=unordered]]],
+  AC_ARG_WITH(map,          [[  --with-map[=ARG]        type of map to use (map|hash|tr1unordered|stdunordered) [default=tr1unordered]]],
     [
       case $withval in
         map)
-          glucat_use_="map"
+          glucat_use_map="map"
           ;;
         hash)
           glucat_use_map="hash"
           ;;
-        unordered)
-          glucat_use_map="unordered"
+        tr1unordered)
+          glucat_use_map="tr1unordered"
+          ;;
+        stdunordered)
+          glucat_use_map="stdunordered"
           ;;
         *)
-          glucat_use_map="unordered"
+          glucat_use_map="tr1unordered"
           ;;
       esac
     ],
-    [glucat_use_map="unordered"])
+    [glucat_use_map="tr1unordered"])
 
   AC_ARG_WITH(dense-mat,    [[  --with-dense-mat        uses dense matrices [default=yes]]],
     [glucat_use_dense_mat=$withval],
@@ -237,9 +240,12 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     [glucat_use_qd=$withval],
     [glucat_use_qd="no"])
 
-  AC_ARG_WITH(random,       [[  --with-random[=ARG]     type of random number generator to use (tr1|gsl) [default=tr1]]],
+  AC_ARG_WITH(random,       [[  --with-random[=ARG]     type of random number generator to use (std|tr1|gsl) [default=tr1]]],
     [
       case $withval in
+        std)
+          glucat_use_random="std"
+          ;;
         tr1)
           glucat_use_random="tr1"
           ;;
@@ -362,7 +368,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     fi
 
     case $host in
-      alpha*-*-*)	GLUCAT_CXX_DEBUG_FLAG=""
+      alpha*-*-*) GLUCAT_CXX_DEBUG_FLAG=""
         ;;
     esac
     CXXFLAGS="$CXXFLAGS $GLUCAT_CXX_DEBUG_FLAG"
@@ -380,54 +386,47 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     ])
   fi
 
-  if test "$glucat_use_warnings" = "yes"; then
-      if test "$GXX" = "yes"; then
-        case $host in
-          *-*-linux-gnu)
-            CFLAGS="-ansi -W -Wall -pedantic -Wshadow -Wpointer-arith -Wmissing-prototypes -Wwrite-strings -D_XOPEN_SOURCE=500 -D_BSD_SOURCE $CFLAGS"
-            CXXFLAGS="-ansi $CXXFLAGS"
-          ;;
-        esac
-        CXXFLAGS="-Wall $CXXFLAGS"
-        if test "$cxxversion" \> "4" ; then
-          if test "$cxxversion" \< "4.1" ; then
-            GLUCAT_CHECK_COMPILER_FLAG(Wstrict-aliasing=2,[CXXFLAGS="$CXXFLAGS -Wstrict-aliasing=2"])
-          fi
-        fi
-     fi
-  fi
+  dnl For compatibility with Cygwin gcc
+  AC_CHECK_HEADERS([bits/wordsize.h],
+    [CXXFLAGS="$CXXFLAGS -DHAVE_BITS_WORDSIZE_H"],
+    [],[])
 
-  if test "$GXX" = "yes" && test "$glucat_use_strict_options" = "yes"; then
-    if test "$cxxversion" \< "4.1" ; then
-      CXXFLAGS="-Wcast-qual -Wshadow -Wcast-align $CXXFLAGS"
-    else
-      GLUCAT_CHECK_COMPILER_FLAG(pedantic,[CXXFLAGS="$CXXFLAGS -pedantic"])
-      GLUCAT_CHECK_COMPILER_FLAG(Wextra,[CXXFLAGS="$CXXFLAGS -Wextra"])
-      GLUCAT_CHECK_COMPILER_FLAG(Wno-unused-parameter,[CXXFLAGS="$CXXFLAGS -Wno-unused-parameter"])
-    fi
-  fi
-
-  if test "$glucat_use_map" = "unordered"; then
-  AC_CHECK_HEADERS([tr1/unordered_map],
-    [CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_TR1_UNORDERED_MAP"],
-    [],
-    [#include <map>])
-  else
-    if test "$GXX" = "yes" && test "$glucat_use_map" = "hash"; then
-    GLUCAT_CHECK_COMPILER_FLAG(Wno-deprecated,[CXXFLAGS="$CXXFLAGS -Wno-deprecated"])
-    AC_CHECK_HEADERS([ext/hash_map backward/hash_map],
-      [
-        CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_GNU_CXX_HASH_MAP"
-        AC_CHECK_HEADERS([backward/hash_map],
-          [CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_BACKWARD_HASH_MAP"],
-          [],
-          [#include <map>])
-      ],
+  glucat_cxx_std="ansi"
+  if test "$glucat_use_map" = "tr1unordered"; then
+    AC_CHECK_HEADERS([tr1/unordered_map],
+      [CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_TR1_UNORDERED_MAP"],
       [],
       [#include <map>])
+  else
+    if test "$glucat_use_map" = "stdunordered"; then
+      save_CXXFLAGS="$CXXFLAGS"
+      CXXFLAGS="$CXXFLAGS -std=c++11"
+      AC_CHECK_HEADERS([unordered_map],
+        [
+          CXXFLAGS="$save_CXXFLAGS -D_GLUCAT_USE_STD_UNORDERED_MAP"
+          glucat_cxx_std="cxx11"
+        ],
+        [
+          CXXFLAGS="$save_CXXFLAGS"
+        ],
+        [#include <map>])
+      
+    else
+      if test "$GXX" = "yes" && test "$glucat_use_map" = "hash"; then
+        GLUCAT_CHECK_COMPILER_FLAG(Wno-deprecated,[CXXFLAGS="$CXXFLAGS -Wno-deprecated"])
+        AC_CHECK_HEADERS([ext/hash_map backward/hash_map],
+          [
+            CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_GNU_CXX_HASH_MAP"
+            AC_CHECK_HEADERS([backward/hash_map],
+              [CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_BACKWARD_HASH_MAP"],
+              [],
+              [#include <map>])
+          ],
+          [],
+          [#include <map>])
+      fi
     fi
   fi
-
   if test "$glucat_use_dense_mat" != "no"; then
     CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_DENSE_MATRICES"
   fi
@@ -464,11 +463,27 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       ],[])
     fi
   else
-    glucat_have_tr1_random=no
-    AC_CHECK_HEADERS([tr1/random],
-    [
-      glucat_have_tr1_random=yes
-    ],[])
+    if test "$glucat_use_random" == "std"; then
+      save_CXXFLAGS="$CXXFLAGS"
+      CXXFLAGS="$CXXFLAGS -std=c++11"
+      glucat_have_std_random=no
+      GLUCAT_CHECK_HEADERS([random],
+      [
+        CXXFLAGS="$save_CXXFLAGS -D_GLUCAT_USE_STD_RANDOM";
+        glucat_have_std_random=yes
+        glucat_cxx_std="cxx11"
+      ],
+      [
+        CXXFLAGS="$save_CXXFLAGS"
+      ])
+    else
+      glucat_have_tr1_random=no
+      AC_CHECK_HEADERS([tr1/random],
+      [
+        CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_TR1_RANDOM";
+        glucat_have_tr1_random=yes
+      ],[])
+    fi
   fi
 
   glucat_extra_cxxflags_pyclical=""
@@ -520,9 +535,39 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     fi
   fi
 
+  if test "$glucat_use_warnings" = "yes"; then
+      if test "$GXX" = "yes"; then
+        case $host in
+          *-*-linux-gnu)
+            if test "$glucat_cxx_std" == "cxx11"; then
+              CXXFLAGS="-std=c++11 $CXXFLAGS"
+            else
+              CXXFLAGS="-ansi $CXXFLAGS"
+            fi
+          ;;
+        esac
+        CXXFLAGS="-Wall $CXXFLAGS"
+        if test "$cxxversion" \> "4" ; then
+          if test "$cxxversion" \< "4.1" ; then
+            GLUCAT_CHECK_COMPILER_FLAG(Wstrict-aliasing=2,[CXXFLAGS="$CXXFLAGS -Wstrict-aliasing=2"])
+          fi
+        fi
+     fi
+  fi
+
+  if test "$GXX" = "yes" && test "$glucat_use_strict_options" = "yes"; then
+    if test "$cxxversion" \< "4.1" ; then
+      CXXFLAGS="-Wcast-qual -Wshadow -Wcast-align $CXXFLAGS"
+    else
+      GLUCAT_CHECK_COMPILER_FLAG(pedantic,[CXXFLAGS="$CXXFLAGS -pedantic"])
+      GLUCAT_CHECK_COMPILER_FLAG(Wextra,[CXXFLAGS="$CXXFLAGS -Wextra"])
+      GLUCAT_CHECK_COMPILER_FLAG(Wno-unused-parameter,[CXXFLAGS="$CXXFLAGS -Wno-unused-parameter"])
+    fi
+  fi
+
   if test "$GXX" = "yes"; then
     GLUCAT_CHECK_COMPILER_FLAG(fno-check-new, [CXXFLAGS="$CXXFLAGS -fno-check-new"])
-    GLUCAT_CHECK_COMPILER_FLAG(fexceptions, [USE_EXCEPTIONS="-fexceptions"], USE_EXCEPTIONS=	)
+    GLUCAT_CHECK_COMPILER_FLAG(fexceptions, [USE_EXCEPTIONS="-fexceptions"], USE_EXCEPTIONS= )
     if test "$CXX" = "icpc" && test "$icpcversion" \> "8" && test "$icpcversion" \< "9"; then
       GLUCAT_CHECK_COMPILER_FLAG(fabi-version=1,[CXXFLAGS="$CXXFLAGS -fabi-version=1"])
     else
