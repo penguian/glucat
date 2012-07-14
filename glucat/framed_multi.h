@@ -110,6 +110,8 @@ namespace glucat
 #elif defined(_GLUCAT_USE_TR1_UNORDERED_MAP)
   private std::tr1::unordered_map< const index_set<LO,HI>, Scalar_T, hash<LO,HI>,
                     std::equal_to< const index_set<LO,HI> > >
+#elif defined(_GLUCAT_USE_STD_UNORDERED_MAP)
+  private std::unordered_map< const index_set<LO,HI>, Scalar_T, hash<LO,HI> >
 #else
   private std::map< const index_set<LO,HI>, Scalar_T,
                     std::less< const index_set<LO,HI> >,
@@ -141,6 +143,9 @@ namespace glucat
 #elif defined(_GLUCAT_USE_TR1_UNORDERED_MAP)
     typedef std::tr1::unordered_map< const index_set_t, Scalar_T, hash<LO,HI>,
                                      std::equal_to<const index_set_t> >
+                                                       map_t;
+#elif defined(_GLUCAT_USE_STD_UNORDERED_MAP)
+    typedef std::unordered_map< const index_set<LO,HI>, Scalar_T, hash<LO,HI> >
                                                        map_t;
 #else
     typedef sorted_map_t                               map_t;

@@ -88,6 +88,8 @@
 # endif
 #elif defined(_GLUCAT_USE_TR1_UNORDERED_MAP)
 # include <tr1/unordered_map>
+#elif defined(_GLUCAT_USE_STD_UNORDERED_MAP)
+# include <unordered_map>
 #else
 # define _GLUCAT_MAP_IS_ORDERED
 #endif
