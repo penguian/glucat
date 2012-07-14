@@ -62,6 +62,7 @@ cdef extern from "PyClical.h":
     cdef cppclass Clifford:
         Clifford ()
         Clifford (Clifford Clf) except+
+        Clifford (Clifford Clf, IndexSet ist) except+
         Clifford (scalar_t scr) except+
         Clifford (char* str) except+
         Clifford (IndexSet ist, scalar_t scr) except+
@@ -76,6 +77,7 @@ cdef extern from "PyClical.h":
         Clifford even()
         Clifford odd()
         vector[scalar_t] vector_part()
+        vector[scalar_t] vector_part(IndexSet frm) except+
         Clifford involute()
         Clifford reverse()
         Clifford conj()
@@ -137,6 +139,6 @@ cdef extern from "PyClical.h":
     Clifford atanh(Clifford Clf)
 
 cdef extern from "PyClical.h" namespace "cga3":
-    Clifford agc3(Clifford Clf) except+
-    Clifford cga3(Clifford Clf) except+
-    Clifford cga3std(Clifford Clf) except+
+    Clifford agc3(Clifford Clf)
+    Clifford cga3(Clifford Clf)
+    Clifford cga3std(Clifford Clf)
