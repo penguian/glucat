@@ -103,7 +103,7 @@ namespace cga3
     typedef typename cl::index_set_t ist;
     static const cl ninf3 = cl(ist(4)) + cl(ist(-1));
 
-    return cl((cl(ist(4)) - x) * ninf3 * (x - cl(ist(4))), ist("{-1,1,2,3,4}"));
+    return (cl(ist(4)) - x) * ninf3 * (x - cl(ist(4)));
   }
 
   /// Convert CGA3 null vector to standard Conformal Geometric Algebra  null vector [DL (10.52)].
@@ -115,7 +115,7 @@ namespace cga3
     typedef typename cl::scalar_t scalar_t;
     static const cl ninf3 = cl(ist(4)) + cl(ist(-1));
 
-    return cl(scalar_t(-2.0) * X / (X & ninf3), ist("{-1,1,2,3,4}"));
+    return scalar_t(-2.0) * X / (X & ninf3);
   }
 
   /// Convert CGA3 null vector to Euclidean 3D vector [DL (10.50)].
@@ -127,9 +127,9 @@ namespace cga3
     typedef typename cl::scalar_t scalar_t;
 
     const cl& cga3stdX = cga3std(X);
-    return cl( (cl(ist(1))*cga3stdX[ist(1)] +
-                cl(ist(2))*cga3stdX[ist(2)] +
-                cl(ist(3))*cga3stdX[ist(3)]) / scalar_t(2.0), ist("{1,2,3}"), true );
+    return (cl(ist(1))*cga3stdX[ist(1)] +
+            cl(ist(2))*cga3stdX[ist(2)] +
+            cl(ist(3))*cga3stdX[ist(3)]) / scalar_t(2.0);
   }
 }
 
