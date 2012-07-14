@@ -53,6 +53,8 @@
 #if defined(_GLUCAT_USE_GSL_RANDOM)
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_randist.h>
+#elif defined(_GLUCAT_USE_STD_RANDOM) 
+#include <random>
 #else
 #include <tr1/random>
 #endif

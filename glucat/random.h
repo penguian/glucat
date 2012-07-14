@@ -66,6 +66,27 @@ namespace glucat
     Scalar_T normal()
     { return Scalar_T(gsl_ran_gaussian(this->gen, 1.0)); }
 
+#elif defined(_GLUCAT_USE_STD_RANDOM)
+
+    std::mt19937 uint_gen;
+    std::uniform_real_distribution<double> uniform_dist;
+    std::normal_distribution<double> normal_dist;
+
+    random_generator() :
+    uint_gen(), uniform_dist(0.0, 1.0), normal_dist(0.0, 1.0)
+    {
+      this->uint_gen.seed(seed);
+    }
+
+    ~random_generator()
+    { }
+
+  public:
+    Scalar_T uniform()
+    { return Scalar_T(this->uniform_dist(this->uint_gen)); }
+    Scalar_T normal()
+    { return Scalar_T(this->normal_dist(this->uint_gen)); }
+
 #else
 
     std::tr1::mt19937 uint_gen;
