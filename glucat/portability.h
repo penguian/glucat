@@ -64,4 +64,9 @@
 #define UBLAS_SQRT sqrt
 #endif
 
+// Use with Cygwin gcc to obtain __WORDSIZE
+#if defined(HAVE_BITS_WORDSIZE_H)
+#include <bits/wordsize.h>
+#endif
+
 #endif // _GLUCAT_PORTABILITY_H
