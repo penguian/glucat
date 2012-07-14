@@ -3,6 +3,9 @@
 /* Define to 1 if you have the <backward/hash_map> header file. */
 #undef HAVE_BACKWARD_HASH_MAP
 
+/* Define to 1 if you have the <bits/wordsize.h> header file. */
+#undef HAVE_BITS_WORDSIZE_H
+
 /* Define to 1 if you have the <ext/hash_map> header file. */
 #undef HAVE_EXT_HASH_MAP
 
@@ -38,6 +41,9 @@
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
+
+/* Define to 1 if you have the <unordered_map> header file. */
+#undef HAVE_UNORDERED_MAP
 
 /* Name of package */
 #undef PACKAGE
