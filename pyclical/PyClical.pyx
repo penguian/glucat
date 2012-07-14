@@ -25,7 +25,7 @@ import math
 import numbers
 import collections
 
-__version__ = "0.6.0"
+__version__ = "0.6.0 + cvs"
 
 from PyClical cimport *
 
@@ -68,7 +68,7 @@ cdef class index_set:
 
     def __cinit__(self, other = 0):
         """
-        Construct and object of type index_set.
+        Construct an object of type index_set.
 
         >>> print index_set(1)
         {1}
@@ -526,7 +526,7 @@ cdef class clifford:
         """
         return clifford(self)
 
-    def __cinit__(self, other = 0, ist = None):
+    def __cinit__(self, other = 0, ixt = None):
         """
         Construct an object of type clifford.
 
@@ -552,7 +552,7 @@ cdef class clifford:
         2{1}+3{2}
         """
         error_msg_prefix = "Cannot initialize clifford object from"
-        if ist is None:
+        if ixt is None:
             try:
                 if   isinstance(other, clifford):
                     self.instance = new Clifford((<clifford>other).unwrap())
@@ -567,27 +567,50 @@ cdef class clifford:
                         raise ValueError(error_msg_prefix + " invalid string " + repr(other) + ".")
                 else:
                     raise TypeError(error_msg_prefix + " " + str(type(other)) + ".")
-            except RuntimeError as runtime_error:
+            except RuntimeError as err:
                 raise ValueError(error_msg_prefix + " " + str(type(other))
                                                   + " value " + repr(other) + ":"
-                                                  + "\n\t" + str(runtime_error))
-        elif isinstance(ist, index_set):
+                                                  + "\n\t" + str(err))
+        elif isinstance(ixt, index_set):
             if   isinstance(other, numbers.Real):
-                self.instance = new Clifford((<index_set>ist).unwrap(), <scalar_t>other)
+                self.instance = new Clifford((<index_set>ixt).unwrap(), <scalar_t>other)
             elif isinstance(other, collections.Sequence):
-                self.instance = new Clifford(list_to_vector(other), (<index_set>ist).unwrap())
+                self.instance = new Clifford(list_to_vector(other), (<index_set>ixt).unwrap())
             else:
                 raise TypeError(error_msg_prefix + " (" + str(type(other))
-                                                 + ", " + repr(ist) + ").")
+                                                 + ", " + repr(ixt) + ").")
         else:
             raise TypeError(error_msg_prefix + " (" + str(type(other))
-                                             + ", " + str(type(ist)) + ").")
+                                             + ", " + str(type(ixt)) + ").")
 
     def __dealloc__(self):
         """
         Clean up by deallocating the instance of C++ class Clifford.
         """
         del self.instance
+
+    def reframe(self, ixt):
+        """
+        Put self into a larger frame, defined by index set ixt.
+        This can be used to make multiplication faster, by multiplying within a common frame.
+
+        >>> clifford("2+3{1}").reframe(ist({1,2,3}))
+        clifford("2+3{1}")
+        >>> clifford("2+3{1}").reframe(ist({1,2,3})).frame()
+        index_set("{1,2,3}")
+        """
+        error_msg_prefix = "Cannot reframe"
+        if isinstance(ixt, index_set):
+            try:
+                result = clifford()
+                result.instance = new Clifford(self.unwrap(), (<index_set>ixt).unwrap())
+            except RuntimeError as err:
+                raise ValueError(error_msg_prefix + " from " + str(self) + " to frame "
+                                                             + str(ixt) + ":"
+                                                             + "\n\t" + str(err))
+        else:
+            raise TypeError(error_msg_prefix + " using (" + str(type(ixt)) + ").")
+        return result
 
     def __richcmp__(lhs, rhs, int op):
         """
@@ -618,10 +641,13 @@ cdef class clifford:
                 return not bool(lhs is rhs)
             else:
                 return bool( toClifford(lhs) != toClifford(rhs) )
+        elif isinstance(lhs, clifford) or isinstance(rhs, clifford):
+            raise TypeError("This comparison operator is not implemented for "
+                            + str(type(lhs)) + ", " + str(type(rhs)) + ".")
         else:
             return NotImplemented
 
-    def __getitem__(self, ist):
+    def __getitem__(self, ixt):
         """
         Subscripting: map from index set to scalar coordinate.
 
@@ -634,7 +660,7 @@ cdef class clifford:
         >>> clifford("2{1,2}")[index_set("{1,2}")]
         2.0
         """
-        return self.instance.getitem(toIndexSet(ist))
+        return self.instance.getitem(toIndexSet(ixt))
 
     def __neg__(self):
         """
@@ -702,7 +728,7 @@ cdef class clifford:
         {1,2}
         >>> print clifford(2) * clifford("{2}")
         2{2}
-        >>> print clifford("{1}")*clifford("{1,2}")
+        >>> print clifford("{1}") * clifford("{1,2}")
         {2}
         """
         return clifford().wrap( toClifford(lhs) * toClifford(rhs) )
@@ -844,11 +870,11 @@ cdef class clifford:
         """
         Geometric multiplicative inverse.
 
-        >>> x = clifford("{1}"); print inv(x)
+        >>> x = clifford("{1}"); print x.inv()
         {1}
-        >>> x = clifford(2); print inv(x)
+        >>> x = clifford(2); print x.inv()
         0.5
-        >>> x = clifford("{1,2}"); print inv(x)
+        >>> x = clifford("{1,2}"); print x.inv()
         -{1,2}
         """
         return clifford().wrap( self.instance.inv() )
@@ -857,9 +883,9 @@ cdef class clifford:
         """
         Transform left hand side, using right hand side as a transformation.
 
-        >>> x=clifford("{1,2}")*pi/2; y=clifford("{1}"); print y|x
+        >>> x=clifford("{1,2}") * pi/2; y=clifford("{1}"); print y|x
         -{1}
-        >>> x=clifford("{1,2}")*pi/2; y=clifford("{1}"); print y|exp(x)
+        >>> x=clifford("{1,2}") * pi/2; y=clifford("{1}"); print y|exp(x)
         -{1}
         """
         return clifford().wrap( toClifford(lhs) | toClifford(rhs) )
@@ -868,9 +894,9 @@ cdef class clifford:
         """
         Transform left hand side, using right hand side as a transformation.
 
-        >>> x=clifford("{1,2}")*pi/2; y=clifford("{1}"); y|=x; print y
+        >>> x=clifford("{1,2}") * pi/2; y=clifford("{1}"); y|=x; print y
         -{1}
-        >>> x=clifford("{1,2}")*pi/2; y=clifford("{1}"); y|=exp(x); print y
+        >>> x=clifford("{1,2}") * pi/2; y=clifford("{1}"); y|=exp(x); print y
         -{1}
         """
         return self.wrap( self.unwrap() | toClifford(rhs) )
@@ -889,6 +915,8 @@ cdef class clifford:
         2+{1}
         >>> x=clifford("2+{1}"); print x ** 2
         5+4{1}
+        >>> i=clifford("{1,2}");print exp(pi/2) * (i ** i)
+        1
         """
         return pow(self, m)
 
@@ -908,8 +936,13 @@ cdef class clifford:
         5+4{1}
         >>> print clifford("1+{1}+{1,2}").pow(3)
         1+3{1}+3{1,2}
+        >>> i=clifford("{1,2}");print exp(pi/2) * i.pow(i)
+        1
         """
-        return clifford().wrap( self.instance.pow(m) )
+        if isinstance(m, numbers.Integral):
+            return clifford().wrap( self.instance.pow(m) )
+        else:
+            return exp(m * log(self))
 
     def outer_pow(self, m):
         """
@@ -986,20 +1019,33 @@ cdef class clifford:
         """
         return clifford().wrap( self.instance.odd() )
 
-    def vector_part(self):
+    def vector_part(self, frm = None):
         """
-        Vector part of multivector, as a Python list, with respect to frame.
+        Vector part of multivector, as a Python list, with respect to frm.
 
         >>> print clifford("1+2{1}+3{2}+4{1,2}").vector_part()
         [2.0, 3.0]
+        >>> print clifford("1+2{1}+3{2}+4{1,2}").vector_part(index_set("{-1,1,2}"))
+        [0.0, 2.0, 3.0]
         """
-        cdef vector[scalar_t] vec = self.instance.vector_part()
-        cdef int n = vec.size()
-        lst = [0.0]*n
+        error_msg_prefix = "Cannot take vector part of "
+        cdef vector[scalar_t] vec
+        cdef int n
         cdef int i
-        for i in xrange(n):
-            lst[i] = vec[i]
-        return lst
+        try:
+            if frm is None:
+                vec = self.instance.vector_part()
+            else:
+                vec = self.instance.vector_part((<index_set>frm).unwrap())
+            n = vec.size()
+            lst = [0.0]*n
+            for i in xrange(n):
+                lst[i] = vec[i]
+            return lst
+        except RuntimeError as err:
+            raise ValueError(error_msg_prefix + str(self) + " using invalid "
+                                              + repr(frm) + " as frame:\n\t"
+                                              + str(err))
 
     def involute(self):
         """
@@ -1008,9 +1054,9 @@ cdef class clifford:
 
         >>> print clifford("{1}").involute()
         -{1}
-        >>> print (clifford("{2}")*clifford("{1}")).involute()
+        >>> print (clifford("{2}") * clifford("{1}")).involute()
         -{1,2}
-        >>> print (clifford("{1}")*clifford("{2}")).involute()
+        >>> print (clifford("{1}") * clifford("{2}")).involute()
         {1,2}
         >>> print clifford("1+{1}+{1,2}").involute()
         1-{1}+{1,2}
@@ -1023,9 +1069,9 @@ cdef class clifford:
 
         >>> print clifford("{1}").reverse()
         {1}
-        >>> print (clifford("{2}")*clifford("{1}")).reverse()
+        >>> print (clifford("{2}") * clifford("{1}")).reverse()
         {1,2}
-        >>> print (clifford("{1}")*clifford("{2}")).reverse()
+        >>> print (clifford("{1}") * clifford("{2}")).reverse()
         -{1,2}
         >>> print clifford("1+{1}+{1,2}").reverse()
         1+{1}-{1,2}
@@ -1038,9 +1084,9 @@ cdef class clifford:
 
         >>> print (clifford("{1}")).conj()
         -{1}
-        >>> print (clifford("{2}")*clifford("{1}")).conj()
+        >>> print (clifford("{2}") * clifford("{1}")).conj()
         {1,2}
-        >>> print (clifford("{1}")*clifford("{2}")).conj()
+        >>> print (clifford("{1}") * clifford("{2}")).conj()
         -{1,2}
         >>> print clifford("1+{1}+{1,2}").conj()
         1-{1}-{1,2}
@@ -1223,7 +1269,7 @@ def clifford_hidden_doctests():
     True
     """
     return
-
+    
 cpdef inline inv(obj):
     """
     Geometric multiplicative inverse.
@@ -1307,9 +1353,9 @@ cpdef inline involute(obj):
 
     >>> print involute(clifford("{1}"))
     -{1}
-    >>> print involute(clifford("{2}")*clifford("{1}"))
+    >>> print involute(clifford("{2}") * clifford("{1}"))
     -{1,2}
-    >>> print involute(clifford("{1}")*clifford("{2}"))
+    >>> print involute(clifford("{1}") * clifford("{2}"))
     {1,2}
     >>> print involute(clifford("1+{1}+{1,2}"))
     1-{1}+{1,2}
@@ -1322,9 +1368,9 @@ cpdef inline reverse(obj):
 
     >>> print reverse(clifford("{1}"))
     {1}
-    >>> print reverse(clifford("{2}")*clifford("{1}"))
+    >>> print reverse(clifford("{2}") * clifford("{1}"))
     {1,2}
-    >>> print reverse(clifford("{1}")*clifford("{2}"))
+    >>> print reverse(clifford("{1}") * clifford("{2}"))
     -{1,2}
     >>> print reverse(clifford("1+{1}+{1,2}"))
     1+{1}-{1,2}
@@ -1337,9 +1383,9 @@ cpdef inline conj(obj):
 
     >>> print conj(clifford("{1}"))
     -{1}
-    >>> print conj(clifford("{2}")*clifford("{1}"))
+    >>> print conj(clifford("{2}") * clifford("{1}"))
     {1,2}
-    >>> print conj(clifford("{1}")*clifford("{2}"))
+    >>> print conj(clifford("{1}") * clifford("{2}"))
     -{1,2}
     >>> print conj(clifford("1+{1}+{1,2}"))
     1-{1}-{1,2}
@@ -1405,6 +1451,8 @@ cpdef inline pow(obj, m):
     5+4{1}
     >>> print pow(clifford("1+{1}+{1,2}"),3)
     1+3{1}+3{1,2}
+    >>> i=clifford("{1,2}");print exp(pi/2) * pow(i, i)
+    1
     """
     try:
         math.pow(obj, m)
@@ -1462,9 +1510,9 @@ cpdef inline exp(obj):
     """
     Exponential of multivector.
 
-    >>> x=clifford("{1,2}")*pi/4; print exp(x)
+    >>> x=clifford("{1,2}") * pi/4; print exp(x)
     0.7071+0.7071{1,2}
-    >>> x=clifford("{1,2}")*pi/2; print exp(x)
+    >>> x=clifford("{1,2}") * pi/2; print exp(x)
     {1,2}
     """
     try:
@@ -1476,11 +1524,11 @@ cpdef inline log(obj,i = None):
     """
     Natural logarithm of multivector with optional complexifier.
 
-    >>> x=clifford("{1,2}"); print (log(x,"{1,2}")*2/pi)
+    >>> x=clifford("{1,2}"); print (log(x,"{1,2}") * 2/pi)
     {1,2}
-    >>> x=clifford("{1,2}"); print (log(x,"{1,2,3}")*2/pi)
+    >>> x=clifford("{1,2}"); print (log(x,"{1,2,3}") * 2/pi)
     {1,2}
-    >>> x=clifford("{1,2}"); print (log(x)*2/pi)
+    >>> x=clifford("{1,2}"); print (log(x) * 2/pi)
     {1,2}
     """
     if not (i is None):
@@ -1533,7 +1581,7 @@ cpdef inline cosh(obj):
     """
     Hyperbolic cosine of multivector.
 
-    >>> x=clifford("{1,2}")*pi; print cosh(x)
+    >>> x=clifford("{1,2}") * pi; print cosh(x)
     -1
     >>> x=clifford("{1,2,3}"); print cosh(acosh(x))
     {1,2,3}
@@ -1612,9 +1660,9 @@ cpdef inline sinh(obj):
     """
     Hyperbolic sine of multivector.
 
-    >>> x=clifford("{1,2}")*pi/2; print sinh(x)
+    >>> x=clifford("{1,2}") * pi/2; print sinh(x)
     {1,2}
-    >>> x=clifford("{1,2}")*pi/6; print sinh(x)
+    >>> x=clifford("{1,2}") * pi/6; print sinh(x)
     0.5{1,2}
     """
     try:
@@ -1626,11 +1674,11 @@ cpdef inline asinh(obj,i = None):
     """
     Inverse hyperbolic sine of multivector with optional complexifier.
 
-    >>> x=clifford("{1,2}"); print asinh(x,"{1,2,3}")*2/pi
+    >>> x=clifford("{1,2}"); print asinh(x,"{1,2,3}") * 2/pi
     {1,2}
-    >>> x=clifford("{1,2}"); print asinh(x)*2/pi
+    >>> x=clifford("{1,2}"); print asinh(x) * 2/pi
     {1,2}
-    >>> x=clifford("{1,2}") / 2; print asinh(x)*6/pi
+    >>> x=clifford("{1,2}") / 2; print asinh(x) * 6/pi
     {1,2}
     """
     if not (i is None):
@@ -1679,7 +1727,7 @@ cpdef inline tanh(obj):
     """
     Hyperbolic tangent of multivector.
 
-    >>> x=clifford("{1,2}")*pi/4; print tanh(x)
+    >>> x=clifford("{1,2}") * pi/4; print tanh(x)
     {1,2}
     """
     try:
@@ -1704,14 +1752,14 @@ cpdef inline atanh(obj,i = None):
         except:
             return clifford().wrap( glucat.atanh(toClifford(obj)) )
 
-cpdef inline random_clifford(index_set ist, fill = 1.0):
+cpdef inline random_clifford(index_set ixt, fill = 1.0):
     """
     Random multivector within a frame.
 
     >>> print random_clifford(index_set("{-3,-1,2}")).frame()
     {-3,-1,2}
     """
-    return clifford().wrap( clifford().instance.random(ist.unwrap(), <scalar_t>fill) )
+    return clifford().wrap( clifford().instance.random(ixt.unwrap(), <scalar_t>fill) )
 
 cpdef inline cga3(obj):
     """
@@ -1745,37 +1793,36 @@ cpdef inline agc3(obj):
     return clifford().wrap( glucat.agc3(toClifford(obj)) )
     
 # Some abbreviations.
-pi = atan(clifford(1.0)) * 4.0
+tau = atan(clifford(1.0)) * 8.0
+pi = tau / 2.0
 
-def cl(obj):
-    """
-    Abbreviation for clifford(obj).
+cl = clifford
+"""
+Abbreviation for clifford.
 
-    >>> print cl(2)
-    2
-    >>> print cl(2L)
-    2
-    >>> print cl(2.0)
-    2
-    >>> print cl(5.0e-1)
-    0.5
-    >>> print cl("2")
-    2
-    >>> print cl("2{1,2,3}")
-    2{1,2,3}
-    >>> print cl(cl("2{1,2,3}"))
-    2{1,2,3}
-    """
-    return clifford(obj)
+>>> print cl(2)
+2
+>>> print cl(2L)
+2
+>>> print cl(2.0)
+2
+>>> print cl(5.0e-1)
+0.5
+>>> print cl("2")
+2
+>>> print cl("2{1,2,3}")
+2{1,2,3}
+>>> print cl(cl("2{1,2,3}"))
+2{1,2,3}
+"""
 
-def ist(obj):
-    """
-    Abbreviation for index_set(obj).
+ist = index_set
+"""
+Abbreviation for index_set.
 
-    >>> print ist("{1,2,3}")
-    {1,2,3}
-    """
-    return index_set(obj)
+>>> print ist("{1,2,3}")
+{1,2,3}
+"""
 
 def e(obj):
     """
