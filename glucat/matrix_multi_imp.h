@@ -482,7 +482,7 @@ namespace glucat
     typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
     typedef typename multivector_t::framed_multi_t framed_multi_t;
     return framed_multi_t(lhs) ^ framed_multi_t(rhs);
-  } 
+  }
 
   /// Outer product
   template< typename Scalar_T, const index_t LO, const index_t HI >
@@ -787,15 +787,28 @@ namespace glucat
   const typename matrix_multi<Scalar_T,LO,HI>::vector_t
   matrix_multi<Scalar_T,LO,HI>::
   vector_part() const
+  { return this->vector_part(this->frame(), true); }
+
+  /// Vector part of multivector, as a vector_t
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const typename matrix_multi<Scalar_T,LO,HI>::vector_t
+  matrix_multi<Scalar_T,LO,HI>::
+  vector_part(const index_set_t frm, const bool prechecked) const
   {
+    if (!prechecked && (this->frame() | frm) != frm)
+      throw error_t("vector_part(frm): value is outside of requested frame");
     vector_t result;
-    const index_t begin_index = this->m_frame.min();
-    const index_t end_index = this->m_frame.max()+1;
+    // If we need to enlarge the frame we may as well use a framed_multi_t
+    if (this->frame() != frm)
+      return framed_multi_t(*this).vector_part(frm, true);
+    
+    const index_t begin_index = frm.min();
+    const index_t end_index = frm.max()+1;
     for (index_t
         idx = begin_index;
         idx != end_index;
         ++idx)
-      if (this->m_frame[idx])
+      if (frm[idx])
         // Frame may contain indices which do not correspond to a grade 1 term but
         // frame cannot omit any index corresponding to a grade 1 term
         result.push_back(

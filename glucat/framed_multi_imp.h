@@ -1018,8 +1018,16 @@ namespace glucat
   const typename framed_multi<Scalar_T,LO,HI>::vector_t
   framed_multi<Scalar_T,LO,HI>::
   vector_part() const
+  { return this->vector_part(this->frame(), true); }
+
+  /// Vector part of multivector, as a vector_t
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const typename framed_multi<Scalar_T,LO,HI>::vector_t
+  framed_multi<Scalar_T,LO,HI>::
+  vector_part(const index_set_t frm, const bool prechecked) const
   {
-    const index_set_t frm = this->frame();
+    if (!prechecked && (this->frame() | frm) != frm)
+      throw error_t("vector_part(frm): value is outside of requested frame");
     vector_t result;
     result.reserve(frm.count());
     const index_t frm_end = frm.max()+1;

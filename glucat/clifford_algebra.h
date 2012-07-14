@@ -101,6 +101,8 @@ namespace glucat
     virtual const multivector_t odd()       const =0;
     /// Vector part of multivector, as a vector_t with respect to frame()
     virtual const vector_t      vector_part () const = 0;
+    /// Vector part of multivector, as a vector_t with respect to frm
+    virtual const vector_t      vector_part (const index_set_t frm, const bool prechecked) const = 0;
     /// Main involution, each {i} is replaced by -{i} in each term, eg. {1} -> -{1}
     virtual const multivector_t involute()  const =0;
     /// Reversion, eg. {1}*{2} -> {2}*{1}
@@ -152,6 +154,8 @@ namespace glucat
     const multivector_t even()      const;                            \
     const multivector_t odd()       const;                            \
     const vector_t      vector_part() const;                          \
+    const vector_t      vector_part                                   \
+         (const index_set_t frm, const bool prechecked = false) const;\
     const multivector_t involute()  const;                            \
     const multivector_t reverse()   const;                            \
     const multivector_t conj()      const;                            \
