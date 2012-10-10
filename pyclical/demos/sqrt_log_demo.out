@@ -1,0 +1,241 @@
+# sqrt_log_demo.py: Demonstrate various sqrt and log calculations with PyClical.
+
+    BASIC OPERATIONS.
+
+>>> e1 = e(1)
+>>> print e1
+{1}
+
+>>> sqrt_e1 = sqrt(e1)
+>>> print sqrt_e1
+0.5+0.5{1}-0.5{2,3}+0.5{1,2,3}
+>>> print sqrt_e1*sqrt_e1
+{1}
+>>> print abs(sqrt_e1*sqrt_e1 - e1)
+6.66133814775e-16
+
+>>> log_e1 = log(e1)
+>>> print log_e1
+-1.571{2,3}+1.571{1,2,3}
+>>> print exp(log_e1)
+{1}
+>>> print abs(exp(log_e1) - e1)
+5.13475332118e-16
+
+>>> v = clifford('-2{1}+2{2}-3{3}')
+>>> print v
+-2{1}+2{2}-3{3}
+
+>>> sqrt_v = sqrt(v)
+>>> print sqrt_v
+1.015-0.4925{1}+0.4925{2}-0.7387{3}+0.7387{1,2}+0.4925{1,3}+0.4925{2,3}+1.015{1,2,3}
+>>> print sqrt_v*sqrt_v
+-2{1}+2{2}-3{3}
+>>> print abs(sqrt_v*sqrt_v - v)
+2.25266250595e-15
+
+>>> log_v = log(v)
+>>> print log_v
+1.417+1.143{1,2}+0.7619{1,3}+0.7619{2,3}+1.571{1,2,3}
+>>> print exp(log_v)
+-2{1}+2{2}-3{3}
+>>> print abs(exp(log_v) - v)
+2.37683247858e-15
+
+>>> x = clifford('-2{1}+2{2}-3{3}+4{-1,1,2}')
+>>> print x
+-2{1}+2{2}-3{3}+4{-1,1,2}
+
+>>> sqrt_x = sqrt(x)
+>>> print sqrt_x
+1.131-0.3266{1}+0.3266{2}-0.6925{3}+0.1655{-1,1}+0.1655{-1,2}-0.1013{1,4}+0.1013{2,4}-0.7883{3,4}+0.7883{-1,1,2}+0.1013{-1,1,3}+0.1013{-1,2,3}-0.1655{1,3,4}+0.1655{2,3,4}-0.6925{-1,1,2,4}-0.3266{-1,1,3,4}-0.3266{-1,2,3,4}+1.131{-1,1,2,3,4}
+>>> print sqrt_x*sqrt_x
+-2{1}+2{2}-3{3}+4{-1,1,2}
+>>> print abs(sqrt_x*sqrt_x - x)
+2.20958117298e-15
+
+>>> log_x = log(x)
+>>> print log_x
+1.589+0.2969{-1,1}+0.2969{-1,2}-0.2939{1,4}+0.2939{2,4}-1.005{3,4}-1.048{-1,1,2,4}-0.3064{-1,1,3,4}-0.3064{-1,2,3,4}+1.571{-1,1,2,3,4}
+>>> print exp(log_x)
+-2{1}+2{2}-3{3}+4{-1,1,2}
+>>> print abs(exp(log_x) - x)
+4.2162363735e-14
+
+>>> x = random_clifford(istpq(2,1))
+>>> print x
+-0.1037+0.08951{-1}-0.02018{1}-0.5085{2}+0.02991{-1,1}+0.3508{-1,2}+0.03778{1,2}-0.322{-1,1,2}
+
+>>> sqrt_x = sqrt(x)
+>>> print sqrt_x
+-0.3341-0.05608{-1}-0.05741{1}+0.2826{2}-0.1154{-1,1}-0.187{-1,2}-0.03801{1,2}+0.09537{3,4}+0.1234{-1,1,2}+0.0108{-1,3,4}+0.2405{1,3,4}+0.0635{2,3,4}+0.3388{-1,1,3,4}-0.07141{-1,2,3,4}+0.05429{1,2,3,4}+0.4118{-1,1,2,3,4}
+>>> print sqrt_x*sqrt_x
+-0.1037+0.08951{-1}-0.02018{1}-0.5085{2}+0.02991{-1,1}+0.3508{-1,2}+0.03778{1,2}-0.322{-1,1,2}
+>>> print abs(sqrt_x*sqrt_x - x)
+3.2413368595e-16
+
+>>> log_x = log(x)
+>>> print log_x
+-0.6979+0.3685{1}+0.1879{2}+0.5086{-1,1}-0.1715{-1,2}+0.07554{1,2}-0.1516{-1,1,2}-0.09419{-1,3,4}-0.9026{1,3,4}+0.06028{2,3,4}-1.306{-1,1,3,4}+0.06335{-1,2,3,4}-0.2289{1,2,3,4}+4.712{-1,1,2,3,4}
+>>> print exp(log_x)
+-0.1037+0.08951{-1}-0.02018{1}-0.5085{2}+0.02991{-1,1}+0.3508{-1,2}+0.03778{1,2}-0.322{-1,1,2}
+>>> print abs(exp(log_x) - x)
+7.17544965685e-15
+
+    SQUARE ROOTS AND LOGARITHMS OF ROTORS
+    in Conformal Geometric Algebra R_(4,1).
+
+    Reference:
+    [D+V]: L. Dorst and R. Valkenburg, 'Square root and logarithm of rotors',
+    L. Dorst and J. Lasenby (editors), Guide to geometric algebra in practice,
+    Springer, 2011, Chapter 5, pp. 81-104.
+
+    Define a bivector B.
+
+>>> B = clifford('2{-1,1}+3{-1,2}+4{-1,3}+5{-1,4}+{1,2}+2{1,3}+3{1,4}-4{2,3}-5{2,4}+{3,4}')
+>>> print B
+2{-1,1}+3{-1,2}+{1,2}+4{-1,3}+2{1,3}-4{2,3}+5{-1,4}+3{1,4}-5{2,4}+{3,4}
+
+    Exponentiate -B/2 to obtain the rotor R.
+
+>>> R = exp(-B/2); print R
+-2.112+3.636{-1,1}+1.855{-1,2}+3.761{1,2}-0.4664{-1,3}-1.583{1,3}+0.7184{2,3}-1.744{-1,4}-1.852{1,4}+2.32{2,4}-0.5215{3,4}-1.795{-1,1,2,3}-2.514{-1,1,2,4}+0.5386{-1,2,3,4}-0.1795{1,2,3,4}
+
+    SQUARE ROOTS OF THE ROTOR R
+
+    Find the square root of R, and check it.
+
+>>> sqrt_R = sqrt(R)
+>>> print sqrt_R
+0.03272{-1}-0.09816{1}+0.4581{3}-0.3272{4}-0.09293{-1,1,2}-0.3656{-1,1,3}-0.3779{-1,2,3}-0.1675{1,2,3}-0.09876{-1,1,4}+0.3716{-1,2,4}-0.1854{1,2,4}+1.38{-1,3,4}+0.8974{1,3,4}-1.424{2,3,4}+1.372{-1,1,2,3,4}
+>>> print sqrt_R*sqrt_R
+-2.112+3.636{-1,1}+1.855{-1,2}+3.761{1,2}-0.4664{-1,3}-1.583{1,3}+0.7184{2,3}-1.744{-1,4}-1.852{1,4}+2.32{2,4}-0.5215{3,4}-1.795{-1,1,2,3}-2.514{-1,1,2,4}+0.5386{-1,2,3,4}-0.1795{1,2,3,4}
+>>> print abs(sqrt_R*sqrt_R - R)
+7.21194766584e-14
+
+    Now use [D+V (5.4)] to try to obtain a square root of R.
+
+>>> dv_disc = (1+R(0))**2 - (R(4))**2
+>>> print dv_disc
+11.04
+>>> dv_sqrt_R = (1+R)*(1+R(0)-R(4))/(2*dv_disc)*(1+R(0)+R(4)+sqrt(dv_disc))/sqrt(1+R(0)+sqrt(dv_disc))
+>>> print dv_sqrt_R
+0.7433+0.09251{-1,1}-0.3727{-1,2}+0.3224{1,2}-0.9146{-1,3}-0.6491{1,3}+0.9504{2,3}-1.308{-1,4}-0.8994{1,4}+1.39{2,4}-0.2862{3,4}-0.6039{-1,1,2,3}-0.8455{-1,1,2,4}+0.1812{-1,2,3,4}-0.06039{1,2,3,4}
+>>> print dv_sqrt_R*dv_sqrt_R
+-2.112+3.636{-1,1}+1.855{-1,2}+3.761{1,2}-0.4664{-1,3}-1.583{1,3}+0.7184{2,3}-1.744{-1,4}-1.852{1,4}+2.32{2,4}-0.5215{3,4}-1.795{-1,1,2,3}-2.514{-1,1,2,4}+0.5386{-1,2,3,4}-0.1795{1,2,3,4}
+>>> print abs(dv_sqrt_R*dv_sqrt_R - R)
+5.89149278509e-15
+
+    The [D+V (5.4)] square root of R is even.
+
+>>> print abs(odd(dv_sqrt_R))
+0.0
+
+     The PyClical square root of R is odd.
+
+>>> print abs(even(sqrt_R))
+9.25277581846e-15
+
+    LOGARITHMS OF THE ROTOR R
+
+
+    Find the logarithm of R, and check it.
+
+>>> log_R = log(R)
+>>> print log_R
+-2.53{-1,1}-1.701{-1,2}-2.395{1,2}-0.5587{-1,3}+0.5056{1,3}+0.4122{2,3}-0.02334{-1,4}+0.4549{1,4}-0.3116{2,4}+0.0958{3,4}+3.142{-1,1,2,3,4}
+>>> print exp(log_R)
+-2.112+3.636{-1,1}+1.855{-1,2}+3.761{1,2}-0.4664{-1,3}-1.583{1,3}+0.7184{2,3}-1.744{-1,4}-1.852{1,4}+2.32{2,4}-0.5215{3,4}-1.795{-1,1,2,3}-2.514{-1,1,2,4}+0.5386{-1,2,3,4}-0.1795{1,2,3,4}
+>>> print abs(exp(log_R) - R)
+1.94141074974e-13
+
+    Now use [D+V, Section 5.3] to try to obtain a logarithm of R or -R.
+
+
+    Obtain the bivector F via the exterior derivative of the action of the rotor R, as per [D+V (5.24)].
+
+>>> F = 2 * (R(4)-R(0)) * R(2); print F
+29.6{-1,1}+23.39{-1,2}+26.14{1,2}+14.03{-1,3}-0.861{1,3}-12.56{2,3}+10.77{-1,4}+1.755{1,4}-7.406{2,4}+1.145{3,4}
+
+    Check the split of F into commuting 2-blades, as per [D+V (5.25)].
+
+>>> dv_norm = lambda F : sqrt(sqrt( (2*scalar(F**2) - F**2) * F**2 ))
+>>> F_m = F*(1 - ((dv_norm(F))**2)/(F**2))/2
+>>> F_p = F*(1 + ((dv_norm(F))**2)/(F**2))/2
+
+    Check that F_m and F_p are commuting 2-blades.
+
+>>> print abs(F_m-F_m(2))
+8.28784044333e-15
+>>> print F_m**2
+-0.8372
+>>> print abs(F_p-F_p(2))
+1.28628804445e-14
+>>> print F_p**2
+835.8
+>>> print abs(F_p*F_m - F_m*F_p)
+2.23865471848e-13
+
+    Set S_{m/p} = F_{m/p}, as per [D+V, remark before (5.26)].
+
+>>> S_m = F_m
+>>> S_p = F_p
+
+    Obtain C_{m/p} = cosh(B_{-/+}), as per [D+V (5.26)].
+
+>>> C_m = -scalar((R**2)(2)/S_p)
+>>> C_p = -scalar((R**2)(2)/S_m)
+
+    Define atanh2 as per [D+V (5.21)].
+
+>>> atanh2 = lambda s, c : math.asinh(sqrt(scalar(s**2)))/sqrt(scalar(s**2))*s if scalar(s**2) > 0 else s if scalar(s**2) == 0 else math.atan2(sqrt(scalar(-s**2)),c)/sqrt(scalar(-s**2))*s if -1 <= scalar(s**2) < 0 else float('nan')
+
+    Display the values of atanh2 to be used to obtain the logarithm.
+
+>>> print atanh2(S_m,C_m)
+0.967{-1,1}+0.1271{-1,2}+1.198{1,2}-0.9112{-1,3}-0.9519{1,3}+1.004{2,3}-1.566{-1,4}-1.236{1,4}+1.778{2,4}-0.3767{3,4}
+>>> print atanh2(S_p,C_p)
+4.092{-1,1}+3.275{-1,2}+3.592{1,2}+2.029{-1,3}-0.05931{1,3}-1.828{2,3}+1.612{-1,4}+0.3262{1,4}-1.154{2,4}+0.1851{3,4}
+
+    Obtain dv_log_R = Log(R) as per [D+V (5.27)].
+
+>>> dv_log_R = -(atanh2(S_m,C_m)+atanh2(S_p,C_p))/2
+>>> print dv_log_R
+-2.53{-1,1}-1.701{-1,2}-2.395{1,2}-0.5587{-1,3}+0.5056{1,3}+0.4122{2,3}-0.02334{-1,4}+0.4549{1,4}-0.3116{2,4}+0.0958{3,4}
+
+    Check that exp(dv_log_R) == R or -R as per [D+V, p. 97].
+
+>>> print exp(dv_log_R)
+2.112-3.636{-1,1}-1.855{-1,2}-3.761{1,2}+0.4664{-1,3}+1.583{1,3}-0.7184{2,3}+1.744{-1,4}+1.852{1,4}-2.32{2,4}+0.5215{3,4}+1.795{-1,1,2,3}+2.514{-1,1,2,4}-0.5386{-1,2,3,4}+0.1795{1,2,3,4}
+>>> print abs(exp(dv_log_R) - R)
+15.5554322939
+>>> print abs(exp(dv_log_R) + R)
+3.43533396859e-14
+
+    Use the pseudoscalar i = e({-1,1,2,3,4}) to obtain the log of -R or R.
+
+>>> i = e({-1,1,2,3,4})
+
+    First, verify that i has the required properties: squares to -1 and commutes with vectors.
+
+>>> print i*i
+-1
+>>> print i*e(-1) - e(-1)*i
+0
+>>> print i*e(1) - e(1)*i
+0
+>>> print i*e(2) - e(2)*i
+0
+>>> print i*e(3) - e(3)*i
+0
+>>> print i*e(4) - e(4)*i
+0
+
+    Now use the properties of i to find an expression for the log of -R or R.
+
+>>> print abs(exp(dv_log_R + i*pi) - R)
+2.95715815245e-14
+>>> print abs(exp(dv_log_R + i*pi) + R)
+15.5554322939
+
+    You have completed the demonstration file sqrt_log_demo.py.
