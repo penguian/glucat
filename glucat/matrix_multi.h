@@ -31,10 +31,23 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
+#include "glucat/global.h"
+#include "glucat/errors.h"
+#include "glucat/index_set.h"
 #include "glucat/clifford_algebra.h"
+#include "glucat/framed_multi.h"
+
+#include <boost/numeric/ublas/fwd.hpp>
+
+#include <fstream>
+#include <string>
+#include <utility>
+#include <vector>
 
 namespace glucat
 {
+  namespace ublas = boost::numeric::ublas;
+  
   // Forward declarations for friends
 
   template< typename Scalar_T, const index_t LO, const index_t HI >
@@ -118,7 +131,7 @@ namespace glucat
     typedef ublas::row_major                           orientation_t;
     typedef ublas::compressed_matrix< Scalar_T, orientation_t >
                                                        basis_matrix_t;
-#ifdef _GLUCAT_USE_DENSE_MATRICES
+#if defined(_GLUCAT_USE_DENSE_MATRICES)
     typedef ublas::matrix< Scalar_T, orientation_t >   matrix_t;
 #else
     typedef basis_matrix_t                             matrix_t;
@@ -231,6 +244,7 @@ namespace glucat
   template< typename Scalar_T, const index_t LO, const index_t HI >
   const matrix_multi<Scalar_T,LO,HI>
   exp(const matrix_multi<Scalar_T,LO,HI>& val);
+
 }
 
 namespace std
