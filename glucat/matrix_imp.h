@@ -5,7 +5,7 @@
     matrix_imp.h : Implement common matrix functions
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2009 by Paul C. Leopardi
+    copyright            : (C) 2001-2012 by Paul C. Leopardi
                          : uBLAS interface contributed by Joerg Walter
  ***************************************************************************
 
@@ -32,18 +32,28 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
+#include "glucat/matrix.h"
+
+#include <boost/numeric/ublas/vector.hpp>
+#include <boost/numeric/ublas/vector_proxy.hpp>
+#include <boost/numeric/ublas/matrix.hpp>
+#include <boost/numeric/ublas/matrix_expression.hpp>
+#include <boost/numeric/ublas/matrix_proxy.hpp>
+#include <boost/numeric/ublas/matrix_sparse.hpp>
+#include <boost/numeric/ublas/operation.hpp>
+#include <boost/numeric/ublas/operation_sparse.hpp>
+
 #include <set>
-#if defined(_GLUCAT_USE_ALGLIB)
-#include <alglib/evd.h>
-#endif
-#if defined(_GLUCAT_USE_BINDINGS_V1)
-#include <boost/numeric/bindings/lapack/workspace.hpp>
-#include <boost/numeric/bindings/lapack/gees.hpp>
-#include <boost/numeric/bindings/traits/ublas_matrix.hpp>
-#endif
-#if defined(_GLUCAT_USE_BINDINGS)
-#include <boost/numeric/bindings/lapack/driver/gees.hpp>
-#include <boost/numeric/bindings/ublas.hpp>
+
+#if   defined(_GLUCAT_USE_ALGLIB)
+# include <alglib/evd.h>
+#elif defined(_GLUCAT_USE_BINDINGS_V1)
+# include <boost/numeric/bindings/lapack/workspace.hpp>
+# include <boost/numeric/bindings/lapack/gees.hpp>
+# include <boost/numeric/bindings/traits/ublas_matrix.hpp>
+#elif defined(_GLUCAT_USE_BINDINGS)
+# include <boost/numeric/bindings/lapack/driver/gees.hpp>
+# include <boost/numeric/bindings/ublas.hpp>
 #endif
 
 namespace glucat { namespace matrix
@@ -308,7 +318,7 @@ namespace glucat { namespace matrix
   prod(const ublas::matrix_expression<LHS_T>& lhs,
        const ublas::matrix_expression<RHS_T>& rhs)
   {
-#ifdef _GLUCAT_USE_DENSE_MATRICES
+#if defined(_GLUCAT_USE_DENSE_MATRICES)
     typedef typename RHS_T::size_type matrix_index_t;
     const matrix_index_t dim = lhs().size1();
     RHS_T result(dim, dim);
@@ -539,7 +549,9 @@ namespace glucat { namespace matrix
 
     typedef typename complex_vector_t::size_type vector_index_t;
     const vector_index_t dim = lambda.size();
-    static const double epsilon = std::numeric_limits<float>::epsilon();
+    static const double epsilon =
+      std::max(std::numeric_limits<double>::epsilon(),
+               numeric_traits<Scalar_T>::to_double(std::numeric_limits<Scalar_T>::epsilon()));
 
     bool negative_eig_found = false;
     bool imaginary_eig_found = false;
@@ -550,7 +562,7 @@ namespace glucat { namespace matrix
 
       const double real_lambda_k = std::real(lambda_k);
       const double imag_lambda_k = std::imag(lambda_k);
-      const double norm_tol = 1024.0*epsilon*epsilon*std::norm(lambda_k);
+      const double norm_tol = 4096.0*epsilon*std::norm(lambda_k);
 
       if (!negative_eig_found &&
           real_lambda_k < -epsilon &&
