@@ -31,7 +31,39 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
+#include "glucat/global.h"
+#include "glucat/errors.h"
 #include "glucat/clifford_algebra.h"
+
+// Use the Boost pool allocator
+#include <boost/pool/poolfwd.hpp>
+
+#include <string>
+#include <utility>
+#include <map>
+#include <vector>
+
+// Use the appropriate type of map
+
+#if defined(_GLUCAT_USE_GNU_CXX_HASH_MAP)
+# if defined(_GLUCAT_USE_BACKWARD_HASH_MAP)
+#  include <backward/hash_map>
+# else
+#  include <ext/hash_map>
+# endif
+#elif defined(_GLUCAT_USE_TR1_UNORDERED_MAP)
+# include <tr1/unordered_map>
+#elif defined(_GLUCAT_USE_STD_UNORDERED_MAP)
+# include <unordered_map>
+#endif
+
+#if defined(_GLUCAT_USE_GNU_CXX_HASH_MAP)  || \
+    defined(_GLUCAT_USE_TR1_UNORDERED_MAP) || \
+    defined(_GLUCAT_USE_STD_UNORDERED_MAP)
+# define _GLUCAT_MAP_IS_HASH
+#else
+# define _GLUCAT_MAP_IS_ORDERED
+#endif
 
 namespace glucat
 {
@@ -93,8 +125,13 @@ namespace glucat
   std::ostream&
   operator<< (std::ostream& os, const std::pair< const index_set<LO,HI>, Scalar_T >& term);
 
+  /// Exponential of multivector
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const framed_multi<Scalar_T,LO,HI>
+  exp(const framed_multi<Scalar_T,LO,HI>& val);
+
   template< const index_t LO, const index_t HI>
-  class hash
+  class index_set_hash
   {
   public:
     typedef index_set<LO,HI> index_set_t;
@@ -106,12 +143,12 @@ namespace glucat
   class framed_multi :
   public clifford_algebra< Scalar_T, index_set<LO,HI>, framed_multi<Scalar_T,LO,HI> >,
 #if defined(_GLUCAT_USE_GNU_CXX_HASH_MAP)
-  private     __gnu_cxx::hash_map< const index_set<LO,HI>, Scalar_T, hash<LO,HI> >
+  private     __gnu_cxx::hash_map< const index_set<LO,HI>, Scalar_T, index_set_hash<LO,HI> >
 #elif defined(_GLUCAT_USE_TR1_UNORDERED_MAP)
-  private std::tr1::unordered_map< const index_set<LO,HI>, Scalar_T, hash<LO,HI>,
+  private std::tr1::unordered_map< const index_set<LO,HI>, Scalar_T, index_set_hash<LO,HI>,
                     std::equal_to< const index_set<LO,HI> > >
 #elif defined(_GLUCAT_USE_STD_UNORDERED_MAP)
-  private std::unordered_map< const index_set<LO,HI>, Scalar_T, hash<LO,HI> >
+  private std::unordered_map< const index_set<LO,HI>, Scalar_T, index_set_hash<LO,HI> >
 #else
   private std::map< const index_set<LO,HI>, Scalar_T,
                     std::less< const index_set<LO,HI> >,
@@ -138,18 +175,30 @@ namespace glucat
                       boost::fast_pool_allocator<term_t> >
                                                        sorted_map_t;
 #if defined(_GLUCAT_USE_GNU_CXX_HASH_MAP)
-    typedef       __gnu_cxx::hash_map< const index_set_t, Scalar_T, hash<LO,HI> >
+    typedef       __gnu_cxx::hash_map< const index_set_t, Scalar_T, index_set_hash<LO,HI> >
                                                        map_t;
 #elif defined(_GLUCAT_USE_TR1_UNORDERED_MAP)
-    typedef std::tr1::unordered_map< const index_set_t, Scalar_T, hash<LO,HI>,
+    typedef std::tr1::unordered_map< const index_set_t, Scalar_T, index_set_hash<LO,HI>,
                                      std::equal_to<const index_set_t> >
                                                        map_t;
 #elif defined(_GLUCAT_USE_STD_UNORDERED_MAP)
-    typedef std::unordered_map< const index_set<LO,HI>, Scalar_T, hash<LO,HI> >
+    typedef std::unordered_map< const index_set<LO,HI>, Scalar_T, index_set_hash<LO,HI> >
                                                        map_t;
 #else
     typedef sorted_map_t                               map_t;
 #endif
+
+    class hash_size_t
+    {
+    public:
+      hash_size_t(size_t hash_size)
+      : n(hash_size)
+      { };
+      const size_t operator()() const
+      { return n; }
+    private:
+      size_t n;
+    };
 
     typedef std::pair< const multivector_t, const multivector_t >
                                                        framed_pair_t;
@@ -164,6 +213,12 @@ namespace glucat
     ~framed_multi() {};
     /// Default constructor
     framed_multi();
+
+  private:
+    /// Private constructor using hash_size
+    framed_multi(const hash_size_t& hash_size);
+  public:
+
     /// Construct a multivector, within a given frame, from a given multivector
     framed_multi(const multivector_t& val,
                  const index_set_t frm, const bool prechecked = false);
@@ -200,6 +255,9 @@ namespace glucat
 
     _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
 
+    /// Number of terms
+    unsigned long nbr_terms() const;
+        
     /// Random multivector within a frame
     static const framed_multi_t random(const index_set_t frm, Scalar_T fill = Scalar_T(1));
 
@@ -226,6 +284,9 @@ namespace glucat
       operator<< <>(std::ostream& os, const multivector_t& val);
     friend std::ostream&
       operator<< <>(std::ostream& os, const term_t& term);
+
+    friend const framed_multi_t
+      exp <>(const framed_multi_t& val);
 
     /// Add a term, if non-zero
     multivector_t&      operator+= (const term_t& term);
