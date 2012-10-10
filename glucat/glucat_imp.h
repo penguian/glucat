@@ -5,7 +5,7 @@
     glucat_imp.h : Organize GluCat template definitions which cannot be compiled separately
                              -------------------
     begin                : Sun 2001-12-25
-    copyright            : (C) 2001-2010 by Paul C. Leopardi
+    copyright            : (C) 2001-2012 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -32,37 +32,21 @@
  ***************************************************************************/
 
 // Template definitions which cannot be compiled separately
+
 #include "glucat/errors_imp.h"
 
-#include <sstream>
 #include "glucat/index_set_imp.h"
+
 #include "glucat/clifford_algebra_imp.h"
 
-#include <boost/numeric/ublas/vector.hpp>
-#include <boost/numeric/ublas/vector_proxy.hpp>
-#include <boost/numeric/ublas/matrix.hpp>
-#include <boost/numeric/ublas/matrix_proxy.hpp>
-#include <boost/numeric/ublas/triangular.hpp>
-#include <boost/numeric/ublas/matrix_sparse.hpp>
-#include <boost/numeric/ublas/operation_sparse.hpp>
-#include <boost/numeric/ublas/operation.hpp>
-#include <boost/numeric/ublas/lu.hpp>
-
-#include <boost/pool/pool_alloc.hpp>
-
-#if defined(_GLUCAT_USE_GSL_RANDOM)
-#include <gsl/gsl_rng.h>
-#include <gsl/gsl_randist.h>
-#elif defined(_GLUCAT_USE_STD_RANDOM) 
-#include <random>
-#else
-#include <tr1/random>
-#endif
 #include "glucat/random.h"
 
 #include "glucat/framed_multi_imp.h"
+
 #include "glucat/matrix_imp.h"
+
 #include "glucat/generation_imp.h"
+
 #include "glucat/matrix_multi_imp.h"
 
 #endif  // _GLUCAT_GLUCAT_IMP_H
