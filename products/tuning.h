@@ -2,10 +2,10 @@
 #define GLUCAT_TEST_SQUARING_TUNING_H
 /***************************************************************************
     GluCat : Generic library of universal Clifford algebra templates
-    tuning.h : Tuning for squaring test
+    tuning.h : Tuning for products test
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2007 by Paul C. Leopardi
+    copyright            : (C) 2001-2012 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -39,7 +39,7 @@ const unsigned int Driver_Fast_Size_Threshold    = 1 << 30;
 const unsigned int Driver_Inv_Fast_Dim_Threshold = 1 << 30;
 #elif defined ( _GLUCAT_SQUARING_MEDIUM )
 const unsigned int Driver_Mult_Matrix_Threshold  =       0;
-const unsigned int Driver_Basis_Max_Count        = 1 << 30;
+const unsigned int Driver_Basis_Max_Count        =      64;
 const unsigned int Driver_Fast_Size_Threshold    = 1 << 30;
 const unsigned int Driver_Inv_Fast_Dim_Threshold = 1 << 30;
 #elif defined ( _GLUCAT_SQUARING_FAST )
@@ -49,9 +49,9 @@ const unsigned int Driver_Fast_Size_Threshold    = 1 <<  0;
 const unsigned int Driver_Inv_Fast_Dim_Threshold = 1 <<  0;
 #elif defined ( _GLUCAT_SQUARING_OPT )
 const unsigned int Driver_Mult_Matrix_Threshold  =       8;
-const unsigned int Driver_Basis_Max_Count        = 1 << 30;
-const unsigned int Driver_Fast_Size_Threshold    = 1 <<  6;
-const unsigned int Driver_Inv_Fast_Dim_Threshold = 1 <<  6;
+const unsigned int Driver_Basis_Max_Count        =      10;
+const unsigned int Driver_Fast_Size_Threshold    = 1 << 10;
+const unsigned int Driver_Inv_Fast_Dim_Threshold = 1 <<  7;
 #else
 const unsigned int Driver_Mult_Matrix_Threshold  = glucat::DEFAULT_Mult_Matrix_Threshold;
 const unsigned int Driver_Basis_Max_Count        = glucat::DEFAULT_Basis_Max_Count;
