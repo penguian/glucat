@@ -1,4 +1,7 @@
-Paul C. Leopardi <paul.leopardi@iinet.net.au>
+AUTHORS for GluCat 0.7.0 with PyClical
+======================================
+
+Paul C. Leopardi <leopardi@users.sourceforge.net>
 
 Project supervisor
 ------------------
@@ -18,14 +21,6 @@ ref: S. Meyers, "Effective C++ ", Addison-Wesley, 1992.
 
 Arvind Raja's prototype was modelled on Clical, by Pertti Lounesto, R. Mikkola,
 V. Vierros.
-
-Advice
-------
-A. Alexandrescu, N. Josuttis, A. Koenig, Scott Meyers, B. Moo, Bjarne Stroustrup, T. Veldhuizen:
-  C++ usage.
-Joerg Arndt: Bit wizardry.
-Duraid Madina, Russell Standish: C++, debugging.
-Christian Perwass: Operators, user interface.
 
 Definitions
 -----------
@@ -87,15 +82,27 @@ Testing
 -------
 Joerg Walter, John Fletcher, Henk Jansen, Johannes Brunen.
 
+Workarounds
+-----------
+Carlos O'Ryan: workaround used in generator.h for:
+"... only defines a private destructor and has no friends"
+
+Advice
+------
+A. Alexandrescu, N. Josuttis, A. Koenig, Scott Meyers, B. Moo, Bjarne
+Stroustrup, T. Veldhuizen:
+  C++ usage.
+Joerg Arndt: Bit wizardry.
+Duraid Madina, Russell Standish: C++, debugging.
+Christian Perwass: Operators, user interface.
+
 Related Projects
 ----------------
 John Fletcher: BoostCliffordDiscussion
 http://www.crystalclearsoftware.com/cgi-bin/boost_wiki/wiki.pl?BoostCliffordDiscussion
 
-Workarounds
------------
-Carlos O'Ryan: workaround used in generator.h for:
-"... only defines a private destructor and has no friends"
+Specific references
+===================
 
 References for identities
 -------------------------
@@ -147,3 +154,72 @@ Healy), in Groups and Computation II, DIMACS Series in Discrete Math and
 Computer Science, Vol. 28, L. Finkelstein and W. Kantor (eds.), 1997, pp.
 329--369.
 
+Recommended general references
+==============================
+
+Books
+-----
+Rafal Ablamowicz, Pertti Lounesto, Josep Parra (eds.),
+"Clifford Algebras with Numeric and Symbolic Computations", Birkhauser, 1996.
+
+Chris Doran and Anthony Lasenby, "Geometric Algebra for Physicists",  Cambridge
+University Press, 2003, 2007.
+http://www.mrao.cam.ac.uk/~cjld1/pages/book.htm
+
+David Hestenes, Garret Sobczyk, "Clifford Algebra to Geometric Calculus",
+Kluwer, first published in 1984; reprinted with corrections in 1992.
+
+Pertti Lounesto, "Clifford Algebras and Spinors", Cambridge University Press,
+Second enhanced edition, 2001.
+
+Alan Macdonald, "Linear and Geometric Algebra", 2011.
+
+Ian R. Porteous, "Clifford Algebras and the Classical groups", Cambridge
+University Press, 1995.
+
+Web sites
+---------
+o Rafal Ablamowitz
+  http://top.math.tntech.edu/rafal/
+o William Baylis:
+  http://cronus.uwindsor.ca/baylis-research
+o The Clifford Research Group at Ghent University
+  http://cage.ugent.be/crg/
+o Leo Dorst 
+  http://staff.science.uva.nl/~leo/clifford/
+o John Fletcher
+  http://www1.aston.ac.uk/eas/staff/dr-john-fletcher/
+o The Geometric Algebra Research Group at Cambridge:
+  http://www.mrao.cam.ac.uk/~clifford/
+o David Hestenes
+  http://geocalc.clas.asu.edu/
+o Soeren Krausshar
+  http://www3.mathematik.tu-darmstadt.de/en/hp/
+  algebrageometrieundfunktionalanalysis/krausshar-soeren/startseite.html
+o Pertti Lounesto
+  http://users.tkk.fi/ppuska/mirror/Lounesto/
+o Alan Macdonald
+  http://faculty.luther.edu/~macdonal/
+o Christian Perwass
+  http://www.perwass.de/
+o Wikipedia: Geometric algebra
+  http://en.wikipedia.org/wiki/Geometric_algebra
+
+
+Other Clifford algebra software
+-------------------------------
+ Current
+ o CLIFFORD for Maple 16
+   http://math.tntech.edu/rafal/cliff16/index.html
+ o CLUCalc, 3D calculation and visualization software
+   http://www.clucalc.info/
+ o GABLE, a Matlab package with a geometric algebra tutorial
+   http://staff.science.uva.nl/~leo/GABLE/index.html
+ o Gaigen 2.5, a C++ code optimized geometric algebra implementation generator
+   http://sourceforge.net/projects/g25/
+
+ Historical
+ o CLICAL, a Clifford algebra calculator
+   http://users.tkk.fi/ppuska/mirror/Lounesto/CLICAL.htm
+ o GA Package for Maple V
+   http://www.mrao.cam.ac.uk/~clifford/software/GA/
