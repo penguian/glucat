@@ -1,3 +1,561 @@
+2012-10-11 00:03  leopardi
+
+	* glucat/random.h: Include header dependencies.
+
+	  Use optional preprocessor symbols to control inclusions in this
+	  file.
+
+	  Use "#if defined()" instead of "#ifdef".
+
+	  Cosmetic: Make brackets adhere to coding conventions
+
+2012-10-11 00:02  leopardi
+
+	* glucat/qd.h: Include header dependencies.
+
+	  Use optional preprocessor symbols to control inclusions in this
+	  file.
+
+	  Use "#if defined()" instead of "#ifdef".
+
+2012-10-11 00:01  leopardi
+
+	* glucat/portability.h: Include header dependencies.
+
+	  Cosmetic: Indent preprocessor defines consistently.
+
+2012-10-11 00:01  leopardi
+
+	* glucat/matrix_multi_imp.h: Include header dependencies.
+
+	  Use "#if defined()" instead of "#ifdef".
+
+	  Rewrite basis_element() so that the basis_cache uses pointers to
+	  matrices instead of matrices.  Make the use of the basis_cache
+	  depend on the actual frame count().
+
+	  Overhaul the implementation of sqrt() and log() so that the Pade'
+	  approximation depends on the numeric precision.
+
+	  Implement exp(): exponential of multivector, using
+	  clifford_exp().
+
+	  Cosmetic: Use traits_t consistently.
+
+2012-10-10 23:59  leopardi
+
+	* glucat/matrix_multi.h: Include header dependencies.
+
+	  Use optional preprocessor symbols to control inclusions in this
+	  file.
+
+	  Use "#if defined()" instead of "#ifdef".
+
+	  Define namepace ublas as boost::numeric::ublas in this file.
+
+2012-10-10 23:58  leopardi
+
+	* glucat/matrix_imp.h: Include header dependencies.
+
+	  Use optional preprocessor symbols to control inclusions in this
+	  file.
+
+	  Use "#if defined()" instead of "#ifdef".
+
+	  Change the definitions of epsilon and norm_tol to improve the
+	  detection of real negative and imaginary eigenvalues.
+
+2012-10-10 23:56  leopardi
+
+	* glucat/long_double.h: Use "#if defined()" instead of "#ifdef".
+
+2012-10-10 23:55  leopardi
+
+	* glucat/: glucat.h, glucat_imp.h: Include only GluCat headers as
+	  dependencies.
+
+	  Let the GluCat header files include their own dependencies and
+	  deal with their own relevant preprocessor symbols.
+
+2012-10-10 23:55  leopardi
+
+	* glucat/global.h: Include header dependencies.
+
+	  Tweak tuning policy default constants.
+
+2012-10-10 23:53  leopardi
+
+	* glucat/framed_multi_imp.h: Include header dependencies.
+
+	  Use optional preprocessor symbols to control inclusions in this
+	  file.
+
+	  Use "#if defined()" instead of "#ifdef".
+
+	  If a hash_map or an unordered_map is being used, as indicated by
+	  the symbol _GLUCAT_MAP_IS_HASH, define the macros
+	  _GLUCAT_HASH_N() and _GLUCAT_HASH_SIZE_T().
+
+	  Use _GLUCAT_HASH_N() to construct framed_multi_t from map_t with
+	  an assumed or inferred minimum number of initial buckets..
+
+	  In the constructor from matrix_multi_t, and in operators *, ^, &,
+	  and %  use _GLUCAT_HASH_SIZE_T() to construct framed_multi_t from
+	  map_t with an inferred minimum number of initial buckets.
+
+	  Use clifford_exp(). to implement exp(): exponential of
+	  multivector.
+
+	  Define a new member function nbr_terms(): number of terms.
+
+	  Cosmetic: Use traits_t consistently.
+
+2012-10-10 23:49  leopardi
+
+	* glucat/framed_multi.h: Include header dependencies.
+
+	  Use optional preprocessor symbols to control inclusions in this
+	  file.
+
+	  Use "#if defined()" instead of "#ifdef".
+
+	  Declare exp(): exponential of multivector, and make it a friend
+	  of framed_multi<>.
+
+	  Change hash() to index_set_hash().
+
+	  Define hash_size_t.
+
+	  Declare a private constructor that uses a hash size.	This is to
+	  try to optimize the allocation for the hash and unordered_map
+	  implementations of framed_multi<>.
+
+	  Declare a new member function nbr_terms(): number of terms.
+
+2012-10-10 23:45  leopardi
+
+	* glucat/clifford_algebra_imp.h: Include header dependencies.
+
+	  Define clifford_exp(): exponential of multivector, with
+	  implementation moved from exp() in matrix_multi_imp.h to this
+	  function, and optimized for varying numeric precision given by
+	  limits_t::digits.
+
+	  In acosh() and asinh() distinguish two cases to give a more
+	  accurate result.
+
+2012-10-10 23:44  leopardi
+
+	* glucat/clifford_algebra.h: Include header dependencies.
+
+	  Declare clifford_exp(): exponential of multivector.
+
+2012-10-10 23:43  leopardi
+
+	* glucat/: errors.h, generation.h, generation_imp.h, index_set.h,
+	  index_set_imp.h, matrix.h, scalar.h: Include header dependencies.
+
+2012-10-10 23:42  leopardi
+
+	* products/tuning.h, squaring/tuning.h: Tweak tuning policy
+	  constants.
+
+2012-10-10 23:41  leopardi
+
+	* test11/peg11.h: Tweak tolerances and set the value of "relative"
+	  differently, to give a better idea of when the algorithms really
+	  lose precision.
+
+	  Output norm of difference to low precision, but output A and B to
+	  high precision when a test fails.
+
+	  Use complexifier() instead of elliptic().
+
+	  Cosmetic: use Multivector_T instead of m_.
+
+2012-10-10 23:40  leopardi
+
+	* test11/peg11.cpp: Use "#if defined()" instead of "#ifdef".
+
+2012-10-10 23:39  leopardi
+
+	* pyclical/PyClical.pyx: Update to version 0.7.0.
+
+	  Add a reference to Doran and Lasenby 2003.
+
+	  Use integers and sets rather than strings to construct
+	  index_sets.
+
+	  Define __contains__ and __iter__ for index_set and clifford (for
+	  clifford these raise TypeError.)
+
+	  Fix some doctests for '**' and pow.
+
+2012-10-10 23:35  leopardi
+
+	* pyclical/PyClical.h: Use set notation instead of string notation
+	  for repr of index_set.
+
+2012-10-10 23:34  leopardi
+
+	* test_runtime/: gfft_test-11.out, products-8.out, squaring-11.out,
+	  test.out, transforms-8.out: Test results for version 0.7.0.
+
+2012-10-10 23:33  leopardi
+
+	* INSTALL, README: Complete rewrite.
+
+2012-10-10 23:32  leopardi
+
+	* glucat.lsm: Use SourceForge email address.
+
+	  Update to version 0.7.0.
+
+2012-10-10 23:32  leopardi
+
+	* Doxyfile, NEWS, TODO: Update to version 0.7.0.
+
+2012-10-10 23:25  leopardi
+
+	* configure.in, configure.in.in: Make "--enable-debug=no
+	  --enable-pyclical" the default.
+
+	  Check for $GXX before adding "-std=c++11" to CFLAGS.
+
+	  Check for <qd/qd_real.h> instead of <qd/qd_config.h>.
+
+	  Update to version 0.7.0.
+
+2012-10-10 23:24  leopardi
+
+	* AUTHORS: Use SourceForge email address.
+
+	  Move references from README to here.
+
+	  Update to version 0.7.0.
+
+2012-10-10 23:18  leopardi
+
+	* pyclical/demos/pyclical_tutorial_utils.py: Move to
+	  pyclical/demos/.
+
+	  Move is_near() after print_fill().
+
+	  Remove exercise_str.
+
+	  Use a sandbox in input_exec() and check_exec() so that incorrect
+	  execution does not affect the state. Copy the current state to
+	  the sandbox before the exec.
+
+	  Allow check_exec() and check_eval() to pass on KeyboardInterrupt.
+
+2012-10-10 23:18  leopardi
+
+	* pyclical/demos/pyclical_tutorials.py: Move to pyclical/demos/.
+
+	  Rename from pyclical_tutorial.py to pyclical_tutorials.py.
+
+	  Add new tutorials.
+
+2012-10-10 23:17  leopardi
+
+	* pyclical/demos/: pyclical_tutorial_1_0_plane.py,
+	  pyclical_tutorial_1_1_complex.py, pyclical_tutorial_1_2_space.py,
+	  pyclical_tutorial_1_3_lorentz.py,
+	  pyclical_tutorial_1_4_fourth.py,
+	  pyclical_tutorial_1_5_conformal.py: New tutorials.
+
+2012-10-10 23:17  leopardi
+
+	* pyclical/demos/pyclical_tutorial_0_4_transcendental.py: Move to
+	  pyclical/demos/.
+
+	  Use the CC-by-SA licence for tutorials.
+
+	  Call the tutorial() function within "try ... except" so that
+	  CRTL-c can interrupt the tutorial.
+
+2012-10-10 23:12  leopardi
+
+	* pyclical/demos/: pyclical_tutorial_0_2_operations.py,
+	  pyclical_tutorial_0_3_functions.py: Move to pyclical/demos/.
+
+	  Use the CC-by-SA licence for tutorials.
+
+	  Call the tutorial() function within "try ... except" so that
+	  CRTL-c can interrupt the tutorial.
+
+2012-10-10 23:11  leopardi
+
+	* pyclical/demos/pyclical_tutorial_0_1_index_sets.py: Move to
+	  pyclical/demos/.
+
+	  Use the CC-by-SA licence for tutorials.
+
+	  Add descriptions for set membership and iteration.
+
+	  Call the tutorial() function within "try ... except" so that
+	  CRTL-c can interrupt the tutorial.
+
+2012-10-10 23:11  leopardi
+
+	* pyclical/demos/pyclical_tutorial_0_0_notation.py: Move to
+	  pyclical/demos/.
+
+	  Use the CC-by-SA licence for tutorials.
+
+	  Change the description of subscripting [] notation.
+
+	  Call the tutorial() function within "try ... except" so that
+	  CRTL-c can interrupt the tutorial.
+
+2012-10-10 23:10  leopardi
+
+	* pyclical/demos/: pyclical_demo.py, sqrt_log_demo.py: Move to
+	  pyclical/demos/.
+
+	  Define demo() function and use it within "try ... except" so that
+	  CRTL-c can interrupt the demo.
+
+2012-10-10 23:09  leopardi
+
+	* pyclical/demos/: pyclical_demo.out, sqrt_log_demo.out: Move to
+	  pyclical/demos/.
+
+	  Demo output.
+
+2012-10-10 23:07  leopardi
+
+	* pyclical/demos/plotting_demo.py: Move to pyclical/demos/.
+
+	  New parameters: figheight and figwidth, defaulting to 12 and 15
+	  respectively.
+
+	  Change plotting_demo() to demo().
+
+	  Cosmetic: use punctuation consistently in comments and output.
+
+2012-10-10 23:06  leopardi
+
+	* pyclical/: plotting_demo.py, pyclical_demo.out, pyclical_demo.py,
+	  pyclical_tutorial.py, pyclical_tutorial_0_0_notation.py,
+	  pyclical_tutorial_0_1_index_sets.py,
+	  pyclical_tutorial_0_2_operations.py,
+	  pyclical_tutorial_0_3_functions.py,
+	  pyclical_tutorial_0_4_transcendental.py,
+	  pyclical_tutorial_utils.py, sqrt_log_demo.out, sqrt_log_demo.py:
+	  Move to pyclical/demos.
+
+2012-07-15 10:59  leopardi
+
+	* pyclical/: pyclical_tutorial.py,
+	  pyclical_tutorial_0_0_notation.py,
+	  pyclical_tutorial_0_1_index_sets.py,
+	  pyclical_tutorial_0_2_operations.py,
+	  pyclical_tutorial_0_3_functions.py,
+	  pyclical_tutorial_0_4_transcendental.py: First set of interactive
+	  tutorials for PyClical.  Run separately or via
+	  pyclical_tutorial.py.
+
+2012-07-15 09:59  leopardi
+
+	* pyclical/: sqrt_log_demo.out, sqrt_log_demo.py: Use demo
+	  utilities from pyclical_tutorial_utils.py, e.g. print_exec(),
+	  print_fill().
+
+2012-07-15 09:58  leopardi
+
+	* pyclical/PyClical.pyx: Interim version number "0.6.0 + cvs".	Use
+	  ixt rather than ist to name parameters of class index_set.  New
+	  member function reframe(self, ixt):  Put self into a larger
+	  frame, defined by index set ixt.  Ensure that __richcmp__ for
+	  clifford raises TypeError for unimplemented comparisons.  Test
+	  member function inv() properly.  Member functions __pow__() and
+	  pow(), and ordinary function pow() can now take clifford powers
+	  as well as integer powers.  Member function vector_part() now has
+	  optional parameter frm.  The name cl is now an abbreviation for
+	  clifford.  The name ist is now an abbreviation for index_set.
+	  The name tau is an abbreviation for pi*2.
+
+	  Cosmetic changes: o Tidy up some expressions in doctests.  o Fix
+	  typos in comments.
+
+2012-07-15 09:57  leopardi
+
+	* pyclical/PyClical.h: Function agc3() no longer reframes its
+	  output into {1,2,3}.	Functions cga3() and cga3std() no longer
+	  reframe their output into {-1,1,2,3,4}.  (PyClical now includes
+	  an explicit reframe() member function.)
+
+2012-07-15 09:57  leopardi
+
+	* pyclical/: pyclical_demo.out, pyclical_demo.py: Use demo
+	  utilities from pyclical_tutorial_utils.py, e.g. print_exec(),
+	  print_fill().  Reformat remarks: remove double spaces between
+	  words, and end sentences with full stops.
+
+2012-07-15 09:57  leopardi
+
+	* pyclical/plotting_demo.py: Overhaul plotting demo: Split demo
+	  function into demo() and draw_orbit().  Use two rotors, randomly
+	  choosing between them.  Exponentiate each of two bivectors only
+	  once, in demo().  In draw_orbit(), use successive multiplication.
+	  Improve point plotting and colouring.  Remove parameter d: demo
+	  uses d=4 exclusively.  Use appropriate default values.  Fix
+	  typos.
+
+2012-07-15 09:56  leopardi
+
+	* pyclical/glucat.pxd: Include constructor Clifford (Clifford Clf,
+	  IndexSet ist) except+.  New member function vector[scalar_t]
+	  vector_part(IndexSet frm) except+.  Functions agc3(), cga3() and
+	  cga3std() no longer throw exceptions.
+
+2012-07-15 09:56  leopardi
+
+	* pyclical/pyclical_tutorial_utils.py: New file. Utilities for
+	  tutorials and demos.
+
+2012-07-15 09:52  leopardi
+
+	* glucat/portability.h: For Cygwin: check for HAVE_BITS_WORDSIZE_H
+	  and include bits/wordsize.h.
+
+2012-07-15 09:52  leopardi
+
+	* glucat/: glucat_imp.h, random.h: If flag _GLUCAT_USE_STD_RANDOM
+	  is set, use C++11 std random number generation.
+
+2012-07-15 09:52  leopardi
+
+	* glucat/: framed_multi.h, glucat.h: New type of map:
+	  _GLUCAT_USE_STD_UNORDERED_MAP for C++11 std::unordered_map.
+
+2012-07-15 09:50  leopardi
+
+	* glucat/: clifford_algebra.h, framed_multi_imp.h,
+	  matrix_multi_imp.h: New member function  vector_part(frm,
+	  prechecked):	vector part of multivector, as a vector_t with
+	  respect to frm.
+
+2012-07-15 09:49  leopardi
+
+	* config.h.in: Generated file.
+
+2012-07-15 09:48  leopardi
+
+	* configure.in, configure.in.in: New type of map: stdunordered for
+	  C++11 std::unordered_map:  sets _GLUCAT_USE_STD_UNORDERED_MAP
+	  Previous map type unordered is now tr1unordered for
+	  std::tr1::unordered_map.  New random generator type std for C++11
+	  std random number generation:  sets _GLUCAT_USE_STD_RANDOM.  If
+	  either stdunordered or std random is chosen successfully, this
+	  sets glucat_cxx_std="cxx11" which sets -std=c++11 compiler
+	  option.  For Cygwin: check for bits/wordsize.h and set
+	  HAVE_BITS_WORDSIZE_H.
+
+2012-05-28 09:16  leopardi
+
+	* pyclical/: sqrt_log_demo.out, sqrt_log_demo.py: Split the
+	  expression for atanh2 over multiple input lines (not visible in
+	  output).  Use the pseudoscalar i = e({-1,1,2,3,4}) to obtain the
+	  log of -R or R.
+
+2012-05-26 21:49  leopardi
+
+	* pyclical/: sqrt_log_demo.out, sqrt_log_demo.py: Overhaul.  Use
+	  print_exec to execute lines of Python code.  Compare PyClical
+	  sqrt and log with the sqrt and log of Dorst and Valkenburg in the
+	  case of rotors in Conformal Geometric Algebra.
+
+2012-05-26 21:46  leopardi
+
+	* pyclical/: pyclical_demo.out, pyclical_demo.py: Overhaul.  Use
+	  print_exec to execute lines of Python code.  Use e(int) rather
+	  than special names for generators.  Use generators in canonical
+	  order and use e(set) where this makes sense.
+
+2012-05-23 10:12  leopardi
+
+	* pyclical/plotting_demo.py: Overhaul to make more useful.
+
+	  New function draw_orbit(r, nbr_points, segment_len, azimuth,
+	  rot_angle, jitter) allows the user to explore the use of their
+	  own rotor r and see what happens when r is a multivector other
+	  than a rotor.
+
+	  Share common default values between draw_orbit and demo
+	  functions.  Give these defaults more useful values.
+
+	  Draw the origin as a white point to work around a bug in
+	  Matplotlib.
+
+	  Ensure that the initial point is on the unit sphere in Euclidean
+	  space.
+
+	  Now that agc3 has been fixed to ensure that the result is in
+	  ist({1,2,3}), use agc3(u).vector_part().
+
+	  Use the norms of each point in p to make the points of the
+	  scatter plot more colourful without oversaturating them.  The
+	  variable arena_width and replotting of the points are no longer
+	  used.
+
+	  For each plot, the demo function now just generates a random
+	  bivector in istpq(d,0), exponentiates it to obtain the rotor and
+	  and then simply calls draw_orbit.
+
+	  Cosmetic: Clean up comment header.
+
+2012-05-20 12:52  leopardi
+
+	* pyclical/glucat.pxd: The last change in PyClical.h to namespace
+	  cga3 functions cga3(), cga3std() and agc3() mean that these
+	  functions can throw exceptions.  Ensure that Cython know this.
+
+2012-05-16 12:17  leopardi
+
+	* pyclical/plotting_demo.py: This script is now more usable as a
+	  demo. Many changes have been made, including:
+
+	  o New arguments: - azimuth : Angle about a vertical axis used to
+	  define the viewpoint.  - jitter : Angle in degrees to use for
+	  each step in the rotation.
+
+	  o More sensible default values for arguments.
+
+	  o Do not use the twisted adjoint action |=, but instead calculate
+	  ir, the inverse of the rotor r once, and use the adjoint action u
+	  = r * u * ir. This works because r must be even, since it is th
+	  exponential of a bivector.
+
+	  o Do not plot lines. The code is now fast enough that this is no
+	  longer useful, since the hull of the scattered points can now
+	  more easily be seen.
+
+	  o Do not use plt.show(). This caused the plots to corrupt when
+	  the next figure was started.
+
+	  o Ensure the points lie within the arena by doubling the arena
+	  width and  recolouring existing points when necessary.
+
+2012-05-14 22:13  leopardi
+
+	* pyclical/PyClical.h: In namespace cga3, ensure that cga3(),
+	  cga3std() return a multivector within frame {-1,1,2,3,4}, and
+	  agc3() returns a multivector within frame {1,2,3}.
+
+2012-05-13 00:45  leopardi
+
+	* pyclical/plotting_demo.py: Fix bug in plotting demo due to use of
+	  vector_part() on result of cga3().  Extract individual
+	  coordinates instead, until cga3() is fixed to return a vector
+	  with frame ist("{1,2,3}").
+
+2012-05-12 23:02  leopardi
+
+	* ChangeLog: ChangeLog for version 0.6.0.
+
 2012-05-12 22:29  leopardi
 
 	* INSTALL: Specify versions of Boost numeric bindings, Python and
