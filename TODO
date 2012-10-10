@@ -1,4 +1,5 @@
-As at GluCat 0.6.0, 2012-05-12:
+TODO for GluCat 0.7.0 with PyClical
+===================================
 
 Documentation:
 o Write a programmer's guide with descriptions of usage via use cases.
@@ -17,26 +18,25 @@ o Port to other architectures and compilers which support template template
 
 Interfaces:
   Downwards:
-o Support later versions of Alglib and Boost numeric bindings
+o Try using Eigen as a replacement for uBLAS, Boost numeric bindngs and Alglib.
+o Alternatively, support later versions of Alglib and Boost numeric bindings
   (requested by John Fletcher).
-o Support the use of C++11 std::unordered_map (requested by John Fletcher).
-o Support the use of C++11 std:: random number generation
-  (requested by John Fletcher).
-o Investigate the use of Eigen as a replacement for uBLAS.
 
   Upwards:
 o Expand the Cython-based Python extension module PyCliCal into a Sage interface.
-o Try defining Boost concepts and more numeric traits so that GluCat can eventually
-  become a Boost library.
+o Try defining Boost concepts and more numeric traits so that GluCat can
+  eventually   become a Boost library.
 
 Transcendental functions:
 o Devise better algorithms and better implementations of existing algorithms for
   the transcendental functions. In particular, pay more attention to radius of
   convergence, condition number of matrices and poking out of the subalgebra.
-o Investigate the use of matrix decompositions in the evaluation of transcentental
-  functions. See N. J. Higham, Functions of Matrices: Theory and Computation, 2008.
+o Investigate the use of matrix decompositions in the evaluation of
+  transcendental functions. See N. J. Higham, Functions of Matrices: Theory and
+  Computation, 2008.
 
 Experimental:
+o Investigate the use of expression templates in GluCat.
 o Try refactoring the relationship between matrix_multi, framed_multi and
   clifford_algebra to allow more flexibility with template parameters.
   Possibly use enable_if and SFINAE to do this.

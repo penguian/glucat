@@ -1,3 +1,38 @@
+NEWS for GluCat 0.7.0 with PyClical
+===================================
+
+2012-10-10: 0.7.0:
+GluCat 0.7.0 has more accurate sqrt and transcendental functions and includes
+PyClical tutorials.
+
+The PyClical Python extension module now comes with a set of tutorials that
+guide you through working with Clifford algebra calculations in Python.
+
+The GluCat library now supports C++11, including <unordered_map> and <random>.
+
+The GluCat library now has transcendental functions that are more accurate when
+used with higher precision arithmetic. This is accomplished by using different
+Pade' approximations according to the numerical precision needed.
+
+The class glucat::framed_multi<> based on hash_map or unordered_map now uses
+constructors that specify an initial number of buckets.
+
+The basis_element cache used for glucat::matrix_multi<> now uses pointers to
+matrices instead of matrices.
+
+The GluCat header files have been reorganized so that they now directly include
+the header files they depend on, rather than relying on glucat/glucat.h and
+glucat/glucat_imp.h to do this.
+
+The default options for ./configure now yield the simplest usable production
+case: ./configure without arguments with GluCat 0.7.0 gives the same results as
+"./configure --with-map=unordered --enable-debug=no --enable-pyclical" did with
+GluCat 0.6.0.
+
+The README and INSTALL files have been completely rewritten, and AUTHORS has
+been updated.
+
+
 2012-05-12: 0.6.0
 GluCat 0.6.0 includes the PyClical extension module for Python.
 
@@ -19,6 +54,7 @@ o New function complexifier(val) : square root of -1 which commutes with all
 o New functions sqrt(val,i,prechecked), and log(val,i,prechecked) :
   square root and logarithm of multivector with specified complexifier.
 
+
 2010-05-31: 0.5.1
 GluCat 0.5.1 fixes sqrt and transcendental functions.
 
@@ -33,6 +69,7 @@ which contain eigenvalue functions.
 o See Approximating functions in Clifford algebras:
   What to do with negative eigenvalues? AGACSE 2010.
 ( To be posted on http://www.maths.anu.edu.au/~leopardi )
+
 
 2010-05-28: 0.5.0
 Introducing PyCliCal: a Python interface to GluCat.
@@ -64,6 +101,7 @@ The C++ code has been updated to support the Intel C++ compiler, version 11.1.
 This involved updateing glucat/portability.h and moving the definitions of
 var_term member fnctions from glucat/framed_multi_imp.h to glucat/framed_multi.h.
 
+
 2010-04-04: 0.4.4
 GluCat supports QD high precision arithmetic.
 
@@ -78,6 +116,7 @@ Algorithms for Quad-Double Precision Floating Point Arithmetic.
 In Proceedings of the 15th IEEE Symposium on Computer Arithmetic (2001).
 ARITH. IEEE Computer Society, 2001.
 
+
 2009-12-21: 0.4.3
 Glucat has a fix for another comparison operator.
 
@@ -85,6 +124,7 @@ For operator!= (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI>& rhs),
 there was essentially the same bug as was fixed in GluCat 0.4.2, but this was
 missed by Bug 2847758. GluCat 0.4.3 fixes this operator, and there are more tests
 in test14 to check this case as well.
+
 
 2009-12-15: 0.4.2
 Bug 2847758: "operator!=(lhs,scr) sometimes wrongly returns true" has been fixed.
@@ -96,6 +136,7 @@ identity matrix. In this case operator!=() returns false when it should return t
 
 This bug has been fixed in GluCat 0.4.2, and new tests have been added to test14
 to check that both operator==() and operator!=() return correct results.
+
 
 2009-07-28: 0.4.1
 Glucat has improved transcendental functions and better support for scalars.
@@ -123,6 +164,7 @@ and Y. Hida, X. S. Li, and D. H. Bailey,
 Algorithms for Quad-Double Precision Floating Point Arithmetic.
 In Proceedings of the 15th IEEE Symposium on Computer Arithmetic (2001).
 ARITH. IEEE Computer Society, 2001.
+
 
 2007-11-06: 0.4.0
 Glucat is now faster and more accurate.
@@ -161,6 +203,7 @@ There are many other minor changes.
 See the files INSTALL, README, glucat-api/refman.pdf and Changelog for more
 details.
 
+
 2007-09-09: 0.3.0
 Two errors lurking in GluCat versions 0.0.1 through 0.2.3 have been fixed.
 
@@ -187,6 +230,7 @@ needed because of differences between the current GNU and Intel compilers. The
 timing tests have been revised to use this new constructor.
 
 See the Changelog for a detailed list of changes.
+
 
 2007-08-23: 0.2.3
 GluCat now uses either dense or compressed matrices; LGPLv3.
@@ -216,6 +260,7 @@ GluCat is now licenced using LGPLv3 or later. See COPYING.
 
 See the Changelog for a detailed list of changes.
 
+
 2007-02-28: 0.2.2
 GluCat, now with Bit Wizardry, is even faster.
 
@@ -230,6 +275,7 @@ Chapter 1, Bit wizardry, http://www.jjj.de/bitwizardry/bitwizardrypage.html
 The file glucat/global.h now defines the macro _GLUCAT_BITS_PER_ULONG,
 which is used in glucat/index_set_imp.h to enable the proprocessor to select
 the 32-bit or 64-bit versions of some of the bitwise algorithms.
+
 
 2007-01-14: 0.2.1
 GluCat fifth anniversary edition is now faster.
@@ -288,6 +334,7 @@ o Test GFFT for frames which are not contiguous.
 
 See the Changelog for a detailed list of changes.
 
+
 2006-12-06: 0.2.0
 Glucat now properly defines and uses numeric_limits and isnan().
 A brief list of changes includes:
@@ -313,11 +360,13 @@ o In portability.h, suppress spurious Intel compiler warnings.
 
 See the Changelog for a detailed list of changes.
 
+
 2005-08-31: 0.1.9
 GluCat continues to track changes in g++ and Boost.
 The code is now even closer to Standard C++, and a little cleaner.
 This version of GluCat requires Boost 1.31.0, 1.33.0 or later.
 See the Changelog for a detailed list of changes.
+
 
 2004-08-11: 0.1.8
 GluCat has had a few bugs fixed, and a few minor enhancements.
@@ -336,14 +385,17 @@ The left contraction operator %= for framed_multi<> has a minor speed
 improvement.
 Compilation using g++ versions older than 3.3 now uses less agressive inlining.
 
+
 2004-06-20: 0.1.7
 GluCat now has an improved ./configure script which is better able to
 determine whether you have <boost/numeric/ublas/lu.hpp> available.
+
 
 2004-05-09: 0.1.6
 Glucat now compiles under gcc 3.4.
 Note that the uBLAS in Boost 1.31.0 does NOT compile under gcc 3.4.
 This has been fixed in Boost CVS.
+
 
 2004-05-05: 0.1.5
 GluCat has further optimizations. The fast conversion between framed_multi<>
@@ -354,10 +406,12 @@ which gives the odd part of a multivector. A new configure option
 "--with-hash-map" replaces the separate hash_map version of GluCat.
 Note: This version of GluCat does NOT compile under gcc 3.4.
 
+
 2003-07-05: 0.1.4-hash_map
 This is a hack to glucat-0.1.4 which uses __gnu_cxx::hash_map<> instead of
 std::map<> for framed_multi<>. gfft_test-10.out shows that the computational
 complexity of the GFT for R_{n,n}is now O(n*4^n).
+
 
 2003-06-29: 0.1.4
 GluCat has gained two bits. The mapping of index_set_t to bitset_t now treats
@@ -366,6 +420,7 @@ bitset_t. This allows DEFAULT_LO to be reduced by 1, and DEFAULT_HI to be
 increased by 1. For a 32 bit unsigned long, the default index_set_t is
 now index_set<-16,16>, using std::bitset<32> rather than index_set<-15,15>,
 which used std::bitset<31>.
+
 
 2003-06-23: 0.1.3
 GluCat now has a few optimizations. The tests have been split up into different
@@ -376,6 +431,7 @@ optimization to unit() and an optimization to nork() for the monomial case.
 GluCat remains compatible with Boost 1.30.0, and also takes advantage of recent
 changes to uBLAS, currently in Boost CVS.
 
+
 2003-03-02: 0.1.2
 GluCat now uses a generalized Fast Fourier Transform (FFT) to map between
 framed_multi<> and matrix-multi<> at high dimensions. This greatly speeds up
@@ -383,6 +439,7 @@ operations in higher dimensions, for example multiplication and division.
 A new ./transforms subdirectory includes a test program for the generalized FFT.
 Also, the build process has been updated to make better use of autoconf and
 automake. As a result, you should no longer need to edit Makefile.in
+
 
 2003-01-08: 0.1.1
 An enhancement to basis_element() includes the use of a basis_table as a cache
@@ -394,6 +451,7 @@ DEFAULT_Basis_Max_Count, which is set to 10. You can change it when you define
 Tune_P, as is done intest/driver.h
 Also included is a change to definition of template defaults for tuning<>, to
 make these defaults easier to override.
+
 
 2002-12-31: 0.1.0
 GluCat is now compatible with gcc 3.2 and Intel C++ 7.0.
@@ -410,30 +468,36 @@ GluCat now uses Boost uBLAS rather than MTL, for a number of reasons:
 6 uBLAS is also generally faster than MTL. This makes GluCat generally faster.
 Other improvements to GluCat include better use of IEEE NaN.
 
+
 2002-08-15: 0.0.7
 GluCat has been finally updated to be compatible with gcc 3.1.1, autoconf 2.5.2
 and automake 1.63.This version of GluCat was built using KDevelop 2.1.2 and MTL
 2.1.2-21.
 Work continues to make GluCat and MTL compatible with Intel C++ 6.0.
 
+
 2002-04-15: 0.0.6
 A bug in elliptic() has been fixed. elliptic now returns a unit volume element I
 whichcommutes with the whole relevant subalgebra
+
 
 2002-01-27: 0.0.5
 GluCat has now been tested with gcc 3.0.3 and should now be very compatible with
 standard C++.
 
+
 2002-01-24: 0.0.4
 GluCat now uses the real irreducible representation for matrix_multi<>, which
 should now runacceptably quickly for Cl(p,0) and Cl(0,q).
+
 
 2002-01-22: 0.0.3
 A nasty bug in matrix_multi<>::operator==() is now fixed. cos(), sin() and
 matrx_multi<>::norm() have been optimized.
 
+
 2002-01-12: 0.0.2
 GluCat now uses CVS.
 
-2002-01-09: 0.0.1
 
+2002-01-09: 0.0.1
