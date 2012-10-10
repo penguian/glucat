@@ -31,6 +31,22 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
+#include "glucat/matrix_multi.h"
+
+#include "glucat/matrix.h"
+#include "glucat/generation.h"
+
+#include <boost/numeric/ublas/matrix.hpp>
+#include <boost/numeric/ublas/matrix_expression.hpp>
+#include <boost/numeric/ublas/matrix_proxy.hpp>
+#include <boost/numeric/ublas/matrix_sparse.hpp>
+#include <boost/numeric/ublas/operation.hpp>
+#include <boost/numeric/ublas/operation_sparse.hpp>
+#include <boost/numeric/ublas/triangular.hpp>
+#include <boost/numeric/ublas/lu.hpp>
+
+#include <fstream>
+
 namespace glucat
 {
   // References for algorithms:
@@ -271,7 +287,7 @@ namespace glucat
       ? rhs
       : multivector_t(framed_multi_t(rhs), our_frame, true);
 
-#ifdef _GLUCAT_USE_DENSE_MATRICES
+#if defined(_GLUCAT_USE_DENSE_MATRICES)
     return ublas::norm_inf(lhs_ref.m_matrix - rhs_ref.m_matrix) == 0;
 #else
     typedef typename matrix_t::const_iterator1 const_iterator1;
@@ -413,8 +429,10 @@ namespace glucat
   matrix_multi<Scalar_T,LO,HI>::
   operator*= (const Scalar_T& scr)
   { // multiply coordinates of all terms by scalar
-    if (numeric_traits<Scalar_T>::isNaN_or_isInf(scr) || this->isnan())
-      return *this = numeric_traits<Scalar_T>::NaN();
+
+    typedef numeric_traits<Scalar_T> traits_t;
+    if (traits_t::isNaN_or_isInf(scr) || this->isnan())
+      return *this = traits_t::NaN();
     if (scr == Scalar_T(0))
       *this = Scalar_T(0);
     else
@@ -432,7 +450,7 @@ namespace glucat
     typedef typename multivector_t::index_set_t index_set_t;
     typedef typename multivector_t::framed_multi_t framed_multi_t;
 
-#ifndef _GLUCAT_USE_DENSE_MATRICES
+#if !defined(_GLUCAT_USE_DENSE_MATRICES)
     if (lhs.isnan() || rhs.isnan())
       return numeric_traits<Scalar_T>::NaN();
 #endif
@@ -449,7 +467,7 @@ namespace glucat
       : multivector_t(framed_multi_t(rhs), our_frame, true);
 
     typedef typename multivector_t::matrix_t matrix_t;
-#ifdef _GLUCAT_USE_DENSE_MATRICES
+#if defined(_GLUCAT_USE_DENSE_MATRICES)
     typedef typename matrix_t::size_type matrix_index_t;
 
     const matrix_index_t dim = lhs_ref.m_matrix.size1();
@@ -550,13 +568,15 @@ namespace glucat
   const matrix_multi<Scalar_T,LO,HI>
   operator/ (const matrix_multi<Scalar_T,LO,HI>& lhs, const matrix_multi<Scalar_T,LO,HI>& rhs)
   {
-#ifndef _GLUCAT_USE_DENSE_MATRICES
+    typedef numeric_traits<Scalar_T> traits_t;
+    
+#if !defined(_GLUCAT_USE_DENSE_MATRICES)
     if (lhs.isnan() || rhs.isnan())
-      return numeric_traits<Scalar_T>::NaN();
+      return traits_t::NaN();
 #endif
 
     if (rhs == Scalar_T(0))
-      return numeric_traits<Scalar_T>::NaN();
+      return traits_t::NaN();
 
     typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
     typedef typename multivector_t::index_set_t index_set_t;
@@ -593,9 +613,9 @@ namespace glucat
       const matrix_t& BT = ublas::trans(lhs_ref.m_matrix);
       matrix_t XT = BT;
       ublas::lu_substitute(LU, pvector, XT);
-#ifndef _GLUCAT_USE_DENSE_MATRICES
+#if !defined(_GLUCAT_USE_DENSE_MATRICES)
       if (matrix::isnan(XT))
-        return numeric_traits<Scalar_T>::NaN();
+        return traits_t::NaN();
 #endif
 
       // Iterative refinement.
@@ -606,13 +626,13 @@ namespace glucat
         // matrix_t R = ublas::prod(AT, XT) - BT;
         matrix_t R = -BT;
         ublas::axpy_prod(AT, XT, R, false);
-#ifndef _GLUCAT_USE_DENSE_MATRICES
+#if !defined(_GLUCAT_USE_DENSE_MATRICES)
         if (matrix::isnan(R))
-          return numeric_traits<Scalar_T>::NaN();
+          return traits_t::NaN();
 #endif
 
         Scalar_T nr = ublas::norm_inf(R);
-        if ( nr != Scalar_T(0) && !numeric_traits<Scalar_T>::isNaN_or_isInf(nr) )
+        if ( nr != Scalar_T(0) && !traits_t::isNaN_or_isInf(nr) )
         {
           matrix_t XTnew = XT;
           Scalar_T nrold = nr + Scalar_T(1);
@@ -641,7 +661,7 @@ namespace glucat
     }
     else
       // AT is singular. Return NaN
-      return numeric_traits<Scalar_T>::NaN();
+      return traits_t::NaN();
   }
 
   /// Geometric quotient
@@ -1093,7 +1113,7 @@ namespace glucat
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Matrix_T >
   class basis_table :
   public std::map< std::pair< const index_set<LO,HI>, const index_set<LO,HI> >,
-                   Matrix_T >
+                   Matrix_T* >
   {
   public:
     /// Single instance of basis table
@@ -1118,28 +1138,42 @@ namespace glucat
   matrix_multi<Scalar_T,LO,HI>::
   basis_element(const index_set_t& ist) const
   {
+    typedef std::pair<const index_set_t, const index_set_t>     index_set_pair_t;
+    const index_set_pair_t& unfolded_pair = index_set_pair_t(ist, this->m_frame);
+
+    typedef basis_table<Scalar_T,LO,HI,basis_matrix_t>          basis_table_t;
+    typedef typename basis_table_t::const_iterator              basis_const_iterator_t;
+    basis_table_t& basis_cache = basis_table_t::basis();
+    
+    const index_t frame_count = this->m_frame.count();
+    const bool use_cache = frame_count <= Tune_P::basis_max_count;
+
+    if (use_cache)
+    {
+      const basis_const_iterator_t basis_it = basis_cache.find(unfolded_pair);
+      if (basis_it != basis_cache.end())
+        return *(basis_it->second);
+    }
     const index_set_t folded_set = ist.fold(this->m_frame);
     const index_set_t folded_frame = this->m_frame.fold();
-    const index_t folded_max = folded_frame.max();
-    const index_t folded_min = folded_frame.min();
-    const matrix_index_t dim = folded_dim<matrix_index_t>(this->m_frame);
-
-    const index_t p = std::max(folded_max,           index_t(0));
-    const index_t q = std::max(index_t(-folded_min), index_t(0));
-
-    typedef basis_table<Scalar_T,LO,HI,basis_matrix_t>      basis_table_t;
-    typedef std::pair<const index_set_t, const index_set_t> index_set_pair_t;
-    typedef std::pair<const index_set_pair_t, basis_matrix_t>   basis_pair_t;
-    typedef typename basis_table_t::const_iterator          basis_const_iterator_t;
-    basis_table_t& basis_cache = basis_table_t::basis();
     const index_set_pair_t& folded_pair = index_set_pair_t(folded_set, folded_frame);
-    if (p+q <= Tune_P::basis_max_count)
+    typedef std::pair<const index_set_pair_t, basis_matrix_t*>   basis_pair_t;
+    if (use_cache)
     {
       const basis_const_iterator_t basis_it = basis_cache.find(folded_pair);
       if (basis_it != basis_cache.end())
-        return basis_it->second;
+      {
+        basis_matrix_t* result_ptr = basis_it->second;
+        basis_cache.insert(basis_pair_t(unfolded_pair, result_ptr));
+        return *result_ptr;
+      }
     }
-    const basis_matrix_t* e = (gen::generator_table<basis_matrix_t>::generator())(p,q);
+    const index_t folded_max = folded_frame.max();
+    const index_t folded_min = folded_frame.min();
+    const index_t p = std::max(folded_max,           index_t(0));
+    const index_t q = std::max(index_t(-folded_min), index_t(0));
+    const basis_matrix_t* e = (gen::generator_table<basis_matrix_t>::generator())(p, q);
+    const matrix_index_t dim = 1 << offset_level(p, q);
     basis_matrix_t result = matrix::unit<basis_matrix_t>(dim);
     for (index_t
         k = folded_min;
@@ -1147,8 +1181,12 @@ namespace glucat
         ++k)
       if (folded_set[k])
         result = matrix::mono_prod(result, e[k]);
-    if (p+q <= Tune_P::basis_max_count)
-      basis_cache.insert(basis_pair_t(folded_pair, result));
+    if (use_cache)
+    {
+      basis_matrix_t* result_ptr = new basis_matrix_t(result);
+      basis_cache.insert(basis_pair_t(folded_pair, result_ptr));
+      basis_cache.insert(basis_pair_t(unfolded_pair, result_ptr));
+    }
     return result;
   }
 
@@ -1157,7 +1195,7 @@ namespace glucat
   inline
   static
   const matrix_multi<Scalar_T,LO,HI>
-  pade_approx(const Scalar_T a[], const Scalar_T b[], const matrix_multi<Scalar_T,LO,HI>& X)
+  pade_approx(const int array_size, const Scalar_T a[], const Scalar_T b[], const matrix_multi<Scalar_T,LO,HI>& X)
   {
     // Pade' approximation
     // Reference: [GW], Section 4.3, pp318-322
@@ -1169,13 +1207,46 @@ namespace glucat
     if (X.isnan())
       return traits_t::NaN();
 
-    const multivector_t& X2 = X*X;
-    const multivector_t& X4 = X2*X2;
-    const multivector_t& X6 = X4*X2;
-    const multivector_t& N = a[0]+X2*a[2]+X4*a[4]+X6*(a[6]+X2*a[8]+X4*a[10]+X6*a[12]) +
-                          X*(a[1]+X2*a[3]+X4*a[5]+X6*(a[7]+X2*a[9]+X4*a[11]+X6*a[13]));
-    const multivector_t& D = b[0]+X2*b[2]+X4*b[4]+X6*(b[6]+X2*b[8]+X4*b[10]+X6*b[12]) +
-                          X*(b[1]+X2*b[3]+X4*b[5]+X6*(b[7]+X2*b[9]+X4*b[11]+X6*b[13]));
+    // Array size is assumed to be even
+    const int nbr_even_powers = array_size/2 - 1;
+
+    // Create an array of even powers
+    multivector_t XX[nbr_even_powers];
+    XX[0] = X * X;
+    XX[1] = XX[0] * XX[0];
+    for (int
+      k = 2;
+      k != nbr_even_powers;
+      ++k)
+      XX[k] = XX[k-2] * XX[1];
+
+    // Calculate numerator N and denominator D
+    multivector_t N = a[1];
+    for (int
+        k = 0;
+        k != nbr_even_powers;
+        ++k)
+      N += XX[k] * a[2*k + 3];
+    N *= X;
+    N += a[0];
+    for (int
+        k = 0;
+        k != nbr_even_powers;
+        ++k)
+      N += XX[k] * a[2*k + 2];
+    multivector_t D = b[1];
+    for (int
+        k = 0;
+        k != nbr_even_powers;
+        ++k)
+      D += XX[k] * b[2*k + 3];
+    D *= X;
+    D += b[0];
+    for (int
+        k = 0;
+        k != nbr_even_powers;
+        ++k)
+      D += XX[k] * b[2*k + 2];
     return N / D;
   }
 
@@ -1188,9 +1259,9 @@ namespace glucat
   {
     // Reference: [CHKL]
     typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
-    const multivector_t& iM = inv(M);
-    M = ((M + iM)/Scalar_T(2) + Scalar_T(1)) / Scalar_T(2);
-    Y *= (iM + Scalar_T(1)) / Scalar_T(2);
+    const multivector_t& invM = inv(M);
+    M = ((M + invM)/Scalar_T(2) + Scalar_T(1)) / Scalar_T(2);
+    Y *= (invM + Scalar_T(1)) / Scalar_T(2);
   }
 
   /// Product form of Denman-Beavers square root iteration
@@ -1201,18 +1272,19 @@ namespace glucat
   {
     // Reference: [CHKL]
     typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
-    typedef numeric_traits<Scalar_T> traits_t;
 
     if (val == Scalar_T(0))
       return val;
 
-    multivector_t M = val;
-    multivector_t Y = val;
-    static const Scalar_T tol = std::numeric_limits<Scalar_T>::epsilon() / Scalar_T(1024);
+    typedef std::numeric_limits<Scalar_T> limits_t;
+    static const Scalar_T tol = std::pow(limits_t::epsilon(), 2);
     static const Scalar_T tol2 = tol * tol;
     static const int sqrt_max_steps = Tune_P::sqrt_max_steps;
+    multivector_t M = val;
+    multivector_t Y = val;
     Scalar_T norm_M_1 = norm(M - Scalar_T(1));
-
+    typedef numeric_traits<Scalar_T> traits_t;
+    
     for (int step = 0;
         step != sqrt_max_steps && norm_M_1 > tol2;
         ++step)
@@ -1228,6 +1300,190 @@ namespace glucat
       return Y;
   }
 
+  /// Coefficients of numerator polynomials of Pade approximations produced by Pade1(sqrt(1+x),x,n,n)
+  // Reference: [Z], Pade1
+  template< typename Scalar_T >
+  struct pade_sqrt_a
+  {
+    static const int array_size = 14;
+    static const Scalar_T array[array_size];
+  };
+
+  /// Coefficients of denominator polynomials of Pade approximations produced by Pade1(sqrt(1+x),x,n,n)
+  // Reference: [Z], Pade1
+  template< typename Scalar_T >
+  struct pade_sqrt_b
+  {
+    static const int array_size = 14;
+    static const Scalar_T array[array_size];
+  };
+
+  template< typename Scalar_T >
+  const Scalar_T pade_sqrt_a<Scalar_T>::array[pade_sqrt_a<Scalar_T>::array_size] =
+  {
+        1.0,               27.0/4.0,         81.0/4.0,       2277.0/64.0,
+    10395.0/256.0,      32319.0/1024.0,    8721.0/512.0,    26163.0/4096.0,
+    53703.0/32768.0,    36465.0/131072.0,  3861.0/131072.0,  7371.0/4194304.0,
+      819.0/16777216.0,    27.0/67108864.0
+  };
+  template< typename Scalar_T >
+  const Scalar_T pade_sqrt_b<Scalar_T>::array[pade_sqrt_b<Scalar_T>::array_size] =
+  {
+        1.0,               25.0/4.0,         69.0/4.0,       1771.0/64.0,
+     7315.0/256.0,      20349.0/1024.0,    4845.0/512.0,    12597.0/4096.0,
+    21879.0/32768.0,    12155.0/131072.0,  1001.0/131072.0,  1365.0/4194304.0,
+       91.0/16777216.0,     1.0/67108864.0
+  };
+
+  template< >
+  struct pade_sqrt_a<float>
+  {
+    static const int array_size = 10;
+    static const float array[array_size];
+  };
+  template< >
+  struct pade_sqrt_b<float>
+  {
+    static const int array_size = 10;
+    static const float array[array_size];
+  };
+  const float pade_sqrt_a<float>::array[pade_sqrt_a<float>::array_size] =
+  {
+       1.0,            19.0/4.0,        19.0/2.0,      665.0/64.0,
+    1729.0/256.0,    2717.0/1024.0,    627.0/1024.0,   627.0/8192.0,
+     285.0/65536.0,    19.0/262144.0
+  };
+  const float pade_sqrt_b<float>::array[pade_sqrt_a<float>::array_size] =
+  {
+       1.0,            17.0/4.0,        15.0/2.0,      455.0/64.0,
+    1001.0/256.0,    1287.0/1024.0,    231.0/1024.0,   165.0/8192.0,
+      45.0/65536,       1.0/262144.0
+  };
+
+  template< >
+  struct pade_sqrt_a<long double>
+  {
+    static const int array_size = 18;
+    static const  long double array[array_size];
+  };
+  template< >
+  struct pade_sqrt_b<long double>
+  {
+    static const int array_size = 18;
+    static const long double array[array_size];
+  };
+  const long double pade_sqrt_a<long double>::array[pade_sqrt_a<long double>::array_size] =
+  {
+        1.0L,                   35.0L/4.0L,             35.0L,               5425.0L/64.0L,
+    35525.0L/256.0L,        166257.0L/1024.0L,      143325.0L/1024.0L,     740025.0L/8192.0L,
+  2877875.0L/65536.0L,     4206125.0L/262144.0L,    572033.0L/131072.0L,  1820105.0L/2097152.0L,
+  1028755.0L/8388608.0L,    395675.0L/33554432.0L,   24225.0L/33554432.0L,   6783.0L/268435456.0L,
+     1785.0L/4294967296.0L,     35.0L/17179869184.0L
+  };
+  const long double pade_sqrt_b<long double>::array[pade_sqrt_a<long double>::array_size] =
+  {
+        1.0L,                   33.0L/4.0L,             31.0L,               4495.0L/64.0L,
+    27405.0L/256.0L,        118755.0L/1024.0L,       94185.0L/1024.0L,     444015.0L/8192.0L,
+  1562275.0L/65536.0L,     2042975.0L/262144.0L,    245157.0L/131072.0L,   676039.0L/2097152.0L,
+   323323.0L/8388608.0L,    101745.0L/33554432.0L,    4845.0L/33554432.0L,    969.0L/268435456.0L,
+      153.0L/4294967296.0L,      1.0L/17179869184.0L
+  };
+#if defined(_GLUCAT_USE_QD)
+  template< >
+  struct pade_sqrt_a<dd_real>
+  {
+    static const int array_size = 22;
+    static const  dd_real array[array_size];
+  };
+  template< >
+  struct pade_sqrt_b<dd_real>
+  {
+    static const int array_size = 22;
+    static const dd_real array[array_size];
+  };
+  const dd_real pade_sqrt_a<dd_real>::array[pade_sqrt_a<dd_real>::array_size] =
+  {
+          dd_real("1"),                               dd_real("43")/dd_real("4"),
+        dd_real("215")/dd_real("4"),               dd_real("10621")/dd_real("64"),
+      dd_real("90687")/dd_real("256"),            dd_real("567987")/dd_real("1024"),
+     dd_real("168861")/dd_real("256"),           dd_real("1246355")/dd_real("2048"),
+    dd_real("7228859")/dd_real("16384"),        dd_real("16583853")/dd_real("65536"),
+    dd_real("7538115")/dd_real("65536"),       dd_real("173376645")/dd_real("4194304"),
+  dd_real("195747825")/dd_real("16777216"),    dd_real("171655785")/dd_real("67108864"),
+   dd_real("14375115")/dd_real("33554432"),     dd_real("14375115")/dd_real("268435456"),
+   dd_real("20764055")/dd_real("4294967296"),    dd_real("5167525")/dd_real("17179869184"),
+     dd_real("206701")/dd_real("17179869184"),     dd_real("76153")/dd_real("274877906944"),
+       dd_real("3311")/dd_real("1099511627776") ,     dd_real("43")/dd_real("4398046511104")
+  };
+  const dd_real pade_sqrt_b<dd_real>::array[pade_sqrt_a<dd_real>::array_size] =
+{
+          dd_real("1"),                               dd_real("41")/dd_real("4"),
+        dd_real("195")/dd_real("4"),                dd_real("9139")/dd_real("64"),
+      dd_real("73815")/dd_real("256"),            dd_real("435897")/dd_real("1024"),
+     dd_real("121737")/dd_real("256"),            dd_real("840565")/dd_real("2048"),
+    dd_real("4539051")/dd_real("16384"),         dd_real("9641775")/dd_real("65536"),
+    dd_real("4032015")/dd_real("65536"),        dd_real("84672315")/dd_real("4194304"),
+   dd_real("86493225")/dd_real("16777216"),     dd_real("67863915")/dd_real("67108864"),
+    dd_real("5014575")/dd_real("33554432"),      dd_real("4345965")/dd_real("268435456"),
+    dd_real("5311735")/dd_real("4294967296"),    dd_real("1081575")/dd_real("17179869184"),
+      dd_real("33649")/dd_real("17179869184"),      dd_real("8855")/dd_real("274877906944"),
+        dd_real("231")/dd_real("1099511627776"),       dd_real("1")/dd_real("4398046511104")
+  };
+  
+  template< >
+  struct pade_sqrt_a<qd_real>
+  {
+    static const int array_size = 34;
+    static const  qd_real array[array_size];
+  };
+  template< >
+  struct pade_sqrt_b<qd_real>
+  {
+    static const int array_size = 34;
+    static const qd_real array[array_size];
+  };
+  const qd_real pade_sqrt_a<qd_real>::array[pade_sqrt_a<qd_real>::array_size] =
+  {
+              qd_real("1"),                                            qd_real("67")/qd_real("4"),
+            qd_real("134"),                                         qd_real("43617")/qd_real("64"),
+         qd_real("633485")/qd_real("256"),                        qd_real("6992857")/qd_real("1024"),
+       qd_real("15246721")/qd_real("1024"),                     qd_real("215632197")/qd_real("8192"),
+     qd_real("2518145487")/qd_real("65536"),                  qd_real("12301285425")/qd_real("262144"),
+     qd_real("6344873535")/qd_real("131072"),                 qd_real("89075432355")/qd_real("2097152"),
+   qd_real("267226297065")/qd_real("8388608"),               qd_real("687479618945")/qd_real("33554432"),
+   qd_real("379874182975")/qd_real("33554432"),             qd_real("1443521895305")/qd_real("268435456"),
+  qd_real("9425348845815")/qd_real("4294967296"),          qd_real("13195488384141")/qd_real("17179869184"),
+   qd_real("987417498133")/qd_real("4294967296"),           qd_real("8055248011085")/qd_real("137438953472"),
+  qd_real("6958363175533")/qd_real("549755813888"),         qd_real("5056698705201")/qd_real("2199023255552"),
+   qd_real("766166470485")/qd_real("2199023255552"),         qd_real("766166470485")/qd_real("17592186044416"),
+   qd_real("623623871325")/qd_real("140737488355328"),       qd_real("203123203803")/qd_real("562949953421312"),
+     qd_real("6478601247")/qd_real("281474976710656"),         qd_real("5038912081")/qd_real("4503599627370496"),
+      qd_real("719844583")/qd_real("18014398509481984"),         qd_real("71853815")/qd_real("72057594037927936"),
+        qd_real("1165197")/qd_real("72057594037927936"),            qd_real("87703")/qd_real("576460752303423488"),
+          qd_real("12529")/qd_real("18446744073709551616"),            qd_real("67")/qd_real("73786976294838206464")
+  };
+  const qd_real pade_sqrt_b<qd_real>::array[pade_sqrt_a<qd_real>::array_size] =
+  {
+            qd_real("1"),                                              qd_real("65")/qd_real("4"),
+          qd_real("126"),                                           qd_real("39711")/qd_real("64"),
+       qd_real("557845")/qd_real("256"),                          qd_real("5949147")/qd_real("1024"),
+     qd_real("12515965")/qd_real("1024"),                       qd_real("170574723")/qd_real("8192"),
+   qd_real("1916797311")/qd_real("65536"),                     qd_real("8996462475")/qd_real("262144"),
+   qd_real("4450881435")/qd_real("131072"),                   qd_real("59826782925")/qd_real("2097152"),
+ qd_real("171503444385")/qd_real("8388608"),                 qd_real("420696483235")/qd_real("33554432"),
+ qd_real("221120793075")/qd_real("33554432"),                qd_real("797168807855")/qd_real("268435456"),
+qd_real("4923689695575")/qd_real("4294967296"),             qd_real("6499270398159")/qd_real("17179869184"),
+ qd_real("456864812569")/qd_real("4294967296"),             qd_real("3486599885395")/qd_real("137438953472"),
+qd_real("2804116503573")/qd_real("549755813888"),           qd_real("1886827875075")/qd_real("2199023255552"),
+ qd_real("263012370465")/qd_real("2199023255552"),           qd_real("240141729555")/qd_real("17592186044416"),
+ qd_real("176848560525")/qd_real("140737488355328"),          qd_real("51538723353")/qd_real("562949953421312"),
+   qd_real("1450433115")/qd_real("281474976710656"),            qd_real("977699359")/qd_real("4503599627370496"),
+    qd_real("118183439")/qd_real("18014398509481984"),            qd_real("9652005")/qd_real("72057594037927936"),
+       qd_real("121737")/qd_real("72057594037927936"),               qd_real("6545")/qd_real("576460752303423488"),
+          qd_real("561")/qd_real("18446744073709551616"),               qd_real("1")/qd_real("73786976294838206464")
+  };
+#endif
+  
   /// Square root of multivector with specified complexifier
   template< typename Scalar_T, const index_t LO, const index_t HI >
   const matrix_multi<Scalar_T,LO,HI>
@@ -1236,33 +1492,7 @@ namespace glucat
     // Reference: [GW], Section 4.3, pp318-322
     // Reference: [GL], Section 11.3, p572-576
     // Reference: [Z], Pade1
-    //std::cout << "Sqrt called" << std::endl;
-
-    // Pade approximation produced by Pade1(sqrt(1+x),x,13,13):
-    // numer := 1+27/4*x+81/4*x^2+2277/64*x^3
-    //          +10395/256*x^4+32319/1024*x^5+8721/512*x^6+26163/4096*x^7
-    //          +53703/32768*x^8+36465/131072*x^9+3861/131072*x^10
-    //          +7371/4194304*x^11+819/16777216*x^12+27/67108864*x^13;
-    // denom := 1+25/4*x+69/4*x^2+1771/64*x^3
-    //          +7315/256*x^4+20349/1024*x^5+4845/512*x^6+12597/4096*x^7
-    //          +21879/32768*x^8+12155/131072*x^9+1001/131072*x^10
-    //          +1365/4194304*x^11+91/16777216*x^12+1/67108864*x^13;
-
-    static const Scalar_T a[] =
-    {
-          1.0,             27.0/4.0,         81.0/4.0,      2277.0/64.0,
-      10395.0/256.0,    32319.0/1024.0,    8721.0/512.0,   26163.0/4096.0,
-      53703.0/32768.0,  36465.0/131072.0,  3861.0/131072.0,
-       7371.0/4194304.0,  819.0/16777216.0,  27.0/67108864.0
-    };
-    static const Scalar_T b[] =
-    {
-          1.0,             25.0/4.0,         69.0/4.0,      1771.0/64.0,
-       7315.0/256.0,    20349.0/1024.0,    4845.0/512.0,   12597.0/4096.0,
-      21879.0/32768.0,  12155.0/131072.0,  1001.0/131072.0,
-       1365.0/4194304.0,   91.0/16777216.0,   1.0/67108864.0
-    };
-
+    
     typedef numeric_traits<Scalar_T> traits_t;
     if (val.isnan())
       return traits_t::NaN();
@@ -1289,7 +1519,6 @@ namespace glucat
 #endif
 
     // Scale val towards abs(A) == 1 or towards A == 1 as appropriate
-    const Scalar_T max_norm = Scalar_T(1.0/9.0);
     const Scalar_T scale =
       (realval != Scalar_T(0) && norm(val/realval - Scalar_T(1)) < Scalar_T(1))
       ? realval
@@ -1305,6 +1534,7 @@ namespace glucat
       rescale = i * sqrt_scale;
 
     const multivector_t& unitval = val / scale;
+    const Scalar_T max_norm = Scalar_T(1.0/4.0);
 
 #if defined(_GLUCAT_USE_EIGENVALUES)
     multivector_t scaled_result;
@@ -1327,7 +1557,10 @@ namespace glucat
       scaled_result =
         (norm(unitval - Scalar_T(1)) < max_norm)
           // Pade' approximation of square root
-        ? pade_approx(a, b, unitval - Scalar_T(1))
+        ? pade_approx(pade_sqrt_a<Scalar_T>::array_size,
+                      pade_sqrt_a<Scalar_T>::array,
+                      pade_sqrt_b<Scalar_T>::array,
+                      unitval - Scalar_T(1))
           // Product form of Denman-Beavers square root iteration
         : db_sqrt(unitval);
       break;
@@ -1340,7 +1573,10 @@ namespace glucat
     const multivector_t& scaled_result =
       (norm(unitval - Scalar_T(1)) < max_norm)
         // Pade' approximation of square root
-      ? pade_approx(a, b, unitval - Scalar_T(1))
+      ? pade_approx(pade_sqrt_a<Scalar_T>::array_size,
+                    pade_sqrt_a<Scalar_T>::array,
+                    pade_sqrt_b<Scalar_T>::array,
+                    unitval - Scalar_T(1))
         // Product form of Denman-Beavers square root iteration
       : db_sqrt(unitval);
     if (scaled_result.isnan())
@@ -1353,7 +1589,10 @@ namespace glucat
       const multivector_t& scaled_mi_result =
         (norm(mi_unitval - Scalar_T(1)) < max_norm)
           // Pade' approximation of square root
-        ? pade_approx(a, b, mi_unitval - Scalar_T(1))
+        ? pade_approx(pade_sqrt_a<Scalar_T>::array_size,
+                      pade_sqrt_a<Scalar_T>::array,
+                      pade_sqrt_b<Scalar_T>::array,
+                      mi_unitval - Scalar_T(1))
           // Product form of Denman-Beavers square root iteration
         : db_sqrt(mi_unitval);
       if (scaled_mi_result.isnan())
@@ -1365,71 +1604,189 @@ namespace glucat
       return scaled_result * rescale;
 #endif
   }
-
-  /// Exponential of multivector
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  const matrix_multi<Scalar_T,LO,HI>
-  exp(const matrix_multi<Scalar_T,LO,HI>& val)
+  
+  /// Coefficients of numerator polynomials of Pade approximations produced by Pade1(log(1+x),x,n,n)
+  // Reference: [Z], Pade1
+  template< typename Scalar_T >
+  struct pade_log_a
   {
-    // Scaling and squaring Pade' approximation of matrix exponential
-    // Reference: [GL], Section 11.3, p572-576
-    // Reference: [H]
+    static const int array_size = 14;
+    static const Scalar_T array[array_size];
+  };
 
-    typedef numeric_traits<Scalar_T> traits_t;
+  /// Coefficients of denominator polynomials of Pade approximations produced by Pade1(log(1+x),x,n,n)
+  // Reference: [Z], Pade1
+  template< typename Scalar_T >
+  struct pade_log_b
+  {
+    static const int array_size = 14;
+    static const Scalar_T array[array_size];
+  };
+  template< typename Scalar_T >
+  const Scalar_T pade_log_a<Scalar_T>::array[pade_log_a<Scalar_T>::array_size] =
+  {
+         0.0,                     1.0,                    6.0,            4741.0/300.0,
+      1441.0/60.0,           107091.0/4600.0,          8638.0/575.0,    263111.0/40250.0,
+    153081.0/80500.0,        395243.0/1101240.0,      28549.0/688275.0, 605453.0/228813200.0,
+    785633.0/10296594000.0, 1145993.0/1873980108000.0
+  };
+  template< typename Scalar_T >
+  const Scalar_T pade_log_b<Scalar_T>::array[pade_log_b<Scalar_T>::array_size] =
+  {
+         1.0,                    13.0/2.0,             468.0/25.0,        1573.0/50.0,
+      1573.0/46.0,            11583.0/460.0,         10296.0/805.0,       2574.0/575.0,
+     11583.0/10925.0,           143.0/874.0,           572.0/37145.0,      117.0/148580.0,
+        13.0/742900.0,            1.0/10400600.0
+  };
 
-    if (val.isnan())
-      return traits_t::NaN();
+  template< >
+  struct pade_log_a<float>
+  {
+    static const int array_size = 10;
+    static const float array[array_size];
+  };
+  template< >
+  struct pade_log_b<float>
+  {
+    static const int array_size = 10;
+    static const float array[array_size];
+  };
+  const float pade_log_a<float>::array[pade_log_a<float>::array_size] =
+  {
+      0.0,            1.0,             4.0,       1337.0/204.0,
+    385.0/68.0,    1879.0/680.0,     193.0/255.0,  197.0/1820.0,
+    419.0/61880.0, 7129.0/61261200.0
+  };
+  const float pade_log_b<float>::array[pade_log_a<float>::array_size] =
+  {
+      1.0,            9.0/2.0,       144.0/17.0,   147.0/17.0,
+    441.0/85.0,      63.0/34.0,       84.0/221.0,    9.0/221.0,
+      9.0/4862.0,     1.0/48620.0
+  };
 
-    const Scalar_T scalar_val = scalar(val);
-    const Scalar_T scalar_exp = traits_t::exp(scalar_val);
-    if (traits_t::isNaN_or_isInf(scalar_exp))
-      return traits_t::NaN();
-    if (val == scalar_val)
-      return scalar_exp;
+  template< >
+  struct pade_log_a<long double>
+  {
+    static const int array_size = 18;
+    static const  long double array[array_size];
+  };
+  template< >
+  struct pade_log_b<long double>
+  {
+    static const int array_size = 18;
+    static const long double array[array_size];
+  };
+  const long double pade_log_a<long double>::array[pade_log_a<long double>::array_size] =
+  {
+         0.0L,                       1.0L,                           8.0L,                    3835.0L/132.0L,
+      8365.0L/132.0L,         11363807.0L/122760.0L,            162981.0L/1705.0L,         9036157.0L/125860.0L,
+  18009875.0L/453096.0L,      44211925.0L/2718576.0L,          4149566.0L/849555.0L,      16973929.0L/16020180.0L,
+    172459.0L/1068012.0L,    116317061.0L/7025382936.0L,      19679783.0L/18441630207.0L, 23763863.0L/614721006900.0L,
+     50747.0L/79318839600.0L, 42142223.0L/14295951736466400.0L
+  };
+  const long double pade_log_b<long double>::array[pade_log_a<long double>::array_size] =
+  {
+         1.0L,                      17.0L/2.0L,                   1088.0L/33.0L,               850.0L/11.0L,
+     41650.0L/341.0L,           140777.0L/1023.0L,             1126216.0L/9889.0L,           63206.0L/899.0L,
+    790075.0L/24273.0L,          60775.0L/5394.0L,               38896.0L/13485.0L,          21658.0L/40455.0L,
+     21658.0L/310155.0L,          4165.0L/682341.0L,               680.0L/2047023.0L,           34.0L/3411705.0L,
+        17.0L/129644790.0L,          1.0L/2333606220
+  };
+#if defined(_GLUCAT_USE_QD)
+  template< >
+  struct pade_log_a<dd_real>
+  {
+    static const int array_size = 22;
+    static const  dd_real array[array_size];
+  };
+  template< >
+  struct pade_log_b<dd_real>
+  {
+    static const int array_size = 22;
+    static const dd_real array[array_size];
+  };
+  const dd_real pade_log_a<dd_real>::array[pade_log_a<dd_real>::array_size] =
+  {
+          dd_real("0"),                                  dd_real("1"),
+         dd_real("10"),                              dd_real("22781")/dd_real("492"),
+      dd_real("21603")/dd_real("164"),             dd_real("5492649")/dd_real("21320"),
+     dd_real("978724")/dd_real("2665"),            dd_real("4191605")/dd_real("10619"),
+   dd_real("12874933")/dd_real("39442"),          dd_real("11473457")/dd_real("54612"),
+    dd_real("2406734")/dd_real("22755"),         dd_real("166770367")/dd_real("4004880"),
+   dd_real("30653165")/dd_real("2402928"),       dd_real("647746389")/dd_real("215195552"),
+   dd_real("25346331")/dd_real("47074027"),      dd_real("278270613")/dd_real("3900419380"),
+  dd_real("105689791")/dd_real("15601677520"),   dd_real("606046475")/dd_real("1379188292768"),
+     dd_real("969715")/dd_real("53502994116"),    dd_real("11098301")/dd_real("26204577562592"),
+     dd_real("118999")/dd_real("26204577562592"), dd_real("18858053")/dd_real("1392249205900512960")
+  };
+  const dd_real pade_log_b<dd_real>::array[pade_log_a<dd_real>::array_size] =
+  {
+          dd_real("1"),                                 dd_real("21")/dd_real("2"),
+       dd_real("2100")/dd_real("41"),                dd_real("12635")/dd_real("82"),
+     dd_real("341145")/dd_real("1066"),            dd_real("1037799")/dd_real("2132"),
+   dd_real("11069856")/dd_real("19721"),           dd_real("9883800")/dd_real("19721"),
+    dd_real("6918660")/dd_real("19721"),            dd_real("293930")/dd_real("1517"),
+    dd_real("1410864")/dd_real("16687"),             dd_real("88179")/dd_real("3034"),
+     dd_real("734825")/dd_real("94054"),            dd_real("305235")/dd_real("188108"),
+     dd_real("348840")/dd_real("1363783"),           dd_real("40698")/dd_real("1363783"),
+       dd_real("6783")/dd_real("2727566"),            dd_real("9975")/dd_real("70916716"),
+        dd_real("266")/dd_real("53187537"),              dd_real("7")/dd_real("70916716"),
+          dd_real("7")/dd_real("8155422340"),            dd_real("1")/dd_real("538257874440")
+  };
 
-    typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
-    multivector_t A = val - scalar_val;
-    const Scalar_T pure_scale = A.norm();
-
-    if (traits_t::isNaN_or_isInf(pure_scale))
-      return traits_t::NaN();
-    if (pure_scale == Scalar_T(0))
-      return scalar_exp;
-
-    const int ilog2_scale =
-      std::max(0, traits_t::to_int(ceil((log2(pure_scale) + Scalar_T(A.frame().count()))/Scalar_T(2)) - 3));
-    const Scalar_T i_scale = traits_t::pow(Scalar_T(2), ilog2_scale);
-    if (traits_t::isNaN_or_isInf(i_scale))
-      return traits_t::NaN();
-
-    A /= i_scale;
-    multivector_t pure_exp;
-    {
-      const int q = 13;
-      static Scalar_T c[q+1];
-      if (c[0] != Scalar_T(1))
-      {
-        c[0] = Scalar_T(1);
-        for (int
-            k = 0;
-            k != q;
-            ++k)
-          c[k+1] = c[k]*(q-k) / ((2*q-k)*(k+1));
-      }
-      const multivector_t& A2 = A*A;
-      const multivector_t& A4 = A2*A2;
-      const multivector_t& A6 = A4*A2;
-      const multivector_t& U =     c[0]+A2*c[2]+A4*c[4]+A6*(c[6]+A2*c[8]+A4*c[10]+A6*c[12]);
-      const multivector_t& AV = A*(c[1]+A2*c[3]+A4*c[5]+A6*(c[7]+A2*c[9]+A4*c[11]+A6*c[13]));
-      pure_exp = (U+AV) / (U-AV);
-    }
-    for (int
-        k = 0;
-        k != ilog2_scale;
-        ++k)
-      pure_exp *= pure_exp;
-    return pure_exp * scalar_exp;
-  }
+  template< >
+  struct pade_log_a<qd_real>
+  {
+    static const int array_size = 34;
+    static const  qd_real array[array_size];
+  };
+  template< >
+  struct pade_log_b<qd_real>
+  {
+    static const int array_size = 34;
+    static const qd_real array[array_size];
+  };
+  const qd_real pade_log_a<qd_real>::array[pade_log_a<qd_real>::array_size] =
+  {
+                qd_real("0"),                                                          qd_real("1"),
+                qd_real("16"),                                                     qd_real("95201")/qd_real("780"),
+             qd_real("30721")/qd_real("52"),                                     qd_real("7416257")/qd_real("3640"),
+           qd_real("1039099")/qd_real("195"),                                 qd_real("6097772319")/qd_real("555100"),
+        qd_real("1564058073")/qd_real("85400"),                              qd_real("30404640205")/qd_real("1209264"),
+         qd_real("725351278")/qd_real("25193"),                            qd_real("4092322670789")/qd_real("147429436"),
+     qd_real("4559713849589")/qd_real("201040140"),                        qd_real("5049361751189")/qd_real("320023080"),
+       qd_real("74979677195")/qd_real("8000577"),                         qd_real("16569850691873")/qd_real("3481514244"),
+     qd_real("1065906022369")/qd_real("515779888"),                      qd_real("335956770855841")/qd_real("438412904800"),
+  qd_real("1462444287585964")/qd_real("6041877844275"),                  qd_real("397242326339851")/qd_real("6122436215532"),
+    qd_real("64211291334131")/qd_real("4373168725380"),                  qd_real("142322343550859")/qd_real("51080680851480"),
+   qd_real("154355972958659")/qd_real("351179680853925"),                qd_real("167483568676259")/qd_real("2937139148960100"),
+     qd_real("4230788929433")/qd_real("704913395750424"),                qd_real("197968763176019")/qd_real("392923948371995600"),
+    qd_real("10537522306718")/qd_real("319250708052246425"),             qd_real("236648286272519")/qd_real("144249197475035425500"),
+   qd_real("260715545088119")/qd_real("4375558990076074573500"),         qd_real("289596255666839")/qd_real("192874640282553367199880"),
+     qd_real("8802625510547")/qd_real("361639950529787563499775"),       qd_real("373831661521439")/qd_real("1659204093030665341336967700"),
+   qd_real("446033437968239")/qd_real("464577146048586295574350956000"),  qd_real("53676090078349")/qd_real("47386868896955802148583797512000")
+      };
+  const qd_real pade_log_b<qd_real>::array[pade_log_a<qd_real>::array_size] =
+  {
+                 qd_real("1"),                                                        qd_real("33")/qd_real("2"),
+              qd_real("8448")/qd_real("65"),                                       qd_real("42284")/qd_real("65"),
+            qd_real("211420")/qd_real("91"),                                      qd_real("573562")/qd_real("91"),
+          qd_real("32119472")/qd_real("2379"),                                  qd_real("92917044")/qd_real("3965"),
+         qd_real("603960786")/qd_real("17995"),                                qd_real("144626625")/qd_real("3599"),
+        qd_real("2776831200")/qd_real("68381"),                              qd_real("16692542100")/qd_real("478667"),
+       qd_real("12241197540")/qd_real("478667"),                              qd_real("1098569010")/qd_real("68381"),
+       qd_real("31387686000")/qd_real("3624193"),                             qd_real("9939433900")/qd_real("2479711"),
+       qd_real("67091178825")/qd_real("42155087"),                            qd_real("2683647153")/qd_real("4959422"),
+       qd_real("19083713088")/qd_real("121505839"),                           qd_real("4708152900")/qd_real("121505839"),
+         qd_real("941630580")/qd_real("116546417"),                             qd_real("88704330")/qd_real("62755763"),
+          qd_real("12902448")/qd_real("62755763"),                               qd_real("1542684")/qd_real("62755763"),
+           qd_real("6427850")/qd_real("2698497809"),                             qd_real("3471039")/qd_real("18889484663"),
+           qd_real("8544096")/qd_real("774468871183"),                             qd_real("39556")/qd_real("79027435835"),
+            qd_real("118668")/qd_real("7191496660985"),                            qd_real("10230")/qd_real("27327687311743"),
+              qd_real("5456")/qd_real("1011124430534491"),                            qd_real("44")/qd_real("1011124430534491"),
+                qd_real("11")/qd_real("70778710137414370"),                            qd_real("1")/qd_real("7219428434016265740")
+  };
+#endif
 
   /// Pade' approximation of log
   template< typename Scalar_T, const index_t LO, const index_t HI >
@@ -1442,37 +1799,14 @@ namespace glucat
     // Reference: [GL], Section 11.3, p572-576
     // Reference: [Z], Pade1
 
-    // Pade approximation produced by Pade1(log(1-x),x,13,13):
-    // numer := -x+6*x^2-4741/300*x^3
-    //          +1441/60*x^4-107091/4600*x^5+8638/575*x^6-263111/40250*x^7
-    //          +153081/80500*x^8-395243/1101240*x^9+28549/688275*x^10
-    //          -605453/228813200*x^11+785633/10296594000*x^12
-    //          -1145993/1873980108000*x^13;
-    // denom := 1-13/2*x+468/25*x^2-1573/50*x^3
-    //          +1573/46*x^4-11583/460*x^5+10296/805*x^6-2574/575*x^7
-    //          +11583/10925*x^8-143/874*x^9+572/37145*x^10
-    //          -117/148580*x^11+13/742900*x^12-1/10400600*x^13;
-
-    static const Scalar_T a[] =
-    {
-            0.0,                  -1.0,                      6.0,            -4741.0/300.0,
-         1441.0/60.0,        -107091.0/4600.0,            8638.0/575.0,    -263111.0/40250.0,
-       153081.0/80500.0,     -395243.0/1101240.0,        28549.0/688275.0,
-      -605453.0/228813200.0,  785633.0/10296594000.0, -1145993.0/1873980108000.0
-    };
-    static const Scalar_T b[] =
-    {
-         1.0,                    -13.0/2.0,                468.0/25.0,       -1573.0/50.0,
-      1573.0/46.0,            -11583.0/460.0,            10296.0/805.0,      -2574.0/575.0,
-     11583.0/10925.0,           -143.0/874.0,              572.0/37145.0,
-      -117.0/148580.0,            13.0/742900.0,            -1.0/10400600.0
-    };
     typedef numeric_traits<Scalar_T> traits_t;
-
     if (val == Scalar_T(0) || val.isnan())
       return traits_t::NaN();
     else
-      return pade_approx(a, b, -val + Scalar_T(1));
+      return pade_approx(pade_log_a<Scalar_T>::array_size,
+                         pade_log_a<Scalar_T>::array,
+                         pade_log_b<Scalar_T>::array,
+                         val - Scalar_T(1));
   }
 
   /// Incomplete square root cascade and Pade' approximation of log
@@ -1484,15 +1818,15 @@ namespace glucat
     // Reference: [CHKL]
     typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
     typedef numeric_traits<Scalar_T> traits_t;
-
     if (val == Scalar_T(0) || val.isnan())
       return traits_t::NaN();
 
+    typedef std::numeric_limits<Scalar_T> limits_t;
+    static const Scalar_T epsilon = limits_t::epsilon();
+    static const Scalar_T max_inner_norm = traits_t::pow(epsilon, 2);
+    static const Scalar_T max_outer_norm = Scalar_T(6.0/limits_t::digits);
     multivector_t Y = val;
     multivector_t E = Scalar_T(0);
-    static const Scalar_T epsilon = std::numeric_limits<Scalar_T>::epsilon();
-    static const Scalar_T max_inner_norm = traits_t::pow(epsilon, 4);
-    static const Scalar_T max_outer_norm = Scalar_T(1.0/9.0);
     Scalar_T norm_Y_1;
     int outer_step;
     Scalar_T pow_2_outer_step = Scalar_T(1);
@@ -1530,9 +1864,8 @@ namespace glucat
   {
     // Scaled incomplete square root cascade and scaled Pade' approximation of log
     // Reference: [CHKL]
-    //std::cout << "Log called" << std::endl;
+    
     typedef numeric_traits<Scalar_T> traits_t;
-
     if (val == Scalar_T(0) || val.isnan())
       return traits_t::NaN();
 
@@ -1607,6 +1940,22 @@ namespace glucat
       return traits_t::NaN();
     else
       return scaled_result + rescale;
+  }
+
+  /// Exponential of multivector
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const matrix_multi<Scalar_T,LO,HI>
+  exp(const matrix_multi<Scalar_T,LO,HI>& val)
+  {
+    typedef numeric_traits<Scalar_T> traits_t;
+    if (val.isnan())
+      return traits_t::NaN();
+
+    const Scalar_T s = scalar(val);
+    if (val == s)
+      return traits_t::exp(s);
+
+    return clifford_exp(val);
   }
 }
 #endif  // _GLUCAT_MATRIX_MULTI_IMP_H
