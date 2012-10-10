@@ -5,7 +5,7 @@
     qd.h : Define functions for dd_real and qd_real as scalar_t
                              -------------------
     begin                : 2010-03-23
-    copyright            : (C) 2010 by Paul C. Leopardi
+    copyright            : (C) 2010-2012 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -31,7 +31,12 @@
  See also Arvind Raja's original header comments and references in glucat.h
  ***************************************************************************/
 
-#ifdef QD_API
+#include "glucat/scalar.h"
+
+#if defined(_GLUCAT_USE_QD)
+# include <qd/qd_real.h>
+# if defined(QD_API)
+
 namespace glucat
 {
   /// Extra traits which extend numeric limits
@@ -269,6 +274,8 @@ namespace glucat
   /// Hyperbolic tangent of qd_real
   _GLUCAT_QD_F(qd_real, tanh)
 }
+
+# endif
 #endif
 
 #endif // _GLUCAT_QD_H
