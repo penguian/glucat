@@ -5,7 +5,7 @@
     peg11.cpp : programming example 11 : Square root and transcendental functions
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2010 by Paul C. Leopardi
+    copyright            : (C) 2001-2012 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -41,8 +41,7 @@ namespace peg11
   void 
   check(const Multivector_T& A, const Multivector_T& B, const string& msg, const bool need_inv = false)
   {
-    typedef Multivector_T m_;
-    typedef typename m_::scalar_t scalar_t;
+    typedef typename Multivector_T::scalar_t scalar_t;
 
     static const scalar_t scalar_eps  = numeric_limits<scalar_t>::epsilon();
     scalar_t tol2;
@@ -50,13 +49,13 @@ namespace peg11
       tol2 = 0.0;
     else
     {
-      static const double   double_eps  = numeric_limits<double>::epsilon();
-      static const scalar_t double_eps2 = scalar_t(double_eps*double_eps);
-      tol2 = (scalar_eps > double_eps2)
-        ? scalar_eps
-        : double_eps2;
+     typedef typename Multivector_T::framed_multi_t framed_multi_t;
+      const double nbr_terms = framed_multi_t(A).truncated(scalar_eps).nbr_terms();
+      scalar_t tol = scalar_eps *
+                     numeric_traits<scalar_t>::pow(scalar_t(2), numeric_limits<scalar_t>::digits / 16 + 4);
+      tol2 = tol * tol * scalar_t(std::max(nbr_terms, 1.0));
     }
-    const bool relative = norm(A) > tol2;
+    const bool relative = (norm(A) > tol2) && (norm(B) > tol2);
     const scalar_t abs_norm_diff = norm(A-B);
     const scalar_t norm_diff = (relative) ? abs_norm_diff/norm(A) : abs_norm_diff;
     const bool A_isnan = A.isnan();
@@ -69,15 +68,20 @@ namespace peg11
       cout << "Test failed: " << msg << endl;
       if (norm_diff > tol2)
       {
-        const streamsize prec = cout.precision(10);
+        const streamsize prec = cout.precision(5);
         cout << ((relative) ? "Relative" : "Absolute");
         cout << " norm of difference == "
              << numeric_traits<scalar_t>::sqrt(norm_diff) << endl;
+         if (!test_control.m_verbose_output)
+         {
+           cout.precision(numeric_limits<scalar_t>::digits10);
+           cout << "lhs==" << B << endl;
+           cout << "rhs==" << A << endl;
+         }
         cout.precision(prec);
       }
       else
-        cout << "Result == "
-             << B << endl;
+        cout << "lhs == " << B << endl;
     }
   }
 
@@ -98,8 +102,8 @@ namespace peg11
     check(m_(1), exp(-A)*exp(A),    "exp(-A)*exp(A) != 1");
     check(exp(A), exp(scalar(A))*exp(pure(A)),
                                     "exp(scalar(A))*exp(pure(A)) != exp(A)");
-    check(exp(elliptic(A)*A), cos(A)+elliptic(A)*sin(A), 
-                                    "cos(A)+elliptic(A)*sin(A) != exp(elliptic(A)*A)");
+    check(exp(complexifier(A)*A), cos(A)+complexifier(A)*sin(A),
+                                    "cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)");
     check(exp(A), cosh(A)+sinh(A),  "cosh(A)+sinh(A) != exp(A)");
     check(sin(A), cos(A)*tan(A),    "cos(A)*tan(A) != sin(A)");
     check(sinh(A), cosh(A)*tanh(A), "cosh(A)*tanh(A) != sinh(A)");
