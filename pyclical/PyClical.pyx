@@ -21,11 +21,15 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
+# References for definitions:
+# [DL]:
+# C. Doran and A. Lasenby, "Geometric algebra for physicists", Cambridge, 2003.
+
 import math
 import numbers
 import collections
 
-__version__ = "0.6.0 + cvs"
+__version__ = "0.7.0"
 
 from PyClical cimport *
 
@@ -72,9 +76,9 @@ cdef class index_set:
 
         >>> print index_set(1)
         {1}
-        >>> print index_set("{1,2}")
+        >>> print index_set({1,2})
         {1,2}
-        >>> print index_set(index_set("{1,2}"))
+        >>> print index_set(index_set({1,2}))
         {1,2}
         >>> print index_set({1,2})
         {1,2}
@@ -117,21 +121,21 @@ cdef class index_set:
         """
         Compare two objects of class index_set.
 
-        >>> index_set(1) == index_set("{1}")
+        >>> index_set(1) == index_set({1})
         True
-        >>> index_set("{1}") != index_set("{1}")
+        >>> index_set({1}) != index_set({1})
         False
-        >>> index_set("{1}") != index_set("{2}")
+        >>> index_set({1}) != index_set({2})
         True
-        >>> index_set("{1}") == index_set("{2}")
+        >>> index_set({1}) == index_set({2})
         False
-        >>> index_set("{1}") < index_set("{2}")
+        >>> index_set({1}) < index_set({2})
         True
-        >>> index_set("{1}") <= index_set("{2}")
+        >>> index_set({1}) <= index_set({2})
         True
-        >>> index_set("{1}") > index_set("{2}")
+        >>> index_set({1}) > index_set({2})
         False
-        >>> index_set("{1}") >= index_set("{2}")
+        >>> index_set({1}) >= index_set({2})
         False
         """
         if (lhs is None) or (rhs is None):
@@ -170,42 +174,72 @@ cdef class index_set:
                 else:
                     return NotImplemented
 
-    def __getitem__(self, idx):
-        """
-        Get the value of an index_set object at an index.
-
-        >>> index_set("{1}")[1]
-        True
-        >>> index_set("{1}")[2]
-        False
-        >>> index_set("{2}")[-1]
-        False
-        >>> index_set("{2}")[1]
-        False
-        >>> index_set("{2}")[2]
-        True
-        >>> index_set("{2}")[33]
-        False
-        """
-        return self.instance.getitem(idx)
-
     def __setitem__(self, idx, val):
         """
         Set the value of an index_set object at index idx to value val.
 
-        >>> s=index_set("{1}"); s[2] = True; print s
+        >>> s=index_set({1}); s[2] = True; print s
         {1,2}
-        >>> s=index_set("{1,2}"); s[1] = False; print s
+        >>> s=index_set({1,2}); s[1] = False; print s
         {2}
         """
         self.instance.set(idx, val)
         return
 
+    def __getitem__(self, idx):
+        """
+        Get the value of an index_set object at an index.
+
+        >>> index_set({1})[1]
+        True
+        >>> index_set({1})[2]
+        False
+        >>> index_set({2})[-1]
+        False
+        >>> index_set({2})[1]
+        False
+        >>> index_set({2})[2]
+        True
+        >>> index_set({2})[33]
+        False
+        """
+        return self.instance.getitem(idx)
+
+    def __contains__(self, idx):
+        """
+        Check that an index_set object contains the index idx: idx in self.
+
+        >>> 1 in index_set({1})
+        True
+        >>> 2 in index_set({1})
+        False
+        >>> -1 in index_set({2})
+        False
+        >>> 1 in index_set({2})
+        False
+        >>> 2 in index_set({2})
+        True
+        >>> 33 in index_set({2})
+        False
+        """
+        return self.instance.getitem(idx)
+
+    def __iter__(self):
+        """
+        Iterate over the indices of an index_set.
+
+        >>> for i in index_set({-3,4,7}): print i,
+        -3 4 7
+        """
+        for idx in range(self.min(), self.max()+1):
+            if idx in self:
+                yield idx
+                
     def __invert__(self):
         """
         Set complement: not.
 
-        >>> print ~index_set("{-16,-15,-14,-13,-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16}")
+        >>> print ~index_set({-16,-15,-14,-13,-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16})
         {-32,-31,-30,-29,-28,-27,-26,-25,-24,-23,-22,-21,-20,-19,-18,-17,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32}
         """
         return index_set().wrap( self.instance.invert() )
@@ -214,9 +248,9 @@ cdef class index_set:
         """
         Symmetric set difference: exclusive or.
 
-        >>> print index_set("{1}") ^ index_set("{2}")
+        >>> print index_set({1}) ^ index_set({2})
         {1,2}
-        >>> print index_set("{1,2}") ^ index_set("{2}")
+        >>> print index_set({1,2}) ^ index_set({2})
         {1}
         """
         return index_set().wrap( toIndexSet(lhs) ^ toIndexSet(rhs) )
@@ -225,9 +259,9 @@ cdef class index_set:
         """
         Symmetric set difference: exclusive or.
 
-        >>> x = index_set("{1}"); x ^= index_set("{2}"); print x
+        >>> x = index_set({1}); x ^= index_set({2}); print x
         {1,2}
-        >>> x = index_set("{1,2}"); x ^= index_set("{2}"); print x
+        >>> x = index_set({1,2}); x ^= index_set({2}); print x
         {1}
         """
         return self.wrap( self.unwrap() ^ toIndexSet(rhs) )
@@ -236,9 +270,9 @@ cdef class index_set:
         """
         Set intersection: and.
 
-        >>> print index_set("{1}") & index_set("{2}")
+        >>> print index_set({1}) & index_set({2})
         {}
-        >>> print index_set("{1,2}") & index_set("{2}")
+        >>> print index_set({1,2}) & index_set({2})
         {2}
         """
         return index_set().wrap( toIndexSet(lhs) & toIndexSet(rhs) )
@@ -247,9 +281,9 @@ cdef class index_set:
         """
         Set intersection: and.
 
-        >>> x = index_set("{1}"); x &= index_set("{2}"); print x
+        >>> x = index_set({1}); x &= index_set({2}); print x
         {}
-        >>> x = index_set("{1,2}"); x &= index_set("{2}"); print x
+        >>> x = index_set({1,2}); x &= index_set({2}); print x
         {2}
         """
         return self.wrap( self.unwrap() & toIndexSet(rhs) )
@@ -258,9 +292,9 @@ cdef class index_set:
         """
         Set union: or.
 
-        >>> print index_set("{1}") | index_set("{2}")
+        >>> print index_set({1}) | index_set({2})
         {1,2}
-        >>> print index_set("{1,2}") | index_set("{2}")
+        >>> print index_set({1,2}) | index_set({2})
         {1,2}
         """
         return index_set().wrap( toIndexSet(lhs) | toIndexSet(rhs) )
@@ -269,9 +303,9 @@ cdef class index_set:
         """
         Set union: or.
 
-        >>> x = index_set("{1}"); x |= index_set("{2}"); print x
+        >>> x = index_set({1}); x |= index_set({2}); print x
         {1,2}
-        >>> x = index_set("{1,2}"); x |= index_set("{2}"); print x
+        >>> x = index_set({1,2}); x |= index_set({2}); print x
         {1,2}
         """
         return self.wrap( self.unwrap() | toIndexSet(rhs) )
@@ -280,7 +314,7 @@ cdef class index_set:
         """
         Cardinality: Number of indices included in set.
 
-        >>> index_set("{-1,1,2}").count()
+        >>> index_set({-1,1,2}).count()
         3
         """
         return self.instance.count()
@@ -289,7 +323,7 @@ cdef class index_set:
         """
         Number of negative indices included in set.
 
-        >>> index_set("{-1,1,2}").count_neg()
+        >>> index_set({-1,1,2}).count_neg()
         1
         """
         return self.instance.count_neg()
@@ -298,7 +332,7 @@ cdef class index_set:
         """
         Number of positive indices included in set.
 
-        >>> index_set("{-1,1,2}").count_pos()
+        >>> index_set({-1,1,2}).count_pos()
         2
         """
         return self.instance.count_pos()
@@ -307,7 +341,7 @@ cdef class index_set:
         """
         Minimum member.
 
-        >>> index_set("{-1,1,2}").min()
+        >>> index_set({-1,1,2}).min()
         -1
         """
         return self.instance.min()
@@ -316,7 +350,7 @@ cdef class index_set:
         """
         Maximum member.
 
-        >>> index_set("{-1,1,2}").max()
+        >>> index_set({-1,1,2}).max()
         2
         """
         return self.instance.max()
@@ -331,7 +365,7 @@ cdef class index_set:
         """
         Sign of geometric product of two Clifford basis elements.
 
-        >>> s = index_set("{1,2}"); t=index_set("{-1}"); s.sign_of_mult(t)
+        >>> s = index_set({1,2}); t=index_set({-1}); s.sign_of_mult(t)
         1
         """
         return self.instance.sign_of_mult(toIndexSet(rhs))
@@ -340,7 +374,7 @@ cdef class index_set:
         """
         Sign of geometric square of a Clifford basis element.
 
-        >>> s = index_set("{1,2}"); s.sign_of_square()
+        >>> s = index_set({1,2}); s.sign_of_square()
         -1
         """
         return self.instance.sign_of_square()
@@ -349,10 +383,10 @@ cdef class index_set:
         """
         The “official” string representation of self.
 
-        >>> index_set("{1,2}").__repr__()
-        'index_set("{1,2}")'
-        >>> repr(index_set("{1,2}"))
-        'index_set("{1,2}")'
+        >>> index_set({1,2}).__repr__()
+        'index_set({1,2})'
+        >>> repr(index_set({1,2}))
+        'index_set({1,2})'
         """
         return index_set_to_repr( self.unwrap() ).c_str()
 
@@ -360,9 +394,9 @@ cdef class index_set:
         """
         The “informal” string representation of self.
 
-        >>> index_set("{1,2}").__str__()
+        >>> index_set({1,2}).__str__()
         '{1,2}'
-        >>> str(index_set("{1,2}"))
+        >>> str(index_set({1,2}))
         '{1,2}'
         """
         return index_set_to_str( self.unwrap() ).c_str()
@@ -375,15 +409,15 @@ def index_set_hidden_doctests():
 
     >>> print index_set(1)
     {1}
-    >>> print index_set("{1,2}")
+    >>> print index_set({1,2})
     {1,2}
-    >>> print index_set(index_set("{1,2}"))
+    >>> print index_set(index_set({1,2}))
     {1,2}
     >>> print index_set({1,2})
     {1,2}
     >>> print index_set({1,2,1})
     {1,2}
-    >>> print index_set("{1,2,1}")
+    >>> print index_set({1,2,1})
     {1,2}
     >>> print index_set("")
     {}
@@ -410,45 +444,45 @@ def index_set_hidden_doctests():
 
     For index_set.__richcmp__: Compare two objects of class index_set.
 
-    >>> index_set(1) == index_set("{1}")
+    >>> index_set(1) == index_set({1})
     True
-    >>> index_set("{1}") != index_set("{1}")
+    >>> index_set({1}) != index_set({1})
     False
-    >>> index_set("{1}") != index_set("{2}")
+    >>> index_set({1}) != index_set({2})
     True
-    >>> index_set("{1}") == index_set("{2}")
+    >>> index_set({1}) == index_set({2})
     False
-    >>> index_set("{1}") < index_set("{2}")
+    >>> index_set({1}) < index_set({2})
     True
-    >>> index_set("{1}") <= index_set("{2}")
+    >>> index_set({1}) <= index_set({2})
     True
-    >>> index_set("{1}") > index_set("{2}")
+    >>> index_set({1}) > index_set({2})
     False
-    >>> index_set("{1}") >= index_set("{2}")
+    >>> index_set({1}) >= index_set({2})
     False
-    >>> None == index_set("{1,2}")
+    >>> None == index_set({1,2})
     False
-    >>> None != index_set("{1,2}")
+    >>> None != index_set({1,2})
     True
-    >>> None < index_set("{1,2}")
+    >>> None < index_set({1,2})
     False
-    >>> None <= index_set("{1,2}")
+    >>> None <= index_set({1,2})
     False
-    >>> None > index_set("{1,2}")
+    >>> None > index_set({1,2})
     False
-    >>> None >= index_set("{1,2}")
+    >>> None >= index_set({1,2})
     False
-    >>> index_set("{1,2}") == None
+    >>> index_set({1,2}) == None
     False
-    >>> index_set("{1,2}") != None
+    >>> index_set({1,2}) != None
     True
-    >>> index_set("{1,2}") < None
+    >>> index_set({1,2}) < None
     False
-    >>> index_set("{1,2}") <= None
+    >>> index_set({1,2}) <= None
     False
-    >>> index_set("{1,2}") > None
+    >>> index_set({1,2}) > None
     False
-    >>> index_set("{1,2}") >= None
+    >>> index_set({1,2}) >= None
     False
     """
     return
@@ -458,9 +492,9 @@ cpdef inline compare(lhs,rhs):
     "lexicographic compare" eg. {3,4,5} is less than {3,7,8};
     -1 if a<b, +1 if a>b, 0 if a==b.
 
-    >>> compare(index_set("{1,2}"),index_set("{-1,3}"))
+    >>> compare(index_set({1,2}),index_set({-1,3}))
     -1
-    >>> compare(index_set("{-1,4}"),index_set("{-1,3}"))
+    >>> compare(index_set({-1,4}),index_set({-1,3}))
     1
     """
     return glucat.compare( toIndexSet(lhs), toIndexSet(rhs) )
@@ -469,7 +503,7 @@ cpdef inline min_neg(obj):
     """
     Minimum negative index, or 0 if none.
 
-    >>> min_neg(index_set("{1,2}"))
+    >>> min_neg(index_set({1,2}))
     0
     """
     return glucat.min_neg( toIndexSet(obj) )
@@ -478,7 +512,7 @@ cpdef inline max_pos(obj):
     """
     Maximum positive index, or 0 if none.
 
-    >>> max_pos(index_set("{1,2}"))
+    >>> max_pos(index_set({1,2}))
     2
     """
     return glucat.max_pos( toIndexSet(obj) )
@@ -546,9 +580,9 @@ cdef class clifford:
         2{1,2,3}
         >>> print clifford("-{1}")
         -{1}
-        >>> print clifford(2,index_set("{1,2}"))
+        >>> print clifford(2,index_set({1,2}))
         2{1,2}
-        >>> print clifford([2,3],index_set("{1,2}"))
+        >>> print clifford([2,3],index_set({1,2}))
         2{1}+3{2}
         """
         error_msg_prefix = "Cannot initialize clifford object from"
@@ -589,15 +623,35 @@ cdef class clifford:
         """
         del self.instance
 
+    def __contains__(self, x):
+        """
+        Not applicable.
+
+        >>> x=clifford(index_set({-3,4,7})); -3 in x
+        Traceback (most recent call last):
+          ...
+        TypeError: Not applicable.
+        """
+        raise TypeError("Not applicable.")
+
+    def __iter__(self):
+        """
+        Not applicable.
+
+        >>> for a in clifford(index_set({-3,4,7})): print a,
+        Traceback (most recent call last):
+          ...
+        TypeError: Not applicable.
+        """
+        raise TypeError("Not applicable.")
+
     def reframe(self, ixt):
         """
         Put self into a larger frame, defined by index set ixt.
         This can be used to make multiplication faster, by multiplying within a common frame.
 
-        >>> clifford("2+3{1}").reframe(ist({1,2,3}))
+        >>> clifford("2+3{1}").reframe(index_set({1,2,3}))
         clifford("2+3{1}")
-        >>> clifford("2+3{1}").reframe(ist({1,2,3})).frame()
-        index_set("{1,2,3}")
         """
         error_msg_prefix = "Cannot reframe"
         if isinstance(ixt, index_set):
@@ -651,13 +705,13 @@ cdef class clifford:
         """
         Subscripting: map from index set to scalar coordinate.
 
-        >>> clifford("{1}")[index_set("1")]
+        >>> clifford("{1}")[index_set(1)]
         1.0
-        >>> clifford("{1}")[index_set("{1}")]
+        >>> clifford("{1}")[index_set({1})]
         1.0
-        >>> clifford("{1}")[index_set("{1,2}")]
+        >>> clifford("{1}")[index_set({1,2})]
         0.0
-        >>> clifford("2{1,2}")[index_set("{1,2}")]
+        >>> clifford("2{1,2}")[index_set({1,2})]
         2.0
         """
         return self.instance.getitem(toIndexSet(ixt))
@@ -1025,7 +1079,7 @@ cdef class clifford:
 
         >>> print clifford("1+2{1}+3{2}+4{1,2}").vector_part()
         [2.0, 3.0]
-        >>> print clifford("1+2{1}+3{2}+4{1,2}").vector_part(index_set("{-1,1,2}"))
+        >>> print clifford("1+2{1}+3{2}+4{1,2}").vector_part(index_set({-1,1,2}))
         [0.0, 2.0, 3.0]
         """
         error_msg_prefix = "Cannot take vector part of "
@@ -1206,9 +1260,9 @@ def clifford_hidden_doctests():
     2{1,2,3}
     >>> print clifford("-{1}")
     -{1}
-    >>> print clifford(2,index_set("{1,2}"))
+    >>> print clifford(2,index_set({1,2}))
     2{1,2}
-    >>> print clifford([2,3],index_set("{1,2}"))
+    >>> print clifford([2,3],index_set({1,2}))
     2{1}+3{2}
     >>> print clifford([1,2])
     Traceback (most recent call last):
@@ -1472,13 +1526,13 @@ cpdef inline complexifier(obj):
     """
     Square root of -1 which commutes with all members of the frame of the given multivector.
 
-    >>> print complexifier(clifford(index_set("{1}")))
+    >>> print complexifier(clifford(index_set({1})))
     {1,2,3}
-    >>> print complexifier(clifford(index_set("{-1}")))
+    >>> print complexifier(clifford(index_set({-1})))
     {-1}
-    >>> print complexifier(index_set("{1}"))
+    >>> print complexifier(index_set({1}))
     {1,2,3}
-    >>> print complexifier(index_set("{-1}"))
+    >>> print complexifier(index_set({-1}))
     {-1}
     """
     return clifford().wrap( glucat.complexifier(toClifford(obj)) )
@@ -1491,7 +1545,7 @@ cpdef inline sqrt(obj, i = None):
     {-1}
     >>> print sqrt(clifford("2{-1}"))
     1+{-1}
-    >>> j=sqrt(-1,complexifier(index_set("{1}"))); print j; print j*j
+    >>> j=sqrt(-1,complexifier(index_set({1}))); print j; print j*j
     {1,2,3}
     -1
     >>> j=sqrt(-1,"{1,2,3}"); print j; print j*j
@@ -1710,7 +1764,7 @@ cpdef inline atan(obj,i = None):
     """
     Inverse tangent of multivector with optional complexifier.
 
-    >>> s=index_set("{1,2,3}"); x=clifford("{1}"); print tan(atan(x,s),s)
+    >>> s=index_set({1,2,3}); x=clifford("{1}"); print tan(atan(x,s),s)
     {1}
     >>> x=clifford("{1}"); print tan(atan(x))
     {1}
@@ -1739,7 +1793,7 @@ cpdef inline atanh(obj,i = None):
     """
     Inverse hyperbolic tangent of multivector with optional complexifier.
 
-    >>> s=index_set("{1,2,3}"); x=clifford("{1,2}"); print tanh(atanh(x,s))
+    >>> s=index_set({1,2,3}); x=clifford("{1,2}"); print tanh(atanh(x,s))
     {1,2}
     >>> x=clifford("{1,2}"); print tanh(atanh(x))
     {1,2}
@@ -1756,7 +1810,7 @@ cpdef inline random_clifford(index_set ixt, fill = 1.0):
     """
     Random multivector within a frame.
 
-    >>> print random_clifford(index_set("{-3,-1,2}")).frame()
+    >>> print random_clifford(index_set({-3,-1,2})).frame()
     {-3,-1,2}
     """
     return clifford().wrap( clifford().instance.random(ixt.unwrap(), <scalar_t>fill) )
@@ -1839,15 +1893,15 @@ def e(obj):
 
 def istpq(p, q):
     """
-    Abbreviation for index_set("{-q,...p}").
+    Abbreviation for index_set({-q,...p}).
 
     >>> print istpq(2,3)
     {-3,-2,-1,1,2}
     """
-    return index_set(str(range(-q,p+1)).replace('[','{').replace(']','}'))
+    return index_set(set(range(-q,p+1)))
 
-ninf3 = e(4) + e(-1) # Null infinity point in 3D Conformal Geometric Algebra.
-nbar3 = e(4) - e(-1) # Null bar point in 3D Conformal Geometric Algebra.
+ninf3 = e(4) + e(-1) # Null infinity point in 3D Conformal Geometric Algebra [DL].
+nbar3 = e(4) - e(-1) # Null bar point in 3D Conformal Geometric Algebra [DL].
 
 # Doctest interface.
 def _test():
