@@ -5,7 +5,7 @@
     portability.h : Work around non-standard compilers and libraries
                              -------------------
     begin                : Sun 2001-08-18
-    copyright            : (C) 2001-2007 by Paul C. Leopardi
+    copyright            : (C) 2001-2012 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -31,6 +31,8 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
+#include <boost/version.hpp>
+
 // Workarounds for ICC and ICPC
 #if defined (BOOST_INTEL) || defined (__INTEL_COMPILER) || defined (__ICL) || defined (__ICC)
 # pragma warning( disable: 177 ) // variable was declared but never referenced
@@ -49,24 +51,24 @@
 
 // ICPC does not have std::tr1::isnan() or std:tr1::isinf()
 #if defined (BOOST_INTEL) || defined (__INTEL_COMPILER) || defined (__ICL) || defined (__ICC)
-#define _GLUCAT_ISNAN(x) (x != x)
-#define _GLUCAT_ISINF(x) (!_GLUCAT_ISNAN(x) && _GLUCAT_ISNAN(x-x))
+# define _GLUCAT_ISNAN(x) (x != x)
+# define _GLUCAT_ISINF(x) (!_GLUCAT_ISNAN(x) && _GLUCAT_ISNAN(x-x))
 #else
-#define _GLUCAT_ISNAN(x) (std::isnan(x))
-#define _GLUCAT_ISINF(x) (std::isinf(x))
+# define _GLUCAT_ISNAN(x) (std::isnan(x))
+# define _GLUCAT_ISINF(x) (std::isinf(x))
 #endif
 
 #if BOOST_VERSION >= 103400
-#define UBLAS_ABS  type_abs
-#define UBLAS_SQRT type_sqrt
+# define UBLAS_ABS  type_abs
+# define UBLAS_SQRT type_sqrt
 #else
-#define UBLAS_ABS  abs
-#define UBLAS_SQRT sqrt
+# define UBLAS_ABS  abs
+# define UBLAS_SQRT sqrt
 #endif
 
 // Use with Cygwin gcc to obtain __WORDSIZE
 #if defined(HAVE_BITS_WORDSIZE_H)
-#include <bits/wordsize.h>
+# include <bits/wordsize.h>
 #endif
 
 #endif // _GLUCAT_PORTABILITY_H
