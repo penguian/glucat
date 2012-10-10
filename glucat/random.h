@@ -5,7 +5,7 @@
     random.h : Random number generator with single instance per Scalar_T
                              -------------------
     begin                : 2010-03-28
-    copyright            : (C) 2001-2010 by Paul C. Leopardi
+    copyright            : (C) 2001-2012 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -31,13 +31,23 @@
  See also Arvind Raja's original header comments and references in glucat.h
  ***************************************************************************/
 
+#if   defined(_GLUCAT_USE_GSL_RANDOM)
+# include <gsl/gsl_rng.h>
+# include <gsl/gsl_randist.h>
+#elif defined(_GLUCAT_USE_STD_RANDOM)
+# include <random>
+#else
+# include <tr1/random>
+#endif
+
 namespace glucat
 {
   /// Random number generator with single instance per Scalar_T
   // Enforce singleton
   // Reference: A. Alexandrescu, "Modern C++ Design", Chapter 6
   template< typename Scalar_T >
-  class random_generator  {
+  class random_generator
+  {
   public:
     /// Single instance of Random number generator
     static random_generator& generator() { static random_generator g; return g;}
@@ -74,9 +84,7 @@ namespace glucat
 
     random_generator() :
     uint_gen(), uniform_dist(0.0, 1.0), normal_dist(0.0, 1.0)
-    {
-      this->uint_gen.seed(seed);
-    }
+    { this->uint_gen.seed(seed); }
 
     ~random_generator()
     { }
@@ -98,9 +106,7 @@ namespace glucat
     random_generator() :
     uint_gen(), uniform_dist(0.0, 1.0), uniform_gen(uint_gen, uniform_dist),
                 normal_dist(0.0, 1.0), normal_gen(uint_gen, normal_dist)
-    {
-      this->uint_gen.seed(seed);
-    }
+    { this->uint_gen.seed(seed); }
 
     ~random_generator()
     { }
