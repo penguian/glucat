@@ -155,7 +155,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
 [
   dnl process the command line arguments
 
-  AC_ARG_ENABLE(debug,      [[  --enable-debug[=ARG]    enables debug symbols (yes|no|full) [default=yes]]],
+  AC_ARG_ENABLE(debug,      [[  --enable-debug[=ARG]    enables debug symbols (yes|no|full) [default=no]]],
   [
     case $enableval in
       yes)
@@ -176,12 +176,12 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
         ;;
     esac
   ],
-    [glucat_use_debug_code="yes"
+    [glucat_use_debug_code="no"
      glucat_use_ndebug_define=yes
   ])
 
   dnl Just for configure --help
-  AC_ARG_ENABLE(dummyoption,[[  --disable-debug         disables debug output and debug symbols [default=no]]],[],[])
+  AC_ARG_ENABLE(dummyoption,[[  --disable-debug         disables debug output and debug symbols [default=yes]]],[],[])
 
   AC_ARG_ENABLE(strict,     [[  --enable-strict         compiles with strict compiler options (may not work!)]],
    [
@@ -259,9 +259,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     ],
     [glucat_use_random="tr1"])
 
-  AC_ARG_ENABLE(pyclical,   [[  --enable-pyclical       uses Cython to build pyclical prototype [default=no]]],
+  AC_ARG_ENABLE(pyclical,   [[  --enable-pyclical       uses Cython to build the PyClical Python extension module [default=yes]]],
     [glucat_use_pyclical=$enableval],
-    [glucat_use_pyclical="no"])
+    [glucat_use_pyclical="yes"])
 
   AC_ARG_WITH(eig,          [[  --with-eig[=ARG]        library to use for eigenvalues (no|alglib|bindingsv1|bindings) [default=no]]],
     [
@@ -400,7 +400,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   else
     if test "$glucat_use_map" = "stdunordered"; then
       save_CXXFLAGS="$CXXFLAGS"
-      CXXFLAGS="$CXXFLAGS -std=c++11"
+      if test "$GXX" = "yes"; then
+        CXXFLAGS="$CXXFLAGS -std=c++11"
+      fi
       AC_CHECK_HEADERS([unordered_map],
         [
           CXXFLAGS="$save_CXXFLAGS -D_GLUCAT_USE_STD_UNORDERED_MAP"
@@ -436,7 +438,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     glucat_add_libs=""
     GLUCAT_CHECK_LIB(qd, main, [glucat_add_libs="$glucat_add_libs -lqd"], [glucat_have_qd=no])
     if test "$glucat_have_qd" != "no"; then
-      GLUCAT_CHECK_HEADERS([qd/qd_config.h],
+      GLUCAT_CHECK_HEADERS([qd/qd_real.h],
       [
         CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_QD";
         all_libraries="$all_libraries $glucat_add_libs"
@@ -465,7 +467,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   else
     if test "$glucat_use_random" == "std"; then
       save_CXXFLAGS="$CXXFLAGS"
-      CXXFLAGS="$CXXFLAGS -std=c++11"
+      if test "$GXX" = "yes"; then
+        CXXFLAGS="$CXXFLAGS -std=c++11"
+      fi
       glucat_have_std_random=no
       GLUCAT_CHECK_HEADERS([random],
       [
@@ -628,7 +632,7 @@ dnl Perform program name transformation
 AC_ARG_PROGRAM
 
 dnl Automake doc recommends to do this only here. (Janos)
-AM_INIT_AUTOMAKE(glucat,0.6.0)
+AM_INIT_AUTOMAKE(glucat,0.7.0)
 
 dnl almost the same like GLUCAT_SET_PREFIX but the path is /usr/local
 dnl
@@ -670,6 +674,7 @@ AC_SUBST(LIBS)
 AC_SUBST(AUTODIRS)
 
 AM_CONDITIONAL([make_pyclical],[test $glucat_use_pyclical = "yes"])
+KDE_CREATE_SUBDIRSLIST
 
 AC_CONFIG_FILES([ Makefile ])
 AC_CONFIG_FILES([ gfft_test/Makefile ])
