@@ -5,7 +5,7 @@
     long_double.h : Define std functions for long double
                              -------------------
     begin                : 2001-12-18
-    copyright            : (C) 2001-2010 by Paul C. Leopardi
+    copyright            : (C) 2001-2012 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -33,7 +33,7 @@
 
 namespace glucat
 {
-#ifdef __USE_GNU
+#if defined(__USE_GNU)
   static const long double l_pi   = M_PIl;
   static const long double l_ln2 = M_LN2l;
 #else
