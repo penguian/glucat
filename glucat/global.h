@@ -31,6 +31,10 @@
  See also Arvind Raja's original header comments and references in glucat.h
  ***************************************************************************/
 
+#include "glucat/portability.h"
+
+#include <limits>
+
 namespace glucat
 {
   // References:
@@ -108,15 +112,15 @@ namespace glucat
   const double DEFAULT_TRUNCATION = std::numeric_limits<float>::epsilon();
 
   // Tuning policy default constants
-  const unsigned int DEFAULT_Mult_Matrix_Threshold   =         8;
-  const unsigned int DEFAULT_Div_Max_Steps           =         4;
-  const unsigned int DEFAULT_Sqrt_Max_Steps          =        64;
-  const unsigned int DEFAULT_Log_Max_Outer_Steps     =        16;
-  const unsigned int DEFAULT_Log_Max_Inner_Steps     =        16;
-  const unsigned int DEFAULT_Basis_Max_Count         =        10;
-  const unsigned int DEFAULT_Fast_Size_Threshold     = 1UL <<  7;
-  const unsigned int DEFAULT_Inv_Fast_Dim_Threshold  = 1UL <<  6;
-  const unsigned int DEFAULT_Products_Size_Threshold = 1UL << 22;
+  const unsigned int DEFAULT_Mult_Matrix_Threshold   =       8;
+  const unsigned int DEFAULT_Div_Max_Steps           =       4;
+  const unsigned int DEFAULT_Sqrt_Max_Steps          =     256;
+  const unsigned int DEFAULT_Log_Max_Outer_Steps     =     256;
+  const unsigned int DEFAULT_Log_Max_Inner_Steps     =      32;
+  const unsigned int DEFAULT_Basis_Max_Count         =      10;
+  const unsigned int DEFAULT_Fast_Size_Threshold     = 1 << 10;
+  const unsigned int DEFAULT_Inv_Fast_Dim_Threshold  = 1 <<  7;
+  const unsigned int DEFAULT_Products_Size_Threshold = 1 << 22;
 
   /// Tuning policy
   template
