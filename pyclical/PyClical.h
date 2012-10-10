@@ -54,7 +54,7 @@ template<typename Index_Set_T>
 inline String index_set_to_repr(const Index_Set_T& ist)
 {
   std::ostringstream os;
-  os << "index_set(\"" << ist << "\")";
+  os << "index_set(" << ist << ")";
   return os.str();
 }
 
