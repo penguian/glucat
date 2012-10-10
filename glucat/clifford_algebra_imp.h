@@ -54,6 +54,10 @@
 // Doron Zeilberger, "PADE" (Maple code), 2002.
 // http://www.math.rutgers.edu/~zeilberg/tokhniot/PADE
 
+#include <glucat/clifford_algebra.h>
+
+#include <glucat/scalar.h>
+
 namespace glucat
 {
   template< typename Scalar_T, typename Index_Set_T, typename Multivector_T>
@@ -593,6 +597,105 @@ namespace glucat
   sqrt(const Multivector<Scalar_T,LO,HI>& val)
   { return sqrt(val, complexifier(val), true); }
 
+  /// Exponential of multivector
+  template< template<typename, const index_t, const index_t> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI >
+  const Multivector<Scalar_T,LO,HI>
+  clifford_exp(const Multivector<Scalar_T,LO,HI>& val)
+  {
+    // Scaling and squaring Pade' approximation of matrix exponential
+    // Reference: [GL], Section 11.3, p572-576
+    // Reference: [H]
+
+    typedef numeric_traits<Scalar_T> traits_t;
+
+    const Scalar_T scalar_val = scalar(val);
+    const Scalar_T scalar_exp = traits_t::exp(scalar_val);
+    if (traits_t::isNaN_or_isInf(scalar_exp))
+      return traits_t::NaN();
+    if (val == scalar_val)
+      return scalar_exp;
+
+    typedef Multivector<Scalar_T,LO,HI> multivector_t;
+    multivector_t A = val - scalar_val;
+    const Scalar_T pure_scale2 = A.norm();
+
+    if (traits_t::isNaN_or_isInf(pure_scale2))
+      return traits_t::NaN();
+    if (pure_scale2 == Scalar_T(0))
+      return scalar_exp;
+
+    const int ilog2_scale =
+      std::max(0, traits_t::to_int(ceil((log2(pure_scale2) + Scalar_T(A.frame().count()))/Scalar_T(2))) - 3);
+    const Scalar_T i_scale = traits_t::pow(Scalar_T(2), ilog2_scale);
+    if (traits_t::isNaN_or_isInf(i_scale))
+      return traits_t::NaN();
+
+    A /= i_scale;
+    multivector_t pure_exp;
+    {
+      typedef std::numeric_limits<Scalar_T> limits_t;
+      const int nbr_even_powers = 2*(limits_t::digits / 32) + 4;
+
+      // Create an array of coefficients
+      const int max_power = 2*nbr_even_powers + 1;
+      static Scalar_T c[max_power+1];
+      if (c[0] != Scalar_T(1))
+      {
+        c[0] = Scalar_T(1);
+        for (int
+            k = 0;
+            k != max_power;
+            ++k)
+          c[k+1] = c[k]*(max_power-k) / ((2*max_power-k)*(k+1));
+      }
+
+      // Create an array of even powers
+      multivector_t AA[nbr_even_powers];
+      AA[0] = A * A;
+      AA[1] = AA[0] * AA[0];
+      for (int
+        k = 2;
+        k != nbr_even_powers;
+        ++k)
+        AA[k] = AA[k-2] * AA[1];
+
+      // Use compensated summation to calculate U and AV
+      multivector_t residual = 0;
+      multivector_t U = c[0];
+      for (int
+          k = 0;
+          k != nbr_even_powers;
+          ++k)
+      {
+        const multivector_t& term = AA[k]*c[2*k + 2] - residual;
+        const multivector_t& sum = U + term;
+        residual = (sum - U) - term;
+        U = sum;
+      }
+      residual = 0;
+      multivector_t AV = c[1];
+      for (int
+          k = 0;
+          k != nbr_even_powers;
+          ++k)
+      {
+        const multivector_t& term = AA[k]*c[2*k + 3] - residual;
+        const multivector_t& sum = AV + term;
+        residual = (sum - AV) - term;
+        AV = sum;
+      }
+      AV *= A;
+      pure_exp = (U+AV) / (U-AV);
+    }
+    for (int
+        k = 0;
+        k != ilog2_scale;
+        ++k)
+      pure_exp *= pure_exp;
+    return pure_exp * scalar_exp;
+  }
+  
   /// Natural logarithm of multivector with specified complexifier
   template< template<typename, const index_t, const index_t> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI >
@@ -623,7 +726,6 @@ namespace glucat
     const Scalar_T& s = scalar(val);
     if (val == s)
       return traits_t::cosh(s);
-
     return (exp(val)+exp(-val)) / Scalar_T(2);
   }
 
@@ -637,9 +739,14 @@ namespace glucat
   {
     typedef numeric_traits<Scalar_T> traits_t;
     check_complex(val, i, prechecked);
-    return val.isnan()
-         ? traits_t::NaN()
-         : log(val + sqrt(val*val - Scalar_T(1), i, true), i, true);
+    if (val.isnan())
+      return traits_t::NaN();
+    
+    typedef Multivector<Scalar_T,LO,HI> multivector_t;
+    const multivector_t radical = sqrt(val*val - Scalar_T(1), i, true);
+    return (norm(val + radical) >= norm(val))
+           ?  log(val + radical, i, true)
+           : -log(val - radical, i, true);
   }
 
   /// Inverse hyperbolic cosine of multivector
@@ -739,9 +846,14 @@ namespace glucat
   {
     typedef numeric_traits<Scalar_T> traits_t;
     check_complex(val, i, prechecked);
-    return val.isnan()
-         ? traits_t::NaN()
-         : log(val + sqrt(val*val + Scalar_T(1), i, true), i, true);
+    if (val.isnan())
+      return traits_t::NaN();
+
+    typedef Multivector<Scalar_T,LO,HI> multivector_t;
+    const multivector_t radical = sqrt(val*val + Scalar_T(1), i, true);
+    return (norm(val + radical) >= norm(val))
+           ?  log( val + radical, i, true)
+           : -log(-val + radical, i, true);
   }
 
   /// Inverse hyperbolic sine of multivector
