@@ -5,7 +5,7 @@
     matrix.h : Declare common matrix functions
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2007 by Paul C. Leopardi
+    copyright            : (C) 2001-2012 by Paul C. Leopardi
                          : uBLAS interface contributed by Joerg Walter
  ***************************************************************************
 
@@ -31,6 +31,10 @@
  ***************************************************************************
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
+
+#include <boost/numeric/ublas/fwd.hpp>
+
+#include <complex>
 
 namespace glucat
 {

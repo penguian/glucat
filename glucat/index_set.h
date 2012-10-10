@@ -31,6 +31,14 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
+#include "glucat/global.h"
+#include "glucat/errors.h"
+
+#include <boost/static_assert.hpp>
+
+#include <bitset>
+#include <utility>
+
 namespace glucat
 {
   template<const index_t LO, const index_t HI>

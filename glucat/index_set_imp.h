@@ -31,6 +31,10 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
+#include "glucat/index_set.h"
+
+#include <sstream>
+
 namespace glucat
 {
   // References for algorithms:

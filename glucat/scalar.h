@@ -5,7 +5,7 @@
     scalar.h : Define functions for scalar_t
                              -------------------
     begin                : 2001-12-20
-    copyright            : (C) 2001-2009 by Paul C. Leopardi
+    copyright            : (C) 2001-2012 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -30,6 +30,13 @@
  ***************************************************************************
  See also Arvind Raja's original header comments and references in glucat.h
  ***************************************************************************/
+
+#include "glucat/portability.h"
+
+#include <boost/numeric/ublas/traits.hpp>
+
+#include <cmath>
+#include <limits>
 
 namespace glucat
 {

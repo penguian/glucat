@@ -5,7 +5,7 @@
     generation_imp.h : Implement functions for generation of the matrix representation
                              -------------------
     begin                : Wed Jan 23 2002
-    copyright            : (C) 2002-2007 by Paul C. Leopardi
+    copyright            : (C) 2002-2012 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -30,6 +30,10 @@
  ***************************************************************************
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
+
+#include "glucat/generation.h"
+
+#include "glucat/matrix.h"
 
 namespace glucat { namespace gen
 {

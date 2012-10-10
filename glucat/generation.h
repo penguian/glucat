@@ -5,7 +5,7 @@
     generation.h : Declare functions for generation of the matrix representation
                              -------------------
     begin                : Wed Jan 23 2002
-    copyright            : (C) 2002-2007 by Paul C. Leopardi
+    copyright            : (C) 2002-2012 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -31,8 +31,14 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
+#include <utility>
+#include <map>
+#include <vector>
+
 namespace glucat { namespace gen
 {
+  namespace ublas = boost::numeric::ublas;
+  
   /// A signature is a pair of indices, p, q, with p == frame.max(), q == -frame.min()
   typedef std::pair<index_t, index_t> signature_t;
 
