@@ -3,7 +3,7 @@
     peg11.cpp : Driver for test 11
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2010 by Paul C. Leopardi
+    copyright            : (C) 2001-2012 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -53,7 +53,7 @@ int test11()
   do_test11< framed_multi<long double> >();
   cout << "matrix_multi<long double>" << endl;
   do_test11< matrix_multi<long double> >();
-#ifdef _GLUCAT_USE_QD
+#if defined(_GLUCAT_USE_QD)
   cout << "framed_multi<dd_real>" << endl;
   do_test11< framed_multi<dd_real> >();
   cout << "matrix_multi<dd_real>" << endl;
