@@ -1,251 +1,308 @@
-Purpose
--------
- GluCat is a library of template classes which models the universal Clifford
- algebras over the real field, with arbitrary dimension and arbitrary
- signature.  To do this, GluCat implements a model of each Clifford algebra
- corresponding to each non-degenerate quadratic form up to a maximum set by
- the user.
+README for GluCat 0.7.0 with PyClical
+=====================================
 
- GluCat classes are designed for use as numeric class template parameters with
- other template libraries, such as Blitz++, deal.II, Matrix Template Library
- and POOMA. These template libraries expect a numeric class which implements
- "appropriate numeric semantics". To provide these semantics, the GluCat
- interface matches float or complex<> as much as possible. Yet the GluCat
- classes must be different from float or complex<>, because they model a
- different algebra.
+GluCat is a library of C++ template classes for calculations with the universal
+Clifford algebras over the real field. The dimension of the algebras you can
+use is limited only by computer word size. Unlike some software packages for
+Clifford algebras, the maximum signature is fixed by default or by user defined
+template parameter values, and calculations are performed in the appropriate
+subalgebra.
+
+GluCat classes are meant to be used as numeric classes with other template
+libraries. To do this, GluCat classes need to look and behave like floating
+point  numeric types such as float and double. The GluCat classes do this by
+providing a definition for std::numeric_limits<>, most or all the expected
+operators like +, -, * /, and functions like sqrt(). In use with other template
+libraries, you will need to look out for the differences between GluCat classes
+and floating point numeric types. Two key differences are that Clifford algebras
+do not have a total ordering, and that multiplication in Clifford algebras is
+not necessarily commutative.
+
+PyClical is a Python extension module that is designed to make it easy for you
+to use Python to perform computations in Clifford algebras, and to implement
+algorithms and programs that use these computations. The syntax and semantics
+of the main index_set and clifford classes in PyClical is designed to be as
+similar as possible to that of the GluCat template classes index_set<> and
+matrix_multi<double>, so that you should be able to use PyClical to teach
+yourself how to use calculations in Clifford algebras, and then transfer that
+knowledge to your ability to use GluCat template classes in C++.
+
 
 Before you go any further
--------------------------
- Before you use this template library, become familiar with geometric and
- Clifford algebras.
-Web sites:
-o Rafal Ablamowitz
-  http://top.math.tntech.edu/rafal/
-o Pertti Lounesto
-  http://www.hut.fi/~ppuska/mirror/Lounesto/
-o The Clifford Research Group at Ghent
-  http://cage.ugent.be/clg/
-o Soeren Krausshar
-  http://cage.rug.ac.be/~krauss
-o The Geometric Algebra Research Group at Cambridge:
-  http://www.mrao.cam.ac.uk/~clifford/
-o William Baylis:
-  http://cronus.uwindsor.ca/baylis-research
-o Leo Dorst
-  http://carol.wins.uva.nl/~leo/clifford/
-o John Fletcher
-  http://www.ceac.aston.ac.uk/research/staff/jpf/clifford/index.php
-o David Hestenes
-  http://modelingnts.la.asu.edu/
-o Christian Perwass
-  http://www.perwass.de/cbup/start.html
+=========================
 
-Books:
-o Rafal Ablamowicz, Pertti Lounesto, Josep Parra (eds.),
-  "Clifford Algebras with Numeric and Symbolic Computations",
-  Birkhauser, 1996.
-o David Hestenes, Garret Sobczyk, "Clifford Algebra to Geometric Calculus"
-  Kluwer, first published in 1984; reprinted with corrections in 1992.
-o Pertti Lounesto, "Clifford Algebras and Spinors",
-  Cambridge University Press, Second enhanced edition, 2001.
-o Ian R. Porteous, "Clifford Algebras and the Classical groups",
-  Cambridge University Press, 1995.
+To make the best use of the GluCat template library and the PyClical extension
+module, you will need to become familiar with Geometric Algebra and Clifford
+algebras in general. The AUTHORS file includes lists of recommended web pages,
+books, and software that can help you to learn about Clifford algebras. Here is
+a short list to get you started.
 
-Software:
- o CLU, a C++ library with OPEN-GL graphics
-   http://www.clucalc.info/
- o GAIGEN, a C++ code optimized generator
-   http://www.science.uva.nl/ga/gaigen/
- o CLICAL, a Clifford algebra calculator
-   http://www.hut.fi/~ppuska/mirror/Lounesto/CLICAL.htm
- o CLIFFORD for Maple 10
-   http://math.tntech.edu/rafal/cliff10/index.html
- o GA Package for Maple V
-   http://www.mrao.cam.ac.uk/~clifford/software/GA/
- o GABLE, a Matlab package with visualization
-   http://carol.wins.uva.nl/~leo/GABLE/index.html
+o Wikipedia: Geometric algebra
+  http://en.wikipedia.org/wiki/Geometric_algebra
 
-Dependencies, Installation and Testing
-------------------------
- See INSTALL.
+o Alan Macdonald, A Survey of Geometric Algebra and Geometric Calculus
+  http://faculty.luther.edu/~macdonal/GA&GC.pdf
 
-Usage
------
- As of the current version there are no detailed usage instructions. What
- follows is a brief summary of usage. See also http://glucat.sourceforge.net
+o Alan Macdonald, Linear and Geometric Algebra, 2011.
+  http://books.google.com.au/books?q=isbn:9781453854938
 
- To see brief descriptions of the classes, functions and operators which
- GluCat defines, see the Doxygen API documentation in ./doc/api/html or
- ./doc/api/glucat-api-reference-manual.pdf.
+You should also install PyClical and run the tutorial.Once you have run the
+PyClical tutorial, run the PyClical demos and look at the sample demo output.
+Now examine the C++ code for the GluCat tests, as well as the sample output.
+Finally, look at Glucat API documentation. Instructions for each of these steps
+are given below.
 
- GluCat is a C++ template library, similar to the C++ Standard Library or the
- Boost uBLAS Library (uBLAS). It consists entirely of source code header
- files, plus a suite of test routines.
 
- To use GluCat:
+Getting started
+===============
+
+To use the software to its full potential, you will want to:
+1. Download and update the software,
+2. Understand the source code directory structure,
+3. Resolve dependencies, install and test the software,
+4. Use the PyClical extension module with Python,
+5. Write C++ programs that use GluCat classes,
+6. Compile and run C++ programs that use GluCat classes, and finally,
+7. Help to improve the software by requesting features, filing bug reports and
+   writing your own source code patches.
+
+These tasks are treated in some detail below.
+
+
+1. Downloading and updating the software
+----------------------------------------
+
+You can download new versions of GluCat from
+http://sourceforge.net/projects/glucat/files/
+or alternatively, use the CVS version:
+http://sourceforge.net/scm/?type=cvs&group_id=37255
+
+
+2. Understanding the source code directory structure
+----------------------------------------------------
+
+GluCat is a C++ template library, similar to the C++ Standard Library or the
+Boost uBLAS Library (uBLAS). It consists of source code header files, a
+suite of test routines, and the PyClical Python extension module and associated
+files.
+
+Once you have downloaded, unzipped and untarred the GluCat source code,
+you should have a directory, glucat-xxx, where xxx is the version number.
+Under glucat-xxx you should see a number of directories, including ./admin,
+./CVS, ./doc, ./gfft_test, ./glucat, ./products, ./pyclical, ./squaring, ./test,
+./test_runtime, ./testxx,  and ./transforms.
+
+The ./glucat directory contains all the header files that define the GluCat C++
+template library.
+
+The ./pyclical directory contains the C++ and Cython source code for the
+PyClical Python extension module, as well as Python source code for the
+PyClical demos and tutorials, and sample demo output.
+
+The ./admin directory is part of the autotools infrastructure for building
+GluCat, and should normally be left unchanged.
+
+The ./CVS directory is used by the CVS version control system. There are also
+CVS directories in each of the other directories. These should also be left
+unchanged.
+
+The ./doc directory contains documentation. Currently only the GluCat API
+Reference Manual can be found here.
+
+The ./gfft_test, ./products, ./squaring and ./transform directories contain the
+C++ source code for timing tests for GluCat.
+
+The ./test and ./testxx directories contain the C++ source code for programming
+examples and regression tests for GluCat.
+
+The ./test_runtime directory contains regression test input and sample output
+for the GluCat timing and regression tests.
+
+
+3. Resolving dependencies, installing and testing the software
+--------------------------------------------------------------
+
+Detailed instructions for these tasks are included in the ./INSTALL file in the
+same directory that contains this README file.
+
+
+4. Using the PyClical extension module with Python
+--------------------------------------------------
+
+The PyClical Python extension module is written in C++ and Cython, and is defined
+in the files pyclical/glucat.pxd, pyclical/PyClical.h, pyclical/PyClical.pxd,
+and pyclical/PyClical.pyx. PyClical is designed to be installed using make. For
+details on building PyClical, see the ./INSTALL file.
+
+The following instructions assume that you have already installed PyClical. If
+you have only run make within the PyClical directory, but have not yet
+installed PyClical, then, assuming you are using the bash interpreter on Linux,
+you will need to set the PYTHONPATH environment variable so that Python can
+find your newly built copy of PyClical. If the make has succeeded, you should
+have the file ./pyclical/PyClical.so. Set PYTHONPATH to include the full
+./pyclical directory path name before any other path names. For example:
+
+  export PYTHONPATH=/home/leopardi/src/glucat/pyclical:$PYTHONPATH
+
+or you can change the PYTHONPATH variable for just one command, e.g.
+
+  PYTHONPATH=/home/leopardi/src/glucat/pyclical:$PYTHONPATH python
+
+PyClical is designed to be used within a Python environment. You will usually
+need to run a Python IDE or interpreter, such as IDLE, ipython or python. The
+follwing instuctions use the standard python interpreter.
+
+To use the capabilities of PyClical from within Python, you must either import
+the PyClical extension module or import objects from this module.  The simplest
+way to do this is to use the following Python statement:
+
+>>> from PyClical import *
+
+Probably the easiest way to get familiar with PyClical is to make a copy of the
+pyclical/demos directory and run the tutorials and demos. For example, assuming
+you are using the Bash shell on Linux, use the following commands:
+
+% cp pyclical/demos /path/to/my/demos
+% cd /path/to/my/demos
+% python pyclical_tutorials.py
+
+where you must replace /path/to/my/demos with the real pathname you want to use.
+
+The pyclical_tutorials program starts by displaying
+
+    Currently available PyClical tutorials:
+
+    0.0 Notation
+    0.1 Index sets
+    0.2 Operations
+    0.3 Algebraic functions
+    0.4 Square root and transcendental functions.
+    1.0 Plane geometry
+    1.1 Complex numbers
+    1.2 Space geometry and vector algebra
+    1.3 Electromagnetism and Lorentz transformations
+    1.4 The fourth dimension
+    1.5 Conformal Geometric Algebra.
+
+    Enter the number for the tutorial you want to run, or Q to quit: 
+
+Just enter one of the numbers, e.g. 0.0, or Q to quit. At any point in an
+individual tutorial, you can interrupt by entering CTRL-c.
+
+
+For more usage examples, see the example Python files pyclical_demo.py,
+plotting_demo.py, and sqrt_log_demo.py, and the example output files
+pyclical_demo.out and sqrt_log_demo.out.
+
+To run pyclical_demo.py and sqrt_log_demos.py, use the following commands:
+
+% cd /path/to/my/demos
+% python pyclical_demo.py
+% python sqrt_log_demos.py
+
+
+To run plotting_demo.py, run "ipython --pylab" and enter the following commands
+at the ipython prompt:
+
+In [1]: %run plotting_demo
+
+In [2]: help(demo)
+
+In [3]: demo()
+
+This demo uses Matplotlib to produce a number of plots.
+
+                            
+5. Writing C++ programs that use GluCat classes
+-----------------------------------------------
+
+Once you have familiarized yourself with Clifford algebras and have tried using
+PyClical, take a good look at the test C++ code in ./test00 to ./test16 and the
+test output in ./test_runtime.
+
+A good way to begin writing your own C++ code using GluCat is to start with the
+programming example code in ./test01. The file test01/peg01.cpp includes
+test/driver.h and test01/peg01.h.
+
+The key lines of code in test/driver.h are:
+
+ #include "glucat/glucat.h"
+ typedef glucat::tuning<> Tune_P;
+ #include "glucat/glucat_imp.h"
+
+The first line includes <glucat/glucat.h>, a convenience header that includes
+all the GluCat declarations.
+
+The second line defines Tune_P, the tuning policy class. This class may be
+included as a template parameter in future versions, but for now, you will need
+to define it by using a typedef before including <glucat/glucat_imp.h>. The
+glucat::tuning<> template class is defined in <glucat/global.h>.
+
+The third line includes <glucat/glucat_imp.h>, a convenience header that includes
+all the GluCat definitions.
+
+
+The key line of code in test01/peg01.h is:
+
+ using namespace glucat;
+
+Glucat defines and uses the glucat:: namespace. You can use names from this
+namespace by using the glucat:: prefix or by the "using" declaration above.
+
+
+To obtain detailed information on the GluCat namespaces, classes and functions,
+see the Doxygen documentation in doc/api/glucat-api-reference-manual.pdf (PDF)
+and doc/api/html/ (HTML).
+
+
+6. Compiling and running C++ programs that use GluCat classes
+-------------------------------------------------------------
+
+You can use the Makefile for ./test01 as the starting point for your own
+Makefile. Your Makefile needs to pass the appropriate flags to your compiler.
+
  o Make sure that the installation directory is in your include path.
-   The default installation directory is /usr/local/include
- o In your code, include individual files as <glucat/filename.h>
-   You can also use the convenience headers <glucat/glucat.h> and
-   <glucat/glucat_imp.h>
- o Use the test header files ./test/driver.h and ./transforms/transforms.h as
-   guides. These contain lines which look something like:
+   The default installation directory is /usr/local/include/.
 
-#include "glucat/glucat.h"
-typedef glucat::tuning<> Tune_P;
-#include "glucat/glucat_imp.h"
+ o GluCat uses preprocessor defines to control header files.
+   See "To Configure" in the ./INSTALL file for details of these preprocessor
+   defines.
 
- Tune_P is the tuning policy class. It may be included as a template parameter
- in future versions, but for now, you will need to define it as a typedef before
- including <glucat/glucat_imp.h>.
- The tuning<> template class is defined in glucat/global.h.
- Glucat defines and uses the glucat:: namespace. You can use names from this
- namespace by using the glucat:: prefix or by using the following declaration:
 
-using namespace glucat;
+7. Helping to improve the software
+----------------------------------
 
- o GluCat uses preprocessor defines to control header files. In glucat/glucat.h:
+To request features, file bug reports or submit source code patches:
 
- _GLUCAT_USE_TR1_UNORDERED_MAP controls the use of the header file
- <tr1/unordered_map>.
- If _GLUCAT_USE_TR1_UNORDERED_MAP is defined, glucat/glucat.h includes this file,
- which contains the declarations and definitions for std::tr1::unordered_map<>.
- The main purpose of this definition is found in glucat/framed_multi.h.
- If _GLUCAT_USE_TR1_UNORDERED_MAP is defined, glucat/framed_multi.h defines
- glucat::framed_multi<> using std::tr1::unordered_map<>, which is an unsorted map.
- By default glucat/framed_multi.h defines glucat::framed_multi<> using std::map<>,
- which is a sorted map.
+The fastest way to ask for help with GluCat or to submit patches is to send an
+email to the project manager ( Paul Leopardi <leopardi@users.sourceforge.net> ).
 
- The configure script option --with-map=unordered adds -D_GLUCAT_USE_TR1_UNORDERED_MAP
- to CXXFLAGS in the test Makefiles, depending on whether <tr1/unordered_map> can be
- found. The default argument to --with-map is unordered, so ./configure with no
- options has the same effect as ./configure --with-map=unordered. For your own
- compilation, check your compiler, and add -D_GLUCAT_USE_TR1_UNORDERED_MAP to your own
- Makefile if you want to use std::tr1::unordered_map<>.
+The SourceForge page http://sourceforge.net/projects/glucat/support also
+provides project forums, project mailing lists and project trackers.
 
- _GLUCAT_USE_GNU_CXX_HASH_MAP controls the use of the header file <ext/hash_map>.
- If _GLUCAT_USE_GNU_CXX_HASH_MAP is defined, glucat/glucat.h includes this file,
- which contains the GNU declarations and definitions for __gnu_cxx::hash_map<>.
- If _GLUCAT_USE_GNU_CXX_HASH_MAP is defined, glucat/framed_multi.h defines
- glucat::framed_multi<> using __gnu_cxx::hash_map<>, which is an unsorted map.
+If you are thinking of writing patches, please try to match the programming
+style used in the relevant source files, and be aware of the coding standards
+used, as listed below.
 
- The configure script option --with-map=hash adds -D_GLUCAT_USE_GNU_CXX_HASH_MAP
- to CXXFLAGS in the test Makefiles, depending on whether you are using the g++
- compiler.  For your own compilation, check your compiler, and add
- -D_GLUCAT_USE_GNU_CXX_HASH_MAP to your own Makefile if you want to use
- __gnu_cxx::hash_map<>.
-
- _GLUCAT_USE_DENSE_MATRICES controls the use of dense matrices.
- The main purpose of this definition is found in glucat/matrix_multi.h.
- If _GLUCAT_USE_DENSE_MATRICES is defined, glucat/matrix_multi.h defines
- glucat::matrix_multi<> using ublas::matrix<>, which is a dense matrix.
- Otherwise matrix_multi.h defines glucat::matrix_multi<> using
- ublas::compressed_matrix<>, which a compressed matrix type. In either case,
- basis matrices always use ublas::compressed_matrix<>.
-
- The configure script flag --with-dense-mat adds -D_GLUCAT_USE_DENSE_MATRICES
- to CXXFLAGS in the test Makefiles. This is the default. If you do not want
- dense matrices, you can use the configure script flag --without-dense-mat.
- For your own compilation, you will need to add -D_GLUCAT_USE_DENSE_MATRICES
- to your own Makefile, if you want to use dense matrices.
-
- _GLUCAT_USE_QD controls the use of the QD high precision floating point library.
- If _GLUCAT_USE_QD is defined, glucat/glucat.h includes qd/qd_config.h and glucat/qd.h.
- The file glucat/qd.h supports the use of QD in GluCat by defining specializations for
- numeric_traits<dd_real> and numeric_traits<qd_real>.
-
- The configure script flag --with-qd adds -D_GLUCAT_USE_QD to CXXFLAGS and adds
- the flag -lqd to the list of libraries, all_libraries in the test Makefiles.
- For your own compilation you will need to add -D_GLUCAT_USE_QD and -lqd to
- your own Makefile. You will also need to ensure that the include path used by
- the compiler sees qd/qd_config.h and the library path sees libqd.a.
-
- _GLUCAT_USE_GSL_RANDOM controls which random number generators are used by the class
- random_generator<> defined in glucat/generator.h. If _GLUCAT_USE_GSL_RANDOM is defined,
- the GSL random number generators are used, and glucat/glucat.h includes <gsl/gsl_rng.h>
- and <gsl/gsl_randist.h> before glucat/generator.h. Otherwise the TR1 random number
- generator are used, and glucat/glucat.h includes <tr1/random> before glucat/generator.h.
-
- The configure script option --with-random[=ARG] is used to control _GLUCAT_USE_GSL_RANDOM
- and determine which libraries to use. The default is tr1, in other words, the configure
- script flag --with-random is equivalent to --with-random=tr1, and omitting this option
- altogether has the same effect, which is to leave _GLUCAT_USE_GSL_RANDOM undefined. The
- configure script option --with-random=gsl adds -D_GLUCAT_USE_GSL_RANDOM to CXXFLAGS and adds
- the flags -lgsl and -lgslcblas to the list of libraries, all_libraries in the test Makefiles.
- For your own compilation you will need to add -D_GLUCAT_USE_GSL_RANDOM, -lgsl and -lgslcblas
- to your own Makefile, if you want to use GSL random numbers instead of TR1. You will also
- need to ensure that the include path used by the compiler sees gsl/gsl_rng.h and the library
- path sees libgsl.a and libgslcblas.a.
-
- _GLUCAT_USE_EIGENVALUES controls whether the sqrt() and log() functions in matrix_multi_imp.h
- detect and handle negative and imaginary eigenvalues correctly. If _GLUCAT_USE_EIGENVALUES is
- defined, then sqrt() and log() call the function classify_eigenvalues(), defined in
- matrix_imp.h, to detect negative and imaginary eigenvalues, and handle negative eigenvalues
- by expanding the algebra. Otherwise, sqrt() and log() operate as per GluCat 0.5.0 and earlier,
- which gives incorrect results in the case of negative eigenvalues.
-
- The function eigenvalues() in matrix_imp.h calls an external function to obtain the
- eigenvalues of a matrix. Which function is used depends on one of a number of preprocessor
- defines:
-
- _GLUCAT_USE_ALGLIB uses the Alglib library of Bochkanov and Bystritsky: http://www.alglib.net/
- In this case, matrix_imp.h includes <alglib/evd.h>.
-
- _GLUCAT_USE_BINDINGS_V1 uses version 1 of the Boost Numeric Bindings library, as packaged by
- Klöckner: http://mathema.tician.de/software/boost-numeric-bindings
- In this case, matrix_imp.h includes <boost/numeric/bindings/lapack/gees.hpp>.
-
- _GLUCAT_USE_BINDINGS uses the SVN sandbox version of the Boost Numeric Bindings library,
- as per http://svn.boost.org/svn/boost/sandbox/numeric_bindings/
- In this case, matrix_imp.h includes <boost/numeric/bindings/lapack/driver/gees.hpp>.
-
- The configure script option --with-eig[=ARG]: is used to control _GLUCAT_USE_EIGENVALUES
- and determine which libraries to use. ARG can be "no", "alglib", "bindingsv1" or "bindings".
- The default is "no". The configure script option --with-eig=alglib adds
- -D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_ALGLIB to CXXFLAGS and adds the flag -lalglib to
- the list of libraries, all_libraries in the test Makefiles.
- The configure script option --with-eig=bindingsv1 adds -D_GLUCAT_USE_EIGENVALUES
- -D_GLUCAT_USE_BINDINGS_V1 to  CXXFLAGS and adds the flags -llapack -lblas to the list of
- libraries, all_libraries in the test Makefiles.
- The configure script option --with-eig=bindings adds -D_GLUCAT_USE_EIGENVALUES
- -D_GLUCAT_USE_BINDINGS to  CXXFLAGS and adds the flags -llapack -lblas to the list of
- libraries, all_libraries in the test Makefiles.
-
- For your own compilation you will need to add -D_GLUCAT_USE_EIGENVALUES, one of
- -D_GLUCAT_USE_ALGLIB, -D_GLUCAT_USE_BINDINGS_V1 or -D_GLUCAT_USE_BINDINGS, and either
- "-lalglib" or "-llapack -lblas" to to your own Makefile, if you want sqrt() and log() to use
- eigenvalues to avoid incorrect results. You will also need to ensure that the include path
- used by the compiler sees the appropriate header files as above, and the library path sees
- the appropriate libraries: either libalglib.a or liblapack.a and libblas.a.
-
-PyClical Python extension module
---------------------------------
-
- Glucat includes a Python extension module called PyClical. PyClical is written in
- C++ and Cython, and is defined in the files pyclical/glucat.pxd, pyclical/PyClical.h,
- pyclical/PyClical.pdx, and pyclical/PyClical.pyx. PyClical is designed to be
- installed using make. For details on building PyClical, see INSTALL. For usage
- examples, see the example Python files pyclical_demo.py, plotting_demo.py, and
- sqrt_log_demo.py, and the example output files pyclical_demo.out and sqrt_log_demo.out.
 
 Coding standards
-----------------
+================
 
- The headers are split into declarations and definitions. The software was
- developed using the g++ compiler, which does not implement the "export" keyword.
- Separate compilation is possible, if you include both the declarations and
- definitions in each compilation unit, but compilation is slow and the resulting
- binary is large.
+The headers are split into declarations and definitions. The software was
+developed using the GNU g++ compiler, which does not implement the "export"
+keyword. Separate compilation is possible, if you include both the declarations
+and definitions in each compilation unit, but compilation is slow and the
+resulting binary is large.
 
- The code follows many, but not all of the guidelines in the
- GNU C++ Standard Library Style Guidelines at
- http://gcc.gnu.org/onlinedocs/libstdc++/17_intro/C++STYLE
- The code also follows much of Scott Meyers' advice from "Effective C++",
- Second Edition.
+The code follows many, but not all of the guidelines in the
+GNU C++ Standard Library Style Guidelines at
+http://gcc.gnu.org/onlinedocs/libstdc++/17_intro/C++STYLE
+The code also follows much of Scott Meyers' advice from "Effective C++",
+Second Edition.
 
- Some code conventions are:
- name_t: The name of a type, either global or local to a class.
- Sentence_Case_T: The name of a type used as a template parameter.
- Other_Sentence_Case: Other template parameters, including template template
- parameters.
- ALL_CAPS_WITH_UNDERSCORES: A global constant defined in <glucat/global.h>
+Some code conventions are:
+name_t: The name of a type, either global or local to a class.
+Sentence_Case_T: The name of a type used as a template parameter.
+Other_Sentence_Case: Other template parameters, including template template
+parameters.
+ALL_CAPS_WITH_UNDERSCORES: A global constant defined in <glucat/global.h>

@@ -1,433 +1,807 @@
-Before You Begin
-================
+INSTALL for GluCat 0.7.0 with PyClical
+======================================
 
- GluCat uses the C++ Standard Library and the Boost Library. Make sure
- you have these installed and working before attempting to use GluCat.
- Use the instructions at http://www.boost.org/more/download.html
- to obtain the Boost Library.
+Prerequisites: Before You Begin
+===============================
 
- Make sure that you have installed Boost with the same version of g++ as you
- will be using with GluCat.
+GluCat uses the C++ Standard Library and the Boost Library. The PyClical Python
+extension module is built using Cython and Python. Make sure that you have all
+of these installed and working before attempting to use GluCat with PyClical.
+Use the instructions at http://www.boost.org/more/download.html to obtain
+the Boost Library. Make sure that you are able to build the Boost library with
+the same C++ compiler version as you will be using to build programs that will
+use the GluCat library.
 
- The headers need a compiler which correctly handles template template classes,
- such as g++ 4.X.
+Scroll to the end of these instructions to see a list of successful builds,
+including version numbers of various software components, and notes on software
+versions.
 
- The headers also need an include library which either defines the macro isnan
- or defines std::isnan.
 
- GluCat 0.6.0 with PyClical has so far been tested using:
+Directory Structure
+===================
+
+Once you have downloaded, unzipped and untarred the source code, you should
+have a directory, glucat-0.7.0. Under this directory you should see a number
+of subdirectories, including ./admin, ./doc, ./glucat, ./gfft_test, ./products,
+./pyclical, ./squaring, ./test, ./test_runtime, ./testxx, and ./transforms.
+
+The following instructions are meant to be used with glucat-0.7.0 as the
+current directory.
+
+
+Installation Summary
+====================
+
+There are three different types of program that you can make using the GluCat
+library with PyClical. These are:
+
+ 1. The test programs.
+ 2. The PyClical Python extension module.
+ 3. Your own programs, written in C++.
+
+There are two different things to install. These are:
+
+ 1. The GluCat C++ header files.
+ 2. The PyClical Python extension module.
+
+The simplest way to install GluCat with PyClical is to run the following
+commands, in order:
+
+ ./configure
+ make
+ sudo make install
+ make clean
+
+More details of the installation process are given below.
+
+
+The Three Different Types of Programs
+=====================================
+
+The test programs
+-----------------
+
+GluCat includes two types test programs, functionality (regression) tests and
+speed (timing) tests. The regression tests are also used as programming
+examples. The source code for the regression tests is in the subdirectories
+./test00 to ./test16. The source code for the timing tests is in ./gfft_test,
+./products, ./squaring and ./transforms. Compilation of these test programs
+uses C++ headers defined in ./test as well as ./glucat.
+
+The PyClical Python extension module
+------------------------------------
+
+GluCat includes a Python extension module called PyClical.
+
+The subdirectory ./pyclical contains source code for the PyClical extension
+module, and the subdirectory ./pyclical/demos, contains demo and tutorial files
+written in Python.
+
+PyClical is written in C++ and Cython, and is defined in the files
+pyclical/glucat.pxd, pyclical/PyClical.h, pyclical/PyClical.pdx, and
+pyclical/PyClical.pyx.
+
+Your own programs, written in C++
+---------------------------------
+
+Once you have installed  the GluCat C++ library, you can build your own C++
+programs using this library. To do this, you will need to follow some or all of
+the same steps you took to build the test programs and the PyClical. This
+includes setting compiler flags, and including relevant headers and libraries.
+Pay special attention to the -D flags described in the configuration section
+below, as these control optional parts of the compilation of the GluCat library.
+To automate the build process, you should use GNU make with your own Makefile.
+For very elaborate software, you may also want to consider using Autotools.
+
+
+To Configure
+============
+
+The build process for both the test programs and PyClical uses a single
+./configure shell script and a single overall Makefile, plus Makefiles in the
+relevant subdirectories.
+
+As briefly described above, the simplest way to install this package is:
+
+ 1. "cd" to the glucat-0.7.0 directory containing the source code and type
+    "./configure" to configure GluCat with PyClical for your system.
+    If you are using "csh" on an old version of System V, you might need to type
+    "sh ./configure" instead to prevent "csh" from trying to execute
+    ./configure itself.
+
+    Running ./configure takes a while.  While running, it prints some messages
+    telling which features it is checking for.
+
+ 2. Type "make" to compile GluCat with PyClical.
+
+ 3. Type "make install" to install the programs and any data files and
+    documentation.  Depending on where you have chosen to install GluCat with
+    PyClical, you make need to use "sudo" or you may need to log in as "root"
+    to perform this operation.
+
+ 4. You can remove the program binaries and object files from the source code
+    directory by typing "make clean".
+
+This section describes the first step in detail.
+
+The ./configure shell script attempts to guess correct values for various
+system-dependent variables used during compilation.  It uses those values to
+create a Makefile in each relevant subdirectory.  It may also create one or
+more ".h" files containing system-dependent definitions.  Finally, it creates a
+shell script ./config.status that you can run in the future to recreate the
+current configuration, a file  ./config.cache that saves the results of its
+tests to speed up reconfiguring, and a file ./config.log containing compiler
+output (useful mainly for debugging ./configure).
+
+If you need to do unusual things to compile GluCat with PyClical, please try to
+figure out how ./configure could check whether to do them, and email diffs or
+instructions to the address given in the ./README file so they can be considered
+for the next release.  If at some point ./config.cache contains results you don't
+want to keep, you may remove or edit it.
+
+The file ./configure.in is used to create ./configure by a program called
+"autoconf".  You only need ./configure.in if you want to change or regenerate
+ ./configure using a newer version of "autoconf".
+
+
+Compilers and Options
+---------------------
+
+Some systems require unusual options for compilation or linking that the
+./configure script does not know about.  You can give ./configure initial values
+for variables by setting them in the environment.  Using a Bourne-compatible
+shell, you can do that on the command line like this:
+    CC=c89 CFLAGS=-O2 LIBS=-lposix ./configure
+
+Or on systems that have the "env" program, you can do it like this:
+    env CPPFLAGS=-I/usr/local/include LDFLAGS=-s ./configure
+
+
+Optional Features
+-----------------
+
+Defaults for the options are specified in brackets.
+
+Installation directories:
+  --prefix=PREFIX         install architecture-independent files in PREFIX
+                          [/usr/local]
+
+By default, "make install" will install the GluCat C++ headers in
+/usr/local/include/glucat, and will install the PyClical.so shared object file
+in a directory under /usr/local whose full pathname is determined by Python, for
+example /usr/local/lib64/python2.7/site-packages. You can specify an installation
+prefix other than /usr/local by using the option "--prefix=PREFIX", for example
+"--prefix=$HOME".
+
+
+  --exec-prefix=EPREFIX   install architecture-dependent files in EPREFIX
+                          [PREFIX]
+
+The option "--exec-prefix=EPREFIX" changes the installation prefix for PyClical,
+without affecting the installation prefix for the GluCat C++ headers.
+
+
+  --enable-debug[=ARG]    enables debug symbols (yes|no|full) [default=no]
+
+This option controls debugging and optimization options. ARG can be "yes", "no"
+or "full". The default is "no".
+
+The option "--enable-debug=no" adds the compiler flag "-DNDEBUG" to CXXFLAGS in
+the Makefiles, and turns on optimizations, such as adding the compiler flag
+"-O3" to CXXFLAGS in the Makefiles, as well as a number of compiler and version
+dependent optimization flags. The optimized compilation may take a long time to
+complete.
+
+The option "--enable-debug=yes" adds the compiler flag "-DNDEBUG" to CXXFLAGS in
+the Makefiles, and turns on debugging, by adding the compiler flags "-O1 -g" to
+CXXFLAGS in the Makefiles.
+
+The option "--enable-debug=yes" turns on full debugging, by adding the compiler
+flags "-O0 -g3" to CXXFLAGS in the Makefiles, and does not add the compiler flag
+"-DNDEBUG" to CXXFLAGS in the Makefiles.
+
+The preprocessor symbol NDEBUG is used by Boost uBLAS to control debugging. 
+If NDEBUG is defined, then uBLAS compiles in release mode, including the use of
+expression templates. If NDEBUG is not defined, then uBLAS compiles in debug
+mode.
+
+
+If you are compiling your own programs using the GluCat library, to control
+debugging and performance, your Makefile needs to pass the following flags to
+the C++ compiler.
+
+ For full production and timing tests:
+  "-DNDEBUG -O3"
+
+ For testing with some debugging capability:
+  "-DNDEBUG -O1 -g"
+
+ For full debugging capability, including the use of debug code in uBLAS:
+  "-O0 -g3"
+
+
+  --disable-debug         disables debug output and debug symbols [default=yes]
+
+Since the default for "--enable-debug" is "no", the option "--disable-debug"
+does nothing.
+
+
+  --enable-pyclical       uses Cython to build PyClical Python extension module
+                          [default=yes]
+
+This option determines whether the PyClical Python extension module is built.
+The option "--enable-pyclical" sets the conditional flag make_pyclical in the
+Makefile for GluCat, and adds the directory ./pyclical to the SUBDIRS list,
+which is the list of subdirectories to be built. This is the default behaviour.
+If you do not want to build PyClical, use the option "--disable-pyclical".
+
+For PyClical to build successfully using pyclical/Makefile, you will need recent
+versions of both Python and Cython. You will need to ensure that the compiler
+can find the header file <Python.h>, by using the "--with-extra-includes" option,
+if necessary.
+
+Alternatively, if your computer has Python installed, but not Cython, you can
+build PyClical from the provided PyClical.cpp file. See details in "To Build"
+below.
+
+
+Optional Packages
+-----------------
+
+  --with-extra-includes=DIR
+
+This option adds non standard include paths.
+
+
+  --with-extra-libs=DIR
+
+This option adds non standard library paths
+
+
+  --with-map[=ARG]        type of map to use
+                          (map|hash|tr1unordered|stdunordered)
+                          [default=tr1unordered]
+
+This option controls preprocessor symbols of the form _GLUCAT_USE_*_MAP that
+determine the type of map used by glucat::framed_multi<>. ARG can be "map",
+"hash", "tr1unordered" or "stdunordered". The default is "tr1unordered".
+
+The option "--with-map=map" adds nothing to CXXFLAGS in the Makefile, so that
+glucat::framed_multi<> uses std::map<>.
+
+The option "--with-map=hash" adds "-D_GLUCAT_USE_GNU_CXX_HASH_MAP" to CXXFLAGS
+in the Makefiles, depending on whether you are using the g++ compiler,
+and adds _GLUCAT_USE_BACKWARD_HASH_MAP if the header file <backward/hash_map>
+is usable.
+
+The option "--with-map=tr1unordered" adds "-D_GLUCAT_USE_TR1_UNORDERED_MAP" to
+CXXFLAGS in the Makefiles, if the header file <tr1/unordered_map> is usable.
+The default argument to "--with-map" is "tr1unordered", so "./configure" with no
+options has the same effect as "./configure --with-map=tr1unordered".
+
+The option "--with-map=stdunordered" adds "-D_GLUCAT_USE_STD_UNORDERED_MAP" to
+CXXFLAGS in the Makefiles, if the header file <unordered_map> is usable.
+If the g++ compiler is being used, the compiler flag "-std=c++11" rather than
+"-ansi" is added to CXXFLAGS, to tell g++ to use the C++ 2011 standard.
+
+
+By default glucat/framed_multi.h defines glucat::framed_multi<> using
+std::map<>, which is a sorted map.
+
+If _GLUCAT_USE_GNU_CXX_HASH_MAP is defined, then if _GLUCAT_USE_BACKWARD_HASH_MAP
+is also defined, glucat/framed_multi.h includes the header file
+<backward/hash_map>, otherwise glucat/framed_multi.h includes the header file
+<ext/hash_map>. In either case, glucat/framed_multi.h defines
+glucat::framed_multi<> using __gnu_cxx::hash_map<>.
+
+If _GLUCAT_USE_TR1_UNORDERED_MAP is defined, glucat/framed_multi.h includes
+the header file <tr1/unordered_map> and defines glucat::framed_multi<>
+using std::tr1::unordered_map<>.
+
+If _GLUCAT_USE_STD_UNORDERED_MAP is defined, glucat/framed_multi.h includes
+the header file <unordered_map> and defines glucat::framed_multi<> using
+std::unordered_map<>.
+
+
+If you are compiling your own programs using the GluCat library, to choose the
+type of map used by glucat::framed_multi<>, your Makefile needs to pass the
+following flags to the C++ compiler, and the corresponding header files must
+exist.
+
+ For std::map<>: no flags.
+
+ For __gnu_cxx::hash_map<> from <ext/hash_map> with the g++ compiler:
+  "-D_GLUCAT_USE_GNU_CXX_HASH_MAP"
+
+ For __gnu_cxx::hash_map<> from <backward/hash_map> with the g++ compiler:
+  "-D_GLUCAT_USE_GNU_CXX_HASH_MAP -D_GLUCAT_USE_BACKWARD_HASH_MAP"
+
+ For std::tr1::unordered_map<>:
+  "-D_GLUCAT_USE_TR1_UNORDERED_MAP"
+
+ For std::unordered_map<>:
+  "-D_GLUCAT_USE_STD_UNORDERED_MAP"
+  If you are using g++, pass the compiler flag "-std=c++11" rather than "-ansi".
+  This tells g++ to use the 2011 C++ standard.
+
+
+  --with-dense-mat        uses dense matrices [default=yes]
+
+This option controls the preprocessor symbol _GLUCAT_USE_DENSE_MATRICES that
+determines the type of matrix used by glucat::matrix_multi<>.
+
+The option "--with-dense-mat" adds "-D_GLUCAT_USE_DENSE_MATRICES" to CXXFLAGS in
+the Makefiles. This is the default. If you do not want dense matrices, you can
+use the option "--without-dense-mat".
+
+
+If _GLUCAT_USE_DENSE_MATRICES is defined, glucat/matrix_multi.h defines
+glucat::matrix_multi<> using ublas::matrix<>, which is a dense matrix.
+Otherwise matrix_multi.h defines glucat::matrix_multi<> using
+ublas::compressed_matrix<>, which a compressed matrix type. In either case,
+basis matrices always use ublas::compressed_matrix<>.
+
+
+To compile your own programs using the GluCat library with dense matrices,
+your Makefile needs to pass the flag "-D_GLUCAT_USE_DENSE_MATRICES" to the C++
+compiler.
+
+
+  --with-qd               uses dd_real and qd_real [default=no]
+
+This option controls the use of the QD high precision floating point library.
+
+The option "--with-qd" adds "-D_GLUCAT_USE_QD" to CXXFLAGS and adds the flag
+"-lqd" to the list of libraries, "all_libraries" in the Makefiles, if the header
+file <qd/qd_real.h> and the library libqd are usable.
+
+
+If _GLUCAT_USE_QD is defined, glucat/qd.h includes <qd/qd_real.h> and supports
+the use of QD in GluCat by defining specializations for numeric_traits<dd_real>
+and numeric_traits<qd_real>.
+
+
+To compile your own programs using the GluCat library with QD, your Makefile
+needs to pass the flags "-D_GLUCAT_USE_QD" and "-lqd" to the C++ compiler.
+You will also need to ensure that the include path used by the compiler sees
+<qd/qd_real.h> and the library path sees libqd.*.
+
+
+  --with-random[=ARG]     type of random number generator to use
+                          (std|tr1|gsl) [default=tr1]
+
+This option controls preprocessor symbols of the form _GLUCAT_USE_*_MAP that
+determine which random number generators are used by glucat::random_generator<>
+defined in glucat/random.h. ARG can be "std", "tr1" or "gsl". The default is
+"tr1".
+
+The option "--with-random=std" adds "D_GLUCAT_USE_STD_RANDOM" to CXXFLAGS in the
+Makefiles, if the header file <random> is usable. If the g++ compiler is being
+used, the compiler flag "-std=c++11" rather than "-ansi" is added to CXXFLAGS,
+to tell g++ to use the C++ 2011 standard.
+
+The option "--with-random=tr1" adds "-D_GLUCAT_USE_TR1_RANDOM" to CXXFLAGS if
+the header file <tr1/random> is usable. The default argument to "--with-random"
+is "tr1", so "./configure" with no options has the same effect as
+"./configure --with-random=tr1".
+
+The option "--with-random=gsl" adds "-D_GLUCAT_USE_GSL_RANDOM" to CXXFLAGS and
+adds the flags "-lgsl" and "-lgslcblas" to the list of libraries, "all_libraries"
+in the Makefiles, if the header file <gsl/gsl_rng.h> and the libraries libgsl
+and libgslcblas are usable.
+
+
+By default the TR1 random number generators are used: glucat/random.h includes
+<tr1/random>.
+
+If _GLUCAT_USE_GSL_RANDOM is defined, the GSL random number generators are used:
+glucat/random.h includes <gsl/gsl_rng.h> and <gsl/gsl_randist.h>.
+
+Otherwise, if _GLUCAT_USE_STD_RANDOM is defined, the C++ 2011 STD random number
+generators are used: glucat/random.h includes <random>.
+
+
+If you are compiling your own programs using the GluCat library, to choose the
+type of random number generators used by glucat::random_generator<>, your
+Makefile needs to pass the following flags to the C++ compiler, and the
+corresponding header files and libraries must be usable.
+
+ For C++ 2011 STD random number generators:
+  "-D_GLUCAT_USE_STD_RANDOM"
+  If you are using g++, pass the compiler flag "-std=c++11" rather than "-ansi".
+  This tells g++ to use the 2011 C++ standard.
+
+ For TR1 random number generators: no flags.
+
+ For GSL random number generators:
+  "-D_GLUCAT_USE_GSL_RANDOM -lgsl -lgslcblas"
+  You will also need to ensure that the include path used by the compiler sees
+  <gsl/gsl_rng.h> and the library path sees libgsl.* and libgslcblas.*.
+
+
+  --with-eig[=ARG]        library to use for eigenvalues
+                          (no|alglib|bindingsv1|bindings) [default=no]
+
+This option is used to control _GLUCAT_USE_EIGENVALUES and determine which
+libraries to use. ARG can be "no", "alglib", "bindingsv1" or "bindings".
+The default is "no".
+
+The option "--with-eig=alglib" adds
+"-D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_ALGLIB" to CXXFLAGS and adds the flag
+"-lalglib" to the list of libraries, "all_libraries" in the Makefiles, if the
+header file <alglib/evd.h> and the library libalglib are usable.
+
+The option "--with-eig=bindingsv1" adds
+"-D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BINDINGS_V1" to  CXXFLAGS and adds the
+flags "-llapack -lblas" to the list of libraries, "all_libraries" in the
+Makefiles, if the header file <boost/numeric/bindings/lapack/gees.hpp> and the
+libraries liblapack and libblas are usable.
+
+The option "--with-eig=bindings" adds
+"-D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BINDINGS" to  CXXFLAGS and adds the
+flags "-llapack -lblas" to the list of libraries, "all_libraries" in the
+Makefiles, if the header file <boost/numeric/bindings/driver/lapack/gees.hpp>
+and the libraries liblapack and libblas are usable.
+
+
+The preprocessor symbol _GLUCAT_USE_EIGENVALUES controls whether the sqrt() and
+log() functions in glucat/matrix_multi_imp.h  detect and handle negative real
+eigenvalues and imaginary eigenvalues correctly. If _GLUCAT_USE_EIGENVALUES is
+defined, then sqrt() and log() call the function classify_eigenvalues(), defined
+in glucat/matrix_imp.h, to detect negative real eigenvalues and imaginary
+eigenvalues, and handle negative real eigenvalues by expanding the algebra.
+Otherwise, sqrt() and log() operate as per GluCat 0.5.0 and earlier, which gives
+incorrect results in the case of negative real eigenvalues.
+
+The function eigenvalues() in glucat/matrix_imp.h calls an external function
+to obtain the eigenvalues of a matrix. Which function is used depends on one of
+a number of preprocessor symbols:
+
+If _GLUCAT_USE_ALGLIB is defined, glucat/matrix_imp.h includes <alglib/evd.h>
+and uses the Alglib library of Bochkanov and Bystritsky: http://www.alglib.net/.
+
+If _GLUCAT_USE_BINDINGS_V1 is defined, glucat/matrix_imp.h includes
+<boost/numeric/bindings/lapack/gees.hpp> and uses version 1 of the Boost Numeric
+Bindings library, as packaged by Klöckner:
+http://mathema.tician.de/software/boost-numeric-bindings/.
+
+If _GLUCAT_USE_BINDINGS is defined, glucat/matrix_imp.h includes
+<boost/numeric/bindings/lapack/driver/gees.hpp> and uses the SVN sandbox version
+of the Boost Numeric Bindings library, as per
+http://svn.boost.org/svn/boost/sandbox/numeric_bindings/.
+
+
+To compile your own programs using the GluCat library, to detect and correctly
+handle negative real eigenvalues in the sqrt() and log() functions, your
+Makefile needs to pass the flag "-D_GLUCAT_USE_EIGENVALUES" to the C++ compiler,
+as well as one of the following choices of flags, and the corresponding header
+files and libraries must be usable.
+
+ For Alglib:
+  "-D_GLUCAT_USE_ALGLIB -lalglib"
+  You will also need to ensure that the include path used by the compiler sees
+  <alglib/evd.h> and the library path sees libalglib.*.
+
+ For Boost Numeric Bindings version 1:
+  "-D_GLUCAT_USE_BINDINGS_V1 -llapack -lblas"
+  You will also need to ensure that the include path used by the compiler sees
+  <boost/numeric/bindings/lapack/gees.hpp> and the library path sees liblapack.*
+  and libblas.*.
+
+ For Boost Numeric Bindings sandbox:
+  "-D_GLUCAT_USE_BINDINGS -llapack -lblas"
+  You will also need to ensure that the include path used by the compiler sees
+  <boost/numeric/bindings/lapack/driver/gees.hpp> and the library path sees
+ liblapack.* and libblas.*.
+
+
+Operation Controls
+------------------
+
+ ./configure recognizes the following options to control how it operates.
+
+ --cache-file=FILE
+      Use and save the results of the tests in FILE instead of
+      ./config.cache.  Set FILE to "/dev/null" to disable caching, to debug the
+      ./configure script.
+
+ --help
+      Print a summary of the options to ./configure, and exit.
+
+ --quiet
+ --silent
+ -q
+      Do not print messages saying which checks are being made.
+
+ --srcdir=DIR
+      Look for source code in directory DIR.  Usually ./configure can determine
+      that directory automatically.
+
+ --version
+      Print the version of Autoconf used to generate the ./configure script,
+      and exit.
+
+ ./configure also accepts some other, not widely useful, options.
+
+
+To Build
+========
+
+Building the test programs
+---------------------------
+
+To create the GluCat test programs, set the environment variable CXX to
+indicate your C++ compiler, eg. "g++" for GNU C++, "icc" for Intel C++, then
+run "make".
+
+Make uses the headers in ./glucat and ./test and the source in ./test??,
+./gfft_test, ./products, ./squaring and ./transforms to make the test programs
+./test??/test??, ./gfft_test/gfft_test, ./products/products,
+./squaring/squaring and  ./transforms/transforms, and (by default) ./pyclical.
+
+
+Building PyClical
+-----------------
+
+If you have run "./configure", then when you run "make" in the top level
+directory, make will build all of the tests, and then build PyClical.
+Make builds PyClical by running the command
+
+ ext_name="$(ext_name)" source_pyx="$(ext_name).pyx" CXXFLAGS="$(CXXFLAGS)" \
+ INCLUDES="$(INCLUDES)" LDFLAGS="$(LDFLAGS)" \
+ python setup.py build_ext --inplace
+
+with INCLUDES=$(all_includes), LDFLAGS=$(all_libraries) and the values of
+CXXFLAGS,  all_includes, all_libraries and ext_name set by ./configure.
+In particular, ext_name is set to "PyClical". You can run pyclical/setup.py
+yourself, but you must set the environment variables ext_name, source_pyx,
+CXXFLAGS, INCLUDES and LDFLAGS to appropriate values. See "To Configure" above
+to determine these values.
+
+
+Alternatively, if you have Python installed but do not have Cython, you can
+build PyClical from the provided PyClical.cpp by running the command
+
+ ext_name="PyClical" source_pyx="PyClical.pyx" \
+ python setup_nocython.py build_ext --inplace
+
+You must also set the environment variables CXXFLAGS, INCLUDES and LDFLAGS to
+appropriate values.
+
+
+To Test
+=======
+
+Running the test programs
+-------------------------
+
+Once you have built the test programs, copy the runtime directory
+./test_runtime to a convenient place. ./test_runtime contains the test input
+file eg8.txt. This file is needed by programming example 8 (reading
+multivectors from input).
+
+The sample test output files are eg3.res, test.out, gfft_test-11.out,
+products-8.out, squaring-11.out and transforms-8.out
+
+The main test script is ./test/test.sh. This runs tests ./test00/test00 to
+./test16/test16, using relative pathnames, so it is best to leave test.sh
+where it is and invoke it using the full path name. This allows it to find
+test00 to test16.
+
+The test script ./test/test.sh takes any number (including zero) of numeric
+parameters. Parameters in the range "00" to "16" correspond to coding examples
+./test00/test00 to ./test16/test16. These examples are run in numerical
+order. With zero parameters, all examples from 00 to 16 are run in order. Many
+of the examples are run twice - once with framed_multi<Scalar_T> and once with
+matrix_multi<Scalar_T>.
+
+The tests typically use floating point arithmetic, and ./test00/test00 and
+./test11/test11 in particular also use random number generators. Therefore if
+you run the tests using different architecture, compilers or random number
+generators, you should expect to have different floating point arithmetic
+results, but generally, still within acceptable error tolerances.
+
+Both ./test00/test00 and ./test11/test11 allow the program arguments "--help"
+and "--verbose". The argument "--verbose" produces verbose output essentially by
+setting the error tolerance to zero. Verbose output can become quite large.
+
+The test script ./test/test_optional.sh takes one parameter, and runs all
+examples 00 to 16 in order, with the given parameter as a program argument.
+Right now this is not very useful, because only ./test00 and ./test11 recognize
+program arguments.
+
+The test program ./gfft_test/gfft_test takes a parameter n, and transforms
+larger and larger multivectors within the subalgebra defined by the frame of
+the index set {-n, ..., -1, 1, ..., n}
+
+The test program ./products/products takes a parameter n, and runs a timing
+test which uses the products *, ^, % and & to multply larger and larger
+multivectors within subalgebras defined by frames limited by the value of n.
+
+The test program ./squaring/squaring takes a parameter n, and runs a timing
+test which squares larger and larger multivectors within subalgebras defined
+by frames limited by the value of n.
+
+The test program ./transforms/transforms takes a parameter n, and transforms
+larger and larger multivectors within the subalgebras defined by  frames
+limited by the value of n.
+
+The test script ./test/timing_tests.sh takes up to 4 numeric parameters.
+The command "./test/timing_tests.sh $a $b $c $d" runs
+ ./products/products $a
+ ./squaring/squaring $b
+ ./gfft_test/gfft_test $c
+ ./transforms/transforms $d
+The default is:
+ ./products/products 8
+ ./squaring/squaring 11
+ ./gfft_test/gfft_test 11
+ ./transforms/transforms 8
+
+The sample timing test results in ./test_runtime were built and run using
+./configure --with-unordered-map --with-dense-mat --enable-debug=no
+on AMD Athlon(tm) 64 3200+, openSUSE Linux 11.2, g++ 4.5.1, Boost 1.44.0.
+
+
+Testing PyClical
+----------------
+Once you have built PyClical, run the doctests. In python or ipython, etc.:
+
+ >>> import PyClical
+ >>> PyClical._test()
+ TestResults(failed=0, attempted=309)
+
+The example Python files pyclical_demo.py and sqrt_log_demo.py have
+corresponding output files pyclical_demo.out and sqrt_log_demo.out.
+Run these files and compare the output.
+
+
+To Install
+==========
+
+Once you are satisfied that GluCat works, you can run "make install".
+This install the headers from ./glucat into the header installation directory,
+$PREFIX/include, which defaults to /usr/local/include. If you have chosen to
+build Pyclical, "make install" also installs the file PyClical.so into
+a directory under $EPREFIX that is determined by the version of Python you are
+running, for example /usr/local/lib64/python2.7/site-packages/.
+
+You will need permission to update the installation directories, so you may need
+to use sudo, login as root, or su to root before you run make install.
+
+
+ List of Successful Builds
+ =========================
+
+ GluCat 0.7.0 with PyClical has so far been built and tested using:
 
  1) AMD Athlon(tm) 64 Processor 3200+ with
-    gcc version 4.5.1 (GCC)
+
+    ./configure --with-qd --with-eig=alglib \
+                --with-extra-libs=$HOME/usr/local/lib \
+                --with-extra-includes=$HOME/usr/local/include
+
+    Linux 2.6.37.6-0.20-desktop #1 SMP PREEMPT x86_64
+    gcc version 4.5.4 (SUSE Linux)
     Boost 1.44.0
     Alglib 2.5.0 C++
     QD 2.3.10
-    Python 2.7.2 |EPD 7.2-2 (64-bit)| (default, Jul  3 2011, 15:17:51)
+    Python 2.7 (r27:82500, Aug 07 2010, 16:54:59) [GCC] on linux2
     Cython 0.16
 
- 2) 2 core AMD E-350 Processor
-    gcc version 4.5.2 (Ubuntu/Linaro 4.5.2-8ubuntu4)
-    Boost 1.42.0
+ 2) AMD Athlon(tm) 64 Processor 3200+ with
+
+    ./configure --with-qd --with-eig=alglib \
+                --with-extra-libs=$HOME/usr/local/lib \
+                --with-extra-includes=$HOME/usr/local/include
+
+    Linux 2.6.37.6-0.20-desktop #1 SMP PREEMPT x86_64
+    gcc version 4.7.1 (GCC)
+    Boost 1.44.0
+    Alglib 2.5.0 C++
+    QD 2.3.10
+    Python 2.7 (r27:82500, Aug 07 2010, 16:54:59) [GCC] on linux2
+    Cython 0.16
+
+ 3) AMD Athlon(tm) 64 Processor 3200+ with
+
+    ./configure --with-map=stdunordered --with-random=std \
+                --with-qd --with-eig=alglib \
+                --with-extra-libs=$HOME/usr/local/lib \
+                --with-extra-includes=$HOME/usr/local/include
+
+    Linux 2.6.37.6-0.20-desktop #1 SMP PREEMPT x86_64
+    gcc version 4.7.1 (GCC)
+    Boost 1.44.0
+    Alglib 2.5.0 C++
+    QD 2.3.10
+    Python 2.7 (r27:82500, Aug 07 2010, 16:54:59) [GCC] on linux2
+    Cython 0.17.1
+
+ 4) 2 core AMD E-350 Processor
+
+   ./configure --with-qd -with-eig=bindingsv1 \
+               --with-extra-includes=$PATHTO/boost-numeric-bindings-v1/
+
+    Linux 3.2.0-31-generic #50-Ubuntu SMP x86_64
+    gcc version 4.6.3 (Ubuntu/Linaro 4.6.3-1ubuntu5)
+    Boost 1.46.2
     Boost Numeric Bindings V1
     QD 2.3.10
     Python 2.7.2 |EPD 7.2-2 (64-bit)| (default, Jul  3 2011, 15:17:51)
     Cython 0.15.1
 
- 3) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
+ 5) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
+
+   ./configure --enable-pyclical --with-qd -with-eig=bindingsv1 \
+               --with-extra-includes=$PATHTO/boost-numeric-bindings-v1/
+
+    Linux 3.2.0-31-generic #50-Ubuntu SMP x86_64
     gcc version 4.6.3 (Ubuntu/Linaro 4.6.3-1ubuntu5)
     Boost 1.46.1
     Boost Numeric Bindings V1
     QD 2.3.13
-    Python 2.7.3 (default, Apr 20 2012, 22:39:59)
+    Python 2.7.3 (default, Aug  1 2012, 05:14:39) [GCC 4.6.3] on linux2
     Cython 0.15.1
 
- 4) 8 core Intel(R) Xeon(R) CPU X7550  @ 2.00GHz with
+ 6) 4 core AMD Opteron(tm) Processor 8360 SE  @ 1.25GHz with
+
+    ./configure --with-eig=bindingsv1 \
+                --with-extra-includes=$PATHTO/boost-numeric-bindings-v1
+
+    Linux 2.6.37-gentoo-r1 #1 SMP x86_64
+    gcc version 4.5.2 (Gentoo 4.5.2 p1.0, pie-0.4.5)
+    Boost 1.49.0
+    Boost Numeric Bindings V1
+    Python 2.7.3 (default, Jul 18 2012, 09:06:01)
+    Cython 0.15.1
+
+ 7) 8 core Intel(R) Xeon(R) CPU X7550  @ 2.00GHz with
+
+   ./configure --exec-prefix=/usr --with-qd --with-eig=bindingsv1 \
+               --with-extra-libs=$HOME/usr/local/lib \
+               --with-extra-includes=$HOME/usr/local/include:\
+                                     $PATHTO/boost-numeric-bindings/
+
+    Linux 3.1.1-gentoo #1 SMP x86_64
     gcc version 4.5.2 (Gentoo 4.5.2 p1.1, pie-0.4.5)
     Boost 1.46.1
     Boost Numeric Bindings V1
     QD 2.3.13
     Python 2.7.1 (r271:86832, May 30 2011, 14:55:55)
-    Cython 0.14.1
+    Cython 0.17.1
 
-   Notes:
-1. GluCat 0.6.0 will not work with QD versions earlier than 2.3.10,
-   because older versions do not zero-initialize dd_real and qd_real
-   as required by ublas::clear().
-2. GluCat 0.6.0 has not been tested with gcc versions earlier than 4.5.1.
 
-Directory Structure
-===================
+Notes on software versions
+--------------------------
 
- Once you have downloaded, unzipped and untarred the source code,
- you should have a directory, glucat-xxx, where xxx is the version number.
- Under glucat-xxx you should see a number of directories, including ./admin,
- ./doc, ./glucat, ./gfft_test, ./products, ./squaring ./test and ./transforms.
- The following instructions are meant to be used with glucat-xxx as the current
- directory.
+ 1. GluCat needs an include library which either defines the macro isnan or
+    defines std::isnan. The C++ standard library included with gcc 4.5.2 and
+    above defines std::isnan.
 
-To Build
-========
+ 1. GluCat 0.7.0 has not been tested with gcc versions earlier than 4.5.2.
+    GluCat needs an include library which either defines the macro isnan or
+    defines std::isnan. The C++ standard library included with gcc 4.5.2 and
+    above defines std::isnan.
 
- GluCat is a C++ template library. There is nothing to build, unless you
- want to use the PyClical Python extension module.
+ 2. Cython versions earlier than 0.15 do not build PyClical 0.7.0 correctly,
+    because PyClical 0.7.0 uses generators, which were only implemented with
+    Cython 0.15.
 
-The PyClical Python extension module
-------------------------------------
+ 3. Cython versions to and including 0.16 do not build PyClical correctly
+    for C++11. If you try to use g++ with -std=c++11 you will see
+    an error message like:
 
- GluCat includes a Python extension module called PyClical.
+ In function ‘void __Pyx_RaiseArgtupleInvalid(...)’:
+ error: unable to find string literal operator ‘operator"" PY_FORMAT_SIZE_T’
 
- The directory ./pyclical contains source code for the PyClical extension
- module, the example Python files pyclical_demo.py, plotting_demo.py, and
- sqrt_log_demo.py, and the example output files pyclical_demo.out and
- sqrt_log_demo.out.
+    The workaround is to edit PyClical.cpp and put a space before and after each
+    occurrence of PY_FORMAT_SIZE_T.
 
- PyClical is written in C++ and Cython, and is defined in the files
- pyclical/glucat.pxd, pyclical/PyClical.h, pyclical/PyClical.pdx, and
- pyclical/PyClical.pyx. PyClical is designed to be installed using make.
+ 4. GluCat 0.7.0 will not work with QD versions earlier than 2.3.10,
+    because older versions do not zero-initialize dd_real and qd_real
+    as required by ublas::clear().
 
- To build the PyClical Python interface, run ./configure --enable-pyclical,
- then make. This sets the conditional flag make_pyclical in the Makefile
- for GluCat, and adds the directory ./pyclical to the SUBDIRS list, which is
- the list of subdirectories to be built. For PyClical to build successfully,
- you will need recent versions of both Python and Cython. You will need to
- ensure that the compiler can find the header file Python.h, by using the
- --with-extra-includes option to ./configure, if necessary.
-
- If you have run ./configure --enable-pyclical, then when you run make in
- the top level directory, make will build all of the tests, and then build
- PyClical. Make builds PyClical by running the command
-
-  ext_name="$(ext_name)" source_pyx="$(ext_name).pyx" CXXFLAGS="$(CXXFLAGS)" \
-  INCLUDES="$(INCLUDES)" LDFLAGS="$(LDFLAGS)" python setup.py build_ext --inplace
-
- with INCLUDES=$(all_includes), LDFLAGS=$(all_libraries) and the values of
- CXXFLAGS,  all_includes, all_libraries and ext_name set by ./configure.
- In particular, ext_name is set to "PyCliCal". You can run pyclical/setup.py
- yourself, but you must set the environment variables ext_name, cource_pyx,
- CXXFLAGS, INCLUDES and LDFLAGS to appropriate values.
-
- Once you have build PyClical, run the doctests. In python or ipython, etc.:
-
-  >>> import PyClical
-  >>> PyClical._test()
-  TestResults(failed=0, attempted=312)
-
- The example Python files pyclical_demo.py and sqrt_log_demo.py have
- corresponding output files pyclical_demo.out and sqrt_log_demo.out.
- Run these files and compare the output.
-
-To Test
-=======
-
-The Test Programs
------------------
-
- The test script ./test/test.sh takes any number (including zero) of numeric
- parameters. Parameters in the range "00" to "16" correspond to coding examples
- ./test00/peg00.h to ./test16/peg16.h. These examples are run in numerical
- order. With zero parameters, all examples from 00 to 16 are run in order. Many
- of the examples are run twice - once with framed_multi<Scalar_T> and once with
- matrix_multi<Scalar_T>.
-
- The test program ./gfft_test/gfft_test takes a parameter n, and transforms
- larger and larger multivectors within the subalgebra defined by the frame of
- the index set {-n, ..., -1, 1, ..., n}
-
- The test program ./products/products takes a parameter n, and runs a timing
- test which uses the products *, ^, % and & to multply larger and larger
- multivectors within subalgebras defined by frames limited by the value of n.
-
- The test program ./squaring/squaring takes a parameter n, and runs a timing
- test which squares larger and larger multivectors within subalgebras defined
- by frames limited by the value of n.
-
- The test program ./transforms/transforms takes a parameter n, and transforms
- larger and larger multivectors within the subalgebras defined by  frames
- limited by the value of n.
-
- The test script ./test/timing_tests.sh takes up to 4 numeric parameters.
- The command "./test/timing_tests.sh $a $b $c $d" runs
-  ./products/products $a
-  ./squaring/squaring $b
-  ./gfft_test/gfft_test $c
-  ./transforms/transforms $d
- The default is:
-  ./products/products 8
-  ./squaring/squaring 11
-  ./gfft_test/gfft_test 11
-  ./transforms/transforms 8
-
- Both ./test00 and ./test11 allow the program arguments --help and --verbose.
- The argument --verbose produces verbose output essentially by setting the error
- tolerance to zero. Verbose output can become quite large.
-
- The test script ./test/test_optional.sh takes one parameter, and runs all
- examples 00 to 16 in order, with the given parameter as a program argument.
- Right now this is not very useful, because only ./test00 and ./test11 recognize
- program arguments.
-
-To Make the Test Programs
--------------------------
-
- To create the GluCat test programs, set the environment variable CXX to
- indicate your C++ compiler, eg. "g++" for GNU C++, "icc" for Intel C++, then
- run ./configure, then make. Some options to ./configure are described below.
- See "Usage" in README for more details.
-
- Make uses the headers in ./glucat and ./test and the source in ./test??,
- ./gfft_test, ./products, ./squaring and ./transforms to make the test programs
- ./test??/test??, ./gfft_test/gfft_test, ./products/products, ./squaring/squaring
- and  ./transforms/transforms
-
- Once you have created the test programs, copy the runtime directory
- ./test_runtime to a convenient place. ./test_runtime contains the test input
- file eg8.txt. This file is needed by programming example 8 (reading
- multivectors from input).
-
- The sample test output files are eg3.res, test.out, gfft_test-11.out,
- products-8.out, squaring-11.out and transforms-8.out
-
- The main test script is ./test/test.sh. This runs tests ./test00/test00 to
- ./test16/test16, using relative pathnames, so it is best to leave test.sh
- where it is and invoke it using the full path name. This allows it to find
- test00 to test16.
-
- To create meaningful timing tests, run ./configure --enable-debug=no, then
- make.  Setting --enable-debug=no will invoke the highest optimization level of
- the relevant compiler.
-
- To compile the tests using std::map for glucat::framed_multi<>,
- run ./configure --with-map=map, then make.
-
- To compile the tests using __gnu_cxx::hash_map for glucat::framed_multi<>,
- run ./configure --with-map=hash, then make. This adds
- -D_GLUCAT_USE_GNU_CXX_HASH_MAP to CXXFLAGS in the test Makefiles, depending
- on whether you are using the g++ compiler.
-
- To compile the tests using std::tr1::unordered_map for glucat::framed_multi<>,
- run ./configure --with-map=unordered, or just run ./configure, then make.
- The default argument to --with-map is unordered, so ./configure with no options
- has the same effect as ./configure --with-map=unordered. This adds
- -D_GLUCAT_USE_TR1_UNORDERED_MAP to CXXFLAGS in the test Makefiles.
-
- To compile the tests using compressed matrices, run ./configure --without-dense-mat,
- then make. This prevents -D_GLUCAT_USE_DENSE_MATRIX_MATRICES from being added to
- CXXFLAGS in the test Makefiles.
-
- To compile the tests using dd_real and qd_real, run ./configure --with-qd,
- then make. This adds -D_GLUCAT_USE_QD to CXXFLAGS in the test Makefiles, and
- adds -lqd to all_libraries.
-
- To compile the tests using GSL random numbers, run ./configure --with-random=gsl,
- then make. This adds -D_GLUCAT_USE_GSL_RANDOM to CXXFLAGS in the test Makefiles.
-
- To compile the tests using TR1 random numbers, run ./configure --with-random=tr1,
- or just run ./configure, then make. The default argument to --with-random is tr1,
- so ./configure with no options has the same effect as ./configure --with-random=tr1.
-
- To compile the tests using eigenvalues provided by Alglib,
- run ./configure --with-eig=alglib, then make. This adds -D_GLUCAT_USE_EIGENVALUES
- -D_GLUCAT_USE_ALGLIB to CXXFLAGS, and adds -lalglib to all_libraries.
-
- To compile the tests using eigenvalues provided by LAPACK via Boost Numeric Bindings V1,
- run ./configure --with-eig=bindingsv1, then make. This adds -D_GLUCAT_USE_EIGENVALUES
- -D_GLUCAT_USE_BINDINGS_V1 to CXXFLAGS, and adds -llapack -lblas to all_libraries.
-
- To compile the tests using eigenvalues provided by LAPACK via Boost Numeric Bindings,
- run ./configure --with-eig=bindings, then make. This adds -D_GLUCAT_USE_EIGENVALUES
- -D_GLUCAT_USE_BINDINGS to CXXFLAGS, and adds -llapack -lblas to all_libraries.
-
- The sample timing test results in ./test_runtime were built and run using
- ./configure --with-unordered-map --with-dense-mat --enable-debug=no
- on AMD Athlon(tm) 64 3200+, openSUSE Linux 11.2, g++ 4.5.1, Boost 1.44.0.
-
- If you are using Linux on Intel, you can also:
- o create a full debug version of the tests:
-   run ./configure --enable-debug=full, then make.
- o create a version for profiling:
-   run ./configure --enable-profile, then make.
-
- Further warnings:
- 1) The optimized compilation may take a long time to complete.
-
- 2) Many Clifford algebra algorithms are exponential in both time and
- space complexity.
-
- 3) Detailed generic instructions for ./configure are given in "Basic
- Installation" below. See also ./configure --help
-
-To Install
-==========
-
- Once you are satisfied that GluCat works, you can run make install.
- What make install does is to install the headers from ./glucat into the
- installation directory, which defaults to /usr/local/include
- You will need permission to update this directory, so you may need to
- su to root before you run make install.
-
-Basic Installation
-==================
-
-   These are generic installation instructions.
-
-   The `configure' shell script attempts to guess correct values for
-various system-dependent variables used during compilation.  It uses
-those values to create a `Makefile' in each directory of the package.
-It may also create one or more `.h' files containing system-dependent
-definitions.  Finally, it creates a shell script `config.status' that
-you can run in the future to recreate the current configuration, a file
-`config.cache' that saves the results of its tests to speed up
-reconfiguring, and a file `config.log' containing compiler output
-(useful mainly for debugging `configure').
-
-   If you need to do unusual things to compile the package, please try
-to figure out how `configure' could check whether to do them, and mail
-diffs or instructions to the address given in the `README' so they can
-be considered for the next release.  If at some point `config.cache'
-contains results you don't want to keep, you may remove or edit it.
-
-   The file `configure.in' is used to create `configure' by a program
-called `autoconf'.  You only need `configure.in' if you want to change
-it or regenerate `configure' using a newer version of `autoconf'.
-
-The simplest way to compile this package is:
-
-  1. `cd' to the directory containing the package's source code and type
-     `./configure' to configure the package for your system.  If you're
-     using `csh' on an old version of System V, you might need to type
-     `sh ./configure' instead to prevent `csh' from trying to execute
-     `configure' itself.
-
-     Running `configure' takes a while.  While running, it prints some
-     messages telling which features it is checking for.
-
-  2. Type `make' to compile the package.
-
-  3. Type `make install' to install the programs and any data files and
-     documentation.
-
-  4. You can remove the program binaries and object files from the
-     source code directory by typing `make clean'.
-
-Compilers and Options
-=====================
-
-   Some systems require unusual options for compilation or linking that
-the `configure' script does not know about.  You can give `configure'
-initial values for variables by setting them in the environment.  Using
-a Bourne-compatible shell, you can do that on the command line like
-this:
-     CC=c89 CFLAGS=-O2 LIBS=-lposix ./configure
-
-Or on systems that have the `env' program, you can do it like this:
-     env CPPFLAGS=-I/usr/local/include LDFLAGS=-s ./configure
-
-Compiling For Multiple Architectures
-====================================
-
-   You can compile the package for more than one kind of computer at the
-same time, by placing the object files for each architecture in their
-own directory.  To do this, you must use a version of `make' that
-supports the `VPATH' variable, such as GNU `make'.  `cd' to the
-directory where you want the object files and executables to go and run
-the `configure' script.  `configure' automatically checks for the
-source code in the directory that `configure' is in and in `..'.
-
-   If you have to use a `make' that does not supports the `VPATH'
-variable, you have to compile the package for one architecture at a time
-in the source code directory.  After you have installed the package for
-one architecture, use `make distclean' before reconfiguring for another
-architecture.
-
-Installation Names
-==================
-
-   By default, `make install' will install the package's files in
-`/usr/local/bin', `/usr/local/man', etc.  You can specify an
-installation prefix other than `/usr/local' by giving `configure' the
-option `--prefix=PATH'.
-
-   You can specify separate installation prefixes for
-architecture-specific files and architecture-independent files.  If you
-give `configure' the option `--exec-prefix=PATH', the package will use
-PATH as the prefix for installing programs and libraries.
-Documentation and other data files will still use the regular prefix.
-
-   If the package supports it, you can cause programs to be installed
-with an extra prefix or suffix on their names by giving `configure' the
-option `--program-prefix=PREFIX' or `--program-suffix=SUFFIX'.
-
-Optional Features
-=================
-
-   Some packages pay attention to `--enable-FEATURE' options to
-`configure', where FEATURE indicates an optional part of the package.
-They may also pay attention to `--with-PACKAGE' options, where PACKAGE
-is something like `gnu-as' or `x' (for the X Window System).  The
-`README' should mention any `--enable-' and `--with-' options that the
-package recognizes.
-
-   For packages that use the X Window System, `configure' can usually
-find the X include and library files automatically, but if it doesn't,
-you can use the `configure' options `--x-includes=DIR' and
-`--x-libraries=DIR' to specify their locations.
-
-Specifying the System Type
-==========================
-
-   There may be some features `configure' can not figure out
-automatically, but needs to determine by the type of host the package
-will run on.  Usually `configure' can figure that out, but if it prints
-a message saying it can not guess the host type, give it the
-`--host=TYPE' option.  TYPE can either be a short name for the system
-type, such as `sun4', or a canonical name with three fields:
-     CPU-COMPANY-SYSTEM
-
-See the file `config.sub' for the possible values of each field.  If
-`config.sub' isn't included in this package, then this package doesn't
-need to know the host type.
-
-   If you are building compiler tools for cross-compiling, you can also
-use the `--target=TYPE' option to select the type of system they will
-produce code for and the `--build=TYPE' option to select the type of
-system on which you are compiling the package.
-
-Sharing Defaults
-================
-
-   If you want to set default values for `configure' scripts to share,
-you can create a site shell script called `config.site' that gives
-default values for variables like `CC', `cache_file', and `prefix'.
-`configure' looks for `PREFIX/share/config.site' if it exists, then
-`PREFIX/etc/config.site' if it exists.  Or, you can set the
-`CONFIG_SITE' environment variable to the location of the site script.
-A warning: not all `configure' scripts look for a site script.
-
-Operation Controls
-==================
-
-   `configure' recognizes the following options to control how it
-operates.
-
-`--cache-file=FILE'
-     Use and save the results of the tests in FILE instead of
-     `./config.cache'.  Set FILE to `/dev/null' to disable caching, for
-     debugging `configure'.
-
-`--help'
-     Print a summary of the options to `configure', and exit.
-
-`--quiet'
-`--silent'
-`-q'
-     Do not print messages saying which checks are being made.
-
-`--srcdir=DIR'
-     Look for the package's source code in directory DIR.  Usually
-     `configure' can determine that directory automatically.
-
-`--version'
-     Print the version of Autoconf used to generate the `configure'
-     script, and exit.
-
-`configure' also accepts some other, not widely useful, options.
+ 5. GluCat 0.7.0 has not been tested with Alglib versions later than 2.5.0 and
+    is unlikely to work with Alglib 3.0.0 or later versions, because the Alglib
+    source files were reorganized for version 3.0.0.
