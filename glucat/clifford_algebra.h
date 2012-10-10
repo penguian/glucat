@@ -31,6 +31,10 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
+#include <string>
+#include <utility>
+#include <vector>
+
 namespace glucat
 {
   /// clifford_algebra<> declares the operations of a Clifford algebra
@@ -557,6 +561,15 @@ namespace glucat
   sqrt(const Multivector<Scalar_T,LO,HI>& val);
 
   // Transcendental functions
+
+  /// Exponential of multivector
+  template
+  < template<typename, const index_t, const index_t> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI
+  >
+  const Multivector<Scalar_T,LO,HI>
+  clifford_exp(const Multivector<Scalar_T,LO,HI>& val);
+  
   /// Natural logarithm of multivector with specified complexifier
   template
   <
