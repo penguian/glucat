@@ -390,9 +390,8 @@ namespace glucat
                            ;
     if (direct_mult)
     { // If we have a sparse multiply, store the result directly
-      const size_t result_max_size = size_t(std::min(lhs_size * rhs_size, double(algebra_dim)));
-      multivector_t result(_GLUCAT_HASH_SIZE_T(result_max_size));
-
+      multivector_t result =
+        multivector_t(_GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
       const const_iterator lhs_begin = lhs.begin();
       const const_iterator lhs_end   = lhs.end();
       const const_iterator rhs_begin = rhs.begin();
@@ -498,8 +497,8 @@ namespace glucat
 
       const index_set_t our_frame = lhs_frame | rhs_frame;
       const set_value_t algebra_dim = 1 << our_frame.count();
-      const size_t result_max_size = size_t(std::min(lhs_size * rhs_size, double(algebra_dim)));
-      multivector_t result(_GLUCAT_HASH_SIZE_T(result_max_size));
+      multivector_t result =
+        multivector_t(_GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
       for (set_value_t
           result_stv = 0;
           result_stv != algebra_dim;
@@ -593,8 +592,8 @@ namespace glucat
 
       const index_set_t our_frame = lhs_frame | rhs_frame;
       const set_value_t algebra_dim = 1 << our_frame.count();
-      const size_t result_max_size = size_t(std::min(lhs_size * rhs_size, double(algebra_dim)));
-      multivector_t result(_GLUCAT_HASH_SIZE_T(result_max_size));
+      multivector_t result =
+        multivector_t(_GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
       for (set_value_t
           result_stv = 0;
           result_stv != algebra_dim;
@@ -733,8 +732,8 @@ namespace glucat
         if ((lhs_ist | rhs_ist) == rhs_ist)
           result += lhs_term * rhs_term;
       }
-      return result;
     }
+    return result;
 #else
     const const_iterator lhs_end   = lhs.end();
     const const_iterator rhs_end   = rhs.end();
@@ -748,8 +747,8 @@ namespace glucat
 
       const index_set_t our_frame = lhs_frame | rhs_frame;
       const set_value_t algebra_dim = 1 << our_frame.count();
-      const size_t result_max_size = size_t(std::min(lhs_size * rhs_size, double(algebra_dim)));
-      multivector_t result(_GLUCAT_HASH_SIZE_T(result_max_size));
+      multivector_t result =
+        multivector_t(_GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
       for (set_value_t
           result_stv = 0;
           result_stv != algebra_dim;
