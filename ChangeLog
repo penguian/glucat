@@ -1,3 +1,32 @@
+2012-11-10 20:19  leopardi
+
+	* test_runtime/: gfft_test-11.out, products-8.out, squaring-11.out,
+	  transforms-8.out: Test results for version 0.7.1.
+
+2012-11-10 20:18  leopardi
+
+	* INSTALL: Update list of successful builds to include a case with
+	  "./configure ... --with-map=map ..." Update to version 0.7.1.
+
+2012-11-10 20:16  leopardi
+
+	* AUTHORS, Doxyfile, README, configure.in, configure.in.in,
+	  glucat.lsm: Update to version 0.7.1.
+
+2012-11-10 20:15  leopardi
+
+	* aclocal.m4: Generated file.  Update to version 0.7.1.
+
+2012-11-07 08:43  leopardi
+
+	* glucat/framed_multi_imp.h: Change initialization of
+	  'multivector_t result' so that multivector_t based on std::map
+	  compiles and works correctly.
+
+2012-10-11 01:23  leopardi
+
+	* ChangeLog: Update to version 0.7.0.
+
 2012-10-11 00:03  leopardi
 
 	* glucat/random.h: Include header dependencies.
