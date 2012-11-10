@@ -1,5 +1,10 @@
-NEWS for GluCat 0.7.0 with PyClical
+NEWS for GluCat 0.7.1 with PyClical
 ===================================
+
+2012-11-11: 0.7.1:
+GluCat 0.7.1 fixes a bug which prevented compilation in the case where the class
+glucat::framed_multi<> is based on std::map.
+
 
 2012-10-10: 0.7.0:
 GluCat 0.7.0 has more accurate sqrt and transcendental functions and includes
