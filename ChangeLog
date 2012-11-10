@@ -1,3 +1,11 @@
+2012-11-10 20:36  leopardi
+
+	* NEWS, TODO: Update to version 0.7.1.
+
+2012-11-10 20:24  leopardi
+
+	* ChangeLog: ChangeLog for version 0.7.1.
+
 2012-11-10 20:19  leopardi
 
 	* test_runtime/: gfft_test-11.out, products-8.out, squaring-11.out,
@@ -4866,4 +4874,3 @@
 2002-01-10 ./README: Add -finline-limit-400
 
 2002-01-09 Release glucat-0.0.1
-
