@@ -449,7 +449,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     fi
   fi
 
-  if test "$glucat_use_random" == "gsl"; then
+  if test "$glucat_use_random" = "gsl"; then
     glucat_have_gsl=yes
     glucat_add_libs=""
     GLUCAT_CHECK_LIB(gsl,      main, [glucat_add_libs="$glucat_add_libs -lgsl"],      [glucat_have_gsl=no])
@@ -465,7 +465,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       ],[])
     fi
   else
-    if test "$glucat_use_random" == "std"; then
+    if test "$glucat_use_random" = "std"; then
       save_CXXFLAGS="$CXXFLAGS"
       if test "$GXX" = "yes"; then
         CXXFLAGS="$CXXFLAGS -std=c++11"
@@ -491,7 +491,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   fi
 
   glucat_extra_cxxflags_pyclical=""
-  if test "$glucat_use_pyclical" == "no"; then
+  if test "$glucat_use_pyclical" = "no"; then
     DO_NOT_COMPILE="$DO_NOT_COMPILE pyclical"
   else
     AM_PATH_PYTHON
@@ -504,7 +504,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   fi
   AC_SUBST(glucat_extra_cxxflags_pyclical)
 
-  if test "$glucat_use_eigenvalues" == "alglib"; then
+  if test "$glucat_use_eigenvalues" = "alglib"; then
     glucat_have_alglib=yes
     glucat_add_libs=""
     GLUCAT_CHECK_LIB(alglib, gamma, [glucat_add_libs="$glucat_add_libs -lalglib"], [glucat_have_alglib=no],[-lm])
@@ -517,20 +517,20 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     fi
   fi
 
-  if test "$glucat_use_eigenvalues" == "bindingsv1" || test "$glucat_use_eigenvalues" == "bindings"; then
+  if test "$glucat_use_eigenvalues" = "bindingsv1" || test "$glucat_use_eigenvalues" = "bindings"; then
     glucat_have_lapack=yes
     glucat_add_libs=""
     GLUCAT_CHECK_LIB(lapack, main, [glucat_add_libs="$glucat_add_libs -llapack"], [glucat_have_lapack=no])
     GLUCAT_CHECK_LIB(blas,   main, [glucat_add_libs="$glucat_add_libs -lblas"],   [glucat_have_lapack=no])
     if test "$glucat_have_lapack" != "no"; then
       all_libraries="$all_libraries $glucat_add_libs"
-      if test "$glucat_use_eigenvalues" == "bindingsv1"; then
+      if test "$glucat_use_eigenvalues" = "bindingsv1"; then
         GLUCAT_CHECK_HEADERS([boost/numeric/bindings/lapack/gees.hpp],
         [
           CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BINDINGS_V1";
         ],[],[])
       fi
-      if test "$glucat_use_eigenvalues" == "bindings"; then
+      if test "$glucat_use_eigenvalues" = "bindings"; then
         GLUCAT_CHECK_HEADERS([boost/numeric/bindings/lapack/driver/gees.hpp],
         [
           CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BINDINGS";
@@ -543,7 +543,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       if test "$GXX" = "yes"; then
         case $host in
           *-*-linux-gnu)
-            if test "$glucat_cxx_std" == "cxx11"; then
+            if test "$glucat_cxx_std" = "cxx11"; then
               CXXFLAGS="-std=c++11 $CXXFLAGS"
             else
               CXXFLAGS="-ansi $CXXFLAGS"
