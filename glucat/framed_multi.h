@@ -35,8 +35,10 @@
 #include "glucat/errors.h"
 #include "glucat/clifford_algebra.h"
 
+#if defined(_GLUCAT_USE_BOOST_POOL_ALLOC)
 // Use the Boost pool allocator
 #include <boost/pool/poolfwd.hpp>
+#endif
 
 #include <string>
 #include <utility>
@@ -151,8 +153,11 @@ namespace glucat
   private std::unordered_map< const index_set<LO,HI>, Scalar_T, index_set_hash<LO,HI> >
 #else
   private std::map< const index_set<LO,HI>, Scalar_T,
-                    std::less< const index_set<LO,HI> >,
-                    boost::fast_pool_allocator< std::pair<const index_set<LO,HI>, Scalar_T> > >
+                    std::less< const index_set<LO,HI> >
+#if defined(_GLUCAT_USE_BOOST_POOL_ALLOC)
+                  , boost::fast_pool_allocator< std::pair<const index_set<LO,HI>, Scalar_T> > 
+#endif                  
+                  >
 #endif
   {
   public:
@@ -171,8 +176,11 @@ namespace glucat
     typedef class var_term                             var_term_t;
     typedef typename matrix_multi_t::matrix_t          matrix_t;
     typedef std::map< const index_set_t, Scalar_T,
-                      std::less<const index_set_t>,
-                      boost::fast_pool_allocator<term_t> >
+                      std::less<const index_set_t>
+#if defined(_GLUCAT_USE_BOOST_POOL_ALLOC)
+                    , boost::fast_pool_allocator<term_t>
+#endif                     
+                    >
                                                        sorted_map_t;
 #if defined(_GLUCAT_USE_GNU_CXX_HASH_MAP)
     typedef       __gnu_cxx::hash_map< const index_set_t, Scalar_T, index_set_hash<LO,HI> >
