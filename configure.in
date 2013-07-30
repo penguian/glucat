@@ -676,7 +676,7 @@ AC_SUBST(AUTODIRS)
 AM_CONDITIONAL([make_pyclical],[test $glucat_use_pyclical = "yes"])
 KDE_CREATE_SUBDIRSLIST
 KDE_CREATE_SUBDIRSLIST
-AC_CONFIG_FILES([ ./Makefile ])
+AC_CONFIG_FILES([ Makefile ])
 AC_CONFIG_FILES([ gfft_test/Makefile ])
 AC_CONFIG_FILES([ glucat/Makefile ])
 AC_CONFIG_FILES([ products/Makefile ])
