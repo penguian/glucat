@@ -34,6 +34,7 @@
 #include "glucat/portability.h"
 
 #include <limits>
+#include <climits>
 
 namespace glucat
 {

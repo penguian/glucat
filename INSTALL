@@ -325,6 +325,32 @@ exist.
   This tells g++ to use the 2011 C++ standard.
 
 
+[Added in patch for openSUSE Build Service using Boost 1.53.0:]
+
+If _GLUCAT_USE_BOOST_POOL_ALLOC is defined, glucat/framed_multi.h includes
+the header file <boost/pool/poolfwd.hpp> and defines glucat::framed_multi<>
+using boost::fast_pool_allocator<>; and glucat/framed_multi.h includes
+the header file <boost/pool/pool_alloc.hpp>.
+
+If you are compiling your own programs using the GluCat library, to use the
+Boost pool allocator, your Makefile needs to pass the following flag to the
+C++ compiler:  "-D_GLUCAT_USE_BOOST_POOL_ALLOC"
+
+You will also need to ensure that the include path used by the compiler sees
+<boost/pool/poolfwd.hpp> and <boost/pool/pool_alloc.hpp>. In addition, if you
+are using Boost 1.50.0 or later, your Makefile needs to pass the following flag 
+to the C++ compiler, after all the linker-related flags: "-lboost_system"
+
+You will also need to ensure that the library path sees libboost_system.*.
+This requires that you have the Boost libraries built and installed.
+See http://www.boost.org/doc/libs/1_53_0/more/getting_started/index.html
+and Boost tickets
+https://svn.boost.org/trac/boost/ticket/7085
+https://svn.boost.org/trac/boost/ticket/7335
+
+[End of addition for openSUSE Build Service using Boost 1.53.0]
+
+
   --with-dense-mat        uses dense matrices [default=yes]
 
 This option controls the preprocessor symbol _GLUCAT_USE_DENSE_MATRICES that

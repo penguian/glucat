@@ -36,8 +36,10 @@
 
 #include "glucat/random.h"
 
+#if defined(_GLUCAT_USE_BOOST_POOL_ALLOC)
 // Use the Boost pool allocator
 #include <boost/pool/pool_alloc.hpp>
+#endif
 
 #include <sstream>
 #include <fstream>
