@@ -8,7 +8,7 @@
 #    Reference:
 #    [B] Michael F. Barnsley, Superfractals, http://www.superfractals.com/
 #
-#    copyright            : (C) 2010-2012 by Paul C. Leopardi
+#    copyright            : (C) 2010-2014 by Paul C. Leopardi
 #
 #    This library is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Lesser General Public License as published
@@ -32,9 +32,9 @@ default_nbr_points  = 20000
 default_segment_len =  5000
 default_figwidth    =    15
 default_figheight   =    12
-default_azimuth     =   210.0
-default_rot_angle   =   360
-default_jitter      =    30
+default_azimuth     =   210
+default_rot_angle   =    15
+default_jitter      =     1
 
 def draw_orbit(r, s,
         nbr_points  = default_nbr_points,
@@ -103,7 +103,7 @@ def draw_orbit(r, s,
     # Draw the origin as a white point. This works around a bug in mplot3d where
     # plots with a small range in Z values are plotted as if Z is close to 0.
     #
-    ax.scatter([0], [0], [0], c='white', alpha=0.5, edgecolors='none')
+    ax.scatter([0], [0], [0], c='white', alpha=0.0, edgecolors='none')
     plt.draw()
     #
     # Split the curve into M segments.
@@ -127,7 +127,7 @@ def draw_orbit(r, s,
             #
             if np.random.rand() < 0.5:
                 u = r * u * invr
-            else:    
+            else:
                 u = s * u * invs
         #
         # Calculate the norms of the points in p and store them in n.
@@ -145,14 +145,14 @@ def draw_orbit(r, s,
         #
         # Set c to be an array of vectors in the unit ball with directions
         # corresponding to p. Use c to determine colours.
-        # Try to make colours bright without oversaturating them:
-        # arctan(x)/2 goes to pi/4 < 1 as x goes to infinity.
+        # Try to make colours bright without oversaturating them.
         #
         c = (p / n3) * (np.arctan(n3) / 2.0)
+        c = (c + 1.0) / np.max(c + 1.0)
         #
-        # Plot the new scattered points using the colours given by (c+1)/2.
+        # Plot the new scattered points using the colours given by c.
         #
-        ax.scatter(p[:, 0], p[:, 1], p[:, 2], c=(c + 1.0) / 2.0, alpha=0.5, edgecolors='none')
+        ax.scatter(p[:, 0], p[:, 1], p[:, 2], c=c)
         plt.draw()
     #
     # Rotate the plot about a vertical axis by rot_angle degrees
@@ -176,7 +176,7 @@ def demo(
         figheight   = default_figheight,
         azimuth     = default_azimuth,
         rot_angle   = default_rot_angle,
-        jitter=default_jitter):
+        jitter      = default_jitter):
     """
     Plot curves created by exponentiating a random bivector and its reciprocal in R_{4,0}.
 
