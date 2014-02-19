@@ -8,52 +8,48 @@
 # This file contains a tutorial that explains the algebraic functions on
 # Clifford algebra elements available within PyClical.
 #
-#    copyright            : (C) 2012 by Paul C. Leopardi
+#    copyright            : (C) 2012-2014 by Paul C. Leopardi
 #
 # Licensed under CC BY-SA 3.0 http://creativecommons.org/licenses/by-sa/3.0/
 
-from PyClical import *
 from pyclical_tutorial_utils import *
 
-def tutorial():
-    ctx = interaction_context(globals())
-    print_exec = ctx.print_exec
-    check_exec = ctx.check_exec
-    check_eval = ctx.check_eval
+def run(ctx):
+    ctx_methods = get_object_methods(ctx)
+    for method in ctx_methods:
+        exec(method + " = ctx_methods['" + method +"']")
 
-    print "# pyclical_tutorial_0_4_transcendental.py:"
-    print ""
-    print_fill("0.4 Square root and transcendental functions.")
-    print ""
+    print_head("0.4 Square root and transcendental functions.")
+    print_line()
     print_fill("This file contains a tutorial that describes the square root and " +
               " transcendental functions on Clifford algebra elements available within PyClical.")
-    print ""
+    print_line()
     print_fill("It is recommended that you do the tutorials in order, beginning with" +
               " 0.0 Notation.")
-    print ""
+    print_line()
 
     pause()
-    print ""
+    print_line()
     print_fill("PyClical is based on two Python classes, clifford, and index_set.")
-    print ""
+    print_line()
     print_fill("The clifford class implements Clifford algebras over the double precision" +
               " floating point approximation to the real numbers.")
-    print ""
+    print_line()
     print_fill("Tutorial 0.0 Notation showed you how to construct objects of type clifford. " +
               " This tutorial shows you how to use the square root and " +
               " transcendental functions defined on these objects.")
 
     pause()
-    print ""
+    print_line()
     print_fill("First we will create a clifford object to work on.")
-    print ""
+    print_line()
     print_exec("w = 1+3*e(1)-2*e(3)+4*e({-2,3}); print w")
     print_exec("x = 2+3*e(1)-5*e(2)+5*e({-1,3}); print x")
 
     pause()
-    print ""
+    print_line()
     print_fill("The complexifier function.")
-    print ""
+    print_line()
     print_fill("One key property of Clifford algebras is that they generally contain many" +
               " square roots of -1. " +
               " Some Clifford algebras have a pseudoscalar e(s) that squares to -1 and" +
@@ -61,19 +57,19 @@ def tutorial():
               " Such a Clifford algebra is isomorphic to a full matrix algebra over" +
               " the complex field, and in this case the pseudoscalar e(s) corresponds to" +
               " the complex i times the identity matrix.")
-    print ""
+    print_line()
     print_fill("The complexifier function takes a clifford object x and returns the pseudoscalar e(s)" +
               " corresponding to the smallest Clifford algebra A containing x," +
               " such that A is isomorphic to a full complex matrix algebra. " +
               " In some cases, there are two such algebras and an arbitrary choice is made.")
-    print ""
+    print_line()
     print_exec("print complexifier(1)")
     print_exec("print complexifier(e(1))")
     print_exec("print complexifier( e({1,2}) )")
     print_exec("j = complexifier(w); print j")
     print_exec("print j * j")
     print_exec("print j * w - w * j")
-    
+
     pause()
     check_exec("set i to be the complexifier of x",
                "i",
@@ -87,31 +83,31 @@ def tutorial():
 
     pause()
     print_fill("The complexifier function can also take an index set or a string as an argument.")
-    print ""
+    print_line()
     print_fill("Examples:")
-    print ""
+    print_line()
     print_exec("print complexifier( ist(1) )")
     print_exec("print complexifier( ist({1,2}) )")
     print_exec("print complexifier('{1,2}')")
-    
+
     pause()
     print_fill("The square root function and many of the transcendental functions" +
               " take a complexifier i as an optional argument, i.e. f(x, i). " +
               " The default is to use complexifier(x) as the complexifier.")
-    print ""
+    print_line()
     print_fill("In the case of the square root and logarithm functions, this is because" +
               " the function needs to use a complexifier i in the case where" +
               " the matrix representation of the clifford object x has a negative real eigenvalue. "
               " See [L-2010] for more details.")
-    print ""
+    print_line()
     print_fill("The other functions that use a complexifier i," +
               " do so either because they are implemented by an expression using i," +
               " or because the function eventually calls sqrt or log.")
 
     pause()
-    print ""
+    print_line()
     print_fill("sqrt(x, i): The square root function.")
-    print ""
+    print_line()
     print_fill("Examples:")
 
     print_exec("print sqrt(-1)")
@@ -125,11 +121,11 @@ def tutorial():
     print_exec("i = e(-1)")
     print_exec("j = e({1,2})")
     print_exec("k = e({1,2,3})")
-    
+
     pause()
     print_fill("exp(x): Exponential function.")
     print_fill("log(x, i): The natural logarithm function.")
-    print ""
+    print_line()
     print_fill("Examples:")
 
     print_exec("print exp(j * pi/2)")
@@ -140,7 +136,7 @@ def tutorial():
     pause()
     print_fill("cos(x, i): The cosine function.")
     print_fill("acos(x, i): The inverse cosine function.")
-    print ""
+    print_line()
     print_fill("Examples:")
 
     print_exec("print cos(acos(j))")
@@ -149,9 +145,9 @@ def tutorial():
     pause()
     print_fill("cosh(x): The hyperbolic cosine function.")
     print_fill("acosh(x, i): The inverse hyperbolic cosine function.")
-    print ""
+    print_line()
     print_fill("Examples:")
-    
+
     print_exec("print cosh(j * pi)")
     print_exec("print acosh(0) / pi")
     print_exec("print acosh(0,'{-2,-1,1}') / pi")
@@ -161,7 +157,7 @@ def tutorial():
     pause()
     print_fill("sin(x, i): The sine function.")
     print_fill("asin(x, i): The inverse sine function.")
-    print ""
+    print_line()
     print_fill("Examples:")
 
     print_exec("print asin(sin(i, i), i)")
@@ -172,7 +168,7 @@ def tutorial():
     pause()
     print_fill("sinh(x): The hyperbolic sine function.")
     print_fill("asinh(x, i): The inverse hyperbolic sine function.")
-    print ""
+    print_line()
     print_fill("Examples:")
 
     print_exec("print sinh(j * pi/2)")
@@ -182,7 +178,7 @@ def tutorial():
     pause()
     print_fill("tan(x, i): The tangent function.")
     print_fill("atan(x, i): The inverse tangent function.")
-    print ""
+    print_line()
     print_fill("Examples:")
 
     print_exec("print tan(j)")
@@ -194,14 +190,14 @@ def tutorial():
     pause()
     print_fill("tanh(x): The hyperbolic tangent function.")
     print_fill("atanh(x, i): The inverse hyperbolic tangent function.")
-    print ""
+    print_line()
     print_fill("Examples:")
 
     print_exec("print tanh(j * pi/4)")
     print_exec("print tanh(atanh(j))")
 
     pause()
-    print ""
+    print_line()
     print_fill("Try these now.")
 
     check_exec("set i to be the complexifier of w",
@@ -227,12 +223,13 @@ def tutorial():
     print_exec("print y - z")
 
     pause()
-    print ""
+    print_line()
     print_fill("You have completed the tutorial file pyclical_tutorial_0_4_transcendental.py.")
 
 if __name__ == "__main__":
+    ctx = tutorial_context(globals())
     try:
-        tutorial()
+        run(ctx)
     except:
-        print_fill("The tutorial was interrupted.")
+        ctx.print_fill("The tutorial was interrupted.")
         pass

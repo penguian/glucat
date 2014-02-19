@@ -9,55 +9,51 @@
 # [LMV] Pertti Lounesto, R. Mikkola, V. Vierros,
 # CLICAL Version 2.0 User Manual: Complex Number, Vector Space and
 # Clifford Algebra Calculator for MS-DOS Personal Computers,
-# Helsinki University of Technology Institute of Mathematics 
+# Helsinki University of Technology Institute of Mathematics
 # Research Reports A248, August 1987.
 #
 # Portions of [LMV] are reproduced here by permission of Aalto University, 2012.
 #
-#    copyright            : (C) 2012 by Paul C. Leopardi
+#    copyright            : (C) 2012-2014 by Paul C. Leopardi
 #
 # Licensed under CC BY-SA 3.0 http://creativecommons.org/licenses/by-sa/3.0/
 
-from PyClical import *
 from pyclical_tutorial_utils import *
 
-def tutorial():
-    ctx = interaction_context(globals())
-    print_exec = ctx.print_exec
-    check_exec = ctx.check_exec
-    check_eval = ctx.check_eval
+def run(ctx):
+    ctx_methods = get_object_methods(ctx)
+    for method in ctx_methods:
+        exec(method + " = ctx_methods['" + method +"']")
 
-    print "# pyclical_tutorial_1_2_space.py:"
-    print ""
-    print_fill("1.2 Space geometry and vector algebra")
-    print ""
+    print_head("1.2 Space geometry and vector algebra")
+    print_line()
     print_fill("This tutorial file contains examples which will introduce you to PyClical" +
               " and the wide range of calculations with Clifford and Grassmann algebras that" +
               " you can use PyClical to perform.")
-    print ""
+    print_line()
     print_fill("It is recommended that you do the tutorials in order, beginning with" +
               " 0.0 Notation.")
-    print ""
+    print_line()
 
     pause()
-    print ""
+    print_line()
     print_fill("This file is based on the Plane Geometry section of the Tutorial from")
     print_fill("[LMV] Pertti Lounesto, R. Mikkola, V. Vierros,")
     print_fill("CLICAL Version 2.0 User Manual: Complex Number, Vector Space and" +
               " Clifford Algebra Calculator for MS-DOS Personal Computers,")
     print_fill("Helsinki University of Technology Institute of Mathematics" +
               " Research Reports A248, August 1987.")
-    print ""
+    print_line()
     print_fill("Example numbers refer to [LMV], e.g. Example 10.2 is the second example" +
               " on p. 10 of [LMV].")
-    print ""
+    print_line()
 
     pause()
-    print ""
+    print_line()
     print_fill("Example 10.2. Divide the vector r == -{1}+8{2}+{3} into components parallel to a == 2{1}-{2}," +
               " b == 2{1}+3{2}-{3} and c == 2{1}+2{2}+5{3}, that is, determine the coefficients alpha, beta" +
               " and gamma in the decomposition r == alpha*a + beta*b + gamma*c.")
-    print ""
+    print_line()
 
     pause()
     print_exec("a = 2*e(1)-e(2); print a")
@@ -79,16 +75,16 @@ def tutorial():
                "print abs(r - ({}))")
 
     pause()
-    print ""
+    print_line()
     print_fill("Compare with Example 7.1 from Tutorial 1.0 Plane geometry.")
-    print ""
+    print_line()
 
     pause()
-    print ""
+    print_line()
     print_fill("Example 11.1. A plane A is spanned by the vectors x == 4{1}+{3} and y == 3{1}+{2}. " +
               " Compute the projection p of the vector v == -5{1}+7{2} in the plane A and the" +
               " component r of v perpendicular to A.")
-    print ""
+    print_line()
 
     pause()
     print_exec("v = -5*e(1)+7*e(2); print v")
@@ -106,20 +102,20 @@ def tutorial():
                "print abs(v - ({}))")
 
     pause()
-    print ""
+    print_line()
     print_fill("In this example the bivector A == x ^ y represents the oriented plane spanned by the" +
               " vectors x and y. " +
               " More precisely A is the oriented area of the parallelogram with sides x and y.")
-    print ""
+    print_line()
     print_fill("Compare with Example 8.1 from Tutorial 1.0 Plane geometry.")
-    print ""
+    print_line()
 
     pause()
-    print ""
+    print_line()
     print_fill("Example 11.2. Determine three perpendicular unit vectors, t1, t2 and t3, with t1" +
               " parallel to v1 == 3{1}-{2}, t2 in the plane of v1 and v2 == {1}+2{3}, pointing into" +
               " the half-plane of v2, and t3 pointing into the half-space of v3 == {2}+{3}.")
-    print ""
+    print_line()
 
     pause()
     print_exec("v1 = 3*e(1)-e(2); print v1")
@@ -142,9 +138,9 @@ def tutorial():
                "u3 / abs(u3)")
 
     pause()
-    print ""
+    print_line()
     print_fill("Now, check that the vectors t1, t2 and t3 are mutually orthogonal.")
-    print ""
+    print_line()
     print_exec("print t1 * t2 + t2 * t1")
     print_exec("print t1 * t3 + t3 * t1")
 
@@ -154,32 +150,32 @@ def tutorial():
                "print {}")
 
     pause()
-    print ""
+    print_line()
     print_fill("Note that the process used to obtain t1, t2 and t3 is essentially" +
               " Gram-Schmidt orthogonalization.")
-    print ""
+    print_line()
 
     pause()
-    print ""
+    print_line()
     print_fill("Example 12.1. the force F == 7{1}+4{2}+5{3} is applied to the point P == (4,6,7). " +
               " Determine t, the magnitude of the torque about the origin O.")
-    print ""
+    print_line()
 
     pause()
     print_exec("R3 = istpq(3,0)")
     print_exec("F = clifford((7,4,5),R3); print F")
     print_exec("OP = clifford((4,6,7), R3); print OP")
     print_exec("t = abs(OP ^ F); print t")
-    print ""
+    print_line()
     print_fill("Here we have used the alternate input notation for vectors, which uses a tuple or list of" +
               " coordinates, and a basis defined by an index_set, in this case R3 == {1,2,3}.")
-    print ""
+    print_line()
 
     pause()
-    print ""
+    print_line()
     print_fill("Example 12.2. Rotate the vector r == 4{1}+2{2}+2{3} about the axis a == 1.5{1}+2{2}" +
               " by the angle alpha == abs(a), to obtain the vector q.")
-    print ""
+    print_line()
 
     pause()
     print_exec("a = 1.5*e(1)+2*e(2); print a")
@@ -189,20 +185,20 @@ def tutorial():
     print_exec("q = r | s; print q")
 
     pause()
-    print ""
+    print_line()
     print_fill("Note that we have used -a instead of a here, to allow the use of r | s. " +
               " Alternatively we could have used a and used the following method.")
-    print ""
+    print_line()
     print_exec("s1 = exp(a * j / 2); print s1")
     print_exec("q1 = inv(s1) * r * s1; print q1")
     print_exec("print abs(q-q1)")
 
     pause()
-    print ""
+    print_line()
     print_fill("Because abs(a) == 2.5 < pi, we can represent the rotation uniquely by -a," +
               " except that 2*pi-a yields the same rotation because s and -s yield" +
               " the same rotation.")
-    print ""
+    print_line()
     print_exec("s2 = exp((2 * pi - a) * j / 2); print s2")
 
     pause()
@@ -212,12 +208,12 @@ def tutorial():
     print_exec("print abs(q-q2)")
 
     pause()
-    print ""
+    print_line()
     print_fill("Example 12.3. Perform two successive rotations, the first one around the axis OA," +
               " A == (1,-1,1) by the angle 2*pi/3, and the second around the axis OB, B == (0,1,-1)" +
               " by the angle pi. " +
               " What is the axis of the combined rotation?")
-    print ""
+    print_line()
 
     pause()
     print_exec("OA = e(1)-e(2)+e(3); print OA")
@@ -229,17 +225,18 @@ def tutorial():
     print_exec("v = exp(j * b / 2); print v")
     print_exec("z = log(u * v); print z")
     print_exec("c = j * z/abs(z); print c")
-    print ""
+    print_line()
     print_fill("This means that the axis of the combined rotation is OC, C == (0,0,1).")
-    print ""
+    print_line()
 
     pause()
-    print ""
+    print_line()
     print_fill("You have completed the tutorial file pyclical_tutorial_1_2_space.py.")
 
 if __name__ == "__main__":
+    ctx = tutorial_context(globals())
     try:
-        tutorial()
+        run(ctx)
     except:
-        print_fill("The tutorial was interrupted.")
+        ctx.print_fill("The tutorial was interrupted.")
         pass

@@ -8,80 +8,76 @@
 # This file contains a tutorial that explains the algebraic functions on
 # Clifford algebra elements available within PyClical.
 #
-#    copyright            : (C) 2012 by Paul C. Leopardi
+#    copyright            : (C) 2012-2014 by Paul C. Leopardi
 #
 # Licensed under CC BY-SA 3.0 http://creativecommons.org/licenses/by-sa/3.0/
 
-from PyClical import *
 from pyclical_tutorial_utils import *
 
-def tutorial():
-    ctx = interaction_context(globals())
-    print_exec = ctx.print_exec
-    check_exec = ctx.check_exec
-    check_eval = ctx.check_eval
+def run(ctx):
+    ctx_methods = get_object_methods(ctx)
+    for method in ctx_methods:
+        exec(method + " = ctx_methods['" + method +"']")
 
-    print "# pyclical_tutorial_0_3_functions.py:"
-    print ""
-    print_fill("0.3 Algebraic functions.")
-    print ""
+    print_head("0.3 Algebraic functions.")
+    print_line()
     print_fill("This file contains a tutorial that explains the algebraic functions on" +
               " Clifford algebra elements available within PyClical.")
-    print ""
+    print_line()
     print_fill("It is recommended that you do the tutorials in order, beginning with" +
               " 0.0 Notation.")
-    print ""
+    print_line()
 
     pause()
-    print ""
+    print_line()
     print_fill("PyClical is based on two Python classes, clifford, and index_set.")
-    print ""
+    print_line()
     print_fill("The clifford class implements Clifford algebras over the double precision" +
               " floating point approximation to the real numbers.")
-    print ""
+    print_line()
     print_fill("Tutorial 0.0 Notation showed you how to construct objects of type clifford. " +
               " This tutorial shows you how to use some functions defined on these objects.")
 
     pause()
-    print ""
+    print_line()
     print_fill("First we will create some clifford objects to work on.")
-    print ""
+    print_line()
     print_exec("w = 1+3*e(1)-2*e(3)+4*e({-2,3}); print w")
     print_exec("x = 2+3*e(1)-5*e(2)+5*e({-1,3}); print x")
 
     pause()
-    print ""
+    print_line()
     print_fill("Examples: Arithmetic functions.")
-    print ""
+    print_line()
     print_fill("These can be called either as a member function or as an ordinary function.")
-    print ""
+    print_line()
     print_fill("inv(): Geometric multiplicative inverse.")
-    print ""
+    print_line()
     print_exec("print x.inv()")
     print_exec("print inv(x)")
 
-    print ""
+    print_line()
     print_fill("pow(m): Power: self to the m.")
-    print ""
+    print_line()
     print_exec("print x.pow(0)")
     print_exec("print x.pow(1)")
     print_exec("print x.pow(3)")
     print_exec("print pow(x, 3)")
 
-    print ""
+    print_line()
     print_fill("outer_pow(m): Outer product power.")
-    print ""
+    print_line()
     print_fill("The outer product power is only defined for m as a non-negative integer.")
-    print ""
+    print_line()
     print_exec("print x.outer_pow(0)")
     print_exec("print x.outer_pow(1)")
     print_exec("print x.outer_pow(3)")
     print_exec("print outer_pow(x, 3)")
 
     pause()
-    print ""
+    print_line()
     print_fill("Try these now.")
-    print ""
+    print_line()
     check_exec("set y to be the inverse of w.",
                "y",
                "inv(w)")
@@ -96,19 +92,19 @@ def tutorial():
                "outer_pow(x, 3)")
 
     pause()
-    print ""
+    print_line()
     print_fill("Examples: Parts of clifford objects.")
-    print ""
+    print_line()
     print_fill("Most of these can be called as member functions or as ordinary functions.")
-    print ""
+    print_line()
     print_fill("One exception is for the grade-vector part of a clifford object. " +
               " The notation for this uses round brackets () immediately after the" +
               " clifford object, as if it was being called as a function. " +
               " The grade must be a non-negative integer. " +
               " This works with constants as well as variables.")
-    print ""
+    print_line()
     print_fill("Examples:")
-    print ""
+    print_line()
     print_exec("print x(0)")
     print_exec("print x(1)")
     print_exec("print x(2)")
@@ -119,54 +115,54 @@ def tutorial():
                "w(3)")
 
     pause()
-    print ""
+    print_line()
     print_fill("Other functions yielding parts of clifford objects are:")
-    print ""
-    print ""
+    print_line()
+    print_line()
     print_fill("scalar(): Scalar part of clifford object.  Result is a scalar.")
-    print ""
+    print_line()
     print_exec("print x.scalar()")
     print_exec("print scalar(x)")
 
-    print ""
+    print_line()
     print_fill("real(): Synonym for scalar().  This is an ordinary function only.")
-    print ""
+    print_line()
     print_exec("print scalar(x)")
 
-    print ""
+    print_line()
     print_fill("pure(): Pure part of a clifford object, that is a clifford object minus" +
               " its scalar part.")
-    print ""
+    print_line()
     print_exec("print x.pure()")
     print_exec("print pure(x)")
 
-    print ""
+    print_line()
     print_fill("even(): Even part of clifford object, sum of even grade terms.")
-    print ""
+    print_line()
     print_exec("print x.even()")
     print_exec("print even(x)")
 
-    print ""
+    print_line()
     print_fill("odd(): Odd part of clifford object, sum of odd grade terms.")
-    print ""
+    print_line()
     print_exec("print x.odd()")
     print_exec("print odd(x)")
 
-    print ""
+    print_line()
     print_fill("vector_part(frm): Vector part of clifford object, as a Python list.")
-    print ""
+    print_line()
     print_fill("This is only available as a member function. " +
               " It takes an optional parameter frm," +
               " which should be an index set defining a subalgebra large enough to" +
               " contain the clifford object.")
-    print ""
+    print_line()
     print_exec("print x.vector_part()")
     print_exec("print x.vector_part(istpq(4,1))")
 
     pause()
-    print ""
+    print_line()
     print_fill("Try these now.")
-    print ""
+    print_line()
     check_exec("set y to be the scalar part of w.",
                "y",
                "scalar(w)")
@@ -190,41 +186,41 @@ def tutorial():
                "w.vector_part(ist({-2,1,3}))")
 
     pause()
-    print ""
+    print_line()
     print_fill("Examples: Involutions of clifford objects.")
-    print ""
+    print_line()
     print_fill("Pyclical implements the three Clifford algebra involutions, both as" +
               " member functions, and as ordinary functions:")
-    print ""
+    print_line()
     print_fill("involute(): Grade involution, each {i} is replaced by -{i} in each term," +
               " eg. e(1) -> -e(1).")
-    print ""
+    print_line()
     print_exec("print e(1).involute()")
     print_exec("print e({1,2}).involute()")
     print_exec("print x.involute()")
     print_exec("print involute(x)")
 
     pause()
-    print ""
+    print_line()
     print_fill("reverse(): Reversion anti-automorphism, eg. e(1)*e(2) -> e(2)*e(1).")
-    print ""
+    print_line()
     print_exec("print e(1).reverse()")
     print_exec("print e({1,2}).reverse()")
     print_exec("print x.reverse()")
     print_exec("print reverse(x)")
 
-    print ""
+    print_line()
     print_fill("conj(): Clifford conjugation anti-automorphism.")
-    print ""
+    print_line()
     print_exec("print e(1).conj()")
     print_exec("print e({1,2}).conj()")
     print_exec("print x.conj()")
     print_exec("print conj(x)")
-    
+
     pause()
-    print ""
+    print_line()
     print_fill("Try these now.")
-    print ""
+    print_line()
     check_exec("set y to be the grade involute of w.",
                "y",
                "involute(w)")
@@ -236,41 +232,41 @@ def tutorial():
                "conj(x)")
 
     pause()
-    print ""
+    print_line()
     print_fill("Examples: Properties of clifford objects.")
-    print ""
+    print_line()
     print_fill("PyClical implements a number of functions yielding properties of clifford objects. " +
               " Four of these give different ideas of the size of an object. " +
               " These are all available as both member functions and ordinary functions.")
-    print ""
+    print_line()
     print_fill("norm(): Norm == sum of squares of coordinates.")
-    print ""
+    print_line()
     print_exec("print x.norm()")
     print_exec("print norm(x)")
 
-    print ""
+    print_line()
     print_fill("abs(): Absolute value: square root of norm.")
-    print ""
+    print_line()
     print_exec("print x.abs()")
     print_exec("print abs(x)")
 
     pause()
-    print ""
+    print_line()
     print_fill("max_abs(): Maximum of absolute values of components of the clifford object.")
-    print ""
+    print_line()
     print_exec("print x.max_abs()")
     print_exec("print max_abs(x)")
 
-    print ""
+    print_line()
     print_fill("quad(): Quadratic form == (reverse(x)*x)(0).")
-    print ""
+    print_line()
     print_exec("print x.quad()")
     print_exec("print quad(x)")
 
     pause()
-    print ""
+    print_line()
     print_fill("Try these now.")
-    print ""
+    print_line()
     check_exec("set y to be the norm of w.",
                "y",
                "norm(w)")
@@ -285,40 +281,41 @@ def tutorial():
                "quad(w)")
 
     pause()
-    print ""
+    print_line()
     print_fill("Two more properties of a clifford object are available as member functions:")
-    print ""
+    print_line()
     print_fill("frame(): Index set defining a subalgebra that contains the clifford object.")
-    print ""
+    print_line()
     print_exec("s = w.frame(); print s")
     print_exec("print type(s)")
 
-    print ""
+    print_line()
     print_fill("isnan(): Check if the clifford object contains any IEEE NaN values.")
-    print ""
+    print_line()
     print_exec("print x.isnan()")
     print_exec("print (0/clifford(0)).isnan()")
 
     pause()
-    print ""
+    print_line()
     print_fill("Examples: Approximations to clifford objects.")
-    print ""
+    print_line()
     print_fill("The following member function simplifies the value of a clifford object. " +
               " This is especially useful when printing.")
-    print ""
+    print_line()
     print_fill("truncated(limit): Remove all terms with relative size smaller than limit.")
-    print ""
+    print_line()
 
     print_exec("print clifford('1e8+{1}+1e-8{1,2}').truncated(1.0e-6)")
     print_exec("print clifford('1e4+{1}+1e-4{1,2}').truncated(1.0e-6)")
 
     pause()
-    print ""
+    print_line()
     print_fill("You have completed the tutorial file pyclical_tutorial_0_3_functions.py.")
 
 if __name__ == "__main__":
+    ctx = tutorial_context(globals())
     try:
-        tutorial()
+        run(ctx)
     except:
-        print_fill("The tutorial was interrupted.")
+        ctx.print_fill("The tutorial was interrupted.")
         pass
