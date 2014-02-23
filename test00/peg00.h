@@ -41,8 +41,8 @@ namespace peg00
   // Springer 2001, Chapter 6, pp. 127-152.
   // http://staff.science.uva.nl/~leo/clifford/index.html
 
-  // [D02]: Leo Dorst, "The inner products of geometric algebra", in 
-  // Applications of Geometric Algebra in Computer Science and Engineering 
+  // [D02]: Leo Dorst, "The inner products of geometric algebra", in
+  // Applications of Geometric Algebra in Computer Science and Engineering
   // (Dorst, Doran, Lasenby, eds), Birkhauser, 2002.
   // http://staff.science.uva.nl/~leo/clifford/index.html
 
@@ -80,12 +80,11 @@ namespace peg00
   template< typename Multivector_T >
   static
   bool
-  test_idents(Multivector_T& a, Multivector_T& b, 
+  test_idents(Multivector_T& a, Multivector_T& b,
               Multivector_T& c, typename Multivector_T::index_set_t e)
   {
     typedef Multivector_T multivector_t;
     typedef typename multivector_t::scalar_t scalar_t;
-    typedef typename multivector_t::index_set_t index_set_t;
 
     static const scalar_t eps = std::numeric_limits<scalar_t>::epsilon();
     const scalar_t tol = (test_control.m_verbose_output)
@@ -117,8 +116,8 @@ namespace peg00
           if ( is_error(lhs, rhs, tol) )
           {
             std::cout << "Identity [HS] (1.21a) failed in " << e
-                      << ": r == " << r 
-                      << ", s == " << s 
+                      << ": r == " << r
+                      << ", s == " << s
                       << std::endl;
             print_error_lhs_rhs(lhs, rhs, tol);
             success = false;
@@ -163,8 +162,8 @@ namespace peg00
           if ( is_error(lhs, rhs, tol) )
           {
             std::cout << "Identity [HS] (1.22a) failed in " << e
-                      << ": r == " << r 
-                      << ", s == " << s 
+                      << ": r == " << r
+                      << ", s == " << s
                       << std::endl;
             print_error_lhs_rhs(lhs, rhs, tol);
             success = false;
@@ -176,7 +175,7 @@ namespace peg00
     { // Identity [HS] (1.25a)
       lhs = (a ^ b) ^ c;
       rhs = a ^ (b ^ c);
-  
+
       if ( is_error(lhs, rhs, tol) )
       {
         std::cout << "Identity [HS] (1.25a) failed in " << e
@@ -193,7 +192,7 @@ namespace peg00
 
       if ( is_error(lhs, rhs, tol) )
       {
-        std::cout << "Identity [HS] (1.31) failed in " << e 
+        std::cout << "Identity [HS] (1.31) failed in " << e
                   << std::endl;
         print_error_lhs_rhs(lhs, rhs, tol);
         success = false;
@@ -207,7 +206,7 @@ namespace peg00
 
       if ( is_error(lhs, rhs, tol) )
       {
-        std::cout << "Identity [D01] (Section 2.3 Example 2, vector) failed in " << e 
+        std::cout << "Identity [D01] (Section 2.3 Example 2, vector) failed in " << e
                   << std::endl;
             print_error_lhs_rhs(lhs, rhs, tol);
         success = false;
@@ -222,7 +221,7 @@ namespace peg00
 
       if ( is_error(lhs, rhs, tol) )
       {
-        std::cout << "Identity [HS] (1.63) failed in " << e 
+        std::cout << "Identity [HS] (1.63) failed in " << e
                   << std::endl;
         print_error_lhs_rhs(lhs, rhs, tol);
         success = false;
@@ -236,7 +235,7 @@ namespace peg00
 
       if ( is_error(lhs, rhs, tol) )
       {
-        std::cout << "Identity [D01] (Section 2.3 Example 2, bivector) failed in " << e 
+        std::cout << "Identity [D01] (Section 2.3 Example 2, bivector) failed in " << e
                   << std::endl;
         print_error_lhs_rhs(lhs, rhs, tol);
         success = false;
@@ -246,7 +245,7 @@ namespace peg00
     { // Identity [HS] (1.44)
       const scalar_t scalar_lhs = star(a, b);
       const scalar_t scalar_rhs = scalar(a * b);
-  
+
       const scalar_t scalar_diff = scalar_lhs - scalar_rhs;
       if (scalar_diff*scalar_diff > tol*tol)
       {
@@ -275,7 +274,7 @@ namespace peg00
       const multivector_t a_0 = a(0);
       lhs = a_0 % b;
       rhs = a_0 * b;
-  
+
       if ( is_error(lhs, rhs, tol) )
       {
         std::cout << "Identity [D01] (2.5) (a.2) failed in " << e
@@ -290,7 +289,7 @@ namespace peg00
       const multivector_t b_0 = b(0);
       lhs = a_1 % b_0;
       rhs = 0;
-  
+
       if ( is_error(lhs, rhs, tol) )
       {
         std::cout << "Identity [D01] (2.5) (a.3) failed in " << e
@@ -304,7 +303,7 @@ namespace peg00
       const multivector_t a_1 = a(1);
       lhs = a_1 % (b ^ c);
       rhs = ( (a_1 % b) ^ c) + (involute(b) ^ (a_1 % c) );
-  
+
       if ( is_error(lhs, rhs, tol) )
       {
         std::cout << "Identity [D01] (2.5) (c) failed in " << e
@@ -314,10 +313,10 @@ namespace peg00
       }
     }
 
-    { // Identity [D01] (2.5) (d), [D02] (2.12), 
+    { // Identity [D01] (2.5) (d), [D02] (2.12),
       lhs = (a ^ b) % c;
       rhs = a % (b % c);
-  
+
       if ( is_error(lhs, rhs, tol) )
       {
         std::cout << "Identity [D01] (2.5) (d) failed in " << e

@@ -38,7 +38,7 @@ namespace peg11
 
   template< class Multivector_T >
   static
-  void 
+  void
   check(const Multivector_T& A, const Multivector_T& B, const string& msg, const bool need_inv = false)
   {
     typedef typename Multivector_T::scalar_t scalar_t;
@@ -60,9 +60,9 @@ namespace peg11
     const scalar_t norm_diff = (relative) ? abs_norm_diff/norm(A) : abs_norm_diff;
     const bool A_isnan = A.isnan();
     const bool B_isnan = B.isnan();
-    if ((A_isnan && !B_isnan) 
-     ||(!A_isnan && !need_inv && B_isnan) 
-     ||(!A_isnan && need_inv && !inv(A).isnan() && B_isnan) 
+    if ((A_isnan && !B_isnan)
+     ||(!A_isnan && !need_inv && B_isnan)
+     ||(!A_isnan && need_inv && !inv(A).isnan() && B_isnan)
      || norm_diff > tol2)
     {
       cout << "Test failed: " << msg << endl;
@@ -87,7 +87,7 @@ namespace peg11
 
   template< class Multivector_T >
   static
-  void 
+  void
   transcendtest(const Multivector_T& A, const bool random=false)
   {
     typedef Multivector_T m_;
@@ -126,7 +126,6 @@ namespace peg11
   rand_transcendtest(int n)
   {
     typedef Multivector_T m_;
-    typedef typename m_::scalar_t scalar_t;
     typedef typename m_::index_set_t index_set_t;
     typedef typename index_set_t::index_pair_t index_pair_t;
 
@@ -165,7 +164,7 @@ namespace peg11
 
   template< class Multivector_T >
   static
-  void 
+  void
   do_test11()
   {
     typedef Multivector_T m_;

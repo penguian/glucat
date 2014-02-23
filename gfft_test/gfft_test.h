@@ -74,7 +74,7 @@ namespace glucat_gfft_test
               const double mm_cpu_time,  const double fm_cpu_time,
               const int mm_trials,       const int fm_trials)
   {
-    cout << "R_" << frame1 << " in " 
+    cout << "R_" << frame1 << " in "
          << "R_" << frame2 << ":" << endl;
     cout << " CPU = ";
     const ios::fmtflags& old_flags = cout.flags();
@@ -117,8 +117,6 @@ namespace glucat_gfft_test
             const typename Multivector_T::index_set_t outer_frame,
             const typename Multivector_T::scalar_t fill)
   {
-    typedef typename Multivector_T::scalar_t    scalar_t;
-    typedef typename Multivector_T::index_set_t index_set_t;
     typedef typename Multivector_T::framed_multi_t framed_multi_t;
     typedef typename Multivector_T::matrix_multi_t matrix_multi_t;
 
@@ -150,7 +148,7 @@ namespace glucat_gfft_test
       fm_cpu_time = elapsed(cpu_time) / nbr_trials;
       fm_trials = nbr_trials;
     }
-#endif    
+#endif
     print_times(inner_frame, outer_frame, mm_cpu_time, fm_cpu_time, mm_trials, fm_trials);
     const ios::fmtflags& old_flags = cout.flags();
     const streamsize width = 8;
@@ -170,7 +168,6 @@ namespace glucat_gfft_test
   fast_test_with_fill(const index_t n, const index_t max_n,
                       const typename Multivector_T::scalar_t fill)
   {
-    typedef typename Multivector_T::scalar_t scalar_t;
     typedef typename Multivector_T::index_set_t index_set_t;
 
     const index_t max_index = min(n, max_n);

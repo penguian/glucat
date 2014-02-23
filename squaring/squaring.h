@@ -52,7 +52,7 @@ namespace glucat_mult_test
   inline
   void
   print_times(const Index_Set_T& frame1, const Index_Set_T& frame2,
-              const double setup_cpu_time, 
+              const double setup_cpu_time,
               const double prod_cpu_time)
   {
     const int index_width = 2;
@@ -83,8 +83,6 @@ namespace glucat_mult_test
             const typename Multivector_T::scalar_t fill)
   {
     typedef Multivector_T multivector_t;
-    typedef typename multivector_t::scalar_t scalar_t;
-    typedef typename multivector_t::index_set_t index_set_t;
 
     clock_t cpu_time = clock();
       multivector_t a = multivector_t(multivector_t::random(inner_frame, fill), outer_frame, true);
@@ -138,7 +136,6 @@ namespace glucat_mult_test
   mult_test(const index_t n, const index_t max_n)
   {
     typedef Multivector_T multivector_t;
-    typedef typename multivector_t::scalar_t scalar_t;
     typedef typename multivector_t::index_set_t index_set_t;
     static const index_t v_lo = index_set_t::v_lo;
     static const index_t v_hi = index_set_t::v_hi;

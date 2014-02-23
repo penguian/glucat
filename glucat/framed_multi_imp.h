@@ -67,7 +67,7 @@ namespace glucat
   framed_multi()
   : map_t(_GLUCAT_HASH_N(0))
   { }
-  
+
   /// Private constructor using hash_size
   template< typename Scalar_T, const index_t LO, const index_t HI >
   framed_multi<Scalar_T,LO,HI>::
@@ -219,7 +219,7 @@ namespace glucat
 #if defined(_GLUCAT_MAP_IS_HASH)
     const size_t max_size = std::min(algebra_dim, matrix::nnz(val.m_matrix));
     *this = multivector_t(_GLUCAT_HASH_SIZE_T(max_size));
-#endif    
+#endif
     for (set_value_t
         stv = 0;
         stv != algebra_dim;
@@ -379,7 +379,7 @@ namespace glucat
 
     if (lhs.isnan() || rhs.isnan())
       return traits_t::NaN();
-    
+
     const double lhs_size = lhs.size();
     const double rhs_size = rhs.size();
     const index_set_t our_frame = lhs.frame() | rhs.frame();
@@ -787,7 +787,7 @@ namespace glucat
     {
       const const_iterator rhs_begin = rhs.begin();
       const const_iterator lhs_begin = lhs.begin();
-      
+
       multivector_t result;
       for (const_iterator
           rhs_it = rhs_begin;
@@ -1271,7 +1271,7 @@ namespace glucat
       }
     return result;
   }
-  
+
   /// Write multivector to output
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
@@ -1343,7 +1343,6 @@ namespace glucat
     else
     {
       typedef framed_multi<Scalar_T,LO,HI>  multivector_t;
-      typedef numeric_traits<Scalar_T> traits_t;
       typedef typename multivector_t::map_t map_t;
       typedef typename multivector_t::sorted_map_t sorted_map_t;
       typedef typename sorted_map_t::const_iterator sorted_iterator;
@@ -1509,7 +1508,7 @@ namespace glucat
     }
     return s;
   }
-  
+
   /// Number of terms
   template< typename Scalar_T, const index_t LO, const index_t HI >
   unsigned long
@@ -1927,7 +1926,7 @@ namespace glucat
     const double size = val.size();
     const index_t frm_count = val.frame().count();
     const set_value_t algebra_dim = 1 << frm_count;
-    
+
     typedef typename framed_multi<Scalar_T,LO,HI>::matrix_multi_t matrix_multi_t;
     if( (size * size <= double(algebra_dim)) || (frm_count < Tune_P::mult_matrix_threshold))
       return clifford_exp(val);

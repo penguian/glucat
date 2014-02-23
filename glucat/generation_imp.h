@@ -163,7 +163,6 @@ namespace glucat { namespace gen
   generator_table<Matrix_T>::
   gen_from_pm4_qp4(const std::vector<Matrix_T>& old, const signature_t sig)
   {
-    typedef typename Matrix_T::size_type matrix_index_t;
     Matrix_T h = old[0];
     for (int
         k = 1;
@@ -195,7 +194,6 @@ namespace glucat { namespace gen
   generator_table<Matrix_T>::
   gen_from_pp4_qm4(const std::vector<Matrix_T>& old, const signature_t sig)
   {
-    typedef typename Matrix_T::size_type matrix_index_t;
     const int old_size = old.size();
     Matrix_T h = old[old_size-1];
     for (int
@@ -226,7 +224,6 @@ namespace glucat { namespace gen
   generator_table<Matrix_T>::
   gen_from_qp1_pm1(const std::vector<Matrix_T>& old, const signature_t sig)
   {
-    typedef typename Matrix_T::size_type matrix_index_t;
     const int old_size = old.size();
     const Matrix_T& a = old[old_size-1];
     std::vector<Matrix_T> result(old_size);

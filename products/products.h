@@ -52,7 +52,7 @@ namespace glucat_prod_test
   inline
   void
   print_times(const Index_Set_T& frame1, const Index_Set_T& frame2,
-              const double setup_cpu_time, 
+              const double setup_cpu_time,
               const double prod_cpu_time,
               const double outer_cpu_time,
               const double inner_cpu_time,
@@ -89,8 +89,6 @@ namespace glucat_prod_test
             const typename Multivector_T::scalar_t fill)
   {
     typedef Multivector_T multivector_t;
-    typedef typename multivector_t::scalar_t scalar_t;
-    typedef typename multivector_t::index_set_t index_set_t;
 
     clock_t cpu_time = clock();
       multivector_t a = multivector_t(multivector_t::random(inner_frame, fill), outer_frame, true);
@@ -153,8 +151,8 @@ namespace glucat_prod_test
       contract_cpu_time = elapsed(cpu_time) / nbr_trials;
     }
 #endif
-    print_times(inner_frame, outer_frame, 
-                setup_cpu_time, prod_cpu_time, 
+    print_times(inner_frame, outer_frame,
+                setup_cpu_time, prod_cpu_time,
                 outer_cpu_time, inner_cpu_time, contract_cpu_time);
   }
 
@@ -164,9 +162,8 @@ namespace glucat_prod_test
   prod_test_with_fill(const index_t max_index, const typename Multivector_T::scalar_t fill)
   {
     cout << "Fill: " << fill << endl;
-    
+
     typedef Multivector_T multivector_t;
-    typedef typename multivector_t::scalar_t scalar_t;
     typedef typename multivector_t::index_set_t index_set_t;
 
     const index_set_t outer_frame = index_set_t(make_pair(-max_index, max_index));
@@ -194,7 +191,6 @@ namespace glucat_prod_test
   prod_test(const index_t n, const index_t max_n)
   {
     typedef Multivector_T multivector_t;
-    typedef typename multivector_t::scalar_t scalar_t;
     typedef typename multivector_t::index_set_t index_set_t;
     static const index_t v_lo = index_set_t::v_lo;
     static const index_t v_hi = index_set_t::v_hi;
