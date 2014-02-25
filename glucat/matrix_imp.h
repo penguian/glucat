@@ -34,6 +34,10 @@
 
 #include "glucat/matrix.h"
 
+# if  defined(_GLUCAT_GCC_IGNORE_UNUSED_LOCAL_TYPEDEFS)
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wunused-local-typedefs"
+# endif
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/vector_proxy.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
@@ -42,15 +46,25 @@
 #include <boost/numeric/ublas/matrix_sparse.hpp>
 #include <boost/numeric/ublas/operation.hpp>
 #include <boost/numeric/ublas/operation_sparse.hpp>
+# if defined(_GLUCAT_GCC_IGNORE_UNUSED_LOCAL_TYPEDEFS)
+#  pragma GCC diagnostic pop
+# endif
 
 #include <set>
 
 #if   defined(_GLUCAT_USE_ALGLIB)
 # include <alglib/evd.h>
 #elif defined(_GLUCAT_USE_BINDINGS_V1)
+# if  defined(_GLUCAT_GCC_IGNORE_UNUSED_LOCAL_TYPEDEFS)
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wunused-local-typedefs"
+# endif
 # include <boost/numeric/bindings/lapack/workspace.hpp>
 # include <boost/numeric/bindings/lapack/gees.hpp>
 # include <boost/numeric/bindings/traits/ublas_matrix.hpp>
+# if defined(_GLUCAT_GCC_IGNORE_UNUSED_LOCAL_TYPEDEFS)
+#  pragma GCC diagnostic pop
+# endif
 #elif defined(_GLUCAT_USE_BINDINGS)
 # include <boost/numeric/bindings/lapack/driver/gees.hpp>
 # include <boost/numeric/bindings/ublas.hpp>
@@ -58,6 +72,11 @@
 
 namespace glucat { namespace matrix
 {
+  // References for algorithms:
+  // [v]: C. F. van Loan and N. Pitsianis, "Approximation with Kronecker products",
+  // in Linear Algebra for Large Scale and Real-Time Applications, Marc S. Moonen,
+  // Gene H. Golub, and Bart L. R. Moor (eds.), 1993, pp. 293--314.
+
   /// Kronecker tensor product of matrices - as per Matlab kron
   template< typename LHS_T, typename RHS_T >
   const
@@ -141,6 +160,38 @@ namespace glucat { namespace matrix
     return result;
   }
 
+  /// Utility routine for nork: calculate result for a range of indices
+  template< typename LHS_T, typename RHS_T >
+  void
+  nork_range(RHS_T& result,
+             const typename LHS_T::const_iterator2 lhs_it2,
+             const RHS_T& rhs,
+             const typename RHS_T::size_type res_s1,
+             const typename RHS_T::size_type res_s2)
+  {
+    // Definition matches [v] Section 4, Theorem 4.1.
+    typedef RHS_T matrix_t;
+    typedef typename matrix_t::size_type matrix_index_t;
+    const matrix_index_t start1 = res_s1 * lhs_it2.index1();
+    const matrix_index_t start2 = res_s2 * lhs_it2.index2();
+    using ublas::range;
+    const range& range1 = range(start1, start1 + res_s1);
+    const range& range2 = range(start2, start2 + res_s2);
+    typedef ublas::matrix_range<const matrix_t> matrix_range_t;
+    const matrix_range_t& rhs_range = matrix_range_t(rhs, range1, range2);
+    typedef typename matrix_t::value_type Scalar_T;
+    const Scalar_T lhs_val = *lhs_it2;
+    for (typename matrix_range_t::const_iterator1
+        rhs_it1 = rhs_range.begin1();
+        rhs_it1 != rhs_range.end1();
+        ++rhs_it1)
+      for (typename matrix_range_t::const_iterator2
+          rhs_it2 = rhs_it1.begin();
+          rhs_it2 != rhs_it1.end();
+          ++rhs_it2)
+          result(rhs_it2.index1(), rhs_it2.index2()) += lhs_val * *rhs_it2;
+   }
+
   /// Left inverse of Kronecker product
   template< typename LHS_T, typename RHS_T >
   const
@@ -148,6 +199,7 @@ namespace glucat { namespace matrix
   nork(const LHS_T& lhs, const RHS_T& rhs, const bool mono)
   {
     // nork(A, kron(A, B)) is close to B
+    // Definition matches [v] Section 4, Theorem 4.1.
     typedef RHS_T matrix_t;
     typedef typename LHS_T::size_type lhs_index_t;
     typedef typename matrix_t::size_type matrix_index_t;
@@ -158,7 +210,7 @@ namespace glucat { namespace matrix
     const matrix_index_t res_s1 = rhs_s1 / lhs_s1;
     const matrix_index_t res_s2 = rhs_s2 / lhs_s2;
     typedef typename matrix_t::value_type Scalar_T;
-    const Scalar_T& nnz_lhs = Scalar_T( double(mono ? lhs_s1 : nnz(lhs)) );
+    const Scalar_T norm_frob2_lhs = norm_frob2(lhs);
     if (!mono)
     {
       typedef error<matrix_t> error_t;
@@ -170,7 +222,7 @@ namespace glucat { namespace matrix
         throw error_t("matrix", "nork: incompatible numbers of rows");
       if (res_s2 * lhs_s2 != rhs_s2)
         throw error_t("matrix", "nork: incompatible numbers of cols");
-      if (nnz_lhs == Scalar_T(0))
+      if (norm_frob2_lhs == Scalar_T(0))
         throw error_t("matrix", "nork: LHS must not be 0");
     }
     matrix_t result(res_s1, res_s2);
@@ -183,26 +235,42 @@ namespace glucat { namespace matrix
           lhs_it2 = lhs_it1.begin();
           lhs_it2 != lhs_it1.end();
           ++lhs_it2)
-        if (*lhs_it2 != Scalar_T(0))
-        {
-          typedef ublas::matrix_range<const matrix_t> matrix_range_t;
-          const Scalar_T& lhs_scale = *lhs_it2 * nnz_lhs;
-          const matrix_index_t start1 = res_s1 * lhs_it2.index1();
-          const matrix_index_t start2 = res_s2 * lhs_it2.index2();
-          using ublas::range;
-          const range& range1 = range(start1, start1 + res_s1);
-          const range& range2 = range(start2, start2 + res_s2);
-          const matrix_range_t& rhs_range = matrix_range_t(rhs, range1, range2);
-          for (typename matrix_range_t::const_iterator1
-              rhs_it1 = rhs_range.begin1();
-              rhs_it1 != rhs_range.end1();
-              ++rhs_it1)
-            for (typename matrix_range_t::const_iterator2
-                rhs_it2 = rhs_it1.begin();
-                rhs_it2 != rhs_it1.end();
-                ++rhs_it2)
-                result(rhs_it2.index1(), rhs_it2.index2()) += *rhs_it2 / lhs_scale;
-        }
+        if (*lhs_it2  != Scalar_T(0))
+          nork_range<LHS_T, RHS_T>(result, lhs_it2, rhs, res_s1, res_s2);
+    result /= norm_frob2_lhs;
+    return result;
+  }
+
+  /// Left inverse of Kronecker product where lhs is a signed permutation matrix
+  template< typename LHS_T, typename RHS_T >
+  const
+  RHS_T
+  signed_perm_nork(const LHS_T& lhs, const RHS_T& rhs)
+  {
+    // signed_perm_nork(A, kron(A, B)) is close to B
+    // Definition matches [v] Section 4, Theorem 4.1.
+    typedef RHS_T matrix_t;
+    typedef typename LHS_T::size_type lhs_index_t;
+    typedef typename matrix_t::size_type matrix_index_t;
+    const lhs_index_t lhs_s1 = lhs.size1();
+    const lhs_index_t lhs_s2 = lhs.size2();
+    const matrix_index_t rhs_s1 = rhs.size1();
+    const matrix_index_t rhs_s2 = rhs.size2();
+    const matrix_index_t res_s1 = rhs_s1 / lhs_s1;
+    const matrix_index_t res_s2 = rhs_s2 / lhs_s2;
+    typedef typename matrix_t::value_type Scalar_T;
+    const Scalar_T norm_frob2_lhs = Scalar_T( double(lhs_s1) );
+    matrix_t result(res_s1, res_s2);
+    result.clear();
+    for (typename LHS_T::const_iterator1
+        lhs_it1 = lhs.begin1();
+        lhs_it1 != lhs.end1();
+        ++lhs_it1)
+    {
+      const typename LHS_T::const_iterator2 lhs_it2 = lhs_it1.begin();
+      nork_range<LHS_T, RHS_T>(result, lhs_it2, rhs, res_s1, res_s2);
+    }
+    result /= norm_frob2_lhs;
     return result;
   }
 
@@ -236,7 +304,6 @@ namespace glucat { namespace matrix
   {
     typedef Matrix_T matrix_t;
     typedef typename matrix_t::value_type Scalar_T;
-    typedef typename matrix_t::size_type matrix_index_t;
     typedef typename matrix_t::const_iterator1 const_iterator1;
     typedef typename matrix_t::const_iterator2 const_iterator2;
     for (const_iterator1
@@ -274,7 +341,6 @@ namespace glucat { namespace matrix
     typedef const RHS_T rhs_expression_t;
     typedef typename RHS_T::expression_type matrix_t;
     typedef typename matrix_t::size_type  matrix_index_t;
-    typedef typename matrix_t::value_type Scalar_T;
     typedef typename lhs_expression_t::const_iterator1   lhs_const_iterator1;
     typedef typename lhs_expression_t::const_iterator2   lhs_const_iterator2;
     typedef typename ublas::matrix_row<rhs_expression_t> matrix_row_t;
@@ -358,7 +424,6 @@ namespace glucat { namespace matrix
   norm_frob2(const Matrix_T& val)
   {
     typedef typename Matrix_T::value_type Scalar_T;
-    typedef typename Matrix_T::size_type matrix_index_t;
 
     Scalar_T result = Scalar_T(0);
     for (typename Matrix_T::const_iterator1
@@ -521,7 +586,7 @@ namespace glucat { namespace matrix
     vector_t imag_lambda = vector_t(dim);
     fortran_int_t sdim = 0;
 
-    lapack::gees ('N', 'N', (logical_t*)0, T, sdim, real_lambda, imag_lambda, V );
+    lapack::gees ('N', 'N', (external_fp)0, T, sdim, real_lambda, imag_lambda, V );
 
     lambda.clear();
     for (vector_t::size_type  k=0; k!= dim; ++k)
