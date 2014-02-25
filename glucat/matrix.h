@@ -60,6 +60,12 @@ namespace glucat
     RHS_T
     nork(const LHS_T& lhs, const RHS_T& rhs, const bool mono = true);
 
+    /// Left inverse of Kronecker product where lhs is a signed permutation matrix
+    template< typename LHS_T, typename RHS_T >
+    const
+    RHS_T
+    signed_perm_nork(const LHS_T& lhs, const RHS_T& rhs);
+
     /// Number of non-zeros
     template< typename Matrix_T >
     typename Matrix_T::size_type
