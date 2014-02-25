@@ -412,7 +412,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
           CXXFLAGS="$save_CXXFLAGS"
         ],
         [#include <map>])
-      
+
     else
       if test "$GXX" = "yes" && test "$glucat_use_map" = "hash"; then
         GLUCAT_CHECK_COMPILER_FLAG(Wno-deprecated,[CXXFLAGS="$CXXFLAGS -Wno-deprecated"])
@@ -632,7 +632,7 @@ dnl Perform program name transformation
 AC_ARG_PROGRAM
 
 dnl Automake doc recommends to do this only here. (Janos)
-AM_INIT_AUTOMAKE(glucat,0.7.1)
+AM_INIT_AUTOMAKE(glucat,0.7.2)
 
 dnl almost the same like GLUCAT_SET_PREFIX but the path is /usr/local
 dnl
