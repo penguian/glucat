@@ -36,6 +36,10 @@
 #include "glucat/matrix.h"
 #include "glucat/generation.h"
 
+# if  defined(_GLUCAT_GCC_IGNORE_UNUSED_LOCAL_TYPEDEFS)
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wunused-local-typedefs"
+# endif
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/matrix_expression.hpp>
 #include <boost/numeric/ublas/matrix_proxy.hpp>
@@ -44,8 +48,12 @@
 #include <boost/numeric/ublas/operation_sparse.hpp>
 #include <boost/numeric/ublas/triangular.hpp>
 #include <boost/numeric/ublas/lu.hpp>
+# if defined(_GLUCAT_GCC_IGNORE_UNUSED_LOCAL_TYPEDEFS)
+#  pragma GCC diagnostic pop
+# endif
 
 #include <fstream>
+#include <iomanip>
 
 namespace glucat
 {
@@ -569,7 +577,7 @@ namespace glucat
   operator/ (const matrix_multi<Scalar_T,LO,HI>& lhs, const matrix_multi<Scalar_T,LO,HI>& rhs)
   {
     typedef numeric_traits<Scalar_T> traits_t;
-    
+
 #if !defined(_GLUCAT_USE_DENSE_MATRICES)
     if (lhs.isnan() || rhs.isnan())
       return traits_t::NaN();
@@ -671,7 +679,7 @@ namespace glucat
   matrix_multi<Scalar_T,LO,HI>::
   operator/= (const multivector_t& rhs)
   { return *this = *this / rhs; }
-  
+
   /// Transformation via twisted adjoint action
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
@@ -821,7 +829,7 @@ namespace glucat
     // If we need to enlarge the frame we may as well use a framed_multi_t
     if (this->frame() != frm)
       return framed_multi_t(*this).vector_part(frm, true);
-    
+
     const index_t begin_index = frm.min();
     const index_t end_index = frm.max()+1;
     for (index_t
@@ -989,7 +997,6 @@ namespace glucat
     if (level == 0)
       return framed_multi_t(X(0,0));
 
-    typedef typename framed_multi_t::matrix_multi_t matrix_multi_t;
     typedef typename framed_multi_t::index_set_t index_set_t;
     typedef typename framed_multi_t::scalar_t Scalar_T;
     typedef Matrix_T matrix_t;
@@ -1008,18 +1015,17 @@ namespace glucat
     basis_matrix_t JK = I;
     JK(0,0) = Scalar_T(-1);
 
-    using matrix::nork;
-    const bool mono = true;
+    using matrix::signed_perm_nork;
     const index_set_t ist_mn   = index_set_t(-level);
     const index_set_t ist_pn   = index_set_t(level);
     const index_set_t ist_mnpn = ist_mn | ist_pn;
     if (level == 1)
     {
       typedef typename framed_multi_t::term_t term_t;
-      const Scalar_T i_x  = nork(I, X, mono)(0, 0);
-      const Scalar_T j_x  = nork(J, X, mono)(0, 0);
-      const Scalar_T k_x  = nork(K, X, mono)(0, 0);
-      const Scalar_T jk_x = nork(JK,X, mono)(0, 0);
+      const Scalar_T i_x  = signed_perm_nork(I, X)(0, 0);
+      const Scalar_T j_x  = signed_perm_nork(J, X)(0, 0);
+      const Scalar_T k_x  = signed_perm_nork(K, X)(0, 0);
+      const Scalar_T jk_x = signed_perm_nork(JK,X)(0, 0);
       framed_multi_t
              result  = i_x;
              result += term_t(ist_mn,   j_x);  // j_x *  mn;
@@ -1031,10 +1037,14 @@ namespace glucat
       const framed_multi_t& mn   = framed_multi_t(ist_mn);
       const framed_multi_t& pn   = framed_multi_t(ist_pn);
       const framed_multi_t& mnpn = framed_multi_t(ist_mnpn);
-      const framed_multi_t& i_x  = fast<framed_multi_t, matrix_t, basis_matrix_t>(nork(I, X, mono), level-1);
-      const framed_multi_t& j_x  = fast<framed_multi_t, matrix_t, basis_matrix_t>(nork(J, X, mono), level-1);
-      const framed_multi_t& k_x  = fast<framed_multi_t, matrix_t, basis_matrix_t>(nork(K, X, mono), level-1);
-      const framed_multi_t& jk_x = fast<framed_multi_t, matrix_t, basis_matrix_t>(nork(JK,X, mono), level-1);
+      const framed_multi_t& i_x  = fast<framed_multi_t, matrix_t, basis_matrix_t>
+                                       (signed_perm_nork(I, X), level-1);
+      const framed_multi_t& j_x  = fast<framed_multi_t, matrix_t, basis_matrix_t>
+                                       (signed_perm_nork(J, X), level-1);
+      const framed_multi_t& k_x  = fast<framed_multi_t, matrix_t, basis_matrix_t>
+                                       (signed_perm_nork(K, X), level-1);
+      const framed_multi_t& jk_x = fast<framed_multi_t, matrix_t, basis_matrix_t>
+                                       (signed_perm_nork(JK,X), level-1);
       framed_multi_t
              result  =  i_x.even() - jk_x.odd();
              result += (j_x.even() - k_x.odd()) * mn;
@@ -1144,7 +1154,7 @@ namespace glucat
     typedef basis_table<Scalar_T,LO,HI,basis_matrix_t>          basis_table_t;
     typedef typename basis_table_t::const_iterator              basis_const_iterator_t;
     basis_table_t& basis_cache = basis_table_t::basis();
-    
+
     const index_t frame_count = this->m_frame.count();
     const bool use_cache = frame_count <= Tune_P::basis_max_count;
 
@@ -1284,7 +1294,7 @@ namespace glucat
     multivector_t Y = val;
     Scalar_T norm_M_1 = norm(M - Scalar_T(1));
     typedef numeric_traits<Scalar_T> traits_t;
-    
+
     for (int step = 0;
         step != sqrt_max_steps && norm_M_1 > tol2;
         ++step)
@@ -1429,7 +1439,7 @@ namespace glucat
       dd_real("33649")/dd_real("17179869184"),      dd_real("8855")/dd_real("274877906944"),
         dd_real("231")/dd_real("1099511627776"),       dd_real("1")/dd_real("4398046511104")
   };
-  
+
   template< >
   struct pade_sqrt_a<qd_real>
   {
@@ -1483,7 +1493,7 @@ qd_real("2804116503573")/qd_real("549755813888"),           qd_real("18868278750
           qd_real("561")/qd_real("18446744073709551616"),               qd_real("1")/qd_real("73786976294838206464")
   };
 #endif
-  
+
   /// Square root of multivector with specified complexifier
   template< typename Scalar_T, const index_t LO, const index_t HI >
   const matrix_multi<Scalar_T,LO,HI>
@@ -1492,7 +1502,7 @@ qd_real("2804116503573")/qd_real("549755813888"),           qd_real("18868278750
     // Reference: [GW], Section 4.3, pp318-322
     // Reference: [GL], Section 11.3, p572-576
     // Reference: [Z], Pade1
-    
+
     typedef numeric_traits<Scalar_T> traits_t;
     if (val.isnan())
       return traits_t::NaN();
@@ -1604,7 +1614,7 @@ qd_real("2804116503573")/qd_real("549755813888"),           qd_real("18868278750
       return scaled_result * rescale;
 #endif
   }
-  
+
   /// Coefficients of numerator polynomials of Pade approximations produced by Pade1(log(1+x),x,n,n)
   // Reference: [Z], Pade1
   template< typename Scalar_T >
@@ -1864,7 +1874,7 @@ qd_real("2804116503573")/qd_real("549755813888"),           qd_real("18868278750
   {
     // Scaled incomplete square root cascade and scaled Pade' approximation of log
     // Reference: [CHKL]
-    
+
     typedef numeric_traits<Scalar_T> traits_t;
     if (val == Scalar_T(0) || val.isnan())
       return traits_t::NaN();
