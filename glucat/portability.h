@@ -33,6 +33,11 @@
 
 #include <boost/version.hpp>
 
+// Workaround for GCC
+# if (__GNUC__ == 4 && __GNUC_MINOR__ >= 8)
+# define _GLUCAT_GCC_IGNORE_UNUSED_LOCAL_TYPEDEFS
+#endif
+
 // Workarounds for ICC and ICPC
 #if defined (BOOST_INTEL) || defined (__INTEL_COMPILER) || defined (__ICL) || defined (__ICC)
 # pragma warning( disable: 177 ) // variable was declared but never referenced
