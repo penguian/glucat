@@ -273,8 +273,7 @@
     CONFORMAL TRANSFORMATIONS AND VAHLEN MATRICES
     in the Minkowski space-time R^(3,1).
 
-    We choose the two extra dimensions e(-2), e(4)  so that our Minkowski space-time has a basis  {
-    e(-1), e(1), e(2), e(3) }.
+    We choose the two extra dimensions e(-2), e(4)  so that our Minkowski space-time has a basis  { e(-1), e(1), e(2), e(3) }.
 
 >>> eneg = e(-2); print eneg
 {-2}
@@ -445,8 +444,7 @@
 
 >>> w = u*v
 
-    Check that reverse(w)*Ak*w vanishes for a pure spinor w and a k-vector Ak when k == 0,1,2 but not
-    when k == 3  (v and reverse(w)*A3*w are parallel)
+    Check that reverse(w)*Ak*w vanishes for a pure spinor w and a k-vector Ak when k == 0,1,2 but not when k == 3  (v and reverse(w)*A3*w are parallel)
 
 >>> A1 = 2*e(1)+3*e(2)+5*e(3)+7*e(-4)+e(-3)+4*e(-2); print A1
 7{-4}+{-3}+4{-2}+2{1}+3{2}+5{3}
