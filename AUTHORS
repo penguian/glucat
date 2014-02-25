@@ -24,15 +24,23 @@ V. Vierros.
 
 Definitions
 -----------
-Milton Abramowicz and Irene A. Stegun: Transcendental functions.
-Mark Ashdown, G. P. Wene: Negative integer indices.
+Milton Abramowicz and Irene A. Stegun:
+  Transcendental functions.
+Mark Ashdown, G. P. Wene:
+  Negative integer indices.
 Chris Doran, David Hestenes, Anthony Lasenby, Pertti Lounesto, Ian R. Porteous, Garret Sobczyk:
   Clifford algebra sum, difference, inner product, outer product,
   geometric product, involutions and anti-involutions, norms.
-Leo Dorst: Left contraction.
-Leo Dorst, Arvind Raja: Index sets.
-David Hestenes, Garret Sobczyk,  G. P. Wene: Countably infinite dimensional Clifford algebra
-Pertti Lounesto, Ian R. Porteous: Matrix basis.
+Leo Dorst:
+  Left contraction.
+Leo Dorst, Arvind Raja:
+  Index sets.
+Yorick Hardy, Nikos P. Pitsianis, Charles F. van Loan:
+  Kronecker quotient.
+David Hestenes, Garret Sobczyk,  G. P. Wene:
+  Countably infinite dimensional Clifford algebra.
+Pertti Lounesto, Ian R. Porteous:
+  Matrix basis.
 
 Algorithms
 ----------
@@ -93,6 +101,7 @@ A. Alexandrescu, N. Josuttis, A. Koenig, Scott Meyers, B. Moo, Bjarne
 Stroustrup, T. Veldhuizen:
   C++ usage.
 Joerg Arndt: Bit wizardry.
+Paul Ivanov: IPython notebooks.
 Duraid Madina, Russell Standish: C++, debugging.
 Christian Perwass: Operators, user interface.
 
@@ -121,29 +130,29 @@ D. Hestenes, G. Sobczyk, Clifford Algebra to Geometric Calculus, D. Reidel, 1984
 References for generalized FFTs on finite groups
 ------------------------------------------------
 L. Babai, L. Ronyai, "Computing irreducible representations of finite groups",
-Math. Comp. 55 (1990), 705--722.
+Math. Comp. 55, 1990, pp. 705--722.
 
 U. Baum, M. Clausen, "Computing irreducible representations of supersolvable
 groups", Math. Comp. 63, 1994, pp. 351--359.
 
 T. Beth, "On the computational complexity of the general discrete Fourier
-transform", Theoretical Computer Science, 51 (1987), no. 3, 331--339.
+transform", Theoretical Computer Science, 51 (3) 1987, pp. 331--339.
 
 G. S. Chirikjian, A. B. Kyatkin, Engineering applications of noncommutative
 harmonic analysis. With emphasis on rotation and motion groups. CRC Press, 2001.
 
 M. Clausen, "Fast generalized Fourier transforms", Theoretical Computer
-Science 67, 1989, 55-63. MR 91f:68081.
+Science 67, 1989, pp. 55--63.
 
 M. Clausen, U. Baum, "Fast Fourier Transforms," Bibliographisches Institut &
 F. A. Brockhaus AG, Mannheim, 1993.
 
 P. Diaconis, D. Rockmore, "Efficient computation of the Fourier transform
-of finite groups," J. Amer. Math. Soc., 3(2), 297--332, 1990.
+of finite groups," J. Amer. Math. Soc., 3 (2), 1990, pp. 297--332.
 
 D. Maslen, D. Rockmore, "Generalized FFTs: A survey of some recent results",
-In L. Finkelstein and W. Kantor, editors, Proc. 1995 DIMACS Workshop in Groups
-and Computation.
+in Proc. 1995 DIMACS Workshop in Groups and Computation, L. Finkelstein
+and W. Kantor (eds.).
 
 D. Maslen, D. Rockmore, "Separation of variables and the computation of
 Fourier transforms on finite groups", I. J. of the Amer. Math. Soc., 10,
@@ -153,6 +162,13 @@ D. Rockmore, "Some applications of generalized FFTs" (Appendix with D.
 Healy), in Groups and Computation II, DIMACS Series in Discrete Math and
 Computer Science, Vol. 28, L. Finkelstein and W. Kantor (eds.), 1997, pp.
 329--369.
+
+References for Kronecker quotients
+----------------------------------
+
+C. F. van Loan and N. Pitsianis, "Approximation with Kronecker products",
+in Linear Algebra for Large Scale and Real-Time Applications, Marc S. Moonen,
+Gene H. Golub, and Bart L. R. Moor (eds.), 1993, pp. 293--314.
 
 Recommended general references
 ==============================
@@ -180,12 +196,12 @@ University Press, 1995.
 Web sites
 ---------
 o Rafal Ablamowitz
-  http://top.math.tntech.edu/rafal/
+  http://math.tntech.edu/rafal/
 o William Baylis:
   http://cronus.uwindsor.ca/baylis-research
 o The Clifford Research Group at Ghent University
   http://cage.ugent.be/crg/
-o Leo Dorst 
+o Leo Dorst
   http://staff.science.uva.nl/~leo/clifford/
 o John Fletcher
   http://www1.aston.ac.uk/eas/staff/dr-john-fletcher/
@@ -194,8 +210,7 @@ o The Geometric Algebra Research Group at Cambridge:
 o David Hestenes
   http://geocalc.clas.asu.edu/
 o Soeren Krausshar
-  http://www3.mathematik.tu-darmstadt.de/en/hp/
-  algebrageometrieundfunktionalanalysis/krausshar-soeren/startseite.html
+  http://www3.mathematik.tu-darmstadt.de/hp/algebra/krausshar-soeren/startseite.html
 o Pertti Lounesto
   http://users.tkk.fi/ppuska/mirror/Lounesto/
 o Alan Macdonald

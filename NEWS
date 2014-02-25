@@ -1,5 +1,22 @@
-NEWS for GluCat 0.7.1 with PyClical
+NEWS for GluCat 0.7.2 with PyClical
 ===================================
+
+2014-02-25: 0.7.2:
+GluCat 0.7.2 with PyClical now generates IPython notebooks.
+
+The Pyclical tutorials are now accompanied by corresponding IPython notebooks.
+
+The nork() function in matrix.h and matrix_imp.h that implements the left
+Kronecker quotient is now accompanied by the signed_perm_nork() function, which
+is faster for the case used by fast<>() in matrix_mult_imp.h.
+
+Use of the Boost pool allocator with framed_multi<> is now optional, controlled
+via the new symbol _GLUCAT_USE_BOOST_POOL_ALLOC.
+
+GluCat compiles cleanly with g++ 0.8. It does not trigger the "unused local
+typedefs" warning caused by the addition of -Wunused-local-typedefs to -Wall
+in g++ 4.8. See http://gcc.gnu.org/ml/gcc-patches/2011-07/msg02460.html
+http://gcc.gnu.org/ml/gcc-patches/2012-05/msg01388.html
 
 2012-11-11: 0.7.1:
 GluCat 0.7.1 fixes a bug which prevented compilation in the case where the class

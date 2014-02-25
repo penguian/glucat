@@ -1,4 +1,4 @@
-TODO for GluCat 0.7.1 with PyClical
+TODO for GluCat 0.7.2 with PyClical
 ===================================
 
 Documentation:
@@ -19,13 +19,12 @@ o Port to other architectures and compilers which support template template
 Interfaces:
   Downwards:
 o Try using Eigen as a replacement for uBLAS, Boost numeric bindngs and Alglib.
-o Alternatively, support later versions of Alglib and Boost numeric bindings
-  (requested by John Fletcher).
+o Alternatively, support later versions of Alglib (requested by John Fletcher).
 
   Upwards:
 o Expand the Cython-based Python extension module PyCliCal into a Sage interface.
 o Try defining Boost concepts and more numeric traits so that GluCat can
-  eventually   become a Boost library.
+  eventually become a Boost library.
 
 Transcendental functions:
 o Devise better algorithms and better implementations of existing algorithms for
@@ -46,7 +45,6 @@ o Try removing the template parameters LO and HI from framed_multi and
   matrix_multi, and using DEFAULT_LO and DEFAULT_HI where these are needed in
   framed_multi.h, matrx_multi.h, etc.
 o Try making Tune_P into a mixin policy class template parameter.
-o Add operator| for geometric operations: return rhs * lhs * involute(inv(rhs))
 o Add convenience constructors to index_set<>: index_set<>(int, int),
   index_set<>(int, int, int), ... etc.
 o Try replacing multiplication by +/-1 within inner products by addition and
@@ -54,3 +52,5 @@ o Try replacing multiplication by +/-1 within inner products by addition and
 o Try creating a class, vector_multi<>, which uses std::vector rather than
   std::map. This should be faster than framed_multi<>, if tuned properly, for
   full multivectors. For sparse multivectors, it may be slower.
+o Try automatically increasing the precision of intermediate floating point
+  operations, particularly for conversions between matrix_multi and framed_multi.

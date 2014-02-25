@@ -1,4 +1,4 @@
-README for GluCat 0.7.1 with PyClical
+README for GluCat 0.7.2 with PyClical
 =====================================
 
 GluCat is a library of C++ template classes for calculations with the universal
@@ -172,23 +172,29 @@ The pyclical_tutorials program starts by displaying
 
     Currently available PyClical tutorials:
 
-    0.0 Notation
-    0.1 Index sets
-    0.2 Operations
-    0.3 Algebraic functions
+    0.0 Notation.
+    0.1 Index sets.
+    0.2 Operations.
+    0.3 Algebraic functions.
     0.4 Square root and transcendental functions.
-    1.0 Plane geometry
-    1.1 Complex numbers
-    1.2 Space geometry and vector algebra
-    1.3 Electromagnetism and Lorentz transformations
-    1.4 The fourth dimension
+    1.0 Plane geometry.
+    1.1 Complex numbers.
+    1.2 Space geometry and vector algebra.
+    1.3 Electromagnetism and Lorentz transformations.
+    1.4 The fourth dimension.
     1.5 Conformal Geometric Algebra.
+    2.0 Exterior product.
 
-    Enter the number for the tutorial you want to run, or Q to quit: 
+    Enter the number for the tutorial you want to run, or Q to quit:
 
 Just enter one of the numbers, e.g. 0.0, or Q to quit. At any point in an
 individual tutorial, you can interrupt by entering CTRL-c.
 
+If you are running Linux or a Unix equivalent, the following should also work:
+
+% cd /path/to/my/demos
+% chmod +x pyclical_tutorials.py
+% ./pyclical_tutorials.py
 
 For more usage examples, see the example Python files pyclical_demo.py,
 plotting_demo.py, and sqrt_log_demo.py, and the example output files
@@ -198,8 +204,15 @@ To run pyclical_demo.py and sqrt_log_demos.py, use the following commands:
 
 % cd /path/to/my/demos
 % python pyclical_demo.py
-% python sqrt_log_demos.py
+% python sqrt_log_demo.py
 
+If you are running Linux or a Unix equivalent, the following should also work:
+
+% cd /path/to/my/demos
+% chmod +x pyclical_demo.py
+% ./pyclical_demo.py
+% chmod +x sqrt_log_demo.py
+% ./sqrt_log_demo.py
 
 To run plotting_demo.py, run "ipython --pylab" and enter the following commands
 at the ipython prompt:
@@ -212,7 +225,21 @@ In [3]: demo()
 
 This demo uses Matplotlib to produce a number of plots.
 
-                            
+The tutorials and demos are also accompanied by a corresponding set of IPython
+notebooks. To build the notebooks, see INSTALL. To run the notebooks, assuming
+that you have a copy of the notebooks in the directory /path/to/my/demos, you have
+ipython installed, you have installed PyClical, or set PYTHONPATH appropriately,
+and you are able to use ipython notebooks via a web browser, use the following
+commands:
+
+% cd /path/to/my/demos
+% ipython notebook
+
+Your web browser should open a new window or tab, displaying a page that lists
+all of the available tutorials and demos as notebooks. To select a notebook,
+click on the corresponding name in the list.
+
+
 5. Writing C++ programs that use GluCat classes
 -----------------------------------------------
 

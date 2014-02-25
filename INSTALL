@@ -1,4 +1,4 @@
-INSTALL for GluCat 0.7.1 with PyClical
+INSTALL for GluCat 0.7.2 with PyClical
 ======================================
 
 Prerequisites: Before You Begin
@@ -21,11 +21,11 @@ Directory Structure
 ===================
 
 Once you have downloaded, unzipped and untarred the source code, you should
-have a directory, glucat-0.7.1. Under this directory you should see a number
+have a directory, glucat-0.7.2. Under this directory you should see a number
 of subdirectories, including ./admin, ./doc, ./glucat, ./gfft_test, ./products,
 ./pyclical, ./squaring, ./test, ./test_runtime, ./testxx, and ./transforms.
 
-The following instructions are meant to be used with glucat-0.7.1 as the
+The following instructions are meant to be used with glucat-0.7.2 as the
 current directory.
 
 
@@ -103,7 +103,7 @@ relevant subdirectories.
 
 As briefly described above, the simplest way to install this package is:
 
- 1. "cd" to the glucat-0.7.1 directory containing the source code and type
+ 1. "cd" to the glucat-0.7.2 directory containing the source code and type
     "./configure" to configure GluCat with PyClical for your system.
     If you are using "csh" on an old version of System V, you might need to type
     "sh ./configure" instead to prevent "csh" from trying to execute
@@ -200,7 +200,7 @@ The option "--enable-debug=yes" turns on full debugging, by adding the compiler
 flags "-O0 -g3" to CXXFLAGS in the Makefiles, and does not add the compiler flag
 "-DNDEBUG" to CXXFLAGS in the Makefiles.
 
-The preprocessor symbol NDEBUG is used by Boost uBLAS to control debugging. 
+The preprocessor symbol NDEBUG is used by Boost uBLAS to control debugging.
 If NDEBUG is defined, then uBLAS compiles in release mode, including the use of
 expression templates. If NDEBUG is not defined, then uBLAS compiles in debug
 mode.
@@ -325,8 +325,6 @@ exist.
   This tells g++ to use the 2011 C++ standard.
 
 
-[Added in patch for openSUSE Build Service using Boost 1.53.0:]
-
 If _GLUCAT_USE_BOOST_POOL_ALLOC is defined, glucat/framed_multi.h includes
 the header file <boost/pool/poolfwd.hpp> and defines glucat::framed_multi<>
 using boost::fast_pool_allocator<>; and glucat/framed_multi.h includes
@@ -338,7 +336,7 @@ C++ compiler:  "-D_GLUCAT_USE_BOOST_POOL_ALLOC"
 
 You will also need to ensure that the include path used by the compiler sees
 <boost/pool/poolfwd.hpp> and <boost/pool/pool_alloc.hpp>. In addition, if you
-are using Boost 1.50.0 or later, your Makefile needs to pass the following flag 
+are using Boost 1.50.0 or later, your Makefile needs to pass the following flag
 to the C++ compiler, after all the linker-related flags: "-lboost_system"
 
 You will also need to ensure that the library path sees libboost_system.*.
@@ -347,8 +345,6 @@ See http://www.boost.org/doc/libs/1_53_0/more/getting_started/index.html
 and Boost tickets
 https://svn.boost.org/trac/boost/ticket/7085
 https://svn.boost.org/trac/boost/ticket/7335
-
-[End of addition for openSUSE Build Service using Boost 1.53.0]
 
 
   --with-dense-mat        uses dense matrices [default=yes]
@@ -595,6 +591,25 @@ You must also set the environment variables CXXFLAGS, INCLUDES and LDFLAGS to
 appropriate values.
 
 
+Building Pyclical notebooks
+---------------------------
+
+In the pyclical/demos directory, there is a Python script
+build_pyclical_notebooks.py. This script builds a set of IPython notebooks
+that correspond to the Pyclical tutorials. The notebooks reproduce the
+contents of the tutorials, but do not have the capability to check the
+exercises. To build the notebooks, change directory to pyclical/demos and run
+
+ python build_pyclical_notebooks.py
+
+The script is written to run standalone: if you are running Linux or a Unix
+equivalent, the command
+
+ ./build_pyclical_notebooks.py
+
+should also work.
+
+
 To Test
 =======
 
@@ -620,6 +635,12 @@ parameters. Parameters in the range "00" to "16" correspond to coding examples
 order. With zero parameters, all examples from 00 to 16 are run in order. Many
 of the examples are run twice - once with framed_multi<Scalar_T> and once with
 matrix_multi<Scalar_T>.
+
+The sample test results in ./test_runtime/test.out are from programs
+built and run using the configure command:
+./configure --with-qd -with-eig=bindingsv1 \\
+--with-extra-includes=$PATHTO/boost-numeric-bindings-v1
+on Intel(R) Core(TM) i7 CPU 870, Kubuntu 13.04, g++ 4.8.1, Boost 1.53.
 
 The tests typically use floating point arithmetic, and ./test00/test00 and
 ./test11/test11 in particular also use random number generators. Therefore if
@@ -664,9 +685,19 @@ The default is:
  ./gfft_test/gfft_test 11
  ./transforms/transforms 8
 
-The sample timing test results in ./test_runtime were built and run using
-./configure --with-unordered-map --with-dense-mat --enable-debug=no
-on AMD Athlon(tm) 64 3200+, openSUSE Linux 11.2, g++ 4.5.1, Boost 1.44.0.
+The sample timing test results in ./test_runtime from programs
+built and run using the configure command:
+    ./configure --with-qd --with-eig=alglib \
+                --with-extra-libs=$HOME/usr/local/lib \
+                --with-extra-includes=$HOME/usr/local/include
+on  AMD Athlon(tm) 64 Processor 3200+ with
+    Linux 3.8.0-31-generic #46-Ubuntu SMP x86_64
+    gcc version 4.8.1 (Ubuntu/Linaro 4.8.1-10ubuntu9)
+    Boost 1.49.0
+    Alglib 2.5.0 C++
+    QD 2.3.13
+    Python 2.7.5+
+    Cython 0.19
 
 
 Testing PyClical
@@ -675,11 +706,14 @@ Once you have built PyClical, run the doctests. In python or ipython, etc.:
 
  >>> import PyClical
  >>> PyClical._test()
- TestResults(failed=0, attempted=309)
+ TestResults(failed=0, attempted=311)
+ >>> quit()
 
-The example Python files pyclical_demo.py and sqrt_log_demo.py have
-corresponding output files pyclical_demo.out and sqrt_log_demo.out.
-Run these files and compare the output.
+In the directory pyclical/demos, the Python script files pyclical_demo.py and
+sqrt_log_demo.py have corresponding output files pyclical_demo.out and
+sqrt_log_demo.out. Run these two Python script files and compare their output to
+the contents of the two output files. See the README under "Using the PyClical
+extension module with Python" for instructions on how to run these files.
 
 
 To Install
@@ -699,151 +733,163 @@ to use sudo, login as root, or su to root before you run make install.
  List of Successful Builds
  =========================
 
- GluCat 0.7.1 with PyClical has so far been built and tested using:
+ GluCat 0.7.2 with PyClical has so far been built and tested using:
 
  1) AMD Athlon(tm) 64 Processor 3200+ with
 
-    ./configure --with-map=map --with-qd --with-eig=alglib \
-                --with-extra-libs=$HOME/usr/local/lib \
-                --with-extra-includes=$HOME/usr/local/include
-    Linux 3.4.11-2.16-desktop #1 SMP PREEMPT x86_64
-    gcc version 4.7.1 (GCC)
-    Boost 1.49.0
-    Alglib 2.5.0 C++
-    QD 2.3.13
-    Python 2.7.3 (default, Apr 14 2012, 08:58:41) [GCC]
-    Cython 0.17.1
-
- 2) AMD Athlon(tm) 64 Processor 3200+ with
-
     ./configure --with-qd --with-eig=alglib \
-                --with-extra-libs=$HOME/usr/local/lib \
-                --with-extra-includes=$HOME/usr/local/include
-    Linux 3.4.11-2.16-desktop #1 SMP PREEMPT x86_64
-    gcc version 4.7.1 (GCC)
+    --with-extra-libs=$HOME/usr/local/lib \
+    --with-extra-includes=$HOME/usr/local/include
+
+    Linux 3.8.0-31-generic #46-Ubuntu SMP x86_64
+    gcc version 4.8.1 (Ubuntu/Linaro 4.8.1-10ubuntu9)
     Boost 1.49.0
     Alglib 2.5.0 C++
     QD 2.3.13
-    Python 2.7.3 (default, Apr 14 2012, 08:58:41) [GCC]
-    Cython 0.17.1
+    Python 2.7.5+
+    Cython 0.19
 
- 3) AMD Athlon(tm) 64 Processor 3200+ with
+ 2) 2 core AMD E-350 Processor
+
+    ./configure --with-qd --with-eig=bindingsv1 \
+    --with-extra-libs=$HOME/usr/local/lib \
+    --with-extra-includes=$HOME/usr/local/include:$PATHTO/boost-numeric-bindings-v1
+
+    Linux 3.8.0-32-generic #47-Ubuntu SMP x86_64
+    gcc version 4.7.3 (Ubuntu/Linaro 4.7.3-1ubuntu1)
+    Boost 1.9.0
+    Boost Numeric Bindings V1
+    QD 2.3.13
+    Python 2.7.4
+    Cython 0.17.4
+
+ 3) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
+
+    ./configure --with-qd --with-eig=bindingsv1 \
+    --with-extra-includes=$PATHTO/numeric_bindings-v1
+
+    Linux 3.8.0-35-generic #50-Ubuntu SMP x86_64
+    gcc version 4.7.3 (Ubuntu/Linaro 4.7.3-2ubuntu4)
+    Boost 1.53.0
+    Boost Numeric Bindings V1
+    QD 2.3.13
+    Python 2.7.4
+    Cython 0.19.1
+
+ 4) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
+
+    ./configure --with-qd --with-eig=bindingsv1 \
+    --with-extra-includes=$PATHTO/numeric_bindings-v1
+
+    Linux 3.8.0-35-generic #50-Ubuntu SMP x86_64
+    gcc version 4.8.1 (Ubuntu 4.8.1-2ubuntu1~13.04)
+    Boost 1.53.0
+    Boost Numeric Bindings V1
+    QD 2.3.13
+    Python 2.7.4
+    Cython 0.19.1
+
+ 5) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
+
+    ./configure --with-map=map --with-qd --with-eig=bindingsv1 \
+    --with-extra-includes=$PATHTO/numeric_bindings-v1
+
+    Linux 3.8.0-35-generic #50-Ubuntu SMP x86_64
+    gcc version 4.8.1 (Ubuntu 4.8.1-2ubuntu1~13.04)
+    Boost 1.53.0
+    Boost Numeric Bindings V1
+    QD 2.3.13
+    Python 2.7.4
+    Cython 0.19.1
+
+ 6) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
 
     ./configure --with-map=stdunordered --with-random=std \
-                --with-qd --with-eig=alglib \
-                --with-extra-libs=$HOME/usr/local/lib \
-                --with-extra-includes=$HOME/usr/local/include
+    --with-qd --with-eig=bindingsv1 \
+    --with-extra-includes=$PATHTO/numeric_bindings-v1
 
-    Linux 3.4.11-2.16-desktop #1 SMP PREEMPT x86_64
-    gcc version 4.7.1 (GCC)
-    Boost 1.49.0
-    Alglib 2.5.0 C++
-    QD 2.3.13
-    Python 2.7.3 (default, Apr 14 2012, 08:58:41) [GCC]
-    Cython 0.17.1
-
- 4) AMD Athlon(tm) 64 Processor 3200+ with
-
-    ./configure --with-map=stdunordered --with-random=std \
-                --with-qd -with-eig=bindingsv1 \
-                --with-extra-libs=$HOME/usr/local/lib \
-                --with-extra-includes=$HOME/usr/local/include: \
-                       $PATHTO/include/boost-numeric-bindings-v1
-
-    Linux 3.4.11-2.16-desktop #1 SMP PREEMPT x86_64
-    gcc version 4.7.1 (GCC)
-    Boost 1.49.0
+    Linux 3.8.0-35-generic #50-Ubuntu SMP x86_64
+    gcc version 4.8.1 (Ubuntu 4.8.1-2ubuntu1~13.04)
+    Boost 1.53.0
     Boost Numeric Bindings V1
     QD 2.3.13
-    Python 2.7.3 (default, Apr 14 2012, 08:58:41) [GCC]
-    Cython 0.17.1
+    Python 2.7.4
+    Cython 0.19.1
 
- 5) 2 core AMD E-350 Processor
+ 7) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
 
-    ./configure --with-qd -with-eig=bindingsv1 \
-                --with-extra-libs=$HOME/usr/local/lib \
-                --with-extra-includes=$HOME/usr/local/include: \
-                       $PATHTO/include/boost-numeric-bindings-v1
+    ./configure --with-qd --with-eig=bindings \
+    --with-extra-includes=$PATHTO/numeric_bindings
 
-    Linux 3.2.0-32-generic #51-Ubuntu SMP x86_64
-    gcc version 4.6.3 (Ubuntu/Linaro 4.6.3-1ubuntu5)
-    Boost 1.46.1
-    Boost Numeric Bindings V1
-    QD 2.3.10
-    Python 2.7.2 |EPD 7.2-2 (64-bit)| (default, Jul  3 2011, 15:17:51)
-    Cython 0.15.1
-
-  6) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
-
-    ./configure --enable-pyclical --with-qd -with-eig=bindingsv1 \
-                --with-extra-includes=$PATHTO/boost-numeric-bindings-v1
-
-    Linux 3.2.0-32-generic #51-Ubuntu SMP x86_64
-    gcc version 4.6.3 (Ubuntu/Linaro 4.6.3-1ubuntu5)
-    Boost 1.46.1
+    Linux 3.8.0-35-generic #50-Ubuntu SMP x86_64
+    gcc version 4.8.1 (Ubuntu 4.8.1-2ubuntu1~13.04)
+    Boost 1.53.0
     Boost Numeric Bindings V1
     QD 2.3.13
-    Python 2.7.3 (default, Aug  1 2012, 05:14:39)
-    Cython 0.15.1
+    Python 2.7.4
+    Cython 0.19.1
 
-  7) 4 core AMD Opteron(tm) Processor 8360 SE  @ 1.25GHz with
+ 8) 4 core AMD Opteron(tm) Processor 8360 SE  @ 1.25GHz with
 
     ./configure --with-eig=bindingsv1 \
-                --with-extra-includes=$PATHTO/include/boost-numeric-bindings-v1
+    --with-extra-includes=$PATHTO/boost-numeric-bindings-v1
 
     Linux 3.4.0-rc3 #4 SMP x86_64
-    gcc version 4.5.2 (Gentoo 4.5.2 p1.0, pie-0.4.5)
+    gcc version 4.5.4 (Gentoo 4.5.4 p1.0, pie-0.4.7)
     Boost 1.49.0
     Boost Numeric Bindings V1
-    Python 2.7.3 (default, Jul 18 2012, 09:06:01)
-    Cython 0.15.1
+    Python 2.7.5
+    Cython 0.18
 
- 8) 8 core Intel(R) Xeon(R) CPU X7550  @ 2.00GHz with
+ 9) 8 core Intel(R) Xeon(R) CPU X7550  @ 2.00GHz with
 
    ./configure --exec-prefix=/usr --with-qd --with-eig=bindingsv1 \
-               --with-extra-libs=$HOME/usr/local/lib \
-               --with-extra-includes=$HOME/usr/local/include:\
-                      $PATHTO/include/boost-numeric-bindings
+   --with-extra-libs=$HOME/usr/local/lib \
+   --with-extra-includes=$HOME/usr/local/include:$PATHTO/boost-numeric-bindings-v1
 
     Linux 3.1.1-gentoo #1 SMP x86_64
     gcc version 4.5.2 (Gentoo 4.5.2 p1.1, pie-0.4.5)
     Boost 1.46.1
     Boost Numeric Bindings V1
     QD 2.3.13
-    Python 2.7.1 (r271:86832, May 30 2011, 14:55:55)
+    Python 2.7.1
     Cython 0.17.1
 
 
 Notes on software versions
 --------------------------
 
- 1. GluCat needs an include library which either defines the macro isnan or
+ 1. GluCat 0.7.2 has not been tested with gcc versions earlier than 4.5.2.
+
+ 2. GluCat needs an include library which either defines the macro isnan or
     defines std::isnan. The C++ standard library included with gcc 4.5.2 and
     above defines std::isnan.
 
- 1. GluCat 0.7.1 has not been tested with gcc versions earlier than 4.5.2.
-    GluCat needs an include library which either defines the macro isnan or
-    defines std::isnan. The C++ standard library included with gcc 4.5.2 and
-    above defines std::isnan.
-
- 2. Cython versions earlier than 0.15 do not build PyClical 0.7.1 correctly,
-    because PyClical 0.7.1 uses generators, which were only implemented with
+ 3. Cython versions earlier than 0.15 do not build PyClical 0.7.2 correctly,
+    because PyClical 0.7.2 uses generators, which were only implemented with
     Cython 0.15.
 
- 3. Cython versions to and including 0.16 do not build PyClical correctly
+ 4. Cython versions to and including 0.16 do not build PyClical correctly
     for C++11. If you try to use g++ with -std=c++11 you will see
     an error message like:
 
  In function ‘void __Pyx_RaiseArgtupleInvalid(...)’:
  error: unable to find string literal operator ‘operator"" PY_FORMAT_SIZE_T’
 
-    The workaround is to edit PyClical.cpp and put a space before and after each
-    occurrence of PY_FORMAT_SIZE_T.
+    See https://github.com/cython/cython/pull/109
 
- 4. GluCat 0.7.1 will not work with QD versions earlier than 2.3.10,
+    The workaround is to edit PyClical.cpp and put a space before and after each
+    occurrence of PY_FORMAT_SIZE_T. This was fixed some time after Cython 0.16
+    and before Cython 0.19.1.
+
+ 5. GluCat 0.7.2 will not work with QD versions earlier than 2.3.10,
     because older versions do not zero-initialize dd_real and qd_real
     as required by ublas::clear().
 
- 5. GluCat 0.7.1 has not been tested with Alglib versions later than 2.5.0 and
+ 6. GluCat 0.7.2 has not been tested with Alglib versions later than 2.5.0 and
     is unlikely to work with Alglib 3.0.0 or later versions, because the Alglib
     source files were reorganized for version 3.0.0.
+
+ 7. Using --with-eig=bindingsv1 and compiling GluCat 0.7.2 using g++ 4.8 or
+    later will result in warning messages from boost/numeric/bidings complaining
+    about unused typedefs. It is safe to ignore these messages.
