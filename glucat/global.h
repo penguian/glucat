@@ -120,7 +120,7 @@ namespace glucat
   const unsigned int DEFAULT_Log_Max_Inner_Steps     =      32;
   const unsigned int DEFAULT_Basis_Max_Count         =      10;
   const unsigned int DEFAULT_Fast_Size_Threshold     = 1 << 10;
-  const unsigned int DEFAULT_Inv_Fast_Dim_Threshold  = 1 <<  7;
+  const unsigned int DEFAULT_Inv_Fast_Dim_Threshold  = 1 <<  6;
   const unsigned int DEFAULT_Products_Size_Threshold = 1 << 22;
 
   /// Tuning policy
