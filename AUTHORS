@@ -44,23 +44,35 @@ Pertti Lounesto, Ian R. Porteous:
 
 Algorithms
 ----------
-Milton Abramowicz and Irene A. Stegun, Gene H. Golub, Charles F. van Loan, C.F. Gerald,  P.O. Wheatley:
+Milton Abramowicz and Irene A. Stegun, Gene H. Golub, Charles F. van Loan,
+C.F. Gerald,  P.O. Wheatley:
   Transcendental functions.
 Joerg Arndt:
   Bit functions on index sets.
 Sheung Hun Cheng, Nicholas J. Higham, Charles S. Kenney, Alan J. Laub :
-  Product form of Denman-Beavers square root iteration, incomplete square root cascade logarithm.
-Leo Dorst: Left contraction.
-P. Fleckenstein: framed_multi<> geometric product
-Gene H. Golub, Charles F. van Loan, Nicholas J. Higham: Matrix division, iterative refinement.
-Gene H. Golub, Charles F. van Loan: Matrix exponential.
-Gene H. Golub, Charles F. van Loan, C.F. Gerald,  P.O. Wheatley: Pade approximation.
-Pertti Lounesto, Ian R. Porteous: Matrix basis.
-A. Lumsdaine, J. Siek, MTL project: Matrix algorithms and linear algebra.
-Arvind Raja: framed_multi<> sum, difference, inner product, outer product,
+  Product form of Denman-Beavers square root iteration, incomplete square root
+ cascade logarithm.
+Leo Dorst:
+  Left contraction.
+P. Fleckenstein:
+  framed_multi<> geometric product
+Gene H. Golub, Charles F. van Loan, Nicholas J. Higham:
+  Matrix division, iterative refinement.
+Gene H. Golub, Charles F. van Loan:
+  Matrix exponential.
+Gene H. Golub, Charles F. van Loan, C.F. Gerald, P.O. Wheatley:
+  Pade approximation.
+Pertti Lounesto, Ian R. Porteous:
+  Matrix basis.
+A. Lumsdaine, J. Siek, MTL project:
+  Matrix algorithms and linear algebra.
+Arvind Raja:
+  framed_multi<> sum, difference, inner product, outer product,
   geometric product, involutions and anti-involutions, norms.
-Joerg Walter, uBLAS project: LU factor and solve, matrix algorithms and linear algebra.
-Jan Cnops: Recursive expressions for matrix representations of Clifford algebras.
+Joerg Walter, uBLAS project:
+  LU factor and solve, matrix algorithms and linear algebra.
+Jan Cnops:
+  Recursive expressions for matrix representations of Clifford algebras.
 Michael Clausen, Ulrich Baum, David K. Maslen, Daniel N. Rockmore:
   Generalized FFTs for finite groups.
 
@@ -72,23 +84,36 @@ QD Interface
 ------------
 David H. Bailey and QD team: Changes to constructors in QD 2.3.10.
 
-PyCliCal Python Extension module
---------------------------------
-Paul Zimmermann: Hosting Sage Days 10 in Nancy, 2008
-William Stein: Sage Days 10 in Nancy, 2008
-Attendees of Sage Days 10 in Nancy, 2008:
-  Advice on use of Cython with C++.
-Robert Bradshaw, Mark Florisson, cython-users
-  More advice on use of Cython with C++.
-
 Configuration
 -------------
 Stephan Kulow, Walter Tasin, KDevelop team:
   Configuration code used in config.in.in
 
-Testing
--------
-Joerg Walter, John Fletcher, Henk Jansen, Johannes Brunen.
+PyClical Python extension module
+--------------------------------
+Paul Zimmermann:
+  Hosting Sage Days 10 in Nancy, 2008
+William Stein:
+  Sage Days 10 in Nancy, 2008
+Attendees of Sage Days 10 in Nancy, 2008:
+  Advice on use of Cython with C++.
+Robert Bradshaw, Mark Florisson, cython-users
+  More advice on use of Cython with C++.
+
+PyClical Tutorials
+------------------
+Perttu Puska:
+  Permission to re-implement the CLICAL tutorials in PyClical.
+
+Testing and patches
+-------------------
+Alan Bromborsky, Johannes Brunen, John Fletcher, Henk Jansen, Joerg Walter,
+Patrick Welche.
+
+openSUSE Build Service
+----------------------
+https://build.opensuse.org/package/show/science/glucat
+Atri Bhattacharya, Adrian Schröter
 
 Workarounds
 -----------
@@ -97,13 +122,17 @@ Carlos O'Ryan: workaround used in generator.h for:
 
 Advice
 ------
-A. Alexandrescu, N. Josuttis, A. Koenig, Scott Meyers, B. Moo, Bjarne
-Stroustrup, T. Veldhuizen:
+A. Alexandrescu, N. Josuttis, A. Koenig, Scott Meyers, B. Moo,
+Bjarne Stroustrup, T. Veldhuizen:
   C++ usage.
-Joerg Arndt: Bit wizardry.
-Paul Ivanov: IPython notebooks.
-Duraid Madina, Russell Standish: C++, debugging.
-Christian Perwass: Operators, user interface.
+Joerg Arndt:
+  Bit wizardry.
+Paul Ivanov:
+  IPython notebooks.
+Duraid Madina, Russell Standish:
+  C++, debugging.
+Christian Perwass:
+  Operators, user interface.
 
 Related Projects
 ----------------
