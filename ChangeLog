@@ -1,3 +1,11 @@
+2014-02-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* AUTHORS: Add authors for GluCat 0.7.2; tidy up.
+
+2014-02-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* ChangeLog: Update to GluCat 0.7.2.
+
 2014-02-25  Paul Leopardi <paul.leopardi@anu.edu.au>
 
 	* test_runtime/gfft_test-11.out, test_runtime/products-8.out,
@@ -339,7 +347,7 @@
 
 2012-10-10  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-	* pyclical/demos/pyclical_demo.py, pyclical/demos/sqrt_log_demo.py:
+	* pyclical/demos/pyclical_demo.py, pyclical/demos/sqrt_log_demo.py: 
 	Move to pyclical/demos/.  Define demo() function and use it within "try ... except" so that
 	CRTL-c can interrupt the demo.
 
@@ -1419,7 +1427,7 @@
 
 2009-12-20  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-	* Doxyfile, INSTALL, configure.in, configure.in.in, glucat.lsm:
+	* Doxyfile, INSTALL, configure.in, configure.in.in, glucat.lsm: 
 	Update to Version 0.4.3.
 
 2009-12-14  Paul C. Leopardi <leopardi@users.sourceforge.net>
@@ -1900,7 +1908,7 @@
 
 2007-11-03  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-	* products/products.h, squaring/squaring.cpp, squaring/squaring.h:
+	* products/products.h, squaring/squaring.cpp, squaring/squaring.h: 
 	Use GLUCAT_TEST_REPEAT to control whether to repeat the timing
 	tests.
 
@@ -3158,7 +3166,7 @@
 	test12/Makefile.am, test12/Makefile.in, test13/Makefile.am,
 	test13/Makefile.in, test14/Makefile.am, test14/Makefile.in,
 	test15/Makefile.am, test15/Makefile.in, test16/Makefile.am,
-	test16/Makefile.in, transforms/Makefile.am, transforms/Makefile.in:
+	test16/Makefile.in, transforms/Makefile.am, transforms/Makefile.in: 
 	Define INCLUDES as $(all_includes) This causes $(all_includes) to be
 	passed correctly to the compiler command line.
 
@@ -3372,12 +3380,12 @@
 
 2003-06-28  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-	* configure.in.in, glucat.doxygen, glucat.kdevprj, glucat.lsm:
+	* configure.in.in, glucat.doxygen, glucat.kdevprj, glucat.lsm: 
 	Update to version 0.1.4
 
 2003-06-28  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-	* glucat/global.h, glucat/index_set.h, glucat/index_set_imp.h:
+	* glucat/global.h, glucat/index_set.h, glucat/index_set_imp.h: 
 	Change mapping of index_set_t to bitset_t to make index 0 of
 	index_set_t a "virtual" bit rather than a real dead bit of bitset_t.
 	This allows DEFAULT_LO to be reduced by 1, and DEFAULT_HI to be
@@ -3800,7 +3808,7 @@
 
 2003-02-25  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-	* test/.cvsignore, test/Makefile.am, test/driver.cpp, test/driver.h:
+	* test/.cvsignore, test/Makefile.am, test/driver.cpp, test/driver.h: 
 	New directory ./transforms for generalized FFT test program.
 
 2003-01-12  Paul C. Leopardi <leopardi@users.sourceforge.net>
@@ -3879,7 +3887,7 @@
 
 2003-01-07  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-	* configure.in, configure.in.in, glucat.doxygen, glucat.kdevprj:
+	* configure.in, configure.in.in, glucat.doxygen, glucat.kdevprj: 
 	Update to GluCat version 0.1.1
 
 2002-12-31  Paul C. Leopardi <leopardi@users.sourceforge.net>
@@ -3985,7 +3993,7 @@
 
 2002-12-30  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-	* glucat/framed_multi_imp.h, glucat/matrix.h, glucat/matrix_imp.h:
+	* glucat/framed_multi_imp.h, glucat/matrix.h, glucat/matrix_imp.h: 
 	Clean up interface to inner().
 
 2002-12-29  Paul C. Leopardi <leopardi@users.sourceforge.net>
@@ -4104,7 +4112,7 @@
 
 2002-12-28  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-	* glucat/clifford_algebra.h, glucat/errors.h, glucat/errors_imp.h:
+	* glucat/clifford_algebra.h, glucat/errors.h, glucat/errors_imp.h: 
 	Prefer std::string to char*
 
 2002-12-28  Paul C. Leopardi <leopardi@users.sourceforge.net>
@@ -4197,7 +4205,7 @@
 	admin/config.pl, admin/config.sub, admin/configure.in.min,
 	admin/cvs-clean.pl, admin/cvs.sh, admin/debianrules, admin/depcomp,
 	admin/detect-autoconf.sh, admin/install-sh, admin/libtool.m4.in,
-	admin/ltmain.sh, admin/missing, admin/mkinstalldirs, admin/ylwrap:
+	admin/ltmain.sh, admin/missing, admin/mkinstalldirs, admin/ylwrap: 
 	Add files apparently needed by autoconf, automake or configure
 
 2002-08-12  Paul C. Leopardi <leopardi@users.sourceforge.net>
