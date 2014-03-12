@@ -235,14 +235,12 @@ Makefile for GluCat, and adds the directory ./pyclical to the SUBDIRS list,
 which is the list of subdirectories to be built. This is the default behaviour.
 If you do not want to build PyClical, use the option "--disable-pyclical".
 
-For PyClical to build successfully using pyclical/Makefile, you will need recent
-versions of both Python and Cython. You will need to ensure that the compiler
-can find the header file <Python.h>, by using the "--with-extra-includes" option,
-if necessary.
-
-Alternatively, if your computer has Python installed, but not Cython, you can
-build PyClical from the provided PyClical.cpp file. See details in "To Build"
-below.
+For PyClical to build successfully using pyclical/Makefile, you will need a
+recent version of Python and (optionally) a recent version of Cython. You will
+also need to ensure that the compiler can find the header file <Python.h>, by
+using the "--with-extra-includes" option, if necessary. If your computer has
+Python installed, but not Cython, you can build PyClical from the provided
+PyClical.cpp file. See details in "To Build" below.
 
 
 Optional Packages
@@ -567,10 +565,10 @@ Building PyClical
 
 If you have run "./configure", then when you run "make" in the top level
 directory, make will build all of the tests, and then build PyClical.
-Make builds PyClical by running the command
+If Cython is installed then make builds PyClical by running the command
 
- ext_name="$(ext_name)" source_pyx="$(ext_name).pyx" CXXFLAGS="$(CXXFLAGS)" \
- INCLUDES="$(INCLUDES)" LDFLAGS="$(LDFLAGS)" \
+ ext_name="$(ext_name)" source_pyx="$(ext_name).pyx" \
+ CXXFLAGS="$(EXTCXXFLAGS)" INCLUDES="$(INCLUDES)" LDFLAGS="$(LDFLAGS)" \
  python setup.py build_ext --inplace
 
 with INCLUDES=$(all_includes), LDFLAGS=$(all_libraries) and the values of
@@ -580,15 +578,17 @@ yourself, but you must set the environment variables ext_name, source_pyx,
 CXXFLAGS, INCLUDES and LDFLAGS to appropriate values. See "To Configure" above
 to determine these values.
 
+Alternatively, if you have Python installed but do not have Cython, then
+./configure will recognize this, and make will build PyClical via the command
 
-Alternatively, if you have Python installed but do not have Cython, you can
-build PyClical from the provided PyClical.cpp by running the command
-
- ext_name="PyClical" source_pyx="PyClical.pyx" \
+ ext_name="$(ext_name)" source_cpp="$(ext_name).cpp" \
+ CXXFLAGS="$(EXTCXXFLAGS)" INCLUDES="$(INCLUDES)" LDFLAGS="$(LDFLAGS)" \
  python setup_nocython.py build_ext --inplace
 
-You must also set the environment variables CXXFLAGS, INCLUDES and LDFLAGS to
-appropriate values.
+with INCLUDES=$(all_includes), LDFLAGS=$(all_libraries) and the values of
+CXXFLAGS,  all_includes, all_libraries and ext_name set by ./configure.
+Again, you can run pyclical/setup_nocython.py yourself, but you must set all
+of the relevant environment variables to appropriate values.
 
 
 Building Pyclical notebooks
@@ -749,7 +749,35 @@ to use sudo, login as root, or su to root before you run make install.
     Python 2.7.5+
     Cython 0.19
 
- 2) 2 core AMD E-350 Processor
+ 2) AMD Athlon(tm) 64 Processor 3200+ with
+
+    ./configure --with-qd --with-eig=bindings \
+    --with-extra-libs=$HOME/usr/local/lib \
+    --with-extra-includes=$PATHTO/numeric_bindings:$HOME/usr/local/include
+
+    Linux 3.8.0-31-generic #46-Ubuntu SMP x86_64
+    gcc version 4.8.1 (Ubuntu/Linaro 4.8.1-10ubuntu9)
+    Boost 1.49.0
+    Boost Numeric Bindings
+    QD 2.3.13
+    Python 2.7.5+
+    Cython 0.19
+
+ 3) AMD Athlon(tm) 64 Processor 3200+ with
+
+    ./configure --with-qd --with-eig=bindings \
+    --with-extra-libs=$HOME/usr/local/lib \
+    --with-extra-includes=$PATHTO/numeric_bindings:$HOME/usr/local/include
+
+    Linux 3.8.0-31-generic #46-Ubuntu SMP x86_64
+    Ubuntu clang version 3.4-1ubuntu1 (trunk) (based on LLVM 3.4)
+    Boost 1.49.0
+    Boost Numeric Bindings
+    QD 2.3.13
+    Python 2.7.5+
+    Cython 0.19
+
+ 4) 2 core AMD E-350 Processor
 
     ./configure --with-qd --with-eig=bindingsv1 \
     --with-extra-libs=$HOME/usr/local/lib \
@@ -757,13 +785,13 @@ to use sudo, login as root, or su to root before you run make install.
 
     Linux 3.8.0-32-generic #47-Ubuntu SMP x86_64
     gcc version 4.7.3 (Ubuntu/Linaro 4.7.3-1ubuntu1)
-    Boost 1.9.0
+    Boost 1.49.0
     Boost Numeric Bindings V1
     QD 2.3.13
     Python 2.7.4
     Cython 0.17.4
 
- 3) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
+ 5) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
 
     ./configure --with-qd --with-eig=bindingsv1 \
     --with-extra-includes=$PATHTO/numeric_bindings-v1
@@ -776,7 +804,7 @@ to use sudo, login as root, or su to root before you run make install.
     Python 2.7.4
     Cython 0.19.1
 
- 4) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
+ 6) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
 
     ./configure --with-qd --with-eig=bindingsv1 \
     --with-extra-includes=$PATHTO/numeric_bindings-v1
@@ -789,7 +817,7 @@ to use sudo, login as root, or su to root before you run make install.
     Python 2.7.4
     Cython 0.19.1
 
- 5) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
+ 7) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
 
     ./configure --with-map=map --with-qd --with-eig=bindingsv1 \
     --with-extra-includes=$PATHTO/numeric_bindings-v1
@@ -802,7 +830,7 @@ to use sudo, login as root, or su to root before you run make install.
     Python 2.7.4
     Cython 0.19.1
 
- 6) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
+ 8) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
 
     ./configure --with-map=stdunordered --with-random=std \
     --with-qd --with-eig=bindingsv1 \
@@ -816,20 +844,33 @@ to use sudo, login as root, or su to root before you run make install.
     Python 2.7.4
     Cython 0.19.1
 
- 7) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
+ 9) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
 
     ./configure --with-qd --with-eig=bindings \
     --with-extra-includes=$PATHTO/numeric_bindings
 
     Linux 3.8.0-35-generic #50-Ubuntu SMP x86_64
-    gcc version 4.8.1 (Ubuntu 4.8.1-2ubuntu1~13.04)
+    gcc version 4.7.3 (Ubuntu/Linaro 4.7.3-2ubuntu4)
     Boost 1.53.0
-    Boost Numeric Bindings V1
+    Boost Numeric Bindings
     QD 2.3.13
     Python 2.7.4
     Cython 0.19.1
 
- 8) 4 core AMD Opteron(tm) Processor 8360 SE  @ 1.25GHz with
+10) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
+
+    ./configure --with-qd --with-eig=bindings \
+    --with-extra-includes=$PATHTO/numeric_bindings
+
+    Linux 3.8.0-35-generic #50-Ubuntu SMP x86_64
+    Ubuntu clang version 3.2-1~exp9ubuntu1 (tags/RELEASE_32/final) (based on LLVM 3.2)
+    Boost 1.53.0
+    Boost Numeric Bindings
+    QD 2.3.13
+    Python 2.7.4
+    Cython 0.19.1
+
+11) 4 core AMD Opteron(tm) Processor 8360 SE  @ 1.25GHz with
 
     ./configure --with-eig=bindingsv1 \
     --with-extra-includes=$PATHTO/boost-numeric-bindings-v1
@@ -841,25 +882,14 @@ to use sudo, login as root, or su to root before you run make install.
     Python 2.7.5
     Cython 0.18
 
- 9) 8 core Intel(R) Xeon(R) CPU X7550  @ 2.00GHz with
-
-   ./configure --exec-prefix=/usr --with-qd --with-eig=bindingsv1 \
-   --with-extra-libs=$HOME/usr/local/lib \
-   --with-extra-includes=$HOME/usr/local/include:$PATHTO/boost-numeric-bindings-v1
-
-    Linux 3.1.1-gentoo #1 SMP x86_64
-    gcc version 4.5.2 (Gentoo 4.5.2 p1.1, pie-0.4.5)
-    Boost 1.46.1
-    Boost Numeric Bindings V1
-    QD 2.3.13
-    Python 2.7.1
-    Cython 0.17.1
-
 
 Notes on software versions
 --------------------------
 
- 1. GluCat 0.7.2 has not been tested with gcc versions earlier than 4.5.2.
+ 1. GluCat 0.7.2 has not been tested with gcc versions earlier than 4.5.4,
+    Clang versions earlier than 3.2, Boost versions earlier than 1.49.0,
+    QD versions earlier than 2.3.13, Python versions earlier than 2.7.4, or
+    Cython versions earlier than 0.18.
 
  2. GluCat needs an include library which either defines the macro isnan or
     defines std::isnan. The C++ standard library included with gcc 4.5.2 and
@@ -879,8 +909,7 @@ Notes on software versions
     See https://github.com/cython/cython/pull/109
 
     The workaround is to edit PyClical.cpp and put a space before and after each
-    occurrence of PY_FORMAT_SIZE_T. This was fixed some time after Cython 0.16
-    and before Cython 0.19.1.
+    occurrence of PY_FORMAT_SIZE_T. This was fixed some time after Cython 0.16.
 
  5. GluCat 0.7.2 will not work with QD versions earlier than 2.3.10,
     because older versions do not zero-initialize dd_real and qd_real
@@ -890,6 +919,9 @@ Notes on software versions
     is unlikely to work with Alglib 3.0.0 or later versions, because the Alglib
     source files were reorganized for version 3.0.0.
 
- 7. Using --with-eig=bindingsv1 and compiling GluCat 0.7.2 using g++ 4.8 or
-    later will result in warning messages from boost/numeric/bidings complaining
-    about unused typedefs. It is safe to ignore these messages.
+ 7. With clang++ 3.2, building PyClical results in the warning
+
+clang: warning: argument unused during compilation: '--param ssp-buffer-size=4'
+
+    This is harmless, and was fixed after Clang version 3.2.
+    See http://llvm.org/bugs/show_bug.cgi?id=15327

@@ -196,9 +196,10 @@ If you are running Linux or a Unix equivalent, the following should also work:
 % chmod +x pyclical_tutorials.py
 % ./pyclical_tutorials.py
 
+
 For more usage examples, see the example Python files pyclical_demo.py,
-plotting_demo.py, and sqrt_log_demo.py, and the example output files
-pyclical_demo.out and sqrt_log_demo.out.
+plotting_demo.py, plotting_demo_mayavi.py, and sqrt_log_demo.py, and the example
+output files pyclical_demo.out and sqrt_log_demo.out.
 
 To run pyclical_demo.py and sqrt_log_demos.py, use the following commands:
 
@@ -224,6 +225,22 @@ In [2]: help(demo)
 In [3]: demo()
 
 This demo uses Matplotlib to produce a number of plots.
+
+To run plotting_demo_mayavi.py, first ensure that you have Mayavi2 and wxPython
+installed and working.
+(See http://code.enthought.com/projects/mayavi/ and http://www.wxpython.org/ )
+Then run "ipython --gui=wx" and enter the following commands at the ipython prompt:
+
+In [1]: %run plotting_demo_mayavi
+
+In [2]: help(demo)
+
+In [3]: demo()
+
+This demo uses Matplotlib to produce a number of plots. With Mayavi and wxPython,
+these plots are displayed in interactive windows, you can rotate, zoom and pan
+them. See (e.g.) http://mayavi.sourceforge.net/docs/guide/ch03s04.html
+
 
 The tutorials and demos are also accompanied by a corresponding set of IPython
 notebooks. To build the notebooks, see INSTALL. To run the notebooks, assuming

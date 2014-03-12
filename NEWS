@@ -1,7 +1,7 @@
 NEWS for GluCat 0.7.2 with PyClical
 ===================================
 
-2014-02-25: 0.7.2:
+2014-03-12: 0.7.2:
 GluCat 0.7.2 with PyClical now generates IPython notebooks.
 
 The Pyclical tutorials are now accompanied by corresponding IPython notebooks.
@@ -17,6 +17,8 @@ GluCat compiles cleanly with g++ 0.8. It does not trigger the "unused local
 typedefs" warning caused by the addition of -Wunused-local-typedefs to -Wall
 in g++ 4.8. See http://gcc.gnu.org/ml/gcc-patches/2011-07/msg02460.html
 http://gcc.gnu.org/ml/gcc-patches/2012-05/msg01388.html
+
+GluCat also compiles cleanly and builds correctly with clang++ 3.4.
 
 2012-11-11: 0.7.1:
 GluCat 0.7.1 fixes a bug which prevented compilation in the case where the class
