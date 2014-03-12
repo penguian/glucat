@@ -3,7 +3,7 @@
 # PyClical: Python interface to GluCat:
 #           Generic library of universal Clifford algebra templates
 #
-# setup_nocython.py: Use Distutils to build PyClical from C++ source..
+# setup_ext.py: Use Distutils to set up an extension to use to build PyClical.
 #
 #    copyright            : (C) 2008-2012 by Paul C. Leopardi
 #
@@ -20,13 +20,26 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
-from distutils.core import setup
-from setup_ext import setup_ext
+from distutils.extension import Extension
 import os
-ext_name = os.environ['ext_name']
-source   = os.environ['source_cpp']
-ext = setup_ext(ext_name, source)
-setup(
-    name = ext_name,
-    ext_modules = [ext]
+# From stackoveflow user subdir 2012-03-16
+from distutils.sysconfig import get_config_vars
+(opt,) = get_config_vars('OPT')
+os.environ['OPT'] = " ".join(
+    flag for flag in opt.split() if flag != '-Wstrict-prototypes'
 )
+#
+cxxflags = os.environ['CXXFLAGS']
+includes = os.environ['INCLUDES']
+ldflags  = os.environ['LDFLAGS']
+#
+def setup_ext(ext_name, source):
+    ext = Extension(
+        ext_name,         # name of extension
+        sources=[source], # filename of our Cython source
+        include_dirs=[".",".."],
+        extra_compile_args=includes.split() + cxxflags.split(),
+        extra_link_args=ldflags.split(),
+    )
+    return ext
+

@@ -21,23 +21,14 @@
 #    along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 from distutils.core import setup
-from distutils.extension import Extension
+from setup_ext import setup_ext
 from Cython.Build import cythonize
 import Cython.Compiler.Options
 Cython.Compiler.Options.annotate=True
 import os
 ext_name = os.environ['ext_name']
 source   = os.environ['source_pyx']
-cxxflags = os.environ['CXXFLAGS']
-includes = os.environ['INCLUDES']
-ldflags  = os.environ['LDFLAGS']
-ext = Extension(
-    ext_name,         # name of extension
-    sources=[source], # filename of our Cython source
-    include_dirs=[".",".."],
-    extra_compile_args=includes.split()+cxxflags.split(),
-    extra_link_args=ldflags.split(),
-)
+ext = setup_ext(ext_name, source)
 setup(
     name = ext_name,
     ext_modules = cythonize([ext])
