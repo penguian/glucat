@@ -1221,7 +1221,7 @@ namespace glucat
     const int nbr_even_powers = array_size/2 - 1;
 
     // Create an array of even powers
-    multivector_t XX[nbr_even_powers];
+    std::vector<multivector_t> XX(nbr_even_powers);
     XX[0] = X * X;
     XX[1] = XX[0] * XX[0];
     for (int

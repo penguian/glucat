@@ -45,7 +45,8 @@ namespace glucat
   // Reference: [AA], p. 25
   template<bool> struct CTAssertion;
   template<> struct CTAssertion<true> { };
-  #define _GLUCAT_CTAssert(expr, msg) namespace { void ERROR_##msg(glucat::CTAssertion<(expr)>) {} }
+  #define _GLUCAT_CTAssert(expr, msg) \
+      namespace { struct msg { glucat::CTAssertion<(expr)> ERROR_##msg; }; }
 
   /// Type comparison
   // Reference: [AA], pp. 34--37

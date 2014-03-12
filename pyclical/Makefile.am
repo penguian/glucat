@@ -1,8 +1,21 @@
-EXTRA_DIST = pyclical_demo.py pyclical_demo.out Makefile.am
+EXTRA_DIST = demos/pyclical_demo.py demos/pyclical_demo.out Makefile.am
 
 AUTOMAKE_OPTIONS = foreign
 
 ext_name = PyClical
+
+# Setup and clean options depend on availability of Cython
+if use_cython
+  SETUP_SOURCE_LIST = $(ext_name).pyx $(ext_name).pxd glucat.pxd $(ext_name).h
+  SETUP_SOURCE_PARAM = source_pyx="$(ext_name).pyx"
+  SETUP = setup
+  CLEAN_CYTHON = $(ext_name).cpp $(ext_name).html
+else
+  SETUP_SOURCE_LIST = $(ext_name).cpp $(ext_name).h
+  SETUP_SOURCE_PARAM = source_cpp="$(ext_name).cpp"
+  SETUP = setup_nocython
+  CLEAN_CYTHON =
+endif
 
 # C++ compiler flags
 glucat_extra_cxxflags_pyclical = @glucat_extra_cxxflags_pyclical@
@@ -14,14 +27,11 @@ LDFLAGS = $(all_libraries)
 
 pyexec_DATA = $(ext_name).so
 
-all: $(pyexec_DATA) $(ext_name).html
+all: $(pyexec_DATA)
 
-$(ext_name).so: $(ext_name).cpp $(ext_name).h ../glucat/glucat.h ../glucat/glucat_imp.h
-	ext_name="$(ext_name)" source_cpp="$(ext_name).cpp" CXXFLAGS="$(EXTCXXFLAGS)" INCLUDES="$(INCLUDES)" LDFLAGS="$(LDFLAGS)" $(PYTHON) setup_nocython.py build_ext --inplace
-
-$(ext_name).cpp $(ext_name).html: setup.py $(ext_name).pyx $(ext_name).pxd glucat.pxd $(ext_name).h ../glucat/glucat.h ../glucat/glucat_imp.h
-	ext_name="$(ext_name)" source_pyx="$(ext_name).pyx" CXXFLAGS="$(EXTCXXFLAGS)" INCLUDES="$(INCLUDES)" LDFLAGS="$(LDFLAGS)" $(PYTHON) setup.py build_ext --inplace
+$(ext_name).so: $(SETUP_SOURCE_LIST) $(SETUP).py setup_ext.py ../glucat/glucat.h ../glucat/glucat_imp.h
+	ext_name="$(ext_name)" $(SETUP_SOURCE_PARAM) CXXFLAGS="$(EXTCXXFLAGS)" INCLUDES="$(INCLUDES)" LDFLAGS="$(LDFLAGS)" $(PYTHON) $(SETUP).py build_ext --inplace
 
 clean:
-	rm -f $(ext_name).so $(ext_name).cpp $(ext_name).html
+	rm -f $(ext_name).so $(CLEAN_CYTHON)
 	rm -rf build
