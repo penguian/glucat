@@ -143,3 +143,8 @@ typedef index_set<lo_ndx,hi_ndx> IndexSet;
 
 typedef double scalar_t;
 typedef matrix_multi<scalar_t> Clifford;
+
+
+// Do not warn about unused values. This affects clang++ as well as g++.
+
+#pragma GCC diagnostic ignored "-Wunused-value"
