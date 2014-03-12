@@ -29,12 +29,12 @@ import math
 import numbers
 import collections
 
-__version__ = "0.7.0"
+__version__ = "0.7.2"
 
 from PyClical cimport *
 
 # Forward reference
-cdef class index_set 
+cdef class index_set
 
 cdef inline IndexSet toIndexSet(obj):
     """
@@ -234,7 +234,7 @@ cdef class index_set:
         for idx in range(self.min(), self.max()+1):
             if idx in self:
                 yield idx
-                
+
     def __invert__(self):
         """
         Set complement: not.
@@ -404,7 +404,7 @@ cdef class index_set:
 def index_set_hidden_doctests():
     """
     Tests for functions that Doctest cannot see.
-    
+
     For index_set.__cinit__: Construct index_set.
 
     >>> print index_set(1)
@@ -527,7 +527,7 @@ cdef inline vector[scalar_t] list_to_vector(lst):
      return v
 
 # Forward reference.
-cdef class clifford 
+cdef class clifford
 
 cdef inline Clifford toClifford(obj):
     return clifford(obj).instance[0]
@@ -688,7 +688,7 @@ cdef class clifford:
         if op == 2: # ==
             if (lhs is None) or (rhs is None):
                 return bool(lhs is rhs)
-            else:          
+            else:
                 return bool( toClifford(lhs) == toClifford(rhs) )
         elif op == 3: # !=
             if (lhs is None) or (rhs is None):
@@ -1323,7 +1323,7 @@ def clifford_hidden_doctests():
     True
     """
     return
-    
+
 cpdef inline inv(obj):
     """
     Geometric multiplicative inverse.
@@ -1510,7 +1510,7 @@ cpdef inline pow(obj, m):
     """
     try:
         math.pow(obj, m)
-    except:    
+    except:
         return clifford(obj).pow(m)
 
 cpdef inline outer_pow(obj, m):
@@ -1845,7 +1845,7 @@ cpdef inline agc3(obj):
     0
     """
     return clifford().wrap( glucat.agc3(toClifford(obj)) )
-    
+
 # Some abbreviations.
 tau = atan(clifford(1.0)) * 8.0
 pi = tau / 2.0
