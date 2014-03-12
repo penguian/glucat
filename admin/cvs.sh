@@ -41,7 +41,7 @@ case $AUTOCONF_VERSION in
     exit 1
     ;;
 esac
- 
+
 AUTOHEADER_VERSION=`$AUTOHEADER --version | head -1`
 case $AUTOHEADER_VERSION in
   Autoconf*2.5* | autoheader*2.5* ) : ;;
@@ -85,12 +85,12 @@ esac
 cvs()
 {
 check_autotool_versions
- 
+
 ### Produce acinclude.m4
 if grep '\$(top_srcdir)/acinclude.m4:' $makefile_am >/dev/null; then
   echo "*** Creating acinclude.m4"
   rm -f acinclude.m4 configure.files
-  
+
   strip_makefile
   $MAKE -f $makefile_wo top_srcdir=. ./acinclude.m4
 fi
@@ -221,7 +221,11 @@ for i in $mfs; do
 	continue
     fi
   fi
-  echo "AC_CONFIG_FILES([ $i/Makefile ])" >> configure.in.new
+  if test "." = "$i"; then
+    echo "AC_CONFIG_FILES([ Makefile ])" >> configure.in.new
+  else
+    echo "AC_CONFIG_FILES([ $i/Makefile ])" >> configure.in.new
+  fi
   if test -n "$UNSERMAKE"; then
     echo "AC_CONFIG_FILES([ $i/Makefile.rules ])" >> configure.in.new
   fi
@@ -402,7 +406,7 @@ for subdir in $dirs; do
 
    $MAKE -s -f _transMakefile podir=$podir EXTRACTRC="$EXTRACTRC" PREPARETIPS="$PREPARETIPS" \
 	XGETTEXT="${XGETTEXT:-xgettext} -C -ki18n -ktr2i18n -kI18N_NOOP -ktranslate -kaliasLocale -x ${includedir:-$KDEDIR/include}/kde.pot" \
-	messages 
+	messages
    ) 2>&1 | grep -v '^make\[1\]' > $tmpname
    test -s $tmpname && { echo $subdir ; cat "$tmpname"; }
    test -f $subdir/rc.cpp && rm -f $subdir/rc.cpp
