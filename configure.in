@@ -78,7 +78,7 @@ AC_CACHE_VAL(glucat_cv_prog_cxx_$glucat_cache,
   AC_LANG_SAVE
   AC_LANG_CPLUSPLUS
   save_CXXFLAGS="$CXXFLAGS"
-  CXXFLAGS="$CXXFLAGS -$1"
+  CXXFLAGS="$CXXFLAGS -Werror -$1"
   AC_TRY_LINK([],[ return 0; ], [eval "glucat_cv_prog_cxx_$glucat_cache=yes"], [])
   CXXFLAGS="$save_CXXFLAGS"
   AC_LANG_RESTORE
@@ -301,14 +301,20 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   AC_REQUIRE([AC_PROG_CXX])
   AC_PROG_CXX
 
+  AC_MSG_CHECKING(for $CXX version)
   if test "$GXX" = "yes"; then
-    dnl The following test is borrowed from VXL Project http://vxl.sourceforge.net/
-    cxxversion=`$CXX -v < /dev/null 2>&1 | grep 'gcc version' | awk '{print [\$]3}'`
-    AC_MSG_RESULT( $CXX version $cxxversion )
+    if test "$CXX" = "clang++"; then
+      clangxxversion=`$CXX -v < /dev/null 2>&1 | head -n 1 | awk '{print [\$]4}'`
+      AC_MSG_RESULT( $clangxxversion )
+    else
+      dnl The following test is borrowed from VXL Project http://vxl.sourceforge.net/
+      cxxversion=`$CXX -v < /dev/null 2>&1 | grep 'gcc version' | awk '{print [\$]3}'`
+      AC_MSG_RESULT( $cxxversion )
+    fi
   fi
   if test "$CXX" = "icpc"; then
     icpcversion=`$CXX -v < /dev/null 2>&1 | head -n 1 | awk '{print [\$]2}'`
-    AC_MSG_RESULT( $CXX version $icpcversion )
+    AC_MSG_RESULT( $icpcversion )
   fi
   if test "$CXX" = "icpc"; then
     CXXFLAGS="$CXXFLAGS -DBOOST_UBLAS_USE_LONG_DOUBLE"
@@ -324,11 +330,12 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
        if test "$CXX" = "icpc"; then
           CXXFLAGS="-O0 $CXXFLAGS"
        else
+        GLUCAT_CHECK_COMPILER_FLAG([finline-limit=400],[CXXFLAGS="-finline-limit=400 $CXXFLAGS"])
         if test "$glucat_use_debug_code" = "full"; then
-          CXXFLAGS="-O0 -finline-limit=400 $CXXFLAGS"
+          CXXFLAGS="-O0 $CXXFLAGS"
           GLUCAT_CXX_DEBUG_FLAG="-g3"
         else
-          CXXFLAGS="-O1 -finline-limit=400 $CXXFLAGS"
+          CXXFLAGS="-O1 $CXXFLAGS"
           GLUCAT_CXX_DEBUG_FLAG="-g"
         fi
        fi
@@ -337,7 +344,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       GLUCAT_CHECK_COMPILER_FLAG(Woverloaded-virtual, [WOVERLOADED_VIRTUAL="-Woverloaded-virtual"], [WOVERLOADED_VIRTUAL=""])
       AC_SUBST(WOVERLOADED_VIRTUAL)
     else
-       if test "$CXX" = "icpc"; then
+       if test "$CXX" = "icpc" || test "$CXX" = "clang++"; then
           CXXFLAGS="$CXXFLAGS -O3"
        else
         if test "$cxxversion" \< "3.3" ; then
@@ -494,11 +501,24 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   if test "$glucat_use_pyclical" = "no"; then
     DO_NOT_COMPILE="$DO_NOT_COMPILE pyclical"
   else
+    glucat_use_cython="no"
+    AC_MSG_CHECKING(for cython version)
+    cythonversion=`cython --version < /dev/null 2>&1 | grep -i 'Cython version' | awk '{print [\$]3}'`
+    if test "$cythonversion" = ""; then
+      AC_MSG_RESULT( not found )
+    else
+      AC_MSG_RESULT( $cythonversion )
+      glucat_use_cython="yes"
+    fi
     AM_PATH_PYTHON
     if test "$GXX" = "yes"; then
       GLUCAT_CHECK_COMPILER_FLAG(fno-strict-aliasing,
       [
         glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -fno-strict-aliasing"
+      ])
+      GLUCAT_CHECK_COMPILER_FLAG(Wno-unused,
+      [
+        glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-unused"
       ])
     fi
   fi
@@ -546,7 +566,11 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
             if test "$glucat_cxx_std" = "cxx11"; then
               CXXFLAGS="-std=c++11 $CXXFLAGS"
             else
+             if test "$CXX" = "clang++"; then
+              CXXFLAGS="-std=c++98 $CXXFLAGS"
+             else
               CXXFLAGS="-ansi $CXXFLAGS"
+             fi
             fi
           ;;
         esac
@@ -570,7 +594,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   fi
 
   if test "$GXX" = "yes"; then
-    GLUCAT_CHECK_COMPILER_FLAG(fno-check-new, [CXXFLAGS="$CXXFLAGS -fno-check-new"])
+    if test "$CXX" != "clang++"; then
+      GLUCAT_CHECK_COMPILER_FLAG(fno-check-new, [CXXFLAGS="$CXXFLAGS -fno-check-new"])
+    fi
     GLUCAT_CHECK_COMPILER_FLAG(fexceptions, [USE_EXCEPTIONS="-fexceptions"], USE_EXCEPTIONS= )
     if test "$CXX" = "icpc" && test "$icpcversion" \> "8" && test "$icpcversion" \< "9"; then
       GLUCAT_CHECK_COMPILER_FLAG(fabi-version=1,[CXXFLAGS="$CXXFLAGS -fabi-version=1"])
@@ -674,7 +700,7 @@ AC_SUBST(LIBS)
 AC_SUBST(AUTODIRS)
 
 AM_CONDITIONAL([make_pyclical],[test $glucat_use_pyclical = "yes"])
-KDE_CREATE_SUBDIRSLIST
+AM_CONDITIONAL([use_cython],[test $glucat_use_cython = "yes"])
 KDE_CREATE_SUBDIRSLIST
 AC_CONFIG_FILES([ Makefile ])
 AC_CONFIG_FILES([ gfft_test/Makefile ])
