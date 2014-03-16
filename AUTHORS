@@ -1,7 +1,34 @@
-AUTHORS for GluCat 0.7.1 with PyClical
+AUTHORS for GluCat 0.7.2 with PyClical
 ======================================
 
 Paul C. Leopardi <leopardi@users.sourceforge.net>
+
+Primary references
+------------------
+
+Available by contacting the author:
+
+Paul Leopardi, "Practical computation with Clifford algebras",
+(unpublished coursework Masters major project report) UNSW 2002.
+
+Available at http://maths-people.anu.edu.au/~leopardi/ :
+
+Paul Leopardi, "Practical computation with Clifford algebras",
+(unpublished presentation) UNSW 2002.
+
+Paul Leopardi, "A generic library of universal Clifford algebra templates",
+(poster) ICCA 6, Cookville, 2002.
+
+Paul Leopardi, "A generalized FFT for Clifford algebras",
+Bulletin of the Belgian Mathematical Society - Simon Stevin,
+Volume 11, Number 5, 2005, pp. 663-688.
+
+Paul Leopardi, "Approximating functions in Clifford algebras",
+(unpublished presentation) ANZMC, Christchurch, 2008.
+
+Paul Leopardi, "Approximating the square root and logarithm functions in
+Clifford algebras: what to do in the case of negative eigenvalues?",
+(extended abstract) AGACSE 2010, Amsterdam, 2010.
 
 Project supervisor
 ------------------
@@ -198,6 +225,9 @@ References for Kronecker quotients
 C. F. van Loan and N. Pitsianis, "Approximation with Kronecker products",
 in Linear Algebra for Large Scale and Real-Time Applications, Marc S. Moonen,
 Gene H. Golub, and Bart L. R. Moor (eds.), 1993, pp. 293--314.
+
+Y. Hardy, "On Kronecker quotients", Electronic Journal of Linear Algebra,
+Vol. 27, 2014, pp. 172--189.
 
 Recommended general references
 ==============================
