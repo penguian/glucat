@@ -1,3 +1,70 @@
+2014-03-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* AUTHORS: Include a paper by Yorick Hardy, as well as work by Paul
+	Leopardi.
+
+2014-03-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/plotting_demo.py: Set correct permissions.
+
+2014-03-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/plotting_demo_mayavi.py: Enhanced plotting demo for
+	users with Mayavi and wxPython.
+
+2014-03-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/gfft_test-11.out, test_runtime/products-8.out,
+	test_runtime/squaring-11.out, test_runtime/transforms-8.out: Update
+	test results for version 0.7.2.
+
+2014-03-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL, NEWS, README: Update to describe changes to version
+	0.7.2.
+
+2014-03-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat.lsm: Update entered date for version 0.7.2.
+
+2014-03-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/PyClical.pyx: Update to version 0.7.2.
+
+2014-03-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* admin/cvs.sh: Ensure that autoconf and autoreconf run cleanly.
+
+2014-03-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/PyClical.h: Build cleanly with LLVM/Clang.
+
+2014-03-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.in.end: Delete unused file.
+
+2014-03-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/setup.py, pyclical/setup_ext.py,
+	pyclical/setup_nocython.py: Build PyClical cleanly and automatically
+	whether or not Cython is installed.
+
+2014-03-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.in, configure.in.in: Build cleanly with LLVM/Clang;
+	build PyClical cleanly and automatically whether or not Cython is
+	installed.
+
+2014-03-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/global.h, glucat/matrix_multi_imp.h, pyclical/Makefile.am: 
+	Build cleanly with LLVM/Clang; build PyClical cleanly and
+	automatically whether or not Cython is installed.
+
+2014-02-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* ChangeLog: Update to GluCat 0.7.2.
+
 2014-02-26  Paul Leopardi <paul.leopardi@anu.edu.au>
 
 	* AUTHORS: Add authors for GluCat 0.7.2; tidy up.
