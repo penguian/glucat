@@ -303,8 +303,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
 
   AC_MSG_CHECKING(for $CXX version)
   if test "$GXX" = "yes"; then
-    if test "$CXX" = "clang++"; then
-      clangxxversion=`$CXX -v < /dev/null 2>&1 | head -n 1 | awk '{print [\$]4}'`
+    if test "$basename_cxx" = "clang++"; then
+      dnl The following test is from user PHV on www.tek-tips.com
+      clangxxversion=`$CXX -v < /dev/null 2>&1 | head -n 1 | awk '{for(i=1;i<NF;++i) if ([\$]i ~ /version/) print [\$](i+1)}'`
       AC_MSG_RESULT( $clangxxversion )
     else
       dnl The following test is borrowed from VXL Project http://vxl.sourceforge.net/
@@ -312,11 +313,11 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       AC_MSG_RESULT( $cxxversion )
     fi
   fi
-  if test "$CXX" = "icpc"; then
+  if test "$basename_cxx" = "icpc"; then
     icpcversion=`$CXX -v < /dev/null 2>&1 | head -n 1 | awk '{print [\$]2}'`
     AC_MSG_RESULT( $icpcversion )
   fi
-  if test "$CXX" = "icpc"; then
+  if test "$basename_cxx" = "icpc"; then
     CXXFLAGS="$CXXFLAGS -DBOOST_UBLAS_USE_LONG_DOUBLE"
     if test "$icpcversion" \< "11" ; then
        GLUCAT_CHECK_COMPILER_FLAG(mp1,[CXXFLAGS="-mp1 $CXXFLAGS"])
@@ -324,10 +325,10 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
        GLUCAT_CHECK_COMPILER_FLAG([fp-model precise],[CXXFLAGS="-fp-model precise $CXXFLAGS"])
     fi
   fi
-  if test "$GXX" = "yes" || test "$CXX" = "icpc"; then
+  if test "$GXX" = "yes" || test "$basename_cxx" = "icpc"; then
     GLUCAT_CXX_DEBUG_FLAG=""
     if test "$glucat_use_debug_code" != "no"; then
-       if test "$CXX" = "icpc"; then
+       if test "$basename_cxx" = "icpc"; then
           CXXFLAGS="-O0 $CXXFLAGS"
        else
         GLUCAT_CHECK_COMPILER_FLAG([finline-limit=400],[CXXFLAGS="-finline-limit=400 $CXXFLAGS"])
@@ -344,7 +345,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       GLUCAT_CHECK_COMPILER_FLAG(Woverloaded-virtual, [WOVERLOADED_VIRTUAL="-Woverloaded-virtual"], [WOVERLOADED_VIRTUAL=""])
       AC_SUBST(WOVERLOADED_VIRTUAL)
     else
-       if test "$CXX" = "icpc" || test "$CXX" = "clang++"; then
+       if test "$basename_cxx" = "icpc" || test "$basename_cxx" = "clang++"; then
           CXXFLAGS="$CXXFLAGS -O3"
        else
         if test "$cxxversion" \< "3.3" ; then
@@ -566,7 +567,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
             if test "$glucat_cxx_std" = "cxx11"; then
               CXXFLAGS="-std=c++11 $CXXFLAGS"
             else
-             if test "$CXX" = "clang++"; then
+             if test "$basename_cxx" = "clang++"; then
               CXXFLAGS="-std=c++98 $CXXFLAGS"
              else
               CXXFLAGS="-ansi $CXXFLAGS"
@@ -594,11 +595,11 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   fi
 
   if test "$GXX" = "yes"; then
-    if test "$CXX" != "clang++"; then
+    if test "$basename_cxx" != "clang++"; then
       GLUCAT_CHECK_COMPILER_FLAG(fno-check-new, [CXXFLAGS="$CXXFLAGS -fno-check-new"])
     fi
     GLUCAT_CHECK_COMPILER_FLAG(fexceptions, [USE_EXCEPTIONS="-fexceptions"], USE_EXCEPTIONS= )
-    if test "$CXX" = "icpc" && test "$icpcversion" \> "8" && test "$icpcversion" \< "9"; then
+    if test "$basename_cxx" = "icpc" && test "$icpcversion" \> "8" && test "$icpcversion" \< "9"; then
       GLUCAT_CHECK_COMPILER_FLAG(fabi-version=1,[CXXFLAGS="$CXXFLAGS -fabi-version=1"])
     else
      if test "$cxxversion" \> "4" && test "$cxxversion" \< "4.0.2" ; then
@@ -681,6 +682,8 @@ all_includes="-I. -I.. $all_includes $USER_INCLUDES"
 
 dnl checks for programs.
 dnl first check for c/c++ compilers
+basename_cc="$(basename $CC)"
+basename_cxx="$(basename $CXX)"
 GLUCAT_CHECK_COMPILERS
 
 CFLAGS="$NOOPT_CFLAGS"
