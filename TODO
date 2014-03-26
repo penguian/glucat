@@ -11,8 +11,8 @@ o Simplify and improve the use of Autotools in configuring, building and
 o Improve the packaging of the example and test programs.
 
 Portability:
-o Build and test GluCat and PyClical using Intel C++, Clang (requested by
-  John Fletcher), and Cygwin on Windows (requested by Alan Bromborsky).
+o Build and test GluCat and PyClical using Intel C++, and Cygwin on Windows
+  (requested by Alan Bromborsky).
 o Port to other architectures and compilers which support template template
   parameters.
 
@@ -33,6 +33,8 @@ o Devise better algorithms and better implementations of existing algorithms for
 o Investigate the use of matrix decompositions in the evaluation of
   transcendental functions. See N. J. Higham, Functions of Matrices: Theory and
   Computation, 2008.
+o Try automatically increasing the precision of intermediate floating point
+  operations for transcendental functions.
 
 Experimental:
 o Investigate the use of expression templates in GluCat.
