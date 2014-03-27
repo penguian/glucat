@@ -301,6 +301,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   AC_REQUIRE([AC_PROG_CXX])
   AC_PROG_CXX
 
+  basename_cc="$(basename $CC)"
+  basename_cxx="$(basename $CXX)"
+
   AC_MSG_CHECKING(for $CXX version)
   if test "$GXX" = "yes"; then
     if test "$basename_cxx" = "clang++"; then
@@ -682,8 +685,6 @@ all_includes="-I. -I.. $all_includes $USER_INCLUDES"
 
 dnl checks for programs.
 dnl first check for c/c++ compilers
-basename_cc="$(basename $CC)"
-basename_cxx="$(basename $CXX)"
 GLUCAT_CHECK_COMPILERS
 
 CFLAGS="$NOOPT_CFLAGS"
