@@ -21,7 +21,7 @@ dnl    Boston, MA 02111-1307, USA.
 
 dnl IMPORTANT NOTE:
 dnl Please do not modify this file unless you expect your modifications to be
-dnl carried into every other module in the repository. 
+dnl carried into every other module in the repository.
 dnl
 dnl Single-module modifications are best placed in configure.in for kdelibs
 dnl and kdebase or configure.in.in if present.
@@ -32,7 +32,8 @@ dnl thanks to Raja R Harinath.
 dnl ------------------------------------------------------------------------
 dnl
 
-# 1
+# serial 1
+
 ifdef([_AC_PATH_X_XMKMF],[],
    [AC_DEFUN([_AC_PATH_X_XMKMF],[AC_PATH_X_XMKMF])])
 ifdef([AC_OUTPUT_SUBDIRS],[],
@@ -498,7 +499,7 @@ AC_DEFUN([KDE_CHECK_PATHS_FOR_COMPLETENESS],
    test -z "$kde_wallpaperdir" || test -z "$kde_templatesdir" ||
    test -z "$kde_bindir" || test -z "$kde_servicesdir" ||
    test -z "$kde_servicetypesdir" || test -z "$kde_moduledir" ||
-   test -z "$kde_styledir" || test -z "kde_widgetdir" 
+   test -z "$kde_styledir" || test -z "kde_widgetdir"
    test "x$kde_have_all_paths" != "xyes"; then
      kde_have_all_paths=no
   fi
@@ -537,8 +538,8 @@ AC_DEFUN([KDE_SUBST_PROGRAMS],
         KDE_FIND_PATH(artsc-config, ARTSCCONFIG, [$kde_default_bindirs], [KDE_MISSING_ARTS_ERROR(artsc-config)])
         KDE_FIND_PATH(kde-config, KDECONFIG, [$kde_default_bindirs])
         KDE_FIND_PATH(meinproc, MEINPROC, [$kde_default_bindirs])
-      
-        if test -n "$MEINPROC" && test ! "$MEINPROC" = "compiled"; then  
+
+        if test -n "$MEINPROC" && test ! "$MEINPROC" = "compiled"; then
  	    kde_sharedirs="/usr/share/kde /usr/local/share /usr/share /opt/kde3/share /opt/kde/share $prefix/share"
             test -n "$KDEDIR" && kde_sharedirs="$KDEDIR/share $kde_sharedirs"
             AC_FIND_FILE(apps/ksgmltools2/customization/kde-chunk.xsl, $kde_sharedirs, KDE_XSL_STYLESHEET)
@@ -658,7 +659,7 @@ AC_DEFUN([KDE_MISC_TESTS],
 [
    AC_LANG_C
    dnl Checks for libraries.
-   AC_CHECK_LIB(util, main, [LIBUTIL="-lutil"]) dnl for *BSD 
+   AC_CHECK_LIB(util, main, [LIBUTIL="-lutil"]) dnl for *BSD
    AC_SUBST(LIBUTIL)
    AC_CHECK_LIB(compat, main, [LIBCOMPAT="-lcompat"]) dnl for *BSD
    AC_SUBST(LIBCOMPAT)
@@ -699,11 +700,11 @@ support])
    # BSDI BSD/OS 2.1 needs -lipc for XOpenDisplay.
    AC_CHECK_FUNC(shmat, ,
      AC_CHECK_LIB(ipc, shmat, X_EXTRA_LIBS="$X_EXTRA_LIBS -lipc"))
-   
+
    # darwin needs this to initialize the environment
    AC_CHECK_HEADERS(crt_externs.h)
    AC_CHECK_FUNC(_NSGetEnviron, [AC_DEFINE(HAVE_NSGETENVIRON, 1, [Define if your system needs _NSGetEnviron to set up the environment])])
- 
+
    # more headers that need to be explicitly included on darwin
    AC_CHECK_HEADERS(sys/types.h stdint.h)
 
@@ -724,8 +725,8 @@ support])
 [
 #include <resolv.h>
 ],
-[ 
-res_init(); 
+[
+res_init();
 ],
         LIBRESOLV="-lresolv"
         X_EXTRA_LIBS="$X_EXTRA_LIBS $LIBRESOLV"
@@ -1084,7 +1085,7 @@ if test -z "$1"; then
   kde_qtsubver=1
 else
   kde_qtsubver=`echo "$1" | sed -e 's#[0-9][0-9]*\.\([0-9][0-9]*\).*#\1#'`
-  # following is the check if subversion isnt found in passed argument
+  # following is the check if subversion isn´t found in passed argument
   if test "$kde_qtsubver" = "$1"; then
     kde_qtsubver=1
   fi
@@ -1652,9 +1653,9 @@ else
  KDE_INCLUDES="-I$kde_includes"
  all_includes="$KDE_INCLUDES $all_includes"
 fi
- 
+
 KDE_LDFLAGS="-L$kde_libraries"
-if test ! "$kde_libraries" = "$x_libraries" && test ! "$kde_libraries" = "$qt_libraries" ; then 
+if test ! "$kde_libraries" = "$x_libraries" && test ! "$kde_libraries" = "$qt_libraries" ; then
  all_libraries="$all_libraries $KDE_LDFLAGS"
 fi
 
@@ -1908,7 +1909,7 @@ AC_DEFUN([AC_PATH_KDE],
 dnl obsolete
 AC_DEFUN([AC_CHECK_SETENV],
 [
-   AC_OBSOLETE([$0], [; instead use AC_CHECK_FUNCS([setenv unsetenv])])dnl 
+   AC_OBSOLETE([$0], [; instead use AC_CHECK_FUNCS([setenv unsetenv])])dnl
    AC_CHECK_FUNCS([setenv unsetenv])
 ])
 
@@ -2498,7 +2499,7 @@ AC_DEFUN([AC_CHECK_COMPILERS],
         kde_use_debug_define=yes
         ;;
     esac
-  ], 
+  ],
     [kde_use_debug_code="no"
       kde_use_debug_define=no
   ])
@@ -2537,7 +2538,7 @@ AC_DEFUN([AC_CHECK_COMPILERS],
   dnl this prevents stupid AC_PROG_CC to add "-g" to the default CFLAGS
   CFLAGS=" $CFLAGS"
 
-  AC_PROG_CC 
+  AC_PROG_CC
 
   AC_PROG_CPP
 
@@ -2592,13 +2593,13 @@ AC_DEFUN([AC_CHECK_COMPILERS],
         CXXFLAGS="+K3 $CXXFLAGS"
       else
         CXXFLAGS="-O2 $CXXFLAGS"
-      fi  
+      fi
     fi
   fi
 
   if test "$kde_use_debug_define" = "yes"; then
     CXXFLAGS="-DNDEBUG -DNO_DEBUG $CXXFLAGS"
-  fi  
+  fi
 
   if test "$kde_use_profiling" = "yes"; then
     KDE_CHECK_COMPILER_FLAG(pg,
@@ -2611,7 +2612,7 @@ AC_DEFUN([AC_CHECK_COMPILERS],
   if test "$kde_use_warnings" = "yes"; then
       if test "$GCC" = "yes"; then
         case $host in
-          *-*-linux-gnu)	
+          *-*-linux-gnu)
             CFLAGS="-ansi -W -Wall -pedantic -Wshadow -Wpointer-arith -Wmissing-prototypes -Wwrite-strings -D_XOPEN_SOURCE=500 -D_BSD_SOURCE $CFLAGS"
             CXXFLAGS="-ansi -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -Wcast-align -Wconversion $CXXFLAGS"
           ;;
@@ -2627,7 +2628,7 @@ AC_DEFUN([AC_CHECK_COMPILERS],
   if test "$GCC" = "yes" && test "$kde_use_strict_options" = "yes"; then
     CXXFLAGS="-Wcast-qual -Wshadow -Wcast-align $CXXFLAGS"
   fi
-    
+
   if test "$GXX" = "yes"; then
     KDE_CHECK_COMPILER_FLAG(fno-exceptions,[CXXFLAGS="$CXXFLAGS -fno-exceptions"])
     KDE_CHECK_COMPILER_FLAG(fno-check-new, [CXXFLAGS="$CXXFLAGS -fno-check-new"])
@@ -2643,7 +2644,7 @@ AC_DEFUN([AC_CHECK_COMPILERS],
     [
       kde_use_pch=$enableval
     ],[kde_use_pch=no])
- 
+
     if test "$kde_use_pch" = "yes"; then
       dnl TODO: support --pch-dir!
       KDE_CHECK_COMPILER_FLAG(-pch,[CXXFLAGS="$CXXFLAGS --pch"])
@@ -2656,7 +2657,7 @@ AC_DEFUN([AC_CHECK_COMPILERS],
       dnl   [CXXFLAGS="$CXXFLAGS --pch_dir `pwd`/pcheaders"])
     fi
     dnl this flag controls inlining. by default KCC inlines in optimisation mode
-    dnl all implementations that are defined inside the class {} declaration. 
+    dnl all implementations that are defined inside the class {} declaration.
     dnl because of templates-compatibility with broken gcc compilers, this
     dnl can cause excessive inlining. This flag limits it to a sane level
     KDE_CHECK_COMPILER_FLAG(-inline_keyword_space_time=6,[CXXFLAGS="$CXXFLAGS --inline_keyword_space_time=6"])
@@ -2679,7 +2680,7 @@ AC_DEFUN([AC_CHECK_COMPILERS],
       *-*-irix*)  test "$GXX" = yes && CXXFLAGS="-D_LANGUAGE_C_PLUS_PLUS -D__LANGUAGE_C_PLUS_PLUS $CXXFLAGS" ;;
       *-*-sysv4.2uw*) CXXFLAGS="-D_UNIXWARE $CXXFLAGS";;
       *-*-sysv5uw7*) CXXFLAGS="-D_UNIXWARE7 $CXXFLAGS";;
-      *-*-solaris*) 
+      *-*-solaris*)
         if test "$GXX" = yes; then
           libstdcpp=`$CXX -print-file-name=libstdc++.so`
           if test ! -f $libstdcpp; then
@@ -2737,10 +2738,10 @@ AC_SUBST(KDE_PLUGIN)
 
 AC_ARG_ENABLE(objprelink, [  --enable-objprelink     prelink apps using objprelink (experimental [only tested on linux/386])],
        kde_use_objprelink=$enableval, kde_use_objprelink=no)
-  if test "x$kde_use_objprelink" = "xyes"; then 
+  if test "x$kde_use_objprelink" = "xyes"; then
 
-      KDE_FIND_PATH(objprelink, OBJPRELINK, [], [kde_use_objprelink=no])   
-     
+      KDE_FIND_PATH(objprelink, OBJPRELINK, [], [kde_use_objprelink=no])
+
       if test "x$kde_use_objprelink" = "xyes"; then
       AC_MSG_CHECKING([Patching libtool to run objprelink.])
       mv libtool libtool.orig
@@ -2748,7 +2749,7 @@ AC_ARG_ENABLE(objprelink, [  --enable-objprelink     prelink apps using objpreli
 #! /bin/sh
 for n ; do case $n in
   *.o)  test -r $n && echo objprelink $n && objprelink $n ;;
-  *.lo) m=`basename $n .lo`".o" && test -r $m && echo objprelink $m && objprelink $m 
+  *.lo) m=`basename $n .lo`".o" && test -r $m && echo objprelink $m && objprelink $m
         m=".libs/$m" && test -r $m && echo objprelink $m && objprelink $m ;;
 esac; done
 EOF
@@ -2898,7 +2899,7 @@ AC_DEFUN([AM_KDE_WITH_NLS],
 # Search path for a program which passes the given test.
 # Ulrich Drepper <drepper@cygnus.com>, 1996.
 
-# 1
+dnl # serial 1
 # Stephan Kulow: I appended a _KDE against name conflicts
 
 dnl AM_PATH_PROG_WITH_TEST_KDE(VARIABLE, PROG-TO-CHECK-FOR,
@@ -2943,7 +2944,7 @@ AC_SUBST($1)dnl
 # Check whether LC_MESSAGES is available in <locale.h>.
 # Ulrich Drepper <drepper@cygnus.com>, 1995.
 
-# 1
+dnl # serial 1
 
 AC_DEFUN([AM_LC_MESSAGES],
   [if test $ac_cv_header_locale_h = yes; then
@@ -2988,7 +2989,7 @@ AC_DEFUN([AM_FUNC_ERROR_AT_LINE],
 # Macro to add for using GNU gettext.
 # Ulrich Drepper <drepper@cygnus.com>, 1995.
 
-# 1
+dnl # serial 1
 # Stephan Kulow: I put a KDE in it to avoid name conflicts
 
 AC_DEFUN([AM_KDE_GNU_GETTEXT],
@@ -3299,7 +3300,7 @@ AC_DEFUN([KDE_PAM], [
           AC_CHECK_LIB(pam, pam_start,
             [ AC_CHECK_HEADER(security/pam_appl.h,
                 [ use_pam=yes
-                  pam_service=kde ]) 
+                  pam_service=kde ])
             ], , $LIBDL)
           ac_cv_path_pam="use_pam=$use_pam pam_service=$pam_service"
         ])
@@ -3339,7 +3340,7 @@ AC_DEFUN([DEF_PAM_SERVICE], [
         AC_MSG_ERROR([Cannot use use --with-$1-pam, as no PAM was detected.
 You may want to enforce it by using --with-pam.])
       fi
-    ], 
+    ],
     [ if test "x$use_pam" = xyes; then
         $3_PAM_SERVICE="$pam_service"
       fi
@@ -3359,18 +3360,18 @@ AC_DEFUN([KDE_SHADOWPASSWD], [
       ac_use_shadow=yes
     ],
     [ dnl for UnixWare
-      AC_CHECK_LIB(gen, getspent, 
+      AC_CHECK_LIB(gen, getspent,
         [ LIBGEN="-lgen"
           ac_use_shadow=yes
-        ], 
-        [ AC_CHECK_FUNC(getspent, 
+        ],
+        [ AC_CHECK_FUNC(getspent,
             [ ac_use_shadow=yes ],
             [ ac_use_shadow=no ])
 	])
     ])
   AC_SUBST(LIBSHADOW)
   AC_SUBST(LIBGEN)
-  
+
   AC_MSG_CHECKING([for shadow passwords])
 
   AC_ARG_WITH(shadow,
@@ -3395,7 +3396,7 @@ AC_DEFUN([KDE_SHADOWPASSWD], [
 
   dnl finally make the relevant binaries setuid root, if we have shadow passwds.
   dnl this still applies, if we could use it indirectly through pam.
-  if test "x$use_shadow" = xyes || 
+  if test "x$use_shadow" = xyes ||
      ( test "x$use_pam" = xyes && test "x$ac_use_shadow" = xyes ); then
       case $host in
       *-*-freebsd* | *-*-netbsd* | *-*-openbsd*)
@@ -3413,7 +3414,7 @@ AC_DEFUN([KDE_PASSWDLIBS], [
   AC_REQUIRE([KDE_PAM])
   AC_REQUIRE([KDE_SHADOWPASSWD])
 
-  if test "x$use_pam" = "xyes"; then 
+  if test "x$use_pam" = "xyes"; then
     PASSWDLIBS="$PAMLIBS"
   else
     PASSWDLIBS="$LIBCRYPT $LIBSHADOW $LIBGEN"
@@ -3724,7 +3725,7 @@ AC_DEFUN([KDE_CHECK_PTHREAD_OPTION],
           USE_THREADS="-D_THREAD_SAFE -I/usr/local/include/pthread/linuxthreads"
         fi
       fi
-    else 
+    else
       USE_THREADS=""
       if test -z "$LIBPTHREAD"; then
         KDE_CHECK_COMPILER_FLAG(pthread, [USE_THREADS="-pthread"] )
@@ -3832,7 +3833,7 @@ fi
 AC_DEFUN([KDE_CHECK_PYTHON_DIR],
 [
 AC_MSG_CHECKING([for Python directory])
- 
+
 AC_CACHE_VAL(kde_cv_pythondir,
 [
   if test -z "$PYTHONDIR"; then
@@ -3841,14 +3842,14 @@ AC_CACHE_VAL(kde_cv_pythondir,
     kde_cv_pythondir="$PYTHONDIR"
   fi
 ])
- 
+
 AC_ARG_WITH(pythondir,
 [  --with-pythondir=pythondir   use python installed in pythondir ],
 [
   ac_python_dir=$withval
 ], ac_python_dir=$kde_cv_pythondir
 )
- 
+
 AC_MSG_RESULT($ac_python_dir)
 ])
 
@@ -3910,7 +3911,7 @@ if test x$python_incdir = xno ||  test x$python_libdir = xno ||  test x$python_m
    test "x$PYTHONLIB" = "x-Lno" && PYTHONLIB=""
    test "x$PYTHONINC" = "x-Ino" && PYTHONINC=""
    $2
-else 
+else
   dnl Note: this test is very weak
   kde_python_link_found=no
   KDE_TRY_LINK_PYTHON(normal)
@@ -3943,8 +3944,8 @@ fi
 
 AC_DEFUN([KDE_CHECK_PYTHON],
 [
-  KDE_CHECK_PYTHON_INTERN("2.2", 
-    [KDE_CHECK_PYTHON_INTERN("2.1", 
+  KDE_CHECK_PYTHON_INTERN("2.2",
+    [KDE_CHECK_PYTHON_INTERN("2.1",
       [KDE_CHECK_PYTHON_INTERN("2.0", [ KDE_CHECK_PYTHON_INTERN($1, $2) ])
   ])])
 ])
@@ -4470,7 +4471,7 @@ AC_DEFUN([KDE_CHECK_LIB],
 
 
 AC_DEFUN([KDE_CHECK_INITGROUPS],
-[ 
+[
   AC_REQUIRE([AC_CANONICAL_HOST])
   AC_CHECK_FUNCS(initgroups)
   if test "x$ac_cv_func_initgroups" = "xyes"; then
@@ -4513,7 +4514,7 @@ AC_DEFUN([KDE_JAVA_PREFIX],
 	dir=`dirname "$1"`
 	base=`basename "$1"`
 	list=`ls -1 $dir`
-	for entry in $list; do 
+	for entry in $list; do
 		if test -d $dir/$entry/bin; then
 			case $entry in
 			   $base)
@@ -4550,8 +4551,8 @@ if test "x$ac_java_dir" = "xno"; then
    kde_java_libhpidir=no
 else
   if test "x$ac_java_dir" = "x"; then
-     
-     
+
+
       dnl No option set -> look in $PATH
       KDE_JAVA_PREFIX(/usr/j*dk*)
       KDE_JAVA_PREFIX(/usr/lib/j*dk*)
@@ -4563,7 +4564,7 @@ else
       KDE_JAVA_PREFIX(/usr/lib/IBMJava2*)
       KDE_JAVA_PREFIX(/usr/lib/IBMJava*)
       KDE_JAVA_PREFIX(/opt/java*)
-    
+
       kde_cv_path="NONE"
       kde_save_IFS=$IFS
       IFS=':'
@@ -4648,7 +4649,7 @@ if test "x$kde_java_bindir" != "xno"; then
 
   if test ! -r "$kde_java_libjvmdir/libjvm.so"; then
      AC_MSG_ERROR([libjvm.so not found under $kde_java_libjvmdir. Use --without-java.])
-  fi 
+  fi
 
   if test ! -x "$kde_java_bindir/java"; then
       AC_MSG_ERROR([java not found under $kde_java_bindir. javac was found though! Use --with-java or --without-java.])
@@ -4677,15 +4678,15 @@ if test "x$kde_java_bindir" != "xno"; then
 
     if test $kde_jni_works = no; then
       AC_MSG_ERROR([Incorrect version of $kde_java_includedir/jni.h.
-		    You need to have Java Development Kit (JDK) version 1.2. 
+		    You need to have Java Development Kit (JDK) version 1.2.
 
 		    Use --with-java to specify another location.
 		    Use --without-java to configure without java support.
-		    Or download a newer JDK and try again. 
+		    Or download a newer JDK and try again.
 		    See e.g. http://java.sun.com/products/jdk/1.2 ])
     fi
 
-    CXXFLAGS="$ac_cxxflags_safe"    
+    CXXFLAGS="$ac_cxxflags_safe"
     AC_LANG_RESTORE
 
     dnl All tests ok, inform and subst the variables
@@ -4774,8 +4775,8 @@ AC_DEFUN([AC_PATH_QTOPIA],
 
   AC_ARG_WITH(qtopia-dir,
               [  --with-qtopia-dir=DIR   where the root of Qtopia is installed ],
-              [  ac_qtopia_incdir="$withval"/include] ) 
-  
+              [  ac_qtopia_incdir="$withval"/include] )
+
   qtopia_incdirs=""
   for dir in $kde_qtopia_dirs; do
     qtopia_incdirs="$qtopia_incdirs $dir/include"
@@ -4907,7 +4908,7 @@ AC_SUBST(KDE_HAS_DOXYGEN)
 ## configuration script generated by Autoconf, you may include it under
 ## the same distribution terms that you use for the rest of that program.
 
-# 47 AC_PROG_LIBTOOL
+dnl # serial 47 AC_PROG_LIBTOOL
 
 # AC_PROG_LIBTOOL
 # ---------------
@@ -5353,7 +5354,7 @@ ia64-*-hpux*)
   fi
   rm -rf conftest*
   ;;
-  
+
 *-*-sco3.2v5*)
   # On SCO OpenServer 5, we need -belf to get full-featured binaries.
   SAVE_CFLAGS="$CFLAGS"
@@ -7160,7 +7161,7 @@ fi
 # Check to make sure the static flag actually works.
 #
 AC_LIBTOOL_LINKER_OPTION([if $compiler static flag $_LT_AC_TAGVAR(lt_prog_compiler_static, $1) works],
-  _LT_AC_TAGVAR(lt_cv_prog_compiler_static_works, $1),
+  _LT_AC_TAGVAR(lt_prog_compiler_static_works, $1),
   $_LT_AC_TAGVAR(lt_prog_compiler_static, $1),
   [],
   [_LT_AC_TAGVAR(lt_prog_compiler_static, $1)=])
@@ -9191,7 +9192,7 @@ AC_MSG_RESULT([$_LT_AC_TAGVAR(lt_prog_compiler_pic, $1)])
 #
 if test -n "$_LT_AC_TAGVAR(lt_prog_compiler_pic, $1)"; then
   AC_LIBTOOL_COMPILER_OPTION([if $compiler PIC flag $_LT_AC_TAGVAR(lt_prog_compiler_pic, $1) works],
-    _LT_AC_TAGVAR(lt_cv_prog_compiler_pic_works, $1),
+    _LT_AC_TAGVAR(lt_prog_compiler_pic_works, $1),
     [$_LT_AC_TAGVAR(lt_prog_compiler_pic, $1) -DPIC], [],
     [case $_LT_AC_TAGVAR(lt_prog_compiler_pic, $1) in
      "" | " "*) ;;
