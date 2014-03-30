@@ -621,8 +621,9 @@ Once you have built the test programs, copy the runtime directory
 file eg8.txt. This file is needed by programming example 8 (reading
 multivectors from input).
 
-The sample test output files are eg3.res, test.out, gfft_test-11.out,
-products-8.out, squaring-11.out and transforms-8.out
+The sample test output files include eg3.res, gfft_test-11.out, products-8.out,
+squaring-11.out and transforms-8.out. There are also eight versions of the
+output of the main test script. These are described below.
 
 The main test script is ./test/test.sh. This runs tests ./test00/test00 to
 ./test16/test16, using relative pathnames, so it is best to leave test.sh
@@ -636,17 +637,74 @@ order. With zero parameters, all examples from 00 to 16 are run in order. Many
 of the examples are run twice - once with framed_multi<Scalar_T> and once with
 matrix_multi<Scalar_T>.
 
-The sample test results in ./test_runtime/test.out are from programs
-built and run using the configure command:
-./configure --with-qd -with-eig=bindingsv1 \\
---with-extra-includes=$PATHTO/boost-numeric-bindings-v1
-on Intel(R) Core(TM) i7 CPU 870, Kubuntu 13.04, g++ 4.8.1, Boost 1.53.
+The ./test_runtime directory contains eight versions of the sample test results,
+corresponding to eight different combinations of configuration parameters. The
+tests were all run on Intel(R) Core(TM) i7 CPU 870, Kubuntu 13.04, g++ 4.8.1,
+Boost 1.53.
+
+The test output file names and corresponding configuration commands are:
+
+1) test.configuration.out
+./configure
+
+2) test.configuration.qd.out
+./configure --with-qd
+
+3) test.configuration.qd-map-map.out
+./configure --with-qd --with-map=map
+
+4) test.configuration.qd-map-stdunordered-random-std.out
+./configure --with-qd --with-map=stdunordered --with-random=std
+
+5) test.configuration.eig-bindings.out
+./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
+
+6) test.configuration.qd-eig-bindings.out
+./configure --with-qd \
+            --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
+
+7) test.configuration.qd-eig-bindings-map-map.out
+./configure --with-qd \
+            --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
+            --with-map=map
+
+8) test.configuration.qd-eig-bindings-map-stdunordered-random-std.out
+./configure --with-qd \
+            --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
+            --with-map=stdunordered --with-random=std
+
+Each of the test output files 5 to 8 is identical to the output produced when
+--with-eig=bindings in the corresponding configuration options is replaced by
+--with-eig=bindingsv1 and --with-extra-includes is changed to match.
+
+When you run your own test using ./test/test.sh, you compare its output to the
+output file corresponding to the closest match to the configuration options you
+used to build your copy of the GluCat library.
+
+The reason why sample test results corresponding to eight different combinations
+of configuration parameters are included in test_runtime is that the test output
+strongly depends on the configuration options chosen. In particular:
+
+o If --with-qd is chosen, extra tests in ./test00/test00 and ./test11/test11 are
+  done using the dd_real and qd_real scalar types.
+
+o If --with-eig=X is chosen, with X set to alglib, bindingsv1 or bindings, the
+  algorithms used for the square root, logarithm and inverse trig functions will
+  become much more accurate, and more tests in ./test11/test11 will succeed.
+  Even if one of these options are chosen, some tests in ./test11/test11 fail
+  due to insufficient accuracy. This is most likely caused by a combination of
+  excessive round off and truncation error with respect to the condition numbers
+  of the matrices used in calculating these functions. It is possible to re-code
+  these functions to use higher precision for intermediate steps, but to do this
+  would require changing the clifford_algebra template to allow mixed-precision
+  arithmetic.
 
 The tests typically use floating point arithmetic, and ./test00/test00 and
 ./test11/test11 in particular also use random number generators. Therefore if
 you run the tests using different architecture, compilers or random number
 generators, you should expect to have different floating point arithmetic
-results, but generally, still within acceptable error tolerances.
+results, but generally, still within acceptable error tolerances, except as
+notes for ./test11/test11 above.
 
 Both ./test00/test00 and ./test11/test11 allow the program arguments "--help"
 and "--verbose". The argument "--verbose" produces verbose output essentially by
@@ -709,6 +767,14 @@ Once you have built PyClical, run the doctests. In python or ipython, etc.:
  TestResults(failed=0, attempted=311)
  >>> quit()
 
+Alternatively, in the directory pyclical, run the script test.py using:
+
+ipython --classic --no-banner < test.py
+
+and compare the output with test.out.
+
+[ For ipython versions before 0.11 use: ipython -classic -nobanner < test.py ]
+
 In the directory pyclical/demos, the Python script files pyclical_demo.py and
 sqrt_log_demo.py have corresponding output files pyclical_demo.out and
 sqrt_log_demo.out. Run these two Python script files and compare their output to
@@ -735,7 +801,25 @@ to use sudo, login as root, or su to root before you run make install.
 
  GluCat 0.7.2 with PyClical has so far been built and tested using:
 
- 1) AMD Athlon(tm) 64 Processor 3200+ with
+ 1) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
+
+    All eight configuration commands corresponding to each of the eight
+    test.configuration*.out files in ./test_runtime
+
+    Linux 3.8.0-35-generic #50-Ubuntu SMP x86_64
+    All three of the following compiler versions:
+    1) gcc version 4.7.3 (Ubuntu/Linaro 4.7.3-2ubuntu4)
+    2) gcc version 4.8.1 (Ubuntu/Linaro 4.8.1-10ubuntu9)
+    3) Ubuntu clang version 3.2-1~exp9ubuntu1 (tags/RELEASE_32/final) (based on LLVM 3.2)
+    Boost 1.53.0
+    Both of:
+    1) Boost Numeric Bindings V1
+    2) Boost Numeric Bindings
+    QD 2.3.13
+    Python 2.7.4
+    Cython 0.19.1
+
+ 2) AMD Athlon(tm) 64 Processor 3200+ with
 
     ./configure --with-qd --with-eig=alglib \
     --with-extra-libs=$HOME/usr/local/lib \
@@ -749,7 +833,7 @@ to use sudo, login as root, or su to root before you run make install.
     Python 2.7.5+
     Cython 0.19
 
- 2) AMD Athlon(tm) 64 Processor 3200+ with
+ 3) AMD Athlon(tm) 64 Processor 3200+ with
 
     ./configure --with-qd --with-eig=bindings \
     --with-extra-libs=$HOME/usr/local/lib \
@@ -763,7 +847,7 @@ to use sudo, login as root, or su to root before you run make install.
     Python 2.7.5+
     Cython 0.19
 
- 3) AMD Athlon(tm) 64 Processor 3200+ with
+ 4) AMD Athlon(tm) 64 Processor 3200+ with
 
     ./configure --with-qd --with-eig=bindings \
     --with-extra-libs=$HOME/usr/local/lib \
@@ -777,7 +861,7 @@ to use sudo, login as root, or su to root before you run make install.
     Python 2.7.5+
     Cython 0.19
 
- 4) 2 core AMD E-350 Processor
+ 5) 2 core AMD E-350 Processor
 
     ./configure --with-qd --with-eig=bindingsv1 \
     --with-extra-libs=$HOME/usr/local/lib \
@@ -791,86 +875,7 @@ to use sudo, login as root, or su to root before you run make install.
     Python 2.7.4
     Cython 0.17.4
 
- 5) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
-
-    ./configure --with-qd --with-eig=bindingsv1 \
-    --with-extra-includes=$PATHTO/numeric_bindings-v1
-
-    Linux 3.8.0-35-generic #50-Ubuntu SMP x86_64
-    gcc version 4.7.3 (Ubuntu/Linaro 4.7.3-2ubuntu4)
-    Boost 1.53.0
-    Boost Numeric Bindings V1
-    QD 2.3.13
-    Python 2.7.4
-    Cython 0.19.1
-
- 6) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
-
-    ./configure --with-qd --with-eig=bindingsv1 \
-    --with-extra-includes=$PATHTO/numeric_bindings-v1
-
-    Linux 3.8.0-35-generic #50-Ubuntu SMP x86_64
-    gcc version 4.8.1 (Ubuntu 4.8.1-2ubuntu1~13.04)
-    Boost 1.53.0
-    Boost Numeric Bindings V1
-    QD 2.3.13
-    Python 2.7.4
-    Cython 0.19.1
-
- 7) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
-
-    ./configure --with-map=map --with-qd --with-eig=bindingsv1 \
-    --with-extra-includes=$PATHTO/numeric_bindings-v1
-
-    Linux 3.8.0-35-generic #50-Ubuntu SMP x86_64
-    gcc version 4.8.1 (Ubuntu 4.8.1-2ubuntu1~13.04)
-    Boost 1.53.0
-    Boost Numeric Bindings V1
-    QD 2.3.13
-    Python 2.7.4
-    Cython 0.19.1
-
- 8) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
-
-    ./configure --with-map=stdunordered --with-random=std \
-    --with-qd --with-eig=bindingsv1 \
-    --with-extra-includes=$PATHTO/numeric_bindings-v1
-
-    Linux 3.8.0-35-generic #50-Ubuntu SMP x86_64
-    gcc version 4.8.1 (Ubuntu 4.8.1-2ubuntu1~13.04)
-    Boost 1.53.0
-    Boost Numeric Bindings V1
-    QD 2.3.13
-    Python 2.7.4
-    Cython 0.19.1
-
- 9) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
-
-    ./configure --with-qd --with-eig=bindings \
-    --with-extra-includes=$PATHTO/numeric_bindings
-
-    Linux 3.8.0-35-generic #50-Ubuntu SMP x86_64
-    gcc version 4.7.3 (Ubuntu/Linaro 4.7.3-2ubuntu4)
-    Boost 1.53.0
-    Boost Numeric Bindings
-    QD 2.3.13
-    Python 2.7.4
-    Cython 0.19.1
-
-10) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
-
-    ./configure --with-qd --with-eig=bindings \
-    --with-extra-includes=$PATHTO/numeric_bindings
-
-    Linux 3.8.0-35-generic #50-Ubuntu SMP x86_64
-    Ubuntu clang version 3.2-1~exp9ubuntu1 (tags/RELEASE_32/final) (based on LLVM 3.2)
-    Boost 1.53.0
-    Boost Numeric Bindings
-    QD 2.3.13
-    Python 2.7.4
-    Cython 0.19.1
-
-11) 4 core AMD Opteron(tm) Processor 8360 SE  @ 1.25GHz with
+6) 4 core AMD Opteron(tm) Processor 8360 SE  @ 1.25GHz with
 
     ./configure --with-eig=bindingsv1 \
     --with-extra-includes=$PATHTO/boost-numeric-bindings-v1
@@ -880,7 +885,7 @@ to use sudo, login as root, or su to root before you run make install.
     Boost 1.49.0
     Boost Numeric Bindings V1
     Python 2.7.5
-    Cython 0.18
+    Cython 0.20.1
 
 
 Notes on software versions
@@ -925,3 +930,23 @@ clang: warning: argument unused during compilation: '--param ssp-buffer-size=4'
 
     This is harmless, and was fixed after Clang version 3.2.
     See http://llvm.org/bugs/show_bug.cgi?id=15327
+
+ 8. With clang++ 3.4 and g++ 4.6 or earlier, if you use the configuration option
+    --with-random=tr1 (the default), an error in a TR1 header file that is part
+    of the C++ Standard Library for g++ will result in an error message like:
+
+/usr/lib/gcc/x86_64-linux-gnu/4.6/../../../../include/c++/4.6/tr1/exp_integral.tcc:
+      353:17: error: call to function
+      '__expint_E1' that is neither visible in the template definition nor found
+        by argument-dependent lookup
+        return -__expint_E1(-__x);
+                ^
+    This bug is fixed in g++ 4.7.
+    See http://gcc.gnu.org/bugzilla/show_bug.cgi?id=29131
+
+    To work around the problem, use a different option for --with-random, or
+    try using g++ 4.7. Alternatively, you could try inserting the line
+
+    template<typename _Tp> _Tp __expint_E1(const _Tp);
+
+    at around line 59 of your copy of /usr/include/c++/4.6/tr1/exp_integral.tcc
