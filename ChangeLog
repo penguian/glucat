@@ -1,3 +1,74 @@
+2014-03-31  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat.lsm: Bring up to date.
+
+2014-03-31  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* NEWS: Fix typo; bring up to date.
+
+2014-03-31  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL: Improve detailed installation instuctions; describe the 8
+	new test output files.
+
+2014-03-30  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/test.out: Sample test output file has been replaced
+	by 8 files corresponding to different configurations.
+
+2014-03-30  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/test.out, pyclical/test.py: Add test script and test
+	output to help automate testing of PyClical.
+
+2014-03-29  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/test.configure.eig-bindings.out,
+	test_runtime/test.configure.out,
+	test_runtime/test.configure.qd-eig-bindings-map-map.out,
+	test_runtime/test.configure.qd-eig-bindings-map-stdunordered-random
+	-std.out, test_runtime/test.configure.qd-eig-bindings.out,
+	test_runtime/test.configure.qd-map-map.out,
+	test_runtime/test.configure.qd-map-stdunordered-random-std.out,
+	test_runtime/test.configure.qd.out: Add test output corresponding to
+	various configure options.
+
+2014-03-29  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* admin/config.guess, admin/config.sub, admin/depcomp,
+	admin/install-sh, admin/missing, admin/mkinstalldirs, admin/ylwrap: 
+	Bring up to date with respect to automake 1.11.6.
+
+2014-03-27  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* acinclude.m4, admin/acinclude.m4.in, admin/libtool.m4.in: Use []
+	quotes for DEFUN names to stop autoreconf warnings on this.  Comment
+	out # serial n everywhere, but add # serial 1 at the start of
+	acinclude.m4.in: there should only be one # serial in a file.
+
+2014-03-27  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.in, configure.in.in: Move basename_cc and basename_cxx
+	definitions to a point where $CC and $CXX should always be defined.
+
+2014-03-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.in, configure.in.in: Use basename_cc, basename_cxx; make
+	test for clang++ version more robust.
+
+2014-03-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* TODO: Bring up to date for GluCat 0.7.2.
+
+2014-03-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* Doxyfile: Exclude pyclical/PyClical.cpp so that doxygen can be
+	used after make.
+
+2014-03-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* ChangeLog: Bring up to date with latest changes for version 0.7.2.
+
 2014-03-16  Paul Leopardi <paul.leopardi@anu.edu.au>
 
 	* AUTHORS: Include a paper by Yorick Hardy, as well as work by Paul
