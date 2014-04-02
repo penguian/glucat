@@ -1,5 +1,15 @@
-NEWS for GluCat 0.7.2 with PyClical
+NEWS for GluCat 0.7.3 with PyClical
 ===================================
+
+2014-04-02: 0.7.3:
+GluCat 0.7.3 fixes a bug where the line
+
+print_exec("from PyClical import *")
+
+was left out of some of the pyclical_tutorial*.py files.
+The C++ code, Cython code and the configure and Makefiles are unchanged from
+GluCat 0.7.2, other than updating the version number, and so these have not been
+tested again.
 
 2014-03-31: 0.7.2:
 GluCat 0.7.2 with PyClical now generates IPython notebooks.

@@ -1,4 +1,4 @@
-INSTALL for GluCat 0.7.2 with PyClical
+INSTALL for GluCat 0.7.3 with PyClical
 ======================================
 
 Prerequisites: Before You Begin
@@ -21,11 +21,11 @@ Directory Structure
 ===================
 
 Once you have downloaded, unzipped and untarred the source code, you should
-have a directory, glucat-0.7.2. Under this directory you should see a number
+have a directory, glucat-0.7.3. Under this directory you should see a number
 of subdirectories, including ./admin, ./doc, ./glucat, ./gfft_test, ./products,
 ./pyclical, ./squaring, ./test, ./test_runtime, ./testxx, and ./transforms.
 
-The following instructions are meant to be used with glucat-0.7.2 as the
+The following instructions are meant to be used with glucat-0.7.3 as the
 current directory.
 
 
@@ -103,7 +103,7 @@ relevant subdirectories.
 
 As briefly described above, the simplest way to install this package is:
 
- 1. "cd" to the glucat-0.7.2 directory containing the source code and type
+ 1. "cd" to the glucat-0.7.3 directory containing the source code and type
     "./configure" to configure GluCat with PyClical for your system.
     If you are using "csh" on an old version of System V, you might need to type
     "sh ./configure" instead to prevent "csh" from trying to execute
@@ -799,7 +799,7 @@ to use sudo, login as root, or su to root before you run make install.
  List of Successful Builds
  =========================
 
- GluCat 0.7.2 with PyClical has so far been built and tested using:
+ GluCat 0.7.3 with PyClical has so far been built and tested using:
 
  1) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
 
@@ -891,7 +891,7 @@ to use sudo, login as root, or su to root before you run make install.
 Notes on software versions
 --------------------------
 
- 1. GluCat 0.7.2 has not been tested with gcc versions earlier than 4.5.4,
+ 1. GluCat 0.7.3 has not been tested with gcc versions earlier than 4.5.4,
     Clang versions earlier than 3.2, Boost versions earlier than 1.49.0,
     QD versions earlier than 2.3.13, Python versions earlier than 2.7.4, or
     Cython versions earlier than 0.18.
@@ -900,8 +900,8 @@ Notes on software versions
     defines std::isnan. The C++ standard library included with gcc 4.5.2 and
     above defines std::isnan.
 
- 3. Cython versions earlier than 0.15 do not build PyClical 0.7.2 correctly,
-    because PyClical 0.7.2 uses generators, which were only implemented with
+ 3. Cython versions earlier than 0.15 do not build PyClical 0.7.3 correctly,
+    because PyClical 0.7.3 uses generators, which were only implemented with
     Cython 0.15.
 
  4. Cython versions to and including 0.16 do not build PyClical correctly
@@ -916,11 +916,11 @@ Notes on software versions
     The workaround is to edit PyClical.cpp and put a space before and after each
     occurrence of PY_FORMAT_SIZE_T. This was fixed some time after Cython 0.16.
 
- 5. GluCat 0.7.2 will not work with QD versions earlier than 2.3.10,
+ 5. GluCat 0.7.3 will not work with QD versions earlier than 2.3.10,
     because older versions do not zero-initialize dd_real and qd_real
     as required by ublas::clear().
 
- 6. GluCat 0.7.2 has not been tested with Alglib versions later than 2.5.0 and
+ 6. GluCat 0.7.3 has not been tested with Alglib versions later than 2.5.0 and
     is unlikely to work with Alglib 3.0.0 or later versions, because the Alglib
     source files were reorganized for version 3.0.0.
 
