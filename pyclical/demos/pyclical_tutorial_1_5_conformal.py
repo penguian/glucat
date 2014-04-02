@@ -27,6 +27,7 @@ def run(ctx):
     print_fill("It is recommended that you do the tutorials in order, beginning with" +
               " 0.0 Notation.")
     print_line()
+    print_exec("from PyClical import *")
 
     pause()
     print_line()

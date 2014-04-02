@@ -47,6 +47,7 @@ def run(ctx):
     print_fill("Example numbers refer to [LMV], e.g. Example 10.2 is the second example" +
               " on p. 10 of [LMV].")
     print_line()
+    print_exec("from PyClical import *")
 
     pause()
     print_line()
