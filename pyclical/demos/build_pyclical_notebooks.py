@@ -31,6 +31,7 @@ def build_notebook_from_tut(ctx, tut):
     build_notebook(ctx, tut.module_name, tut.title)
 
 ctx = pn.notebook_context(globals())
+build_notebook_from_demo(ctx, "clifford_demo")
 build_notebook_from_demo(ctx, "pyclical_demo")
 build_notebook_from_demo(ctx, "sqrt_log_demo")
 
