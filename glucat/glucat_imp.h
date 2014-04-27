@@ -37,6 +37,8 @@
 
 #include "glucat/index_set_imp.h"
 
+#include "glucat/scalar_imp.h"
+
 #include "glucat/clifford_algebra_imp.h"
 
 #include "glucat/random.h"

@@ -32,8 +32,6 @@
 #if !defined(NDEBUG)
 #define NDEBUG
 #endif
-#include "test/driver.h"
-#include "test/control.h"
 #include "test11/peg11.h"
 
 int test11()

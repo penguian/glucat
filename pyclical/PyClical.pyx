@@ -1578,12 +1578,16 @@ cpdef inline log(obj,i = None):
     """
     Natural logarithm of multivector with optional complexifier.
 
-    >>> x=clifford("{1,2}"); print (log(x,"{1,2}") * 2/pi)
-    {1,2}
+    >>> x=clifford("{-1}"); print (log(x,"{-1}") * 2/pi)
+    {-1}
     >>> x=clifford("{1,2}"); print (log(x,"{1,2,3}") * 2/pi)
     {1,2}
     >>> x=clifford("{1,2}"); print (log(x) * 2/pi)
     {1,2}
+    >>> x=clifford("{1,2}"); print (log(x,"{1,2}") * 2/pi)
+    Traceback (most recent call last):
+    ...
+    RuntimeError: check_complex(val, i): i is not a valid complexifier for val
     """
     if not (i is None):
         return clifford().wrap( glucat.log(toClifford(obj), toClifford(i)) )

@@ -155,8 +155,8 @@ namespace glucat
   private std::map< const index_set<LO,HI>, Scalar_T,
                     std::less< const index_set<LO,HI> >
 #if defined(_GLUCAT_USE_BOOST_POOL_ALLOC)
-                  , boost::fast_pool_allocator< std::pair<const index_set<LO,HI>, Scalar_T> > 
-#endif                  
+                  , boost::fast_pool_allocator< std::pair<const index_set<LO,HI>, Scalar_T> >
+#endif
                   >
 #endif
   {
@@ -169,7 +169,10 @@ namespace glucat
     typedef std::vector<Scalar_T>                      vector_t;
     typedef error<multivector_t>                       error_t;
     typedef      matrix_multi<Scalar_T,LO,HI>          matrix_multi_t;
-    friend class matrix_multi<Scalar_T,LO,HI>;
+    template< typename Other_Scalar_T, const index_t Other_LO, const index_t Other_HI >
+    friend class matrix_multi;
+    template< typename Other_Scalar_T, const index_t Other_LO, const index_t Other_HI >
+    friend class framed_multi;
 
   private:
     class                                              var_term; // forward
@@ -179,7 +182,7 @@ namespace glucat
                       std::less<const index_set_t>
 #if defined(_GLUCAT_USE_BOOST_POOL_ALLOC)
                     , boost::fast_pool_allocator<term_t>
-#endif                     
+#endif
                     >
                                                        sorted_map_t;
 #if defined(_GLUCAT_USE_GNU_CXX_HASH_MAP)
@@ -226,9 +229,17 @@ namespace glucat
     /// Private constructor using hash_size
     framed_multi(const hash_size_t& hash_size);
   public:
-
+    /// Copy constructor
+    template< typename Other_Scalar_T >
+    framed_multi(const framed_multi<Other_Scalar_T,LO,HI>& val);
+    /// Copy constructor
+    framed_multi(const framed_multi_t& val);
     /// Construct a multivector, within a given frame, from a given multivector
-    framed_multi(const multivector_t& val,
+    template< typename Other_Scalar_T >
+    framed_multi(const framed_multi<Other_Scalar_T,LO,HI>& val,
+                 const index_set_t frm, const bool prechecked = false);
+    /// Construct a multivector, within a given frame, from a given multivector
+    framed_multi(const framed_multi_t& val,
                  const index_set_t frm, const bool prechecked = false);
     /// Construct a multivector from an index set and a scalar coordinate
     framed_multi(const index_set_t ist, const Scalar_T& crd = Scalar_T(1));
@@ -255,9 +266,11 @@ namespace glucat
                  const index_set_t frm, const bool prechecked = false)
     { *this = framed_multi(std::string(str), frm, prechecked); };
     /// Construct a multivector from a matrix_multi_t
-    framed_multi(const matrix_multi_t& val);
+    template< typename Other_Scalar_T >
+    framed_multi(const matrix_multi<Other_Scalar_T,LO,HI>& val);
     /// Use generalized FFT to construct a matrix_multi_t
-    const matrix_multi_t fast_matrix_multi(const index_set_t frm) const;
+    template< typename Other_Scalar_T >
+    const matrix_multi<Other_Scalar_T,LO,HI> fast_matrix_multi(const index_set_t frm) const;
     /// Use inverse generalized FFT to construct a framed_multi_t
     const framed_multi_t fast_framed_multi() const;
 
@@ -265,7 +278,7 @@ namespace glucat
 
     /// Number of terms
     unsigned long nbr_terms() const;
-        
+
     /// Random multivector within a frame
     static const framed_multi_t random(const index_set_t frm, Scalar_T fill = Scalar_T(1));
 

@@ -32,8 +32,24 @@
 // C. Doran and A. Lasenby, "Geometric algebra for physicists", Cambridge, 2003.
 
 #include "glucat/glucat.h"
-typedef glucat::tuning<> Tune_P;
-#include "glucat/glucat_imp.h"
+
+typedef glucat::tuning
+  <
+    glucat::DEFAULT_Mult_Matrix_Threshold,
+    glucat::DEFAULT_Div_Max_Steps,
+    glucat::DEFAULT_Sqrt_Max_Steps,
+    glucat::DEFAULT_Log_Max_Outer_Steps,
+    glucat::DEFAULT_Log_Max_Inner_Steps,
+    glucat::DEFAULT_Basis_Max_Count,
+    glucat::DEFAULT_Fast_Size_Threshold,
+    glucat::DEFAULT_Inv_Fast_Dim_Threshold,
+    glucat::DEFAULT_Products_Size_Threshold,
+    glucat::precision_same,
+    glucat::precision_same
+  >
+  Tune_P;
+
+  #include "glucat/glucat_imp.h"
 #include <iostream>
 #include <sstream>
 #include <iomanip>

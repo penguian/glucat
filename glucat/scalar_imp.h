@@ -1,11 +1,11 @@
-#ifndef _GLUCAT_LONG_DOUBLE_H
-#define _GLUCAT_LONG_DOUBLE_H
+#ifndef _GLUCAT_SCALAR_IMP_H
+#define _GLUCAT_SCALAR_IMP_H
 /***************************************************************************
     GluCat : Generic library of universal Clifford algebra templates
-    long_double.h : Define std functions for long double
+    scalar_imp.h : Define functions for scalar_t
                              -------------------
-    begin                : 2001-12-18
-    copyright            : (C) 2001-2012 by Paul C. Leopardi
+    begin                : 2001-12-20
+    copyright            : (C) 2001-2014 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -31,42 +31,58 @@
  See also Arvind Raja's original header comments and references in glucat.h
  ***************************************************************************/
 
+#include "glucat/portability.h"
+
+#include <boost/numeric/ublas/traits.hpp>
+
+#include <cmath>
+#include <limits>
+
 namespace glucat
 {
-#if defined(__USE_GNU)
-  static const long double l_pi   = M_PIl;
-  static const long double l_ln2 = M_LN2l;
-#else
-  static const long double l_pi = 3.1415926535897932384626433832795029L;
-  static const long double l_ln2 = 0.6931471805599453094172321214581766L;
+  /// Extra traits which extend numeric limits
+  // Reference: [AA], 2.4, p. 30-31
+
+  /// Cast to float
+  template< >
+  template< typename Other_Scalar_T >
+  inline
+  float
+  numeric_traits<float>::
+  to_scalar_t(const Other_Scalar_T& val)
+  { return float(numeric_traits<Other_Scalar_T>::to_double(val)); }
+
+  /// Cast to double
+  template< >
+  template< typename Other_Scalar_T >
+  inline
+  double
+  numeric_traits<double>::
+  to_scalar_t(const Other_Scalar_T& val)
+  { return numeric_traits<Other_Scalar_T>::to_double(val); }
+
+  /// Cast to promote
+  template< typename Scalar_T >
+  inline
+  typename numeric_traits<Scalar_T>::promoted::type
+  to_promote(const Scalar_T& val)
+  { return numeric_traits<Scalar_T>::promoted::type(val); }
+
+  /// Cast to demote
+  template< typename Scalar_T >
+  inline
+  typename numeric_traits<Scalar_T>::demoted::type
+  to_demote(const Scalar_T& val)
+  { return numeric_traits<Scalar_T>::demoted::type(val); }
+
+#if defined(_GLUCAT_USE_QD)
+  /// Cast to demote
+  template< >
+  inline
+  typename numeric_traits<dd_real>::demoted::type
+  to_demote(const dd_real& val)
+  { return numeric_traits<dd_real>::to_double(val); }
 #endif
-
-  /// Promoted type for long double
-  template<>
-  struct
-  numeric_traits<long double>::
-  promoted {typedef long double type;};
-
-  /// Demoted type for long double
-  template<>
-  struct
-  numeric_traits<long double>::
-  demoted {typedef long double type;};
-
-  /// Pi for long double
-  template<>
-  inline
-  const long double
-  numeric_traits<long double>::
-  pi()
-  { return l_pi; }
-
-  /// log(2) for long double
-  template<>
-  inline
-  const long double
-  numeric_traits<long double>::
-  ln_2()
-  { return l_ln2; }
 }
-#endif // _GLUCAT_LONG_DOUBLE_H
+
+#endif // _GLUCAT_SCALAR_IMP_H

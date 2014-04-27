@@ -42,6 +42,12 @@ namespace glucat
   /// Extra traits which extend numeric limits
   // Reference: [AA], 2.4, p. 30-31
 
+  /// Promoted type for double
+  template<>
+  struct
+  numeric_traits<double>::
+  promoted {typedef dd_real type;};
+
 #define _GLUCAT_QD_F(_T, _F) \
   template<>           \
   inline               \
@@ -89,6 +95,18 @@ namespace glucat
   numeric_traits<dd_real>::
   to_double(const dd_real& val)
   { return ::to_double(val); }
+
+  /// Promoted type for dd_real
+  template<>
+  struct
+  numeric_traits<dd_real>::
+  promoted {typedef dd_real type;};
+
+  /// Demoted type for dd_real
+  template<>
+  struct
+  numeric_traits<dd_real>::
+  demoted {typedef double type;};
 
   /// Modulo function for dd_real
   template<>
@@ -202,6 +220,18 @@ namespace glucat
   to_double(const qd_real& val)
   { return ::to_double(val); }
 
+  /// Promoted type for qd_real
+  template<>
+  struct
+  numeric_traits<qd_real>::
+  promoted {typedef qd_real type;};
+
+  /// Demoted type for qd_real
+  template<>
+  struct
+  numeric_traits<qd_real>::
+  demoted {typedef qd_real type;};
+
   /// Modulo function for qd_real
   template<>
   inline
@@ -276,6 +306,15 @@ namespace glucat
 }
 
 # endif
+#else
+namespace glucat
+{
+  /// Promoted type for double
+  template<>
+  struct
+  numeric_traits<double>::
+  promoted {typedef double type;};
+}
 #endif
 
 #endif // _GLUCAT_QD_H

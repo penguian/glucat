@@ -410,7 +410,7 @@ namespace glucat
   Scalar_T
   imag(const Multivector<Scalar_T,LO,HI>& val)
   { return Scalar_T(0); }
-  
+
   /// Pure part
   template< template<typename, const index_t, const index_t> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI >
@@ -695,7 +695,7 @@ namespace glucat
       pure_exp *= pure_exp;
     return pure_exp * scalar_exp;
   }
-  
+
   /// Natural logarithm of multivector with specified complexifier
   template< template<typename, const index_t, const index_t> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI >
@@ -741,7 +741,7 @@ namespace glucat
     check_complex(val, i, prechecked);
     if (val.isnan())
       return traits_t::NaN();
-    
+
     typedef Multivector<Scalar_T,LO,HI> multivector_t;
     const multivector_t radical = sqrt(val*val - Scalar_T(1), i, true);
     return (norm(val + radical) >= norm(val))

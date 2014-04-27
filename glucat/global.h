@@ -5,7 +5,7 @@
     global.h : Global declarations
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2012 by Paul C. Leopardi
+    copyright            : (C) 2001-2014 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -113,6 +113,14 @@ namespace glucat
   /// Default for truncation
   const double DEFAULT_TRUNCATION = std::numeric_limits<float>::epsilon();
 
+  /// Precision policy
+  enum precision_t
+  {
+    precision_demoted,
+    precision_same,
+    precision_promoted
+  };
+
   // Tuning policy default constants
   const unsigned int DEFAULT_Mult_Matrix_Threshold   =       8;
   const unsigned int DEFAULT_Div_Max_Steps           =       4;
@@ -123,6 +131,9 @@ namespace glucat
   const unsigned int DEFAULT_Fast_Size_Threshold     = 1 << 10;
   const unsigned int DEFAULT_Inv_Fast_Dim_Threshold  = 1 <<  6;
   const unsigned int DEFAULT_Products_Size_Threshold = 1 << 22;
+  const precision_t  DEFAULT_Fast_Precision          = precision_same;
+  const precision_t  DEFAULT_Function_Precision      = precision_same;
+
 
   /// Tuning policy
   template
@@ -135,7 +146,9 @@ namespace glucat
     unsigned int Basis_Max_Count         = DEFAULT_Basis_Max_Count,
     unsigned int Fast_Size_Threshold     = DEFAULT_Fast_Size_Threshold,
     unsigned int Inv_Fast_Dim_Threshold  = DEFAULT_Inv_Fast_Dim_Threshold,
-    unsigned int Products_Size_Threshold = DEFAULT_Products_Size_Threshold
+    unsigned int Products_Size_Threshold = DEFAULT_Products_Size_Threshold,
+    precision_t  Fast_Precision          = DEFAULT_Fast_Precision,
+    precision_t  Function_Precision      = DEFAULT_Function_Precision
   >
   struct tuning
   {
@@ -164,6 +177,12 @@ namespace glucat
   // Tuning for products (other than geometric product)
     /// Minimum size needed for to invoke faster products algorithms
     enum { products_size_threshold = Products_Size_Threshold };
+  // Tuning for precision of forward and inverse generalized FFT
+    /// Precision used for forward and inverse generalized FFT
+    static const precision_t fast_precision = Fast_Precision;
+  // Tuning for precision of exp, log and sqrt functions
+    /// Precision used for exp, log and sqrt functions
+    static const precision_t function_precision = Function_Precision;
   };
 
   /// Modulo function which works reliably for lhs < 0

@@ -119,10 +119,11 @@ namespace glucat_gfft_test
   {
     typedef typename Multivector_T::framed_multi_t framed_multi_t;
     typedef typename Multivector_T::matrix_multi_t matrix_multi_t;
+    typedef typename Multivector_T::scalar_t scalar_t;
 
     Multivector_T a = Multivector_T::random(inner_frame, fill);
     clock_t cpu_time = clock();
-      matrix_multi_t A = a.fast_matrix_multi(outer_frame);
+      matrix_multi_t A = a.template fast_matrix_multi<scalar_t>(outer_frame);
     double mm_cpu_time = elapsed(cpu_time);
     int mm_trials = 1;
 #ifdef _GLUCAT_TEST_REPEAT
@@ -130,13 +131,13 @@ namespace glucat_gfft_test
     {
       cpu_time = clock();
         for (int trials = 0; trials != nbr_trials; ++trials)
-          A = a.fast_matrix_multi(outer_frame);
+          A = a.template fast_matrix_multi<scalar_t>(outer_frame);
       mm_cpu_time = elapsed(cpu_time) / nbr_trials;
       mm_trials = nbr_trials;
     }
 #endif
     cpu_time = clock();
-      framed_multi_t new_a = A.fast_framed_multi();
+      framed_multi_t new_a = A.template fast_framed_multi<scalar_t>();
     double fm_cpu_time = elapsed(cpu_time);
     int fm_trials = 1;
 #ifdef _GLUCAT_TEST_REPEAT
@@ -144,7 +145,7 @@ namespace glucat_gfft_test
     {
       cpu_time = clock();
         for (int trials = 0; trials != nbr_trials; ++trials)
-          new_a = A.fast_framed_multi();
+          new_a = A.template fast_framed_multi<scalar_t>();
       fm_cpu_time = elapsed(cpu_time) / nbr_trials;
       fm_trials = nbr_trials;
     }

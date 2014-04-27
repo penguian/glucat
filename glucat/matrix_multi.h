@@ -47,7 +47,7 @@
 namespace glucat
 {
   namespace ublas = boost::numeric::ublas;
-  
+
   // Forward declarations for friends
 
   template< typename Scalar_T, const index_t LO, const index_t HI >
@@ -106,10 +106,20 @@ namespace glucat
   const matrix_multi<Scalar_T,LO,HI>
   sqrt(const matrix_multi<Scalar_T,LO,HI>& val, const matrix_multi<Scalar_T,LO,HI>& i, bool prechecked);
 
+  /// Square root of multivector with specified complexifier
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const matrix_multi<Scalar_T,LO,HI>
+  matrix_sqrt(const matrix_multi<Scalar_T,LO,HI>& val, const matrix_multi<Scalar_T,LO,HI>& i);
+
   /// Natural logarithm of multivector with specified complexifier
   template< typename Scalar_T, const index_t LO, const index_t HI >
   const matrix_multi<Scalar_T,LO,HI>
   log(const matrix_multi<Scalar_T,LO,HI>& val, const matrix_multi<Scalar_T,LO,HI>& i, bool prechecked);
+
+  /// Natural logarithm of multivector with specified complexifier
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const matrix_multi<Scalar_T,LO,HI>
+  matrix_log(const matrix_multi<Scalar_T,LO,HI>& val, const matrix_multi<Scalar_T,LO,HI>& i);
 
   /// A matrix_multi<Scalar_T,LO,HI> is a matrix approximation to a multivector
   template< typename Scalar_T = double, const index_t LO = DEFAULT_LO, const index_t HI = DEFAULT_HI >
@@ -125,16 +135,20 @@ namespace glucat
     typedef std::vector<Scalar_T>                      vector_t;
     typedef error<multivector_t>                       error_t;
     typedef      framed_multi<Scalar_T,LO,HI>          framed_multi_t;
-    friend class framed_multi<Scalar_T,LO,HI>;
+    template< typename Other_Scalar_T, const index_t Other_LO, const index_t Other_HI >
+    friend class framed_multi;
+    template< typename Other_Scalar_T, const index_t Other_LO, const index_t Other_HI >
+    friend class matrix_multi;
 
   private:
     typedef ublas::row_major                           orientation_t;
-    typedef ublas::compressed_matrix< Scalar_T, orientation_t >
+    typedef ublas::compressed_matrix< int, orientation_t >
                                                        basis_matrix_t;
 #if defined(_GLUCAT_USE_DENSE_MATRICES)
     typedef ublas::matrix< Scalar_T, orientation_t >   matrix_t;
 #else
-    typedef basis_matrix_t                             matrix_t;
+    typedef ublas::compressed_matrix< Scalar_T, orientation_t >
+                                                       matrix_t;
 #endif
     typedef typename matrix_t::size_type               matrix_index_t;
 
@@ -145,8 +159,14 @@ namespace glucat
     ~matrix_multi() {};
     /// Default constructor
     matrix_multi();
+    /// Copy constructor
+    template< typename Other_Scalar_T >
+    matrix_multi(const matrix_multi<Other_Scalar_T,LO,HI>& val);
+    /// Copy constructor
+    matrix_multi(const matrix_multi_t& val);
     /// Construct a multivector, within a given frame, from a given multivector
-    matrix_multi(const multivector_t& val,
+    template< typename Other_Scalar_T >
+    matrix_multi(const matrix_multi<Other_Scalar_T,LO,HI>& val,
                  const index_set_t frm, const bool prechecked = false);
     /// Construct a multivector from an index set and a scalar coordinate
     matrix_multi(const index_set_t ist, const Scalar_T& crd = Scalar_T(1));
@@ -173,16 +193,22 @@ namespace glucat
                  const index_set_t frm, const bool prechecked = false)
     { *this = matrix_multi(std::string(str), frm, prechecked); };
     /// Construct a multivector from a framed_multi_t
-    matrix_multi(const framed_multi_t& val);
+    template< typename Other_Scalar_T >
+    matrix_multi(const framed_multi<Other_Scalar_T,LO,HI>& val);
     /// Construct a multivector, within a given frame, from a framed_multi_t
-    matrix_multi(const framed_multi_t& val,
+    template< typename Other_Scalar_T >
+    matrix_multi(const framed_multi<Other_Scalar_T,LO,HI>& val,
                  const index_set_t frm, const bool prechecked = false);
     /// Use generalized FFT to construct a matrix_multi_t
     const matrix_multi_t fast_matrix_multi(const index_set_t frm) const;
     /// Use inverse generalized FFT to construct a framed_multi_t
-    const framed_multi_t fast_framed_multi() const;
+    template< typename Other_Scalar_T >
+    const framed_multi<Other_Scalar_T,LO,HI> fast_framed_multi() const;
 
   private:
+    /// Construct a multivector within a given frame from a given matrix
+    template< typename Matrix_T >
+    matrix_multi(const Matrix_T& mtx, const index_set_t frm);
     /// Construct a multivector within a given frame from a given matrix
     matrix_multi(const matrix_t& mtx, const index_set_t frm);
     /// Create a basis element matrix within the current frame
@@ -221,10 +247,12 @@ namespace glucat
     friend std::ostream&
       operator<< <>(std::ostream& os, const term_t& term);
 
-    friend const matrix_multi_t
-      sqrt <>(const matrix_multi_t& val, const matrix_multi_t& i, bool prechecked);
-    friend const matrix_multi_t
-      log  <>(const matrix_multi_t& val, const matrix_multi_t& i, bool prechecked);
+    template< typename Other_Scalar_T, const index_t Other_LO, const index_t Other_HI >
+    friend const matrix_multi<Other_Scalar_T,Other_LO,Other_HI>
+      matrix_sqrt(const matrix_multi<Other_Scalar_T,Other_LO,Other_HI>& val, const matrix_multi<Other_Scalar_T,Other_LO,Other_HI>& i);
+    template< typename Other_Scalar_T, const index_t Other_LO, const index_t Other_HI >
+    friend const matrix_multi<Other_Scalar_T,Other_LO,Other_HI>
+      matrix_log(const matrix_multi<Other_Scalar_T,Other_LO,Other_HI>& val, const matrix_multi<Other_Scalar_T,Other_LO,Other_HI>& i);
 
     /// Add a term, if non-zero
     multivector_t&     operator+= (const term_t& rhs);
