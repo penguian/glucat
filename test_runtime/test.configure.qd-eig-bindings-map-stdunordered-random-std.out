@@ -614,89 +614,45 @@ A
 
 A
   31.4159{-2,-1,1,2,3,4,5}
-Test failed: exp(A)*exp(-A) != 1
-Relative norm of difference == 1.7643e-05
-lhs==0.999982
-rhs==1
-Test failed: exp(-A)*exp(A) != 1
-Relative norm of difference == 1.7643e-05
-lhs==0.999982
-rhs==1
-Test failed: tan(atan(A)) != A
-Relative norm of difference == 8.4181e-06
-lhs==0.000264455+31.4159{-2,-1,1,2,3,4,5}
-rhs==31.4159{-2,-1,1,2,3,4,5}
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 9.6533e-06
-lhs==31.4162{-2,-1,1,2,3,4,5}
-rhs==31.4159{-2,-1,1,2,3,4,5}
 
 A
   -31.4159{-2,-1,1,2,3,4,5}
-Test failed: exp(A)*exp(-A) != 1
-Relative norm of difference == 1.7643e-05
-lhs==0.999982
-rhs==1
-Test failed: exp(-A)*exp(A) != 1
-Relative norm of difference == 1.7643e-05
-lhs==0.999982
-rhs==1
-Test failed: tan(atan(A)) != A
-Relative norm of difference == 8.4181e-06
-lhs==-0.000264455-31.4159{-2,-1,1,2,3,4,5}
-rhs==-31.4159{-2,-1,1,2,3,4,5}
 Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 9.5926e-06
-lhs==-31.4156{-2,-1,1,2,3,4,5}
+Relative norm of difference == 6.8605e-06
+lhs==-31.4157{-2,-1,1,2,3,4,5}
 rhs==-31.4159{-2,-1,1,2,3,4,5}
 
 A
   3.14159{1,2}
-Test failed: sin(asin(A)) != A
-Relative norm of difference == 4.4666e-06
-lhs==3.14159{1,2}-1.38283e-05{1,2,3}
-rhs==3.14159{1,2}
 
 A
   1.5708{-1}
-Test failed: cosh(A)*tanh(A) != sinh(A)
-lhs == nan
 
 A
   -1.5708{-1}
-Test failed: cosh(A)*tanh(A) != sinh(A)
-lhs == nan
 
 A
   314.159{-1}
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 lhs == nan
 Test failed: cos(A)*tan(A) != sin(A)
-Absolute norm of difference == inf
-lhs==0
-rhs==inf{-1}
+lhs == nan
 Test failed: tan(atan(A)) != A
-Relative norm of difference == 5.7313e-06
-lhs==314.161{-1}
-rhs==314.159{-1}
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 2.0011e-05
-lhs==314.153{-1}
+Relative norm of difference == 1.488e-05
+lhs==-0.00431415+314.161{-1}
 rhs==314.159{-1}
 
 A
   -314.159{-1}
 Test failed: cos(A)*tan(A) != sin(A)
-Absolute norm of difference == inf
-lhs==0
-rhs==-inf{-1}
+lhs == nan
 Test failed: tan(atan(A)) != A
-Relative norm of difference == 1.292e-05
-lhs==-314.155{-1}
+Relative norm of difference == 1.8854e-05
+lhs==0.00431399-314.155{-1}
 rhs==-314.159{-1}
 Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 2.8559e-05
-lhs==-314.15{-1}
+Relative norm of difference == 1.1657e-05
+lhs==-314.163{-1}
 rhs==-314.159{-1}
 
 A
@@ -737,8 +693,16 @@ lhs == nan
 A
   3.40282e+38{-1}+3.40282e+38{1}
 Test failed: exp(A)*exp(-A) != 1
-lhs == nan
+Absolute norm of difference == 1
+lhs==0
+rhs==1
 Test failed: exp(-A)*exp(A) != 1
+Absolute norm of difference == 1
+lhs==0
+rhs==1
+Test failed: cos(A)*tan(A) != sin(A)
+lhs == nan
+Test failed: cosh(A)*tanh(A) != sinh(A)
 lhs == nan
 Test failed: sqrt(A)*sqrt(A) != A
 lhs == nan
@@ -760,10 +724,6 @@ Random A in {1,2}
 Random A in {1,2}
 
 Random A in {-1,1,2}
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 2.2377e-05
-lhs==-0.154796+0.69664{-1}+0.0411389{1}+0.268295{2}+7.7635e-06{3}+2.43076e-06{4}-0.938933{-1,1}-0.402659{-1,2}-0.374924{1,2}-5.79655e-06{-1,3}+1.86265e-06{1,3}+8.16956e-06{2,3}+3.4894e-06{-1,4}-3.41028e-06{1,4}+2.05518e-06{2,4}+7.13858e-07{3,4}-0.678867{-1,1,2}-8.83639e-06{-1,1,3}+4.96954e-06{-1,2,3}-3.77744e-06{1,2,3}-1.68973e-06{-1,1,4}-3.7671e-06{-1,2,4}+3.79131e-06{1,2,4}+1.28247e-06{-1,3,4}-3.67829e-06{1,3,4}-2.2062e-06{2,3,4}-9.63733e-06{-1,1,2,3}-2.01152e-06{-1,1,2,4}-2.54713e-06{-1,1,3,4}+2.44639e-06{-1,2,3,4}+2.70338e-07{-1,1,2,3,4}
-rhs==-0.154796+0.696652{-1}+0.0411444{1}+0.268284{2}-0.938945{-1,1}-0.402666{-1,2}-0.374935{1,2}-0.678871{-1,1,2}
 
 Random A in {-1,1,2}
 
@@ -772,10 +732,6 @@ Random A in {-2,-1,1,2}
 Random A in {-2,-1,1,2}
 
 Random A in {-1,1,2,3}
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 2.4818e-05
-lhs==-0.168028-0.336227{-1}-0.100463{1}+0.380317{2}+0.333533{3}-1.64833e-06{4}-0.291603{-1,1}+0.297729{-1,2}-0.244026{1,2}-0.00836661{-1,3}+0.341031{1,3}+0.190469{2,3}-3.15801e-06{-1,4}-3.73373e-06{1,4}+4.91895e-06{2,4}-5.11315e-06{3,4}-0.0434255{-1,1,2}+0.0833018{-1,1,3}-0.124294{-1,2,3}-0.334353{1,2,3}+6.24532e-06{-1,1,4}+6.405e-06{1,2,4}+3.41305e-06{-1,3,4}+2.84559e-06{1,3,4}-8.2102e-06{2,3,4}+0.0635078{-1,1,2,3}+2.20488e-06{-1,1,2,4}+2.86036e-06{-1,1,3,4}+2.40309e-06{-1,2,3,4}+1.07283e-06{-1,1,2,3,4}
-rhs==-0.168027-0.336228{-1}-0.100459{1}+0.380318{2}+0.333534{3}-0.291611{-1,1}+0.297734{-1,2}-0.244033{1,2}-0.00837256{-1,3}+0.341029{1,3}+0.190472{2,3}-0.0434282{-1,1,2}+0.0832956{-1,1,3}-0.124287{-1,2,3}-0.334357{1,2,3}+0.0635063{-1,1,2,3}
 
 Random A in {-1,1,2,3}
 
@@ -855,10 +811,6 @@ A
 
 A
   3.14159{1,2}
-Test failed: sin(asin(A)) != A
-Relative norm of difference == 4.5582e-06
-lhs==3.14159{1,2}+1.43051e-06{1,3}-1.40667e-05{1,2,3}
-rhs==3.14159{1,2}
 
 A
   1.5708{-1}
@@ -871,12 +823,8 @@ A
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 lhs == 0
 Test failed: tan(atan(A)) != A
-Relative norm of difference == 2.6629e-05
-lhs==-0.00816971+314.161{-1}
-rhs==314.159{-1}
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 2.0224e-05
-lhs==314.153{-1}
+Relative norm of difference == 1.488e-05
+lhs==-0.00431415+314.161{-1}
 rhs==314.159{-1}
 
 A
@@ -884,12 +832,12 @@ A
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 lhs == 0
 Test failed: tan(atan(A)) != A
-Relative norm of difference == 2.9037e-05
-lhs==0.0081694-314.155{-1}
+Relative norm of difference == 1.8854e-05
+lhs==0.00431399-314.155{-1}
 rhs==-314.159{-1}
 Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 2.8689e-05
-lhs==-314.15{-1}
+Relative norm of difference == 1.1657e-05
+lhs==-314.163{-1}
 rhs==-314.159{-1}
 
 A
@@ -941,10 +889,6 @@ Random A in {}
 Random A in {}
 
 Random A in {1}
-Test failed: sinh(asinh(A)) != A
-Relative norm of difference == 8.967e-06
-lhs==0.5746+0.628744{1}
-rhs==0.574595+0.628749{1}
 
 Random A in {1}
 
@@ -961,14 +905,6 @@ Random A in {-1,1,2}
 Random A in {-1,1,2}
 
 Random A in {-2,-1,1,2}
-Test failed: sqrt(A)*sqrt(A) != A
-Relative norm of difference == 3.0399e-05
-lhs==-0.0977211-1.07731e-06{-3}+0.355824{-2}+0.324274{-1}+0.119433{1}+0.205932{2}+2.48093e-06{-3,-2}-2.58442e-06{-3,-1}+0.112231{-2,-1}+4.19817e-06{-3,1}+0.150965{-2,1}-0.0449054{-1,1}-2.62295e-06{-3,2}+0.288033{-2,2}-0.314242{-1,2}+0.176884{1,2}+5.04777e-07{-3,-2,-1}+6.85919e-07{-3,-2,1}-4.9097e-06{-3,-1,1}+0.238363{-2,-1,1}-2.63914e-06{-3,-2,2}-2.58093e-06{-3,-1,2}-0.316694{-2,-1,2}+2.10456e-06{-3,1,2}+0.102595{-2,1,2}-0.0391798{-1,1,2}+3.60771e-07{-3,-2,-1,1}-9.79519e-07{-3,-2,-1,2}-8.13045e-07{-3,-2,1,2}+1.073e-06{-3,-1,1,2}+0.116321{-2,-1,1,2}-2.1325e-06{-3,-2,-1,1,2}
-rhs==-0.0977196+0.355826{-2}+0.324277{-1}+0.119433{1}+0.205935{2}+0.112233{-2,-1}+0.150967{-2,1}-0.0449051{-1,1}+0.288037{-2,2}-0.314245{-1,2}+0.176887{1,2}+0.238367{-2,-1,1}-0.316697{-2,-1,2}+0.102592{-2,1,2}-0.039178{-1,1,2}+0.116322{-2,-1,1,2}
-Test failed: exp(log(A)) != A
-Relative norm of difference == 1.5631e-05
-lhs==-0.0977207-5.73967e-07{-3}+0.355824{-2}+0.324275{-1}+0.119432{1}+0.205932{2}+2.04501e-06{-3,-2}-2.30134e-06{-3,-1}+0.112232{-2,-1}+3.81532e-06{-3,1}+0.150964{-2,1}-0.0449064{-1,1}-2.49726e-06{-3,2}+0.288033{-2,2}-0.314242{-1,2}+0.176885{1,2}+7.28102e-07{-3,-2,-1}+8.23852e-07{-3,-2,1}-5.22082e-06{-3,-1,1}+0.238364{-2,-1,1}-1.9823e-06{-3,-2,2}-2.58797e-06{-3,-1,2}-0.316695{-2,-1,2}+2.56483e-06{-3,1,2}+0.102595{-2,1,2}-0.0391795{-1,1,2}+6.29615e-07{-3,-2,-1,1}-1.17125e-06{-3,-2,-1,2}-7.07345e-07{-3,-2,1,2}+1.5221e-06{-3,-1,1,2}+0.11632{-2,-1,1,2}-2.1533e-06{-3,-2,-1,1,2}
-rhs==-0.0977196+0.355826{-2}+0.324277{-1}+0.119433{1}+0.205935{2}+0.112233{-2,-1}+0.150967{-2,1}-0.0449051{-1,1}+0.288037{-2,2}-0.314245{-1,2}+0.176887{1,2}+0.238367{-2,-1,1}-0.316697{-2,-1,2}+0.102592{-2,1,2}-0.039178{-1,1,2}+0.116322{-2,-1,1,2}
 
 Random A in {-2,-1,1,2}
 
@@ -1049,33 +985,21 @@ A
 
 A
   -31.4159265358979{-2,-1,1,2,3,4,5}
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 4.0485e-14
-lhs==-31.4159265358992{-2,-1,1,2,3,4,5}
-rhs==-31.4159265358979{-2,-1,1,2,3,4,5}
 
 A
   3.14159265358979{1,2}
 
 A
   1.5707963267949{-1}
-Test failed: cosh(A)*tanh(A) != sinh(A)
-lhs == nan
 
 A
   -1.5707963267949{-1}
-Test failed: cosh(A)*tanh(A) != sinh(A)
-lhs == nan
 
 A
   314.159265358979{-1}
 
 A
   -314.159265358979{-1}
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 2.9493e-14
-lhs==-314.159265358989{-1}
-rhs==-314.159265358979{-1}
 
 A
   {1}
@@ -1119,7 +1043,9 @@ lhs == nan
 Test failed: exp(-A)*exp(A) != 1
 lhs == nan
 Test failed: sqrt(A)*sqrt(A) != A
-lhs == nan
+Absolute norm of difference == inf
+lhs==0
+rhs==1.79769313486232e+308{-1}+1.79769313486232e+308{1}
 
 Random A in {}
 
@@ -1228,23 +1154,15 @@ A
 
 A
   1.5707963267949{-1}
-Test failed: cosh(A)*tanh(A) != sinh(A)
-lhs == 0
 
 A
   -1.5707963267949{-1}
-Test failed: cosh(A)*tanh(A) != sinh(A)
-lhs == 0
 
 A
   314.159265358979{-1}
 
 A
   -314.159265358979{-1}
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 2.9969e-14
-lhs==-314.159265358989{-1}
-rhs==-314.159265358979{-1}
 
 A
   {1}
@@ -1283,12 +1201,10 @@ lhs == nan
 
 A
   nan
-Test failed: exp(A)*exp(-A) != 1
-lhs == nan
-Test failed: exp(-A)*exp(A) != 1
-lhs == nan
 Test failed: sqrt(A)*sqrt(A) != A
-lhs == nan
+Absolute norm of difference == inf
+lhs==0
+rhs==nan
 
 Random A in {}
 
