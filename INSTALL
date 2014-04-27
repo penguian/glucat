@@ -644,31 +644,31 @@ Boost 1.53.
 
 The test output file names and corresponding configuration commands are:
 
-1) test.configuration.out
+1) test.configure.out
 ./configure
 
-2) test.configuration.qd.out
+2) test.configure.qd.out
 ./configure --with-qd
 
-3) test.configuration.qd-map-map.out
+3) test.configure.qd-map-map.out
 ./configure --with-qd --with-map=map
 
-4) test.configuration.qd-map-stdunordered-random-std.out
+4) test.configure.qd-map-stdunordered-random-std.out
 ./configure --with-qd --with-map=stdunordered --with-random=std
 
-5) test.configuration.eig-bindings.out
+5) test.configure.eig-bindings.out
 ./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
 
-6) test.configuration.qd-eig-bindings.out
+6) test.configure.qd-eig-bindings.out
 ./configure --with-qd \
             --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
 
-7) test.configuration.qd-eig-bindings-map-map.out
+7) test.configure.qd-eig-bindings-map-map.out
 ./configure --with-qd \
             --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
             --with-map=map
 
-8) test.configuration.qd-eig-bindings-map-stdunordered-random-std.out
+8) test.configure.qd-eig-bindings-map-stdunordered-random-std.out
 ./configure --with-qd \
             --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
             --with-map=stdunordered --with-random=std
@@ -804,7 +804,7 @@ to use sudo, login as root, or su to root before you run make install.
  1) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
 
     All eight configuration commands corresponding to each of the eight
-    test.configuration*.out files in ./test_runtime
+    test.configure*.out files in ./test_runtime
 
     Linux 3.8.0-35-generic #50-Ubuntu SMP x86_64
     All three of the following compiler versions:
