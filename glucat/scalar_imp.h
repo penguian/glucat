@@ -61,28 +61,63 @@ namespace glucat
   to_scalar_t(const Other_Scalar_T& val)
   { return numeric_traits<Other_Scalar_T>::to_double(val); }
 
+#if defined(_GLUCAT_USE_QD)
+  /// Cast to long double
+  template< >
+  template< >
+  inline
+  long double
+  numeric_traits<long double>::
+  to_scalar_t(const dd_real& val)
+  { return static_cast<long double>(val.x[0]) + static_cast<long double>(val.x[1]); }
+
+  /// Cast to long double
+  template< >
+  template< >
+  inline
+  long double
+  numeric_traits<long double>::
+  to_scalar_t(const qd_real& val)
+  { return static_cast<long double>(val.x[0]) + static_cast<long double>(val.x[1]); }
+
+  /// Cast to dd_real
+  template< >
+  template< >
+  inline
+  dd_real
+  numeric_traits<dd_real>::
+  to_scalar_t(const qd_real& val)
+  { return dd_real(val.x[0],val.x[1]); }
+
+  /// Cast to qd_real
+  template< >
+  template< >
+  inline
+  qd_real
+  numeric_traits<qd_real>::
+  to_scalar_t(const dd_real& val)
+  { return qd_real(val.x[0],val.x[1],0.0,0.0); }
+#endif
+
   /// Cast to promote
   template< typename Scalar_T >
   inline
   typename numeric_traits<Scalar_T>::promoted::type
   to_promote(const Scalar_T& val)
-  { return numeric_traits<Scalar_T>::promoted::type(val); }
+  {
+    typedef typename numeric_traits<Scalar_T>::promoted::type promoted_scalar_t;
+    return numeric_traits<promoted_scalar_t>::to_scalar_t(val);
+  }
 
   /// Cast to demote
   template< typename Scalar_T >
   inline
   typename numeric_traits<Scalar_T>::demoted::type
   to_demote(const Scalar_T& val)
-  { return numeric_traits<Scalar_T>::demoted::type(val); }
-
-#if defined(_GLUCAT_USE_QD)
-  /// Cast to demote
-  template< >
-  inline
-  typename numeric_traits<dd_real>::demoted::type
-  to_demote(const dd_real& val)
-  { return numeric_traits<dd_real>::to_double(val); }
-#endif
+  {
+    typedef typename numeric_traits<Scalar_T>::demoted::type demoted_scalar_t;
+    return numeric_traits<demoted_scalar_t>::to_scalar_t(val);
+  }
 }
 
 #endif // _GLUCAT_SCALAR_IMP_H

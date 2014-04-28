@@ -100,7 +100,7 @@ namespace glucat
   template<>
   struct
   numeric_traits<dd_real>::
-  promoted {typedef dd_real type;};
+  promoted {typedef qd_real type;};
 
   /// Demoted type for dd_real
   template<>
@@ -306,15 +306,6 @@ namespace glucat
 }
 
 # endif
-#else
-namespace glucat
-{
-  /// Promoted type for double
-  template<>
-  struct
-  numeric_traits<double>::
-  promoted {typedef double type;};
-}
 #endif
 
 #endif // _GLUCAT_QD_H
