@@ -108,9 +108,6 @@ namespace glucat
   {
     this->m_matrix.clear();
     typedef typename matrix_multi<Other_Scalar_T,LO,HI>::matrix_t other_matrix_t;
-    const matrix_index_t val_s1 = val.m_matrix.size1();
-    const matrix_index_t val_s2 = val.m_matrix.size2();
-
     typedef typename other_matrix_t::const_iterator1 other_const_iterator1;
     typedef typename other_matrix_t::const_iterator2 other_const_iterator2;
     for (other_const_iterator1
@@ -291,13 +288,9 @@ namespace glucat
   template< typename Matrix_T >
   matrix_multi<Scalar_T,LO,HI>::
   matrix_multi(const Matrix_T& mtx, const index_set_t frm)
-  : m_frame( frm )
+  : m_frame( frm ), m_matrix( mtx.size1(), mtx.size2() )
   {
-    const matrix_index_t dim = folded_dim<matrix_index_t>(frm);
-    this->m_matrix.resize(dim, dim, false);
     this->m_matrix.clear();
-    const matrix_index_t val_s1 = mtx.size1();
-    const matrix_index_t val_s2 = mtx.size2();
 
     typedef typename Matrix_T::const_iterator1 const_iterator1;
     typedef typename Matrix_T::const_iterator2 const_iterator2;
@@ -316,12 +309,8 @@ namespace glucat
   template< typename Scalar_T, const index_t LO, const index_t HI >
   matrix_multi<Scalar_T,LO,HI>::
   matrix_multi(const matrix_t& mtx, const index_set_t frm)
-  : m_frame( frm )
-  {
-    const matrix_index_t dim = folded_dim<matrix_index_t>(frm);
-    this->m_matrix.resize(dim, dim, false);
-    noalias(this->m_matrix) = mtx;
-  }
+  : m_frame( frm ), m_matrix( mtx )
+  { }
 
   /// Assignment operator
   template< typename Scalar_T, const index_t LO, const index_t HI >
