@@ -132,14 +132,17 @@ namespace peg11
     check(sin(A), cos(A)*tan(A),    "cos(A)*tan(A) != sin(A)");
     check(sinh(A), cosh(A)*tanh(A), "cosh(A)*tanh(A) != sinh(A)");
 
-    check(A, sqrt(A)*sqrt(A), "sqrt(A)*sqrt(A) != A");
-    check(A, exp(log(A)),     "exp(log(A)) != A", true);
+    if ((A == scalar(A)) || !((inv(A)).isnan()))
+      check(A, sqrt(A)*sqrt(A), "sqrt(A)*sqrt(A) != A");
+    if (!((inv(A)).isnan()))
+      check(A, exp(log(A)),   "exp(log(A)) != A", true);
     check(A, cos(acos(A)),    "cos(acos(A)) != A", true);
     check(A, cosh(acosh(A)),  "cosh(acosh(A)) != A", true);
     check(A, sin(asin(A)),    "sin(asin(A)) != A", true);
     check(A, sinh(asinh(A)),  "sinh(asinh(A)) != A", true);
     check(A, tan(atan(A)),    "tan(atan(A)) != A", true);
-    check(A, tanh(atanh(A)),  "tanh(atanh(A)) != A", true);
+    if (!(log(m_(1)+A).isnan() || log(m_(1)-A).isnan()))
+      check(A, tanh(atanh(A)),"tanh(atanh(A)) != A", true);
     cout << endl;
     cout.precision(prec);
   }
@@ -227,8 +230,7 @@ namespace peg11
     transcendtest(m_("{-2,-1,1,2}"));
     transcendtest(-m_("{-2,-1,1,2}"));
     transcendtest(m_("{-1}+{1}"));
-    // the following should produce NaN values
-    transcendtest(m_("{-1}+{1}")*scalar_t(numeric_limits<scalar_t>::max()));
+
     rand_transcendtest<m_>(3);
   }
 }
