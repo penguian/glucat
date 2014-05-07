@@ -42,12 +42,6 @@ namespace glucat
 #endif
 
 #if defined(_GLUCAT_USE_QD)
-  /// Promoted type for long double
-  template<>
-  struct
-  numeric_traits<long double>::
-  promoted {typedef long double type;};
-
   /// Demoted type for long double
   template<>
   struct

@@ -48,6 +48,12 @@ namespace glucat
   numeric_traits<double>::
   promoted {typedef dd_real type;};
 
+  /// Promoted type for long double
+  template<>
+  struct
+  numeric_traits<long double>::
+  promoted {typedef dd_real type;};
+
 #define _GLUCAT_QD_F(_T, _F) \
   template<>           \
   inline               \

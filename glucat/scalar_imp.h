@@ -86,8 +86,26 @@ namespace glucat
   inline
   dd_real
   numeric_traits<dd_real>::
+  to_scalar_t(const long double& val)
+  { return dd_real(double(val),double(val-static_cast<long double>(double(val)))); }
+
+  /// Cast to dd_real
+  template< >
+  template< >
+  inline
+  dd_real
+  numeric_traits<dd_real>::
   to_scalar_t(const qd_real& val)
   { return dd_real(val.x[0],val.x[1]); }
+
+  /// Cast to qd_real
+  template< >
+  template< >
+  inline
+  qd_real
+  numeric_traits<qd_real>::
+  to_scalar_t(const long double& val)
+  { return qd_real(double(val),double(val-static_cast<long double>(double(val))),0.0,0.0); }
 
   /// Cast to qd_real
   template< >
