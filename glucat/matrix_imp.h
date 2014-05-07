@@ -54,20 +54,22 @@
 
 #if   defined(_GLUCAT_USE_ALGLIB)
 # include <alglib/evd.h>
-#elif defined(_GLUCAT_USE_BINDINGS_V1)
+#else
 # if  defined(_GLUCAT_GCC_IGNORE_UNUSED_LOCAL_TYPEDEFS)
 #  pragma GCC diagnostic push
 #  pragma GCC diagnostic ignored "-Wunused-local-typedefs"
 # endif
-# include <boost/numeric/bindings/lapack/workspace.hpp>
-# include <boost/numeric/bindings/lapack/gees.hpp>
-# include <boost/numeric/bindings/traits/ublas_matrix.hpp>
+# if defined(_GLUCAT_USE_BINDINGS_V1)
+#  include <boost/numeric/bindings/lapack/workspace.hpp>
+#  include <boost/numeric/bindings/lapack/gees.hpp>
+#  include <boost/numeric/bindings/traits/ublas_matrix.hpp>
+# elif defined(_GLUCAT_USE_BINDINGS)
+#  include <boost/numeric/bindings/lapack/driver/gees.hpp>
+#  include <boost/numeric/bindings/ublas.hpp>
+# endif
 # if defined(_GLUCAT_GCC_IGNORE_UNUSED_LOCAL_TYPEDEFS)
 #  pragma GCC diagnostic pop
 # endif
-#elif defined(_GLUCAT_USE_BINDINGS)
-# include <boost/numeric/bindings/lapack/driver/gees.hpp>
-# include <boost/numeric/bindings/ublas.hpp>
 #endif
 
 namespace glucat { namespace matrix
@@ -180,7 +182,7 @@ namespace glucat { namespace matrix
     typedef ublas::matrix_range<const matrix_t> matrix_range_t;
     const matrix_range_t& rhs_range = matrix_range_t(rhs, range1, range2);
     typedef typename matrix_t::value_type Scalar_T;
-    const Scalar_T lhs_val = *lhs_it2;
+    const Scalar_T lhs_val = numeric_traits<Scalar_T>::to_scalar_t(*lhs_it2);
     for (typename matrix_range_t::const_iterator1
         rhs_it1 = rhs_range.begin1();
         rhs_it1 != rhs_range.end1();
