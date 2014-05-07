@@ -152,7 +152,7 @@ namespace glucat
     const matrix_index_t dim = folded_dim<matrix_index_t>(this->m_frame);
     this->m_matrix.resize(dim, dim, false);
     this->m_matrix.clear();
-    *this += term_t(ist, Scalar_T(crd));
+    *this += term_t(ist, crd);
   }
 
   /// Construct a multivector, within a given frame, from an index set and a scalar coordinate
@@ -166,7 +166,7 @@ namespace glucat
     const matrix_index_t dim = folded_dim<matrix_index_t>(frm);
     this->m_matrix.resize(dim, dim, false);
     this->m_matrix.clear();
-    *this += term_t(ist, Scalar_T(crd));
+    *this += term_t(ist, crd);
   }
 
   /// Construct a multivector from a scalar (within a frame, if given)
@@ -1034,7 +1034,7 @@ namespace glucat
   operator+= (const term_t& term)
   {
     if (term.second != Scalar_T(0))
-      this->m_matrix.plus_assign(matrix_t(this->basis_element(term.first)) * term.second);
+      this->m_matrix.plus_assign(this->basis_element(term.first) * term.second);
     return *this;
   }
 
