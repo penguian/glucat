@@ -142,7 +142,7 @@ namespace glucat
 
   private:
     typedef ublas::row_major                           orientation_t;
-    typedef ublas::compressed_matrix< int, orientation_t >
+    typedef ublas::compressed_matrix< Scalar_T, orientation_t >
                                                        basis_matrix_t;
 #if defined(_GLUCAT_USE_DENSE_MATRICES)
     typedef ublas::matrix< Scalar_T, orientation_t >   matrix_t;
