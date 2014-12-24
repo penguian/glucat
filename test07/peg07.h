@@ -41,12 +41,13 @@ namespace peg07
   Multivector_T operator|| (const Multivector_T& lhs, const Multivector_T& rhs)
   {
     typedef Multivector_T number;
+    typedef typename number::scalar_t scalar_t;
     const typename number::index_set_t R8("{1,2,3,4,5,6,7,8}");
     const number p1_8("{1,2,3,4,5,6,7,8}", R8);
     const number v("-{1,2,4}-{2,3,5}-{3,4,6}-{4,5,7}-{1,5,6}-{2,6,7}-{1,3,7}", R8);
     const number p8("{8}", R8);
     const number w = v * number("{1,2,3,4,5,6,7}", R8);
-    return (lhs*p8*rhs*(1.0-p1_8)*(1.0+w))(1);
+    return (lhs*p8*rhs*(scalar_t(1.0)-p1_8)*(scalar_t(1.0)+w))(1);
   }
 
   template< class Multivector_T >
@@ -54,8 +55,9 @@ namespace peg07
   Multivector_T expo(const Multivector_T& f)
   {
     typedef Multivector_T number;
+    typedef typename number::scalar_t scalar_t;
     const number ff = f^f;
-    return 1.0 + f + ff/2.0 + (ff^(f/6.0 + ff/24.0));
+    return scalar_t(1.0) + f + ff/scalar_t(2.0) + (ff^(f/scalar_t(6.0) + ff/scalar_t(24.0)));
   }
 
   template< class Multivector_T >
@@ -63,9 +65,10 @@ namespace peg07
   void do_test7()
   {
     typedef Multivector_T number;
+    typedef typename number::scalar_t scalar_t;
     const typename number::index_set_t R8("{1,2,3,4,5,6,7,8}");
     const number F =
-      number("3{1,2}+4{2,3}+4{2,6}+5{3,7}+{4,5}+2{6,7}", R8) / 10.0;
+      number("3{1,2}+4{2,3}+4{2,6}+5{3,7}+{4,5}+2{6,7}", R8) / scalar_t(10.0);
     number u = number(expo(F), R8);
     u /= abs(u);
     const number x = number("3{1}+4{3}+5{5}", R8);
