@@ -5,7 +5,7 @@
     matrix_multi.h : Declare a class for the matrix representation of a multivector
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2012 by Paul C. Leopardi
+    copyright            : (C) 2001-2014 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -147,8 +147,7 @@ namespace glucat
 #if defined(_GLUCAT_USE_DENSE_MATRICES)
     typedef ublas::matrix< Scalar_T, orientation_t >   matrix_t;
 #else
-    typedef ublas::compressed_matrix< Scalar_T, orientation_t >
-                                                       matrix_t;
+    typedef basis_matrix_t                             matrix_t;
 #endif
     typedef typename matrix_t::size_type               matrix_index_t;
 
@@ -159,14 +158,15 @@ namespace glucat
     ~matrix_multi() {};
     /// Default constructor
     matrix_multi();
-    /// Copy constructor
+    /// Construct a multivector from a multivector with a different scalar type
     template< typename Other_Scalar_T >
     matrix_multi(const matrix_multi<Other_Scalar_T,LO,HI>& val);
-    /// Copy constructor
-    matrix_multi(const matrix_multi_t& val);
     /// Construct a multivector, within a given frame, from a given multivector
     template< typename Other_Scalar_T >
     matrix_multi(const matrix_multi<Other_Scalar_T,LO,HI>& val,
+                 const index_set_t frm, const bool prechecked = false);
+    /// Construct a multivector, within a given frame, from a given multivector
+    matrix_multi(const multivector_t& val,
                  const index_set_t frm, const bool prechecked = false);
     /// Construct a multivector from an index set and a scalar coordinate
     matrix_multi(const index_set_t ist, const Scalar_T& crd = Scalar_T(1));

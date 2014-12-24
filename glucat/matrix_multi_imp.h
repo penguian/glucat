@@ -5,7 +5,7 @@
     matrix_multi_imp.h : Implement the matrix representation of a multivector
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2012 by Paul C. Leopardi
+    copyright            : (C) 2001-2014 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -99,7 +99,7 @@ namespace glucat
     m_matrix( matrix_t( 1, 1 ) )
   { this->m_matrix.clear(); }
 
-  /// Copy constructor
+  /// Construct a multivector from a multivector with a different scalar type
   template< typename Scalar_T, const index_t LO, const index_t HI >
   template< typename Other_Scalar_T >
   matrix_multi<Scalar_T,LO,HI>::
@@ -121,18 +121,41 @@ namespace glucat
         this->m_matrix(val_it2.index1(), val_it2.index2()) = numeric_traits<Scalar_T>::to_scalar_t(*val_it2);
   }
 
-  /// Copy constructor
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  matrix_multi<Scalar_T,LO,HI>::
-  matrix_multi(const matrix_multi_t& val)
-  : m_frame( val.m_frame ), m_matrix( val.m_matrix )
-  { }
-
   /// Construct a multivector, within a given frame, from a given multivector
   template< typename Scalar_T, const index_t LO, const index_t HI >
   template< typename Other_Scalar_T >
   matrix_multi<Scalar_T,LO,HI>::
   matrix_multi(const matrix_multi<Other_Scalar_T,LO,HI>& val, const index_set_t frm, const bool prechecked)
+  : m_frame( frm )
+  {
+    if (!prechecked && (val.m_frame | frm) != frm)
+      throw error_t("multivector_t(val,frm): cannot initialize with value outside of frame");
+    if (frm == val.m_frame)
+    {
+      const matrix_index_t dim = folded_dim<matrix_index_t>(frm);
+      this->m_matrix.resize(dim, dim, false);
+      this->m_matrix.clear();
+      typedef typename matrix_multi<Other_Scalar_T,LO,HI>::matrix_t other_matrix_t;
+      typedef typename other_matrix_t::const_iterator1 other_const_iterator1;
+      typedef typename other_matrix_t::const_iterator2 other_const_iterator2;
+      for (other_const_iterator1
+          val_it1 = val.m_matrix.begin1();
+          val_it1 != val.m_matrix.end1();
+          ++val_it1)
+        for (other_const_iterator2
+            val_it2 = val_it1.begin();
+            val_it2 != val_it1.end();
+            ++val_it2)
+          this->m_matrix(val_it2.index1(), val_it2.index2()) = numeric_traits<Scalar_T>::to_scalar_t(*val_it2);
+    }
+    else
+      *this = multivector_t(framed_multi_t(val), frm, true);
+  }
+
+  /// Construct a multivector, within a given frame, from a given multivector
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  matrix_multi<Scalar_T,LO,HI>::
+  matrix_multi(const multivector_t& val, const index_set_t frm, const bool prechecked)
   : m_frame( frm )
   {
     if (!prechecked && (val.m_frame | frm) != frm)
@@ -1050,6 +1073,7 @@ namespace glucat
     typedef typename framed_multi_t::scalar_t Scalar_T;
     typedef Matrix_T matrix_t;
     typedef Basis_Matrix_T basis_matrix_t;
+    typedef typename basis_matrix_t::value_type  basis_scalar_t;
     typedef numeric_traits<Scalar_T> traits_t;
 
     if (level == 0)
@@ -1061,12 +1085,12 @@ namespace glucat
     const basis_matrix_t&  I = matrix::unit<basis_matrix_t>(2);
     basis_matrix_t J(2,2,2);
     J.clear();
-    J(0,1)  = -1;
-    J(1,0)  =  1;
+    J(0,1)  = basis_scalar_t(-1);
+    J(1,0)  = basis_scalar_t( 1);
     basis_matrix_t K = J;
-    K(0,1)  =  1;
+    K(0,1)  = basis_scalar_t( 1);
     basis_matrix_t JK = I;
-    JK(0,0) = -1;
+    JK(0,0) = basis_scalar_t(-1);
 
     using matrix::signed_perm_nork;
     const index_set_t ist_mn   = index_set_t(-level);
@@ -1150,34 +1174,7 @@ namespace glucat
 
     // Do the inverse fast transform
     typedef framed_multi<Other_Scalar_T,LO,HI> framed_multi_t;
-    framed_multi_t val;
-    switch (Tune_P::fast_precision)
-    {
-    case precision_demoted:
-      {
-        typedef typename numeric_traits<Other_Scalar_T>::demoted::type demoted_scalar_t;
-        typedef framed_multi<demoted_scalar_t,LO,HI> demoted_framed_multi_t;
-        typedef matrix_multi<demoted_scalar_t,LO,HI> demoted_matrix_multi_t;
-        typedef typename demoted_matrix_multi_t::matrix_t demoted_matrix_t;
-        demoted_matrix_multi_t demoted_this = *this;
-        val = framed_multi_t(fast<demoted_framed_multi_t, demoted_matrix_t, basis_matrix_t>(demoted_this.m_matrix, level));
-      }
-      break;
-    case precision_promoted:
-      {
-        typedef typename numeric_traits<Other_Scalar_T>::promoted::type promoted_scalar_t;
-        typedef framed_multi<promoted_scalar_t,LO,HI> promoted_framed_multi_t;
-        typedef matrix_multi<promoted_scalar_t,LO,HI> promoted_matrix_multi_t;
-        typedef typename promoted_matrix_multi_t::matrix_t promoted_matrix_t;
-        promoted_matrix_multi_t promoted_this = *this;
-        val = framed_multi_t(fast<promoted_framed_multi_t, promoted_matrix_t, basis_matrix_t>(promoted_this.m_matrix, level));
-      }
-      break;
-    default:
-      typedef framed_multi<Scalar_T,LO,HI> same_framed_multi_t;
-      val = framed_multi_t(fast<same_framed_multi_t, matrix_t, basis_matrix_t>(this->m_matrix, level));
-      break;
-    }
+    framed_multi_t val = fast<framed_multi_t, matrix_t, basis_matrix_t>(this->m_matrix, level);
 
     // Off-centre val
     switch (pos_mod(orig_p-orig_q, 8))

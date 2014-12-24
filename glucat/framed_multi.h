@@ -5,7 +5,7 @@
     framed_multi.h : Declare a class for the framed representation of a multivector
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2012 by Paul C. Leopardi
+    copyright            : (C) 2001-2014 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -229,11 +229,9 @@ namespace glucat
     /// Private constructor using hash_size
     framed_multi(const hash_size_t& hash_size);
   public:
-    /// Copy constructor
+    /// Construct a multivector from a multivector with a different scalar type
     template< typename Other_Scalar_T >
     framed_multi(const framed_multi<Other_Scalar_T,LO,HI>& val);
-    /// Copy constructor
-    framed_multi(const framed_multi_t& val);
     /// Construct a multivector, within a given frame, from a given multivector
     template< typename Other_Scalar_T >
     framed_multi(const framed_multi<Other_Scalar_T,LO,HI>& val,

@@ -6,7 +6,7 @@
     Clifford algebra element
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2012 by Paul C. Leopardi
+    copyright            : (C) 2001-2014 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -75,7 +75,7 @@ namespace glucat
   : map_t(_GLUCAT_HASH_N(hash_size()))
   { }
 
-  /// Copy constructor
+  /// Construct a multivector from a multivector with a different scalar type
   template< typename Scalar_T, const index_t LO, const index_t HI >
   template< typename Other_Scalar_T >
   framed_multi<Scalar_T,LO,HI>::
@@ -89,13 +89,6 @@ namespace glucat
     for (other_const_iterator val_it = val_begin; val_it != val_end; ++val_it)
       this->insert(term_t(val_it->first, numeric_traits<Scalar_T>::to_scalar_t(val_it->second)));
   }
-
-  /// Copy constructor
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  framed_multi<Scalar_T,LO,HI>::
-  framed_multi(const framed_multi_t& val)
-  : map_t(val)
-  { }
 
   /// Construct a multivector, within a given frame, from a given multivector
   template< typename Scalar_T, const index_t LO, const index_t HI >
@@ -1829,21 +1822,21 @@ namespace glucat
     const basis_matrix_t&  I = matrix::unit<basis_matrix_t>(2);
     basis_matrix_t J(2,2,2);
     J.clear();
-    J(0,1)  = -1;
-    J(1,0)  =  1;
+    J(0,1)  = Scalar_T(-1);
+    J(1,0)  = Scalar_T( 1);
     basis_matrix_t K = J;
-    K(0,1)  =  1;
+    K(0,1)  = Scalar_T( 1);
     basis_matrix_t JK = I;
-    JK(0,0) = -1;
+    JK(0,0) = Scalar_T(-1);
 
     const index_set_t ist_mn = index_set_t(-level);
     const index_set_t ist_pn = index_set_t(level);
     if (level == 1)
     {
       if (odd)
-        return matrix_t(J) * (*this)[ist_mn] + matrix_t(K)  * (*this)[ist_pn];
+        return J * (*this)[ist_mn] + K  * (*this)[ist_pn];
       else
-        return matrix_t(I) * this->scalar()  + matrix_t(JK) * (*this)[ist_mn ^ ist_pn];
+        return I * this->scalar()  + JK * (*this)[ist_mn ^ ist_pn];
     }
     else
     {
@@ -1898,32 +1891,10 @@ namespace glucat
     const index_t level = (p + q)/2;
 
     // Do the fast transform
-    switch (Tune_P::fast_precision)
-    {
-    case precision_demoted:
-      {
-        typedef typename numeric_traits<Other_Scalar_T>::demoted::type demoted_scalar_t;
-        typedef framed_multi<demoted_scalar_t,LO,HI> demoted_framed_multi_t;
-        const demoted_framed_multi_t& demoted_ev_val = val.even();
-        const demoted_framed_multi_t& demoted_od_val = val.odd();
-        return matrix_multi<Other_Scalar_T,LO,HI>(demoted_ev_val.fast(level, 0) + demoted_od_val.fast(level, 1), frm);
-      }
-      break;
-    case precision_promoted:
-      {
-        typedef typename numeric_traits<Other_Scalar_T>::promoted::type promoted_scalar_t;
-        typedef framed_multi<promoted_scalar_t,LO,HI> promoted_framed_multi_t;
-        const promoted_framed_multi_t& promoted_ev_val = val.even();
-        const promoted_framed_multi_t& promoted_od_val = val.odd();
-        return matrix_multi<Other_Scalar_T,LO,HI>(promoted_ev_val.fast(level, 0) + promoted_od_val.fast(level, 1), frm);
-      }
-      break;
-    default:
       const multivector_t& ev_val = val.even();
       const multivector_t& od_val = val.odd();
       return matrix_multi<Other_Scalar_T,LO,HI>(ev_val.fast(level, 0) + od_val.fast(level, 1), frm);
     }
-  }
 
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
