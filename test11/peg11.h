@@ -44,7 +44,6 @@ typedef glucat::tuning
     glucat::DEFAULT_Fast_Size_Threshold,
     glucat::DEFAULT_Inv_Fast_Dim_Threshold,
     glucat::DEFAULT_Products_Size_Threshold,
-    glucat::precision_same,
     glucat::precision_promoted
   >
   Tune_P;
