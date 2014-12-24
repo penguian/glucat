@@ -50,7 +50,7 @@ namespace glucat
   float
   numeric_traits<float>::
   to_scalar_t(const Other_Scalar_T& val)
-  { return float(numeric_traits<Other_Scalar_T>::to_double(val)); }
+  { return static_cast<float>(numeric_traits<Other_Scalar_T>::to_double(val)); }
 
   /// Cast to double
   template< >

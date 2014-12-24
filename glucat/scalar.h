@@ -5,7 +5,7 @@
     scalar.h : Define functions for scalar_t
                              -------------------
     begin                : 2001-12-20
-    copyright            : (C) 2001-2012 by Paul C. Leopardi
+    copyright            : (C) 2001-2014 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -123,14 +123,14 @@ namespace glucat
     static
     int
     to_int(const Scalar_T& val)
-    { return int(val); }
+    { return static_cast<int>(val); }
 
     /// Cast to double
     inline
     static
     double
     to_double(const Scalar_T& val)
-    { return double(val); }
+    { return static_cast<double>(val); }
 
     /// Cast to Scalar_T
     template <typename Other_Scalar_T >
@@ -138,7 +138,7 @@ namespace glucat
     static
     Scalar_T
     to_scalar_t(const Other_Scalar_T& val)
-    { return Scalar_T(val); }
+    { return static_cast<Scalar_T>(val); }
 
     /// Promoted type
     struct promoted {typedef double type;};
