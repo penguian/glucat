@@ -5,8 +5,11 @@
 #
 # plotting_demo_mayavi.py: Demonstrate the use of Mayavi2 plotting with PyClical.
 #
-#    Reference:
+#    References:
 #    [B] Michael F. Barnsley, Superfractals, http://www.superfractals.com/
+#    [DV] Leo Dorst and Robert Valkenburg, "Square Root and Logarithm of Rotors in 3D
+#    Geometric Algebra Using Polar Decomposition", in Leo Dorst and Joan Lasenby
+#    (eds.), Guide to Geometric Algebra in Practice, Springer, 2011, pp. 81-104.
 #
 #    copyright            : (C) 2010-2014 by Paul C. Leopardi
 #
@@ -23,16 +26,22 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
+#
+# Imports needed for array calculation and plotting.
+#
+import numpy as np
+import mayavi.mlab as ml
 from PyClical import *
 
 #
 # Default values common to functions draw_orbit and demo.
 #
 default_nbr_points  =  8000
-default_segment_len =  2000
-default_figwidth    =   900
-default_figheight   =   900
+default_segment_len =  8000
+default_figwidth    =  1024
+default_figheight   =  1024
 default_radius      =     0.05
+default_resolution  =     8
 default_opacity     =     1.0
 
 def draw_orbit(r, s,
@@ -41,6 +50,7 @@ def draw_orbit(r, s,
         figwidth    = default_figwidth,
         figheight   = default_figheight,
         radius      = default_radius,
+        resolution  = default_resolution,
         opacity     = default_opacity):
     """
     Plot an orbit created by a random sequence using the rotors r and s,
@@ -53,13 +63,9 @@ def draw_orbit(r, s,
     figwidth    : Width of figure.
     figheight   : Height of figure.
     radius      : Relative radius of the ball around each point.
+    resolution  : Resolution of the ball around each point.
     opacity     : Opacity of the ball around each point.
     """
-    #
-    # Imports needed for array calculation and plotting.
-    #
-    import numpy as np
-    import mayavi.mlab as ml
     #
     # Frame for 3D Euclidean space R^3.
     #
@@ -90,10 +96,6 @@ def draw_orbit(r, s,
     #
     p = np.empty((segment_len, 3))
     #
-    # Use a new figure.
-    #
-    ml.figure(size=(figwidth, figheight))
-    #
     # Split the orbit into M segments.
     #
     M = nbr_points / segment_len
@@ -110,6 +112,7 @@ def draw_orbit(r, s,
             p[k,:] = agc3(u).vector_part(r3frame)
             #
             # Act on u via the adjoint action of either the rotor r or the rotor s.
+            # See [DV] for orbits of rotors in 3D CGA.
             # The rotor is chosen uniformly at random, making this a simple chaos game.
             # See [B] for related ideas.
             #
@@ -127,16 +130,19 @@ def draw_orbit(r, s,
         ml.points3d(p[:,0], p[:,1], p[:,2], n[:,0],
                     colormap="jet",
                     scale_factor=radius,
+                    resolution=resolution,
                     opacity=opacity)
 
 #
 # Default values for demo.
 #
-default_nbr_orbits  =    4
+default_nbr_figures =    4
+default_nbr_orbits  =    1
 default_scaling     = 1000
 default_reciprocal  = True
 
 def demo(
+        nbr_figures = default_nbr_figures,
         nbr_orbits  = default_nbr_orbits,
         nbr_points  = default_nbr_points,
         scaling     = default_scaling,
@@ -144,19 +150,22 @@ def demo(
         figwidth    = default_figwidth,
         figheight   = default_figheight,
         radius      = default_radius,
+        resolution  = default_resolution,
         opacity     = default_opacity,
         reciprocal  = default_reciprocal):
     """
     Plot orbits created by exponentiating a random bivector and its reciprocal in R_{4,0}.
 
     Parameters:
-    nbr_orbits  : Number of orbits to plot.
-    nbr_points  : Number of points overall.
+    nbr_figures : Number of figures to plot.
+    nbr_orbits  : Number of orbits to plot per figure.
+    nbr_points  : Number of points to plot in each orbit.
     scaling     : Scaling constant to use with bivector br.
     segment_len : Number of points in an orbit segment.
     figwidth    : Width of figure.
     figheight   : Height of figure.
     radius      : Relative radius of the ball around each point.
+    resolution  : Resolution of the ball around each point.
     opacity     : Opacity of the ball around each point.
     reciprocal  : Use the reciprocal bivector with respect to the pseudoscalar of R_{4,0}
     """
@@ -170,29 +179,38 @@ def demo(
     #
     r4frame = istpq(4,0)
     #
-    # Plot nbr_orbits orbits.
+    # Plot nbr_figures figures.
     #
-    for i in xrange(nbr_orbits):
+    for fig in xrange(nbr_figures):
         #
-        # Set br to be a random bivector in R_{4,0} with appropriate scaling.
+        # Use a new figure.
         #
-        br = random_clifford(r4frame)(2) * scaling / nbr_points
+        ml.figure(size=(figwidth, figheight))
         #
-        # Set bs to be the reciprocal bivector with respect to the pseudoscalar of R_{4,0}.
+        # Plot nbr_orbits orbits.
         #
-        bs = (cl(r4frame) / br) if reciprocal else cl(0)
-        #
-        # Exponentiate the bivectors br and bs to obtain rotors r and s.
-        #
-        r  = exp(br)
-        s  = exp(bs)
-        #
-        # Draw the orbit.
-        #
-        draw_orbit(r, s,
-                   nbr_points=nbr_points,
-                   segment_len=segment_len,
-                   figwidth=figwidth,
-                   figheight=figheight,
-                   radius=radius,
-                   opacity=opacity)
+        for i in xrange(nbr_orbits):
+            #
+            # Set br to be a random bivector in R_{4,0} with appropriate scaling.
+            #
+            br = random_clifford(r4frame)(2) * scaling / nbr_points
+            #
+            # Set bs to be the reciprocal bivector with respect to the pseudoscalar of R_{4,0}.
+            #
+            bs = (cl(r4frame) / br) if reciprocal else cl(0)
+            #
+            # Exponentiate the bivectors br and bs to obtain rotors r and s.
+            #
+            r  = exp(br)
+            s  = exp(bs)
+            #
+            # Draw the orbit.
+            #
+            draw_orbit(r, s,
+                       nbr_points=nbr_points,
+                       segment_len=segment_len,
+                       figwidth=figwidth,
+                       figheight=figheight,
+                       radius=radius,
+                       resolution=resolution,
+                       opacity=opacity)
