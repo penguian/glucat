@@ -1,4 +1,4 @@
-README for GluCat 0.7.3 with PyClical
+README for GluCat 0.7.4 with PyClical
 =====================================
 
 GluCat is a library of C++ template classes for calculations with the universal
@@ -241,6 +241,11 @@ This demo uses Matplotlib to produce a number of plots. With Mayavi and wxPython
 these plots are displayed in interactive windows, you can rotate, zoom and pan
 them. See (e.g.) http://mayavi.sourceforge.net/docs/guide/ch03s04.html
 
+You can also run the Mayavi plotting demo from a graphical user interface.
+To do this, run "./plotting_demo_dialog.py". For this to work properly, you will
+need to have Traits and TraitsUI installed. See (e.g.)
+http://code.enthought.com/projects/traits/
+http://code.enthought.com/projects/traits_ui/
 
 The tutorials and demos are also accompanied by a corresponding set of IPython
 notebooks. To build the notebooks, see INSTALL. To run the notebooks, assuming

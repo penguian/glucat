@@ -1,5 +1,12 @@
-NEWS for GluCat 0.7.3 with PyClical
+NEWS for GluCat 0.7.4 with PyClical
 ===================================
+
+2014-12-24: 0.7.4:
+GluCat 0.7.4 optionally improves the precision of the sqrt, log and exp functions.
+It does so by implementing constructors that allow mixed precision, e.g. a
+matrix_multi<float> can be initialized using a framed_multi<double>, etc.
+The precision of the sqrt(), log() and exp() functions is controlled by the
+tuning parameter function_precision.
 
 2014-04-02: 0.7.3:
 GluCat 0.7.3 fixes a bug where the line

@@ -1,4 +1,4 @@
-INSTALL for GluCat 0.7.3 with PyClical
+INSTALL for GluCat 0.7.4 with PyClical
 ======================================
 
 Prerequisites: Before You Begin
@@ -21,11 +21,11 @@ Directory Structure
 ===================
 
 Once you have downloaded, unzipped and untarred the source code, you should
-have a directory, glucat-0.7.3. Under this directory you should see a number
+have a directory, glucat-0.7.4. Under this directory you should see a number
 of subdirectories, including ./admin, ./doc, ./glucat, ./gfft_test, ./products,
 ./pyclical, ./squaring, ./test, ./test_runtime, ./testxx, and ./transforms.
 
-The following instructions are meant to be used with glucat-0.7.3 as the
+The following instructions are meant to be used with glucat-0.7.4 as the
 current directory.
 
 
@@ -103,7 +103,7 @@ relevant subdirectories.
 
 As briefly described above, the simplest way to install this package is:
 
- 1. "cd" to the glucat-0.7.3 directory containing the source code and type
+ 1. "cd" to the glucat-0.7.4 directory containing the source code and type
     "./configure" to configure GluCat with PyClical for your system.
     If you are using "csh" on an old version of System V, you might need to type
     "sh ./configure" instead to prevent "csh" from trying to execute
@@ -271,11 +271,13 @@ The option "--with-map=hash" adds "-D_GLUCAT_USE_GNU_CXX_HASH_MAP" to CXXFLAGS
 in the Makefiles, depending on whether you are using the g++ compiler,
 and adds _GLUCAT_USE_BACKWARD_HASH_MAP if the header file <backward/hash_map>
 is usable.
+*This option is deprecated and will be removed in a later version of GluCat.*
 
 The option "--with-map=tr1unordered" adds "-D_GLUCAT_USE_TR1_UNORDERED_MAP" to
 CXXFLAGS in the Makefiles, if the header file <tr1/unordered_map> is usable.
 The default argument to "--with-map" is "tr1unordered", so "./configure" with no
 options has the same effect as "./configure --with-map=tr1unordered".
+*This option is deprecated and will be removed in a later version of GluCat.*
 
 The option "--with-map=stdunordered" adds "-D_GLUCAT_USE_STD_UNORDERED_MAP" to
 CXXFLAGS in the Makefiles, if the header file <unordered_map> is usable.
@@ -291,10 +293,12 @@ is also defined, glucat/framed_multi.h includes the header file
 <backward/hash_map>, otherwise glucat/framed_multi.h includes the header file
 <ext/hash_map>. In either case, glucat/framed_multi.h defines
 glucat::framed_multi<> using __gnu_cxx::hash_map<>.
+*This option is deprecated and will be removed in a later version of GluCat.*
 
 If _GLUCAT_USE_TR1_UNORDERED_MAP is defined, glucat/framed_multi.h includes
 the header file <tr1/unordered_map> and defines glucat::framed_multi<>
 using std::tr1::unordered_map<>.
+*This option is deprecated and will be removed in a later version of GluCat.*
 
 If _GLUCAT_USE_STD_UNORDERED_MAP is defined, glucat/framed_multi.h includes
 the header file <unordered_map> and defines glucat::framed_multi<> using
@@ -310,12 +314,15 @@ exist.
 
  For __gnu_cxx::hash_map<> from <ext/hash_map> with the g++ compiler:
   "-D_GLUCAT_USE_GNU_CXX_HASH_MAP"
+*This option is deprecated and will be removed in a later version of GluCat.*
 
  For __gnu_cxx::hash_map<> from <backward/hash_map> with the g++ compiler:
   "-D_GLUCAT_USE_GNU_CXX_HASH_MAP -D_GLUCAT_USE_BACKWARD_HASH_MAP"
+*This option is deprecated and will be removed in a later version of GluCat.*
 
  For std::tr1::unordered_map<>:
   "-D_GLUCAT_USE_TR1_UNORDERED_MAP"
+*This option is deprecated and will be removed in a later version of GluCat.*
 
  For std::unordered_map<>:
   "-D_GLUCAT_USE_STD_UNORDERED_MAP"
@@ -404,6 +411,7 @@ The option "--with-random=tr1" adds "-D_GLUCAT_USE_TR1_RANDOM" to CXXFLAGS if
 the header file <tr1/random> is usable. The default argument to "--with-random"
 is "tr1", so "./configure" with no options has the same effect as
 "./configure --with-random=tr1".
+*This option is deprecated and will be removed in a later version of GluCat.*
 
 The option "--with-random=gsl" adds "-D_GLUCAT_USE_GSL_RANDOM" to CXXFLAGS and
 adds the flags "-lgsl" and "-lgslcblas" to the list of libraries, "all_libraries"
@@ -450,12 +458,14 @@ The option "--with-eig=alglib" adds
 "-D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_ALGLIB" to CXXFLAGS and adds the flag
 "-lalglib" to the list of libraries, "all_libraries" in the Makefiles, if the
 header file <alglib/evd.h> and the library libalglib are usable.
+*This option is deprecated and will be removed in a later version of GluCat.*
 
 The option "--with-eig=bindingsv1" adds
 "-D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BINDINGS_V1" to  CXXFLAGS and adds the
 flags "-llapack -lblas" to the list of libraries, "all_libraries" in the
 Makefiles, if the header file <boost/numeric/bindings/lapack/gees.hpp> and the
 libraries liblapack and libblas are usable.
+*This option is deprecated and will be removed in a later version of GluCat.*
 
 The option "--with-eig=bindings" adds
 "-D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BINDINGS" to  CXXFLAGS and adds the
@@ -479,11 +489,13 @@ a number of preprocessor symbols:
 
 If _GLUCAT_USE_ALGLIB is defined, glucat/matrix_imp.h includes <alglib/evd.h>
 and uses the Alglib library of Bochkanov and Bystritsky: http://www.alglib.net/.
+*This option is deprecated and will be removed in a later version of GluCat.*
 
 If _GLUCAT_USE_BINDINGS_V1 is defined, glucat/matrix_imp.h includes
 <boost/numeric/bindings/lapack/gees.hpp> and uses version 1 of the Boost Numeric
 Bindings library, as packaged by Klöckner:
 http://mathema.tician.de/software/boost-numeric-bindings/.
+*This option is deprecated and will be removed in a later version of GluCat.*
 
 If _GLUCAT_USE_BINDINGS is defined, glucat/matrix_imp.h includes
 <boost/numeric/bindings/lapack/driver/gees.hpp> and uses the SVN sandbox version
@@ -501,12 +513,14 @@ files and libraries must be usable.
   "-D_GLUCAT_USE_ALGLIB -lalglib"
   You will also need to ensure that the include path used by the compiler sees
   <alglib/evd.h> and the library path sees libalglib.*.
+*This option is deprecated and will be removed in a later version of GluCat.*
 
  For Boost Numeric Bindings version 1:
   "-D_GLUCAT_USE_BINDINGS_V1 -llapack -lblas"
   You will also need to ensure that the include path used by the compiler sees
   <boost/numeric/bindings/lapack/gees.hpp> and the library path sees liblapack.*
   and libblas.*.
+*This option is deprecated and will be removed in a later version of GluCat.*
 
  For Boost Numeric Bindings sandbox:
   "-D_GLUCAT_USE_BINDINGS -llapack -lblas"
@@ -639,8 +653,8 @@ matrix_multi<Scalar_T>.
 
 The ./test_runtime directory contains eight versions of the sample test results,
 corresponding to eight different combinations of configuration parameters. The
-tests were all run on Intel(R) Core(TM) i7 CPU 870, Kubuntu 13.04, g++ 4.8.1,
-Boost 1.53.
+tests were all run on Intel(R) Core(TM) i7 CPU 870, Kubuntu 13.04, g++ 4.8.2,
+Boost 1.54.
 
 The test output file names and corresponding configuration commands are:
 
@@ -673,13 +687,9 @@ The test output file names and corresponding configuration commands are:
             --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
             --with-map=stdunordered --with-random=std
 
-Each of the test output files 5 to 8 is identical to the output produced when
---with-eig=bindings in the corresponding configuration options is replaced by
---with-eig=bindingsv1 and --with-extra-includes is changed to match.
-
-When you run your own test using ./test/test.sh, you compare its output to the
-output file corresponding to the closest match to the configuration options you
-used to build your copy of the GluCat library.
+When you run your own test using ./test/test.sh, you should compare its output to
+the output file corresponding to the closest match to the configuration options
+you used to build your copy of the GluCat library.
 
 The reason why sample test results corresponding to eight different combinations
 of configuration parameters are included in test_runtime is that the test output
@@ -694,10 +704,7 @@ o If --with-eig=X is chosen, with X set to alglib, bindingsv1 or bindings, the
   Even if one of these options are chosen, some tests in ./test11/test11 fail
   due to insufficient accuracy. This is most likely caused by a combination of
   excessive round off and truncation error with respect to the condition numbers
-  of the matrices used in calculating these functions. It is possible to re-code
-  these functions to use higher precision for intermediate steps, but to do this
-  would require changing the clifford_algebra template to allow mixed-precision
-  arithmetic.
+  of the matrices used in calculating these functions.
 
 The tests typically use floating point arithmetic, and ./test00/test00 and
 ./test11/test11 in particular also use random number generators. Therefore if
@@ -745,17 +752,15 @@ The default is:
 
 The sample timing test results in ./test_runtime from programs
 built and run using the configure command:
-    ./configure --with-qd --with-eig=alglib \
-                --with-extra-libs=$HOME/usr/local/lib \
-                --with-extra-includes=$HOME/usr/local/include
-on  AMD Athlon(tm) 64 Processor 3200+ with
-    Linux 3.8.0-31-generic #46-Ubuntu SMP x86_64
-    gcc version 4.8.1 (Ubuntu/Linaro 4.8.1-10ubuntu9)
-    Boost 1.49.0
-    Alglib 2.5.0 C++
+    ./configure --with-qd --with-eig=bindings  \
+                --with-extra-includes=$PATHTO/numeric_bindings \
+                --with-map=stdunordered --with-random=std
+on  Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz+ with
+    Linux 3.13.0-43-generic #72-Ubuntu SMP x86_64
+    gcc version 4.8.2 (Ubuntu 4.8.2-19ubuntu1)
+    Boost 1.54.0
+    Boost Numeric Bindings
     QD 2.3.13
-    Python 2.7.5+
-    Cython 0.19
 
 
 Testing PyClical
@@ -764,7 +769,7 @@ Once you have built PyClical, run the doctests. In python or ipython, etc.:
 
  >>> import PyClical
  >>> PyClical._test()
- TestResults(failed=0, attempted=311)
+ TestResults(failed=0, attempted=312)
  >>> quit()
 
 Alternatively, in the directory pyclical, run the script test.py using:
@@ -799,112 +804,75 @@ to use sudo, login as root, or su to root before you run make install.
  List of Successful Builds
  =========================
 
- GluCat 0.7.3 with PyClical has so far been built and tested using:
+ GluCat 0.7.4 with PyClical has so far been built and tested using:
 
  1) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
 
     All eight configuration commands corresponding to each of the eight
     test.configure*.out files in ./test_runtime
 
-    Linux 3.8.0-35-generic #50-Ubuntu SMP x86_64
-    All three of the following compiler versions:
-    1) gcc version 4.7.3 (Ubuntu/Linaro 4.7.3-2ubuntu4)
-    2) gcc version 4.8.1 (Ubuntu/Linaro 4.8.1-10ubuntu9)
-    3) Ubuntu clang version 3.2-1~exp9ubuntu1 (tags/RELEASE_32/final) (based on LLVM 3.2)
-    Boost 1.53.0
-    Both of:
-    1) Boost Numeric Bindings V1
-    2) Boost Numeric Bindings
+    Linux 3.13.0-43-generic #72-Ubuntu SMP x86_64
+    The following compiler versions:
+    1) gcc version 4.8.2 (Ubuntu 4.8.2-19ubuntu1)
+    2) Ubuntu clang version 3.4-1ubuntu3 (tags/RELEASE_34/final) (based on LLVM 3.4)
+    Boost 1.54.0
+    Boost Numeric Bindings
     QD 2.3.13
-    Python 2.7.4
+    Python 2.7.6
     Cython 0.19.1
 
- 2) AMD Athlon(tm) 64 Processor 3200+ with
-
-    ./configure --with-qd --with-eig=alglib \
-    --with-extra-libs=$HOME/usr/local/lib \
-    --with-extra-includes=$HOME/usr/local/include
-
-    Linux 3.8.0-31-generic #46-Ubuntu SMP x86_64
-    gcc version 4.8.1 (Ubuntu/Linaro 4.8.1-10ubuntu9)
-    Boost 1.49.0
-    Alglib 2.5.0 C++
-    QD 2.3.13
-    Python 2.7.5+
-    Cython 0.19
-
- 3) AMD Athlon(tm) 64 Processor 3200+ with
+ 2) 2 core AMD E-350 Processor
 
     ./configure --with-qd --with-eig=bindings \
     --with-extra-libs=$HOME/usr/local/lib \
     --with-extra-includes=$PATHTO/numeric_bindings:$HOME/usr/local/include
 
-    Linux 3.8.0-31-generic #46-Ubuntu SMP x86_64
-    gcc version 4.8.1 (Ubuntu/Linaro 4.8.1-10ubuntu9)
-    Boost 1.49.0
+    Linux 3.8.0-35-generic #50-Ubuntu SMP x86_64
+    gcc version 4.8.2 (Ubuntu 4.8.2-19ubuntu1)
+    Boost 1.54.0
     Boost Numeric Bindings
     QD 2.3.13
-    Python 2.7.5+
-    Cython 0.19
+    Python 2.7.6
+    Cython 0.20.1post0
 
- 4) AMD Athlon(tm) 64 Processor 3200+ with
+3) 4 core AMD Opteron(tm) Processor 8360 SE  @ 1.25GHz with
 
-    ./configure --with-qd --with-eig=bindings \
-    --with-extra-libs=$HOME/usr/local/lib \
-    --with-extra-includes=$PATHTO/numeric_bindings:$HOME/usr/local/include
-
-    Linux 3.8.0-31-generic #46-Ubuntu SMP x86_64
-    Ubuntu clang version 3.4-1ubuntu1 (trunk) (based on LLVM 3.4)
-    Boost 1.49.0
-    Boost Numeric Bindings
-    QD 2.3.13
-    Python 2.7.5+
-    Cython 0.19
-
- 5) 2 core AMD E-350 Processor
-
-    ./configure --with-qd --with-eig=bindingsv1 \
-    --with-extra-libs=$HOME/usr/local/lib \
-    --with-extra-includes=$HOME/usr/local/include:$PATHTO/boost-numeric-bindings-v1
-
-    Linux 3.8.0-32-generic #47-Ubuntu SMP x86_64
-    gcc version 4.7.3 (Ubuntu/Linaro 4.7.3-1ubuntu1)
-    Boost 1.49.0
-    Boost Numeric Bindings V1
-    QD 2.3.13
-    Python 2.7.4
-    Cython 0.17.4
-
-6) 4 core AMD Opteron(tm) Processor 8360 SE  @ 1.25GHz with
-
-    ./configure --with-eig=bindingsv1 \
-    --with-extra-includes=$PATHTO/boost-numeric-bindings-v1
+    ./configure --with-eig=bindings \
+    --with-extra-includes=$PATHTO/numeric_bindings
 
     Linux 3.4.0-rc3 #4 SMP x86_64
-    gcc version 4.5.4 (Gentoo 4.5.4 p1.0, pie-0.4.7)
+    gcc version 4.8.3 (Gentoo 4.8.3 p1.1, pie-0.5.9)
     Boost 1.49.0
-    Boost Numeric Bindings V1
-    Python 2.7.5
+    Boost Numeric Bindings
+    Python 2.7.7
     Cython 0.20.1
 
 
 Notes on software versions
 --------------------------
 
- 1. GluCat 0.7.3 has not been tested with gcc versions earlier than 4.5.4,
-    Clang versions earlier than 3.2, Boost versions earlier than 1.49.0,
-    QD versions earlier than 2.3.13, Python versions earlier than 2.7.4, or
-    Cython versions earlier than 0.18.
+    GluCat 0.7.4 has not been tested with gcc versions earlier than 4.8.2,
+    Clang versions earlier than 3.4, Boost versions earlier than 1.49.0,
+    QD versions earlier than 2.3.13, Python versions earlier than 2.7.6, or
+    Cython versions earlier than 0.19.1.
 
- 2. GluCat needs an include library which either defines the macro isnan or
+    GluCat 0.7.4 has not been tested with Alglib or Boost Numeric Bindings V1.
+    These libraries are deprecated and the configuration option to build with
+    them will be removed in GluCat 0.8.0.
+
+    The following bugs and workarounds apply to earlier versions of GluCat,
+    and may still be applicable to GluCat 0.7.4, but have not been checked
+    for this version.
+
+ 1. GluCat needs an include library which either defines the macro isnan or
     defines std::isnan. The C++ standard library included with gcc 4.5.2 and
     above defines std::isnan.
 
- 3. Cython versions earlier than 0.15 do not build PyClical 0.7.3 correctly,
-    because PyClical 0.7.3 uses generators, which were only implemented with
+ 2. Cython versions earlier than 0.15 do not build PyClical correctly,
+    because PyClical uses generators, which were only implemented with
     Cython 0.15.
 
- 4. Cython versions to and including 0.16 do not build PyClical correctly
+ 3. Cython versions to and including 0.16 do not build PyClical correctly
     for C++11. If you try to use g++ with -std=c++11 you will see
     an error message like:
 
@@ -916,22 +884,18 @@ Notes on software versions
     The workaround is to edit PyClical.cpp and put a space before and after each
     occurrence of PY_FORMAT_SIZE_T. This was fixed some time after Cython 0.16.
 
- 5. GluCat 0.7.3 will not work with QD versions earlier than 2.3.10,
-    because older versions do not zero-initialize dd_real and qd_real
-    as required by ublas::clear().
+ 4. GluCat will not work with QD versions earlier than 2.3.10, because older
+    versions of QD do not zero-initialize dd_real and qd_real as required by
+    ublas::clear().
 
- 6. GluCat 0.7.3 has not been tested with Alglib versions later than 2.5.0 and
-    is unlikely to work with Alglib 3.0.0 or later versions, because the Alglib
-    source files were reorganized for version 3.0.0.
-
- 7. With clang++ 3.2, building PyClical results in the warning
+ 5. With clang++ 3.2, building PyClical results in the warning
 
 clang: warning: argument unused during compilation: '--param ssp-buffer-size=4'
 
     This is harmless, and was fixed after Clang version 3.2.
     See http://llvm.org/bugs/show_bug.cgi?id=15327
 
- 8. With clang++ 3.4 and g++ 4.6 or earlier, if you use the configuration option
+ 6. With clang++ 3.4 and g++ 4.6 or earlier, if you use the configuration option
     --with-random=tr1 (the default), an error in a TR1 header file that is part
     of the C++ Standard Library for g++ will result in an error message like:
 

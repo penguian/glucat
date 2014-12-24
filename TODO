@@ -1,4 +1,4 @@
-TODO for GluCat 0.7.3 with PyClical
+TODO for GluCat 0.7.4 with PyClical
 ===================================
 
 Documentation:
@@ -18,7 +18,8 @@ o Port to other architectures and compilers which support template template
 
 Interfaces:
   Downwards:
-o Try using Eigen as a replacement for uBLAS, Boost numeric bindngs and Alglib.
+o Try using Armadillo, Blaze or Eigen as a replacement for uBLAS, Boost numeric
+  bindings and Alglib.
 o Alternatively, support later versions of Alglib (requested by John Fletcher).
 
   Upwards:
@@ -33,8 +34,6 @@ o Devise better algorithms and better implementations of existing algorithms for
 o Investigate the use of matrix decompositions in the evaluation of
   transcendental functions. See N. J. Higham, Functions of Matrices: Theory and
   Computation, 2008.
-o Try automatically increasing the precision of intermediate floating point
-  operations for transcendental functions.
 
 Experimental:
 o Investigate the use of expression templates in GluCat.
@@ -54,5 +53,3 @@ o Try replacing multiplication by +/-1 within inner products by addition and
 o Try creating a class, vector_multi<>, which uses std::vector rather than
   std::map. This should be faster than framed_multi<>, if tuned properly, for
   full multivectors. For sparse multivectors, it may be slower.
-o Try automatically increasing the precision of intermediate floating point
-  operations, particularly for conversions between matrix_multi and framed_multi.
