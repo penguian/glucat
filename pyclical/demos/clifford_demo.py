@@ -199,9 +199,6 @@ def run(ctx=tutorial_context(globals())):
 
     pause()
     print_fill("There is even more to time and space than this, but *our* time has run out.")
-    print_fill("Here is a taste of the possibilities ...")
-    print_exec("import plotting_demo_mayavi as pdm")
-    print_exec("#pdm.demo()")
 
 if __name__ == "__main__":
     try:
