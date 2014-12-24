@@ -5,7 +5,7 @@
     qd.h : Define functions for dd_real and qd_real as scalar_t
                              -------------------
     begin                : 2010-03-23
-    copyright            : (C) 2010-2012 by Paul C. Leopardi
+    copyright            : (C) 2010-2014 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
