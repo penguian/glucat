@@ -44,12 +44,11 @@ typedef glucat::tuning
     glucat::DEFAULT_Fast_Size_Threshold,
     glucat::DEFAULT_Inv_Fast_Dim_Threshold,
     glucat::DEFAULT_Products_Size_Threshold,
-    glucat::precision_same,
-    glucat::precision_same
+    glucat::precision_promoted
   >
   Tune_P;
 
-  #include "glucat/glucat_imp.h"
+#include "glucat/glucat_imp.h"
 #include <iostream>
 #include <sstream>
 #include <iomanip>
@@ -164,3 +163,13 @@ typedef matrix_multi<scalar_t> Clifford;
 // Do not warn about unused values. This affects clang++ as well as g++.
 
 #pragma GCC diagnostic ignored "-Wunused-value"
+
+#if defined(__clang__)
+// Do not warn about unused functions. The affects clang++ only.
+
+# pragma clang diagnostic ignored "-Wunused-function"
+
+// Do not warn about unneeded internal declarations. The affects clang++ only.
+
+# pragma clang diagnostic ignored "-Wunneeded-internal-declaration"
+#endif
