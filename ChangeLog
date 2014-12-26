@@ -1,3 +1,189 @@
+2014-12-24  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/gfft_test-11.out, test_runtime/products-8.out,
+	test_runtime/squaring-11.out,
+	test_runtime/test.configure.eig-bindings.out,
+	test_runtime/test.configure.out,
+	test_runtime/test.configure.qd-eig-bindings-map-map.out,
+	test_runtime/test.configure.qd-eig-bindings-map-stdunordered-random
+	-std.out, test_runtime/test.configure.qd-eig-bindings.out,
+	test_runtime/test.configure.qd-map-map.out,
+	test_runtime/test.configure.qd-map-stdunordered-random-std.out,
+	test_runtime/test.configure.qd.out, test_runtime/transforms-8.out:
+	Update test results for GluCat 0.7.4.
+
+2014-12-24  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/sqrt_log_demo.out, pyclical/demos/sqrt_log_demo.py:
+	In PyClical sqrt_log_demo, do not print the value of the random
+	multivector x.
+
+2014-12-24  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/clifford_demo.py: Remove plotting_demo_mayavi from
+	Clifford demo. It does not work properly from IPython Notebook.
+
+2014-12-24  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test07/peg07.h: Use scalar_t with scalar constants.
+
+2014-12-24  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test11/peg11.h: Use tuning parameter function_precision but not
+	fast_precision.
+
+2014-12-24  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/plotting_demo_dialog.py,
+	pyclical/demos/plotting_demo_mayavi.py: Improve the PyClical
+	plotting demos that use Mayavi.
+
+2014-12-24  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL, NEWS, README, TODO: Update INSTALL, NEWS, README and TODO
+	for GluCat 0.7.4.
+
+2014-12-24  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* AUTHORS, Doxyfile, glucat.lsm, pyclical/PyClical.pyx: Update
+	GluCat and PyClical versions to 0.7.4.
+
+2014-12-24  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/PyClical.h: Do not use tuning parameter fast_precision.
+	Use precision_promoted for function_precision for better function
+	accuracy. Ignore some clang++ warnings caused by Cython.
+
+2014-12-24  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/scalar.h, glucat/scalar_imp.h: Use static_cast<>.
+
+2014-12-24  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/long_double.h, glucat/qd.h: Update copyright notice.
+
+2014-12-24  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi.h, glucat/framed_multi_imp.h,
+	glucat/matrix_multi.h, glucat/matrix_multi_imp.h: Consistently
+	define and use tuning parameter function_precision but not
+	fast_precision.
+
+2014-12-24  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/global.h: In glucat/global.h, remove tuning parameter
+	fast_precision. It did not work as anticipated.
+
+2014-12-24  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* admin/cvs.sh, admin/detect-autoconf.sh, admin/ltmain.sh: Make
+	admin shell files executable.
+
+2014-05-07  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test11/peg11.h: Do not test cases where the result is known to be
+	undefined or NaN,
+
+2014-05-07  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_multi_imp.h: In operator+=(term), do not cast the
+	basis element to matrix_t; in constructors, don't cast crd to
+	Scalar_T when crd is already of this type.
+
+2014-05-07  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/scalar_imp.h: Adjust spacing in subtractions.
+
+2014-05-07  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/long_double.h, glucat/qd.h, glucat/scalar_imp.h: Add
+	conversions from long double to dd_real and qd_real; promote long
+	double to dd_real when _GLUCAT_USE_QD is defined.
+
+2014-05-07  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_multi.h: Revert basis_matrix_t back to using
+	Scalar_T rather than int: this is to speed up matrix_multi
+	construction from framed_multi.
+
+2014-05-07  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_imp.h: Use _GLUCAT_GCC_IGNORE_UNUSED_LOCAL_TYPEDEFS
+	with _GLUCAT_USE_BINDINGS.
+
+2014-05-07  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.in, configure.in.in: Add GLUCAT_MSG_WARN_DEPRECATED for
+	deprecated options; update some AC_* macros; improve quoting in
+	messages.
+
+2014-05-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/test.configure.qd-map-stdunordered-random-std.out:
+	Changed test results corresponding to the changes to matrix_multi<>
+	constructors.
+
+2014-05-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_multi_imp.h: Simplify constructors to remove
+	unnecessary operations and to prevent clang++ warnings about unused
+	variables.
+
+2014-04-28  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/test.configure.eig-bindings.out,
+	test_runtime/test.configure.out,
+	test_runtime/test.configure.qd-eig-bindings-map-map.out,
+	test_runtime/test.configure.qd-eig-bindings-map-stdunordered-random
+	-std.out, test_runtime/test.configure.qd-eig-bindings.out,
+	test_runtime/test.configure.qd-map-map.out,
+	test_runtime/test.configure.qd-map-stdunordered-random-std.out,
+	test_runtime/test.configure.qd.out: Test results for improved scalar
+	demotion and promotion.
+
+2014-04-28  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/long_double.h, glucat/qd.h, glucat/scalar_imp.h: Improve
+	scalar demotion and promotion by using long double, dd_real and
+	qd_real as appropriate.
+
+2014-04-27  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/test.configure.eig-bindings.out,
+	test_runtime/test.configure.out,
+	test_runtime/test.configure.qd-eig-bindings-map-map.out,
+	test_runtime/test.configure.qd-eig-bindings-map-stdunordered-random
+	-std.out, test_runtime/test.configure.qd-eig-bindings.out,
+	test_runtime/test.configure.qd-map-map.out,
+	test_runtime/test.configure.qd-map-stdunordered-random-std.out,
+	test_runtime/test.configure.qd.out: Test scalar promote / demote, in
+	particular test11 uses promoted sqrt, log and exp functions.
+
+2014-04-27  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* gfft_test/gfft_test.h, glucat/clifford_algebra_imp.h,
+	glucat/framed_multi.h, glucat/framed_multi_imp.h, glucat/global.h,
+	glucat/glucat_imp.h, glucat/long_double.h, glucat/matrix_multi.h,
+	glucat/matrix_multi_imp.h, glucat/qd.h, glucat/scalar.h,
+	glucat/scalar_imp.h, pyclical/PyClical.h, pyclical/PyClical.pyx,
+	test11/peg11.cpp, test11/peg11.h, transforms/transforms.h: Implement
+	scalar promotion and demotion, and use it in GFFT and in sqrt, log
+	and exp functions.
+
+2014-04-27  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL: Correct test output file names.
+
+2014-04-17  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/build_pyclical_notebooks.py,
+	pyclical/demos/clifford_demo.py: New demo file based on presentation
+	given at Aston University in 2014, hosted by John Fletcher.
+
+2014-04-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* ChangeLog: Bring up to date.
+
 2014-04-02  Paul Leopardi <paul.leopardi@anu.edu.au>
 
 	* AUTHORS, Doxyfile, INSTALL, NEWS, README, TODO, glucat.lsm,
@@ -55,7 +241,7 @@
 2014-03-29  Paul Leopardi <paul.leopardi@anu.edu.au>
 
 	* admin/config.guess, admin/config.sub, admin/depcomp,
-	admin/install-sh, admin/missing, admin/mkinstalldirs, admin/ylwrap: 
+	admin/install-sh, admin/missing, admin/mkinstalldirs, admin/ylwrap:
 	Bring up to date with respect to automake 1.11.6.
 
 2014-03-27  Paul Leopardi <paul.leopardi@anu.edu.au>
@@ -147,7 +333,7 @@
 
 2014-03-12  Paul Leopardi <paul.leopardi@anu.edu.au>
 
-	* glucat/global.h, glucat/matrix_multi_imp.h, pyclical/Makefile.am: 
+	* glucat/global.h, glucat/matrix_multi_imp.h, pyclical/Makefile.am:
 	Build cleanly with LLVM/Clang; build PyClical cleanly and
 	automatically whether or not Cython is installed.
 
@@ -504,7 +690,7 @@
 
 2012-10-10  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-	* pyclical/demos/pyclical_demo.py, pyclical/demos/sqrt_log_demo.py: 
+	* pyclical/demos/pyclical_demo.py, pyclical/demos/sqrt_log_demo.py:
 	Move to pyclical/demos/.  Define demo() function and use it within "try ... except" so that
 	CRTL-c can interrupt the demo.
 
@@ -1584,7 +1770,7 @@
 
 2009-12-20  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-	* Doxyfile, INSTALL, configure.in, configure.in.in, glucat.lsm: 
+	* Doxyfile, INSTALL, configure.in, configure.in.in, glucat.lsm:
 	Update to Version 0.4.3.
 
 2009-12-14  Paul C. Leopardi <leopardi@users.sourceforge.net>
@@ -2065,7 +2251,7 @@
 
 2007-11-03  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-	* products/products.h, squaring/squaring.cpp, squaring/squaring.h: 
+	* products/products.h, squaring/squaring.cpp, squaring/squaring.h:
 	Use GLUCAT_TEST_REPEAT to control whether to repeat the timing
 	tests.
 
@@ -3323,7 +3509,7 @@
 	test12/Makefile.am, test12/Makefile.in, test13/Makefile.am,
 	test13/Makefile.in, test14/Makefile.am, test14/Makefile.in,
 	test15/Makefile.am, test15/Makefile.in, test16/Makefile.am,
-	test16/Makefile.in, transforms/Makefile.am, transforms/Makefile.in: 
+	test16/Makefile.in, transforms/Makefile.am, transforms/Makefile.in:
 	Define INCLUDES as $(all_includes) This causes $(all_includes) to be
 	passed correctly to the compiler command line.
 
@@ -3537,12 +3723,12 @@
 
 2003-06-28  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-	* configure.in.in, glucat.doxygen, glucat.kdevprj, glucat.lsm: 
+	* configure.in.in, glucat.doxygen, glucat.kdevprj, glucat.lsm:
 	Update to version 0.1.4
 
 2003-06-28  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-	* glucat/global.h, glucat/index_set.h, glucat/index_set_imp.h: 
+	* glucat/global.h, glucat/index_set.h, glucat/index_set_imp.h:
 	Change mapping of index_set_t to bitset_t to make index 0 of
 	index_set_t a "virtual" bit rather than a real dead bit of bitset_t.
 	This allows DEFAULT_LO to be reduced by 1, and DEFAULT_HI to be
@@ -3965,7 +4151,7 @@
 
 2003-02-25  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-	* test/.cvsignore, test/Makefile.am, test/driver.cpp, test/driver.h: 
+	* test/.cvsignore, test/Makefile.am, test/driver.cpp, test/driver.h:
 	New directory ./transforms for generalized FFT test program.
 
 2003-01-12  Paul C. Leopardi <leopardi@users.sourceforge.net>
@@ -4044,7 +4230,7 @@
 
 2003-01-07  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-	* configure.in, configure.in.in, glucat.doxygen, glucat.kdevprj: 
+	* configure.in, configure.in.in, glucat.doxygen, glucat.kdevprj:
 	Update to GluCat version 0.1.1
 
 2002-12-31  Paul C. Leopardi <leopardi@users.sourceforge.net>
@@ -4150,7 +4336,7 @@
 
 2002-12-30  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-	* glucat/framed_multi_imp.h, glucat/matrix.h, glucat/matrix_imp.h: 
+	* glucat/framed_multi_imp.h, glucat/matrix.h, glucat/matrix_imp.h:
 	Clean up interface to inner().
 
 2002-12-29  Paul C. Leopardi <leopardi@users.sourceforge.net>
@@ -4269,7 +4455,7 @@
 
 2002-12-28  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-	* glucat/clifford_algebra.h, glucat/errors.h, glucat/errors_imp.h: 
+	* glucat/clifford_algebra.h, glucat/errors.h, glucat/errors_imp.h:
 	Prefer std::string to char*
 
 2002-12-28  Paul C. Leopardi <leopardi@users.sourceforge.net>
@@ -4362,7 +4548,7 @@
 	admin/config.pl, admin/config.sub, admin/configure.in.min,
 	admin/cvs-clean.pl, admin/cvs.sh, admin/debianrules, admin/depcomp,
 	admin/detect-autoconf.sh, admin/install-sh, admin/libtool.m4.in,
-	admin/ltmain.sh, admin/missing, admin/mkinstalldirs, admin/ylwrap: 
+	admin/ltmain.sh, admin/missing, admin/mkinstalldirs, admin/ylwrap:
 	Add files apparently needed by autoconf, automake or configure
 
 2002-08-12  Paul C. Leopardi <leopardi@users.sourceforge.net>
@@ -4600,4 +4786,71 @@
 2002-01-12  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
 	* Add glucat to cvs
+
+2002-01-12 leopardi
+
+        * .cvsignore, AUTHORS, COPYING, ChangeLog, INSTALL, Makefile.am,
+          Makefile.dist, NEWS, README, TODO, acconfig.h, acinclude.m4.in,
+          config.guess, config.h.in, config.sub, configure, configure.in,
+          configure.in.no_shlib, glucat.directory, glucat.doxygen,
+          glucat.kdevprj, glucat.kdevses, glucat.lsm, install-sh,
+          libtool.m4.in, ltconfig, ltmain.sh, missing, mkinstalldirs,
+          stamp-h.in, glucat/.cvsignore, glucat/Makefile.am,
+          glucat/clifford_algebra.h, glucat/clifford_algebra_imp.h,
+          glucat/errors.h, glucat/errors_imp.h, glucat/framed_multi.h,
+          glucat/framed_multi_imp.h, glucat/global.h, glucat/glucat.h,
+          glucat/glucat_imp.h, glucat/index_set.h, glucat/index_set_imp.h,
+          glucat/long_double.h, glucat/matrix_multi_imp.h, glucat/matrix.h,
+          glucat/matrix_imp.h, glucat/matrix_multi.h, glucat/portability.h,
+          glucat/scalar.h, glucat/templates/.cvsignore,
+          glucat/templates/cpp_template, glucat/templates/header_template,
+          test/.cvsignore, test/Makefile.am, test/driver.cpp,
+          test/driver.h, test/eg3.res, test/eg8.txt, test/peg01.h,
+          test/peg02.h, test/peg03.h, test/peg04.h, test/peg05.h,
+          test/peg06.h, test/peg07.h, test/peg08.h, test/peg09.h,
+          test/peg10.h, test/peg11.h, test/peg12.h, test/peg13.h,
+          test/peg14.h, test/peg15.h, test/peg16.h, test/squaring.h,
+          test/test-6.out, test/test.out, test/templates/.cvsignore,
+          test/templates/cpp_template, test/templates/header_template:
+          Initial revision
+
+2002-01-12 leopardi
+
+        *  Update version to 0.0.2
+
+2002-01-12  leopardi
+
+        * ./test/test.out, test6.out: Add sample output
+
+2002-01-12  leopardi
+
+        * Add all relevant files to CVS
+
+2002-01-12  leopardi
+
+        * ./glucat/doc: remove unused directory
+
+2002-01-11  leopardi
+
+        * ./glucat/clifford_algebra_imp.h: Fix elliptic() to give a result which commutes
+
+2002-01-11  leopardi
+
+        * ./test/peg12.cpp: Change example name from "basis group" to "frame group"
+
+2002-01-11  leopardi
+
+        * ./test/peg13.cpp, peg14.cpp, peg15.cpp: Add cout << example name
+
+2002-01-11  leopardi
+
+        * ./test/peg16.cpp: Fix example name to read: Matrices of multivectors
+
+2002-01-10  leopardi
+
+        * ./README: Add -finline-limit-400
+
+2002-01-09  leopardi
+
+        * Release glucat-0.0.1
 
