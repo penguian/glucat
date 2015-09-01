@@ -21,15 +21,18 @@
 #    along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 from distutils.core import setup
-from setup_ext import setup_ext
+from setup_ext import setup_ext, cxx_build_ext
 from Cython.Build import cythonize
 import Cython.Compiler.Options
 Cython.Compiler.Options.annotate=True
 import os
+
 ext_name = os.environ['ext_name']
 source   = os.environ['source_pyx']
 ext = setup_ext(ext_name, source)
+
 setup(
     name = ext_name,
+    cmdclass = {'build_ext': cxx_build_ext},
     ext_modules = cythonize([ext])
 )

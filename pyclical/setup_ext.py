@@ -30,7 +30,7 @@ os.environ['OPT'] = " ".join(
 )
 #
 cxxflags = os.environ['CXXFLAGS']
-includes = os.environ['INCLUDES']
+am_cppflags = os.environ['AM_CPPFLAGS']
 ldflags  = os.environ['LDFLAGS']
 #
 def setup_ext(ext_name, source):
@@ -38,8 +38,23 @@ def setup_ext(ext_name, source):
         ext_name,         # name of extension
         sources=[source], # filename of our Cython source
         include_dirs=[".",".."],
-        extra_compile_args=includes.split() + cxxflags.split(),
+        extra_compile_args=am_cppflags.split() + cxxflags.split(),
         extra_link_args=ldflags.split(),
     )
     return ext
 
+# From https://github.com/SublimeCodeIntel/silvercity/blob/master/setup.py
+# as at 2015-08-31
+from distutils.command.build_ext import build_ext
+class cxx_build_ext(build_ext):
+    def build_extensions(self):
+        # Allow a custom C++ compiler through the environment variables.
+        compiler = os.environ.get('CXX')
+        if compiler is not None:
+            import sysconfig
+            (ccshared, cflags) = sysconfig.get_config_vars(
+                'CCSHARED', 'CFLAGS')
+            args = {}
+            args['compiler_so'] = compiler + ' ' + ccshared + ' ' + cflags
+            self.compiler.set_executables(**args)
+        build_ext.build_extensions(self)
