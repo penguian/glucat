@@ -6,7 +6,7 @@
     Clifford algebra element
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2014 by Paul C. Leopardi
+    copyright            : (C) 2001-2015 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -252,7 +252,7 @@ namespace glucat
     const Scalar_T eps = std::numeric_limits<Scalar_T>::epsilon();
     const Scalar_T tol = traits_t::abs(val_norm * eps * eps);
 #if defined(_GLUCAT_MAP_IS_HASH)
-    const size_t max_size = std::min(algebra_dim, matrix::nnz(val.m_matrix));
+    const size_t max_size = std::min<size_t>(algebra_dim, matrix::nnz(val.m_matrix));
     *this = multivector_t(_GLUCAT_HASH_SIZE_T(max_size));
 #endif
     for (set_value_t
