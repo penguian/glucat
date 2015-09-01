@@ -5,7 +5,7 @@ AUTOMAKE_OPTIONS = foreign
 noinst_PROGRAMS = gfft_test
 
 # set the include path found by configure
-INCLUDES = $(all_includes)
+AM_CPPFLAGS = $(all_includes)
 # the library search path.
 LDFLAGS = $(all_libraries)
 gfft_test_LDFLAGS = $(LDFLAGS)

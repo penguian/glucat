@@ -5,7 +5,7 @@ AUTOMAKE_OPTIONS = foreign
 noinst_PROGRAMS = test10
 
 # set the include path found by configure
-INCLUDES = $(all_includes)
+AM_CPPFLAGS = $(all_includes)
 # the library search path.
 LDFLAGS = $(all_libraries)
 test10_LDFLAGS = $(LDFLAGS)

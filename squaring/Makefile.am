@@ -5,7 +5,7 @@ AUTOMAKE_OPTIONS = foreign
 noinst_PROGRAMS = squaring
 
 # set the include path found by configure
-INCLUDES = $(all_includes)
+AM_CPPFLAGS = $(all_includes)
 # the library search path.
 LDFLAGS = $(all_libraries)
 squaring_LDFLAGS = $(LDFLAGS)
