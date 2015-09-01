@@ -1,13 +1,12 @@
-TODO for GluCat 0.7.4 with PyClical
+TODO for GluCat 0.7.5 with PyClical
 ===================================
 
 Documentation:
 o Write a programmer's guide with descriptions of usage via use cases.
-o Provide better user documentation for PyCliCal.
+o Provide better user documentation for PyClical.
 
 Packaging:
-o Simplify and improve the use of Autotools in configuring, building and
-  installing GluCat and PyClical. Essentially a complete overhaul is needed.
+o Port from Autotools to Cmake.
 o Improve the packaging of the example and test programs.
 
 Portability:
@@ -18,12 +17,10 @@ o Port to other architectures and compilers which support template template
 
 Interfaces:
   Downwards:
-o Try using Armadillo, Blaze or Eigen as a replacement for uBLAS, Boost numeric
-  bindings and Alglib.
-o Alternatively, support later versions of Alglib (requested by John Fletcher).
+o Try using Armadillo as a replacement for uBLAS, Boost bindings and Alglib.
 
   Upwards:
-o Expand the Cython-based Python extension module PyCliCal into a Sage interface.
+o Expand the Cython-based Python extension module PyClical into a Sage interface.
 o Try defining Boost concepts and more numeric traits so that GluCat can
   eventually become a Boost library.
 
@@ -36,7 +33,8 @@ o Investigate the use of matrix decompositions in the evaluation of
   Computation, 2008.
 
 Experimental:
-o Investigate the use of expression templates in GluCat.
+o Port to C++14 to take maximum advantage of C++11 and C++14 semantics and idioms.
+o Investigate the use of expression templates.
 o Try refactoring the relationship between matrix_multi, framed_multi and
   clifford_algebra to allow more flexibility with template parameters.
   Possibly use enable_if and SFINAE to do this.

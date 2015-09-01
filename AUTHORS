@@ -1,4 +1,4 @@
-AUTHORS for GluCat 0.7.4 with PyClical
+AUTHORS for GluCat 0.7.5 with PyClical
 ======================================
 
 Paul C. Leopardi <leopardi@users.sourceforge.net>
@@ -11,7 +11,8 @@ Available by contacting the author:
 Paul Leopardi, "Practical computation with Clifford algebras",
 (unpublished coursework Masters major project report) UNSW 2002.
 
-Available at http://maths-people.anu.edu.au/~leopardi/ :
+Available at 
+http://sites.google.com/site/paulleopardi/research/clifford-algebras :
 
 Paul Leopardi, "Practical computation with Clifford algebras",
 (unpublished presentation) UNSW 2002.
@@ -239,7 +240,7 @@ Rafal Ablamowicz, Pertti Lounesto, Josep Parra (eds.),
 
 Chris Doran and Anthony Lasenby, "Geometric Algebra for Physicists",  Cambridge
 University Press, 2003, 2007.
-http://www.mrao.cam.ac.uk/~cjld1/pages/book.htm
+http://geometry.mrao.cam.ac.uk/2007/01/geometric-algebra-for-physicists/
 
 David Hestenes, Garret Sobczyk, "Clifford Algebra to Geometric Calculus",
 Kluwer, first published in 1984; reprinted with corrections in 1992.
@@ -262,20 +263,18 @@ o The Clifford Research Group at Ghent University
   http://cage.ugent.be/crg/
 o Leo Dorst
   http://staff.science.uva.nl/~leo/clifford/
-o John Fletcher
-  http://www1.aston.ac.uk/eas/staff/dr-john-fletcher/
 o The Geometric Algebra Research Group at Cambridge:
-  http://www.mrao.cam.ac.uk/~clifford/
+  http://geometry.mrao.cam.ac.uk/
 o David Hestenes
   http://geocalc.clas.asu.edu/
 o Soeren Krausshar
-  http://www3.mathematik.tu-darmstadt.de/hp/algebra/krausshar-soeren/startseite.html
+  http://www.uni-erfurt.de/mathematik/mathematik/team/prof-dr-soeren-krausshar/
 o Pertti Lounesto
   http://users.tkk.fi/ppuska/mirror/Lounesto/
 o Alan Macdonald
   http://faculty.luther.edu/~macdonal/
 o Christian Perwass
-  http://www.perwass.de/
+  http://www.researchgate.net/profile/Christian_Perwass/publications
 o Wikipedia: Geometric algebra
   http://en.wikipedia.org/wiki/Geometric_algebra
 
@@ -295,5 +294,5 @@ Other Clifford algebra software
  Historical
  o CLICAL, a Clifford algebra calculator
    http://users.tkk.fi/ppuska/mirror/Lounesto/CLICAL.htm
- o GA Package for Maple V
-   http://www.mrao.cam.ac.uk/~clifford/software/GA/
+ o GA Package for Maple
+   http://www.mrao.cam.ac.uk/~maja1/software/GA/

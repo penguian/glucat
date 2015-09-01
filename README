@@ -1,4 +1,4 @@
-README for GluCat 0.7.4 with PyClical
+README for GluCat 0.7.5 with PyClical
 =====================================
 
 GluCat is a library of C++ template classes for calculations with the universal
@@ -46,7 +46,7 @@ o Alan Macdonald, A Survey of Geometric Algebra and Geometric Calculus
 o Alan Macdonald, Linear and Geometric Algebra, 2011.
   http://books.google.com.au/books?q=isbn:9781453854938
 
-You should also install PyClical and run the tutorial.Once you have run the
+You should also install PyClical and run the tutorial. Once you have run the
 PyClical tutorial, run the PyClical demos and look at the sample demo output.
 Now examine the C++ code for the GluCat tests, as well as the sample output.
 Finally, look at Glucat API documentation. Instructions for each of these steps
@@ -74,8 +74,8 @@ These tasks are treated in some detail below.
 
 You can download new versions of GluCat from
 http://sourceforge.net/projects/glucat/files/
-or alternatively, use the CVS version:
-http://sourceforge.net/scm/?type=cvs&group_id=37255
+or alternatively, use the Git version:
+http://sourceforge.net/p/glucat/git/ci/master/tree/
 
 
 2. Understanding the source code directory structure
@@ -89,7 +89,7 @@ files.
 Once you have downloaded, unzipped and untarred the GluCat source code,
 you should have a directory, glucat-xxx, where xxx is the version number.
 Under glucat-xxx you should see a number of directories, including ./admin,
-./CVS, ./doc, ./gfft_test, ./glucat, ./products, ./pyclical, ./squaring, ./test,
+./doc, ./gfft_test, ./glucat, ./m4, ./products, ./pyclical, ./squaring, ./test,
 ./test_runtime, ./testxx,  and ./transforms.
 
 The ./glucat directory contains all the header files that define the GluCat C++
@@ -99,12 +99,8 @@ The ./pyclical directory contains the C++ and Cython source code for the
 PyClical Python extension module, as well as Python source code for the
 PyClical demos and tutorials, and sample demo output.
 
-The ./admin directory is part of the autotools infrastructure for building
-GluCat, and should normally be left unchanged.
-
-The ./CVS directory is used by the CVS version control system. There are also
-CVS directories in each of the other directories. These should also be left
-unchanged.
+The ./admin and ./m4 directories are part of the autotools infrastructure for 
+building GluCat, and should normally be left unchanged.
 
 The ./doc directory contains documentation. Currently only the GluCat API
 Reference Manual can be found here.

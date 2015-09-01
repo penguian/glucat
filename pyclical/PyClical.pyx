@@ -6,7 +6,7 @@
 #
 # PyClical.pyx: Cython definitions visible from Python.
 #
-#    copyright            : (C) 2008-2014 by Paul C. Leopardi
+#    copyright            : (C) 2008-2015 by Paul C. Leopardi
 #
 #    This library is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Lesser General Public License as published
@@ -29,7 +29,7 @@ import math
 import numbers
 import collections
 
-__version__ = "0.7.4"
+__version__ = "0.7.5"
 
 from PyClical cimport *
 

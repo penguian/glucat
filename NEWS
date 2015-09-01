@@ -1,5 +1,11 @@
-NEWS for GluCat 0.7.4 with PyClical
+NEWS for GluCat 0.7.5 with PyClical
 ===================================
+
+2015-08-31: 0.7.5:
+The use of Autotools in configuring, building and installing GluCat and 
+PyClical has been simplified and improved. Deprecated configuation options
+have been dropped. The default for --with-random is now std. The default
+for --with-map is now stdunordered. 
 
 2014-12-24: 0.7.4:
 GluCat 0.7.4 optionally improves the precision of the sqrt, log and exp functions.
