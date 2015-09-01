@@ -1,13 +1,7 @@
-/* config.h.in.  Generated from configure.in by autoheader.  */
-
-/* Define to 1 if you have the <backward/hash_map> header file. */
-#undef HAVE_BACKWARD_HASH_MAP
+/* config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* Define to 1 if you have the <bits/wordsize.h> header file. */
 #undef HAVE_BITS_WORDSIZE_H
-
-/* Define to 1 if you have the <ext/hash_map> header file. */
-#undef HAVE_EXT_HASH_MAP
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
@@ -32,12 +26,6 @@
 
 /* Define to 1 if you have the <sys/types.h> header file. */
 #undef HAVE_SYS_TYPES_H
-
-/* Define to 1 if you have the <tr1/random> header file. */
-#undef HAVE_TR1_RANDOM
-
-/* Define to 1 if you have the <tr1/unordered_map> header file. */
-#undef HAVE_TR1_UNORDERED_MAP
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
