@@ -21,7 +21,7 @@ endif
 glucat_extra_cxxflags_pyclical = @glucat_extra_cxxflags_pyclical@
 EXTCXXFLAGS = $(glucat_extra_cxxflags_pyclical) $(CXXFLAGS)
 # set the include path found by configure
-INCLUDES = $(all_includes)
+AM_CPPFLAGS = $(all_includes)
 # the library search path.
 LDFLAGS = $(all_libraries)
 
@@ -30,7 +30,7 @@ pyexec_DATA = $(ext_name).so
 all: $(pyexec_DATA)
 
 $(ext_name).so: $(SETUP_SOURCE_LIST) $(SETUP).py setup_ext.py ../glucat/glucat.h ../glucat/glucat_imp.h
-	ext_name="$(ext_name)" $(SETUP_SOURCE_PARAM) CXXFLAGS="$(EXTCXXFLAGS)" INCLUDES="$(INCLUDES)" LDFLAGS="$(LDFLAGS)" $(PYTHON) $(SETUP).py build_ext --inplace
+	ext_name="$(ext_name)" $(SETUP_SOURCE_PARAM) CXX="$(CXX)" CXXFLAGS="$(EXTCXXFLAGS)" AM_CPPFLAGS="$(AM_CPPFLAGS)" LDFLAGS="$(LDFLAGS)" $(PYTHON) $(SETUP).py build_ext --inplace
 
 clean:
 	rm -f $(ext_name).so $(CLEAN_CYTHON)
