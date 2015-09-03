@@ -22,12 +22,6 @@
 
 from distutils.extension import Extension
 import os
-# From stackoveflow user subdir 2012-03-16
-from distutils.sysconfig import get_config_vars
-(opt,) = get_config_vars('OPT')
-os.environ['OPT'] = " ".join(
-    flag for flag in opt.split() if flag != '-Wstrict-prototypes'
-)
 #
 cxxflags = os.environ['CXXFLAGS']
 am_cppflags = os.environ['AM_CPPFLAGS']
@@ -51,10 +45,14 @@ class cxx_build_ext(build_ext):
         # Allow a custom C++ compiler through the environment variables.
         compiler = os.environ.get('CXX')
         if compiler is not None:
-            import sysconfig
-            (ccshared, cflags) = sysconfig.get_config_vars(
-                'CCSHARED', 'CFLAGS')
+            from distutils.sysconfig import get_config_vars
+            (ccshared, cflags) = get_config_vars('CCSHARED', 'CFLAGS')
+            # From stackoveflow user subdir 2012-03-16
+            ignore_flag = '-Wstrict-prototypes'
+            new_cflags = " ".join(
+                flag for flag in cflags.split() if flag != ignore_flag
+            )
             args = {}
-            args['compiler_so'] = compiler + ' ' + ccshared + ' ' + cflags
+            args['compiler_so'] = compiler + ' ' + ccshared + ' ' + new_cflags
             self.compiler.set_executables(**args)
         build_ext.build_extensions(self)
