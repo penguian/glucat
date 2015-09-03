@@ -1,8 +1,8 @@
-EXTRA_DIST = demos/pyclical_demo.py demos/pyclical_demo.out Makefile.am
+ext_name = PyClical
+
+EXTRA_DIST = demos/*.py demos/*.out Makefile.am $(ext_name).cpp test.out
 
 AUTOMAKE_OPTIONS = foreign
-
-ext_name = PyClical
 
 # Setup and clean options depend on availability of Cython
 if use_cython
