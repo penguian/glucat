@@ -127,6 +127,9 @@ Attendees of Sage Days 10 in Nancy, 2008:
   Advice on use of Cython with C++.
 Robert Bradshaw, Mark Florisson, cython-users
   More advice on use of Cython with C++.
+Brian Quinlan
+  Code in pyclical/setup_ext.py adapted from
+  https://github.com/SublimeCodeIntel/silvercity/blob/master/setup.py
 
 PyClical Tutorials
 ------------------
