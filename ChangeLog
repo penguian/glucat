@@ -1,3 +1,11 @@
+2015-09-05  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* glucat.lsm: Correct date.
+
+2015-09-04  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* : Merge remote-tracking branch 'origin/master' Conflicts: 	ChangeLog ChangeLog for version 0.7.5.
+
 2015-09-03  Paul Leopardi <leopardi@users.sourceforge.net>
 
 	* AUTHORS: Add Brian Quinlan to AUTHORS due to use of SilverCity
@@ -131,6 +139,10 @@
 	admin/debianrules, admin/libtool.m4.in, admin/ltmain.sh,
 	admin/mkinstalldirs, admin/ylwrap: Simplify the use of Autotools in
 	the configure, build, install process. Remove unused admin files.
+
+2014-12-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* ChangeLog: Update ChangeLog for version 0.7.4.
 
 2014-12-24  Paul Leopardi <paul.leopardi@anu.edu.au>
 
