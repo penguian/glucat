@@ -47,21 +47,11 @@
 
 // Use the appropriate type of map
 
-#if defined(_GLUCAT_USE_GNU_CXX_HASH_MAP)
-# if defined(_GLUCAT_USE_BACKWARD_HASH_MAP)
-#  include <backward/hash_map>
-# else
-#  include <ext/hash_map>
-# endif
-#elif defined(_GLUCAT_USE_TR1_UNORDERED_MAP)
-# include <tr1/unordered_map>
-#elif defined(_GLUCAT_USE_STD_UNORDERED_MAP)
+#if defined(_GLUCAT_USE_STD_UNORDERED_MAP)
 # include <unordered_map>
 #endif
 
-#if defined(_GLUCAT_USE_GNU_CXX_HASH_MAP)  || \
-    defined(_GLUCAT_USE_TR1_UNORDERED_MAP) || \
-    defined(_GLUCAT_USE_STD_UNORDERED_MAP)
+#if defined(_GLUCAT_USE_STD_UNORDERED_MAP)
 # define _GLUCAT_MAP_IS_HASH
 #else
 # define _GLUCAT_MAP_IS_ORDERED
@@ -144,12 +134,7 @@ namespace glucat
   template< typename Scalar_T = double,  const index_t LO = DEFAULT_LO, const index_t HI = DEFAULT_HI >
   class framed_multi :
   public clifford_algebra< Scalar_T, index_set<LO,HI>, framed_multi<Scalar_T,LO,HI> >,
-#if defined(_GLUCAT_USE_GNU_CXX_HASH_MAP)
-  private     __gnu_cxx::hash_map< const index_set<LO,HI>, Scalar_T, index_set_hash<LO,HI> >
-#elif defined(_GLUCAT_USE_TR1_UNORDERED_MAP)
-  private std::tr1::unordered_map< const index_set<LO,HI>, Scalar_T, index_set_hash<LO,HI>,
-                    std::equal_to< const index_set<LO,HI> > >
-#elif defined(_GLUCAT_USE_STD_UNORDERED_MAP)
+#if defined(_GLUCAT_USE_STD_UNORDERED_MAP)
   private std::unordered_map< const index_set<LO,HI>, Scalar_T, index_set_hash<LO,HI> >
 #else
   private std::map< const index_set<LO,HI>, Scalar_T,
@@ -185,14 +170,7 @@ namespace glucat
 #endif
                     >
                                                        sorted_map_t;
-#if defined(_GLUCAT_USE_GNU_CXX_HASH_MAP)
-    typedef       __gnu_cxx::hash_map< const index_set_t, Scalar_T, index_set_hash<LO,HI> >
-                                                       map_t;
-#elif defined(_GLUCAT_USE_TR1_UNORDERED_MAP)
-    typedef std::tr1::unordered_map< const index_set_t, Scalar_T, index_set_hash<LO,HI>,
-                                     std::equal_to<const index_set_t> >
-                                                       map_t;
-#elif defined(_GLUCAT_USE_STD_UNORDERED_MAP)
+#if defined(_GLUCAT_USE_STD_UNORDERED_MAP)
     typedef std::unordered_map< const index_set<LO,HI>, Scalar_T, index_set_hash<LO,HI> >
                                                        map_t;
 #else
