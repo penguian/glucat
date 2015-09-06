@@ -1,3 +1,54 @@
+2015-09-06  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* pyclical/PyClical.pyx: Update to version 0.8.0.
+
+2015-09-06  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* AUTHORS, Doxyfile, TODO, glucat.lsm: Update to version 0.8.0.
+
+2015-09-06  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* NEWS: NEWS for version 0.8.0.
+
+2015-09-06  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* INSTALL: Document changes, including new compiler flag and two new
+	tests.
+
+2015-09-06  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* README: Use correct name for
+	doc/api/GluCat-API-reference-manual.pdf.
+
+2015-09-06  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: Remove unused flag _GLUCAT_USE_STD_RANDOM; ensure
+	that --enable-debug=full uses CXX flags -O0 -g3.
+
+2015-09-06  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* test_runtime/test.configure.compressed-mat.out,
+	test_runtime/test.configure.debug-full.out: New test output files.
+
+2015-09-06  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* glucat/matrix_multi_imp.h: Use new flag _GLUCAT_CHECK_ISNAN to
+	ensure that dense and compressed matrices test for isnan() the same
+	way.
+
+2015-09-06  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* glucat/random.h: Remove deprecated TR1 default.
+
+2015-09-06  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* glucat/framed_multi.h, glucat/matrix_imp.h: Remove deprecated
+	options.
+
+2015-09-05  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* ChangeLog: Update ChangeLog for version 0.7.5.
+
 2015-09-05  Paul Leopardi <leopardi@users.sourceforge.net>
 
 	* glucat.lsm: Correct date.
@@ -91,7 +142,7 @@
 	test_runtime/test.configure.qd-eig-bindings-map-map.out,
 	test_runtime/test.configure.qd-eig-bindings.out,
 	test_runtime/test.configure.qd-map-map.out,
-	test_runtime/test.configure.qd.out, test_runtime/transforms-8.out: 
+	test_runtime/test.configure.qd.out, test_runtime/transforms-8.out:
 	Update test output files.
 
 2015-09-01  Paul Leopardi <leopardi@users.sourceforge.net>
@@ -129,7 +180,7 @@
 	*
 	test_runtime/test.configure.qd-eig-bindings-map-stdunordered-random
 	-std.out,
-	test_runtime/test.configure.qd-map-stdunordered-random-std.out: 
+	test_runtime/test.configure.qd-map-stdunordered-random-std.out:
 	Remove obsolete test output files.
 
 2015-09-01  Paul Leopardi <leopardi@users.sourceforge.net>
@@ -5003,4 +5054,5 @@
 2002-01-09  leopardi
 
         * Release glucat-0.0.1
+
 
