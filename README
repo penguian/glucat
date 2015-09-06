@@ -1,4 +1,4 @@
-README for GluCat 0.7.5 with PyClical
+README for GluCat 0.8.0 with PyClical
 =====================================
 
 GluCat is a library of C++ template classes for calculations with the universal
@@ -296,7 +296,7 @@ namespace by using the glucat:: prefix or by the "using" declaration above.
 
 
 To obtain detailed information on the GluCat namespaces, classes and functions,
-see the Doxygen documentation in doc/api/glucat-api-reference-manual.pdf (PDF)
+see the Doxygen documentation in doc/api/GluCat-API-reference-manual.pdf (PDF)
 and doc/api/html/ (HTML).
 
 

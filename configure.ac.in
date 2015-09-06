@@ -32,7 +32,7 @@ dnl    Boston, MA 02111-1307, USA.
 
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([glucat],[0.7.5])
+AC_INIT([glucat],[0.8.0])
 AC_CONFIG_MACRO_DIR([m4])
 m4_include([m4/acinclude.m4])
 AC_CONFIG_SRCDIR([aclocal.m4]) dnl a source file from your sub dir
@@ -46,6 +46,9 @@ AC_DEFUN([GLUCAT_MSG_WARN_DEPRECATED],
 
 AC_DEFUN([GLUCAT_CHECK_COMPILERS],
 [
+  dnl As a side effect of testing introduced by autoconf, CXXFLAGS has been changed. Restore it.
+  CXXFLAGS=$saved_CXXFLAGS
+
   dnl process the command line arguments
 
   AC_ARG_ENABLE(debug,      [[  --enable-debug[=ARG]    enables debug symbols (yes|no|full) [default=no]]],
@@ -163,23 +166,15 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     ],
     [glucat_use_eigenvalues="no"])
 
-  dnl this prevents stupid AC_PROG_CC to add "-g" to the default CFLAGS
-  CFLAGS=" $CFLAGS"
-
   AC_LANG(C++)
 
   if test -z "$LDFLAGS" && test "$glucat_use_debug_code" = "no" && test "$GCC" = "yes"; then
      LDFLAGS=""
   fi
 
-  AC_PROG_CPP
-
-  CXXFLAGS=" $CXXFLAGS"
-
   AC_REQUIRE([AC_PROG_CXX])
   AC_PROG_CXX
 
-  basename_cc="$(basename $CC)"
   basename_cxx="$(basename $CXX)"
 
   AC_MSG_CHECKING([for $CXX version])
@@ -322,7 +317,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       glucat_have_std_random=no
       GLUCAT_CHECK_HEADERS([random],
       [
-        CXXFLAGS="$save_CXXFLAGS -D_GLUCAT_USE_STD_RANDOM";
         glucat_have_std_random=yes
         glucat_cxx_std="cxx11"
       ],
@@ -340,7 +334,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     AC_MSG_CHECKING([for cython version])
     cythonversion=`cython --version < /dev/null 2>&1 | grep -i 'Cython version' | awk '{print [\$]3}'`
     if test "$cythonversion" = ""; then
-      AC_MSG_RESULT( not found )
+      AC_MSG_RESULT( [not found] )
     else
       AC_MSG_RESULT( $cythonversion )
       glucat_use_cython="yes"
@@ -420,11 +414,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
 
   if test "$GCC" = yes; then
      NOOPT_CXXFLAGS=-O0
-     NOOPT_CFLAGS=-O0
   fi
 
   AC_SUBST(NOOPT_CXXFLAGS)
-  AC_SUBST(NOOPT_CFLAGS)
 
   ifdef([AM_DEPENDENCIES], AC_REQUIRE([GLUCAT_ADD_DEPENDENCIES]), [])
 ])
@@ -468,10 +460,11 @@ all_libraries="$all_libraries $USER_LDFLAGS"
 all_includes="-I. -I.. $all_includes $USER_INCLUDES"
 
 dnl checks for programs.
-dnl first check for c/c++ compilers
+dnl first check for C++ compilers
+
+saved_CXXFLAGS=$CXXFLAGS
 GLUCAT_CHECK_COMPILERS
 
-CFLAGS="$NOOPT_CFLAGS"
 CXXFLAGS="$CXXFLAGS $USE_EXCEPTIONS"
 
 AC_SUBST(all_includes)

@@ -38,6 +38,7 @@
 #  pragma GCC diagnostic push
 #  pragma GCC diagnostic ignored "-Wunused-local-typedefs"
 # endif
+
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/vector_proxy.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
@@ -46,31 +47,17 @@
 #include <boost/numeric/ublas/matrix_sparse.hpp>
 #include <boost/numeric/ublas/operation.hpp>
 #include <boost/numeric/ublas/operation_sparse.hpp>
+
+#if defined(_GLUCAT_USE_BINDINGS)
+# include <boost/numeric/bindings/lapack/driver/gees.hpp>
+# include <boost/numeric/bindings/ublas.hpp>
+#endif
+
 # if defined(_GLUCAT_GCC_IGNORE_UNUSED_LOCAL_TYPEDEFS)
 #  pragma GCC diagnostic pop
 # endif
 
 #include <set>
-
-#if   defined(_GLUCAT_USE_ALGLIB)
-# include <alglib/evd.h>
-#else
-# if  defined(_GLUCAT_GCC_IGNORE_UNUSED_LOCAL_TYPEDEFS)
-#  pragma GCC diagnostic push
-#  pragma GCC diagnostic ignored "-Wunused-local-typedefs"
-# endif
-# if defined(_GLUCAT_USE_BINDINGS_V1)
-#  include <boost/numeric/bindings/lapack/workspace.hpp>
-#  include <boost/numeric/bindings/lapack/gees.hpp>
-#  include <boost/numeric/bindings/traits/ublas_matrix.hpp>
-# elif defined(_GLUCAT_USE_BINDINGS)
-#  include <boost/numeric/bindings/lapack/driver/gees.hpp>
-#  include <boost/numeric/bindings/ublas.hpp>
-# endif
-# if defined(_GLUCAT_GCC_IGNORE_UNUSED_LOCAL_TYPEDEFS)
-#  pragma GCC diagnostic pop
-# endif
-#endif
 
 namespace glucat { namespace matrix
 {
@@ -466,50 +453,7 @@ namespace glucat { namespace matrix
     return result;
   }
 
-#if defined(_GLUCAT_USE_ALGLIB)
-  /// Convert matrix to ALGLIB format
-  template< typename Matrix_T >
-  static
-  ap::real_2d_array
-  to_alglib(const Matrix_T& val)
-  {
-    typedef typename Matrix_T::size_type matrix_index_t;
-    const matrix_index_t s1 = val.size1();
-    const matrix_index_t s2 = val.size2();
-
-    ap::real_2d_array result;
-    result.setlength(int(s1), int(s2));
-
-    typedef typename Matrix_T::value_type Scalar_T;
-    typedef numeric_traits<Scalar_T> traits_t;
-
-    matrix_index_t j;
-    matrix_index_t k;
-    for (j = 0;
-        j != s1;
-        ++j)
-      for(k = 0;
-          k != s2;
-          ++k)
-         result(int(j), int(k)) = 0.0;
-
-    typedef typename Matrix_T::const_iterator1 const_iterator1;
-    typedef typename Matrix_T::const_iterator2 const_iterator2;
-    for (const_iterator1
-        val_it1 = val.begin1();
-        val_it1 != val.end1();
-        ++val_it1)
-      for (const_iterator2
-          val_it2 = val_it1.begin();
-          val_it2 != val_it1.end();
-          ++val_it2)
-         result(int(val_it2.index1()), int(val_it2.index2())) = traits_t::to_double(*val_it2);
-
-    return result;
-  }
-#endif
-
-#if defined(_GLUCAT_USE_BINDINGS_V1) || defined(_GLUCAT_USE_BINDINGS)
+#if defined(_GLUCAT_USE_BINDINGS)
   /// Convert matrix to LAPACK format
   template< typename Matrix_T >
   static
@@ -556,33 +500,12 @@ namespace glucat { namespace matrix
     complex_vector_t lambda = complex_vector_t(dim);
     lambda.clear();
 
-#if defined(_GLUCAT_USE_ALGLIB)
-    ap::real_2d_array T = to_alglib(val);
-    const int n = dim;
-    ap::real_1d_array real_lambda;
-    real_lambda.setlength(n);
-    ap::real_1d_array imag_lambda;
-    imag_lambda.setlength(n);
-    ap::real_2d_array vl;
-    ap::real_2d_array vr;
-
-    rmatrixevd(T, n, 0, real_lambda, imag_lambda, vl, vr);
-
-    lambda.clear();
-    for (int  k=0; k!= n; ++k)
-      lambda[k] = complex_t(real_lambda(k), imag_lambda(k));
-#endif
-#if defined(_GLUCAT_USE_BINDINGS_V1) || defined(_GLUCAT_USE_BINDINGS)
+#if defined(_GLUCAT_USE_BINDINGS)
     namespace lapack = boost::numeric::bindings::lapack;
     typedef typename ublas::matrix<double, ublas::column_major> lapack_matrix_t;
 
     lapack_matrix_t T = to_lapack(val);
     lapack_matrix_t V = T;
-#if defined(_GLUCAT_USE_BINDINGS_V1)
-
-    lapack::gees (T, lambda, V, lapack::optimal_workspace() );
-
-#elif defined(_GLUCAT_USE_BINDINGS)
     typedef typename ublas::vector<double> vector_t;
     vector_t real_lambda = vector_t(dim);
     vector_t imag_lambda = vector_t(dim);
@@ -593,7 +516,6 @@ namespace glucat { namespace matrix
     lambda.clear();
     for (vector_t::size_type  k=0; k!= dim; ++k)
       lambda[k] = complex_t(real_lambda[k], imag_lambda[k]);
-#endif
 #endif
     return lambda;
   }

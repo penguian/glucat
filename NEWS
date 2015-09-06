@@ -1,5 +1,19 @@
-NEWS for GluCat 0.7.5 with PyClical
+NEWS for GluCat 0.8.0 with PyClical
 ===================================
+
+2015-09-06: 0.8.0:
+All deprecated options have been removed from the code,
+along with the code associated with related defined options. Because this is
+a backwards-incompatible change, the version number has been bumped to 0.8.0.
+
+Specfically, the code can no longer optionally use:
+<ext/hash_map> (was enabled by the option _GLUCAT_USE_GNU_CXX_HASH_MAP),
+<backward/hash_map> (_GLUCAT_USE_BACKWARD_HASH_MAP),
+<tr1/unordered_map> (_GLUCAT_USE_TR1_UNORDERED_MAP),
+<tr1/random> (the old default: the option _GLUCAT_USE_STD_RANDOM
+is no longer needed, and is ignored, as <random> is now the default),
+<alglib/evd.h> (_GLUCAT_USE_ALGLIB) or
+<boost/numeric/bindings/lapack/gees.hpp> (_GLUCAT_USE_BINDINGS_V1).
 
 2015-08-31: 0.7.5:
 The use of Autotools in configuring, building and installing GluCat and 
