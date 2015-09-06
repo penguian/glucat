@@ -1,4 +1,4 @@
-INSTALL for GluCat 0.7.5 with PyClical
+INSTALL for GluCat 0.8.0 with PyClical
 ======================================
 
 Prerequisites: Before You Begin
@@ -21,11 +21,11 @@ Directory Structure
 ===================
 
 Once you have downloaded, unzipped and untarred the source code, you should
-have a directory, glucat-0.7.5. Under this directory you should see a number
+have a directory, glucat-0.8.0. Under this directory you should see a number
 of subdirectories, including ./admin, ./doc, ./glucat, ./gfft_test, ./products,
 ./pyclical, ./squaring, ./test, ./test_runtime, ./testxx, and ./transforms.
 
-The following instructions are meant to be used with glucat-0.7.5 as the
+The following instructions are meant to be used with glucat-0.8.0 as the
 current directory.
 
 
@@ -103,7 +103,7 @@ relevant subdirectories.
 
 As briefly described above, the simplest way to install this package is:
 
- 1. "cd" to the glucat-0.7.5 directory containing the source code and type
+ 1. "cd" to the glucat-0.8.0 directory containing the source code and type
     "./configure" to configure GluCat with PyClical for your system.
     If you are using "csh" on an old version of System V, you might need to type
     "sh ./configure" instead to prevent "csh" from trying to execute
@@ -276,18 +276,6 @@ If the g++ compiler is being used, the compiler flag "-std=c++11" rather than
 By default glucat/framed_multi.h defines glucat::framed_multi<> using
 std::map<>, which is a sorted map.
 
-If _GLUCAT_USE_GNU_CXX_HASH_MAP is defined, then if _GLUCAT_USE_BACKWARD_HASH_MAP
-is also defined, glucat/framed_multi.h includes the header file
-<backward/hash_map>, otherwise glucat/framed_multi.h includes the header file
-<ext/hash_map>. In either case, glucat/framed_multi.h defines
-glucat::framed_multi<> using __gnu_cxx::hash_map<>.
-*This option is deprecated and will be removed in a later version of GluCat.*
-
-If _GLUCAT_USE_TR1_UNORDERED_MAP is defined, glucat/framed_multi.h includes
-the header file <tr1/unordered_map> and defines glucat::framed_multi<>
-using std::tr1::unordered_map<>.
-*This option is deprecated and will be removed in a later version of GluCat.*
-
 If _GLUCAT_USE_STD_UNORDERED_MAP is defined, glucat/framed_multi.h includes
 the header file <unordered_map> and defines glucat::framed_multi<> using
 std::unordered_map<>.
@@ -299,18 +287,6 @@ following flags to the C++ compiler, and the corresponding header files must
 exist.
 
  For std::map<>: no flags.
-
- For __gnu_cxx::hash_map<> from <ext/hash_map> with the g++ compiler:
-  "-D_GLUCAT_USE_GNU_CXX_HASH_MAP"
-*This option is deprecated and will be removed in a later version of GluCat.*
-
- For __gnu_cxx::hash_map<> from <backward/hash_map> with the g++ compiler:
-  "-D_GLUCAT_USE_GNU_CXX_HASH_MAP -D_GLUCAT_USE_BACKWARD_HASH_MAP"
-*This option is deprecated and will be removed in a later version of GluCat.*
-
- For std::tr1::unordered_map<>:
-  "-D_GLUCAT_USE_TR1_UNORDERED_MAP"
-*This option is deprecated and will be removed in a later version of GluCat.*
 
  For std::unordered_map<>:
   "-D_GLUCAT_USE_STD_UNORDERED_MAP"
@@ -362,6 +338,17 @@ your Makefile needs to pass the flag "-D_GLUCAT_USE_DENSE_MATRICES" to the C++
 compiler.
 
 
+There is a second, related flag that controls certain tests for isnan() within
+glucat/matrix_multi_imp.h. If _GLUCAT_CHECK_ISNAN is defined, then these tests
+are performed. These tests were the default for compressed matrices before
+GluCat 0.8.0, but they are now controlled by this separate flag.
+
+
+To compile your own programs using the GluCat library with these tests for
+isnan(), your Makefile needs to pass the flag "-D_GLUCAT_CHECK_ISNAN" to the
+C++ compiler.
+
+
   --with-qd               uses dd_real and qd_real [default=no]
 
 This option controls the use of the QD high precision floating point library.
@@ -401,15 +388,11 @@ in the Makefiles, if the header file <gsl/gsl_rng.h> and the libraries libgsl
 and libgslcblas are usable.
 
 
-By default the TR1 random number generators are used: glucat/random.h includes
-<tr1/random>.
-*This default is deprecated and will be changed in a later version of GluCat.*
+By default the the C++ 2011 STD random number generators are used:
+glucat/random.h includes <random>.
 
 If _GLUCAT_USE_GSL_RANDOM is defined, the GSL random number generators are used:
 glucat/random.h includes <gsl/gsl_rng.h> and <gsl/gsl_randist.h>.
-
-Otherwise, if _GLUCAT_USE_STD_RANDOM is defined, the C++ 2011 STD random number
-generators are used: glucat/random.h includes <random>.
 
 
 If you are compiling your own programs using the GluCat library, to choose the
@@ -418,12 +401,8 @@ Makefile needs to pass the following flags to the C++ compiler, and the
 corresponding header files and libraries must be usable.
 
  For C++ 2011 STD random number generators:
-  "-D_GLUCAT_USE_STD_RANDOM"
   If you are using g++, pass the compiler flag "-std=c++11" rather than "-ansi".
   This tells g++ to use the 2011 C++ standard.
-
- For TR1 random number generators: no flags.
- *This default is deprecated and will be changed in a later version of GluCat.*
 
  For GSL random number generators:
   "-D_GLUCAT_USE_GSL_RANDOM -lgsl -lgslcblas"
@@ -457,16 +436,6 @@ The function eigenvalues() in glucat/matrix_imp.h calls an external function
 to obtain the eigenvalues of a matrix. Which function is used depends on one of
 a number of preprocessor symbols:
 
-If _GLUCAT_USE_ALGLIB is defined, glucat/matrix_imp.h includes <alglib/evd.h>
-and uses the Alglib library of Bochkanov and Bystritsky: http://www.alglib.net/.
-*This option is deprecated and will be removed in a later version of GluCat.*
-
-If _GLUCAT_USE_BINDINGS_V1 is defined, glucat/matrix_imp.h includes
-<boost/numeric/bindings/lapack/gees.hpp> and uses version 1 of the Boost Numeric
-Bindings library, as packaged by Klöckner:
-http://mathema.tician.de/software/boost-numeric-bindings/.
-*This option is deprecated and will be removed in a later version of GluCat.*
-
 If _GLUCAT_USE_BINDINGS is defined, glucat/matrix_imp.h includes
 <boost/numeric/bindings/lapack/driver/gees.hpp> and uses the SVN sandbox version
 of the Boost Numeric Bindings library, as per
@@ -478,19 +447,6 @@ handle negative real eigenvalues in the sqrt() and log() functions, your
 Makefile needs to pass the flag "-D_GLUCAT_USE_EIGENVALUES" to the C++ compiler,
 as well as one of the following choices of flags, and the corresponding header
 files and libraries must be usable.
-
- For Alglib:
-  "-D_GLUCAT_USE_ALGLIB -lalglib"
-  You will also need to ensure that the include path used by the compiler sees
-  <alglib/evd.h> and the library path sees libalglib.*.
-*This option is deprecated and will be removed in a later version of GluCat.*
-
- For Boost Numeric Bindings version 1:
-  "-D_GLUCAT_USE_BINDINGS_V1 -llapack -lblas"
-  You will also need to ensure that the include path used by the compiler sees
-  <boost/numeric/bindings/lapack/gees.hpp> and the library path sees liblapack.*
-  and libblas.*.
-*This option is deprecated and will be removed in a later version of GluCat.*
 
  For Boost Numeric Bindings sandbox:
   "-D_GLUCAT_USE_BINDINGS -llapack -lblas"
@@ -606,7 +562,7 @@ file eg8.txt. This file is needed by programming example 8 (reading
 multivectors from input).
 
 The sample test output files include eg3.res, gfft_test-11.out, products-8.out,
-squaring-11.out and transforms-8.out. There are also eight versions of the
+squaring-11.out and transforms-8.out. There are also ten versions of the
 output of the main test script. These are described below.
 
 The main test script is ./test/test.sh. This runs tests ./test00/test00 to
@@ -621,8 +577,8 @@ order. With zero parameters, all examples from 00 to 16 are run in order. Many
 of the examples are run twice - once with framed_multi<Scalar_T> and once with
 matrix_multi<Scalar_T>.
 
-The ./test_runtime directory contains eight versions of the sample test results,
-corresponding to eight different combinations of configuration parameters. The
+The ./test_runtime directory contains ten versions of the sample test results,
+corresponding to ten different combinations of configuration parameters. The
 tests were all run on Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz+ with
     Linux 3.19.0-26-generic #28-Ubuntu SMP x86_64
     gcc version 5.1.1 20150504 (Ubuntu 5.1.1-4ubuntu12)
@@ -638,25 +594,31 @@ The test output file names and corresponding configuration commands are:
 2) test.configure.qd.out
 ./configure --with-qd
 
-3) test.configure.qd-map-map.out
+3) test.configure.debug-full.out
+./configure --enable-debug=full
+
+4) test.configure.compressed-mat.out
+./configure --without-dense-mat
+
+5) test.configure.qd-map-map.out
 ./configure --with-qd --with-map=map
 
-4) test.configure.qd-map-map-gsl.out
+6) test.configure.qd-map-map-gsl.out
 ./configure --with-qd --with-map=map --with-random=gsl
 
-5) test.configure.eig-bindings.out
+7) test.configure.eig-bindings.out
 ./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
 
-6) test.configure.qd-eig-bindings.out
+8) test.configure.qd-eig-bindings.out
 ./configure --with-qd \
             --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
 
-7) test.configure.qd-eig-bindings-map-map.out
+9) test.configure.qd-eig-bindings-map-map.out
 ./configure --with-qd \
             --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
             --with-map=map
 
-8) test.configure.qd-eig-bindings-map-map-gsl.out
+10) test.configure.qd-eig-bindings-map-map-gsl.out
 ./configure --with-qd \
             --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
             --with-map=map --with-random=gsl
@@ -665,7 +627,7 @@ When you run your own test using ./test/test.sh, you should compare its output t
 the output file corresponding to the closest match to the configuration options
 you used to build your copy of the GluCat library.
 
-The reason why sample test results corresponding to eight different combinations
+The reason why sample test results corresponding to ten different combinations
 of configuration parameters are included in test_runtime is that the test output
 strongly depends on the configuration options chosen. In particular:
 
@@ -777,11 +739,11 @@ to use sudo, login as root, or su to root before you run make install.
  List of Successful Builds
  =========================
 
- GluCat 0.7.5 with PyClical has so far been built and tested using:
+ GluCat 0.8.0 with PyClical has so far been built and tested using:
 
  1) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
 
-    All eight configuration commands corresponding to each of the eight
+    All ten configuration commands corresponding to each of the ten
     test.configure*.out files in ./test_runtime
 
     Linux 3.19.0-26-generic #28-Ubuntu SMP x86_64
@@ -812,17 +774,13 @@ to use sudo, login as root, or su to root before you run make install.
 Notes on software versions
 --------------------------
 
-    GluCat 0.7.5 has not been tested with gcc versions earlier than 4.9.2,
+    GluCat 0.8.0 has not been tested with gcc versions earlier than 4.9.2,
     Clang versions earlier than 3.4, Boost versions earlier than 1.55.0,
     QD versions earlier than 2.3.13, Python versions earlier than 2.7.9, or
     Cython versions earlier than 0.21.1.
 
-    GluCat 0.7.5 has not been tested with Alglib or Boost Numeric Bindings V1.
-    These libraries are deprecated and the configuration option to build with
-    them has been removed.
-
     The following bugs and workarounds apply to earlier versions of GluCat,
-    and may still be applicable to GluCat 0.7.5, but have not been checked
+    and may still be applicable to GluCat 0.8.0, but have not been checked
     for this version.
 
  1. GluCat needs an include library which either defines the macro isnan or
@@ -855,23 +813,3 @@ clang: warning: argument unused during compilation: '--param ssp-buffer-size=4'
 
     This is harmless, and was fixed after Clang version 3.2.
     See http://llvm.org/bugs/show_bug.cgi?id=15327
-
- 6. With clang++ 3.4 and g++ 4.6 or earlier, if you use the configuration option
-    --with-random=tr1 (the default), an error in a TR1 header file that is part
-    of the C++ Standard Library for g++ will result in an error message like:
-
-/usr/lib/gcc/x86_64-linux-gnu/4.6/../../../../include/c++/4.6/tr1/exp_integral.tcc:
-      353:17: error: call to function
-      '__expint_E1' that is neither visible in the template definition nor found
-        by argument-dependent lookup
-        return -__expint_E1(-__x);
-                ^
-    This bug is fixed in g++ 4.7.
-    See http://gcc.gnu.org/bugzilla/show_bug.cgi?id=29131
-
-    To work around the problem, use a different option for --with-random, or
-    try using g++ 4.7. Alternatively, you could try inserting the line
-
-    template<typename _Tp> _Tp __expint_E1(const _Tp);
-
-    at around line 59 of your copy of /usr/include/c++/4.6/tr1/exp_integral.tcc
