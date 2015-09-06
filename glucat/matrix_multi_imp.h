@@ -533,7 +533,7 @@ namespace glucat
     typedef typename multivector_t::index_set_t index_set_t;
     typedef typename multivector_t::framed_multi_t framed_multi_t;
 
-#if !defined(_GLUCAT_USE_DENSE_MATRICES)
+#if defined(_GLUCAT_CHECK_ISNAN)
     if (lhs.isnan() || rhs.isnan())
       return numeric_traits<Scalar_T>::NaN();
 #endif
@@ -653,7 +653,7 @@ namespace glucat
   {
     typedef numeric_traits<Scalar_T> traits_t;
 
-#if !defined(_GLUCAT_USE_DENSE_MATRICES)
+#if defined(_GLUCAT_CHECK_ISNAN)
     if (lhs.isnan() || rhs.isnan())
       return traits_t::NaN();
 #endif
@@ -696,7 +696,7 @@ namespace glucat
       const matrix_t& BT = ublas::trans(lhs_ref.m_matrix);
       matrix_t XT = BT;
       ublas::lu_substitute(LU, pvector, XT);
-#if !defined(_GLUCAT_USE_DENSE_MATRICES)
+#if defined(_GLUCAT_CHECK_ISNAN)
       if (matrix::isnan(XT))
         return traits_t::NaN();
 #endif
@@ -709,7 +709,7 @@ namespace glucat
         // matrix_t R = ublas::prod(AT, XT) - BT;
         matrix_t R = -BT;
         ublas::axpy_prod(AT, XT, R, false);
-#if !defined(_GLUCAT_USE_DENSE_MATRICES)
+#if defined(_GLUCAT_CHECK_ISNAN)
         if (matrix::isnan(R))
           return traits_t::NaN();
 #endif
