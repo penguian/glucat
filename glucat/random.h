@@ -34,10 +34,8 @@
 #if   defined(_GLUCAT_USE_GSL_RANDOM)
 # include <gsl/gsl_rng.h>
 # include <gsl/gsl_randist.h>
-#elif defined(_GLUCAT_USE_STD_RANDOM)
-# include <random>
 #else
-# include <tr1/random>
+# include <random>
 #endif
 
 namespace glucat
@@ -76,7 +74,7 @@ namespace glucat
     Scalar_T normal()
     { return Scalar_T(gsl_ran_gaussian(this->gen, 1.0)); }
 
-#elif defined(_GLUCAT_USE_STD_RANDOM)
+#else
 
     std::mt19937 uint_gen;
     std::uniform_real_distribution<double> uniform_dist;
@@ -94,28 +92,6 @@ namespace glucat
     { return Scalar_T(this->uniform_dist(this->uint_gen)); }
     Scalar_T normal()
     { return Scalar_T(this->normal_dist(this->uint_gen)); }
-
-#else
-
-    std::tr1::mt19937 uint_gen;
-    std::tr1::uniform_real<double> uniform_dist;
-    std::tr1::variate_generator< std::tr1::mt19937, std::tr1::uniform_real<double> > uniform_gen;
-    std::tr1::normal_distribution<double> normal_dist;
-    std::tr1::variate_generator< std::tr1::mt19937, std::tr1::normal_distribution<double> > normal_gen;
-
-    random_generator() :
-    uint_gen(), uniform_dist(0.0, 1.0), uniform_gen(uint_gen, uniform_dist),
-                normal_dist(0.0, 1.0), normal_gen(uint_gen, normal_dist)
-    { this->uint_gen.seed(seed); }
-
-    ~random_generator()
-    { }
-
-  public:
-    Scalar_T uniform()
-    { return Scalar_T(this->uniform_gen()); }
-    Scalar_T normal()
-    { return Scalar_T(this->normal_gen()); }
 
 #endif
   };
