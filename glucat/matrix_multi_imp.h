@@ -5,7 +5,7 @@
     matrix_multi_imp.h : Implement the matrix representation of a multivector
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2014 by Paul C. Leopardi
+    copyright            : (C) 2001-2015 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -1388,7 +1388,9 @@ namespace glucat
     else
       return Y;
   }
+}
 
+namespace {
   /// Coefficients of numerator polynomials of Pade approximations produced by Pade1(sqrt(1+x),x,n,n)
   // Reference: [Z], Pade1
   template< typename Scalar_T >
@@ -1477,6 +1479,7 @@ namespace glucat
    323323.0L/8388608.0L,    101745.0L/33554432.0L,    4845.0L/33554432.0L,    969.0L/268435456.0L,
       153.0L/4294967296.0L,      1.0L/17179869184.0L
   };
+
 #if defined(_GLUCAT_USE_QD)
   template< >
   struct pade_sqrt_a<dd_real>
@@ -1572,7 +1575,10 @@ qd_real("2804116503573")/qd_real("549755813888"),           qd_real("18868278750
           qd_real("561")/qd_real("18446744073709551616"),               qd_real("1")/qd_real("73786976294838206464")
   };
 #endif
+}
 
+namespace glucat
+{
   /// Square root of multivector with specified complexifier
   template< typename Scalar_T, const index_t LO, const index_t HI >
   const matrix_multi<Scalar_T,LO,HI>
@@ -1739,7 +1745,9 @@ qd_real("2804116503573")/qd_real("549755813888"),           qd_real("18868278750
       return scaled_result * rescale;
 #endif
   }
+}
 
+namespace {
   /// Coefficients of numerator polynomials of Pade approximations produced by Pade1(log(1+x),x,n,n)
   // Reference: [Z], Pade1
   template< typename Scalar_T >
@@ -1922,7 +1930,9 @@ qd_real("2804116503573")/qd_real("549755813888"),           qd_real("18868278750
                 qd_real("11")/qd_real("70778710137414370"),                            qd_real("1")/qd_real("7219428434016265740")
   };
 #endif
+}
 
+namespace glucat{
   /// Pade' approximation of log
   template< typename Scalar_T, const index_t LO, const index_t HI >
   static
