@@ -67,7 +67,7 @@ namespace glucat
   index_set<LO,HI>::
   index_set(const set_value_t folded_val, const index_set_t frm, const bool prechecked)
   {
-    if (!prechecked && folded_val > set_value_t(1 << frm.count()))
+    if (!prechecked && folded_val >= set_value_t(1 << frm.count()))
         throw error_t("index_set(val,frm): cannot create: value gives an index set outside of frame");
     const index_set_t folded_frame = frm.fold();
     const index_t min_index = folded_frame.min();
@@ -117,9 +117,9 @@ namespace glucat
   bool
   index_set<LO,HI>::
   operator== (const index_set_t rhs) const
-  { 
+  {
     const bitset_t* pthis = static_cast<const bitset_t*>(this);
-    return *pthis == static_cast<bitset_t>(rhs); 
+    return *pthis == static_cast<bitset_t>(rhs);
   }
 
   /// Inequality
@@ -128,9 +128,9 @@ namespace glucat
   bool
   index_set<LO,HI>::
   operator!= (const index_set_t rhs) const
-  { 
+  {
     const bitset_t* pthis = static_cast<const bitset_t*>(this);
-    return *pthis != static_cast<bitset_t>(rhs); 
+    return *pthis != static_cast<bitset_t>(rhs);
   }
 
   /// Set complement: not
@@ -238,13 +238,13 @@ namespace glucat
   bool
   index_set<LO,HI>::
   test(const index_t idx) const
-  { 
+  {
     // Reference: [JA], 1.2.1
-    return (idx < 0) 
+    return (idx < 0)
            ?   bool(bitset_t::to_ulong() & (1UL << (idx - LO)))
-           : (idx > 0) 
+           : (idx > 0)
              ? bool(bitset_t::to_ulong() & (1UL << (idx - LO - 1)))
-             : false; 
+             : false;
   }
 
   /// Include all indices except 0: set all bits except 0
@@ -342,7 +342,7 @@ namespace glucat
   index_t
   index_set<LO,HI>::
   count() const
-  { 
+  {
     unsigned long val = bitset_t::to_ulong();
     // Reference: [JA], 1.3
     if (val == 0)
@@ -355,7 +355,7 @@ namespace glucat
       return result;
     }
   }
-  
+
   /// Number of negative indices included in set
   template<const index_t LO, const index_t HI>
   inline
@@ -599,7 +599,7 @@ namespace glucat
     const index_t this_grade = this->count();
     const index_t rhs_grade  = rhs.count();
     return (this_grade < rhs_grade)
-           ? true 
+           ? true
            : (this_grade > rhs_grade)
              ? false
              : this->lex_less_than(rhs);
@@ -661,7 +661,7 @@ namespace glucat
           s.get();
           // This ends parsing.
           parse_index_list = false;
-        } 
+        }
       }
     }
     if (s.good() && parse_index_list)
@@ -735,7 +735,7 @@ namespace glucat
     const index_t max_index = this->max();
     return (min_index < 0 && max_index > 0)
          ?  max_index - min_index == this->count()
-         : (min_index == 1 || max_index == -1) && 
+         : (min_index == 1 || max_index == -1) &&
            (max_index - min_index == this->count() - 1);
   }
 
@@ -767,22 +767,22 @@ namespace glucat
         --unfold_idx)
       if (frm.test(unfold_idx))
         // result.set(fold_idx--, this->test(unfold_idx));
-      { 
+      {
         if (this->test(unfold_idx))
           result.set(fold_idx);
         --fold_idx;
-      } 
+      }
     fold_idx = 1;
     for (unfold_idx = 1;
         unfold_idx <= frm_max;
         ++unfold_idx)
       if (frm.test(unfold_idx))
         // result.set(fold_idx++, this->test(unfold_idx));
-      { 
+      {
         if (this->test(unfold_idx))
           result.set(fold_idx);
         ++fold_idx;
-      } 
+      }
     return result;
   }
 
@@ -888,7 +888,7 @@ namespace glucat
     if (nbits > 8)
     {
       // Set h to be the inverse reversed Gray code of rhs.
-      // This sets each bit of h to be the cumulative ^ of 
+      // This sets each bit of h to be the cumulative ^ of
       // the same and lower bits of rhs.
       const unsigned long h = inverse_reversed_gray(urhs);
       // Set k to be the inverse Gray code of *this & h.
