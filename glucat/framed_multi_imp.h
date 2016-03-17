@@ -791,7 +791,7 @@ namespace glucat
           result_stv != algebra_dim;
           ++result_stv)
       {
-        const index_set_t result_ist = index_set_t(result_stv, rhs_frame, true);
+        const index_set_t result_ist = index_set_t(result_stv, our_frame, true);
         const index_set_t comp_frame = lhs_frame & ~result_ist;
         const set_value_t comp_dim = 1 << comp_frame.count();
         Scalar_T result_crd = Scalar_T(0);
