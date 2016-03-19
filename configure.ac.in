@@ -279,7 +279,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   if test "$glucat_use_qd" != "no"; then
     glucat_have_qd=yes
     glucat_add_libs=""
-    GLUCAT_CHECK_LIB(qd, main, [glucat_add_libs="$glucat_add_libs -lqd"], [glucat_have_qd=no])
+    GLUCAT_CHECK_LIB(qd, main, [glucat_add_libs="-lqd $glucat_add_libs"], [glucat_have_qd="no"])
     if test "$glucat_have_qd" != "no"; then
       GLUCAT_CHECK_HEADERS([qd/qd_real.h],
       [
@@ -287,17 +287,17 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
         all_libraries="$all_libraries $glucat_add_libs"
       ],
       [
-        glucat_have_qd=no
+        glucat_have_qd="no"
       ],[])
     fi
   fi
 
   if test "$glucat_use_random" = "gsl"; then
-    glucat_have_gsl=yes
+    glucat_have_gsl="yes"
     glucat_add_libs=""
-    GLUCAT_CHECK_LIB([m],[cos])
-    GLUCAT_CHECK_LIB([gslcblas], [cblas_dgemm],    [glucat_add_libs="$glucat_add_libs -lgslcblas"], [glucat_have_gsl=no])
-    GLUCAT_CHECK_LIBS([gsl],     [gsl_blas_dgemm], [glucat_add_libs="$glucat_add_libs -lgsl"],      [glucat_have_gsl=no], [-lgslcblas])
+    GLUCAT_CHECK_LIB([m],        [cos],            [glucat_add_libs="-lm $glucat_add_libs"],        [glucat_have_gsl="no"])
+    GLUCAT_CHECK_LIB([gslcblas], [cblas_dgemm],    [glucat_add_libs="-lgslcblas $glucat_add_libs"], [glucat_have_gsl="no"])
+    GLUCAT_CHECK_LIBS([gsl],     [gsl_blas_dgemm], [glucat_add_libs="-lgsl $glucat_add_libs"],      [glucat_have_gsl="no"], [-lgslcblas])
     if test "$glucat_have_gsl" != "no"; then
       GLUCAT_CHECK_HEADERS([gsl/gsl_rng.h],
       [
@@ -305,7 +305,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
         all_libraries="$all_libraries $glucat_add_libs"
       ],
       [
-        glucat_have_gsl=no
+        glucat_have_gsl="no"
       ],[])
     fi
   else
@@ -314,10 +314,10 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       if test "$GXX" = "yes"; then
         CXXFLAGS="$CXXFLAGS -std=c++11"
       fi
-      glucat_have_std_random=no
+      glucat_have_std_random="no"
       GLUCAT_CHECK_HEADERS([random],
       [
-        glucat_have_std_random=yes
+        glucat_have_std_random="yes"
         glucat_cxx_std="cxx11"
       ],
       [
@@ -325,7 +325,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       ])
     fi
   fi
-  
+
   glucat_extra_cxxflags_pyclical=""
   if test "$glucat_use_pyclical" = "no"; then
     DO_NOT_COMPILE="$DO_NOT_COMPILE pyclical"
@@ -354,10 +354,10 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   AC_SUBST(glucat_extra_cxxflags_pyclical)
 
   if test "$glucat_use_eigenvalues" = "bindings"; then
-    glucat_have_lapack=yes
+    glucat_have_lapack="yes"
     glucat_add_libs=""
-    GLUCAT_CHECK_LIB(lapack, main, [glucat_add_libs="$glucat_add_libs -llapack"], [glucat_have_lapack=no])
-    GLUCAT_CHECK_LIB(blas,   main, [glucat_add_libs="$glucat_add_libs -lblas"],   [glucat_have_lapack=no])
+    GLUCAT_CHECK_LIB(blas,   main, [glucat_add_libs="-lblas $glucat_add_libs"],   [glucat_have_lapack="no"])
+    GLUCAT_CHECK_LIB(lapack, main, [glucat_add_libs="-llapack $glucat_add_libs"], [glucat_have_lapack="no"])
     if test "$glucat_have_lapack" != "no"; then
       all_libraries="$all_libraries $glucat_add_libs"
       GLUCAT_CHECK_HEADERS([boost/numeric/bindings/lapack/driver/gees.hpp],
