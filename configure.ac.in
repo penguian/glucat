@@ -248,22 +248,15 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       GLUCAT_CHECK_COMPILER_FLAG(Woverloaded-virtual, [WOVERLOADED_VIRTUAL="-Woverloaded-virtual"], [WOVERLOADED_VIRTUAL=""])
       AC_SUBST(WOVERLOADED_VIRTUAL)
     else
-       if test "$basename_cxx" = "icpc" || test "$basename_cxx" = "clang++"; then
-          CXXFLAGS="$CXXFLAGS -O3"
-       else
-          case $host in
-            x86_64-*-*)
-              CXXFLAGS="$CXXFLAGS -march=k8"
-              ;;
-          esac
-          CXXFLAGS="$CXXFLAGS -O3"
-          GLUCAT_CHECK_COMPILER_FLAG(funroll-loops,[CXXFLAGS="$CXXFLAGS -funroll-loops"])
-          GLUCAT_CHECK_COMPILER_FLAG(fvariable-expansion-in-unroller,[CXXFLAGS="$CXXFLAGS -fvariable-expansion-in-unroller"])
+       CXXFLAGS="-O3 $CXXFLAGS"
+       if test "$basename_cxx" == "g++"; then
+          GLUCAT_CHECK_COMPILER_FLAG([march=native],[CXXFLAGS="$CXXFLAGS -march=native"])
+          GLUCAT_CHECK_COMPILER_FLAG([funroll-loops],[CXXFLAGS="$CXXFLAGS -funroll-loops"])
+          GLUCAT_CHECK_COMPILER_FLAG([fvariable-expansion-in-unroller],[CXXFLAGS="$CXXFLAGS -fvariable-expansion-in-unroller"])
           GLUCAT_CXX_DEBUG_FLAG="-g"
        fi
     fi
-
-    CXXFLAGS="$CXXFLAGS $GLUCAT_CXX_DEBUG_FLAG"
+    CXXFLAGS="$GLUCAT_CXX_DEBUG_FLAG $CXXFLAGS"
   fi
 
   if test "$glucat_use_ndebug_define" = "yes"; then
