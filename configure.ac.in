@@ -210,51 +210,47 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       dnl The following test is from user PHV on www.tek-tips.com
       clangxxversion=`$CXX -v < /dev/null 2>&1 | head -n 1 | awk '{for(i=1;i<NF;++i) if ([\$]i ~ /version/) print [\$](i+1)}'`
       AC_MSG_RESULT([$clangxxversion])
-    else
+    fi
+    if test "$basename_cxx" = "g++"; then
       dnl The following test is borrowed from VXL Project http://vxl.sourceforge.net/
       cxxversion=`$CXX -v < /dev/null 2>&1 | grep 'gcc version' | awk '{print [\$]3}'`
       AC_MSG_RESULT([$cxxversion])
     fi
-  fi
-  if test "$basename_cxx" = "icpc"; then
-    icpcversion=`$CXX -v < /dev/null 2>&1 | head -n 1 | awk '{print [\$]2}'`
-    AC_MSG_RESULT([$icpcversion])
+    if test "$basename_cxx" = "icpc"; then
+      icpcversion=`$CXX -dumpversion`
+      AC_MSG_RESULT([$icpcversion])
+    fi
   fi
   if test "$basename_cxx" = "icpc"; then
     CXXFLAGS="$CXXFLAGS -DBOOST_UBLAS_USE_LONG_DOUBLE"
-    if test "$icpcversion" \< "11" ; then
-       GLUCAT_CHECK_COMPILER_FLAG([mp1],[CXXFLAGS="-mp1 $CXXFLAGS"])
-    else
-       GLUCAT_CHECK_COMPILER_FLAG([fp-model precise],[CXXFLAGS="-fp-model precise $CXXFLAGS"])
-    fi
+    GLUCAT_CHECK_COMPILER_FLAG([fp-model precise],[CXXFLAGS="-fp-model precise $CXXFLAGS"])
   fi
-  if test "$GXX" = "yes" || test "$basename_cxx" = "icpc"; then
+  if test "$GXX" = "yes"; then
     GLUCAT_CXX_DEBUG_FLAG=""
     if test "$glucat_use_debug_code" != "no"; then
-       if test "$basename_cxx" = "icpc"; then
-          CXXFLAGS="-O0 $CXXFLAGS"
-       else
-        GLUCAT_CHECK_COMPILER_FLAG([finline-limit=400],[CXXFLAGS="-finline-limit=400 $CXXFLAGS"])
-        if test "$glucat_use_debug_code" = "full"; then
-          CXXFLAGS="-O0 $CXXFLAGS"
-          GLUCAT_CXX_DEBUG_FLAG="-g3"
-        else
-          CXXFLAGS="-O1 $CXXFLAGS"
-          GLUCAT_CXX_DEBUG_FLAG="-g"
-        fi
-       fi
+      GLUCAT_CHECK_COMPILER_FLAG([finline-limit=400],[CXXFLAGS="-finline-limit=400 $CXXFLAGS"])
+      if test "$glucat_use_debug_code" = "full"; then
+        CXXFLAGS="-O0 $CXXFLAGS"
+        GLUCAT_CXX_DEBUG_FLAG="-g3"
+      else
+        CXXFLAGS="-O1 $CXXFLAGS"
+        GLUCAT_CXX_DEBUG_FLAG="-g"
+      fi
 
       dnl convenience compiler flags
       GLUCAT_CHECK_COMPILER_FLAG([Woverloaded-virtual], [WOVERLOADED_VIRTUAL="-Woverloaded-virtual"], [WOVERLOADED_VIRTUAL=""])
       AC_SUBST([WOVERLOADED_VIRTUAL])
     else
-       CXXFLAGS="-O3 $CXXFLAGS"
-       if test "$basename_cxx" = "g++"; then
-          GLUCAT_CHECK_COMPILER_FLAG([march=native],[CXXFLAGS="$CXXFLAGS -march=native"])
-          GLUCAT_CHECK_COMPILER_FLAG([funroll-loops],[CXXFLAGS="$CXXFLAGS -funroll-loops"])
-          GLUCAT_CHECK_COMPILER_FLAG([fvariable-expansion-in-unroller],[CXXFLAGS="$CXXFLAGS -fvariable-expansion-in-unroller"])
-          GLUCAT_CXX_DEBUG_FLAG="-g"
-       fi
+      CXXFLAGS="-O3 $CXXFLAGS"
+      if test "$basename_cxx" = "g++"; then
+        GLUCAT_CHECK_COMPILER_FLAG([march=native],[CXXFLAGS="$CXXFLAGS -march=native"])
+        GLUCAT_CHECK_COMPILER_FLAG([funroll-loops],[CXXFLAGS="$CXXFLAGS -funroll-loops"])
+        GLUCAT_CHECK_COMPILER_FLAG([fvariable-expansion-in-unroller],[CXXFLAGS="$CXXFLAGS -fvariable-expansion-in-unroller"])
+        GLUCAT_CXX_DEBUG_FLAG="-g"
+      fi
+      if test "$basename_cxx" = "icpc"; then
+        GLUCAT_CHECK_COMPILER_FLAG([xhost],[CXXFLAGS="$CXXFLAGS -xhost"])
+      fi
     fi
     CXXFLAGS="$GLUCAT_CXX_DEBUG_FLAG $CXXFLAGS"
   fi
@@ -312,7 +308,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   if test "$glucat_use_random" = "gsl"; then
     glucat_have_gsl="yes"
     glucat_add_libs=""
-    GLUCAT_CHECK_LIB([m],        [cos],            [glucat_add_libs="-lm $glucat_add_libs"],        [glucat_have_gsl="no"])
+    if test "$basename_cxx" != "icpc"; then
+      GLUCAT_CHECK_LIB([m],      [cos],            [glucat_add_libs="-lm $glucat_add_libs"],        [glucat_have_gsl="no"])
+    fi
     GLUCAT_CHECK_LIB([gslcblas], [cblas_dgemm],    [glucat_add_libs="-lgslcblas $glucat_add_libs"], [glucat_have_gsl="no"])
     GLUCAT_CHECK_LIBS([gsl],     [gsl_blas_dgemm], [glucat_add_libs="-lgsl $glucat_add_libs"],      [glucat_have_gsl="no"], [-lgslcblas])
     if test "$glucat_have_gsl" != "no"; then
@@ -354,9 +352,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       [
         CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BINDINGS";
       ],[],[])
-      if test "$basename_cxx" = "clang++"; then
-        GLUCAT_CHECK_COMPILER_FLAG([Wno-unused-local-typedefs],[CXXFLAGS="$CXXFLAGS -Wno-unused-local-typedefs"])
-      fi
     fi
   fi
 
@@ -371,9 +366,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
           CXXFLAGS="-std=c++11 $CXXFLAGS"
         else
           if test "$basename_cxx" = "clang++"; then
-          CXXFLAGS="-std=c++98 $CXXFLAGS"
+            CXXFLAGS="-std=c++98 $CXXFLAGS"
           else
-          CXXFLAGS="-ansi $CXXFLAGS"
+            CXXFLAGS="-ansi $CXXFLAGS"
           fi
         fi
       ;;
@@ -381,9 +376,12 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   fi
 
   if test "$glucat_use_warnings" = "yes"; then
-      if test "$GXX" = "yes"; then
-        CXXFLAGS="-Wall $CXXFLAGS"
-     fi
+    if test "$GXX" = "yes"; then
+      CXXFLAGS="-Wall $CXXFLAGS"
+      if test "$basename_cxx" = "clang++" || test "$basename_cxx" = "g++"; then
+        GLUCAT_CHECK_COMPILER_FLAG([Wno-unused-local-typedefs],[CXXFLAGS="$CXXFLAGS -Wno-unused-local-typedefs"])
+      fi
+    fi
   fi
 
   if test "$GXX" = "yes" && test "$glucat_use_strict_options" = "yes"; then
@@ -397,9 +395,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       GLUCAT_CHECK_COMPILER_FLAG([fno-check-new], [CXXFLAGS="$CXXFLAGS -fno-check-new"])
     fi
     GLUCAT_CHECK_COMPILER_FLAG([fexceptions], [USE_EXCEPTIONS="-fexceptions"], USE_EXCEPTIONS= )
-    if test "$basename_cxx" = "icpc" && test "$icpcversion" \> "8" && test "$icpcversion" \< "9"; then
-      GLUCAT_CHECK_COMPILER_FLAG([fabi-version=1],[CXXFLAGS="$CXXFLAGS -fabi-version=1"])
-    fi
   fi
   AC_SUBST([USE_EXCEPTIONS])
 
@@ -450,7 +445,7 @@ fi
 
 dnl without this order in this file, automake will be confused!
 dnl
-dnl AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_HEADERS([config.h])
 
 GLUCAT_CHECK_EXTRA_LIBS
 all_libraries="$all_libraries $USER_LDFLAGS"
