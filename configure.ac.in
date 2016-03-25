@@ -354,6 +354,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       [
         CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BINDINGS";
       ],[],[])
+      if test "$basename_cxx" = "clang++"; then
+        GLUCAT_CHECK_COMPILER_FLAG([Wno-unused-local-typedefs],[CXXFLAGS="$CXXFLAGS -Wno-unused-local-typedefs"])
+      fi
     fi
   fi
 
