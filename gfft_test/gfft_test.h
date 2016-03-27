@@ -33,26 +33,9 @@
 
 #define _GLUCAT_TEST_REPEAT
 #include "glucat/glucat.h"
-
-// If radix of int is not 2, we can't easily set thresholds
-_GLUCAT_CTAssert(std::numeric_limits<int>::radix == 2, CannotSetThresholds)
-
-const int DRIVER_BASIS_MAX_COUNT        = 1;
-const int DRIVER_FAST_SIZE_THRESHOLD    = 1 << (std::numeric_limits<int>::digits - 1);
-const int DRIVER_INV_FAST_DIM_THRESHOLD = 1 << (std::numeric_limits<int>::digits - 1);
-typedef glucat::tuning
-  <
-    glucat::DEFAULT_Mult_Matrix_Threshold,
-    glucat::DEFAULT_Div_Max_Steps,
-    glucat::DEFAULT_Sqrt_Max_Steps,
-    glucat::DEFAULT_Log_Max_Outer_Steps,
-    glucat::DEFAULT_Log_Max_Inner_Steps,
-    DRIVER_BASIS_MAX_COUNT,
-    DRIVER_FAST_SIZE_THRESHOLD,
-    DRIVER_INV_FAST_DIM_THRESHOLD
-  >
-  Tune_P;
-
+#include "test/undefine.h"
+#define _GLUCAT_TEST_TUNING_NAIVE
+#include "test/tuning.h"
 #include "glucat/glucat_imp.h"
 #include "test/timing.h"
 #include "test/try_catch.h"
