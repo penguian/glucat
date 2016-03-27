@@ -1235,7 +1235,7 @@ namespace glucat
     basis_table_t& basis_cache = basis_table_t::basis();
 
     const index_t frame_count = this->m_frame.count();
-    const bool use_cache = frame_count <= Tune_P::basis_max_count;
+    const bool use_cache = frame_count <= index_t(Tune_P::basis_max_count);
 
     if (use_cache)
     {
