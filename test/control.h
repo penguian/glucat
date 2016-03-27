@@ -40,10 +40,12 @@ namespace glucat
     bool m_valid;
     /// Produce more detailed output from tests
     bool m_verbose_output;
+    /// Catch exceptions
+    bool m_catch_exceptions;
 
     /// Default constructor
     control_t()
-    : m_valid(false), m_verbose_output(false)
+    : m_valid(false), m_verbose_output(false), m_catch_exceptions(true)
     {};
     /// Constructor from program arguments
     control_t(int argc, char ** argv);
@@ -52,7 +54,7 @@ namespace glucat
   /// Test control constructor from program arguments
   control_t::
   control_t(int argc, char ** argv)
-  : m_valid(true), m_verbose_output(false)
+  : m_valid(true), m_verbose_output(false), m_catch_exceptions(true)
   {
     bool print_help = false;
     const std::string& arg_0_str = argv[0];
@@ -72,6 +74,8 @@ namespace glucat
         }
         else if (arg_name == "verbose")
           this->m_verbose_output = true;
+        else if (arg_name == "no-catch")
+          this->m_catch_exceptions = false;
         else
           valid = false;
       }
