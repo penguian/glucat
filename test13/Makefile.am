@@ -1,8 +1,11 @@
 ####### kdevelop will overwrite this part!!! (begin)##########
-EXTRA_DIST = ../test/driver.h peg13.cpp peg13.h Makefile.am
+EXTRA_DIST = peg13.cpp peg13.h Makefile.am
 ####### kdevelop will overwrite this part!!! (end)############
 AUTOMAKE_OPTIONS = foreign
-noinst_PROGRAMS = test13
+check_PROGRAMS = test13
+check_DATA = test13.out
+test13.out: test13
+	../test/test.sh 13 > test13.out
 
 # set the include path found by configure
 AM_CPPFLAGS = $(all_includes)
@@ -12,4 +15,9 @@ test13_LDFLAGS = $(LDFLAGS)
 
 test13_SOURCES = peg13.cpp
 test13_LDADD = $(LDADD)
-test13_DEPENDENCIES = ../test/driver.h peg13.h
+test13_DEPENDENCIES = ../test/control.h ../test/driver.h ../test/try_catch.h ../test/tuning.h peg13.h
+
+clean:
+	test -z peg13.o    || rm -f peg13.o
+	test -z test13     || rm -f test13
+	test -z test13.out || rm -f test13.out
