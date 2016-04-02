@@ -165,10 +165,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
 
   AC_LANG([C]++)
 
-  if test -z "$LDFLAGS" && test "$glucat_use_debug_code" = "no" && test "$GCC" = "yes"; then
-    LDFLAGS=""
-  fi
-
   AC_REQUIRE([AC_PROG_CXX])
   AC_PROG_CXX
 
@@ -378,12 +374,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
 
   AC_PROG_CXXCPP
 
-  if test "$GCC" = yes; then
-    NOOPT_CXXFLAGS="-O0"
-  fi
-
-  AC_SUBST([NOOPT_CXXFLAGS])
-
   ifdef([AM_DEPENDENCIES],AC_REQUIRE([GLUCAT_ADD_DEPENDENCIES]),[])
 ])
 
@@ -437,7 +427,6 @@ AC_SUBST([all_includes])
 AC_SUBST([all_libraries])
 LIBS="$all_libraries"
 AC_SUBST([LIBS])
-
 AC_SUBST([AUTODIRS])
 
 AM_CONDITIONAL([make_pyclical],[test "$glucat_use_pyclical" = "yes"])
