@@ -242,7 +242,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
         GLUCAT_CXX_DEBUG_FLAG="-g"
       fi
       if test "$basename_cxx" = "icpc"; then
-        GLUCAT_CHECK_COMPILER_FLAG([xhost],[CXXFLAGS="$CXXFLAGS -xhost"])
+        GLUCAT_CHECK_COMPILER_FLAG([xHost],[CXXFLAGS="$CXXFLAGS -xHost"])
       fi
     fi
     CXXFLAGS="$GLUCAT_CXX_DEBUG_FLAG $CXXFLAGS"
