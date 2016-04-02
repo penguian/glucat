@@ -120,7 +120,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
         glucat_use_map="stdunordered"
         ;;
       *)
-        AC_MSG_ERROR([Unknown option for --with-map])
+      AC_MSG_ERROR([Unknown option for --with-map])
         ;;
     esac
   ],[glucat_use_map="stdunordered"])
@@ -158,7 +158,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
         glucat_use_eigenvalues="bindings"
         ;;
       *)
-        AC_MSG_ERROR([Unknown option for --with-eig])
+        AC_MSG_ERROR('Unknown option for --with-eig')
         ;;
     esac
   ],[glucat_use_eigenvalues="no"])
@@ -333,7 +333,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     if test "$glucat_have_lapack" != "no"; then
       all_libraries="$all_libraries $glucat_add_libs"
       GLUCAT_CHECK_HEADERS([boost/numeric/bindings/lapack/driver/gees.hpp],
-      [CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BINDINGS";],[],[])
+        [CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BINDINGS";],[],[])
     fi
   fi
 
@@ -353,7 +353,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
             CXXFLAGS="-ansi $CXXFLAGS"
           fi
         fi
-      ;;
+        ;;
     esac
   fi
 
@@ -397,7 +397,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
 
 AC_DEFUN([GLUCAT_ADD_DEPENDENCIES],
 [
-   [A]M_DEPENDENCIES([CXX])
+  [A]M_DEPENDENCIES([CXX])
 ])
 
 dnl This is so we can use kde-common
@@ -418,7 +418,7 @@ dnl almost the same like GLUCAT_SET_PREFIX but the path is /usr/local
 dnl
 unset CDPATH
 dnl make /usr/local the default for the installation
-AC_PREFIX_DEFAULT(/usr/local)
+AC_PREFIX_DEFAULT([/usr/local])
 
 if test "x$prefix" = "xNONE"; then
   prefix="$ac_default_prefix"
@@ -448,5 +448,5 @@ AC_SUBST([LIBS])
 
 AC_SUBST([AUTODIRS])
 
-AM_CONDITIONAL([make_pyclical],[test $glucat_use_pyclical = "yes"])
-AM_CONDITIONAL([use_cython],[test $glucat_use_cython = "yes"])
+AM_CONDITIONAL([make_pyclical],[test "$glucat_use_pyclical" = "yes"])
+AM_CONDITIONAL([use_cython],[test "$glucat_use_cython" = "yes"])
