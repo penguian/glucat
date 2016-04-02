@@ -172,29 +172,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   AC_REQUIRE([AC_PROG_CXX])
   AC_PROG_CXX
 
-  glucat_extra_cxxflags_pyclical=""
-  if test "$glucat_use_pyclical" = "no"; then
-    DO_NOT_COMPILE="$DO_NOT_COMPILE pyclical"
-  else
-    glucat_use_cython="no"
-    AC_MSG_CHECKING([for cython version])
-    cythonversion=`cython --version < /dev/null 2>&1 | grep -i 'Cython version' | awk '{print [\$]3}'`
-    if test "$cythonversion" = ""; then
-      AC_MSG_RESULT([not found])
-    else
-      AC_MSG_RESULT([$cythonversion])
-      glucat_use_cython="yes"
-    fi
-    AM_PATH_PYTHON
-    if test "$GXX" = "yes"; then
-      GLUCAT_CHECK_COMPILER_FLAG([fno-strict-aliasing],
-      [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -fno-strict-aliasing"])
-      GLUCAT_CHECK_COMPILER_FLAG([Wno-unused],
-      [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-unused"])
-    fi
-  fi
-  AC_SUBST([glucat_extra_cxxflags_pyclical])
-
   basename_cxx="$(basename $CXX)"
 
   AC_MSG_CHECKING([for $CXX version])
@@ -257,8 +234,30 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   fi
 
   dnl For compatibility with Cygwin gcc
-  AC_CHECK_HEADERS([bits/wordsize.h],
-    [CXXFLAGS="$CXXFLAGS -DHAVE_BITS_WORDSIZE_H"],[],[])
+  AC_CHECK_HEADERS([bits/wordsize.h],[CXXFLAGS="$CXXFLAGS -DHAVE_BITS_WORDSIZE_H"],[],[])
+
+  glucat_extra_cxxflags_pyclical=""
+  glucat_use_cython="no"
+  if test "$glucat_use_pyclical" = "no"; then
+    DO_NOT_COMPILE="$DO_NOT_COMPILE pyclical"
+  else
+    AC_MSG_CHECKING([for cython version])
+    cythonversion=`cython --version < /dev/null 2>&1 | grep -i 'Cython version' | awk '{print [\$]3}'`
+    if test "$cythonversion" = ""; then
+      AC_MSG_RESULT([not found])
+    else
+      AC_MSG_RESULT([$cythonversion])
+      glucat_use_cython="yes"
+    fi
+    AM_PATH_PYTHON
+    if test "$GXX" = "yes"; then
+      GLUCAT_CHECK_COMPILER_FLAG([fno-strict-aliasing],
+        [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -fno-strict-aliasing"])
+      GLUCAT_CHECK_COMPILER_FLAG([Wno-unused],
+        [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-unused"])
+    fi
+  fi
+  AC_SUBST([glucat_extra_cxxflags_pyclical])
 
   glucat_cxx_std="ansi"
   if test "$glucat_use_map" = "stdunordered"; then
