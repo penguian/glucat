@@ -266,6 +266,13 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       GLUCAT_CHECK_COMPILER_FLAG([Wno-unused],
         [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-unused"])
     fi
+    if test "$basename_cxx" = "icpc"; then
+      GLUCAT_CHECK_LIB([imf],[cos],[],
+      [
+        glucat_use_pyclical="no"
+        DO_NOT_COMPILE="$DO_NOT_COMPILE pyclical"
+      ])
+    fi
   fi
   AC_SUBST([glucat_extra_cxxflags_pyclical])
 
@@ -298,7 +305,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   if test "$glucat_use_random" = "gsl"; then
     glucat_have_gsl="yes"
     glucat_add_libs=""
-    if test "$basename_cxx" != "icpc"; then
+    if test "$basename_cxx" = "icpc"; then
+      GLUCAT_CHECK_LIB([imf],   [cos],           [],                                             [glucat_have_gsl="no"])
+    else
       GLUCAT_CHECK_LIB([m],     [cos],           [glucat_add_libs="-lm $glucat_add_libs"],       [glucat_have_gsl="no"])
     fi
     GLUCAT_CHECK_LIB([gslcblas],[cblas_dgemm],   [glucat_add_libs="-lgslcblas $glucat_add_libs"],[glucat_have_gsl="no"])
