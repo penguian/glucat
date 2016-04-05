@@ -164,7 +164,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
         glucat_use_eigenvalues="bindings"
         ;;
       *)
-        AC_MSG_ERROR('Unknown option for --with-eig')
+        AC_MSG_ERROR([Unknown option for --with-eig])
         ;;
     esac
   ],[glucat_use_eigenvalues="no"])
