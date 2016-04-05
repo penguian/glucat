@@ -265,6 +265,11 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
         [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -fno-strict-aliasing"])
       GLUCAT_CHECK_COMPILER_FLAG([Wno-unused],
         [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-unused"])
+      GLUCAT_CHECK_COMPILER_FLAG([fstack-protector-strong],[],
+      [
+        glucat_use_pyclical="no"
+        DO_NOT_COMPILE="$DO_NOT_COMPILE pyclical"
+      ])
     fi
     if test "$basename_cxx" = "icpc"; then
       GLUCAT_CHECK_LIB([imf],[cos],[],
