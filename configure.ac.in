@@ -278,6 +278,12 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
         DO_NOT_COMPILE="$DO_NOT_COMPILE pyclical"
       ])
     fi
+    if test "$glucat_use_cython" = "no"; then
+      AC_MSG_WARN([Cannot build using Cython.])
+    fi
+    if test "$glucat_use_pyclical" = "no"; then
+      AC_MSG_WARN([Cannot build PyClical.])
+    fi
   fi
   AC_SUBST([glucat_extra_cxxflags_pyclical])
 
@@ -305,6 +311,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
         all_libraries="$all_libraries $glucat_add_libs"
       ],[glucat_have_qd="no"],[])
     fi
+    if test "$glucat_have_qd" = "no"; then
+      AC_MSG_WARN([Cannot build using QD.])
+    fi
   fi
 
   if test "$glucat_use_random" = "gsl"; then
@@ -325,19 +334,24 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       ],
       [glucat_have_gsl="no"],[])
     fi
-  else
-    if test "$glucat_use_random" = "std"; then
-      save_CXXFLAGS="$CXXFLAGS"
-      if test "$GXX" = "yes"; then
-        CXXFLAGS="$CXXFLAGS -std=c++11"
-      fi
-      glucat_have_std_random="no"
-      GLUCAT_CHECK_HEADERS([random],
-      [
-        glucat_have_std_random="yes"
-        glucat_cxx_std="cxx11"
-      ],
-      [CXXFLAGS="$save_CXXFLAGS"])
+    if test "$glucat_have_gsl" = "no"; then
+      AC_MSG_WARN([Cannot build using GSL random number generators.])
+    fi
+  fi
+  if test "$glucat_use_random" = "std" || test "$glucat_have_gsl" = "no"; then
+    save_CXXFLAGS="$CXXFLAGS"
+    if test "$GXX" = "yes"; then
+      CXXFLAGS="$CXXFLAGS -std=c++11"
+    fi
+    glucat_have_std_random="no"
+    GLUCAT_CHECK_HEADERS([random],
+    [
+      glucat_have_std_random="yes"
+      glucat_cxx_std="cxx11"
+    ],
+    [CXXFLAGS="$save_CXXFLAGS"])
+    if test "glucat_have_std_random" = "no"; then
+      AC_MSG_WARN([Cannot build using STD random number generators.])
     fi
   fi
 
@@ -347,9 +361,19 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     GLUCAT_CHECK_LIB([blas],  [main],[glucat_add_libs="-lblas $glucat_add_libs"],  [glucat_have_lapack="no"])
     GLUCAT_CHECK_LIB([lapack],[main],[glucat_add_libs="-llapack $glucat_add_libs"],[glucat_have_lapack="no"])
     if test "$glucat_have_lapack" != "no"; then
-      all_libraries="$all_libraries $glucat_add_libs"
+      glucat_have_bindings="yes"
       GLUCAT_CHECK_HEADERS([boost/numeric/bindings/lapack/driver/gees.hpp],
-        [CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BINDINGS";],[],[])
+      [
+        CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BINDINGS"
+        all_libraries="$all_libraries $glucat_add_libs"
+      ],
+      [glucat_have_bindings="no"],[])
+    fi
+    if test "$glucat_have_lapack" = "no"; then
+      AC_MSG_WARN([Cannot build using LAPACK.])
+    fi
+    if test "$glucat_have_bindings" = "no"; then
+      AC_MSG_WARN([Cannot build using Boost bindings.])
     fi
   fi
 
@@ -365,6 +389,8 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       GLUCAT_CHECK_COMPILER_FLAG([Wno-unused-variable],[CXXFLAGS="$CXXFLAGS -Wno-unused-variable"])
       CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_BOOST_POOL_ALLOC";
       all_libraries="$all_libraries $glucat_add_libs"
+    else
+      AC_MSG_WARN([Cannot build using Boost pool allocator.])
     fi
   fi
 
