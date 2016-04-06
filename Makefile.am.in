@@ -25,7 +25,7 @@ all-header: $(TOPSUBDIRS) $(CONFIG_HEADER)
 	cp $(CONFIG_HEADER) $(GLUCAT_CONFIG_HEADER)
 
 $(TOPSUBDIRS)::
-	test -z $(GLUCAT_CONFIG_HEADER) || rm -f $(GLUCAT_CONFIG_HEADER)
+	rm -f $(GLUCAT_CONFIG_HEADER)
 	$(MAKE) -C $@
 
 check: check-recursive
@@ -49,8 +49,8 @@ check-out-header: $(TESTOUT) $(CONFIG_HEADER)
 	cp $(CONFIG_HEADER) $(GLUCAT_CONFIG_HEADER)
 
 $(TESTOUT)::
-	test -z $(GLUCAT_CONFIG_HEADER) || rm -f $(GLUCAT_CONFIG_HEADER)
-	test -z test_runtime/test.out   || rm -f test_runtime/test.out
+	rm -f $(GLUCAT_CONFIG_HEADER)
+	rm -f test_runtime/test.out
 	$(MAKE) -C $(@D) check
 
 .PHONY: all-header check-out-header
@@ -80,7 +80,7 @@ dist-hook:
 	cd $(top_distdir) && $(MAKE) -f admin/Makefile.common subdirs
 
 clean-local:
-	test -z $(GLUCAT_CONFIG_HEADER) || rm -f $(GLUCAT_CONFIG_HEADER)
+	rm -f $(GLUCAT_CONFIG_HEADER)
 	for d in $(EXAMPLES); do \
 	  $(MAKE) -C $$d clean; \
 	done

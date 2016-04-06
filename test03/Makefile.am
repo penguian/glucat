@@ -18,6 +18,4 @@ test03_LDADD = $(LDADD)
 test03_DEPENDENCIES = ../test/control.h ../test/driver.h ../test/try_catch.h ../test/tuning.h peg03.h
 
 clean:
-	test -z peg03.o    || rm -f peg03.o
-	test -z test03     || rm -f test03
-	test -z test03.out || rm -f test03.out
+	rm -f peg03.o test03 test03.out
