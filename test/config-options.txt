@@ -1,5 +1,5 @@
 default:
-check-isnan:                 --enable-check-isnan
+disable-check-isnan:         --disable-check-isnan
 debug-full:                  --enable-debug=full
 debug-yes:                   --enable-debug=yes
 compressed-mat:              --without-dense-mat
