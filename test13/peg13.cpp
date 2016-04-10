@@ -79,4 +79,4 @@ int test13()
 using namespace glucat;
 
 int main(int argc, char ** argv)
-{ return try_catch(test13); }
+{ return control_t::control(argc, argv).call(test13); }

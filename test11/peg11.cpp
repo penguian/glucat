@@ -67,10 +67,4 @@ int test11()
 using namespace glucat;
 
 int main(int argc, char ** argv)
-{
-  test_control = control_t(argc, argv);
-  if (test_control.m_valid)
-    return try_catch(test11);
-  else
-    return 1;
-}
+{ return control_t::control(argc, argv).call(test11); }

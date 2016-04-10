@@ -48,4 +48,4 @@ int test16()
 using namespace glucat;
 
 int main(int argc, char ** argv)
-{ return try_catch(test16); }
+{ return control_t::control(argc, argv).call(test16); }

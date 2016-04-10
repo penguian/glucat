@@ -30,7 +30,6 @@
  ***************************************************************************/
 
 #include "test/driver.h"
-#include "test/control.h"
 #include "test00/peg00.h"
 
 int test00()
@@ -89,10 +88,4 @@ int test00()
 using namespace glucat;
 
 int main(int argc, char ** argv)
-{
-  test_control = control_t(argc, argv);
-  if (test_control.m_valid)
-    return try_catch(test00);
-  else
-    return 1;
-}
+{ return control_t::control(argc, argv).call(test00); }

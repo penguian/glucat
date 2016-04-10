@@ -31,30 +31,63 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 #include "config.h"
+#include "test/try_catch.h"
+
 namespace glucat
 {
   /// Parameters to control tests
-  struct control_t
+  class control_t
   {
+  private:
     /// Test parameters are valid
     bool m_valid;
-    /// Produce more detailed output from tests
-    bool m_verbose_output;
+    const bool valid() const
+    { return m_valid; }
+
     /// Catch exceptions
     bool m_catch_exceptions;
+    const bool catch_exceptions() const
+    { return m_catch_exceptions; }
 
-    /// Default constructor
-    control_t()
-    : m_valid(false), m_verbose_output(false), m_catch_exceptions(true)
-    {};
+    /// Produce more detailed output from tests
+    static bool m_verbose_output;
+    
     /// Constructor from program arguments
     control_t(int argc, char ** argv);
+    // Enforce singleton
+    // Reference: A. Alexandrescu, "Modern C++ Design", Chapter 6
+    control_t() {}
+    ~control_t() {}
+    control_t(const control_t&);
+    control_t& operator= (const control_t&);
+
+    /// Friend declaration to avoid compiler warning:
+    /// "... only defines a private destructor and has no friends"
+    /// Ref: Carlos O'Ryan, ACE http://doc.ece.uci.edu
+    friend class friend_for_private_destructor;
+  public:
+    /// Single instance
+    /// Ref: Scott Meyers, "Effective C++" Second Edition, Addison-Wesley, 1998.
+    static const control_t& control(int argc, char ** argv)
+    { static const control_t c(argc, argv); return c; }
+    
+    /// Call a function that returns int
+    int call(intfn f) const;
+    /// Call a function of int that returns int
+    int call(intintfn f, int arg) const;
+
+    /// Produce more detailed output from tests
+    static bool verbose()
+    { return m_verbose_output; }
   };
 
+  /// Produce more detailed output from tests
+  bool control_t::m_verbose_output = false;
+  
   /// Test control constructor from program arguments
   control_t::
   control_t(int argc, char ** argv)
-  : m_valid(true), m_verbose_output(false), m_catch_exceptions(true)
+  : m_valid(true), m_catch_exceptions(true)
   {
     bool print_help = false;
     const std::string& arg_0_str = argv[0];
@@ -91,12 +124,38 @@ namespace glucat
       std::cout << program_name << " for GluCat version " << VERSION << ":" << std::endl;
       std::cout << "Usage:  " << program_name << " [option ...]" << std::endl;
       std::cout << "Options:" << std::endl;
-      std::cout << "  --verbose   : Produce more detailed test output." << std::endl;
       std::cout << "  --help      : Print this summary." << std::endl;
+      std::cout << "  --no-catch  : Do not catch exceptions." << std::endl;
+      std::cout << "  --verbose   : Produce more detailed test output." << std::endl;
     }
   }
 
-  /// Global variable to control this test_control
-  control_t test_control = control_t();
+  /// Call a function that returns int
+  inline
+  int 
+  control_t::
+  call(intfn f) const
+  {
+    if (valid())
+      return (catch_exceptions())
+        ? try_catch(f)
+        : (*f)();
+    else
+      return 1;
+  }
+      
+  /// Call a function of int that returns int
+  inline
+  int 
+  control_t::
+  call(intintfn f, int arg) const
+  {
+    if (valid())
+      return (catch_exceptions())
+        ? try_catch(f, arg)
+        : (*f)(arg);
+    else
+      return 1;
+  }
 }
 #endif // _GLUCAT_CONTROL_H

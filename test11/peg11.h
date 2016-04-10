@@ -32,27 +32,14 @@
  ***************************************************************************/
 
 #include "glucat/glucat.h"
-
-typedef glucat::tuning
-  <
-    glucat::DEFAULT_Mult_Matrix_Threshold,
-    glucat::DEFAULT_Div_Max_Steps,
-    glucat::DEFAULT_Sqrt_Max_Steps,
-    glucat::DEFAULT_Log_Max_Outer_Steps,
-    glucat::DEFAULT_Log_Max_Inner_Steps,
-    glucat::DEFAULT_Basis_Max_Count,
-    glucat::DEFAULT_Fast_Size_Threshold,
-    glucat::DEFAULT_Inv_Fast_Dim_Threshold,
-    glucat::DEFAULT_Products_Size_Threshold,
-    glucat::precision_promoted
-  >
-  Tune_P;
-
+#include "test/undefine.h"
+#define _GLUCAT_TEST_TUNING_PROMOTED
+#include "test/tuning.h"
 #include "glucat/glucat_imp.h"
-#include <iomanip>
-#include <cstdio>
 #include "test/try_catch.h"
 #include "test/control.h"
+#include <iomanip>
+#include <cstdio>
 
 namespace peg11
 {
@@ -68,7 +55,7 @@ namespace peg11
 
     static const scalar_t scalar_eps  = numeric_limits<scalar_t>::epsilon();
     scalar_t tol2;
-    if (test_control.m_verbose_output)
+    if (control_t::verbose())
       tol2 = 0.0;
     else
     {
@@ -95,7 +82,7 @@ namespace peg11
         cout << ((relative) ? "Relative" : "Absolute");
         cout << " norm of difference == "
              << numeric_traits<scalar_t>::sqrt(norm_diff) << endl;
-         if (!test_control.m_verbose_output)
+         if (!control_t::verbose())
          {
            cout.precision(numeric_limits<scalar_t>::digits10);
            cout << "lhs==" << B << endl;

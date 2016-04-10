@@ -87,7 +87,7 @@ namespace peg00
     typedef typename multivector_t::scalar_t scalar_t;
 
     static const scalar_t eps = std::numeric_limits<scalar_t>::epsilon();
-    const scalar_t tol = (test_control.m_verbose_output)
+    const scalar_t tol = (control_t::verbose())
       ? 0.0
       : eps * 512.0;
 
