@@ -204,6 +204,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   if test "$basename_cxx" = "icpc"; then
     CXXFLAGS="$CXXFLAGS -DBOOST_UBLAS_USE_LONG_DOUBLE"
     GLUCAT_CHECK_COMPILER_FLAG([fp-model precise],[CXXFLAGS="-fp-model precise $CXXFLAGS"])
+    GLUCAT_CHECK_COMPILER_FLAG([fp-model source], [CXXFLAGS="-fp-model source $CXXFLAGS"])
   fi
   if test "$GXX" = "yes"; then
     GLUCAT_CXX_DEBUG_FLAG=""
