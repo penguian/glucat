@@ -225,6 +225,8 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       CXXFLAGS="-O3 $CXXFLAGS"
       if test "$basename_cxx" = "g++"; then
         GLUCAT_CHECK_COMPILER_FLAG([march=native],[CXXFLAGS="$CXXFLAGS -march=native"])
+        GLUCAT_CHECK_COMPILER_FLAG([finline-limit=4000],[CXXFLAGS="-finline-limit=4000 $CXXFLAGS"])
+        GLUCAT_CHECK_COMPILER_FLAG([-param inline-unit-growth=200],[CXXFLAGS="--param inline-unit-growth=200 $CXXFLAGS"])
         GLUCAT_CHECK_COMPILER_FLAG([funroll-loops],[CXXFLAGS="$CXXFLAGS -funroll-loops"])
         GLUCAT_CHECK_COMPILER_FLAG([fvariable-expansion-in-unroller],[CXXFLAGS="$CXXFLAGS -fvariable-expansion-in-unroller"])
         GLUCAT_CXX_DEBUG_FLAG="-g"
