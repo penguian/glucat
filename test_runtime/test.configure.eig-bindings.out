@@ -620,9 +620,7 @@ A
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 lhs == nan
 Test failed: cos(A)*tan(A) != sin(A)
-Absolute norm of difference == inf
-lhs==0
-rhs==inf{-1}
+lhs == nan
 Test failed: tan(atan(A)) != A
 Relative norm of difference == 1.488e-05
 lhs==-0.00431415+314.161{-1}
@@ -631,9 +629,7 @@ rhs==314.159{-1}
 A
   -314.159{-1}
 Test failed: cos(A)*tan(A) != sin(A)
-Absolute norm of difference == inf
-lhs==0
-rhs==-inf{-1}
+lhs == nan
 Test failed: tan(atan(A)) != A
 Relative norm of difference == 1.8854e-05
 lhs==0.00431399-314.155{-1}
@@ -774,7 +770,7 @@ A
 A
   314.159{-1}
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
-lhs == 0
+lhs == nan
 Test failed: tan(atan(A)) != A
 Relative norm of difference == 1.488e-05
 lhs==-0.00431415+314.161{-1}
@@ -783,7 +779,7 @@ rhs==314.159{-1}
 A
   -314.159{-1}
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
-lhs == 0
+lhs == nan
 Test failed: tan(atan(A)) != A
 Relative norm of difference == 1.8854e-05
 lhs==0.00431399-314.155{-1}
@@ -1308,12 +1304,12 @@ A
 A
   1.57079632679489662{-1}
 Test failed: cosh(A)*tanh(A) != sinh(A)
-lhs == 0
+lhs == nan
 
 A
   -1.57079632679489662{-1}
 Test failed: cosh(A)*tanh(A) != sinh(A)
-lhs == 0
+lhs == nan
 
 A
   314.159265358979324{-1}

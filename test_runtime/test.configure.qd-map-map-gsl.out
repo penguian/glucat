@@ -632,9 +632,7 @@ A
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 lhs == nan
 Test failed: cos(A)*tan(A) != sin(A)
-Absolute norm of difference == inf
-lhs==0
-rhs==inf{-1}
+lhs == nan
 Test failed: tan(atan(A)) != A
 Relative norm of difference == 1.488e-05
 lhs==-0.00431415+314.161{-1}
@@ -643,9 +641,7 @@ rhs==314.159{-1}
 A
   -314.159{-1}
 Test failed: cos(A)*tan(A) != sin(A)
-Absolute norm of difference == inf
-lhs==0
-rhs==-inf{-1}
+lhs == nan
 Test failed: tan(atan(A)) != A
 Relative norm of difference == 1.8854e-05
 lhs==0.00431399-314.155{-1}
@@ -856,7 +852,7 @@ A
 A
   314.159{-1}
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
-lhs == 0
+lhs == nan
 Test failed: tan(atan(A)) != A
 Relative norm of difference == 1.488e-05
 lhs==-0.00431415+314.161{-1}
@@ -865,7 +861,7 @@ rhs==314.159{-1}
 A
   -314.159{-1}
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
-lhs == 0
+lhs == nan
 Test failed: tan(atan(A)) != A
 Relative norm of difference == 1.8854e-05
 lhs==0.00431399-314.155{-1}
@@ -936,7 +932,7 @@ Relative norm of difference == 2.4467e+11
 lhs==1.40593e+11+3.56944e+10{-1}+6.68224e+10{1}-1.28745e+11{2}-1.28745e+11{-1,1}-6.68224e+10{-1,2}-3.56944e+10{1,2}+1.40593e+11{-1,1,2}
 rhs==0.692887-0.033363{-1}-0.567274{1}+0.551651{2}+0.481105{-1,1}-0.0312442{-1,2}+0.252967{1,2}-0.0468244{-1,1,2}
 Test failed: tanh(atanh(A)) != A
-lhs == 0
+lhs == nan
 
 Random A in {-2,-1,1,2}
 Test failed: exp(log(A)) != A
@@ -2606,12 +2602,12 @@ A
 A
   1.57079632679489661923132169163975144209858469968755291048747230e+00{-1}
 Test failed: cosh(A)*tanh(A) != sinh(A)
-lhs == 0
+lhs == nan
 
 A
   -1.57079632679489661923132169163975144209858469968755291048747230e+00{-1}
 Test failed: cosh(A)*tanh(A) != sinh(A)
-lhs == 0
+lhs == nan
 
 A
   3.14159265358979323846264338327950288419716939937510582097494459e+02{-1}
