@@ -1,11 +1,16 @@
-####### kdevelop will overwrite this part!!! (begin)##########
-EXTRA_DIST = peg02.cpp peg02.h Makefile.am
-####### kdevelop will overwrite this part!!! (end)############
+EXTRA_DIST = Makefile.am
+
 AUTOMAKE_OPTIONS = foreign
-check_PROGRAMS = test02
-check_DATA = test02.out
+
+noinst_PROGRAMS = test02
+
+check: test02.out
 test02.out: test02
 	../test/test.sh 02 > test02.out
+
+noinst_HEADERS = peg02.h
+test02_SOURCES = peg02.cpp
+test02_LDADD = $(LDADD)
 
 # set the include path found by configure
 AM_CPPFLAGS = $(all_includes)
@@ -13,9 +18,4 @@ AM_CPPFLAGS = $(all_includes)
 LDFLAGS = $(all_libraries)
 test02_LDFLAGS = $(LDFLAGS)
 
-test02_SOURCES = peg02.cpp
-test02_LDADD = $(LDADD)
-test02_DEPENDENCIES = ../test/control.h ../test/driver.h ../test/try_catch.h ../test/tuning.h peg02.h
-
-clean:
-	rm -f peg02.o test02 test02.out
+CLEANFILES = test02.out

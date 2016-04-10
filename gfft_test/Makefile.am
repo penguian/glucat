@@ -1,15 +1,16 @@
-####### kdevelop will overwrite this part!!! (begin)##########
-EXTRA_DIST = Makefile.am gfft_test.cpp gfft_test.h
-####### kdevelop will overwrite this part!!! (end)############
+EXTRA_DIST = Makefile.am
+
 AUTOMAKE_OPTIONS = foreign
+
 noinst_PROGRAMS = gfft_test
+
+noinst_HEADERS = gfft_test.h
+
+gfft_test_SOURCES = gfft_test.cpp
+gfft_test_LDADD = $(LDADD)
 
 # set the include path found by configure
 AM_CPPFLAGS = $(all_includes)
 # the library search path.
 LDFLAGS = $(all_libraries)
 gfft_test_LDFLAGS = $(LDFLAGS)
-
-gfft_test_SOURCES = gfft_test.cpp
-gfft_test_LDADD = $(LDADD)
-gfft_test_DEPENDENCIES = gfft_test.h
