@@ -504,6 +504,17 @@ GLUCAT_CHECK_COMPILERS
 
 CXXFLAGS="$CXXFLAGS $USE_EXCEPTIONS"
 
+# Generate Doxyfile from Doxyfile.in
+# From
+# http://chris-miceli.blogspot.com.au/2011/01/integrating-doxygen-with-autotools.html
+AC_CHECK_PROGS([DOXYGEN], [doxygen])
+if test -z "$DOXYGEN"; then 
+  AC_MSG_WARN([Doxygen not found - continuing without Doxygen support])
+fi
+AM_CONDITIONAL([HAVE_DOXYGEN],[test -n "$DOXYGEN"])
+AM_COND_IF([HAVE_DOXYGEN],[AC_CONFIG_FILES([Doxyfile])])
+AC_SUBST([doxydir],[$(pwd)])
+
 AC_SUBST([all_includes])
 AC_SUBST([all_libraries])
 LIBS="$all_libraries"
