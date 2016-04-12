@@ -79,7 +79,7 @@ namespace glucat
   /// Constructor from range of indices from range.first to range.second
   template<const index_t LO, const index_t HI>
   index_set<LO,HI>::
-  index_set(const std::pair<index_t,index_t>& range, const bool prechecked)
+  index_set(const index_pair_t& range, const bool prechecked)
   {
     if (!prechecked && (range.first < LO || range.second > HI))
         throw error_t("index_set(range): cannot create: range is too large");
@@ -980,7 +980,7 @@ namespace glucat
   template<const index_t LO, const index_t HI>
   inline
   index_set<LO,HI>::reference::
-  reference( index_set<LO,HI>& ist, index_t idx ) :
+  reference( index_set_t& ist, index_t idx ) :
     m_pst(&ist),
     m_idx(idx)
   { }
@@ -1004,7 +1004,7 @@ namespace glucat
   inline
   typename index_set<LO,HI>::reference&
   index_set<LO,HI>::reference::
-  operator= (const typename index_set<LO,HI>::reference& j)
+  operator= (const reference& j)
   {
     if ( (j.m_pst)[j.m_idx] )
       m_pst->set(m_idx);
