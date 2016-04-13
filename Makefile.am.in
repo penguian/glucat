@@ -36,7 +36,11 @@ $(TESTOUT)::
 	rm -f test_runtime/test.out
 	$(MAKE) -C $(@D) check
 
-.PHONY: check-out-header
+install-doc: install-data
+
+install-data:
+	-$(MAKE) -C $(DOC) install-data
+	-$(MAKE) -C $(PYCLICAL_DEMOS) install-data
 
 $(top_srcdir)/configure.ac: configure.ac.in $(top_srcdir)/subdirs
 	cd $(top_srcdir) && $(MAKE) -f admin/Makefile.common configure.ac ;
@@ -67,3 +71,5 @@ clean-local:
 dist-hook:
 	cd $(top_distdir) && perl admin/am_edit -padmin
 	cd $(top_distdir) && $(MAKE) -f admin/Makefile.common subdirs
+
+.PHONY: check-out-header install-doc

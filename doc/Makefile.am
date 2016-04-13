@@ -3,12 +3,14 @@ AUTOMAKE_OPTIONS = foreign
 if HAVE_DOXYGEN
 
   PDFDOC = api/GluCat-API-reference-manual.pdf
-
+  doc_pdf_DATA = $(PDFDOC)
+  doc_pdfdir = $(docdir)/pdf
+  
   HTMLDOC = api/html
+  doc_htmldir = $(docdir)/html 
+  doc_html_DATA = $(HTMLDOC)/*
 
-  doc_DATA = $(PDFDOC) $(HTMLDOC)
-
-$(HTMLDOC): doxygen.out
+$(HTMLDOC)/*: doxygen.out
 
 doxygen.out: @doxydir@/Doxyfile
 	mkdir -p api/html
