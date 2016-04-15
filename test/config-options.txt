@@ -1,20 +1,18 @@
 default:
-disable-check-isnan:         --disable-check-isnan
+compressed-mat:              --without-dense-mat
 debug-full:                  --enable-debug=full
 debug-yes:                   --enable-debug=yes
-compressed-mat:              --without-dense-mat
+disable-check-isnan:         --disable-check-isnan
+disable-dependency:          --disable-dependency-tracking
 disable-pyclical:            --disable-pyclical
-no-dependency:               --disable-dependency-tracking
-prefix-home-opt:             --prefix=$HOME/opt
-qd:                          --with-qd
-qd-map-map:                  --with-qd --with-map=map
-qd-map-map-gsl:              --with-qd --with-map=map --with-random=gsl
-pool-alloc:                            --with-map=map --with-pool-alloc
 eig-bindings:                          --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
 eig-bindings-fast:                     --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings --with-tuning=fast
 eig-bindings-naive:                    --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings --with-tuning=naive
+map-map-gsl:                 --with-map=map --with-random=gsl
+map-map-pool-alloc:          --with-map=map --with-pool-alloc
+prefix-home-opt:             --prefix=$HOME/opt
 qd-eig-bindings:             --with-qd --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
 qd-eig-bindings-demoted:     --with-qd --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings --with-tuning=demoted
-qd-eig-bindings-promoted:    --with-qd --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings --with-tuning=promoted
 qd-eig-bindings-gsl:         --with-qd --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings --with-random=gsl
 qd-eig-bindings-map-map:     --with-qd --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings --with-map=map
+qd-eig-bindings-promoted:    --with-qd --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings --with-tuning=promoted
