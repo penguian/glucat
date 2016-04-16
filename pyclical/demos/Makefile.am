@@ -1,5 +1,6 @@
 AUTOMAKE_OPTIONS = foreign
 
+if make_pyclical
 demodir = $(datarootdir)/pyclical/demos
 
 NOTEBOOKS = clifford_demo.ipynb            pyclical_demo.ipynb                    sqrt_log_demo.ipynb \
@@ -14,3 +15,4 @@ $(NOTEBOOKS):
 
 clean-local:
 	rm -f *.pyc *.ipynb
+endif

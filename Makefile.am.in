@@ -1,6 +1,7 @@
 if make_pyclical
   PYCLICAL = pyclical
   PYCLICAL_DEMOS = pyclical/demos
+  INSTALL_PYCLICAL_DEMOS = install-pyclical-demos
 endif
 
 TIMING = gfft_test products squaring transforms
@@ -19,7 +20,7 @@ GLUCAT_CONFIG_HEADER = glucat/config.h
 
 EXTRA_DIST = admin doc m4 test test_runtime AUTHORS COPYING ChangeLog configure.ac.in glucat.lsm INSTALL Makefile.am NEWS README TODO
 
-glucat:  $(GLUCAT_CONFIG_HEADER)
+glucat: $(GLUCAT_CONFIG_HEADER)
 
 $(GLUCAT_CONFIG_HEADER):
 	cp $(CONFIG_HEADER) $(GLUCAT_CONFIG_HEADER)
@@ -38,9 +39,15 @@ $(TESTOUT)::
 
 install-doc: install-data
 
-install-data:
+install-data: install-api-doc $(INSTALL_PYCLICAL_DEMOS)
+
+install-api-doc:
 	-$(MAKE) -C $(DOC) install-data
+
+if make_pyclical
+install-pyclical-demos:
 	-$(MAKE) -C $(PYCLICAL_DEMOS) install-data
+endif
 
 $(top_srcdir)/configure.ac: configure.ac.in $(top_srcdir)/subdirs
 	cd $(top_srcdir) && $(MAKE) -f admin/Makefile.common configure.ac ;
@@ -72,4 +79,4 @@ dist-hook:
 	cd $(top_distdir) && perl admin/am_edit -padmin
 	cd $(top_distdir) && $(MAKE) -f admin/Makefile.common subdirs
 
-.PHONY: check-out-header install-doc
+.PHONY: check-out-header install-doc install-api-doc $(INSTALL_PYCLICAL_DEMOS)
