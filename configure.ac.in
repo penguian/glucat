@@ -32,7 +32,7 @@ dnl    Boston, MA 02111-1307, USA.
 
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([glucat],[0.8.1-alpha])
+AC_INIT([glucat],[0.8.1])
 AC_CONFIG_MACRO_DIR([m4])
 m4_include([m4/acinclude.m4])
 AC_CONFIG_SRCDIR([aclocal.m4]) dnl a source file from your sub dir
@@ -475,7 +475,7 @@ dnl Perform program name transformation
 AC_ARG_PROGRAM
 
 dnl Automake doc recommends to do this only here. (Janos)
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([gnu])
 
 dnl almost the same like GLUCAT_SET_PREFIX but the path is /usr/local
 dnl
