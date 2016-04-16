@@ -7,8 +7,8 @@ if HAVE_DOXYGEN
   doc_pdfdir = $(docdir)/pdf
   
   HTMLDOC = api/html
-  doc_htmldir = $(docdir)/html 
   doc_html_DATA = $(HTMLDOC)/*
+  doc_htmldir = $(docdir)/html
 
 $(HTMLDOC)/*: doxygen.out
 
