@@ -10,46 +10,36 @@ TOPSUBDIRS = glucat $(PYCLICAL) $(PYCLICAL_DEMOS) $(TIMING)
 
 EXAMPLES = test00 test01 test02 test03 test04 test05 test06 test07 test08 test09 test10 test11 test12 test13 test14 test15 test16
 
-DOC = doc
-
 TESTOUT = test00/test00.out test01/test01.out test02/test02.out test03/test03.out test04/test04.out test05/test05.out \
           test06/test06.out test07/test07.out test08/test08.out test09/test09.out test10/test10.out test11/test11.out \
           test12/test12.out test13/test13.out test14/test14.out test15/test15.out test16/test16.out
 
+DOC = doc
+
 doc_DATA = AUTHORS COPYING ChangeLog glucat.lsm INSTALL NEWS README TODO
 
-EXTRA_DIST = admin doc m4 test test_runtime configure Makefile.am
+EXTRA_DIST = admin doc m4 test test_runtime $(EXAMPLES) configure.ac configure Makefile.am
 
-GLUCAT_CONFIG_HEADER = glucat/config.h
+check: test-out
 
-glucat: $(GLUCAT_CONFIG_HEADER)
-
-$(GLUCAT_CONFIG_HEADER):
-	cp $(CONFIG_HEADER) $(GLUCAT_CONFIG_HEADER)
-
-check: check-out-header
-
-check-out-header: $(TESTOUT) $(GLUCAT_CONFIG_HEADER)
+test-out: $(TESTOUT)
 	cat $(TESTOUT) > test_runtime/test.out
 
+if HAVE_DOXYGEN
 $(DOC)::
-	$(MAKE) -C $@
+	$(MAKE) -C $(DOC)
+endif
 
-$(TESTOUT)::
+$(TESTOUT):
 	rm -f test_runtime/test.out
 	$(MAKE) -C $(@D) check
 
 install-doc: install-data
 
-install-data: install-data-am install-api-doc $(INSTALL_PYCLICAL_DEMOS)
+install-data: install-data-am install-api-doc
 
 install-api-doc:
 	-$(MAKE) -C $(DOC) install-data
-
-if make_pyclical
-install-pyclical-demos:
-	-$(MAKE) -C $(PYCLICAL_DEMOS) install-data
-endif
 
 $(top_srcdir)/configure.ac: configure.ac.in $(top_srcdir)/subdirs
 	cd $(top_srcdir) && $(MAKE) -f admin/Makefile.common configure.ac ;
@@ -65,15 +55,8 @@ MAINTAINERCLEANFILES = subdirs configure.in acinclude.m4 configure.files
 cvs:
 	$(MAKE) -f admin/Makefile.common cvs
 
-# Fix to "make dist" which needs tar.
-# Without this fix aclocal would use tar with parameters 'chof' for "make dist",
-# and that would use the old v7 format for tar files.
-# That won't work with the long file names in the doc directory.
-am__tar = $${TAR-tar} chf - "$$tardir"
-
 clean-local:
-	rm -f $(GLUCAT_CONFIG_HEADER)
-	for d in $(EXAMPLES); do \
+	-for d in $(DOC) $(PYCLICAL) $(EXAMPLES); do \
 	  $(MAKE) -C $$d clean; \
 	done
 
@@ -81,4 +64,4 @@ dist-hook:
 	cd $(top_distdir) && perl admin/am_edit -padmin
 	cd $(top_distdir) && $(MAKE) -f admin/Makefile.common subdirs
 
-.PHONY: check-out-header install-doc install-api-doc $(INSTALL_PYCLICAL_DEMOS)
+.PHONY: test-out install-doc install-api-doc $(INSTALL_PYCLICAL_DEMOS)

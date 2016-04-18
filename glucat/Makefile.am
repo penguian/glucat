@@ -10,5 +10,5 @@ make-install-dirs:
 install-data-hook: make-install-dirs
 	-@ echo Installing $(includedir) ; \
 	$(INSTALL_DATA) *.h $(includedir)
-clean:
-	rm -f config.h
+# clean:
+# 	rm -f config.h

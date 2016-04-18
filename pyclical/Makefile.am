@@ -1,9 +1,12 @@
 AUTOMAKE_OPTIONS = foreign
 
 if make_pyclical
+
 ext_name = PyClical
 
-EXTRA_DIST = demos/*.py demos/*.out Makefile.am $(ext_name)_nocython.cpp test.out
+EXTNOCYTHONCPP = $(ext_name)_nocython.cpp
+
+EXTRA_DIST = demos/*.py demos/*.out Makefile.am $(EXTNOCYTHONCPP) test.out
 
 # Setup options depend on availability of Cython
 if use_cython
@@ -11,8 +14,8 @@ if use_cython
   SETUP_SOURCE_PARAM = source_pyx="$(ext_name).pyx"
   SETUP = setup
 else
-  SETUP_SOURCE_LIST = $(ext_name)_nocython.cpp $(ext_name).h
-  SETUP_SOURCE_PARAM = source_cpp="$(ext_name)_nocython.cpp"
+  SETUP_SOURCE_LIST = $(EXTNOCYTHONCPP) $(ext_name).h
+  SETUP_SOURCE_PARAM = source_cpp="$(EXTNOCYTHONCPP)"
   SETUP = setup_nocython
 endif
 
@@ -27,14 +30,24 @@ pyexec_DATA = $(ext_name).so
 
 all: $(pyexec_DATA)
 
-$(ext_name).so: $(SETUP_SOURCE_LIST) $(SETUP).py setup_ext.py ../glucat/glucat.h ../glucat/glucat_imp.h
+$(pyexec_DATA): $(SETUP_SOURCE_LIST) $(SETUP).py setup_ext.py
 	ext_name="$(ext_name)" $(SETUP_SOURCE_PARAM) CXX="$(CXX)" CXXFLAGS="$(EXTCXXFLAGS)" AM_CPPFLAGS="$(EXTAM_CPPFLAGS)" LDFLAGS="$(EXTLDFLAGS)" $(PYTHON) $(SETUP).py build_ext --inplace
+
+if use_cython
+$(ext_name).cpp: $(pyexec_DATA)
+
+$(EXTNOCYTHONCPP): $(ext_name).cpp
+	cp $(ext_name).cpp $@
+	$(MAKE) clean
+
+endif
 
 CLEAN_CYTHON = $(ext_name).cpp $(ext_name).html
 
-CLEANFILES = $(ext_name).so $(CLEAN_CYTHON)
+CLEANFILES = $(pyexec_DATA) $(CLEAN_CYTHON)
 
 clean-local:
 	rm -f *.pyc
 	rm -rf build
+
 endif

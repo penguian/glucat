@@ -475,7 +475,7 @@ dnl Perform program name transformation
 AC_ARG_PROGRAM
 
 dnl Automake doc recommends to do this only here. (Janos)
-AM_INIT_AUTOMAKE([gnu])
+AM_INIT_AUTOMAKE([gnu tar-pax])
 
 dnl almost the same like GLUCAT_SET_PREFIX but the path is /usr/local
 dnl
@@ -504,9 +504,7 @@ GLUCAT_CHECK_COMPILERS
 
 CXXFLAGS="$CXXFLAGS $USE_EXCEPTIONS"
 
-# Generate Doxyfile from Doxyfile.in
-# From
-# http://chris-miceli.blogspot.com.au/2011/01/integrating-doxygen-with-autotools.html
+# From http://chris-miceli.blogspot.com.au/2011/01/integrating-doxygen-with-autotools.html
 AC_CHECK_PROGS([DOXYGEN], [doxygen])
 if test -z "$DOXYGEN"; then 
   AC_MSG_WARN([Doxygen not found - continuing without Doxygen support])

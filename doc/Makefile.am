@@ -1,29 +1,37 @@
 AUTOMAKE_OPTIONS = foreign
 
+htmldir = $(docdir)/html
+pdfdir = $(docdir)/pdf
+
 if HAVE_DOXYGEN
-
-  PDFDOC = api/GluCat-API-reference-manual.pdf
-  doc_pdf_DATA = $(PDFDOC)
-  doc_pdfdir = $(docdir)/pdf
   
-  HTMLDOC = api/html
-  doc_html_DATA = $(HTMLDOC)/*
-  doc_htmldir = $(docdir)/html
+  html_DATA = api/html/*
+  pdf_DATA = api/GluCat-API-reference-manual.pdf
+  
+html: $(html_DATA)
 
-$(HTMLDOC)/*: doxygen.out
+$(html_DATA): doxygen.out
 
-doxygen.out: @doxydir@/Doxyfile
+doxygen.out: $(doxydir)/Doxyfile
 	mkdir -p api/html
 	mkdir -p api/latex
-	cd @doxydir@ && $(DOXYGEN) $(DOXYFLAGS) $< > doc/doxygen.out
+	$(DOXYGEN) $(DOXYFLAGS) $< > doxygen.out
 
-$(PDFDOC): doxygen.out
-	make -C api/latex > make-pdf.out
-	cp api/latex/refman.pdf $(PDFDOC)
+pdf: $(pdf_DATA)
 
-  CLEANFILES = doxygen.out make-pdf.out
+$(pdf_DATA): html
+	$(MAKE) -C api/latex > api/latex/make.out
+	cp api/latex/refman.pdf $@
+	$(MAKE) clean
+
+  CLEANFILES = doxygen.out
 
 clean-local:
+	rm -rf api/latex
+
+distclean-local:
 	rm -rf api
+
+.PHONY: html pdf
 
 endif
