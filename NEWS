@@ -1,5 +1,23 @@
-NEWS for GluCat 0.8.0 with PyClical
+NEWS for GluCat 0.8.1 with PyClical
 ===================================
+
+2016-04-22: 0.8.1:
+GluCat 0.8.1 makes testing faster, easier and more comprehensive.
+
+The configuration option --with-tuning=arg controls test tuning via preprocessor
+macros and the header files test/tuning.h and test/undefine.h.
+
+The configuration option --enable-check-isnan controls checks for NaN values,
+and the configuration option --with-pool-alloc controls the use of the Boost
+pool allocator.
+
+The scripts test/test-all-config-options.sh, test/diff-all-config-outputs.sh
+and test/copy-all-config-outputs.sh enable comprehensive tesing of configuation
+options.
+
+The use of Autotools has again been improved, with enhancements to make, 
+make clean, make dist and make install, and the introduction of make check, 
+make doc and make install-doc.
 
 2015-09-06: 0.8.0:
 All deprecated options have been removed from the code,
