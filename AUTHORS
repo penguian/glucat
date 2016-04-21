@@ -1,4 +1,4 @@
-AUTHORS for GluCat 0.8.0 with PyClical
+AUTHORS for GluCat 0.8.1 with PyClical
 ======================================
 
 Paul C. Leopardi <leopardi@users.sourceforge.net>
@@ -112,10 +112,15 @@ QD Interface
 ------------
 David H. Bailey and QD team: Changes to constructors in QD 2.3.10.
 
-Configuration
--------------
+Configuration and Building
+--------------------------
 Stephan Kulow, Walter Tasin, KDevelop team:
-  Configuration code used in config.in.in
+  Original code used in admin/* and configure.ac.in
+John Calcote:
+  Autools examples and ideas for make check, make dist, make doc, and make
+  install, used in configure.ac.in, Makefile.am.in and various Makefile.am files.
+Chris Miceli:
+  Integrating Doxygen with Autotools.
 
 PyClical Python extension module
 --------------------------------
@@ -178,12 +183,12 @@ References for identities
 L. Dorst, "Honing geometric algebra for its use in the computer sciences",
 in Geometric Computing with Clifford Algebras, (G. Sommer, ed.)
 Springer 2001, Chapter 6, pp. 127-152.
-http://staff.science.uva.nl/~leo/clifford/index.html
+https://staff.fnwi.uva.nl/l.dorst/clifford/index.html
 
 L. Dorst, "The inner products of geometric algebra", in
 Applications of Geometric Algebra in Computer Science and Engineering
 (Dorst, Doran, Lasenby, eds), Birkhauser, 2002.
-http://staff.science.uva.nl/~leo/clifford/index.html
+https://staff.fnwi.uva.nl/l.dorst/clifford/index.html
 
 D. Hestenes, G. Sobczyk, Clifford Algebra to Geometric Calculus, D. Reidel, 1984.
 
@@ -265,7 +270,7 @@ o William Baylis:
 o The Clifford Research Group at Ghent University
   http://cage.ugent.be/crg/
 o Leo Dorst
-  http://staff.science.uva.nl/~leo/clifford/
+  https://staff.fnwi.uva.nl/l.dorst/clifford/index.html
 o The Geometric Algebra Research Group at Cambridge:
   http://geometry.mrao.cam.ac.uk/
 o David Hestenes
@@ -273,9 +278,9 @@ o David Hestenes
 o Soeren Krausshar
   http://www.uni-erfurt.de/mathematik/mathematik/team/prof-dr-soeren-krausshar/
 o Pertti Lounesto
-  http://users.tkk.fi/ppuska/mirror/Lounesto/
+  https://users.aalto.fi/~ppuska/mirror/Lounesto/
 o Alan Macdonald
-  http://faculty.luther.edu/~macdonal/
+  http://faculty.luther.edu/~macdonal/laga/
 o Christian Perwass
   http://www.researchgate.net/profile/Christian_Perwass/publications
 o Wikipedia: Geometric algebra
@@ -288,14 +293,16 @@ Other Clifford algebra software
  o CLIFFORD for Maple 16
    http://math.tntech.edu/rafal/cliff16/index.html
  o CLUCalc, 3D calculation and visualization software
-   http://www.clucalc.info/
+   http://www.clucalc.info/   
  o GABLE, a Matlab package with a geometric algebra tutorial
-   http://staff.science.uva.nl/~leo/GABLE/index.html
+   https://staff.fnwi.uva.nl/l.dorst/GABLE/index.html
  o Gaigen 2.5, a C++ code optimized geometric algebra implementation generator
    http://sourceforge.net/projects/g25/
+ o galgebra: geometric algebra/calculus modules for sympy
+   https://github.com/brombo/galgebra
 
  Historical
  o CLICAL, a Clifford algebra calculator
-   http://users.tkk.fi/ppuska/mirror/Lounesto/CLICAL.htm
+   https://users.aalto.fi/~ppuska/mirror/Lounesto/CLICAL.htm
  o GA Package for Maple
    http://www.mrao.cam.ac.uk/~maja1/software/GA/
