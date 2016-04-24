@@ -8,30 +8,35 @@ if HAVE_DOXYGEN
   html_DATA = api/html/*
   pdf_DATA = api/GluCat-API-reference-manual.pdf
   
-html: $(html_DATA)
+  glucatHEADERS = ../glucat/*.h
+  testHEADERS = ../test/*.h
+  PyClicalSOURCE = ../pyclical/glucat.pxd ../pyclical/PyClical.h  ../pyclical/PyClical.pxd ../pyclical/PyClical.pyx
+  
+doc: html pdf
 
-$(html_DATA): doxygen.out
+html: $(html_DATA) 
 
-doxygen.out: $(doxydir)/Doxyfile
+$(html_DATA): .doxygen.out
+
+.doxygen.out: $(glucatHEADERS) $(testHEADERS) $(PyClicalSOURCE)
 	mkdir -p api/html
 	mkdir -p api/latex
-	$(DOXYGEN) $(DOXYFLAGS) $< > doxygen.out
+	$(DOXYGEN) $(DOXYFLAGS) $(doxydir)/Doxyfile > .doxygen.out
 
 pdf: $(pdf_DATA)
 
-$(pdf_DATA): html
+$(pdf_DATA): .doxygen.out
 	$(MAKE) -C api/latex > api/latex/make.out
 	cp api/latex/refman.pdf $@
 	$(MAKE) clean
-
-  CLEANFILES = doxygen.out
 
 clean-local:
 	rm -rf api/latex
 
 distclean-local:
 	rm -rf api
+	rm -f .doxygen.out
 
-.PHONY: html pdf
+.PHONY: doc html pdf
 
 endif
