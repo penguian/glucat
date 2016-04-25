@@ -111,10 +111,6 @@ fi
 
 echo "*** Creating Makefile templates"
 $AUTOMAKE || exit 1
-if test -z "$UNSERMAKE"; then
-  echo "*** Postprocessing Makefile templates"
-  perl admin/am_edit || exit 1
-fi
 
 if egrep "^cvs-local:" $makefile_am >/dev/null; then \
   strip_makefile
@@ -149,7 +145,6 @@ fi
 $ACLOCAL
 $AUTOHEADER
 $AUTOMAKE --foreign --include-deps
-perl admin/am_edit
 call_and_fix_autoconf
 touch stamp-h.in
 if grep "^cvs-local:" $makefile_am >/dev/null; then
@@ -167,7 +162,6 @@ subdir_dist()
 $ACLOCAL
 $AUTOHEADER
 $AUTOMAKE --foreign --include-deps
-perl ../admin/am_edit
 call_and_fix_autoconf
 }
 

@@ -18,7 +18,7 @@ DOC = doc
 
 doc_DATA = AUTHORS COPYING ChangeLog glucat.lsm INSTALL NEWS README TODO
 
-EXTRA_DIST = admin doc m4 test test_runtime $(EXAMPLES) configure.ac configure Makefile.am
+EXTRA_DIST = admin doc m4 test test_runtime $(EXAMPLES) configure.ac.in configure.ac configure Makefile.am $(doc_DATA)
 
 check: test-out
 
@@ -38,6 +38,7 @@ install-doc: install-api-doc
 
 install-api-doc:
 	-$(MAKE) -C $(DOC) install-data
+	rm -rf autom4te.cache
 
 $(top_srcdir)/configure.ac: configure.ac.in $(top_srcdir)/subdirs
 	cd $(top_srcdir) && $(MAKE) -f admin/Makefile.common configure.ac ;
@@ -54,8 +55,13 @@ cvs:
 	$(MAKE) -f admin/Makefile.common cvs
 
 clean-local:
-	-for d in $(DOC) $(PYCLICAL) $(EXAMPLES); do \
+	-for d in $(DOC) $(PYCLICAL) $(PYCLICAL)/demos $(EXAMPLES); do \
 	  $(MAKE) -C $$d clean; \
+	done
+
+distclean-local:
+	-for d in $(DOC) $(PYCLICAL) $(PYCLICAL)/demos $(EXAMPLES); do \
+	  $(MAKE) -C $$d distclean; \
 	done
 
 dist-hook:

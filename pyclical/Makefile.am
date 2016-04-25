@@ -4,17 +4,21 @@ if make_pyclical
 
 ext_name = PyClical
 
+EXTCYTHON_SOURCE = $(ext_name).pyx $(ext_name).pxd glucat.pxd
 EXTNOCYTHONCPP = $(ext_name)_nocython.cpp
+EXTNOCYTHON_SOURCE = $(EXTNOCYTHONCPP)
+EXT_HEADER = $(ext_name).h
 
-EXTRA_DIST = demos/*.py demos/*.out Makefile.am $(EXTNOCYTHONCPP) test.out
+EXTRA_DIST = Makefile.am $(EXTCYTHON_SOURCE) $(EXTNOCYTHON_SOURCE) $(EXT_HEADER) \
+             setup_ext.py  setup_nocython.py  setup.py  test.py test.out
 
 # Setup options depend on availability of Cython
 if use_cython
-  SETUP_SOURCE_LIST = $(ext_name).pyx $(ext_name).pxd glucat.pxd $(ext_name).h
+  SETUP_SOURCE_LIST = $(EXTCYTHON_SOURCE) $(EXT_HEADER)
   SETUP_SOURCE_PARAM = source_pyx="$(ext_name).pyx"
   SETUP = setup
 else
-  SETUP_SOURCE_LIST = $(EXTNOCYTHONCPP) $(ext_name).h
+  SETUP_SOURCE_LIST = $(EXTNOCYTHON_SOURCE) $(EXT_HEADER)
   SETUP_SOURCE_PARAM = source_cpp="$(EXTNOCYTHONCPP)"
   SETUP = setup_nocython
 endif
