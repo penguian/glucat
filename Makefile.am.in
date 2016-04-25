@@ -34,9 +34,7 @@ $(TESTOUT):
 	rm -f test_runtime/test.out
 	$(MAKE) -C $(@D) check
 
-install-doc: install-data
-
-install-data: install-data-am install-api-doc
+install-doc: install-api-doc
 
 install-api-doc:
 	-$(MAKE) -C $(DOC) install-data
