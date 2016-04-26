@@ -491,6 +491,7 @@ fi
 dnl without this order in this file, automake will be confused!
 dnl
 AC_CONFIG_HEADERS([config.h])
+AX_PREFIX_CONFIG_H([glucat/glucat_config.h])
 
 GLUCAT_CHECK_EXTRA_LIBS
 all_libraries="$all_libraries $USER_LDFLAGS"

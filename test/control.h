@@ -30,7 +30,7 @@
  ***************************************************************************
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
-#include "config.h"
+#include "glucat/glucat_config.h"
 #include "test/try_catch.h"
 
 namespace glucat
@@ -121,7 +121,7 @@ namespace glucat
     }
     if (print_help)
     {
-      std::cout << program_name << " for GluCat version " << VERSION << ":" << std::endl;
+      std::cout << program_name << " for " << GLUCAT_PACKAGE_NAME << " version " << GLUCAT_VERSION << ":" << std::endl;
       std::cout << "Usage:  " << program_name << " [option ...]" << std::endl;
       std::cout << "Options:" << std::endl;
       std::cout << "  --help      : Print this summary." << std::endl;
