@@ -28,12 +28,9 @@ pdf: $(pdf_DATA)
 $(pdf_DATA): .doxygen.out
 	$(MAKE) -C api/latex > api/latex/make.out
 	cp api/latex/refman.pdf $@
-	$(MAKE) clean
-
-clean-local:
 	rm -rf api/latex
 
-distclean-local:
+clean-local:
 	rm -rf api
 	rm -f .doxygen.out
 
