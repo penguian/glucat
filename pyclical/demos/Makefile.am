@@ -11,14 +11,16 @@ plotting_demo_dialog.py      pyclical_tutorial_0_1_index_sets.py  pyclical_tutor
 plotting_demo_mayavi.py      pyclical_tutorial_0_2_operations.py  pyclical_tutorial_1_3_lorentz.py         sqrt_log_demo.py \
 plotting_demo.py             pyclical_tutorial_0_3_functions.py   pyclical_tutorial_1_4_fourth.py 
 
+DEMOSOUT = $(DEMOS) pyclical_demo.out  sqrt_log_demo.out
+
+demo_DATA = $(DEMOSOUT)
+
 NOTEBOOKS = clifford_demo.ipynb            pyclical_demo.ipynb                    sqrt_log_demo.ipynb \
 pyclical_tutorial_0_0_notation.ipynb       pyclical_tutorial_0_1_index_sets.ipynb pyclical_tutorial_0_2_operations.ipynb   pyclical_tutorial_0_3_functions.ipynb \
 pyclical_tutorial_0_4_transcendental.ipynb pyclical_tutorial_1_0_plane.ipynb      pyclical_tutorial_1_1_complex.ipynb      pyclical_tutorial_1_2_space.ipynb \
 pyclical_tutorial_1_3_lorentz.ipynb        pyclical_tutorial_1_4_fourth.ipynb     pyclical_tutorial_1_5_conformal.ipynb    pyclical_tutorial_2_0_wedge_product.ipynb
 
-demo_DATA = $(DEMOS) $(NOTEBOOKS) pyclical_demo.out  sqrt_log_demo.out
-
-EXTRA_DIST = $(demo_DATA)
+EXTRA_DIST = $(DEMOSOUT) $(NOTEBOOKS)
 
 $(NOTEBOOKS):
 	python build_pyclical_notebooks.py
