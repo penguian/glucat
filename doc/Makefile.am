@@ -1,5 +1,7 @@
 AUTOMAKE_OPTIONS = foreign
 
+EXTRA_DIST = Makefile.in
+
 htmldir = $(docdir)/html
 pdfdir = $(docdir)/pdf
 
