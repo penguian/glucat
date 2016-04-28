@@ -18,7 +18,7 @@ DOC = doc
 
 doc_DATA = AUTHORS COPYING ChangeLog glucat.lsm INSTALL NEWS README TODO
 
-EXTRA_DIST = admin m4 test test_runtime $(EXAMPLES) configure.ac.in configure.ac configure Makefile.am $(doc_DATA) doc/Makefile.in
+EXTRA_DIST = admin m4 test test_runtime $(EXAMPLES) configure.ac.in configure.ac configure Makefile.am $(doc_DATA) doc/Makefile.am doc/Makefile.in
 
 check: test-out
 
@@ -63,7 +63,7 @@ distclean-local:
 	done
 
 dist-hook:
-	cd $(top_distdir) && $(MAKE) -f admin/Makefile.common subdirs
+	cd $(top_distdir) && $(MAKE) -f admin/Makefile.common cvs
 	cd $(top_distdir) && rm -rf */.deps
 
 .PHONY: doc test-out install-doc $(INSTALL_PYCLICAL_DEMOS)
