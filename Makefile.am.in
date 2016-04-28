@@ -18,7 +18,7 @@ DOC = doc
 
 doc_DATA = AUTHORS COPYING ChangeLog glucat.lsm INSTALL NEWS README TODO
 
-EXTRA_DIST = admin m4 test test_runtime $(EXAMPLES) configure.ac.in configure.ac configure Makefile.am $(doc_DATA)
+EXTRA_DIST = admin m4 test test_runtime $(EXAMPLES) configure.ac.in configure.ac configure Makefile.am $(doc_DATA) doc/Makefile.in
 
 check: test-out
 
