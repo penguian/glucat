@@ -63,7 +63,8 @@ distclean-local:
 	done
 
 dist-hook:
-	cd $(top_distdir) && $(MAKE) -f admin/Makefile.common cvs
+	cd $(top_distdir) && $(MAKE) -f admin/Makefile.common subdirs
+	cd $(top_distdir) && $(MAKE) -f admin/Makefile.common configure.ac
 	cd $(top_distdir) && rm -rf */.deps
 
 .PHONY: doc test-out install-doc $(INSTALL_PYCLICAL_DEMOS)
