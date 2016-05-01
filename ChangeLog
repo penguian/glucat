@@ -1,3 +1,446 @@
+2016-05-02  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* INSTALL: Installation instructions for version 0.8.1
+
+2016-05-02  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* NEWS, glucat.lsm: Bump date to 2016-05-01
+
+2016-05-01  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* Makefile.am.in: Correct and clean up make dist, make clean, make
+	distclean
+
+2016-04-29  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* Makefile.am.in: Try making subdirs and configure.ac in dist-hook,
+	instead of cvs
+
+2016-04-29  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* Makefile.am.in: Try adding doc/makefile.am to EXTRA_DIST. Try
+	making cvs instead of subdirs in dist-hook.
+
+2016-04-29  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* Makefile.am.in: Distribute doc/Makefile.in
+
+2016-04-29  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* Makefile.am.in: Do not make doc unless the user explicitly tells
+	make to do so
+
+2016-04-28  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* Makefile.am.in, doc/Makefile.am: Distribute doc/Makefile.in
+
+2016-04-28  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* Makefile.am.in, doc/Makefile.am: Do not distribute built API
+	documentation. Let the user make it.
+
+2016-04-27  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* doc/Makefile.am: Treat 'make clean' consistently
+
+2016-04-27  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* pyclical/demos/Makefile.am: Do not distribute notebooks
+
+2016-04-26  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* products/tuning.h, squaring/tuning.h: Remove obsolete tuning.h
+	files
+
+2016-04-26  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* Makefile.am.in: Do not use obsolete admin/am_edit
+
+2016-04-26  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in, m4/ax_prefix_config_h.m4, test/control.h: 
+	Generate and use glucat/glucat_config.h rather than using config.h
+	directly
+
+2016-04-25  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* Makefile.am.in, admin/am_edit, admin/cvs.sh,
+	pyclical/Makefile.am, pyclical/demos/Makefile.am: Do not use
+	obsolete admin/am_edit. Adjust Makefile.am files to compensate.
+
+2016-04-25  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* Makefile.am.in: Ensure that make install-doc only installs the API
+	documentation
+
+2016-04-24  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* Makefile.am.in, doc/Makefile.am: Ensure that make install-doc does
+	not try to remake the Doxygen documentation
+
+2016-04-21  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* NEWS: Update to version 0.8.1
+
+2016-04-21  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* .cvsignore, glucat/.cvsignore: Remove disused .cvsignore files
+
+2016-04-21  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* glucat/templates/.cvsignore, glucat/templates/cpp_template,
+	glucat/templates/header_template, test/templates/.cvsignore,
+	test/templates/cpp_template, test/templates/header_template: Remove
+	disused templates directories
+
+2016-04-21  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* AUTHORS, README, TODO, glucat.lsm: Update to version 0.8.1
+
+2016-04-18  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* Makefile.am.in, configure.ac.in, doc/Makefile.am,
+	glucat/Makefile.am, pyclical/Makefile.am,
+	pyclical/demos/Makefile.am: make, make doc, make install, make
+	install-doc and make dist are now closer to GNU Coding Standards
+
+2016-04-16  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* Makefile.am.in, configure.ac.in: GluCat version 0.8.1. Include
+	standard GNU targets in install-doc.
+
+2016-04-16  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* doc/Makefile.am: Tidy up
+
+2016-04-16  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* Makefile.am.in, pyclical/Makefile.am, pyclical/demos/Makefile.am: 
+	Ensure that make_pyclical is used consistently in Austomake
+	conditionals
+
+2016-04-16  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* pyclical/test.out, pyclical/test.py: Print PyClical version before
+	running doctests
+
+2016-04-16  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* pyclical/PyClical.pyx: Bump PyClical version to 0.8.1
+
+2016-04-15  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* test/config-options.txt,
+	test_runtime/test.configure.disable-dependency.out,
+	test_runtime/test.configure.map-map-gsl.out,
+	test_runtime/test.configure.map-map-pool-alloc.out,
+	test_runtime/test.configure.no-dependency.out,
+	test_runtime/test.configure.pool-alloc.out,
+	test_runtime/test.configure.qd-eig-bindings-demoted.out,
+	test_runtime/test.configure.qd-eig-bindings-gsl.out,
+	test_runtime/test.configure.qd-eig-bindings-map-map.out,
+	test_runtime/test.configure.qd-eig-bindings-promoted.out,
+	test_runtime/test.configure.qd-eig-bindings.out,
+	test_runtime/test.configure.qd-map-map-gsl.out,
+	test_runtime/test.configure.qd-map-map.out,
+	test_runtime/test.configure.qd.out: Improve test configuration
+	options
+
+2016-04-14  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* Makefile.am.in, doc/Makefile.am: Refine install-data target and
+	create install-doc target
+
+2016-04-14  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* Makefile.am.in, pyclical/demos/Makefile.am: First draft of
+	Makefile.am for pyclical/demos
+
+2016-04-13  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* test_runtime/gfft_test-11.out, test_runtime/products-8.out,
+	test_runtime/squaring-11.out, test_runtime/transforms-8.out: Update
+	sample timing test output
+
+2016-04-13  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* Doxyfile.in, Makefile.am.in, doc/Makefile.am: Use Makefile to make
+	doc
+
+2016-04-13  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: Use doyxdir in Doxyfile.in. Add compiler flags in
+	a consistent order.
+
+2016-04-13  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* glucat/index_set_imp.h: Match function declarations more closely
+
+2016-04-11  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* Doxyfile, Doxyfile.in, configure.ac.in: Doxyfile is now generated
+	from Doxyfile.in
+
+2016-04-11  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* subdirs: Remove file that is created by make -f
+	admin/Makefile.common
+
+2016-04-11  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* test_runtime/gfft_test-11.out, test_runtime/products-8.out,
+	test_runtime/squaring-11.out, test_runtime/transforms-8.out: Update
+	sample timing test output
+
+2016-04-11  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: Optimize g++ inlining
+
+2016-04-11  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* test_runtime/test.configure.out,
+	test_runtime/test.configure.qd-eig-bindings-map-map-gsl.out: Delete
+	obsolete test output files
+
+2016-04-10  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: Add -fp-model source flag to icpc for consistency
+	of floating point results
+
+2016-04-10  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* test/control.h, test/driver.h, test00/peg00.cpp, test00/peg00.h,
+	test01/peg01.cpp, test02/peg02.cpp, test03/peg03.cpp,
+	test04/peg04.cpp, test05/peg05.cpp, test06/peg06.cpp,
+	test07/peg07.cpp, test08/peg08.cpp, test09/peg09.cpp,
+	test10/peg10.cpp, test11/peg11.cpp, test11/peg11.h,
+	test12/peg12.cpp, test13/peg13.cpp, test14/peg14.cpp,
+	test15/peg15.cpp, test16/peg16.cpp: Make control_t into a singleton.
+	Add --no-catch option to tests.
+
+2016-04-10  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* gfft_test/Makefile.am, products/Makefile.am,
+	squaring/Makefile.am, test00/Makefile.am, test01/Makefile.am,
+	test02/Makefile.am, test03/Makefile.am, test04/Makefile.am,
+	test05/Makefile.am, test06/Makefile.am, test07/Makefile.am,
+	test08/Makefile.am, test09/Makefile.am, test10/Makefile.am,
+	test11/Makefile.am, test12/Makefile.am, test13/Makefile.am,
+	test14/Makefile.am, test15/Makefile.am, test16/Makefile.am,
+	transforms/Makefile.am: Use appropriate automake variables
+
+2016-04-10  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* test_runtime/test.configure.compressed-mat.out,
+	test_runtime/test.configure.debug-full.out,
+	test_runtime/test.configure.debug-yes.out,
+	test_runtime/test.configure.default.out,
+	test_runtime/test.configure.disable-check-isnan.out,
+	test_runtime/test.configure.disable-pyclical.out,
+	test_runtime/test.configure.eig-bindings-fast.out,
+	test_runtime/test.configure.eig-bindings-naive.out,
+	test_runtime/test.configure.eig-bindings.out,
+	test_runtime/test.configure.no-dependency.out,
+	test_runtime/test.configure.pool-alloc.out,
+	test_runtime/test.configure.prefix-home-opt.out,
+	test_runtime/test.configure.qd-eig-bindings-demoted.out,
+	test_runtime/test.configure.qd-eig-bindings-gsl.out,
+	test_runtime/test.configure.qd-eig-bindings-map-map.out,
+	test_runtime/test.configure.qd-eig-bindings-promoted.out,
+	test_runtime/test.configure.qd-eig-bindings.out,
+	test_runtime/test.configure.qd-map-map-gsl.out,
+	test_runtime/test.configure.qd-map-map.out,
+	test_runtime/test.configure.qd.out: Sample output for tests from
+	test/config-options.txt
+
+2016-04-10  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in, test/config-options.txt: Change the default for
+	--enable-check-isnan to yes
+
+2016-04-07  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* Makefile.am.in: Simplify semi-recursive make clean. Use recursive
+	make all. Eliminate race conditions.
+
+2016-04-07  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* Makefile.am, config.h.in: Remove some files that are generated by
+	'make -f admin/Makefile.common cvs'
+
+2016-04-07  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* glucat/Makefile.am: Remove useless test -z command
+
+2016-04-06  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* Makefile.am.in, test00/Makefile.am, test01/Makefile.am,
+	test02/Makefile.am, test03/Makefile.am, test04/Makefile.am,
+	test05/Makefile.am, test06/Makefile.am, test07/Makefile.am,
+	test08/Makefile.am, test09/Makefile.am, test10/Makefile.am,
+	test11/Makefile.am, test12/Makefile.am, test13/Makefile.am,
+	test14/Makefile.am, test15/Makefile.am, test16/Makefile.am: Remove
+	useless test -z comamnds
+
+2016-04-05  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* test/config-options.txt, test/copy-all-config-outputs.sh,
+	test/copy-one-config-output.sh, test/define-config-options.sh,
+	test/diff-all-config-outputs.sh, test/diff-one-config-output.sh,
+	test/test-all-config-options.sh, test/test-one-config-option.sh: 
+	Systematic tests of configuration options
+
+2016-04-05  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* pyclical/Makefile.am: Use PyClical_nocython.cpp to build without
+	Cython. Always remove PyClical.cpp and PyClical.html on clean.
+
+2016-04-05  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: Warn when selected config option is unusable
+
+2016-04-05  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: Compilation of PyClical needs
+	-fstack-protector-strong
+
+2016-04-05  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: Use correct quotes
+
+2016-04-03  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: If icpc is the compiler, add checks for Intel
+	libimf
+
+2016-04-03  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: 0.8.1-alpha: config options for NaN checking,
+	Boost pool allocator and test tuning.
+
+2016-04-03  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: Remove some obsolete tests
+
+2016-04-02  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: Consistently use GLUCAT_CHECK_HEADERS
+
+2016-04-02  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: Move tests for PyClical and Cython. Correct the
+	case where PyClical is not wanted.
+
+2016-04-02  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: Make quoting and spacing more consistent
+
+2016-04-02  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: Intel -xHost compiler option is case sensitive
+
+2016-04-02  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: Use correct quotation. Adjust some indentation.
+
+2016-03-29  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* Makefile.am, Makefile.am.in, glucat/Makefile.am,
+	test00/Makefile.am, test01/Makefile.am, test02/Makefile.am,
+	test03/Makefile.am, test04/Makefile.am, test05/Makefile.am,
+	test06/Makefile.am, test07/Makefile.am, test08/Makefile.am,
+	test08/eg8.txt, test09/Makefile.am, test10/Makefile.am,
+	test11/Makefile.am, test12/Makefile.am, test13/Makefile.am,
+	test14/Makefile.am, test15/Makefile.am, test16/Makefile.am: First
+	draft of semi-recursive parallel make and parallel make check
+
+2016-03-27  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* gfft_test/gfft_test.h, transforms/transforms.h: Use
+	test/undefine.h and test/tuning.h with _GLUCAT_TEST_TUNING_NAIVE to
+	ensure that transforms between framed_multi_t and matrix_multi_t use
+	naive algorithms
+
+2016-03-27  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* products/products.h, squaring/squaring.h: Use test/tuning.h to
+	allow preprocessor to control tuning
+
+2016-03-27  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* test/driver.h: Use test/tuning.h to allow preprocessor to control
+	tuning
+
+2016-03-27  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* test/control.h: Add member m_catch_exceptions to control_t.
+	Default is true.
+
+2016-03-27  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* glucat/matrix_multi_imp.h: Use the correct type for <= comparison
+
+2016-03-27  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: Make indentation consistent
+
+2016-03-26  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: Ensure that config.h is generated. Update support
+	for Intel C++.
+
+2016-03-25  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: Use -Wno-unused-local-typedefs when using clang++
+	with Boost bindings, to suppress warning messages
+
+2016-03-25  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: Use correct quoting
+
+2016-03-21  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* admin/cvs.sh: Update required automake version. Recognize
+	AC_CONFIG_HEADERS.
+
+2016-03-19  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: Use -march=native where available, rather than
+	-march=k8
+
+2016-03-19  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: Group together tests for --enable options. Do the
+	same with tests for --with options.
+
+2016-03-19  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* config.h.in, configure.ac.in: Add libraries in the correct order
+
+2016-03-18  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* test/tuning.h, test/undefine.h: Use preprocessor macros to control
+	test tuning
+
+2016-03-17  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* glucat/framed_multi_imp.h: In operator%(), construct result_ist
+	using our_frame, to correctly match algebra_dim.
+
+2016-03-17  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* glucat/index_set_imp.h: In index_set constructor from set_value_t,
+	correctly check if value gives an index set outside of frame.
+
+2015-09-14  Paul Leopardi <paul.leopardi@gmail.com>
+
+	* : Merge pull request #6 from penguian/github/master Use unnamed namespaces to allow compilation and linking of separate
+	translation units.
+
+2015-09-07  Paul Leopardi <paul.leopardi@gmail.com>
+
+	* : Merge pull request #1 from penguian/github/master GitHub/master
+
 2015-09-06  Paul Leopardi <leopardi@users.sourceforge.net>
 
 	* pyclical/PyClical.pyx: Update to version 0.8.0.
@@ -142,7 +585,7 @@
 	test_runtime/test.configure.qd-eig-bindings-map-map.out,
 	test_runtime/test.configure.qd-eig-bindings.out,
 	test_runtime/test.configure.qd-map-map.out,
-	test_runtime/test.configure.qd.out, test_runtime/transforms-8.out:
+	test_runtime/test.configure.qd.out, test_runtime/transforms-8.out: 
 	Update test output files.
 
 2015-09-01  Paul Leopardi <leopardi@users.sourceforge.net>
@@ -180,7 +623,7 @@
 	*
 	test_runtime/test.configure.qd-eig-bindings-map-stdunordered-random
 	-std.out,
-	test_runtime/test.configure.qd-map-stdunordered-random-std.out:
+	test_runtime/test.configure.qd-map-stdunordered-random-std.out: 
 	Remove obsolete test output files.
 
 2015-09-01  Paul Leopardi <leopardi@users.sourceforge.net>
@@ -210,12 +653,12 @@
 	-std.out, test_runtime/test.configure.qd-eig-bindings.out,
 	test_runtime/test.configure.qd-map-map.out,
 	test_runtime/test.configure.qd-map-stdunordered-random-std.out,
-	test_runtime/test.configure.qd.out, test_runtime/transforms-8.out:
+	test_runtime/test.configure.qd.out, test_runtime/transforms-8.out: 
 	Update test results for GluCat 0.7.4.
 
 2014-12-24  Paul Leopardi <paul.leopardi@anu.edu.au>
 
-	* pyclical/demos/sqrt_log_demo.out, pyclical/demos/sqrt_log_demo.py:
+	* pyclical/demos/sqrt_log_demo.out, pyclical/demos/sqrt_log_demo.py: 
 	In PyClical sqrt_log_demo, do not print the value of the random
 	multivector x.
 
@@ -320,7 +763,7 @@
 
 2014-05-02  Paul Leopardi <paul.leopardi@anu.edu.au>
 
-	* test_runtime/test.configure.qd-map-stdunordered-random-std.out:
+	* test_runtime/test.configure.qd-map-stdunordered-random-std.out: 
 	Changed test results corresponding to the changes to matrix_multi<>
 	constructors.
 
@@ -442,7 +885,7 @@
 2014-03-29  Paul Leopardi <paul.leopardi@anu.edu.au>
 
 	* admin/config.guess, admin/config.sub, admin/depcomp,
-	admin/install-sh, admin/missing, admin/mkinstalldirs, admin/ylwrap:
+	admin/install-sh, admin/missing, admin/mkinstalldirs, admin/ylwrap: 
 	Bring up to date with respect to automake 1.11.6.
 
 2014-03-27  Paul Leopardi <paul.leopardi@anu.edu.au>
@@ -534,7 +977,7 @@
 
 2014-03-12  Paul Leopardi <paul.leopardi@anu.edu.au>
 
-	* glucat/global.h, glucat/matrix_multi_imp.h, pyclical/Makefile.am:
+	* glucat/global.h, glucat/matrix_multi_imp.h, pyclical/Makefile.am: 
 	Build cleanly with LLVM/Clang; build PyClical cleanly and
 	automatically whether or not Cython is installed.
 
@@ -891,7 +1334,7 @@
 
 2012-10-10  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-	* pyclical/demos/pyclical_demo.py, pyclical/demos/sqrt_log_demo.py:
+	* pyclical/demos/pyclical_demo.py, pyclical/demos/sqrt_log_demo.py: 
 	Move to pyclical/demos/.  Define demo() function and use it within "try ... except" so that
 	CRTL-c can interrupt the demo.
 
@@ -1971,7 +2414,7 @@
 
 2009-12-20  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-	* Doxyfile, INSTALL, configure.in, configure.in.in, glucat.lsm:
+	* Doxyfile, INSTALL, configure.in, configure.in.in, glucat.lsm: 
 	Update to Version 0.4.3.
 
 2009-12-14  Paul C. Leopardi <leopardi@users.sourceforge.net>
@@ -2452,7 +2895,7 @@
 
 2007-11-03  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-	* products/products.h, squaring/squaring.cpp, squaring/squaring.h:
+	* products/products.h, squaring/squaring.cpp, squaring/squaring.h: 
 	Use GLUCAT_TEST_REPEAT to control whether to repeat the timing
 	tests.
 
@@ -3710,7 +4153,7 @@
 	test12/Makefile.am, test12/Makefile.in, test13/Makefile.am,
 	test13/Makefile.in, test14/Makefile.am, test14/Makefile.in,
 	test15/Makefile.am, test15/Makefile.in, test16/Makefile.am,
-	test16/Makefile.in, transforms/Makefile.am, transforms/Makefile.in:
+	test16/Makefile.in, transforms/Makefile.am, transforms/Makefile.in: 
 	Define INCLUDES as $(all_includes) This causes $(all_includes) to be
 	passed correctly to the compiler command line.
 
@@ -3924,12 +4367,12 @@
 
 2003-06-28  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-	* configure.in.in, glucat.doxygen, glucat.kdevprj, glucat.lsm:
+	* configure.in.in, glucat.doxygen, glucat.kdevprj, glucat.lsm: 
 	Update to version 0.1.4
 
 2003-06-28  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-	* glucat/global.h, glucat/index_set.h, glucat/index_set_imp.h:
+	* glucat/global.h, glucat/index_set.h, glucat/index_set_imp.h: 
 	Change mapping of index_set_t to bitset_t to make index 0 of
 	index_set_t a "virtual" bit rather than a real dead bit of bitset_t.
 	This allows DEFAULT_LO to be reduced by 1, and DEFAULT_HI to be
@@ -4352,7 +4795,7 @@
 
 2003-02-25  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-	* test/.cvsignore, test/Makefile.am, test/driver.cpp, test/driver.h:
+	* test/.cvsignore, test/Makefile.am, test/driver.cpp, test/driver.h: 
 	New directory ./transforms for generalized FFT test program.
 
 2003-01-12  Paul C. Leopardi <leopardi@users.sourceforge.net>
@@ -4431,7 +4874,7 @@
 
 2003-01-07  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-	* configure.in, configure.in.in, glucat.doxygen, glucat.kdevprj:
+	* configure.in, configure.in.in, glucat.doxygen, glucat.kdevprj: 
 	Update to GluCat version 0.1.1
 
 2002-12-31  Paul C. Leopardi <leopardi@users.sourceforge.net>
@@ -4537,7 +4980,7 @@
 
 2002-12-30  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-	* glucat/framed_multi_imp.h, glucat/matrix.h, glucat/matrix_imp.h:
+	* glucat/framed_multi_imp.h, glucat/matrix.h, glucat/matrix_imp.h: 
 	Clean up interface to inner().
 
 2002-12-29  Paul C. Leopardi <leopardi@users.sourceforge.net>
@@ -4656,7 +5099,7 @@
 
 2002-12-28  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-	* glucat/clifford_algebra.h, glucat/errors.h, glucat/errors_imp.h:
+	* glucat/clifford_algebra.h, glucat/errors.h, glucat/errors_imp.h: 
 	Prefer std::string to char*
 
 2002-12-28  Paul C. Leopardi <leopardi@users.sourceforge.net>
@@ -4749,7 +5192,7 @@
 	admin/config.pl, admin/config.sub, admin/configure.in.min,
 	admin/cvs-clean.pl, admin/cvs.sh, admin/debianrules, admin/depcomp,
 	admin/detect-autoconf.sh, admin/install-sh, admin/libtool.m4.in,
-	admin/ltmain.sh, admin/missing, admin/mkinstalldirs, admin/ylwrap:
+	admin/ltmain.sh, admin/missing, admin/mkinstalldirs, admin/ylwrap: 
 	Add files apparently needed by autoconf, automake or configure
 
 2002-08-12  Paul C. Leopardi <leopardi@users.sourceforge.net>
