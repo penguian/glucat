@@ -1,7 +1,7 @@
 NEWS for GluCat 0.8.1 with PyClical
 ===================================
 
-2016-04-22: 0.8.1:
+2016-05-01: 0.8.1:
 GluCat 0.8.1 makes testing faster, easier and more comprehensive.
 
 The configuration option --with-tuning=arg controls test tuning via preprocessor
