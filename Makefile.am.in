@@ -1,7 +1,6 @@
 if make_pyclical
   PYCLICAL = pyclical
   PYCLICAL_DEMOS = pyclical/demos
-  INSTALL_PYCLICAL_DEMOS = install-pyclical-demos
 endif
 
 TIMING = gfft_test products squaring transforms
@@ -18,7 +17,7 @@ DOC = doc
 
 doc_DATA = AUTHORS COPYING ChangeLog glucat.lsm INSTALL NEWS README TODO
 
-EXTRA_DIST = admin m4 test test_runtime $(EXAMPLES) configure.ac.in configure.ac configure Makefile.am $(doc_DATA) doc/Makefile.am doc/Makefile.in
+EXTRA_DIST = admin m4 test test_runtime $(EXAMPLES) subdirs configure.ac.in configure.ac configure Makefile.am $(doc_DATA) doc/Makefile.am doc/Makefile.in
 
 check: test-out
 
@@ -47,24 +46,22 @@ $(top_srcdir)/configure.files:
 $(top_srcdir)/subdirs:
 	cd $(top_srcdir) && $(MAKE) -f admin/Makefile.common subdirs ;
 
-MAINTAINERCLEANFILES = subdirs configure.in acinclude.m4 configure.files
+MAINTAINERCLEANFILES = subdirs configure.ac acinclude.m4 configure.files
 
 cvs:
 	$(MAKE) -f admin/Makefile.common cvs
 
 clean-local:
-	-for d in $(DOC) $(PYCLICAL) $(PYCLICAL)/demos $(EXAMPLES); do \
+	-for d in $(DOC) $(PYCLICAL) $(PYCLICAL_DEMOS) $(EXAMPLES); do \
 	  $(MAKE) -C $$d clean; \
 	done
 
 distclean-local:
-	-for d in $(DOC) $(PYCLICAL) $(PYCLICAL)/demos $(EXAMPLES); do \
+	-for d in $(DOC) $(PYCLICAL) $(PYCLICAL_DEMOS) $(EXAMPLES); do \
 	  $(MAKE) -C $$d distclean; \
 	done
 
 dist-hook:
-	cd $(top_distdir) && $(MAKE) -f admin/Makefile.common subdirs
-	cd $(top_distdir) && $(MAKE) -f admin/Makefile.common configure.ac
 	cd $(top_distdir) && rm -rf */.deps
 
-.PHONY: doc test-out install-doc $(INSTALL_PYCLICAL_DEMOS)
+.PHONY: doc test-out install-doc
