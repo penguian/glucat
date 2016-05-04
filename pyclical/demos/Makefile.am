@@ -13,7 +13,7 @@ plotting_demo.py             pyclical_tutorial_0_3_functions.py   pyclical_tutor
 
 DEMOSOUT = $(DEMOS) pyclical_demo.out  sqrt_log_demo.out
 
-demo_DATA = $(DEMOSOUT)
+dist_demo_DATA = $(DEMOSOUT)
 
 NOTEBOOKS = clifford_demo.ipynb            pyclical_demo.ipynb                    sqrt_log_demo.ipynb \
 pyclical_tutorial_0_0_notation.ipynb       pyclical_tutorial_0_1_index_sets.ipynb pyclical_tutorial_0_2_operations.ipynb   pyclical_tutorial_0_3_functions.ipynb \
