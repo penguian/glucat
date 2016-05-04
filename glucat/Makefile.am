@@ -2,7 +2,7 @@ EXTRA_DIST = *.h
 AUTOMAKE_OPTIONS = foreign
 
 # Set the include path found by configure
-includedir = ${prefix}/include/glucat
+includedir = ${DESTDIR}${prefix}/include/glucat
 AM_CPPFLAGS = $(all_includes)
 SUBDIRS =
 make-install-dirs:
