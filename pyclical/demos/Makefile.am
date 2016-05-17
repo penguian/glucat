@@ -2,8 +2,6 @@ AUTOMAKE_OPTIONS = foreign
 
 if make_pyclical
 
-demodir = $(datarootdir)/pyclical/demos
-
 DEMOS =                      pyclical_demo.py                     pyclical_tutorial_0_4_transcendental.py  pyclical_tutorial_1_5_conformal.py \
 build_pyclical_notebooks.py  pyclical_notebook_utils.py           pyclical_tutorial_1_0_plane.py           pyclical_tutorial_2_0_wedge_product.py \
 clifford_demo.py             pyclical_tutorial_0_0_notation.py    pyclical_tutorial_1_1_complex.py         pyclical_tutorials.py \
@@ -23,7 +21,7 @@ pyclical_tutorial_1_3_lorentz.ipynb        pyclical_tutorial_1_4_fourth.ipynb   
 nodist_demo_DATA = $(NOTEBOOKS)
 
 $(NOTEBOOKS):
-	python build_pyclical_notebooks.py
+	PYTHONPATH=..:$(PYTHONPATH) python build_pyclical_notebooks.py
 
 clean-local:
 	rm -f *.pyc *.ipynb
