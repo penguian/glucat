@@ -28,6 +28,7 @@ $(nodist_html_DATA): .doxygen.out
 pdf: $(nodist_pdf_DATA)
 
 $(nodist_pdf_DATA): .doxygen.out
+	sed -i "s/operator\%/operator\\\%/g" api/latex/*.tex
 	$(MAKE) -C api/latex > api/latex/make.out
 	cp api/latex/refman.pdf $@
 	rm -rf api/latex
