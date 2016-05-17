@@ -116,6 +116,12 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     [glucat_check_isnan="$enableval"],
     [glucat_check_isnan="yes"])
 
+  AC_ARG_WITH([demo-dir],
+    AS_HELP_STRING([--with-demo-dir=DIR],              [path to installed pyclical demos [default=$DATAROOTDIR/pyclical/demos]]),,
+    [with_demo_dir="${datarootdir}/pyclical/demos"])
+  demodir="$with_demo_dir"
+  AC_SUBST([demodir])
+
   AC_ARG_WITH([map],          [[  --with-map[=ARG]        type of map to use (map|stdunordered) [default=stdunordered]]],
   [
     case "$withval" in
