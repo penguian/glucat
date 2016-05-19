@@ -309,7 +309,12 @@ This option adds non standard include paths.
 
   --with-extra-libs=DIR
 
-This option adds non standard library paths
+This option adds non standard library paths.
+
+
+  --with-demo-dir=DIR     [default=$DATAROOTDIR/pyclical/demos]
+  
+This option defines the installation directory for the PyClical demos.
 
 
   --with-map[=ARG]        type of map to use
@@ -948,9 +953,10 @@ Running "make install" will also install some documentation. Specifically, the
 GNU top level doumentation files AUTHORS, ChangeLog, COPYING, glucat.lsm,
 INSTALL, NEWS, README and TODO are installed into $DATAROOTDIR/doc/glucat. This
 defaults to $PREFIX/share/doc/glucat, i.e. /usr/local/share/doc/glucat. The
-PyClical demos and notebooks are installed into $DATAROOTDIR/pyclical/demos.
-This defaults to $PREFIX/share/pyclical/demos, i.e. 
-/usr/local/share/pyclical/demos.
+PyClical demos and notebooks are installed by default into the directory 
+$DATAROOTDIR/pyclical/demos. This defaults to $PREFIX/share/pyclical/demos, i.e. 
+/usr/local/share/pyclical/demos. You can change this directory by using the 
+configuration option --with-demo-dir=DIR.
 
 You will need permission to update the installation directories, so you may need
 to use sudo, login as root, or su to root before you run make install.
