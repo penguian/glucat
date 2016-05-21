@@ -1,5 +1,12 @@
-NEWS for GluCat 0.8.1 with PyClical
-===================================
+NEWS for GluCat 0.8.1-1 with PyClical
+=====================================
+
+2016-05-22: 0.8.1-1:
+GluCat is again in synch with the OpenSUSE Science project.
+
+A number of patches suggested by Atri Bhattacharya of the OpenSUSE Science 
+project have been applied to the build and installation process for GluCat.
+The GluCat and Pyclical code itself is unchanged from GluCat 0.8.1.
 
 2016-05-01: 0.8.1:
 GluCat 0.8.1 makes testing faster, easier and more comprehensive.

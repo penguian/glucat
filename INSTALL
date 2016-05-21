@@ -1,5 +1,5 @@
-INSTALL for GluCat 0.8.1 with PyClical
-======================================
+INSTALL for GluCat 0.8.1-1 with PyClical
+========================================
 
 Prerequisites: Before You Begin
 ===============================
@@ -27,13 +27,13 @@ You can install GluCat in one of two ways:
 To install the first way, from (e.g.) GitHub, run the following commands on a
 Linux machine or equivalent Posix environment connected to the Internet:
 
-> git clone git@github.com:penguian/glucat.git glucat-0.8.1
-> cd glucat-0.8.1
+> git clone git@github.com:penguian/glucat.git glucat-0.8.1-1
+> cd glucat-0.8.1-1
 > make -f admin/Makefile.common cvs
 
-This results in a directory structure that includes glucat-0.8.1/configure,
+This results in a directory structure that includes glucat-0.8.1-1/configure,
 allowing you to make and install GluCat in the same way as if you had downloaded
-and unzipped the tarball glucat-0.8.1.tar.gz.
+and unzipped the tarball glucat-0.8.1-1.tar.gz.
 
 
 Directory Structure
@@ -41,11 +41,11 @@ Directory Structure
 
 Once you have downloaded, unzipped and untarred the source code, or followed 
 the instructions above to install from Git clone, you should have a directory, 
-glucat-0.8.1. Under this directory you should see a number
+glucat-0.8.1-1. Under this directory you should see a number
 of subdirectories, including ./admin, ./doc, ./glucat, ./gfft_test, ./products,
 ./pyclical, ./squaring, ./test, ./test_runtime, ./testxx, and ./transforms.
 
-The following instructions are meant to be used with glucat-0.8.1 as the
+The following instructions are meant to be used with glucat-0.8.1-1 as the
 current directory.
 
 
@@ -139,7 +139,7 @@ subdirectories.
 
 As briefly described above, the simplest way to install this package is:
 
- 1. "cd" to the glucat-0.8.1 directory containing the source code and type
+ 1. "cd" to the glucat-0.8.1-1 directory containing the source code and type
     "./configure" to configure GluCat with PyClical for your system.
     If you are using "csh" on an old version of System V, you might need to type
     "sh ./configure" instead to prevent "csh" from trying to execute
@@ -830,9 +830,9 @@ speeding up the entire testing process.
 
 Rather than running the regression tests in-place and copying the output
 directly into ./test_runtime, the script ./test/test-all-config-options.sh
-produces as many copies of the whole direcory glucat-0.8.1 as there are lines
-in ./test/config-options.txt, naming them glucat-0.8.1.1 to glucat-0.8.1.18,
-in the parent directory of glucat-0.8.1. This allows the effect of each set
+produces as many copies of the whole direcory glucat-0.8.1-1 as there are lines
+in ./test/config-options.txt, naming them glucat-0.8.1-1.1 to glucat-0.8.1-1.18,
+in the parent directory of glucat-0.8.1-1. This allows the effect of each set
 of configuration options to be directly compared, and also ensures that any
 side-effect of a configuration does not affect the test results of another
 configuration.
@@ -844,9 +844,9 @@ the line 11 of ./test/config-options.txt
 map-map-gsl:                 --with-map=map --with-random=gsl
 
 causes ./test/diff-all-config-outputs.sh to use diff to compare
-glucat-0.8.1.11/test_runtime/test.configure.map-map-gsl.out to
-glucat-0.8.1/test_runtime/test.configure.map-map-gsl.out, and compare
-glucat-0.8.1.11/pyclical/test.out to glucat-0.8.1/pyclical/test.out.
+glucat-0.8.1-1.11/test_runtime/test.configure.map-map-gsl.out to
+glucat-0.8.1-1/test_runtime/test.configure.map-map-gsl.out, and compare
+glucat-0.8.1-1.11/pyclical/test.out to glucat-0.8.1-1/pyclical/test.out.
 
 Each comparison should only produce a line containing the line number of
 the configuration being compared: 1 to 18.
@@ -863,9 +863,9 @@ The exceptional cases are:
 
 disable-pyclical:            --disable-pyclical
 
-   In this case, if PyClical 0.8.1 is not already installed, then the contents
-   of glucat-0.8.1.7/pyclical/test.out will differ from that of 
-   glucat-0.8.1/pyclical/test.out.
+   In this case, if PyClical 0.8.1-1 is not already installed, then the contents
+   of glucat-0.8.1-1.7/pyclical/test.out will differ from that of 
+   glucat-0.8.1-1/pyclical/test.out.
 
 If the output of your systematic tests differs due to a difference in compilers
 or libraries, you may want to copy this output to ./test_runtime to ease future
@@ -965,7 +965,7 @@ to use sudo, login as root, or su to root before you run make install.
  List of Successful Builds
  =========================
 
- GluCat 0.8.1 with PyClical has so far been built and tested using:
+ GluCat 0.8.1-1 with PyClical has so far been built and tested using:
 
  1) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
 
@@ -1005,13 +1005,13 @@ to use sudo, login as root, or su to root before you run make install.
 Notes on software versions
 --------------------------
 
-    GluCat 0.8.1 has not been tested with gcc versions earlier than 4.9.2,
+    GluCat 0.8.1-1 has not been tested with gcc versions earlier than 4.9.2,
     Clang versions earlier than 3.4, Boost versions earlier than 1.55.0,
     QD versions earlier than 2.3.13, Python versions earlier than 2.7.9, or
     Cython versions earlier than 0.21.1.
 
     The following bugs and workarounds apply to earlier versions of GluCat,
-    and may still be applicable to GluCat 0.8.1, but have not been checked
+    and may still be applicable to GluCat 0.8.1-1, but have not been checked
     for this version.
 
  1. GluCat needs an include library which either defines the macro isnan or
