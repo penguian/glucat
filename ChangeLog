@@ -1,3 +1,57 @@
+2016-05-22  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* AUTHORS, INSTALL, NEWS, TODO, configure.ac.in, glucat.lsm: Version
+	0.8.1-1 rolls up openSUSE Science patches
+
+2016-05-20  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* INSTALL: Improve the description of the installation directory for
+	pyclical/demos
+
+2016-05-20  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: Better help message for --with-demo-dir option
+
+2016-05-18  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* pyclical/demos/Makefile.am: Atri Bhattacharya (openSUSE): New
+	option: path to installed pyclical demos. Set PYTHONPATH to find
+	newly built PyClical.so
+
+2016-05-18  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* doc/Makefile.am: Atri Bhattacharya (openSUSE): work around bug in
+	Doxygen 1.8.11
+
+2016-05-18  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: Atri Bhattacharya (openSUSE): New option: path to
+	installed pyclical demos
+
+2016-05-05  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* pyclical/demos/Makefile.am: Try hinting to automake to install but
+	not distribute the iPython notebooks
+
+2016-05-05  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* pyclical/demos/Makefile.am: Try hinting to automake to distribute
+	the correct demo files
+
+2016-05-05  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* glucat/Makefile.am, pyclical/demos/Makefile.am, test/Makefile.am: 
+	Try to repair more Makefile.am files
+
+2016-05-04  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* glucat/Makefile.am: glucat-DESTDIR.patch provided by Atri
+	Bhattacharya <badshah400@gmail.com>
+
+2016-05-02  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* ChangeLog: ChangeLog for version 0.8.1
+
 2016-05-02  Paul Leopardi <leopardi@users.sourceforge.net>
 
 	* INSTALL: Installation instructions for version 0.8.1
