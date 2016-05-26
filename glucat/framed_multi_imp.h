@@ -1818,25 +1818,26 @@ namespace glucat
       return matrix::unit<matrix_t>(1) * this->scalar();
 
     typedef typename matrix_multi_t::basis_matrix_t basis_matrix_t;
+    typedef typename basis_matrix_t::value_type basis_scalar_t;
 
     const basis_matrix_t&  I = matrix::unit<basis_matrix_t>(2);
     basis_matrix_t J(2,2,2);
     J.clear();
-    J(0,1)  = Scalar_T(-1);
-    J(1,0)  = Scalar_T( 1);
+    J(0,1)  = basis_scalar_t(-1);
+    J(1,0)  = basis_scalar_t( 1);
     basis_matrix_t K = J;
-    K(0,1)  = Scalar_T( 1);
+    K(0,1)  = basis_scalar_t( 1);
     basis_matrix_t JK = I;
-    JK(0,0) = Scalar_T(-1);
+    JK(0,0) = basis_scalar_t(-1);
 
     const index_set_t ist_mn = index_set_t(-level);
     const index_set_t ist_pn = index_set_t(level);
     if (level == 1)
     {
       if (odd)
-        return J * (*this)[ist_mn] + K  * (*this)[ist_pn];
+        return matrix_t(J) * (*this)[ist_mn] + matrix_t(K)  * (*this)[ist_pn];
       else
-        return I * this->scalar()  + JK * (*this)[ist_mn ^ ist_pn];
+        return matrix_t(I) * this->scalar()  + matrix_t(JK) * (*this)[ist_mn ^ ist_pn];
     }
     else
     {
