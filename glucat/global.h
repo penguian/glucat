@@ -127,9 +127,9 @@ namespace glucat
   const unsigned int DEFAULT_Sqrt_Max_Steps          =     256;
   const unsigned int DEFAULT_Log_Max_Outer_Steps     =     256;
   const unsigned int DEFAULT_Log_Max_Inner_Steps     =      32;
-  const unsigned int DEFAULT_Basis_Max_Count         =      10;
-  const unsigned int DEFAULT_Fast_Size_Threshold     = 1 << 10;
-  const unsigned int DEFAULT_Inv_Fast_Dim_Threshold  = 1 <<  6;
+  const unsigned int DEFAULT_Basis_Max_Count         =      12;
+  const unsigned int DEFAULT_Fast_Size_Threshold     = 1 <<  6;
+  const unsigned int DEFAULT_Inv_Fast_Dim_Threshold  = 1 <<  3;
   const unsigned int DEFAULT_Products_Size_Threshold = 1 << 22;
   const precision_t  DEFAULT_Function_Precision      = precision_same;
 
