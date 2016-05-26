@@ -101,6 +101,12 @@ namespace glucat
   std::ostream&
   operator<< (std::ostream& os, const matrix_multi<Scalar_T,LO,HI>& val);
 
+  /// Find a common frame for operands of a binary operator 
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  const index_set<LO,HI>
+  reframe (const matrix_multi<Scalar_T,LO,HI>& lhs,    const matrix_multi<Scalar_T,LO,HI>& rhs,
+                 matrix_multi<Scalar_T,LO,HI>& lhs_reframed, matrix_multi<Scalar_T,LO,HI>& rhs_reframed);
+
   /// Square root of multivector with specified complexifier
   template< typename Scalar_T, const index_t LO, const index_t HI >
   const matrix_multi<Scalar_T,LO,HI>
@@ -142,12 +148,13 @@ namespace glucat
 
   private:
     typedef ublas::row_major                           orientation_t;
-    typedef ublas::compressed_matrix< Scalar_T, orientation_t >
+    typedef ublas::compressed_matrix< int, orientation_t >
                                                        basis_matrix_t;
 #if defined(_GLUCAT_USE_DENSE_MATRICES)
     typedef ublas::matrix< Scalar_T, orientation_t >   matrix_t;
 #else
-    typedef basis_matrix_t                             matrix_t;
+    typedef ublas::compressed_matrix< Scalar_T, orientation_t >
+                                                       matrix_t;
 #endif
     typedef typename matrix_t::size_type               matrix_index_t;
 
@@ -247,6 +254,10 @@ namespace glucat
     friend std::ostream&
       operator<< <>(std::ostream& os, const term_t& term);
 
+    template< typename Other_Scalar_T, const index_t Other_LO, const index_t Other_HI >
+    friend const index_set<Other_LO,Other_HI>
+    reframe (const matrix_multi<Other_Scalar_T,Other_LO,Other_HI>& lhs,    const matrix_multi<Other_Scalar_T,Other_LO,Other_HI>& rhs,
+                   matrix_multi<Other_Scalar_T,Other_LO,Other_HI>& lhs_reframed, matrix_multi<Other_Scalar_T,Other_LO,Other_HI>& rhs_reframed);
     template< typename Other_Scalar_T, const index_t Other_LO, const index_t Other_HI >
     friend const matrix_multi<Other_Scalar_T,Other_LO,Other_HI>
       matrix_sqrt(const matrix_multi<Other_Scalar_T,Other_LO,Other_HI>& val, const matrix_multi<Other_Scalar_T,Other_LO,Other_HI>& i);

@@ -349,6 +349,35 @@ namespace glucat
     return *this;
   }
 
+  /// Find a common frame for operands of a binary operator 
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
+  const index_set<LO,HI>
+  reframe (const matrix_multi<Scalar_T,LO,HI>& lhs,    const matrix_multi<Scalar_T,LO,HI>& rhs,
+                 matrix_multi<Scalar_T,LO,HI>& lhs_reframed, matrix_multi<Scalar_T,LO,HI>& rhs_reframed)
+  {
+    typedef index_set<LO,HI> index_set_t;
+    typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
+    typedef typename multivector_t::framed_multi_t framed_multi_t;
+    // Determine the initial common frame
+    index_set_t our_frame = lhs.m_frame | rhs.m_frame;
+    framed_multi_t framed_lhs;
+    framed_multi_t framed_rhs;
+    if ((lhs.m_frame != our_frame) || (rhs.m_frame != our_frame))
+    {
+      // The common frame may expand as a result of the transform to framed_multi_t
+      framed_lhs = framed_multi_t(lhs);
+      framed_rhs = framed_multi_t(rhs);
+      our_frame |= framed_lhs.frame() | framed_rhs.frame();
+    }
+    // Do the reframing only where necessary
+    if (lhs.m_frame != our_frame)
+      lhs_reframed = multivector_t(framed_lhs, our_frame, true);
+    if (rhs.m_frame != our_frame)
+      rhs_reframed = multivector_t(framed_rhs, our_frame, true);
+    return our_frame;
+  }
+  
   /// Test for equality of multivectors
   template< typename Scalar_T, const index_t LO, const index_t HI >
   bool
@@ -360,15 +389,15 @@ namespace glucat
       return true;
 
     // Operate only within a common frame
-    const index_set_t our_frame = this->m_frame | rhs.m_frame;
-    const multivector_t& lhs_ref =
-      (this->m_frame == our_frame)
+    multivector_t lhs_reframed;
+    multivector_t rhs_reframed;
+    const index_set_t our_frame = reframe(*this, rhs, lhs_reframed, rhs_reframed);
+    const multivector_t& lhs_ref = (this->m_frame == our_frame)
       ? *this
-      : multivector_t(framed_multi_t(*this), our_frame, true);
-    const multivector_t& rhs_ref =
-      (rhs.m_frame == our_frame)
+      : lhs_reframed;
+    const multivector_t& rhs_ref = (rhs.m_frame == our_frame)
       ? rhs
-      : multivector_t(framed_multi_t(rhs), our_frame, true);
+      : rhs_reframed;
 
 #if defined(_GLUCAT_USE_DENSE_MATRICES)
     return ublas::norm_inf(lhs_ref.m_matrix - rhs_ref.m_matrix) == 0;
@@ -378,21 +407,21 @@ namespace glucat
     // If either matrix contains zero entries,
     // compare using subtraction and ublas::norm_inf
     for (const_iterator1
-        it1 = lhs_ref.m_matrix.begin1();
+        it1 =  lhs_ref.m_matrix.begin1();
         it1 != lhs_ref.m_matrix.end1();
         ++it1)
       for (const_iterator2
-          it2 = it1.begin();
+          it2 =  it1.begin();
           it2 != it1.end();
           ++it2)
         if (*it2 == 0)
           return ublas::norm_inf(lhs_ref.m_matrix - rhs_ref.m_matrix) == 0;
     for (const_iterator1
-        it1 = rhs.m_matrix.begin1();
-        it1 != rhs.m_matrix.end1();
+        it1 =  rhs_ref.m_matrix.begin1();
+        it1 != rhs_ref.m_matrix.end1();
         ++it1)
       for (const_iterator2
-          it2 = it1.begin();
+          it2 =  it1.begin();
           it2 != it1.end();
           ++it2)
         if (*it2 == 0)
@@ -400,7 +429,7 @@ namespace glucat
     // Neither matrix contains zero entries.
     // Compare by iterating over both matrices in lock step.
     const_iterator1 this_it1 = lhs_ref.m_matrix.begin1();
-    const_iterator1 it1 = rhs_ref.m_matrix.begin1();
+    const_iterator1 it1 =      rhs_ref.m_matrix.begin1();
     for (;
         (this_it1 != lhs_ref.m_matrix.end1()) && (it1 != rhs_ref.m_matrix.end1());
         ++this_it1, ++it1)
@@ -459,14 +488,11 @@ namespace glucat
       return *this *= Scalar_T(2);
 
     // Operate only within a common frame
-    const index_set_t our_frame = this->m_frame | rhs.m_frame;
-    if (this->m_frame != our_frame)
-      // Represent *this in our_frame via conversion through framed_multi_t
-      *this = multivector_t(framed_multi_t(*this), our_frame, true);
-    const multivector_t& rhs_ref =
-      (rhs.m_frame == our_frame)
+    multivector_t rhs_reframed;
+    const index_set_t our_frame = reframe(*this, rhs, *this, rhs_reframed);
+    const multivector_t& rhs_ref = (rhs.m_frame == our_frame)
       ? rhs
-      : multivector_t(framed_multi_t(rhs), our_frame, true);
+      : rhs_reframed;
 
     noalias(this->m_matrix) += rhs_ref.m_matrix;
     return *this;
@@ -484,14 +510,11 @@ namespace glucat
       return *this = Scalar_T(0);
 
     // Operate only within a common frame
-    const index_set_t our_frame = this->m_frame | rhs.m_frame;
-    if (this->m_frame != our_frame)
-      // Represent *this in our_frame via conversion through framed_multi_t
-      *this = multivector_t(framed_multi_t(*this), our_frame, true);
-    const multivector_t& rhs_ref =
-      (rhs.m_frame == our_frame)
+    multivector_t rhs_reframed;
+    const index_set_t our_frame = reframe(*this, rhs, *this, rhs_reframed);
+    const multivector_t& rhs_ref = (rhs.m_frame == our_frame)
       ? rhs
-      : multivector_t(framed_multi_t(rhs), our_frame, true);
+      : rhs_reframed;
 
     noalias(this->m_matrix) -= rhs_ref.m_matrix;
     return *this;
@@ -539,15 +562,15 @@ namespace glucat
 #endif
 
     // Operate only within a common frame
-    const index_set_t our_frame = lhs.m_frame | rhs.m_frame;
-    const multivector_t& lhs_ref =
-      (lhs.m_frame == our_frame)
+    multivector_t lhs_reframed;
+    multivector_t rhs_reframed;
+    const index_set_t our_frame = reframe(lhs, rhs, lhs_reframed, rhs_reframed);
+    const multivector_t& lhs_ref = (lhs.m_frame == our_frame)
       ? lhs
-      : multivector_t(framed_multi_t(lhs), our_frame, true);
-    const multivector_t& rhs_ref =
-      (rhs.m_frame == our_frame)
+      : lhs_reframed;
+    const multivector_t& rhs_ref = (rhs.m_frame == our_frame)
       ? rhs
-      : multivector_t(framed_multi_t(rhs), our_frame, true);
+      : rhs_reframed;
 
     typedef typename multivector_t::matrix_t matrix_t;
 #if defined(_GLUCAT_USE_DENSE_MATRICES)
@@ -666,15 +689,15 @@ namespace glucat
     typedef typename multivector_t::framed_multi_t framed_multi_t;
 
     // Operate only within a common frame
-    const index_set_t our_frame = lhs.m_frame | rhs.m_frame;
-    const multivector_t& lhs_ref =
-      (lhs.m_frame == our_frame)
+    multivector_t lhs_reframed;
+    multivector_t rhs_reframed;
+    const index_set_t our_frame = reframe(lhs, rhs, lhs_reframed, rhs_reframed);
+    const multivector_t& lhs_ref = (lhs.m_frame == our_frame)
       ? lhs
-      : multivector_t(framed_multi_t(lhs), our_frame, true);
-    const multivector_t& rhs_ref =
-      (rhs.m_frame == our_frame)
+      : lhs_reframed;
+    const multivector_t& rhs_ref = (rhs.m_frame == our_frame)
       ? rhs
-      : multivector_t(framed_multi_t(rhs), our_frame, true);
+      : rhs_reframed;
 
     // Solve result == lhs_ref/rhs_ref <=> result*rhs_ref == lhs_ref
     // We now solve X == B/A
@@ -1057,7 +1080,7 @@ namespace glucat
   operator+= (const term_t& term)
   {
     if (term.second != Scalar_T(0))
-      this->m_matrix.plus_assign(this->basis_element(term.first) * term.second);
+      this->m_matrix.plus_assign(matrix_t(this->basis_element(term.first)) * term.second);
     return *this;
   }
 
