@@ -554,7 +554,6 @@ namespace glucat
   {
     typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
     typedef typename multivector_t::index_set_t index_set_t;
-    typedef typename multivector_t::framed_multi_t framed_multi_t;
 
 #if defined(_GLUCAT_CHECK_ISNAN)
     if (lhs.isnan() || rhs.isnan())
@@ -686,7 +685,6 @@ namespace glucat
 
     typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
     typedef typename multivector_t::index_set_t index_set_t;
-    typedef typename multivector_t::framed_multi_t framed_multi_t;
 
     // Operate only within a common frame
     multivector_t lhs_reframed;
