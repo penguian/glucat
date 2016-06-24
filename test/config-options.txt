@@ -5,6 +5,7 @@ debug-yes:                   --enable-debug=yes
 disable-check-isnan:         --disable-check-isnan
 disable-dependency:          --disable-dependency-tracking
 disable-pyclical:            --disable-pyclical
+stdlib-libcxx:                         --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings --disable-pyclical --with-stdlib=libcxx
 eig-bindings:                          --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
 eig-bindings-fast:                     --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings --with-tuning=fast
 eig-bindings-naive:                    --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings --with-tuning=naive
