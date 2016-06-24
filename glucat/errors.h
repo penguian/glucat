@@ -31,6 +31,7 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
+#include <string>
 #include <exception>
 #include <stdexcept>
 
