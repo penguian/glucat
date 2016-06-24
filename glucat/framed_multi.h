@@ -135,9 +135,9 @@ namespace glucat
   class framed_multi :
   public clifford_algebra< Scalar_T, index_set<LO,HI>, framed_multi<Scalar_T,LO,HI> >,
 #if defined(_GLUCAT_USE_STD_UNORDERED_MAP)
-  private std::unordered_map< const index_set<LO,HI>, Scalar_T, index_set_hash<LO,HI> >
+  private std::unordered_map< index_set<LO,HI>, Scalar_T, index_set_hash<LO,HI> >
 #else
-  private std::map< const index_set<LO,HI>, Scalar_T,
+  private std::map< index_set<LO,HI>, Scalar_T,
                     std::less< const index_set<LO,HI> >
 #if defined(_GLUCAT_USE_BOOST_POOL_ALLOC)
                   , boost::fast_pool_allocator< std::pair<const index_set<LO,HI>, Scalar_T> >
@@ -163,7 +163,7 @@ namespace glucat
     class                                              var_term; // forward
     typedef class var_term                             var_term_t;
     typedef typename matrix_multi_t::matrix_t          matrix_t;
-    typedef std::map< const index_set_t, Scalar_T,
+    typedef std::map< index_set_t, Scalar_T,
                       std::less<const index_set_t>
 #if defined(_GLUCAT_USE_BOOST_POOL_ALLOC)
                     , boost::fast_pool_allocator<term_t>
@@ -171,7 +171,7 @@ namespace glucat
                     >
                                                        sorted_map_t;
 #if defined(_GLUCAT_USE_STD_UNORDERED_MAP)
-    typedef std::unordered_map< const index_set<LO,HI>, Scalar_T, index_set_hash<LO,HI> >
+    typedef std::unordered_map< index_set_t, Scalar_T, index_set_hash<LO,HI> >
                                                        map_t;
 #else
     typedef sorted_map_t                               map_t;
