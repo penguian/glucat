@@ -43,16 +43,20 @@ from distutils.command.build_ext import build_ext
 class cxx_build_ext(build_ext):
     def build_extensions(self):
         # Allow a custom C++ compiler through the environment variables.
-        compiler = os.environ.get('CXX')
-        if compiler is not None:
-            from distutils.sysconfig import get_config_vars
-            (ccshared, cflags) = get_config_vars('CCSHARED', 'CFLAGS')
+        new_compiler = os.environ.get('CXX')
+        if new_compiler is not None:
             # From stackoveflow user subdir 2012-03-16
-            ignore_flag = '-Wstrict-prototypes'
-            new_cflags = " ".join(
-                flag for flag in cflags.split() if flag != ignore_flag
-            )
+            # See also https://docs.python.org/2/distutils/apiref.html
+            ignore_flags = {
+                '-fstack-protector-strong',
+                '-Wdate-time',
+                '-Wstrict-prototypes'
+                }
+            new_compiler_so = [new_compiler] + [word for word in self.compiler.compiler_so[1:] if not word in ignore_flags]
+            new_compiler_so.append('-fstack-protector')
+            new_linker_so =   [new_compiler] + [word for word in self.compiler.linker_so[1:] if not word in ignore_flags]
             args = {}
-            args['compiler_so'] = compiler + ' ' + ccshared + ' ' + new_cflags
+            args['compiler_so'] = " ".join(new_compiler_so)
+            args['linker_so'] = " ".join(new_linker_so)
             self.compiler.set_executables(**args)
         build_ext.build_extensions(self)
