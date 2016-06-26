@@ -1,5 +1,5 @@
-INSTALL for GluCat 0.8.1-1 with PyClical
-========================================
+INSTALL for GluCat 0.8.2 with PyClical
+======================================
 
 Prerequisites: Before You Begin
 ===============================
@@ -27,13 +27,13 @@ You can install GluCat in one of two ways:
 To install the first way, from (e.g.) GitHub, run the following commands on a
 Linux machine or equivalent Posix environment connected to the Internet:
 
-> git clone git@github.com:penguian/glucat.git glucat-0.8.1-1
-> cd glucat-0.8.1-1
+> git clone git@github.com:penguian/glucat.git glucat-0.8.2
+> cd glucat-0.8.2
 > make -f admin/Makefile.common cvs
 
-This results in a directory structure that includes glucat-0.8.1-1/configure,
+This results in a directory structure that includes glucat-0.8.2/configure,
 allowing you to make and install GluCat in the same way as if you had downloaded
-and unzipped the tarball glucat-0.8.1-1.tar.gz.
+and unzipped the tarball glucat-0.8.2.tar.gz.
 
 
 Directory Structure
@@ -41,11 +41,11 @@ Directory Structure
 
 Once you have downloaded, unzipped and untarred the source code, or followed 
 the instructions above to install from Git clone, you should have a directory, 
-glucat-0.8.1-1. Under this directory you should see a number
+glucat-0.8.2. Under this directory you should see a number
 of subdirectories, including ./admin, ./doc, ./glucat, ./gfft_test, ./products,
 ./pyclical, ./squaring, ./test, ./test_runtime, ./testxx, and ./transforms.
 
-The following instructions are meant to be used with glucat-0.8.1-1 as the
+The following instructions are meant to be used with glucat-0.8.2 as the
 current directory.
 
 
@@ -126,6 +126,10 @@ and libraries.
 
 Pay special attention to the -D flags described in the configuration section
 below, as these control optional parts of the compilation of the GluCat library.
+In particular, if you compile your own programs without setting any of these
+-D flags, please be aware that the default random number generator used by
+GluCat requires the use of the C++ 2011 standard. See details below.
+
 To automate the build process, you should use GNU make with your own Makefile.
 For very elaborate software, you may also want to consider using GNU Autotools.
 
@@ -139,7 +143,7 @@ subdirectories.
 
 As briefly described above, the simplest way to install this package is:
 
- 1. "cd" to the glucat-0.8.1-1 directory containing the source code and type
+ 1. "cd" to the glucat-0.8.2 directory containing the source code and type
     "./configure" to configure GluCat with PyClical for your system.
     If you are using "csh" on an old version of System V, you might need to type
     "sh ./configure" instead to prevent "csh" from trying to execute
@@ -315,6 +319,27 @@ This option adds non standard library paths.
   --with-demo-dir=DIR     [default=$DATAROOTDIR/pyclical/demos]
   
 This option defines the installation directory for the PyClical demos.
+
+
+  --with-stdlib[=ARG]     C++ standard library to use 
+                          (libcxx|libstdcxx) 
+                          [default=libstdcxx]
+
+This option controls which C++ standard library is to be used. ARG can be
+"libcxx" or "libstdcxx". The default is "libstdcxx".
+
+The option "--with-stdlib=libcxx" is effective only when the clang++ compiler
+is being used, as indicated by the environment variable $CXX. In this case, 
+the compiler flag "-stdlib=libc++" is added to CXXFLAGS. Note that if you use
+libc++ with GluCat, you will need to ensure that any third party libraries
+that you use are binary compatible with libc++. This may, in particular,
+effect the building of PyClical. 
+
+If you are using clang++ to compile your own programs using the GluCat library,
+to choose the libc++ library, add the compiler flag "-stdlib=libc++" to your
+own compilation commands. 
+
+For further details, see http://libcxx.llvm.org/docs/
 
 
   --with-map[=ARG]        type of map to use
@@ -630,7 +655,7 @@ The test_runtime directory
 The test runtime directory ./test_runtime contains sample test output files.
 
 The sample test output files include eg3.res, gfft_test-11.out, products-8.out,
-squaring-11.out and transforms-8.out. There are also 18 versions of the output
+squaring-11.out and transforms-8.out. There are also 19 versions of the output
 of the regression test. These are described below.
 
 ./test_runtime also contains the test input file eg8.txt. This file is needed
@@ -654,8 +679,8 @@ order. With zero parameters, all examples from 00 to 16 are run in order. Many
 of the examples are run twice - once with framed_multi<Scalar_T> and once with
 matrix_multi<Scalar_T>.
 
-The ./test_runtime directory contains 18 sample versions of the regression test
-results, corresponding to 18 different combinations of configuration parameters.
+The ./test_runtime directory contains 19 sample versions of the regression test
+results, corresponding to 19 different combinations of configuration parameters.
 The tests were all run on an Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz+ with
 
     Linux 4.2.0-35-generic #40-Ubuntu SMP x86_64
@@ -687,6 +712,10 @@ test.configure.disable-dependency:
 
 test.configure.disable-pyclical:            
 ./configure --disable-pyclical
+
+test.configure.stdlib-libcxx:
+./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
+--disable-pyclical --with-stdlib=libcxx
 
 test.configure.eig-bindings:                          
 ./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
@@ -736,7 +765,7 @@ When you run your own test using ./test/test.sh, you should compare its output
 to the output file corresponding to the closest match to the configuration
 options you used to build your copy of the GluCat library.
 
-The reason why sample test results corresponding to 18 different combinations
+The reason why sample test results corresponding to 19 different combinations
 of configuration parameters are included in test_runtime is that the test output
 strongly depends on the configuration options chosen. In particular:
 
@@ -830,26 +859,26 @@ speeding up the entire testing process.
 
 Rather than running the regression tests in-place and copying the output
 directly into ./test_runtime, the script ./test/test-all-config-options.sh
-produces as many copies of the whole direcory glucat-0.8.1-1 as there are lines
-in ./test/config-options.txt, naming them glucat-0.8.1-1.1 to glucat-0.8.1-1.18,
-in the parent directory of glucat-0.8.1-1. This allows the effect of each set
+produces as many copies of the whole direcory glucat-0.8.2 as there are lines
+in ./test/config-options.txt, naming them glucat-0.8.2.1 to glucat-0.8.2.19,
+in the parent directory of glucat-0.8.2. This allows the effect of each set
 of configuration options to be directly compared, and also ensures that any
 side-effect of a configuration does not affect the test results of another
 configuration.
 
 The script ./test/diff-all-config-outputs.sh compares each relevant test output
 file with the corresponding file in ./test_runtime or ./pyclical. For example,
-the line 11 of ./test/config-options.txt 
+line 11 of ./test/config-options.txt 
 
 map-map-gsl:                 --with-map=map --with-random=gsl
 
 causes ./test/diff-all-config-outputs.sh to use diff to compare
-glucat-0.8.1-1.11/test_runtime/test.configure.map-map-gsl.out to
-glucat-0.8.1-1/test_runtime/test.configure.map-map-gsl.out, and compare
-glucat-0.8.1-1.11/pyclical/test.out to glucat-0.8.1-1/pyclical/test.out.
+glucat-0.8.2.11/test_runtime/test.configure.map-map-gsl.out to
+glucat-0.8.2/test_runtime/test.configure.map-map-gsl.out, and compare
+glucat-0.8.2.11/pyclical/test.out to glucat-0.8.2/pyclical/test.out.
 
 Each comparison should only produce a line containing the line number of
-the configuration being compared: 1 to 18.
+the configuration being compared: 1 to 19.
 
 The exceptional cases are:
 
@@ -859,13 +888,16 @@ The exceptional cases are:
    output different from either the GNU C++ compiler or the Clang compiler.
    For example, QD version 2.3.16 contains an update that fixes a problem with
    tanh.
-3. In the case of line 7 of ./test/config-options.txt
+3. In the cases of lines 7 and 8 of ./test/config-options.txt
 
-disable-pyclical:            --disable-pyclical
+disable-pyclical: --disable-pyclical
+stdlib-libcxx:    --with-eig=bindings \
+                  --with-extra-includes=$PATHTO/numeric_bindings \
+                  --disable-pyclical --with-stdlib=libcxx
 
-   In this case, if PyClical 0.8.1-1 is not already installed, then the contents
-   of glucat-0.8.1-1.7/pyclical/test.out will differ from that of 
-   glucat-0.8.1-1/pyclical/test.out.
+   In these cases, if PyClical is not already installed, then the contents
+   of glucat-0.8.2.7/pyclical/test.out and glucat-0.8.2.7/pyclical/test.out 
+   will differ from that of glucat-0.8.2/pyclical/test.out.
 
 If the output of your systematic tests differs due to a difference in compilers
 or libraries, you may want to copy this output to ./test_runtime to ease future
@@ -908,8 +940,8 @@ built and run using the configure command:
     ./configure --with-qd --with-eig=bindings  \
                 --with-extra-includes=$PATHTO/numeric_bindings
 on  Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz+ with
-    Linux 4.2.0-35-generic #40-Ubuntu SMP x86_64
-    gcc version 5.2.1 20151010 (Ubuntu 5.2.1-22ubuntu2)
+    Linux 4.4.0-24-generic #43-Ubuntu SMP x86_64
+    gcc version 5.3.1 20160413 (Ubuntu 5.3.1-14ubuntu2.1)
     Boost 1.58.0
     Boost Numeric Bindings
     QD 2.3.17.
@@ -965,26 +997,27 @@ to use sudo, login as root, or su to root before you run make install.
  List of Successful Builds
  =========================
 
- GluCat 0.8.1-1 with PyClical has so far been built and tested using:
+ GluCat 0.8.2 with PyClical has so far been built and tested using:
 
  1) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
 
-    Linux 4.2.0-35-generic #40-Ubuntu SMP x86_64
+    Linux 4.4.0-24-generic #43-Ubuntu SMP x86_64
+    
 
     The following compiler versions:
-    1) gcc version 5.2.1 20151010 (Ubuntu 5.2.1-22ubuntu2)
-    2) Ubuntu clang version 3.6.2-1 (tags/RELEASE_362/final) (based on LLVM 3.6.2)
-    3) Intel(R) C++ Intel(R) 64 Compiler for applications running on Intel(R) 64, 
-       Version 16.0.2.181 Build 20160204
+    1) gcc version 4.8.5 (Ubuntu 4.8.5-4ubuntu2)
+    2) gcc version 5.3.1 20160413 (Ubuntu 5.3.1-14ubuntu2.1)
+    3) clang version 3.9.0 (trunk 273084) (llvm/trunk 273081)
+    4) Intel(R) C++ Intel(R) 64 Compiler for applications running on Intel(R) 64, 
+       icpc version 16.0.2 (gcc version 5.0.0 compatibility)
     Boost 1.58.0
-    Boost 1.60.0
+    Boost 1.61.0
     Boost Numeric Bindings
-    QD 2.3.13
     QD 2.3.17
-    Python 2.7.10
-    Cython 0.23.3
+    Python 2.7.11+
+    Cython 0.23.4
 
-    All 18 configuration commands corresponding to each of the 18
+    All 19 configuration commands corresponding to each of the 19
     test.configure*.out files in ./test_runtime
 
  2) 2 core AMD E-350 Processor with
@@ -1005,13 +1038,13 @@ to use sudo, login as root, or su to root before you run make install.
 Notes on software versions
 --------------------------
 
-    GluCat 0.8.1-1 has not been tested with gcc versions earlier than 4.9.2,
-    Clang versions earlier than 3.4, Boost versions earlier than 1.55.0,
-    QD versions earlier than 2.3.13, Python versions earlier than 2.7.9, or
-    Cython versions earlier than 0.21.1.
+    GluCat 0.8.2 has not been tested with gcc versions earlier than 4.8.5,
+    Clang versions earlier than 3.9, Boost versions earlier than 1.58.0,
+    QD versions earlier than 2.3.13, Python versions earlier than 2.7.10, or
+    Cython versions earlier than 0.23.3.
 
     The following bugs and workarounds apply to earlier versions of GluCat,
-    and may still be applicable to GluCat 0.8.1-1, but have not been checked
+    and may still be applicable to GluCat 0.8.2, but have not been checked
     for this version.
 
  1. GluCat needs an include library which either defines the macro isnan or

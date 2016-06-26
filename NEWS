@@ -1,5 +1,24 @@
-NEWS for GluCat 0.8.1-1 with PyClical
-=====================================
+NEWS for GluCat 0.8.2 with PyClical
+===================================
+
+2016-06-26: 0.8.2:
+The GluCat classes basis_matrix_t and framed_multi<> have been refined.
+GluCat now compiles with clang++ and libc++. PyClical can now be built with
+g++ version 4.8 and possibly earlier versions.
+
+The class basis_matrix_t is now based on int rather than on Scalar_T. This
+should make basis matrix generation more efficient, especially when Scalar_T
+is of class dd_real or qd_real.
+
+The class framed_multi<> is now based on either map<index_set_t, Scalar_T> or
+unordered_map<index_set_t, Scalar_T>, rather than the previous base class,
+map<const index_set_t, Scalar_T> or unordered_map<const index_set_t, Scalar_T>.
+This is for compatibility with the libc++ implementations of these bases
+classes.
+
+A new function, reframe(lhs,rhs,lhs_reframed,rhs_reframed) fixes a bug in
+reframing for binary operations on class matrix_multi<>.
+
 
 2016-05-22: 0.8.1-1:
 GluCat is again in synch with the OpenSUSE Science project.

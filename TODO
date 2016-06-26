@@ -1,5 +1,5 @@
-TODO for GluCat 0.8.1-1 with PyClical
-=====================================
+TODO for GluCat 0.8.2 with PyClical
+===================================
 
 Documentation:
 o Write a programmer's guide with descriptions of usage via use cases.
@@ -34,7 +34,6 @@ o Investigate the use of matrix decompositions in the evaluation of
 Experimental:
 o Expand the use of numeric type promotion and demotion from transcendental
   functions to operations such as division.
-o Try using compressed integer matrices for matrix generators and basis elements.
 o Port to C++14 to take maximum advantage of C++11 and C++14 semantics and idioms.
 o Investigate the use of expression templates.
 o Try refactoring the relationship between matrix_multi, framed_multi and
