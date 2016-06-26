@@ -1,3 +1,110 @@
+2016-06-26  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* INSTALL, NEWS, TODO: Update to version 0.8.2
+
+2016-06-26  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* pyclical/PyClical.pyx, pyclical/test.out: Update to version 0.8.2
+
+2016-06-26  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* AUTHORS: Update to version 0.8.2
+
+2016-06-26  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* glucat.lsm: Update to version 0.8.2
+
+2016-06-26  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: Update to version 0.8.2
+
+2016-06-25  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: Remove check for -fstack-protector-strong, since
+	pyclical/setup_ext.py now ignores this flag
+
+2016-06-25  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* pyclical/setup_ext.py: Avoid g++4.8 error from
+	-fstack-protector-strong and clang++ warning from -Wdate-time
+
+2016-06-25  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* test_runtime/gfft_test-11.out, test_runtime/products-8.out,
+	test_runtime/squaring-11.out, test_runtime/transforms-8.out: Current
+	timing test results
+
+2016-06-24  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* test_runtime/test.configure.stdlib-libcxx.out: Test results for
+	stdlib-libcxx
+
+2016-06-24  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* test/config-options.txt: New test stdlib-libcxx
+
+2016-06-24  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: New option --with-stdlib to allow clang++ to use
+	libc++
+
+2016-06-24  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* glucat/framed_multi.h: Allow compilation with clang++ using
+	libc++: remove const from map and unordered_map keys.
+
+2016-06-24  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* glucat/errors.h: Allow compilation with clang++ using libc++:
+	include <string> header file.
+
+2016-06-23  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* glucat/matrix_multi_imp.h: Remove unused local typedefs
+
+2016-05-27  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* test_runtime/gfft_test-11.out, test_runtime/products-8.out,
+	test_runtime/squaring-11.out,
+	test_runtime/test.configure.compressed-mat.out,
+	test_runtime/test.configure.debug-full.out,
+	test_runtime/test.configure.debug-yes.out,
+	test_runtime/test.configure.default.out,
+	test_runtime/test.configure.disable-check-isnan.out,
+	test_runtime/test.configure.disable-dependency.out,
+	test_runtime/test.configure.disable-pyclical.out,
+	test_runtime/test.configure.eig-bindings-fast.out,
+	test_runtime/test.configure.eig-bindings-naive.out,
+	test_runtime/test.configure.eig-bindings.out,
+	test_runtime/test.configure.map-map-gsl.out,
+	test_runtime/test.configure.map-map-pool-alloc.out,
+	test_runtime/test.configure.prefix-home-opt.out,
+	test_runtime/test.configure.qd-eig-bindings-demoted.out,
+	test_runtime/test.configure.qd-eig-bindings-gsl.out,
+	test_runtime/test.configure.qd-eig-bindings-map-map.out,
+	test_runtime/test.configure.qd-eig-bindings-promoted.out,
+	test_runtime/test.configure.qd-eig-bindings.out,
+	test_runtime/transforms-8.out: Test results for changes to
+	matrix_multi and tuning.
+
+2016-05-27  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* glucat/global.h: Try a new default for tuning
+
+2016-05-27  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* glucat/framed_multi_imp.h: Make basis_matrix_t a matrix of int.
+
+2016-05-27  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* glucat/matrix_multi.h, glucat/matrix_multi_imp.h: Make
+	basis_matrix_t a matrix of int. New function reframe fixes a bug in
+	reframing for binary operations.
+
+2016-05-22  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* ChangeLog: ChangeLog for version 0.8.1-1
+
 2016-05-22  Paul Leopardi <leopardi@users.sourceforge.net>
 
 	* AUTHORS, INSTALL, NEWS, TODO, configure.ac.in, glucat.lsm: Version
