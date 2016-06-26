@@ -29,7 +29,7 @@ import math
 import numbers
 import collections
 
-__version__ = "0.8.1"
+__version__ = "0.8.2"
 
 from PyClical cimport *
 
