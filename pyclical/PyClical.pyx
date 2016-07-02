@@ -647,11 +647,13 @@ cdef class clifford:
 
     def reframe(self, ixt):
         """
-        Put self into a larger frame, defined by index set ixt.
+        Put self into a larger frame, containing the union of self.frame() and index set ixt.
         This can be used to make multiplication faster, by multiplying within a common frame.
 
         >>> clifford("2+3{1}").reframe(index_set({1,2,3}))
         clifford("2+3{1}")
+        >>> s=index_set({1,2,3});t=index_set({-3,-2,-1});x=random_clifford(s); x.reframe(t).frame() == (s|t);
+        True
         """
         error_msg_prefix = "Cannot reframe"
         if isinstance(ixt, index_set):
