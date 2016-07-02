@@ -128,9 +128,9 @@ namespace glucat
   matrix_multi(const matrix_multi<Other_Scalar_T,LO,HI>& val, const index_set_t frm, const bool prechecked)
   : m_frame( frm )
   {
-    if (!prechecked && (val.m_frame | frm) != frm)
-      throw error_t("multivector_t(val,frm): cannot initialize with value outside of frame");
-    if (frm == val.m_frame)
+    if (frm != val.m_frame)
+      *this = multivector_t(framed_multi_t(val), frm);
+    else
     {
       const matrix_index_t dim = folded_dim<matrix_index_t>(frm);
       this->m_matrix.resize(dim, dim, false);
@@ -148,8 +148,6 @@ namespace glucat
             ++val_it2)
           this->m_matrix(val_it2.index1(), val_it2.index2()) = numeric_traits<Scalar_T>::to_scalar_t(*val_it2);
     }
-    else
-      *this = multivector_t(framed_multi_t(val), frm, true);
   }
 
   /// Construct a multivector, within a given frame, from a given multivector
@@ -158,12 +156,10 @@ namespace glucat
   matrix_multi(const multivector_t& val, const index_set_t frm, const bool prechecked)
   : m_frame( frm )
   {
-    if (!prechecked && (val.m_frame | frm) != frm)
-      throw error_t("multivector_t(val,frm): cannot initialize with value outside of frame");
-    if (frm == val.m_frame)
-      this->m_matrix = val.m_matrix;
+    if (frm != val.m_frame)
+      *this = multivector_t(framed_multi_t(val), frm);
     else
-      *this = multivector_t(framed_multi_t(val), frm, true);
+      this->m_matrix = val.m_matrix;
   }
 
   /// Construct a multivector from an index set and a scalar coordinate
@@ -281,20 +277,18 @@ namespace glucat
   template< typename Other_Scalar_T >
   matrix_multi<Scalar_T,LO,HI>::
   matrix_multi(const framed_multi<Other_Scalar_T,LO,HI>& val, const index_set_t frm, const bool prechecked)
-  : m_frame( frm )
   {
-    if (!prechecked && (val.frame() | frm) != frm)
-      throw error_t("multivector_t(val,frm): cannot initialize with value outside of frame");
-
+    const index_set_t our_frame = val.frame() | frm;
     if (val.size() >= Tune_P::fast_size_threshold)
       try
       {
-        *this = val.template fast_matrix_multi<Scalar_T>(frm);
+        *this = val.template fast_matrix_multi<Scalar_T>(our_frame);
         return;
       }
       catch (const glucat_error& e)
       { }
-    const matrix_index_t dim = folded_dim<matrix_index_t>(frm);
+    this->m_frame = our_frame;
+    const matrix_index_t dim = folded_dim<matrix_index_t>(our_frame);
     this->m_matrix.resize(dim, dim, false);
     this->m_matrix.clear();
 

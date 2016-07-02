@@ -98,9 +98,6 @@ namespace glucat
                const index_set_t frm, const bool prechecked)
   : map_t(_GLUCAT_HASH_N(val.size()))
   {
-    if (!prechecked && (val.frame() | frm) != frm)
-      throw error_t("multivector_t(val,frm): cannot initialize with value outside of frame");
-
     typedef framed_multi<Other_Scalar_T,LO,HI> other_framed_multi_t;
     typedef typename other_framed_multi_t::const_iterator other_const_iterator;
     const other_const_iterator val_begin = val.begin();
@@ -115,10 +112,7 @@ namespace glucat
   framed_multi(const framed_multi_t& val,
                const index_set_t frm, const bool prechecked)
   : map_t(val)
-  {
-    if (!prechecked && (val.frame() | frm) != frm)
-      throw error_t("multivector_t(val,frm): cannot initialize with value outside of frame");
-  }
+  { }
 
   /// Construct a multivector from an index set and a scalar coordinate
   template< typename Scalar_T, const index_t LO, const index_t HI >
