@@ -1,3 +1,59 @@
+2016-07-06  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* NEWS: Update description of changes in version 0.8.2
+
+2016-07-06  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* glucat.lsm: Update Entered-date
+
+2016-07-06  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* INSTALL: Update descriptions of software versions tested.
+
+2016-07-06  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* test_runtime/gfft_test-11.out, test_runtime/products-8.out,
+	test_runtime/squaring-11.out, test_runtime/transforms-8.out: Update
+	timing test results
+
+2016-07-06  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* glucat/clifford_algebra.h, glucat/framed_multi.h,
+	glucat/framed_multi_imp.h, glucat/long_double.h,
+	glucat/matrix_multi_imp.h, glucat/qd.h, glucat/scalar.h,
+	test/control.h: Use return type T instead of const T if T is a
+	primitive type
+
+2016-07-06  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* glucat/global.h, glucat/index_set_imp.h, glucat/matrix_multi.h: 
+	Update copyright date
+
+2016-07-06  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* glucat/portability.h: Remove workarounds for icpc. Make workaround
+	for isnan and isinf depend on whether C++ is standard 2011 or later.
+
+2016-07-06  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: Replace if test with bracket syntax so that wild
+	cards will work. This enables tests for g++\*, etc.
+
+2016-07-02  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* pyclical/PyClical.pyx, pyclical/test.out: Updated comment and new
+	doctest for new behaviour of reframe()
+
+2016-07-02  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* glucat/framed_multi_imp.h, glucat/matrix_multi_imp.h: In
+	constructors that use value and frame, use the union of frames
+	instead of throwing when value is outside of frame.
+
+2016-06-26  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* ChangeLog: ChangeLog for version 0.8.2
+
 2016-06-26  Paul Leopardi <leopardi@users.sourceforge.net>
 
 	* INSTALL, NEWS, TODO: Update to version 0.8.2
