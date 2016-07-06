@@ -5,7 +5,7 @@
     matrix_multi.h : Declare a class for the matrix representation of a multivector
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2014 by Paul C. Leopardi
+    copyright            : (C) 2001-2016 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
