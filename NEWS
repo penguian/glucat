@@ -1,10 +1,8 @@
 NEWS for GluCat 0.8.2 with PyClical
 ===================================
 
-2016-06-26: 0.8.2:
+2016-07-06: 0.8.2:
 The GluCat classes basis_matrix_t and framed_multi<> have been refined.
-GluCat now compiles with clang++ and libc++. PyClical can now be built with
-g++ version 4.8 and possibly earlier versions.
 
 The class basis_matrix_t is now based on int rather than on Scalar_T. This
 should make basis matrix generation more efficient, especially when Scalar_T
@@ -16,14 +14,30 @@ map<const index_set_t, Scalar_T> or unordered_map<const index_set_t, Scalar_T>.
 This is for compatibility with the libc++ implementations of these bases
 classes.
 
+The framed_multi<> and matrix_multi<> constructors that use the parameters
+val, frm and prechecked have changed. The frame used for the constuction now
+includes the union of val.frame() with frm, and these constructors no longer
+throw an exception if val is oustide of frm.
+
 A new function, reframe(lhs,rhs,lhs_reframed,rhs_reframed) fixes a bug in
 reframing for binary operations on class matrix_multi<>.
 
+The function reframe(self, ixt) in pyclical/PyCliCal.pyx now puts self into
+a larger frame, containing the union of self.frame() and index set ixt.
+
+GluCat now compiles with clang++ and libc++.
+
+PyClical can now be built with g++ version 4.8 and possibly earlier versions.
+
+GluCat also compiles cleanly with Intel C++ 16.0.2. The Intel compiler
+workarounds in glucat/portability.h have been removed. This involved changing
+those functions returning a value of type const T, where T is a primitive type,
+to instead return a value of type T.
 
 2016-05-22: 0.8.1-1:
 GluCat is again in synch with the OpenSUSE Science project.
 
-A number of patches suggested by Atri Bhattacharya of the OpenSUSE Science 
+A number of patches suggested by Atri Bhattacharya of the OpenSUSE Science
 project have been applied to the build and installation process for GluCat.
 The GluCat and Pyclical code itself is unchanged from GluCat 0.8.1.
 
@@ -41,8 +55,8 @@ The scripts test/test-all-config-options.sh, test/diff-all-config-outputs.sh
 and test/copy-all-config-outputs.sh enable comprehensive tesing of configuation
 options.
 
-The use of Autotools has again been improved, with enhancements to make, 
-make clean, make dist and make install, and the introduction of make check, 
+The use of Autotools has again been improved, with enhancements to make,
+make clean, make dist and make install, and the introduction of make check,
 make doc and make install-doc.
 
 2015-09-06: 0.8.0:
@@ -60,10 +74,10 @@ is no longer needed, and is ignored, as <random> is now the default),
 <boost/numeric/bindings/lapack/gees.hpp> (_GLUCAT_USE_BINDINGS_V1).
 
 2015-08-31: 0.7.5:
-The use of Autotools in configuring, building and installing GluCat and 
+The use of Autotools in configuring, building and installing GluCat and
 PyClical has been simplified and improved. Deprecated configuation options
 have been dropped. The default for --with-random is now std. The default
-for --with-map is now stdunordered. 
+for --with-map is now stdunordered.
 
 2014-12-24: 0.7.4:
 GluCat 0.7.4 optionally improves the precision of the sqrt, log and exp functions.
