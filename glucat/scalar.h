@@ -5,7 +5,7 @@
     scalar.h : Define functions for scalar_t
                              -------------------
     begin                : 2001-12-20
-    copyright            : (C) 2001-2014 by Paul C. Leopardi
+    copyright            : (C) 2001-2016 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -110,7 +110,7 @@ namespace glucat
     /// Smart NaN
     inline
     static
-    const Scalar_T
+    Scalar_T
     NaN()
     {
       return std::numeric_limits<Scalar_T>::has_quiet_NaN
@@ -149,147 +149,147 @@ namespace glucat
     /// Modulo function for scalar
     inline
     static
-    const Scalar_T
+    Scalar_T
     fmod(const Scalar_T& lhs, const Scalar_T& rhs)
     { return std::fmod(lhs, rhs); }
 
     /// Complex conjugate of scalar
     inline
     static
-    const Scalar_T
+    Scalar_T
     conj(const Scalar_T& val)
     { return val; }
 
     /// Real part of scalar
     inline
     static
-    const Scalar_T
+    Scalar_T
     real(const Scalar_T& val)
     { return val; }
 
     /// Imaginary part of scalar
     inline
     static
-    const Scalar_T
+    Scalar_T
     imag(const Scalar_T& val)
     { return Scalar_T(0); }
 
     /// Absolute value of scalar
     inline
     static
-    const Scalar_T
+    Scalar_T
     abs(const Scalar_T& val)
     { return boost::numeric::ublas::type_traits<Scalar_T>::UBLAS_ABS(val); }
 
     /// Pi
     inline
     static
-    const Scalar_T
+    Scalar_T
     pi()
     { return Scalar_T(3.14159265358979323); }
 
     /// log(2)
     inline
     static
-    const Scalar_T
+    Scalar_T
     ln_2()
     { return Scalar_T(0.693147180559945309); }
 
     /// Integer power
     inline
     static
-    const Scalar_T
+    Scalar_T
     pow(const Scalar_T& val, int n)
     { return std::pow(val, n); }
 
     /// Square root of scalar
     inline
     static
-    const Scalar_T
+    Scalar_T
     sqrt(const Scalar_T& val)
     { return boost::numeric::ublas::type_traits<Scalar_T>::UBLAS_SQRT(val); }
 
     /// Exponential
     inline
     static
-    const Scalar_T
+    Scalar_T
     exp(const Scalar_T& val)
     { return std::exp(val); }
 
     /// Logarithm of scalar
     inline
     static
-    const Scalar_T
+    Scalar_T
     log(const Scalar_T& val)
     { return std::log(val); }
 
     /// Log base 2
     inline
     static
-    const Scalar_T
+    Scalar_T
     log2(const Scalar_T& val)
     { return log(val)/ln_2(); }
 
     /// Cosine of scalar
     inline
     static
-    const Scalar_T
+    Scalar_T
     cos(const Scalar_T& val)
     { return std::cos(val); }
 
     /// Inverse cosine of scalar
     inline
     static
-    const Scalar_T
+    Scalar_T
     acos(const Scalar_T& val)
     { return std::acos(val); }
 
     /// Hyperbolic cosine of scalar
     inline
     static
-    const Scalar_T
+    Scalar_T
     cosh(const Scalar_T& val)
     { return std::cosh(val); }
 
     /// Sine of scalar
     inline
     static
-    const Scalar_T
+    Scalar_T
     sin(const Scalar_T& val)
     { return std::sin(val); }
 
     /// Inverse sine of scalar
     inline
     static
-    const Scalar_T
+    Scalar_T
     asin(const Scalar_T& val)
     { return std::asin(val); }
 
     /// Hyperbolic sine of scalar
     inline
     static
-    const Scalar_T
+    Scalar_T
     sinh(const Scalar_T& val)
     { return std::sinh(val); }
 
     /// Tangent of scalar
     inline
     static
-    const Scalar_T
+    Scalar_T
     tan(const Scalar_T& val)
     { return std::tan(val); }
 
     /// Inverse tangent of scalar
     inline
     static
-    const Scalar_T
+    Scalar_T
     atan(const Scalar_T& val)
     { return std::atan(val); }
 
     /// Hyperbolic tangent of scalar
     inline
     static
-    const Scalar_T
+    Scalar_T
     tanh(const Scalar_T& val)
     { return std::tanh(val); }
 

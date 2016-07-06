@@ -5,7 +5,7 @@
     control.h : Define and set parameters to control tests
                              -------------------
     begin                : 2010-04-21
-    copyright            : (C) 2010 by Paul C. Leopardi
+    copyright            : (C) 2010-2016 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -41,12 +41,12 @@ namespace glucat
   private:
     /// Test parameters are valid
     bool m_valid;
-    const bool valid() const
+    bool valid() const
     { return m_valid; }
 
     /// Catch exceptions
     bool m_catch_exceptions;
-    const bool catch_exceptions() const
+    bool catch_exceptions() const
     { return m_catch_exceptions; }
 
     /// Produce more detailed output from tests

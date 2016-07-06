@@ -5,7 +5,7 @@
     qd.h : Define functions for dd_real and qd_real as scalar_t
                              -------------------
     begin                : 2010-03-23
-    copyright            : (C) 2010-2014 by Paul C. Leopardi
+    copyright            : (C) 2010-2016 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -57,7 +57,7 @@ namespace glucat
 #define _GLUCAT_QD_F(_T, _F) \
   template<>           \
   inline               \
-  const _T             \
+  _T                   \
   numeric_traits<_T>:: \
   _F(const _T& val)    \
   { return ::_F(val); }
@@ -117,7 +117,7 @@ namespace glucat
   /// Modulo function for dd_real
   template<>
   inline
-  const dd_real
+  dd_real
   numeric_traits<dd_real>::
   fmod(const dd_real& lhs, const dd_real& rhs)
   { return ::fmod(lhs, rhs); }
@@ -125,7 +125,7 @@ namespace glucat
   /// pow for dd_real
   template<>
   inline
-  const dd_real
+  dd_real
   numeric_traits<dd_real>::
   pow(const dd_real& val, int n)
   {
@@ -140,7 +140,7 @@ namespace glucat
   /// Pi for dd_real
   template<>
   inline
-  const dd_real
+  dd_real
   numeric_traits<dd_real>::
   pi()
   { return dd_real::_pi; }
@@ -148,7 +148,7 @@ namespace glucat
   /// log(2) for dd_real
   template<>
   inline
-  const dd_real
+  dd_real
   numeric_traits<dd_real>::
   ln_2()
   { return dd_real::_log2; }
@@ -241,7 +241,7 @@ namespace glucat
   /// Modulo function for qd_real
   template<>
   inline
-  const qd_real
+  qd_real
   numeric_traits<qd_real>::
   fmod(const qd_real& lhs, const qd_real& rhs)
   { return ::fmod(lhs, rhs); }
@@ -249,7 +249,7 @@ namespace glucat
   /// pow for qd_real
   template<>
   inline
-  const qd_real
+  qd_real
   numeric_traits<qd_real>::
   pow(const qd_real& val, int n)
   {
@@ -264,7 +264,7 @@ namespace glucat
   /// Pi for qd_real
   template<>
   inline
-  const qd_real
+  qd_real
   numeric_traits<qd_real>::
   pi()
   { return qd_real::_pi; }
@@ -272,7 +272,7 @@ namespace glucat
   /// log(2) for qd_real
   template<>
   inline
-  const qd_real
+  qd_real
   numeric_traits<qd_real>::
   ln_2()
   { return qd_real::_log2; }

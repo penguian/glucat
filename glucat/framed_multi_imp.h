@@ -6,7 +6,7 @@
     Clifford algebra element
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2015 by Paul C. Leopardi
+    copyright            : (C) 2001-2016 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -1009,7 +1009,7 @@ namespace glucat
   /// Grade of multivector: maximum of the grades of each term
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  const index_t
+  index_t
   framed_multi<Scalar_T,LO,HI>::
   grade() const
   {

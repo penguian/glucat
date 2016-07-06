@@ -5,7 +5,7 @@
     long_double.h : Define std functions for long double
                              -------------------
     begin                : 2001-12-18
-    copyright            : (C) 2001-2014 by Paul C. Leopardi
+    copyright            : (C) 2001-2016 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -70,7 +70,7 @@ namespace glucat
   /// Pi for long double
   template<>
   inline
-  const long double
+  long double
   numeric_traits<long double>::
   pi()
   { return l_pi; }
@@ -78,7 +78,7 @@ namespace glucat
   /// log(2) for long double
   template<>
   inline
-  const long double
+  long double
   numeric_traits<long double>::
   ln_2()
   { return l_ln2; }
