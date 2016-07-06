@@ -5,7 +5,7 @@
     portability.h : Work around non-standard compilers and libraries
                              -------------------
     begin                : Sun 2001-08-18
-    copyright            : (C) 2001-2012 by Paul C. Leopardi
+    copyright            : (C) 2001-2016 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -32,37 +32,23 @@
  ***************************************************************************/
 
 #include <boost/version.hpp>
+#include <cmath>
 
 // Workaround for GCC
-# if (__GNUC__ == 4 && __GNUC_MINOR__ >= 8)
+#if (__GNUC__ == 4 && __GNUC_MINOR__ >= 8)
 # define _GLUCAT_GCC_IGNORE_UNUSED_LOCAL_TYPEDEFS
 #endif
 
-// Workarounds for ICC and ICPC
-#if defined (BOOST_INTEL) || defined (__INTEL_COMPILER) || defined (__ICL) || defined (__ICC)
-# pragma warning( disable: 177 ) // variable was declared but never referenced
-# pragma warning( disable: 193 ) // zero used for undefined preprocessing identifier
-# pragma warning( disable: 279 ) // controlling expression is constant
-# pragma warning( disable: 383 ) // value copied to temporary, reference to temporary ...
-# pragma warning( disable: 444 ) // destructor for base is not virtual
-# pragma warning( disable: 593 ) // variable was set but never used
-# pragma warning( disable: 810 ) // conversion from "double" to "int" may lose significant bits
-# pragma warning( disable: 858 ) // type qualifier on return type is meaningless
-# pragma warning( disable: 869 ) // parameter was never referenced
-# pragma warning( disable: 981 ) // operands are evaluated in unspecified order
-# pragma warning( disable: 1572 ) // floating-point equality and inequality comparisons ...
-# pragma warning( disable: 2259 ) // non-pointer conversion from "double" to "...={float}" may lose significant bits
-#endif
-
-// ICPC does not have std::tr1::isnan() or std:tr1::isinf()
-#if defined (BOOST_INTEL) || defined (__INTEL_COMPILER) || defined (__ICL) || defined (__ICC)
-# define _GLUCAT_ISNAN(x) (x != x)
-# define _GLUCAT_ISINF(x) (!_GLUCAT_ISNAN(x) && _GLUCAT_ISNAN(x-x))
-#else
+// Workaround for isnan and isinf
+#if __cplusplus > 199711L
 # define _GLUCAT_ISNAN(x) (std::isnan(x))
 # define _GLUCAT_ISINF(x) (std::isinf(x))
+#else
+# define _GLUCAT_ISNAN(x) (x != x)
+# define _GLUCAT_ISINF(x) (!_GLUCAT_ISNAN(x) && _GLUCAT_ISNAN(x-x))
 #endif
 
+// Workaround for abs and sqrt
 #if BOOST_VERSION >= 103400
 # define UBLAS_ABS  type_abs
 # define UBLAS_SQRT type_sqrt
