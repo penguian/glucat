@@ -12,6 +12,9 @@ the Boost Library. Make sure that you are able to build the Boost library with
 the same C++ compiler version as you will be using to build programs that will
 use the GluCat library.
 
+The default configuration of GluCat, as well as most combinations of
+configuration options, require a compiler that supports the C++ 2011 standard.
+
 Scroll to the end of these instructions to see a list of successful builds,
 including version numbers of various software components, and notes on software
 versions.
@@ -39,8 +42,8 @@ and unzipped the tarball glucat-0.8.2.tar.gz.
 Directory Structure
 ===================
 
-Once you have downloaded, unzipped and untarred the source code, or followed 
-the instructions above to install from Git clone, you should have a directory, 
+Once you have downloaded, unzipped and untarred the source code, or followed
+the instructions above to install from Git clone, you should have a directory,
 glucat-0.8.2. Under this directory you should see a number
 of subdirectories, including ./admin, ./doc, ./glucat, ./gfft_test, ./products,
 ./pyclical, ./squaring, ./test, ./test_runtime, ./testxx, and ./transforms.
@@ -64,7 +67,7 @@ There are four different things to install. These are:
 
  1. The PyClical Python extension module.
  2. The GluCat C++ header files.
- 3. The basic documentation, including the PyClical demonstration scripts and 
+ 3. The basic documentation, including the PyClical demonstration scripts and
     notebooks.
  4. The GluCat API documentation.
 
@@ -120,8 +123,8 @@ Your own programs, written in C++
 
 Once you have installed  the GluCat C++ library, you use this library to build
 your own C++ programs. To do this, you will need to follow some or all of the
-same steps you took to build the test programs and the PyClical extension 
-module. This includes setting compiler flags, and including relevant headers 
+same steps you took to build the test programs and the PyClical extension
+module. This includes setting compiler flags, and including relevant headers
 and libraries.
 
 Pay special attention to the -D flags described in the configuration section
@@ -285,12 +288,12 @@ PyClical.cpp file. See details in "To Build" below.
 
   --enable-check-isnan    check for NaN values at various places in the code [default=yes]
 
-This option determines whether the GluCat library code uses the potentially 
-expensive isnan() member function to check for NaN values within the 
+This option determines whether the GluCat library code uses the potentially
+expensive isnan() member function to check for NaN values within the
 matrix_multi<> implementations of operator*() and operator/().
 
 The option --enable-check-isnan adds "-D_GLUCAT_CHECK_ISNAN" to CXXFLAGS in
-the Makefiles. This is the default. If you do not want to check for NaN values, 
+the Makefiles. This is the default. If you do not want to check for NaN values,
 you can use the option "--disable-check-isnan".
 
 If D_GLUCAT_CHECK_ISNAN is defined, the functions operator*() and operator/()
@@ -298,8 +301,8 @@ in glucat/matrix_multi_imp.h use the member function isnan() to check for NaN
 values in the LHS and RHS operands, and if either is NaN, then the result is NaN.
 If D_GLUCAT_CHECK_ISNAN is not defined, then these chacks are not performed.
 
-If you are compiling your own programs using the GluCat library, to check for 
-NaN values within operator*() and operator/(), your Makefile needs to pass 
+If you are compiling your own programs using the GluCat library, to check for
+NaN values within operator*() and operator/(), your Makefile needs to pass
 the flag "-D_GLUCAT_CHECK_ISNAN" to the C++ compiler.
 
 
@@ -317,27 +320,27 @@ This option adds non standard library paths.
 
 
   --with-demo-dir=DIR     [default=$DATAROOTDIR/pyclical/demos]
-  
+
 This option defines the installation directory for the PyClical demos.
 
 
-  --with-stdlib[=ARG]     C++ standard library to use 
-                          (libcxx|libstdcxx) 
+  --with-stdlib[=ARG]     C++ standard library to use
+                          (libcxx|libstdcxx)
                           [default=libstdcxx]
 
 This option controls which C++ standard library is to be used. ARG can be
 "libcxx" or "libstdcxx". The default is "libstdcxx".
 
 The option "--with-stdlib=libcxx" is effective only when the clang++ compiler
-is being used, as indicated by the environment variable $CXX. In this case, 
+is being used, as indicated by the environment variable $CXX. In this case,
 the compiler flag "-stdlib=libc++" is added to CXXFLAGS. Note that if you use
 libc++ with GluCat, you will need to ensure that any third party libraries
 that you use are binary compatible with libc++. This may, in particular,
-effect the building of PyClical. 
+effect the building of PyClical.
 
 If you are using clang++ to compile your own programs using the GluCat library,
 to choose the libc++ library, add the compiler flag "-stdlib=libc++" to your
-own compilation commands. 
+own compilation commands.
 
 For further details, see http://libcxx.llvm.org/docs/
 
@@ -379,8 +382,8 @@ exist.
   If you are using g++, pass the compiler flag "-std=c++11" rather than "-ansi".
   This tells g++ to use the 2011 C++ standard.
 
-  
-  --with-pool-alloc       use Boost Pool allocator 
+
+  --with-pool-alloc       use Boost Pool allocator
                           [default=no]
 
 This option determines whether the GluCat library code uses the Boost pool
@@ -405,8 +408,7 @@ to the C++ compiler, after all the linker-related flags: "-lboost_system"
 
 You will also need to ensure that the library path sees libboost_system.*.
 This requires that you have the Boost libraries built and installed.
-See http://www.boost.org/doc/libs/1_55_0/more/getting_started/index.html
-and Boost tickets
+See http://www.boost.org/more/getting_started/index.html and Boost tickets
 https://svn.boost.org/trac/boost/ticket/7085
 https://svn.boost.org/trac/boost/ticket/7335
 
@@ -538,8 +540,8 @@ files and libraries must be usable.
   <boost/numeric/bindings/lapack/driver/gees.hpp> and the library path sees
  liblapack.* and libblas.*.
 
- 
- --with-tuning[=ARG]     set of tuning parameters to use for testing 
+
+ --with-tuning[=ARG]     set of tuning parameters to use for testing
                          (slow|naive|fast|promoted|demoted)
 
 The option "--with-tuning=arg" adds "-D_GLUCAT_TEST_TUNING_ARG" to CXXFLAGS,
@@ -547,11 +549,11 @@ where "ARG" is "arg" converted to uppercase. This option is unusual in that no
 macro names of the form _GLUCAT_TEST_TUNING_ARG appear in the GluCat header
 files. Such names appear only in the test header files. In particular the
 header file test/tuning.h uses the macro names _GLUCAT_TEST_TUNING_SLOW,
-_GLUCAT_TEST_TUNING_NAIVE, _GLUCAT_TEST_TUNING_FAST, 
+_GLUCAT_TEST_TUNING_NAIVE, _GLUCAT_TEST_TUNING_FAST,
 _GLUCAT_TEST_TUNING_PROMOTED and _GLUCAT_TEST_TUNING_DEMOTED to provide
 different options for the tuning policy Tune_P.
 
- 
+
 Operation Controls
 ------------------
 
@@ -596,7 +598,7 @@ Make uses the headers in ./glucat and ./test and the source in ./pyclical,
 timing test programs ./gfft_test/gfft_test, ./products/products,
 ./squaring/squaring and ./transforms/transforms.
 
-The following build steps will be performed if you have not selected the 
+The following build steps will be performed if you have not selected the
 configuration option --disable-pyclical (equivalently, --enable-pyclical=no).
 
 If Cython is installed then make builds PyClical by running the command
@@ -634,13 +636,13 @@ Building and running the regression test programs
 -------------------------------------------------
 
 To build and run the regression test programs, set the environment variable CXX
-to indicate your C++ compiler, eg. "g++" for GNU C++, "icpc" for Intel C++, 
+to indicate your C++ compiler, eg. "g++" for GNU C++, "icpc" for Intel C++,
 then run "./configure" as above, and then run "make check". This builds and
 runs the executable files ./test00/test00 to ./test16/test16. This produces
 the intermediate output files ./test00/test00.out to ./test16/test16.out, and the
 final test output file ./test_runtime/test.out. You can use a parallel make for
 "make check" , e.g. "make check -j 6". This is especially useful on modern
-multicore machines. 
+multicore machines.
 
 Warning:If you use too many jobs with parallel make, the compiler will have
 problems obtaining enough memory to run efficiently.
@@ -695,73 +697,73 @@ in ./test/config-options.txt and are:
 test.configure.default.out:
 ./configure
 
-test.configure.compressed-mat:              
+test.configure.compressed-mat:
 ./configure --without-dense-mat
 
-test.configure.debug-full:                  
+test.configure.debug-full:
 ./configure --enable-debug=full
 
-test.configure.debug-yes:                   
+test.configure.debug-yes:
 ./configure --enable-debug=yes
 
-test.configure.disable-check-isnan:         
+test.configure.disable-check-isnan:
 ./configure --disable-check-isnan
 
-test.configure.disable-dependency:          
+test.configure.disable-dependency:
 ./configure --disable-dependency-tracking
 
-test.configure.disable-pyclical:            
+test.configure.disable-pyclical:
 ./configure --disable-pyclical
 
 test.configure.stdlib-libcxx:
 ./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
 --disable-pyclical --with-stdlib=libcxx
 
-test.configure.eig-bindings:                          
+test.configure.eig-bindings:
 ./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
 
-test.configure.eig-bindings-fast:                     
+test.configure.eig-bindings-fast:
 ./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
 --with-tuning=fast
 
-test.configure.eig-bindings-naive:                    
+test.configure.eig-bindings-naive:
 ./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
             --with-tuning=naive
 
-test.configure.map-map-gsl:                 
+test.configure.map-map-gsl:
 ./configure --with-map=map --with-random=gsl
 
-test.configure.map-map-pool-alloc:          
+test.configure.map-map-pool-alloc:
 ./configure --with-map=map --with-pool-alloc
 
-test.configure.prefix-home-opt:             
+test.configure.prefix-home-opt:
 ./configure --prefix=$HOME/opt
 
-test.configure.qd-eig-bindings:             
+test.configure.qd-eig-bindings:
 ./configure --with-qd \
             --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
 
-test.configure.qd-eig-bindings-demoted:     
+test.configure.qd-eig-bindings-demoted:
 ./configure --with-qd \
             --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
             --with-tuning=demoted
 
-test.configure.qd-eig-bindings-gsl:         
+test.configure.qd-eig-bindings-gsl:
 ./configure --with-qd \
             --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
             --with-random=gsl
 
-test.configure.qd-eig-bindings-map-map:     
+test.configure.qd-eig-bindings-map-map:
 ./configure --with-qd \
             --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
             --with-map=map
 
-test.configure.qd-eig-bindings-promoted:    
+test.configure.qd-eig-bindings-promoted:
 ./configure --with-qd \
             --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
             --with-tuning=promoted
 
-When you run your own test using ./test/test.sh, you should compare its output 
+When you run your own test using ./test/test.sh, you should compare its output
 to the output file corresponding to the closest match to the configuration
 options you used to build your copy of the GluCat library.
 
@@ -787,10 +789,10 @@ generators, you should expect to have different floating point arithmetic
 results, but generally, still within acceptable error tolerances, except as
 noted for ./test11/test11 above.
 
-The regression tests ./test00/test00 to ./test16/test16 recognize the program 
+The regression tests ./test00/test00 to ./test16/test16 recognize the program
 arguments "--help", "--no-catch", and "--verbose". The "--no-catch" argument
 disables the default exception catching behaviour of a regression test, to
-allow prgram crashes to be more easily debugged. For ./test00/test00 and 
+allow prgram crashes to be more easily debugged. For ./test00/test00 and
 ./test11/test11 the argument "--verbose" produces verbose output essentially by
 setting the error tolerance to zero. Verbose output can become quite large.
 
@@ -805,7 +807,7 @@ The ./test directory contains the script ./test/test-all-config-options.sh.
 This script uses the configuration given by the file ./test/config-options.txt
 to build and run the regression tests and the PyClical doctests once for each
 set of configuration options specified in the file. The syntax of each line of
-the file  ./test/config-options.txt is simply 
+the file  ./test/config-options.txt is simply
 
 abbreviation: options
 
@@ -835,7 +837,7 @@ The line
 
 map-map-gsl:                 --with-map=map --with-random=gsl
 
-specifies the abbreviation "map-map-gsl" and the options 
+specifies the abbreviation "map-map-gsl" and the options
 "--with-map=map --with-random=gsl". This corresponds to running the
 regression tests and doctests using the configure command
 
@@ -868,7 +870,7 @@ configuration.
 
 The script ./test/diff-all-config-outputs.sh compares each relevant test output
 file with the corresponding file in ./test_runtime or ./pyclical. For example,
-line 11 of ./test/config-options.txt 
+line 11 of ./test/config-options.txt
 
 map-map-gsl:                 --with-map=map --with-random=gsl
 
@@ -896,14 +898,14 @@ stdlib-libcxx:    --with-eig=bindings \
                   --disable-pyclical --with-stdlib=libcxx
 
    In these cases, if PyClical is not already installed, then the contents
-   of glucat-0.8.2.7/pyclical/test.out and glucat-0.8.2.7/pyclical/test.out 
+   of glucat-0.8.2.7/pyclical/test.out and glucat-0.8.2.7/pyclical/test.out
    will differ from that of glucat-0.8.2/pyclical/test.out.
 
 If the output of your systematic tests differs due to a difference in compilers
 or libraries, you may want to copy this output to ./test_runtime to ease future
 comparisons. To do so, run the script ./test/copy-all-config-outputs.sh.
 
-   
+
 Running the timing (benchmark) tests
 ------------------------------------
 
@@ -985,9 +987,9 @@ Running "make install" will also install some documentation. Specifically, the
 GNU top level doumentation files AUTHORS, ChangeLog, COPYING, glucat.lsm,
 INSTALL, NEWS, README and TODO are installed into $DATAROOTDIR/doc/glucat. This
 defaults to $PREFIX/share/doc/glucat, i.e. /usr/local/share/doc/glucat. The
-PyClical demos and notebooks are installed by default into the directory 
-$DATAROOTDIR/pyclical/demos. This defaults to $PREFIX/share/pyclical/demos, i.e. 
-/usr/local/share/pyclical/demos. You can change this directory by using the 
+PyClical demos and notebooks are installed by default into the directory
+$DATAROOTDIR/pyclical/demos. This defaults to $PREFIX/share/pyclical/demos, i.e.
+/usr/local/share/pyclical/demos. You can change this directory by using the
 configuration option --with-demo-dir=DIR.
 
 You will need permission to update the installation directories, so you may need
@@ -1002,16 +1004,16 @@ to use sudo, login as root, or su to root before you run make install.
  1) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
 
     Linux 4.4.0-24-generic #43-Ubuntu SMP x86_64
-    
 
     The following compiler versions:
     1) gcc version 4.8.5 (Ubuntu 4.8.5-4ubuntu2)
     2) gcc version 5.3.1 20160413 (Ubuntu 5.3.1-14ubuntu2.1)
-    3) clang version 3.9.0 (trunk 273084) (llvm/trunk 273081)
-    4) Intel(R) C++ Intel(R) 64 Compiler for applications running on Intel(R) 64, 
-       icpc version 16.0.2 (gcc version 5.0.0 compatibility)
-    Boost 1.58.0
-    Boost 1.61.0
+    3) gcc version 6.1.1 20160510 (Ubuntu 6.1.1-2ubuntu12~16.04)
+    4) clang version 3.9.0 (trunk 273084) (llvm/trunk 273081)
+    5) icpc version 16.0.2 (gcc version 5.0.0 compatibility)
+
+    Boost 1.53.0, 1.55.0, and 1.61.0 (headers only, with Boost 1.58.0 library)
+    Boost 1.58.0 (headers and library)
     Boost Numeric Bindings
     QD 2.3.17
     Python 2.7.11+
@@ -1039,9 +1041,24 @@ Notes on software versions
 --------------------------
 
     GluCat 0.8.2 has not been tested with gcc versions earlier than 4.8.5,
-    Clang versions earlier than 3.9, Boost versions earlier than 1.58.0,
-    QD versions earlier than 2.3.13, Python versions earlier than 2.7.10, or
-    Cython versions earlier than 0.23.3.
+    Clang versions earlier than 3.9, Intel C++ versions earlier than 16.0.2,
+    Boost versions earlier than 1.53.0, QD versions earlier than 2.3.13,
+    Python versions earlier than 2.7.10, or Cython versions earlier than 0.23.3.
+
+
+    The following version incompatibility was observed during testing:
+
+    With g++ 5.3.1 and Boost 1.53.0 or Boost 1.55.0, the header file
+    <boost/smart_ptr/shared_ptr.hpp> generates multiple warnings of the form:
+
+warning: ‘template<class> class std::auto_ptr’ is deprecated [-Wdeprecated-declarations]
+
+    This does not occur with g++ 4.8.5 and Boost 1.53.0, 1.55.0 or 1.61.0,
+    nor with g++ 5.3.1 and Boost 1.58.0 or Boost 1.61.0.
+
+See https://svn.boost.org/trac/boost/ticket/11411
+    https://svn.boost.org/trac/boost/ticket/11622
+
 
     The following bugs and workarounds apply to earlier versions of GluCat,
     and may still be applicable to GluCat 0.8.2, but have not been checked
