@@ -1,3 +1,15 @@
+2016-07-11  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* README: Update version to 0.8.2
+
+2016-07-07  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* INSTALL: Tested on SageMathCloud
+
+2016-07-06  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* ChangeLog: ChangeLog for version 0.8.2
+
 2016-07-06  Paul Leopardi <leopardi@users.sourceforge.net>
 
 	* NEWS: Update description of changes in version 0.8.2
