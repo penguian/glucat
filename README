@@ -1,4 +1,4 @@
-README for GluCat 0.8.1 with PyClical
+README for GluCat 0.8.2 with PyClical
 =====================================
 
 GluCat is a library of C++ template classes for calculations with the universal
@@ -103,7 +103,7 @@ PyClical Python extension module, as well as a subdirectory ./pyclical/demos
 containing Python source code for the PyClical demos and tutorials, and sample
 demo output.
 
-The ./admin and ./m4 directories are part of the autotools infrastructure for 
+The ./admin and ./m4 directories are part of the autotools infrastructure for
 building GluCat, and should normally be left unchanged.
 
 The ./doc directory contains documentation. Currently only the GluCat API
@@ -286,7 +286,7 @@ The first line includes <glucat/glucat.h>, a convenience header that includes
 all the GluCat declarations.
 
 The second line includes "test/tuning.h", a convenience header that defines
-Tune_P, the tuning policy class. This class may be included as a template 
+Tune_P, the tuning policy class. This class may be included as a template
 parameter in future versions of GluCat, but for now, in your own code, you will
 need to define it by using a typedef before including <glucat/glucat_imp.h>.
 The glucat::tuning<> template class is defined in <glucat/global.h>. See
