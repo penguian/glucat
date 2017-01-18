@@ -12,12 +12,12 @@ GluCat classes are meant to be used as numeric classes with other template
 libraries. To do this, GluCat classes need to look and behave like floating
 point  numeric types such as float and double. The GluCat classes do this by
 providing a definition for std::numeric_limits<>, most or all the expected
-operators like +, -, * /, and functions like sqrt(). In use with other template
+operators like +, -, *, /, and functions like sqrt(). In use with other template
 libraries, you will need to look out for the differences between GluCat classes
 and floating point numeric types. Two key differences are that Clifford algebras
 do not have a total ordering, and that multiplication in Clifford algebras is
 not necessarily commutative. A third difference is that not all non-zero
-elements of a Clifford algebra hvae a multiplicative inverse.
+elements of a Clifford algebra have a multiplicative inverse.
 
 PyClical is a Python extension module that is designed to make it easy for you
 to use Python to perform computations in Clifford algebras, and to implement
@@ -150,7 +150,7 @@ or you can change the PYTHONPATH variable for just one command, e.g.
 
 PyClical is designed to be used within a Python environment. You will usually
 need to run a Python IDE or interpreter, such as IDLE, ipython or python. The
-follwing instuctions use the standard python interpreter.
+following instructions use the standard python interpreter.
 
 To use the capabilities of PyClical from within Python, you must either import
 the PyClical extension module or import objects from this module.  The simplest
