@@ -159,7 +159,7 @@ def run(ctx=tutorial_context(globals())):
               +" can be expressed as the product of at most $n$ vectors.")
     print_fill("In particular, $x \mapsto b a x (b a)^{-1}$ is a reflection in the direction of $a$"
               +" followed by a reflection in the direction of $b$.")
-    print_fill("This is also a rotation throught *twice* the angle between $a$ and $b$.")
+    print_fill("This is also a rotation through *twice* the angle between $a$ and $b$.")
     print_exec("x = e(1)+2*e(2); print x; print x*x")
     print_exec("y = (b * a) * x * inv(b * a); print y; print y*y")
     print_exec("print acos((a/abs(a)) & (b/abs(b))) * 180/pi")
