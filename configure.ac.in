@@ -270,9 +270,13 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   if [[[ "$glucat_use_profiling" == "yes" ]]]; then
     GLUCAT_CHECK_COMPILER_FLAG([pg],[CXXFLAGS="$CXXFLAGS -pg"])
   fi
-  
+
   dnl For compatibility with Cygwin gcc
   GLUCAT_CHECK_HEADERS([bits/wordsize.h],[CXXFLAGS="$CXXFLAGS -DHAVE_BITS_WORDSIZE_H"],[],[])
+
+  dnl To work around backwards incompatibility of boost::serialization changes
+  GLUCAT_CHECK_HEADERS([boost/serialization/array_wrapper.hpp],
+    [CXXFLAGS="$CXXFLAGS -D_GLUCAT_HAVE_BOOST_SERIALIZATION_ARRAY_WRAPPER_H"],[],[])
 
   glucat_extra_cxxflags_pyclical=""
   glucat_use_cython="no"
@@ -529,7 +533,7 @@ CXXFLAGS="$CXXFLAGS $USE_EXCEPTIONS"
 
 # From http://chris-miceli.blogspot.com.au/2011/01/integrating-doxygen-with-autotools.html
 AC_CHECK_PROGS([DOXYGEN], [doxygen])
-if [[[ -z "$DOXYGEN" ]]]; then 
+if [[[ -z "$DOXYGEN" ]]]; then
   AC_MSG_WARN([Doxygen not found - continuing without Doxygen support])
 fi
 AC_SUBST([doxydir],[$(pwd)])

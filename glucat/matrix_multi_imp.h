@@ -40,6 +40,9 @@
 #  pragma GCC diagnostic push
 #  pragma GCC diagnostic ignored "-Wunused-local-typedefs"
 # endif
+# if  defined(_GLUCAT_HAVE_BOOST_SERIALIZATION_ARRAY_WRAPPER_H)
+#  include <boost/serialization/array_wrapper.hpp>
+# endif
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/matrix_expression.hpp>
 #include <boost/numeric/ublas/matrix_proxy.hpp>
@@ -343,7 +346,7 @@ namespace glucat
     return *this;
   }
 
-  /// Find a common frame for operands of a binary operator 
+  /// Find a common frame for operands of a binary operator
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
   const index_set<LO,HI>
@@ -371,7 +374,7 @@ namespace glucat
       rhs_reframed = multivector_t(framed_rhs, our_frame, true);
     return our_frame;
   }
-  
+
   /// Test for equality of multivectors
   template< typename Scalar_T, const index_t LO, const index_t HI >
   bool
