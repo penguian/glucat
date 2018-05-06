@@ -53,7 +53,7 @@ namespace glucat
       { result = (*f)(); }
     catch (const glucat_error& e)
       { e.print_error_msg(); }
-    catch (std::bad_alloc)
+    catch (const std::bad_alloc& e)
       { std::cerr << "bad_alloc" << std::endl; }
     catch (...)
       { std::cerr << "unexpected exception" << std::endl; }
@@ -68,7 +68,7 @@ namespace glucat
       { result = (*f)(arg); }
     catch (const glucat_error& e)
       { e.print_error_msg(); }
-    catch (std::bad_alloc)
+    catch (const std::bad_alloc& e)
       { std::cerr << "bad_alloc" << std::endl; }
     catch (...)
       { std::cerr << "unexpected exception" << std::endl; }
