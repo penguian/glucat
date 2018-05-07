@@ -25,21 +25,21 @@ cimport glucat
 from glucat cimport IndexSet, String, Clifford, scalar_t, vector
 
 cdef extern from "PyClical.h":
-    inline IndexSet operator&(IndexSet Lhs, IndexSet Rhs)
-    inline IndexSet operator|(IndexSet Lhs, IndexSet Rhs)
-    inline IndexSet operator^(IndexSet Lhs, IndexSet Rhs)
+    IndexSet operator&(IndexSet Lhs, IndexSet Rhs)
+    IndexSet operator|(IndexSet Lhs, IndexSet Rhs)
+    IndexSet operator^(IndexSet Lhs, IndexSet Rhs)
 
-    inline String index_set_to_repr(IndexSet& Ist)
-    inline String index_set_to_str(IndexSet& Ist)
+    String index_set_to_repr(IndexSet& Ist)
+    String index_set_to_str(IndexSet& Ist)
 
-    inline Clifford operator+(Clifford Lhs, Clifford Rhs)
-    inline Clifford operator-(Clifford Lhs, Clifford Rhs)
-    inline Clifford operator*(Clifford Lhs, Clifford Rhs)
-    inline Clifford operator&(Clifford Lhs, Clifford Rhs)
-    inline Clifford operator%(Clifford Lhs, Clifford Rhs)
-    inline Clifford operator^(Clifford Lhs, Clifford Rhs)
-    inline Clifford operator/(Clifford Lhs, Clifford Rhs)
-    inline Clifford operator|(Clifford Lhs, Clifford Rhs)
+    Clifford operator+(Clifford Lhs, Clifford Rhs)
+    Clifford operator-(Clifford Lhs, Clifford Rhs)
+    Clifford operator*(Clifford Lhs, Clifford Rhs)
+    Clifford operator&(Clifford Lhs, Clifford Rhs)
+    Clifford operator%(Clifford Lhs, Clifford Rhs)
+    Clifford operator^(Clifford Lhs, Clifford Rhs)
+    Clifford operator/(Clifford Lhs, Clifford Rhs)
+    Clifford operator|(Clifford Lhs, Clifford Rhs)
 
-    inline String clifford_to_repr(Clifford& Clf)
-    inline String clifford_to_str(Clifford& Clf)
+    String clifford_to_repr(Clifford& Clf)
+    String clifford_to_str(Clifford& Clf)
