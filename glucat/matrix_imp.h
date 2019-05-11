@@ -55,6 +55,10 @@
 # include <boost/numeric/bindings/ublas.hpp>
 #endif
 
+#if defined(_GLUCAT_USE_UBLAS_EIGENSOLVER)
+# include <boost/numeric/ublas/eigen_solver.hpp>
+#endif
+
 # if defined(_GLUCAT_GCC_IGNORE_UNUSED_LOCAL_TYPEDEFS)
 #  pragma GCC diagnostic pop
 # endif
@@ -489,6 +493,40 @@ namespace glucat { namespace matrix
   }
 #endif
 
+#if defined(_GLUCAT_USE_UBLAS_EIGENSOLVER)
+  /// Convert matrix to double format
+  template< typename Matrix_T >
+  static
+  ublas::matrix<double>
+  to_double_matrix(const Matrix_T& val)
+  {
+    typedef typename Matrix_T::size_type matrix_index_t;
+    const matrix_index_t s1 = val.size1();
+    const matrix_index_t s2 = val.size2();
+
+    typedef typename ublas::matrix<double> double_matrix_t;
+    double_matrix_t result(s1, s2);
+    result.clear();
+
+    typedef typename Matrix_T::value_type Scalar_T;
+    typedef numeric_traits<Scalar_T> traits_t;
+
+    typedef typename Matrix_T::const_iterator1 const_iterator1;
+    typedef typename Matrix_T::const_iterator2 const_iterator2;
+    for (const_iterator1
+        val_it1 = val.begin1();
+        val_it1 != val.end1();
+        ++val_it1)
+      for (const_iterator2
+          val_it2 = val_it1.begin();
+          val_it2 != val_it1.end();
+          ++val_it2)
+         result(val_it2.index1(), val_it2.index2()) = traits_t::to_double(*val_it2);
+
+      return result;
+  }
+#endif
+
   /// Eigenvalues of a matrix
   template< typename Matrix_T >
   ublas::vector< std::complex<double> >
@@ -518,6 +556,20 @@ namespace glucat { namespace matrix
     lambda.clear();
     for (vector_t::size_type  k=0; k!= dim; ++k)
       lambda[k] = complex_t(real_lambda[k], imag_lambda[k]);
+#endif
+#if defined(_GLUCAT_USE_UBLAS_EIGENSOLVER)
+    typedef typename ublas::matrix<double> double_matrix_t;
+    typedef typename ublas::vector<double> double_vector_t;
+    double_matrix_t matrix_val = to_double_matrix(val);
+    ublas::eigen_solver< double_matrix_t > es(matrix_val, ublas::EIGVAL);
+    double_matrix_t real_lambda = es.get_real_eigenvalues();
+    double_matrix_t imag_lambda = es.get_complex_eigenvalues();
+    lambda.clear();
+    for (double_vector_t::size_type  k=0; k!= dim; ++k)
+    {
+      int int_k = static_cast<int>(k);
+      lambda[k] = complex_t(real_lambda(int_k, int_k), imag_lambda(int_k, int_k));
+    }
 #endif
     return lambda;
   }
