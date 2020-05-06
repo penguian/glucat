@@ -291,7 +291,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       AC_MSG_RESULT([$cythonversion])
       glucat_use_cython="yes"
     fi
-    AM_PATH_PYTHON
+    AM_PATH_PYTHON([2])
     if [[[ "$GXX" == "yes" ]]]; then
       GLUCAT_CHECK_COMPILER_FLAG([fno-strict-aliasing],
         [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -fno-strict-aliasing"])
@@ -455,8 +455,12 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     if [[[ "$GXX" == "yes" ]]]; then
       CXXFLAGS="-Wall $CXXFLAGS"
       if [[[ "$basename_cxx" == "clang++" || "$basename_cxx" == "g++"* ]]]; then
-        GLUCAT_CHECK_COMPILER_FLAG([Wno-unused-local-typedefs],[CXXFLAGS="$CXXFLAGS -Wno-unused-local-typedefs"])
         GLUCAT_CHECK_COMPILER_FLAG([Wno-misleading-indentation],[CXXFLAGS="$CXXFLAGS -Wno-misleading-indentation"])
+        GLUCAT_CHECK_COMPILER_FLAG([Wno-self-assign-overloaded],[CXXFLAGS="$CXXFLAGS -Wno-self-assign-overloaded"])
+        GLUCAT_CHECK_COMPILER_FLAG([Wno-unused-local-typedefs],[CXXFLAGS="$CXXFLAGS -Wno-unused-local-typedefs"])
+        if [[[ "$glucat_cxx_std" != "cxx17" ]]]; then
+          GLUCAT_CHECK_COMPILER_FLAG([Wno-deprecated-register],[CXXFLAGS="$CXXFLAGS -Wno-deprecated-register"])
+        fi
       fi
     fi
   fi
