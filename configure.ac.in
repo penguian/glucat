@@ -250,8 +250,12 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       CXXFLAGS="-O3 $CXXFLAGS"
       if [[[ "$basename_cxx" == "g++"* ]]]; then
         GLUCAT_CHECK_COMPILER_FLAG([march=native],[CXXFLAGS="$CXXFLAGS -march=native"])
-        GLUCAT_CHECK_COMPILER_FLAG([finline-limit=4000],[CXXFLAGS="$CXXFLAGS -finline-limit=4000"])
+        GLUCAT_CHECK_COMPILER_FLAG([finline-limit=8000],[CXXFLAGS="$CXXFLAGS -finline-limit=8000"])
+        GLUCAT_CHECK_COMPILER_FLAG([-param large-function-insns=8000],[CXXFLAGS="$CXXFLAGS --param large-function-insns=8000"])
+        GLUCAT_CHECK_COMPILER_FLAG([-param max-inline-insns-auto=8000],[CXXFLAGS="$CXXFLAGS --param max-inline-insns-auto=8000"])
+        GLUCAT_CHECK_COMPILER_FLAG([-param max-inline-insns-single=8000],[CXXFLAGS="$CXXFLAGS --param max-inline-insns-single=8000"])
         GLUCAT_CHECK_COMPILER_FLAG([-param inline-unit-growth=200],[CXXFLAGS="$CXXFLAGS --param inline-unit-growth=200"])
+        GLUCAT_CHECK_COMPILER_FLAG([-param large-function-growth=200],[CXXFLAGS="$CXXFLAGS --param large-function-growth=200"])
         GLUCAT_CHECK_COMPILER_FLAG([funroll-loops],[CXXFLAGS="$CXXFLAGS -funroll-loops"])
         GLUCAT_CHECK_COMPILER_FLAG([fvariable-expansion-in-unroller],[CXXFLAGS="$CXXFLAGS -fvariable-expansion-in-unroller"])
         GLUCAT_CXX_DEBUG_FLAG="-g"
