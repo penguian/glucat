@@ -1,3 +1,86 @@
+2020-05-10  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* DESIGN: Correct permissions
+
+2020-05-10  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* AUTHORS, README, TODO, configure.ac.in, glucat.lsm,
+	pyclical/PyClical.pyx: Bump version to 0.8.3
+
+2020-05-10  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* test_runtime/gfft_test-11.out, test_runtime/products-8.out,
+	test_runtime/squaring-11.out,
+	test_runtime/test.configure.compressed-mat.out,
+	test_runtime/test.configure.debug-full.out,
+	test_runtime/test.configure.debug-yes.out,
+	test_runtime/test.configure.default.out,
+	test_runtime/test.configure.disable-check-isnan.out,
+	test_runtime/test.configure.disable-dependency.out,
+	test_runtime/test.configure.disable-pyclical.out,
+	test_runtime/test.configure.eig-bindings.out,
+	test_runtime/test.configure.prefix-home-opt.out,
+	test_runtime/test.configure.qd-eig-bindings-demoted.out,
+	test_runtime/test.configure.qd-eig-bindings-gsl.out,
+	test_runtime/test.configure.qd-eig-bindings-map-map.out,
+	test_runtime/test.configure.qd-eig-bindings-promoted.out,
+	test_runtime/test.configure.qd-eig-bindings.out,
+	test_runtime/test.configure.stdlib-libcxx.out,
+	test_runtime/transforms-8.out: Update test results
+
+2020-05-10  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* pyclical/PyClical.pxd: Set language_level to 2 for current Cython
+	builds
+
+2020-05-10  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* INSTALL: INSTALL for Glucat 0.8.3
+
+2020-05-10  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: Improve g++ inlining
+
+2020-05-06  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: Allow configuration with current toolchains
+
+2020-05-05  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* admin/cvs.sh: Allow automake 1.16
+
+2018-07-24  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* DESIGN: Re-add missing DESIGN file.
+
+2018-05-07  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* pyclical/PyClical.pxd: Remove inline attributes to satisfy Cython
+	0.28.2+
+
+2018-05-06  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* test/try_catch.h: Change catch for bad_alloc to a reference to
+	avoid g++ 8+ warning message.
+
+2017-08-23  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: Use correct quotation.
+
+2017-05-10  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* : commit 84c067076f6994a7eba2d04031b1babdd2a37608 Author: Paul
+	Leopardi <leopardi@users.sourceforge.net> Date:   Wed May 10
+	21:03:33 2017 +1000
+
+2017-01-19  Paul Leopardi <paul.leopardi@gmail.com>
+
+	* : Merge pull request #7 from drewitz/typos typos in README and clifford_demo.py
+
+2016-07-11  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* ChangeLog: Keep up to date
+
 2016-07-11  Paul Leopardi <leopardi@users.sourceforge.net>
 
 	* README: Update version to 0.8.2
@@ -360,11 +443,11 @@
 2016-04-15  Paul Leopardi <leopardi@users.sourceforge.net>
 
 	* test/config-options.txt,
-	test_runtime/test.configure.disable-dependency.out,
+	test_runtime/{test.configure.no-dependency.out =>
+	test.configure.disable-dependency.out},
 	test_runtime/test.configure.map-map-gsl.out,
-	test_runtime/test.configure.map-map-pool-alloc.out,
-	test_runtime/test.configure.no-dependency.out,
-	test_runtime/test.configure.pool-alloc.out,
+	test_runtime/{test.configure.pool-alloc.out =>
+	test.configure.map-map-pool-alloc.out},
 	test_runtime/test.configure.qd-eig-bindings-demoted.out,
 	test_runtime/test.configure.qd-eig-bindings-gsl.out,
 	test_runtime/test.configure.qd-eig-bindings-map-map.out,
@@ -4534,9 +4617,9 @@
 
 2004-04-14  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-	* Doxyfile, glucat.doxygen: New name for Doxygen configuration file.
-	Change GluCat version to 0.1.5.  Bring up to date.  Include new
-	Doxygen capabilities.
+	* glucat.doxygen => Doxyfile: New name for Doxygen configuration
+	file.  Change GluCat version to 0.1.5.  Bring up to date.  Include
+	new Doxygen capabilities.
 
 2004-04-14  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
