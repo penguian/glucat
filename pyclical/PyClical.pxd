@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# cython: language_level=2
 #
 # PyClical: Python interface to GluCat:
 #           Generic library of universal Clifford algebra templates

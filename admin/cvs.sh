@@ -59,15 +59,14 @@ esac
 
 AUTOMAKE_STRING=`$AUTOMAKE --version | head -1`
 case $AUTOMAKE_STRING in
-  automake*1.14* ) : ;;
-  automake*1.15* ) : ;;
+  automake*1.1[4-6]* ) : ;;
   unsermake* ) :
     echo "*** YOU'RE USING UNSERMAKE."
     echo "*** GOOD LUCK!! :)"
     ;;
   * )
     echo "*** YOU'RE USING $AUTOMAKE_STRING."
-    echo "*** GluCat requires automake 1.14 or 1.15*"
+    echo "*** GluCat requires automake 1.14 to 1.16*"
     exit 1
     ;;
 esac
