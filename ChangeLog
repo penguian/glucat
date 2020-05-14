@@ -1,3 +1,11 @@
+2020-05-14  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* NEWS: NEWS for GluCat 0.8.3
+
+2020-05-11  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #9 from penguian/8-use-current-toolchains Use current toolchains
+
 2020-05-10  Paul Leopardi <leopardi@users.sourceforge.net>
 
 	* DESIGN: Correct permissions
