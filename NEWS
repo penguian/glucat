@@ -1,5 +1,13 @@
-NEWS for GluCat 0.8.2 with PyClical
+NEWS for GluCat 0.8.3 with PyClical
 ===================================
+
+2020-05-13: 0.8.3
+GluCat now builds with current toolchains.
+
+GluCat 0.8.3 builds with current versions of Clang, GCC and Intel compilers,
+Boost, Cython and Python. The source code is otherwise unchanged.
+
+See INSTALL for details.
 
 2016-07-06: 0.8.2:
 The GluCat classes basis_matrix_t and framed_multi<> have been refined.
