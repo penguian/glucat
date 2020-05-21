@@ -15,7 +15,7 @@ TESTOUT = test00/test00.out test01/test01.out test02/test02.out test03/test03.ou
 
 DOC = doc
 
-doc_DATA = AUTHORS COPYING ChangeLog glucat.lsm INSTALL NEWS README TODO
+doc_DATA = AUTHORS COPYING ChangeLog DESIGN glucat.lsm INSTALL NEWS README TODO
 
 EXTRA_DIST = admin m4 test test_runtime $(EXAMPLES) subdirs configure.ac.in configure.ac configure Makefile.am $(doc_DATA) doc/Makefile.am doc/Makefile.in
 
