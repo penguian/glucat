@@ -295,7 +295,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       AC_MSG_RESULT([$cythonversion])
       glucat_use_cython="yes"
     fi
-    AM_PATH_PYTHON([2])
+    AM_PATH_PYTHON([3])
     if [[[ "$GXX" == "yes" ]]]; then
       GLUCAT_CHECK_COMPILER_FLAG([fno-strict-aliasing],
         [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -fno-strict-aliasing"])
