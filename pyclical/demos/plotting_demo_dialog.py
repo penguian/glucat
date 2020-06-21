@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 An example of how to modify the data visualized  via an interactive dialog.
 """

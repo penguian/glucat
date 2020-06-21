@@ -14,9 +14,8 @@
 from pyclical_tutorial_utils import *
 
 def run(ctx):
-    ctx_methods = get_object_methods(ctx)
-    for method in ctx_methods:
-        exec(method + " = ctx_methods['" + method +"']")
+    for name, method in get_object_methods(ctx).items():
+        exec("global "+name+";"+name+"=method")
 
     print_head("2.0 Exterior product.")
     print_line()
@@ -37,27 +36,27 @@ def run(ctx):
     print_line()
     print_fill("First, we create two random vectors, u and v.")
     print_line()
-    print_exec("u = random_clifford(frame)(1);print u")
-    print_exec("v = random_clifford(frame)(1);print v")
+    print_exec("u = random_clifford(frame)(1); print(u)")
+    print_exec("v = random_clifford(frame)(1); print(v)")
 
     print_line()
     print_fill("We now set the vector w to be a random linear combination of u and v.")
     print_line()
-    print_exec("a = random_clifford(ist(0));print a")
-    print_exec("b = random_clifford(ist(0));print b")
-    print_exec("w = a*u + b*v; print w")
+    print_exec("a = random_clifford(ist(0)); print(a)")
+    print_exec("b = random_clifford(ist(0)); print(b)")
+    print_exec("w = a*u + b*v; print(w)")
 
     print_line()
     print_fill("The exterior product shows the pairwise independence of u, v and w ...")
     print_line()
-    print_exec("print u^v")
-    print_exec("print u^w")
-    print_exec("print v^w")
+    print_exec("print(u^v)")
+    print_exec("print(u^w)")
+    print_exec("print(v^w)")
 
     print_line()
     print_fill("... and the linear dependence of the set {u, v, w}.")
     print_line()
-    print_exec("print u^v^w")
+    print_exec("print(u^v^w)")
 
     pause()
     print_line()

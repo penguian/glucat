@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -11,9 +11,11 @@
 #
 # Licensed under CC BY-SA 3.0 http://creativecommons.org/licenses/by-sa/3.0/
 
+from builtins import input
+from builtins import object
 from pyclical_tutorial_utils import *
 
-class tutorial_module:
+class tutorial_module(object):
     def __init__(self, tutorial_title, tutorial_module_name):
         self.title       = tutorial_title
         self.module_name = tutorial_module_name
@@ -61,14 +63,14 @@ def tutorial():
     print_fill = ctx.print_fill
     input_str = ""
     while True:
-        print ""
+        print("")
         print_fill("Currently available PyClical tutorials:")
-        print ""
-        for key, tut in sorted(tutorial_dict.iteritems()):
+        print("")
+        for key, tut in sorted(tutorial_dict.items()):
             print_fill(tut.title)
 
-        print ""
-        input_str = raw_input(fill("Enter the number for the tutorial you want to run, or Q to quit:") + " ")
+        print("")
+        input_str = input(fill("Enter the number for the tutorial you want to run, or Q to quit:") + " ")
         if (len(input_str) > 0) and (input_str[0].upper() == 'Q'):
             break
 

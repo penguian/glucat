@@ -29,6 +29,8 @@
 #
 # Imports needed for array calculation and plotting.
 #
+from builtins import range
+from past.utils import old_div
 import numpy as np
 import mayavi.mlab as ml
 from PyClical import *
@@ -84,7 +86,7 @@ def draw_orbit(r, s,
     # on the unit sphere in 3D Euclidean space.
     #
     x = random_clifford(r3frame)(1)
-    x = e(1) if x == 0 else x / abs(x)
+    x = e(1) if x == 0 else old_div(x, abs(x))
     u = cga3(x)(1)
     #
     # Find the inverses of the rotors r and s.
@@ -98,13 +100,13 @@ def draw_orbit(r, s,
     #
     # Split the orbit into M segments.
     #
-    M = nbr_points / segment_len
-    for j in xrange(M):
+    M = old_div(nbr_points, segment_len)
+    for j in range(M):
         #
         # Find segment_len points forming an orbit segment
         # by successively using the rotor r and its inverse.
         #
-        for k in xrange(segment_len):
+        for k in range(segment_len):
             #
             # Determine the current 3D Euclidean point
             # corresponding to the CGA null vector u.
@@ -181,7 +183,7 @@ def demo(
     #
     # Plot nbr_figures figures.
     #
-    for fig in xrange(nbr_figures):
+    for fig in range(nbr_figures):
         #
         # Use a new figure.
         #
@@ -189,7 +191,7 @@ def demo(
         #
         # Plot nbr_orbits orbits.
         #
-        for i in xrange(nbr_orbits):
+        for i in range(nbr_orbits):
             #
             # Set br to be a random bivector in R_{4,0} with appropriate scaling.
             #
@@ -197,7 +199,7 @@ def demo(
             #
             # Set bs to be the reciprocal bivector with respect to the pseudoscalar of R_{4,0}.
             #
-            bs = (cl(r4frame) / br) if reciprocal else cl(0)
+            bs = (old_div(cl(r4frame), br)) if reciprocal else cl(0)
             #
             # Exponentiate the bivectors br and bs to obtain rotors r and s.
             #

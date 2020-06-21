@@ -61,60 +61,60 @@ def run(ctx):
               " In this tutorial, we therefore identify i, the square root of -1 in the complex numbers," +
               " with the generator {-1}.")
     print_line()
-    print_exec("i = e(-1); print i")
+    print_exec("i = e(-1); print(i)")
 
     pause()
     print_line()
     print_fill("Example 9.1. Compute the absolute value r, the square root s, and the cube t of the" +
               " complex number z = 3 + 4*i.")
     print_line()
-    print_exec("z = 3+4*i; print z")
-    print_exec("r = abs(z);print r")
-    print_exec("s = sqrt(z); print s")
-    print_exec("t = z ** 3; print t")
+    print_exec("z = 3+4*i; print(z)")
+    print_exec("r = abs(z); print(r)")
+    print_exec("s = sqrt(z); print(s)")
+    print_exec("t = z ** 3; print(t)")
 
     pause()
     print_line()
     print_fill("Example 9.2. Compute log(1+i) and compare the result to the principal logarithm (log(2))/2 + i*pi/4.")
     print_line()
-    print_exec("a = log(1+i); print a")
-    print_exec("b = (log(2))/2 + i*pi/4; print b")
-    print_exec("print abs(a-b)")
+    print_exec("a = log(1+i); print(a)")
+    print_exec("b = (log(2))/2 + i*pi/4; print(b)")
+    print_exec("print(abs(a-b))")
 
     pause()
     print_line()
     print_fill("Example 9.3. Let s = exp(i*pi/5). " +
               " Find the real part and the phase angle of z = 1/(1+s).")
     print_line()
-    print_exec("s = exp(i*pi/5); print s")
-    print_exec("z = 1/(1+s); print z")
-    print_exec("print scalar(z)")
+    print_exec("s = exp(i*pi/5); print(s)")
+    print_exec("z = 1/(1+s); print(z)")
+    print_exec("print(scalar(z))")
     print_exec("w = log(z)")
-    print_exec("print pure(w)")
+    print_exec("print(pure(w))")
 
     pause()
     check_eval("compare with z to check that the value of w is correct.",
                "exp(w)",
-               "print abs(z - {})")
+               "print(abs(z - {}))")
 
     pause()
     print_line()
     print_fill("Example 10.1. Solve the equation sin(z) == 1+i.")
     print_line()
-    print_exec("w = asin(1+i); print w")
+    print_exec("w = asin(1+i); print(w)")
     print_line()
     print_fill("Therefore the solutions are 2*k*pi + w and (2*k+1)*pi - w.")
     print_line()
-    print_exec("k = 3; print k")
+    print_exec("k = 3; print(k)")
 
     pause()
     check_eval("compare with 1+i to check that z == 2*k*pi + w is a solution.",
                "sin(2*k*pi + w)",
-               "print abs((1+i) - {})")
+               "print(abs((1+i) - {}))")
     pause()
     check_eval("compare with 1+i to check that z == (2*k+1)*pi - w is a solution.",
                "sin((2*k+1)*pi - w)",
-               "print abs((1+i) - {})")
+               "print(abs((1+i) - {}))")
 
     pause()
     print_line()

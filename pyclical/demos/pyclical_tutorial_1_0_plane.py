@@ -60,10 +60,10 @@ def run(ctx):
               " a == {1}-2{2} and b == {1}+{2}, that is, determine the coefficients in" +
               " the decomposition r == alpha*a + beta*b.")
     print_line()
-    print_exec("a = 3*e(1)-2*e(2); print a")
-    print_exec("b = e(1)+e(2); print b")
-    print_exec("r = 5*e(1)-e(2); print r")
-    print_exec("alpha = (r ^ b) / (a ^ b); print alpha")
+    print_exec("a = 3*e(1)-2*e(2); print(a)")
+    print_exec("b = e(1)+e(2); print(b)")
+    print_exec("r = 5*e(1)-e(2); print(r)")
+    print_exec("alpha = (r ^ b) / (a ^ b); print(alpha)")
 
     pause()
     check_exec("set beta to be the coefficient of r with respect to b.",
@@ -72,7 +72,7 @@ def run(ctx):
     pause()
     check_eval("compare with r to check that the values\n" "of alpha and beta are correct.",
                "alpha * a + beta * b",
-               "print abs(r - ({}))")
+               "print(abs(r - ({})))")
 
     pause()
     print_line()
@@ -85,8 +85,8 @@ def run(ctx):
     print_fill("Example 7.2. Compute the angle between the directions a == 3{1}+{2} and" +
               " b == 4{1}-2{2}.")
     print_line()
-    print_exec("a = 3*e(1)+e(2); print a")
-    print_exec("b = 4*e(1)-2*e(2); print b")
+    print_exec("a = 3*e(1)+e(2); print(a)")
+    print_exec("b = 4*e(1)-2*e(2); print(b)")
     print_exec("c = a & b")
     print_exec("d = abs(a * b)")
 
@@ -98,22 +98,22 @@ def run(ctx):
     pause()
     check_eval("compare with scalar(a & b) to check that the value of theta is correct.",
                "abs(a) * abs(b) * cos(theta)",
-               "print abs(scalar(a & b) - {})")
+               "print(abs(scalar(a & b) - {}))")
 
     pause()
     print_line()
     print_fill("The value of theta is expressed in radians and corresponds to 45 degrees. " +
               " This can be checked as follows:")
     print_line()
-    print_exec("print theta/pi")
+    print_exec("print(theta/pi)")
 
     pause()
     print_line()
     print_fill("Example 8.1. Find the projection of the vector a == 8{1}-{2} in the" +
               " direction b == 2{1}+{2}, and the component of a perpendicular to b.")
     print_line()
-    print_exec("a = 8*e(1)-e(2); print a")
-    print_exec("b = 2*e(1)+e(2); print b")
+    print_exec("a = 8*e(1)-e(2); print(a)")
+    print_exec("b = 2*e(1)+e(2); print(b)")
 
     pause()
     check_exec("set c to be the projection of a in the direction b.",
@@ -126,15 +126,15 @@ def run(ctx):
     pause()
     check_eval("compare with a to check that the values of c and d are correct.",
                "c + d",
-               "print abs(a - (c + d))")
+               "print(abs(a - (c + d)))")
 
     pause()
     print_line()
     print_fill("Example 8.2. Rotate the vector r==2{1}+3{2} by the angle pi/3==60 degrees.")
     print_line()
-    print_exec("r = 2*e(1)+3*e(2); print r")
-    print_exec("i = e({1,2}); print i")
-    print_exec("z = exp(i * pi / 3); print z")
+    print_exec("r = 2*e(1)+3*e(2); print(r)")
+    print_exec("i = e({1,2}); print(i)")
+    print_exec("z = exp(i * pi / 3); print(z)")
 
     pause()
     check_exec("set rz to be the vector r rotated by the angle pi/3.",
@@ -157,9 +157,9 @@ def run(ctx):
     print_fill("Example 8.3. Combine two successive reflections of the vector r==4{1}-3{2}" +
               " in the lines defined by the vectors a==3{1}-{2} and b==2{1}+{2}.")
     print_line()
-    print_exec("r = 4*e(1)-3*e(2); print r")
-    print_exec("a = 3*e(1)-e(2); print a")
-    print_exec("b = 2*e(1)+e(2); print b")
+    print_exec("r = 4*e(1)-3*e(2); print(r)")
+    print_exec("a = 3*e(1)-e(2); print(a)")
+    print_exec("b = 2*e(1)+e(2); print(b)")
 
     pause()
     check_exec("set q to be the vector r reflected in the line defined by the vector a.",
@@ -179,19 +179,19 @@ def run(ctx):
     pause()
     check_eval("compare with r | a to check the meaning of r | a.",
                "a * r / involute(a)",
-               "print abs( (r | a) - ({}) )")
+               "print(abs( (r | a) - ({}) ))")
     pause()
     check_eval("compare with r | a to check the first equality above.",
                "-a * r / a",
-               "print abs( (r | a) - ({}) )")
+               "print(abs( (r | a) - ({}) ))")
     pause()
     check_eval("compare with r | a to check the second equality above.",
                "(r * a - 2 * (a & r)) / a",
-               "print abs( (r | a) - ({}) )")
+               "print(abs( (r | a) - ({}) ))")
     pause()
     check_eval("compare with r | a to check the third\n" "equality above.",
                "r - 2 * (a & r) * a / (a & a)",
-               "print abs( (r | a) - ({}) )")
+               "print(abs( (r | a) - ({}) ))")
 
     pause()
     print_line()
