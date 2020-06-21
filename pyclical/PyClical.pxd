@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# cython: language_level=2
+# cython: language_level=3
 #
 # PyClical: Python interface to GluCat:
 #           Generic library of universal Clifford algebra templates
@@ -24,14 +24,15 @@
 
 cimport glucat
 from glucat cimport IndexSet, String, Clifford, scalar_t, vector
+from libcpp.string cimport string
 
 cdef extern from "PyClical.h":
     IndexSet operator&(IndexSet Lhs, IndexSet Rhs)
     IndexSet operator|(IndexSet Lhs, IndexSet Rhs)
     IndexSet operator^(IndexSet Lhs, IndexSet Rhs)
 
-    String index_set_to_repr(IndexSet& Ist)
-    String index_set_to_str(IndexSet& Ist)
+    string index_set_to_repr(IndexSet& Ist)
+    string index_set_to_str(IndexSet& Ist)
 
     Clifford operator+(Clifford Lhs, Clifford Rhs)
     Clifford operator-(Clifford Lhs, Clifford Rhs)
@@ -42,5 +43,5 @@ cdef extern from "PyClical.h":
     Clifford operator/(Clifford Lhs, Clifford Rhs)
     Clifford operator|(Clifford Lhs, Clifford Rhs)
 
-    String clifford_to_repr(Clifford& Clf)
-    String clifford_to_str(Clifford& Clf)
+    string clifford_to_repr(Clifford& Clf)
+    string clifford_to_str(Clifford& Clf)
