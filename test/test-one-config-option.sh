@@ -52,7 +52,7 @@ pushd ${package_dir}/.. \
     pushd pyclical \
       > /dev/null
 
-      ipython --classic --no-banner \
+      ipython3 --classic --no-banner \
         < test.py > test.out
 
     popd \

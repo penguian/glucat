@@ -30,7 +30,7 @@ EXTAM_CPPFLAGS = $(all_includes)
 # the library search path.
 EXTLDFLAGS = $(all_libraries)
 
-pyexec_DATA = $(ext_name).so
+pyexec_DATA = $(ext_name).*.so
 
 all: $(pyexec_DATA)
 
@@ -53,5 +53,6 @@ CLEANFILES = $(pyexec_DATA) $(CLEAN_CYTHON)
 clean-local:
 	rm -f *.pyc
 	rm -rf build
+	rm -rf __pycache__
 
 endif
