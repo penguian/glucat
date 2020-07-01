@@ -1,4 +1,4 @@
-README for GluCat 0.8.3 with PyClical
+README for GluCat 0.8.4 with PyClical
 =====================================
 
 GluCat is a library of C++ template classes for calculations with the universal
@@ -146,11 +146,11 @@ have the file ./pyclical/PyClical.so. Set PYTHONPATH to include the full
 
 or you can change the PYTHONPATH variable for just one command, e.g.
 
-  PYTHONPATH=/home/leopardi/src/glucat/pyclical:$PYTHONPATH python
+  PYTHONPATH=/home/leopardi/src/glucat/pyclical:$PYTHONPATH python3
 
 PyClical is designed to be used within a Python environment. You will usually
-need to run a Python IDE or interpreter, such as IDLE, ipython or python. The
-following instructions use the standard python interpreter.
+need to run a Python IDE or interpreter, such as IDLE, ipython3 or python3. The
+following instructions use the standard python3 interpreter.
 
 To use the capabilities of PyClical from within Python, you must either import
 the PyClical extension module or import objects from this module.  The simplest
@@ -167,7 +167,7 @@ PyClical, use the following commands:
 
 % cp /usr/local/share/pyclical/demos /path/to/my/demos
 % cd /path/to/my/demos
-% python pyclical_tutorials.py
+% python3 pyclical_tutorials.py
 
 where you must replace /path/to/my/demos with the real pathname you want to use.
 
@@ -200,45 +200,41 @@ If you are running Linux or a Unix equivalent, the following should also work:
 % ./pyclical_tutorials.py
 
 
-For more usage examples, see the example Python files pyclical_demo.py,
-plotting_demo.py, plotting_demo_mayavi.py, and sqrt_log_demo.py, and the example
-output files pyclical_demo.out and sqrt_log_demo.out.
+For more usage examples, see the example Python files clifford_demo.py,
+pyclical_demo.py, plotting_demo.py, plotting_demo_dialog.py,
+plotting_demo_mayavi.py, and sqrt_log_demo.py, and the example output files
+pyclical_demo.out and sqrt_log_demo.out.
 
-To run pyclical_demo.py and sqrt_log_demos.py, use the following commands:
+To run clifford_demo.py, pyclical_demo.p, or sqrt_log_demo.py, use the
+following commands:
 
 % cd /path/to/my/demos
-% python pyclical_demo.py
-% python sqrt_log_demo.py
+% python3 $DEMO.py
+where $DEMO is one of clifford_dmo, pyclical_demo or sqrt_log_demo.
 
 If you are running Linux or a Unix equivalent, the following should also work:
 
 % cd /path/to/my/demos
-% chmod +x pyclical_demo.py
-% ./pyclical_demo.py
-% chmod +x sqrt_log_demo.py
-% ./sqrt_log_demo.py
+% chmod +x $DEMO.py
+% ./$DEMO.py
 
-To run plotting_demo.py, run "ipython --pylab" and enter the following commands
-at the ipython prompt:
+To run plotting_demo.py, run "ipython3 --pylab" and enter the following commands
+at the IPython prompt:
 
 In [1]: %run plotting_demo
 
-In [2]: help(demo)
-
-In [3]: demo()
+In [2]: demo()
 
 This demo uses Matplotlib to produce a number of plots.
 
 To run plotting_demo_mayavi.py, first ensure that you have Mayavi2 and wxPython
 installed and working.
 (See http://code.enthought.com/projects/mayavi/ and http://www.wxpython.org/ )
-Then run "ipython --gui=wx" and enter the following commands at the ipython prompt:
+Then run "ipython3 --gui=wx" and enter the following commands at the ipython3 prompt:
 
 In [1]: %run plotting_demo_mayavi
 
-In [2]: help(demo)
-
-In [3]: demo()
+In [2]: demo()
 
 This demo uses Matplotlib to produce a number of plots. With Mayavi and wxPython,
 these plots are displayed in interactive windows, you can rotate, zoom and pan
@@ -250,15 +246,15 @@ need to have Traits and TraitsUI installed. See (e.g.)
 http://code.enthought.com/projects/traits/
 http://code.enthought.com/projects/traits_ui/
 
-The tutorials and demos are also accompanied by a corresponding set of IPython
+The tutorials and demos are also accompanied by a corresponding set of Jupyter
 notebooks. To build the notebooks, see INSTALL. To run the notebooks, assuming
 that you have a copy of the notebooks in the directory /path/to/my/demos, you have
-ipython installed, you have installed PyClical, or set PYTHONPATH appropriately,
-and you are able to use ipython notebooks via a web browser, use the following
+ipython3 installed, you have installed PyClical, or set PYTHONPATH appropriately,
+and you are able to use Jupyter notebooks via a web browser, use the following
 commands:
 
 % cd /path/to/my/demos
-% ipython notebook
+% jupyter notebook
 
 Your web browser should open a new window or tab, displaying a page that lists
 all of the available tutorials and demos as notebooks. To select a notebook,
