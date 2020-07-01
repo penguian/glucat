@@ -45,3 +45,5 @@ cdef extern from "PyClical.h":
 
     string clifford_to_repr(Clifford& Clf)
     string clifford_to_str(Clifford& Clf)
+
+    const scalar_t epsilon

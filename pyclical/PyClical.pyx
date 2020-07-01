@@ -1852,8 +1852,10 @@ cpdef inline agc3(obj):
     return clifford().wrap( glucat.agc3(toClifford(obj)) )
 
 # Some abbreviations.
-tau = atan(clifford(1.0)) * 8.0
+scalar_epsilon = epsilon
+
 pi = atan(clifford(1.0)) * 4.0
+tau = atan(clifford(1.0)) * 8.0
 
 cl = clifford
 """

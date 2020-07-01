@@ -25,7 +25,6 @@ from builtins import range
 from builtins import object
 import sys
 import numbers
-import numpy as np
 from PyClical import *
 
 def get_console_width():
@@ -61,7 +60,7 @@ def is_near(x, y):
         elif isinstance(x, bool):
             return x == y
         elif isinstance(x, numbers.Real) or isinstance(x, clifford):
-            tol = 4.0 * np.finfo(np.double).eps
+            tol = 4.0 * scalar_epsilon
             if abs(x) > tol:
                 return abs(x-y) / abs(x) < tol
             else:
@@ -152,7 +151,7 @@ class tutorial_context(interaction_context):
             print("\nThat's right.\n")
         else:
             print("\nNot quite.\n")
-        self.print_fill("Here is one way to do this, and then print(the result:)")
+        self.print_fill("Here is one way to do this, and then print the result:")
         self.print_exec(var_name+" = "+value_str+"; print("+var_name+")")
 
     def check_eval(self, prompt, value_str, command_str):
