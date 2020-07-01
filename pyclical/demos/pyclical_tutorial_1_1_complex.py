@@ -21,12 +21,8 @@
 from pyclical_tutorial_utils import *
 
 def run(ctx):
-    pause      = ctx.pause
-    print_line = ctx.print_line
-    print_fill = ctx.print_fill
-    print_exec = ctx.print_exec
-    check_exec = ctx.check_exec
-    check_eval = ctx.check_eval
+    for name, method in get_object_methods(ctx).items():
+        exec("global "+name+";"+name+"=method")
 
     print_fill("# pyclical_tutorial_1_1_complex.py:")
     print_line()
