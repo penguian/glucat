@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -24,7 +25,6 @@
 #    along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 from builtins import range
-from past.utils import old_div
 from PyClical import *
 
 #
@@ -84,7 +84,7 @@ def draw_orbit(r, s,
     # on the unit sphere in 3D Euclidean space.
     #
     x = random_clifford(r3frame)(1)
-    x = e(1) if x == 0 else old_div(x, abs(x))
+    x = e(1) if x == 0 else x / abs(x)
     u = cga3(x)(1)
     #
     # Find the inverses of the rotors r and s.
@@ -110,7 +110,7 @@ def draw_orbit(r, s,
     #
     # Split the curve into M segments.
     #
-    M = old_div(nbr_points, segment_len)
+    M = nbr_points // segment_len
     for j in range(M):
         #
         # Find segment_len points forming a curve segment
@@ -149,8 +149,8 @@ def draw_orbit(r, s,
         # corresponding to p. Use c to determine colours.
         # Try to make colours bright without oversaturating them.
         #
-        c = (old_div(p, n3)) * (old_div(np.arctan(n3), 2.0))
-        c = old_div((c + 1.0), np.max(c + 1.0))
+        c = (p / n3) * (np.arctan(n3) / 2.0)
+        c = (c + 1.0) / np.max(c + 1.0)
         #
         # Plot the new scattered points using the colours given by c.
         #
@@ -208,7 +208,7 @@ def demo(
         #
         # Set bs to be the reciprocal bivector with respect to the pseudoscalar of R_{4,0}.
         #
-        bs = old_div(cl(r4frame), br)
+        bs = cl(r4frame) / br
         #
         # Exponentiate the bivectors br and bs to obtain rotors r and s.
         #
@@ -218,3 +218,7 @@ def demo(
         # Draw the curve.
         #
         draw_orbit(r, s, nbr_points, segment_len, figwidth, figheight, azimuth, rot_angle, jitter)
+
+
+if __name__ == "__main__":
+    demo()
