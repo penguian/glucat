@@ -24,6 +24,6 @@ $(NOTEBOOKS):
 	PYTHONPATH=..:$(PYTHONPATH) $(PYTHON) build_pyclical_notebooks.py
 
 clean-local:
-	rm -f *.pyc *.ipynb
+	rm -rf *.pyc *.ipynb __pycache__
 
 endif
