@@ -32,6 +32,8 @@ EXTLDFLAGS = $(all_libraries)
 
 pyexec_DATA = $(ext_name).*.so
 
+CHECK_OUT = check.out
+
 all: $(pyexec_DATA)
 
 $(pyexec_DATA): $(SETUP_SOURCE_LIST) $(SETUP).py setup_ext.py
@@ -45,6 +47,11 @@ $(EXTNOCYTHONCPP): $(ext_name).cpp
 	$(MAKE) clean
 
 endif
+
+check: $(CHECK_OUT)
+
+$(CHECK_OUT): all
+	$(PYTHON) -iq < test.py > check.out 2>&1
 
 CLEAN_CYTHON = $(ext_name).cpp $(ext_name).html
 
