@@ -49,15 +49,6 @@ pushd ${package_dir}/.. \
     popd \
       > /dev/null
 
-    pushd pyclical \
-      > /dev/null
-
-      ipython3 --classic --no-banner \
-        < test.py > test.out
-
-    popd \
-      > /dev/null
-
     make clean \
       > /dev/null
 
