@@ -47,11 +47,16 @@ class cxx_build_ext(build_ext):
         if new_compiler is not None:
             # From stackoveflow user subdir 2012-03-16
             # See also https://docs.python.org/2/distutils/apiref.html
-            ignore_flags = {
+            ignore_flags = (
+                set()
+                if new_compiler == "g++" else
+                {
                 '-fstack-protector-strong',
                 '-Wdate-time',
+                '-Wno-unused-result',
                 '-Wstrict-prototypes'
                 }
+            )
             new_compiler_so = [new_compiler] + [word for word in self.compiler.compiler_so[1:] if not word in ignore_flags]
             new_compiler_so.append('-fstack-protector')
             new_linker_so =   [new_compiler] + [word for word in self.compiler.linker_so[1:] if not word in ignore_flags]
