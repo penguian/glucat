@@ -4,7 +4,7 @@
 #   test-one-config-option.sh : Test one defined configuration.
 #
 #   begin                : Sun 2016-04-03
-#   copyright            : (C) 2016 by Paul C. Leopardi
+#   copyright            : (C) 2016-2020 by Paul C. Leopardi
 #
 #   This library is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU Lesser General Public License as published

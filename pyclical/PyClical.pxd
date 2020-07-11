@@ -7,7 +7,7 @@
 # PyClical.pxd: Basic Cython definitions for PyClical
 #               corresponding to C++ definitions from PyClical.h.
 #
-#    copyright            : (C) 2008-2012 by Paul C. Leopardi
+#    copyright            : (C) 2008-2020 by Paul C. Leopardi
 #
 #    This library is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Lesser General Public License as published
