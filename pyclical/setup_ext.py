@@ -48,7 +48,9 @@ class cxx_build_ext(build_ext):
             # From stackoveflow user subdir 2012-03-16
             # See also https://docs.python.org/2/distutils/apiref.html
             ignore_flags = (
-                set()
+                {
+                '-Wstrict-prototypes'
+                }
                 if new_compiler == "g++" else
                 {
                 '-fstack-protector-strong',
