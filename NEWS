@@ -1,5 +1,15 @@
-NEWS for GluCat 0.8.3 with PyClical
+NEWS for GluCat 0.8.4 with PyClical
 ===================================
+
+2020-07-12: 0.8.4
+PyClical is now compatible with Python 3.
+
+PyClical had now been ported to Python 3, and can mo longer be used with
+Python 2. The PyClical classes are unchanged except that the constructors
+now use Python 3 default Unicode strings rather than Python 2 byte strings.
+The C++ code is essentially unchanged.
+
+See INSTALL and README for details.
 
 2020-05-13: 0.8.3
 GluCat now builds with current toolchains.

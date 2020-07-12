@@ -21,9 +21,9 @@ pyclical_tutorial_1_3_lorentz.ipynb        pyclical_tutorial_1_4_fourth.ipynb   
 nodist_demo_DATA = $(NOTEBOOKS)
 
 $(NOTEBOOKS):
-	PYTHONPATH=..:$(PYTHONPATH) python build_pyclical_notebooks.py
+	PYTHONPATH="..:$(PYTHONPATH)" $(PYTHON) build_pyclical_notebooks.py
 
 clean-local:
-	rm -f *.pyc *.ipynb
+	rm -rf *.pyc *.ipynb __pycache__
 
 endif

@@ -5,7 +5,7 @@
 #
 # pyclical_tutorial_utils.py: This file contains utilities for use with PyClical tutorials.
 #
-#    copyright            : (C) 2012-2014 by Paul C. Leopardi
+#    copyright            : (C) 2012-2020 by Paul C. Leopardi
 #
 #    This library is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Lesser General Public License as published
@@ -20,9 +20,11 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
+from builtins import input
+from builtins import range
+from builtins import object
 import sys
 import numbers
-import numpy as np
 from PyClical import *
 
 def get_console_width():
@@ -58,9 +60,9 @@ def is_near(x, y):
         elif isinstance(x, bool):
             return x == y
         elif isinstance(x, numbers.Real) or isinstance(x, clifford):
-            tol = 4.0 * np.finfo(np.double).eps
+            tol = 4.0 * scalar_epsilon
             if abs(x) > tol:
-                return abs(x-y)/abs(x) < tol
+                return abs(x-y) / abs(x) < tol
             else:
                 return abs(x-y) < tol
         else:
@@ -69,38 +71,41 @@ def is_near(x, y):
          return False
 
 def get_object_methods(obj):
-    return dict([(method, getattr(obj, method)) for method in dir(obj) if callable(getattr(obj, method))])
+    return dict([
+        (method, getattr(obj, method))
+        for method in dir(obj)
+        if callable(getattr(obj, method)) and not method.startswith('_')])
 
-class interaction_context:
+class interaction_context(object):
     def __init__(self, dictionary):
         self.object_names = dictionary
 
     def pause(self):
-        print "pause"
+        print("pause")
 
     def print_line(self):
-        print "print_line"
+        print("print_line")
 
     def print_head(self, output_str, indent = "    "):
-        print "print_head: ", output_str
+        print("print_head: ", output_str)
 
     def print_fill(self, output_str, indent = "    "):
-        print "print_fill: ", output_str
+        print("print_fill: ", output_str)
 
     def print_exec(self, command_str):
-        print "print_exec: ", command_str
+        print("print_exec: ", command_str)
 
     def input_exec(self, prompt, sandbox):
-        print "input_exec: ", prompt
+        print("input_exec: ", prompt)
 
     def input_eval(self, prompt):
-        print "input_eval: ", prompt
+        print("input_eval: ", prompt)
 
     def check_exec(self, prompt, var_name, value_str):
-        print "check_exec: ", prompt, var_name, value_str
+        print("check_exec: ", prompt, var_name, value_str)
 
     def check_eval(self, prompt, value_str, command_str):
-        print "check_exec: ", prompt, value_str, command_str
+        print("check_exec: ", prompt, value_str, command_str)
 
 class tutorial_context(interaction_context):
     def __init__(self, dictionary):
@@ -108,34 +113,34 @@ class tutorial_context(interaction_context):
 
     def pause(self):
         if sys.stdin.isatty() and sys.stdout.isatty():
-            raw_input("Press ENTER to continue:")
+            input("Press ENTER to continue:")
 
     def print_line(self):
-        print ""
+        print("")
 
     def print_head(self, output_str, indent = ""):
-        print fill(output_str, indent)
+        print(fill(output_str, indent))
 
     def print_fill(self, output_str, indent = "    "):
-        print fill(output_str, indent)
+        print(fill(output_str, indent))
 
     def print_exec(self, command_str):
-        print ">>>", command_str
-        exec command_str in self.object_names
+        print(">>>", command_str)
+        exec(command_str, self.object_names)
 
     def input_exec(self, prompt, sandbox):
-        input_str = raw_input(prompt + "\n>>> ")
-        exec input_str in sandbox
+        input_str = input(prompt + "\n>>> ")
+        exec(input_str, sandbox)
 
     def input_eval(self, prompt):
-        input_str = raw_input(prompt + "\n>>> ")
+        input_str = input(prompt + "\n>>> ")
         return eval(input_str, self.object_names)
 
     def check_exec(self, prompt, var_name, value_str):
         try:
             sandbox = self.object_names.copy()
             filled_prompt = fill("Exercise: Enter a Python statement to " + prompt, "")
-            print ""
+            print("")
             self.input_exec(filled_prompt, sandbox)
             value = eval(value_str, self.object_names)
         except KeyboardInterrupt:
@@ -143,11 +148,11 @@ class tutorial_context(interaction_context):
         except:
             value = None
         if var_name in sandbox and is_near(sandbox[var_name], value):
-            print "\nThat's right.\n"
+            print("\nThat's right.\n")
         else:
-            print "\nNot quite.\n"
+            print("\nNot quite.\n")
         self.print_fill("Here is one way to do this, and then print the result:")
-        self.print_exec(var_name+" = "+value_str+"; print "+var_name)
+        self.print_exec(var_name+" = "+value_str+"; print("+var_name+")")
 
     def check_eval(self, prompt, value_str, command_str):
         try:
@@ -156,16 +161,16 @@ class tutorial_context(interaction_context):
             value = None
         try:
             filled_prompt = fill("Exercise: Enter a Python expression to " + prompt, "")
-            print ""
+            print("")
             input_value = self.input_eval(filled_prompt)
             if is_near(input_value, value):
-                print "\nYour expression gives the right value.\n"
+                print("\nYour expression gives the right value.\n")
             else:
-                print "\nNot quite.\n"
+                print("\nNot quite.\n")
         except KeyboardInterrupt:
             raise
         except:
-            print "\nNot quite.\n"
+            print("\nNot quite.\n")
         self.print_fill("Here is one way to use such an expression:")
         command_str = command_str.format(value_str)
         self.print_exec(command_str)

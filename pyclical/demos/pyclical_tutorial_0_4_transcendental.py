@@ -15,9 +15,8 @@
 from pyclical_tutorial_utils import *
 
 def run(ctx):
-    ctx_methods = get_object_methods(ctx)
-    for method in ctx_methods:
-        exec(method + " = ctx_methods['" + method +"']")
+    for name, method in get_object_methods(ctx).items():
+        exec("global "+name+";"+name+"=method")
 
     print_head("0.4 Square root and transcendental functions.")
     print_line()
@@ -44,8 +43,8 @@ def run(ctx):
     print_line()
     print_fill("First we will create a clifford object to work on.")
     print_line()
-    print_exec("w = 1+3*e(1)-2*e(3)+4*e({-2,3}); print w")
-    print_exec("x = 2+3*e(1)-5*e(2)+5*e({-1,3}); print x")
+    print_exec("w = 1+3*e(1)-2*e(3)+4*e({-2,3}); print(w)")
+    print_exec("x = 2+3*e(1)-5*e(2)+5*e({-1,3}); print(x)")
 
     pause()
     print_line()
@@ -64,12 +63,12 @@ def run(ctx):
               " such that A is isomorphic to a full complex matrix algebra. " +
               " In some cases, there are two such algebras and an arbitrary choice is made.")
     print_line()
-    print_exec("print complexifier(1)")
-    print_exec("print complexifier(e(1))")
-    print_exec("print complexifier( e({1,2}) )")
-    print_exec("j = complexifier(w); print j")
-    print_exec("print j * j")
-    print_exec("print j * w - w * j")
+    print_exec("print(complexifier(1))")
+    print_exec("print(complexifier(e(1)))")
+    print_exec("print(complexifier( e({1,2}) ))")
+    print_exec("j = complexifier(w); print(j)")
+    print_exec("print(j * j)")
+    print_exec("print(j * w - w * j)")
 
     pause()
     check_exec("set i to be the complexifier of x",
@@ -77,19 +76,19 @@ def run(ctx):
                "complexifier(x)")
     check_eval("compare with -1 to check that i is a square root of -1",
                "i * i",
-               "print 1 + {}")
+               "print(1 + {})")
     check_eval("compare with x * i to check that i commutes with x",
                "i * x",
-               "print x * i - {}")
+               "print(x * i - {})")
 
     pause()
     print_fill("The complexifier function can also take an index set or a string as an argument.")
     print_line()
     print_fill("Examples:")
     print_line()
-    print_exec("print complexifier( ist(1) )")
-    print_exec("print complexifier( ist({1,2}) )")
-    print_exec("print complexifier('{1,2}')")
+    print_exec("print(complexifier( ist(1) ))")
+    print_exec("print(complexifier( ist({1,2}) ))")
+    print_exec("print(complexifier('{1,2}'))")
 
     pause()
     print_fill("The square root function and many of the transcendental functions" +
@@ -111,10 +110,10 @@ def run(ctx):
     print_line()
     print_fill("Examples:")
 
-    print_exec("print sqrt(-1)")
-    print_exec("j = sqrt(-1, complexifier(e(1))); print j; print j*j")
-    print_exec("j = sqrt(-1,'{1,2,3}'); print j; print j*j")
-    print_exec("print sqrt(2*e(-1))")
+    print_exec("print(sqrt(-1))")
+    print_exec("j = sqrt(-1, complexifier(e(1))); print(j); print(j*j)")
+    print_exec("j = sqrt(-1,'{1,2,3}'); print(j); print(j*j)")
+    print_exec("print(sqrt(2*e(-1)))")
 
     pause()
     print_fill("For the examples for the transcendental functions," +
@@ -129,10 +128,10 @@ def run(ctx):
     print_line()
     print_fill("Examples:")
 
-    print_exec("print exp(j * pi/2)")
-    print_exec("print (log(j) / pi)")
-    print_exec("print (log(j,'{1,2}') / pi)")
-    print_exec("print (log(j,'{1,2,3}') / pi)")
+    print_exec("print(exp(j * pi/2))")
+    print_exec("print((log(j) / pi))")
+    print_exec("print((log(j,'{1,2}') / pi))")
+    print_exec("print((log(j,'{1,2,3}') / pi))")
 
     pause()
     print_fill("cos(x, i): The cosine function.")
@@ -140,8 +139,8 @@ def run(ctx):
     print_line()
     print_fill("Examples:")
 
-    print_exec("print cos(acos(j))")
-    print_exec("print cos(acos(j), k)")
+    print_exec("print(cos(acos(j)))")
+    print_exec("print(cos(acos(j), k))")
 
     pause()
     print_fill("cosh(x): The hyperbolic cosine function.")
@@ -149,11 +148,11 @@ def run(ctx):
     print_line()
     print_fill("Examples:")
 
-    print_exec("print cosh(j * pi)")
-    print_exec("print acosh(0) / pi")
-    print_exec("print acosh(0,'{-2,-1,1}') / pi")
-    print_exec("print cosh(acosh(j))")
-    print_exec("print cosh(acosh(k))")
+    print_exec("print(cosh(j * pi))")
+    print_exec("print(acosh(0) / pi)")
+    print_exec("print(acosh(0,'{-2,-1,1}') / pi)")
+    print_exec("print(cosh(acosh(j)))")
+    print_exec("print(cosh(acosh(k)))")
 
     pause()
     print_fill("sin(x, i): The sine function.")
@@ -161,10 +160,10 @@ def run(ctx):
     print_line()
     print_fill("Examples:")
 
-    print_exec("print asin(sin(i, i), i)")
-    print_exec("print asin(sin(i, i),'{-2,-1,1}')")
-    print_exec("print asin(sin(k))")
-    print_exec("print asin(1) / pi")
+    print_exec("print(asin(sin(i, i), i))")
+    print_exec("print(asin(sin(i, i),'{-2,-1,1}'))")
+    print_exec("print(asin(sin(k)))")
+    print_exec("print(asin(1) / pi)")
 
     pause()
     print_fill("sinh(x): The hyperbolic sine function.")
@@ -172,9 +171,9 @@ def run(ctx):
     print_line()
     print_fill("Examples:")
 
-    print_exec("print sinh(j * pi/2)")
-    print_exec("print asinh(j) / pi")
-    print_exec("print asinh(j, k) / pi")
+    print_exec("print(sinh(j * pi/2))")
+    print_exec("print(asinh(j) / pi)")
+    print_exec("print(asinh(j, k) / pi)")
 
     pause()
     print_fill("tan(x, i): The tangent function.")
@@ -182,11 +181,11 @@ def run(ctx):
     print_line()
     print_fill("Examples:")
 
-    print_exec("print tan(j)")
-    print_exec("print tan(j) * (exp(1) + exp(-1)) / (exp(1) - exp(-1))")
-    print_exec("print tan(j, k)")
-    print_exec("print tan(atan(e(1)))")
-    print_exec("print tan(atan(e(1), k), k)")
+    print_exec("print(tan(j))")
+    print_exec("print(tan(j) * (exp(1) + exp(-1)) / (exp(1) - exp(-1)))")
+    print_exec("print(tan(j, k))")
+    print_exec("print(tan(atan(e(1))))")
+    print_exec("print(tan(atan(e(1), k), k))")
 
     pause()
     print_fill("tanh(x): The hyperbolic tangent function.")
@@ -194,8 +193,8 @@ def run(ctx):
     print_line()
     print_fill("Examples:")
 
-    print_exec("print tanh(j * pi/4)")
-    print_exec("print tanh(atanh(j))")
+    print_exec("print(tanh(j * pi/4))")
+    print_exec("print(tanh(atanh(j)))")
 
     pause()
     print_line()
@@ -211,7 +210,7 @@ def run(ctx):
                "z",
                "cos(w) + i * sin(w)")
     print_fill("Checking:")
-    print_exec("print y - z")
+    print_exec("print(y - z)")
 
     pause()
     check_exec("set y to be the exponential of x",
@@ -221,7 +220,7 @@ def run(ctx):
                "z",
                "cosh(x) + sinh(x)")
     print_fill("Checking:")
-    print_exec("print y - z")
+    print_exec("print(y - z)")
 
     pause()
     print_line()

@@ -20,83 +20,87 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
 import json as js
-from pyclical_tutorial_utils import*
+from pyclical_tutorial_utils import *
 
 def print_cell_markdown(source):
-    print js.dumps({
+    print(js.dumps({
            "cell_type": "markdown",
            "metadata": {},
            "source": [
-             source
+            source
            ]
-          }, indent=1),
+          }, indent=1), end='')
 
-def print_cell_code(code_input, prompt_number):
-    print js.dumps({
+def print_cell_code(code_input, execution_count):
+    print(js.dumps({
            "cell_type": "code",
-           "collapsed": "false",
-           "input": [
+           "source": [
             code_input
            ],
-           "language": "python",
            "metadata": {},
            "outputs": [],
-           "prompt_number": prompt_number
-          }, indent=1),
+           "execution_count": execution_count
+          }, indent=1), end='')
 
 def print_metadata_name(name):
-    print js.dumps({
+    print(js.dumps({
            "name": name
-          }, indent=1),
+          }, indent=1), end='')
 
 class notebook_context(interaction_context):
 
     def __init__(self, dictionary):
         self.object_names = dictionary
-        self.prompt_number = 1
-
-    def pause(self):
-        print_cell_markdown('---')
-        print ','
-
-    def print_line(self):
-        print_cell_markdown(' ')
-        print ','
+        self.execution_count = 1
 
     def print_notebook_header(self, notebook_title):
-        print '{'
-        print ' "metadata":',
-        print_metadata_name(notebook_title)
-        print ','
-        print ' "nbformat":', 3, ','
-        print ' "nbformat_minor":', 0, ','
-        print ' "worksheets": ['
-        print '  {'
-        print '   "cells": ['
-
-    def print_head(self, output_str, indent = ""):
-        print_cell_markdown("#" + output_str)
-        print ','
-
-    def print_fill(self, output_str, indent = "    "):
-        print_cell_markdown(output_str)
-        print ','
-
-    def print_exec(self, command_str):
-        print_cell_code(command_str, self.prompt_number)
-        print ','
-        self.prompt_number += 1
+        print('{')
+        print(' "metadata": {},')
+        print(' "nbformat":', 4, ',')
+        print(' "nbformat_minor":', 2, ',')
+        print(' "metadata": {')
+        print('   "kernelspec": {')
+        print('    "display_name": "Python 3",')
+        print('    "language": "python",')
+        print('    "name": "python3"')
+        print('   },')
+        print('   "language_info": {')
+        print('    "codemirror_mode": {')
+        print('     "name": "ipython",')
+        print('     "version": 3')
+        print('    },')
+        print('    "file_extension": ".py",')
+        print('    "mimetype": "text/x-python",')
+        print('    "name": "python"')
+        print('   }')
+        print('  },')
+        print(' "cells": [')
 
     def print_notebook_footer(self):
         print_cell_markdown(" ")
-        print ''
-        print '   ],'
-        print '   "metadata": {}'
-        print '  }'
-        print ' ]'
-        print '}'
+        print('')
+        print(' ]')
+        print('}')
+
+    def pause(self):
+        pass
+
+    def print_head(self, output_str, indent = ""):
+        print_cell_markdown("# " + output_str)
+        print(',')
+
+    def print_fill(self, output_str, indent = "    "):
+        print_cell_markdown(output_str)
+        print(',')
+
+    def print_line(self):
+        pass
+
+    def print_exec(self, command_str):
+        print_cell_code(command_str, self.execution_count)
+        print(',')
+        self.execution_count += 1
 
     def input_exec(self, prompt, sandbox):
         pass
@@ -104,8 +108,8 @@ class notebook_context(interaction_context):
     def check_exec(self, prompt, var_name, value_str):
         self.print_fill("Exercise: Enter a Python statement to " + prompt)
         self.print_exec("")
-        self.print_fill("Here is one way to do this, and then print the result:")
-        self.print_exec(var_name + " = " + value_str + "; print " + var_name)
+        self.print_fill("Here is one way to do this, and then print(the result:)")
+        self.print_exec(var_name + " = " + value_str + "; print(" + var_name + ")")
 
     def input_eval(self, prompt):
         pass

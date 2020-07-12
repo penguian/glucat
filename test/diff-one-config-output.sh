@@ -4,7 +4,7 @@
 #   diff-one-config-output.sh : Find differences in test output for one configuration.
 #
 #   begin                : Sun 2016-04-03
-#   copyright            : (C) 2016 by Paul C. Leopardi
+#   copyright            : (C) 2016-2020 by Paul C. Leopardi
 #
 #   This library is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU Lesser General Public License as published
@@ -41,12 +41,13 @@ pushd ${package_dir}/.. \
       
     pushd pyclical \
       > /dev/null
+      if [ -f check.out ]
+      then
+        diff -ub ${package_dir}/pyclical/test.out check.out \
+          > test.out.diff
 
-      diff -ub ${package_dir}/pyclical/test.out test.out \
-        > test.out.diff
-
-      cat test.out.diff
-      
+        cat test.out.diff
+      fi
     popd \
       > /dev/null
 

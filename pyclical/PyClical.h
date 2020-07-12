@@ -52,6 +52,7 @@ typedef glucat::tuning
 #include <iostream>
 #include <sstream>
 #include <iomanip>
+#include <limits>
 
 /// Create a PyFloatObject object from Scalar_T v.
 /// Needed because Scalar_T might not be the same as double.
@@ -159,6 +160,7 @@ typedef index_set<lo_ndx,hi_ndx> IndexSet;
 typedef double scalar_t;
 typedef matrix_multi<scalar_t> Clifford;
 
+const scalar_t epsilon = std::numeric_limits<scalar_t>::epsilon();
 
 // Do not warn about unused values. This affects clang++ as well as g++.
 

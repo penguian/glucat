@@ -15,9 +15,8 @@
 from pyclical_tutorial_utils import *
 
 def run(ctx):
-    ctx_methods = get_object_methods(ctx)
-    for method in ctx_methods:
-        exec(method + " = ctx_methods['" + method +"']")
+    for name, method in get_object_methods(ctx).items():
+        exec("global "+name+";"+name+"=method")
 
     print_head("0.3 Algebraic functions.")
     print_line()
@@ -43,8 +42,8 @@ def run(ctx):
     print_line()
     print_fill("First we will create some clifford objects to work on.")
     print_line()
-    print_exec("w = 1+3*e(1)-2*e(3)+4*e({-2,3}); print w")
-    print_exec("x = 2+3*e(1)-5*e(2)+5*e({-1,3}); print x")
+    print_exec("w = 1+3*e(1)-2*e(3)+4*e({-2,3}); print(w)")
+    print_exec("x = 2+3*e(1)-5*e(2)+5*e({-1,3}); print(x)")
 
     pause()
     print_line()
@@ -54,26 +53,26 @@ def run(ctx):
     print_line()
     print_fill("inv(): Geometric multiplicative inverse.")
     print_line()
-    print_exec("print x.inv()")
-    print_exec("print inv(x)")
+    print_exec("print(x.inv())")
+    print_exec("print(inv(x))")
 
     print_line()
     print_fill("pow(m): Power: self to the m.")
     print_line()
-    print_exec("print x.pow(0)")
-    print_exec("print x.pow(1)")
-    print_exec("print x.pow(3)")
-    print_exec("print pow(x, 3)")
+    print_exec("print(x.pow(0))")
+    print_exec("print(x.pow(1))")
+    print_exec("print(x.pow(3))")
+    print_exec("print(pow(x, 3))")
 
     print_line()
     print_fill("outer_pow(m): Outer product power.")
     print_line()
     print_fill("The outer product power is only defined for m as a non-negative integer.")
     print_line()
-    print_exec("print x.outer_pow(0)")
-    print_exec("print x.outer_pow(1)")
-    print_exec("print x.outer_pow(3)")
-    print_exec("print outer_pow(x, 3)")
+    print_exec("print(x.outer_pow(0))")
+    print_exec("print(x.outer_pow(1))")
+    print_exec("print(x.outer_pow(3))")
+    print_exec("print(outer_pow(x, 3))")
 
     pause()
     print_line()
@@ -106,10 +105,10 @@ def run(ctx):
     print_line()
     print_fill("Examples:")
     print_line()
-    print_exec("print x(0)")
-    print_exec("print x(1)")
-    print_exec("print x(2)")
-    print_exec("print x(3)")
+    print_exec("print(x(0))")
+    print_exec("print(x(1))")
+    print_exec("print(x(2))")
+    print_exec("print(x(3))")
 
     check_exec("set y to be the grade 3 part of w.",
                "y",
@@ -122,32 +121,32 @@ def run(ctx):
     print_line()
     print_fill("scalar(): Scalar part of clifford object.  Result is a scalar.")
     print_line()
-    print_exec("print x.scalar()")
-    print_exec("print scalar(x)")
+    print_exec("print(x.scalar())")
+    print_exec("print(scalar(x))")
 
     print_line()
     print_fill("real(): Synonym for scalar().  This is an ordinary function only.")
     print_line()
-    print_exec("print scalar(x)")
+    print_exec("print(scalar(x))")
 
     print_line()
     print_fill("pure(): Pure part of a clifford object, that is a clifford object minus" +
               " its scalar part.")
     print_line()
-    print_exec("print x.pure()")
-    print_exec("print pure(x)")
+    print_exec("print(x.pure())")
+    print_exec("print(pure(x))")
 
     print_line()
     print_fill("even(): Even part of clifford object, sum of even grade terms.")
     print_line()
-    print_exec("print x.even()")
-    print_exec("print even(x)")
+    print_exec("print(x.even())")
+    print_exec("print(even(x))")
 
     print_line()
     print_fill("odd(): Odd part of clifford object, sum of odd grade terms.")
     print_line()
-    print_exec("print x.odd()")
-    print_exec("print odd(x)")
+    print_exec("print(x.odd())")
+    print_exec("print(odd(x))")
 
     print_line()
     print_fill("vector_part(frm): Vector part of clifford object, as a Python list.")
@@ -157,8 +156,8 @@ def run(ctx):
               " which should be an index set defining a subalgebra large enough to" +
               " contain the clifford object.")
     print_line()
-    print_exec("print x.vector_part()")
-    print_exec("print x.vector_part(istpq(4,1))")
+    print_exec("print(x.vector_part())")
+    print_exec("print(x.vector_part(istpq(4,1)))")
 
     pause()
     print_line()
@@ -172,7 +171,7 @@ def run(ctx):
                "pure(w)")
     check_eval("compare with w to check that the scalar and pure parts add to w.",
                "scalar(w) + pure(w)",
-               "print abs( w - ({}) )")
+               "print(abs( w - ({}) ))")
     check_exec("set y to be the even part of w.",
                "y",
                "w.even()")
@@ -181,7 +180,7 @@ def run(ctx):
                "w.odd()")
     check_eval("compare with w to check that the even and odd parts add to w.",
                "even(w) + odd(w)",
-               "print abs( w - ({}) )")
+               "print(abs( w - ({}) ))")
     check_exec("set y to be the vector part of w with respect to the frame {-2,1,3}",
                "y",
                "w.vector_part(ist({-2,1,3}))")
@@ -196,27 +195,27 @@ def run(ctx):
     print_fill("involute(): Grade involution, each {i} is replaced by -{i} in each term," +
               " eg. e(1) -> -e(1).")
     print_line()
-    print_exec("print e(1).involute()")
-    print_exec("print e({1,2}).involute()")
-    print_exec("print x.involute()")
-    print_exec("print involute(x)")
+    print_exec("print(e(1).involute())")
+    print_exec("print(e({1,2}).involute())")
+    print_exec("print(x.involute())")
+    print_exec("print(involute(x))")
 
     pause()
     print_line()
     print_fill("reverse(): Reversion anti-automorphism, eg. e(1)*e(2) -> e(2)*e(1).")
     print_line()
-    print_exec("print e(1).reverse()")
-    print_exec("print e({1,2}).reverse()")
-    print_exec("print x.reverse()")
-    print_exec("print reverse(x)")
+    print_exec("print(e(1).reverse())")
+    print_exec("print(e({1,2}).reverse())")
+    print_exec("print(x.reverse())")
+    print_exec("print(reverse(x))")
 
     print_line()
     print_fill("conj(): Clifford conjugation anti-automorphism.")
     print_line()
-    print_exec("print e(1).conj()")
-    print_exec("print e({1,2}).conj()")
-    print_exec("print x.conj()")
-    print_exec("print conj(x)")
+    print_exec("print(e(1).conj())")
+    print_exec("print(e({1,2}).conj())")
+    print_exec("print(x.conj())")
+    print_exec("print(conj(x))")
 
     pause()
     print_line()
@@ -242,27 +241,27 @@ def run(ctx):
     print_line()
     print_fill("norm(): Norm == sum of squares of coordinates.")
     print_line()
-    print_exec("print x.norm()")
-    print_exec("print norm(x)")
+    print_exec("print(x.norm())")
+    print_exec("print(norm(x))")
 
     print_line()
     print_fill("abs(): Absolute value: square root of norm.")
     print_line()
-    print_exec("print x.abs()")
-    print_exec("print abs(x)")
+    print_exec("print(x.abs())")
+    print_exec("print(abs(x))")
 
     pause()
     print_line()
     print_fill("max_abs(): Maximum of absolute values of components of the clifford object.")
     print_line()
-    print_exec("print x.max_abs()")
-    print_exec("print max_abs(x)")
+    print_exec("print(x.max_abs())")
+    print_exec("print(max_abs(x))")
 
     print_line()
     print_fill("quad(): Quadratic form == (reverse(x)*x)(0).")
     print_line()
-    print_exec("print x.quad()")
-    print_exec("print quad(x)")
+    print_exec("print(x.quad())")
+    print_exec("print(quad(x))")
 
     pause()
     print_line()
@@ -287,14 +286,14 @@ def run(ctx):
     print_line()
     print_fill("frame(): Index set defining a subalgebra that contains the clifford object.")
     print_line()
-    print_exec("s = w.frame(); print s")
-    print_exec("print type(s)")
+    print_exec("s = w.frame(); print(s)")
+    print_exec("print(type(s))")
 
     print_line()
     print_fill("isnan(): Check if the clifford object contains any IEEE NaN values.")
     print_line()
-    print_exec("print x.isnan()")
-    print_exec("print (0/clifford(0)).isnan()")
+    print_exec("print(x.isnan())")
+    print_exec("print((0/clifford(0)).isnan())")
 
     pause()
     print_line()
@@ -306,8 +305,8 @@ def run(ctx):
     print_fill("truncated(limit): Remove all terms with relative size smaller than limit.")
     print_line()
 
-    print_exec("print clifford('1e8+{1}+1e-8{1,2}').truncated(1.0e-6)")
-    print_exec("print clifford('1e4+{1}+1e-4{1,2}').truncated(1.0e-6)")
+    print_exec("print(clifford('1e8+{1}+1e-8{1,2}').truncated(1.0e-6))")
+    print_exec("print(clifford('1e4+{1}+1e-4{1,2}').truncated(1.0e-6))")
 
     pause()
     print_line()

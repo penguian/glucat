@@ -30,7 +30,9 @@ EXTAM_CPPFLAGS = $(all_includes)
 # the library search path.
 EXTLDFLAGS = $(all_libraries)
 
-pyexec_DATA = $(ext_name).so
+pyexec_DATA = $(ext_name).*.so
+
+CHECK_OUT = check.out
 
 all: $(pyexec_DATA)
 
@@ -46,6 +48,11 @@ $(EXTNOCYTHONCPP): $(ext_name).cpp
 
 endif
 
+check: $(CHECK_OUT)
+
+$(CHECK_OUT): all
+	$(PYTHON) -iq < test.py > check.out 2>&1
+
 CLEAN_CYTHON = $(ext_name).cpp $(ext_name).html
 
 CLEANFILES = $(pyexec_DATA) $(CLEAN_CYTHON)
@@ -53,5 +60,6 @@ CLEANFILES = $(pyexec_DATA) $(CLEAN_CYTHON)
 clean-local:
 	rm -f *.pyc
 	rm -rf build
+	rm -rf __pycache__
 
 endif

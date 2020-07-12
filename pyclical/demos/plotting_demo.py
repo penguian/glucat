@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -23,6 +24,7 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
+from builtins import range
 from PyClical import *
 
 #
@@ -108,13 +110,13 @@ def draw_orbit(r, s,
     #
     # Split the curve into M segments.
     #
-    M = nbr_points / segment_len
-    for j in xrange(M):
+    M = nbr_points // segment_len
+    for j in range(M):
         #
         # Find segment_len points forming a curve segment
         # by successively using the rotor r and its inverse.
         #
-        for k in xrange(segment_len):
+        for k in range(segment_len):
             #
             # Determine the current 3D Euclidean point
             # corresponding to the CGA null vector u.
@@ -198,7 +200,7 @@ def demo(
     #
     # Plot nbr_curves curves.
     #
-    for i in xrange(nbr_curves):
+    for i in range(nbr_curves):
         #
         # Set br to be a random bivector in R_{4,0} with appropriate scaling.
         #
@@ -216,3 +218,7 @@ def demo(
         # Draw the curve.
         #
         draw_orbit(r, s, nbr_points, segment_len, figwidth, figheight, azimuth, rot_angle, jitter)
+
+
+if __name__ == "__main__":
+    demo()

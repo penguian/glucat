@@ -21,9 +21,8 @@
 from pyclical_tutorial_utils import *
 
 def run(ctx):
-    ctx_methods = get_object_methods(ctx)
-    for method in ctx_methods:
-        exec(method + " = ctx_methods['" + method +"']")
+    for name, method in get_object_methods(ctx).items():
+        exec("global "+name+";"+name+"=method")
 
     print_head("1.2 Space geometry and vector algebra")
     print_line()
@@ -57,12 +56,12 @@ def run(ctx):
     print_line()
 
     pause()
-    print_exec("a = 2*e(1)-e(2); print a")
-    print_exec("b = 2*e(1)+3*e(2)-e(3); print b")
-    print_exec("c = 2*e(1)+2*e(2)+5*e(3); print c")
-    print_exec("V = a ^ b ^ c; print V")
-    print_exec("r = -e(1)+8*e(2)+e(3); print r")
-    print_exec("alpha = (r ^ b ^ c) / V; print alpha")
+    print_exec("a = 2*e(1)-e(2); print(a)")
+    print_exec("b = 2*e(1)+3*e(2)-e(3); print(b)")
+    print_exec("c = 2*e(1)+2*e(2)+5*e(3); print(c)")
+    print_exec("V = a ^ b ^ c; print(V)")
+    print_exec("r = -e(1)+8*e(2)+e(3); print(r)")
+    print_exec("alpha = (r ^ b ^ c) / V; print(alpha)")
 
     pause()
     check_exec("set beta to be the coefficient of r with respect to b.",
@@ -73,7 +72,7 @@ def run(ctx):
                "(a ^ b ^ r) / V")
     check_eval("compare with r to check that the values of alpha, beta and gamma are correct.",
                "alpha * a + beta * b + gamma * c",
-               "print abs(r - ({}))")
+               "print(abs(r - ({})))")
 
     pause()
     print_line()
@@ -88,11 +87,11 @@ def run(ctx):
     print_line()
 
     pause()
-    print_exec("v = -5*e(1)+7*e(2); print v")
-    print_exec("x = 4*e(1)+e(3); print x")
-    print_exec("y = 3*e(1)+e(2); print y")
-    print_exec("A = x ^ y; print A")
-    print_exec("p = (v & A) / A; print p")
+    print_exec("v = -5*e(1)+7*e(2); print(v)")
+    print_exec("x = 4*e(1)+e(3); print(x)")
+    print_exec("y = 3*e(1)+e(2); print(y)")
+    print_exec("A = x ^ y; print(A)")
+    print_exec("p = (v & A) / A; print(p)")
 
     pause()
     check_exec("set r to be the component of v perpendicular to A.",
@@ -100,7 +99,7 @@ def run(ctx):
                "(v ^ A) / A")
     check_eval("compare with v to check that the values of p and r are correct.",
                "p + r",
-               "print abs(v - ({}))")
+               "print(abs(v - ({})))")
 
     pause()
     print_line()
@@ -119,19 +118,19 @@ def run(ctx):
     print_line()
 
     pause()
-    print_exec("v1 = 3*e(1)-e(2); print v1")
-    print_exec("v2 = e(1)+2*e(3); print v2")
-    print_exec("v3 = e(2)+e(3); print v3")
-    print_exec("A1 = v1; print A1")
-    print_exec("A2 = A1 ^ v2; print A2")
-    print_exec("A3 = A2 ^ v3; print A3")
+    print_exec("v1 = 3*e(1)-e(2); print(v1)")
+    print_exec("v2 = e(1)+2*e(3); print(v2)")
+    print_exec("v3 = e(2)+e(3); print(v3)")
+    print_exec("A1 = v1; print(A1)")
+    print_exec("A2 = A1 ^ v2; print(A2)")
+    print_exec("A3 = A2 ^ v3; print(A3)")
 
     pause()
-    print_exec("u1 = v1; print u1")
-    print_exec("u2 = inv(A1) * A2; print u2")
-    print_exec("u3 = inv(A2) * A3; print u3")
-    print_exec("t1 = u1 / abs(u1); print t1")
-    print_exec("t2 = u2 / abs(u2); print t2")
+    print_exec("u1 = v1; print(u1)")
+    print_exec("u2 = inv(A1) * A2; print(u2)")
+    print_exec("u3 = inv(A2) * A3; print(u3)")
+    print_exec("t1 = u1 / abs(u1); print(t1)")
+    print_exec("t2 = u2 / abs(u2); print(t2)")
 
     pause()
     check_exec("set t3 to be the unit vector parallel to u3.",
@@ -142,13 +141,13 @@ def run(ctx):
     print_line()
     print_fill("Now, check that the vectors t1, t2 and t3 are mutually orthogonal.")
     print_line()
-    print_exec("print t1 * t2 + t2 * t1")
-    print_exec("print t1 * t3 + t3 * t1")
+    print_exec("print(t1 * t2 + t2 * t1)")
+    print_exec("print(t1 * t3 + t3 * t1)")
 
     pause()
     check_eval("check that t2 is orthogonal to t3",
                "t2 * t3 + t3 * t2",
-               "print {}")
+               "print({})")
 
     pause()
     print_line()
@@ -164,9 +163,9 @@ def run(ctx):
 
     pause()
     print_exec("R3 = istpq(3,0)")
-    print_exec("F = clifford((7,4,5),R3); print F")
-    print_exec("OP = clifford((4,6,7), R3); print OP")
-    print_exec("t = abs(OP ^ F); print t")
+    print_exec("F = clifford((7,4,5),R3); print(F)")
+    print_exec("OP = clifford((4,6,7), R3); print(OP)")
+    print_exec("t = abs(OP ^ F); print(t)")
     print_line()
     print_fill("Here we have used the alternate input notation for vectors, which uses a tuple or list of" +
               " coordinates, and a basis defined by an index_set, in this case R3 == {1,2,3}.")
@@ -179,20 +178,20 @@ def run(ctx):
     print_line()
 
     pause()
-    print_exec("a = 1.5*e(1)+2*e(2); print a")
-    print_exec("j = e({1,2,3}); print j")
-    print_exec("s = exp(-a * j / 2); print s")
-    print_exec("r = e(1)+2*e(2)+2*e(3); print r")
-    print_exec("q = r | s; print q")
+    print_exec("a = 1.5*e(1)+2*e(2); print(a)")
+    print_exec("j = e({1,2,3}); print(j)")
+    print_exec("s = exp(-a * j / 2); print(s)")
+    print_exec("r = e(1)+2*e(2)+2*e(3); print(r)")
+    print_exec("q = r | s; print(q)")
 
     pause()
     print_line()
     print_fill("Note that we have used -a instead of a here, to allow the use of r | s. " +
               " Alternatively we could have used a and used the following method.")
     print_line()
-    print_exec("s1 = exp(a * j / 2); print s1")
-    print_exec("q1 = inv(s1) * r * s1; print q1")
-    print_exec("print abs(q-q1)")
+    print_exec("s1 = exp(a * j / 2); print(s1)")
+    print_exec("q1 = inv(s1) * r * s1; print(q1)")
+    print_exec("print(abs(q-q1))")
 
     pause()
     print_line()
@@ -200,13 +199,13 @@ def run(ctx):
               " except that 2*pi-a yields the same rotation because s and -s yield" +
               " the same rotation.")
     print_line()
-    print_exec("s2 = exp((2 * pi - a) * j / 2); print s2")
+    print_exec("s2 = exp((2 * pi - a) * j / 2); print(s2)")
 
     pause()
     check_exec("set q2 to be the vector r rotated by the rotor s2.",
                "q2",
                "r | s2")
-    print_exec("print abs(q-q2)")
+    print_exec("print(abs(q-q2))")
 
     pause()
     print_line()
@@ -217,15 +216,15 @@ def run(ctx):
     print_line()
 
     pause()
-    print_exec("OA = e(1)-e(2)+e(3); print OA")
-    print_exec("OB = e(2)-e(3); print OB")
-    print_exec("a = OA/abs(OA) * 2*pi/3; print a")
-    print_exec("b = OB/abs(OB) * pi; print b")
-    print_exec("j = e({1,2,3}); print j")
-    print_exec("u = exp(j * a / 2); print u")
-    print_exec("v = exp(j * b / 2); print v")
-    print_exec("z = log(u * v); print z")
-    print_exec("c = j * z/abs(z); print c")
+    print_exec("OA = e(1)-e(2)+e(3); print(OA)")
+    print_exec("OB = e(2)-e(3); print(OB)")
+    print_exec("a = OA/abs(OA) * 2*pi/3; print(a)")
+    print_exec("b = OB/abs(OB) * pi; print(b)")
+    print_exec("j = e({1,2,3}); print(j)")
+    print_exec("u = exp(j * a / 2); print(u)")
+    print_exec("v = exp(j * b / 2); print(v)")
+    print_exec("z = log(u * v); print(z)")
+    print_exec("c = j * z/abs(z); print(c)")
     print_line()
     print_fill("This means that the axis of the combined rotation is OC, C == (0,0,1).")
     print_line()
