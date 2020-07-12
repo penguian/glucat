@@ -1,3 +1,138 @@
+2020-07-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #13 from
+	penguian/issue-11-Migrate_PyClical_to_Python_3 Migrate PyClical to Python 3. Closes issue #11
+
+2020-07-12  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* pyclical/setup_ext.py: Allow for a wider range of gcc versions
+
+2020-07-11  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* NEWS, glucat.lsm: Update release date
+
+2020-07-11  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* pyclical/PyClical.pxd, pyclical/demos/pyclical_tutorial_utils.py,
+	test/diff-one-config-output.sh, test/test-one-config-option.sh: 
+	Update copyright notices
+
+2020-07-11  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* Doxyfile.in, doc/Makefile.am: Use current doxygen
+
+2020-07-10  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* test/diff-one-config-output.sh, test/test-one-config-option.sh: 
+	Update to match the change to 'make check' that includes pyclical in
+	the check
+
+2020-07-10  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* pyclical/demos/Makefile.am: Quote PYTHONPATH definition in case it
+	contains an unquoted space
+
+2020-07-10  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* pyclical/setup_ext.py: Update ignore_flags for current compilers
+
+2020-07-08  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* Makefile.am.in, pyclical/Makefile.am, pyclical/test.out: Add
+	pyclical/test.py to make check
+
+2020-07-08  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* pyclical/demos/plotting_demo.py,
+	pyclical/demos/plotting_demo_mayavi.py: Do not use past.utils or
+	old_div. Make executable and default to running demo().
+
+2020-07-08  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* pyclical/demos/Makefile.am: Clean up __pycache__
+
+2020-07-01  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* glucat.lsm: Update for Version 0.8.4
+
+2020-07-01  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* NEWS: NEWS for GluCat 0.8.4
+
+2020-07-01  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* INSTALL, README: Version 0.8.4. Bring up to date.
+
+2020-07-01  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* pyclical/test.out: Version 0.8.4. Update PyClical test results.
+
+2020-07-01  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* AUTHORS, TODO, configure.ac.in, pyclical/PyClical.pyx: Version
+	0.8.4
+
+2020-07-01  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* pyclical/Makefile.am, pyclical/demos/Makefile.am,
+	test/test-one-config-option.sh: Consistently use Python 3
+
+2020-07-01  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* pyclical/PyClical.h, pyclical/PyClical.pxd,
+	pyclical/PyClical.pyx, pyclical/demos/pyclical_tutorial_utils.py: 
+	Define scalar_epsilon to remove dependence of tutorials on Numpy
+
+2020-07-01  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* pyclical/demos/pyclical_tutorial_1_0_plane.py,
+	pyclical/demos/pyclical_tutorial_1_1_complex.py: Consistently use
+	get_object_methods
+
+2020-06-21  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* configure.ac.in: Build using Python 3
+
+2020-06-21  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* pyclical/demos/build_pyclical_notebooks.py,
+	pyclical/demos/clifford_demo.py, pyclical/demos/plotting_demo.py,
+	pyclical/demos/plotting_demo_dialog.py,
+	pyclical/demos/plotting_demo_mayavi.py,
+	pyclical/demos/pyclical_demo.out, pyclical/demos/pyclical_demo.py,
+	pyclical/demos/pyclical_notebook_utils.py,
+	pyclical/demos/pyclical_tutorial_0_0_notation.py,
+	pyclical/demos/pyclical_tutorial_0_1_index_sets.py,
+	pyclical/demos/pyclical_tutorial_0_2_operations.py,
+	pyclical/demos/pyclical_tutorial_0_3_functions.py,
+	pyclical/demos/pyclical_tutorial_0_4_transcendental.py,
+	pyclical/demos/pyclical_tutorial_1_0_plane.py,
+	pyclical/demos/pyclical_tutorial_1_1_complex.py,
+	pyclical/demos/pyclical_tutorial_1_2_space.py,
+	pyclical/demos/pyclical_tutorial_1_3_lorentz.py,
+	pyclical/demos/pyclical_tutorial_1_4_fourth.py,
+	pyclical/demos/pyclical_tutorial_1_5_conformal.py,
+	pyclical/demos/pyclical_tutorial_2_0_wedge_product.py,
+	pyclical/demos/pyclical_tutorial_utils.py,
+	pyclical/demos/pyclical_tutorials.py,
+	pyclical/demos/sqrt_log_demo.out, pyclical/demos/sqrt_log_demo.py: 
+	Convert demos to Python 3
+
+2020-06-21  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* pyclical/PyClical.pxd, pyclical/PyClical.pyx,
+	pyclical/glucat.pxd, pyclical/test.out, pyclical/test.py: Build and
+	test using Python 3
+
+2020-05-23  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #12 from
+	penguian/issue-10-Add_DESIGN_to_distributed_files Add DESIGN to the list of files included in the distribution
+
+2020-05-14  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* ChangeLog: Update Changelog
+
 2020-05-14  Paul Leopardi <leopardi@users.sourceforge.net>
 
 	* NEWS: NEWS for GluCat 0.8.3
@@ -818,7 +953,7 @@
 
 2015-09-04  Paul Leopardi <leopardi@users.sourceforge.net>
 
-	* : Merge remote-tracking branch 'origin/master' Conflicts: 	ChangeLog ChangeLog for version 0.7.5.
+	* : Merge remote-tracking branch 'origin/master' Conflicts:         ChangeLog ChangeLog for version 0.7.5.
 
 2015-09-03  Paul Leopardi <leopardi@users.sourceforge.net>
 
@@ -5817,5 +5952,4 @@
 2002-01-09  leopardi
 
         * Release glucat-0.0.1
-
 
