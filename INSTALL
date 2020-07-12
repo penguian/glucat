@@ -285,8 +285,8 @@ using the "--with-extra-includes" option, if necessary. If your computer has
 Python installed, but not Cython, you can build PyClical from the provided
 PyClical.cpp file. See details in "To Build" below.
 
-Building PyClical also builds pyclical/demos. This requires a recent Python 2.7
-version of Numpy.
+Building PyClical also builds pyclical/demos. This results in the creation of
+Jupyter notebooks.
 
 
   --enable-check-isnan    check for NaN values at various places in the code [default=yes]
@@ -688,11 +688,14 @@ The ./test_runtime directory contains 19 sample versions of the regression test
 results, corresponding to 19 different combinations of configuration parameters.
 The tests were all run on an Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz+ with
 
-    Linux 4.2.0-35-generic #40-Ubuntu SMP x86_64
-    gcc version 5.2.1 20151010 (Ubuntu 5.2.1-22ubuntu2)
-    Boost 1.58.0
+    Linux 5.3.0-62-generic #56-Ubuntu SMP x86_64
+    Kubuntu 19.10
+    gcc version 9.2.1 20191008 (Ubuntu 9.2.1-9ubuntu2)
+    Boost 1.67.0
     Boost Numeric Bindings
-    QD 2.3.17
+    QD 2.3.22
+    Cython 0.29.10
+    Python 3.7.5
 
 The test output file names and corresponding configuration commands are defined
 in ./test/config-options.txt and are:
@@ -893,16 +896,6 @@ The exceptional cases are:
    output different from either the GNU C++ compiler or the Clang compiler.
    For example, QD version 2.3.16 contains an update that fixes a problem with
    tanh.
-3. In the cases of lines 7 and 8 of ./test/config-options.txt
-
-disable-pyclical: --disable-pyclical
-stdlib-libcxx:    --with-eig=bindings \
-                  --with-extra-includes=$PATHTO/numeric_bindings \
-                  --disable-pyclical --with-stdlib=libcxx
-
-   In these cases, if PyClical is not already installed, then the contents
-   of glucat-0.8.4.7/pyclical/test.out and glucat-0.8.4.7/pyclical/test.out
-   will differ from that of glucat-0.8.4/pyclical/test.out.
 
 If the output of your systematic tests differs due to a difference in compilers
 or libraries, you may want to copy this output to ./test_runtime to ease future
@@ -1004,7 +997,8 @@ to use sudo, login as root, or su to root before you run make install.
 
  1) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
 
-    Linux 5.3.0-59-generic #53-Ubuntu SMP x86_64
+    Linux 5.3.0-62-generic #56-Ubuntu SMP x86_64
+    Kubuntu 19.10
 
     The following compiler versions:
     1) gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~19.10)
@@ -1020,24 +1014,74 @@ to use sudo, login as root, or su to root before you run make install.
     Python 3.7.5
     Numpy 1.16.2
     Matplotlib 3.0.2
-    Mayavi2 4.7.1
+    Mayavi2 4.5.0
+    Doxygen 1.8.13
+    pdfTeX 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian)
 
     All 19 configuration commands corresponding to each of the 19
     test.configure*.out files in ./test_runtime
 
  2) 2 core AMD E-350 Processor with
 
-    Linux 5.3.0-40-generic #32-Ubuntu SMP x86_64
-    gcc version 9.2.1 20191008 (Ubuntu 9.2.1-9ubuntu2)
-    Boost 1.67.0
+    Linux 5.4.0-40-generic #44-Ubuntu SMP x86_64
+    Kubuntu 20.04 LTS
+    gcc version 9.3.0 (Ubuntu 9.3.0-10ubuntu2)
+    Boost 1.71.0
     Boost Numeric Bindings
     QD 2.3.22
-    Cython 0.29.10
-    Python 2.7.17
-    Numpy 1.16.2
+    Cython 0.29.14
+    Python 3.8.2
+    Numpy 1.17.4
+    Matplotlib 3.1.2
+    Mayavi2 4.7.1
+    Doxygen 1.8.17
+    pdfTeX 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian)
 
     ./configure --with-qd --with-eig=bindings \
     --with-extra-includes=$PATHTO/numeric_bindings
+
+ 3) Virtual 4 core Intel(R) Xeon(R) CPU @ 2.30GHz with
+
+    Linux 4.15.0-1037-gcp #39-Ubuntu SMP x86_64
+    Ubuntu 18.04.4 LTS
+    gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)
+    Boost 1.65.1
+    Boost Numeric Bindings
+    Cython 0.29.20
+    Python 3.6.9
+    Numpy 1.18.5
+
+    ./configure --with-eig=bindings --with-extra-includes=$HOME/usr/local/include
+
+4) Virtual 8 processor Intel Xeon E312xx (Sandy Bridge, IBRS update) with
+
+    Linux 2.6.32-754.18.2.el6.x86_64 #1 SMP x86_64
+    CentOS release 6.10 (Final)
+    gcc (GCC) 9.1.0
+    Boost 1.66.0
+    Boost Numeric Bindings
+    Cython 0.29.21
+    Python 3.7.7
+    Numpy 1.19.0
+
+    ./configure --with-eig=bindings --with-extra-includes=$HOME/usr/local/include
+
+5) Virtual 4 core Intel(R) Core(TM) i7 CPU 870 @ 2.93GHz with
+
+    Linux 5.7.7-1-default #1 SMP x86_64
+    openSUSE Tumbleweed Release 20200708
+    gcc (SUSE Linux) 10.1.1 20200625 [revision c91e43e9363bd119a695d64505f96539fa451bf2]
+    Boost 1.71.0
+    Boost Numeric Bindings
+    Cython 0.29.20
+    Python 3.8.3
+    Numpy 1.18.4
+    Matplotlib 3.2.2
+    Mayavi2 4.7.1
+    Doxygen 1.8.13
+    pdfTeX 3.14159265-2.6-1.40.21 (TeX Live for SUSE Linux)
+
+    ./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
 
 
 Notes on software versions
@@ -1046,6 +1090,14 @@ Notes on software versions
     GluCat 0.8.4 contains essentially the same header code as GluCat 0.8.2.
     PyClical is now compatible with Python 3 and is backwards incompatible
     with Python 2.
+
+    The PyClical plotting demos use Numpy and either Matplotlib or Mayavi2.
+    The versions used need to be compatible with each other and with Python.
+    In particular, for Mayavi2 the versions of VTK and TVTK used need to be
+    compatible.
+
+    Building the documentation requires recent versions of both doxygen and
+    latex, (e.g. texlive-2019).
 
     GluCat 0.8.2 was not tested with gcc versions earlier than 4.8.5,
     Clang versions earlier than 3.9, Intel C++ versions earlier than 16.0.2,
