@@ -284,18 +284,16 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
 
   glucat_extra_cxxflags_pyclical=""
   glucat_use_cython="no"
-  if [[[ "$glucat_use_pyclical" == "no" ]]]; then
-    DO_NOT_COMPILE="$DO_NOT_COMPILE pyclical"
-  else
-    AC_MSG_CHECKING([for cython version])
-    cythonversion=`cython --version < /dev/null 2>&1 | grep -i 'Cython version' | awk '{print [\$]3}'`
+  if [[[ "$glucat_use_pyclical" != "no" ]]]; then
+    AM_PATH_PYTHON([3])
+    AC_MSG_CHECKING([for Cython version])
+    cythonversion=`$PYTHON -c $'try:\n import Cython\n print(Cython.__version__)\nexcept:\n pass'`
     if [[[ "$cythonversion" == "" ]]]; then
       AC_MSG_RESULT([not found])
     else
       AC_MSG_RESULT([$cythonversion])
       glucat_use_cython="yes"
     fi
-    AM_PATH_PYTHON([3])
     if [[[ "$GXX" == "yes" ]]]; then
       GLUCAT_CHECK_COMPILER_FLAG([fno-strict-aliasing],
         [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -fno-strict-aliasing"])
@@ -304,17 +302,20 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     fi
     if [[[ "$basename_cxx" == "icpc" ]]]; then
       GLUCAT_CHECK_LIB([imf],[cos],[],
-      [
-        glucat_use_pyclical="no"
-        DO_NOT_COMPILE="$DO_NOT_COMPILE pyclical"
-      ])
+      [glucat_use_pyclical="no"])
     fi
     if [[[ "$glucat_use_cython" == "no" ]]]; then
       AC_MSG_WARN([Cannot build using Cython.])
+      AC_CHECK_FILE([pyclical/PyClical_nocython.cpp],
+      [],
+      [glucat_use_pyclical="no"])
     fi
     if [[[ "$glucat_use_pyclical" == "no" ]]]; then
       AC_MSG_WARN([Cannot build PyClical.])
     fi
+  fi
+  if [[[ "$glucat_use_pyclical" == "no" ]]]; then
+    DO_NOT_COMPILE="$DO_NOT_COMPILE pyclical"
   fi
   AC_SUBST([glucat_extra_cxxflags_pyclical])
 
