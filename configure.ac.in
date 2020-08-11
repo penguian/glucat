@@ -175,11 +175,14 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     esac
   ],[glucat_use_random="std"])
 
-  AC_ARG_WITH([eig],          [[  --with-eig[=ARG]        library to use for eigenvalues (no|bindings) [default=no]]],
+  AC_ARG_WITH([eig],          [[  --with-eig[=ARG]        library to use for eigenvalues (no|arma|bindings) [default=no]]],
   [
     case "$withval" in
       no)
         glucat_use_eigenvalues="no"
+        ;;
+      arma)
+        glucat_use_eigenvalues="arma"
         ;;
       bindings)
         glucat_use_eigenvalues="bindings"
@@ -388,6 +391,31 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     fi
   fi
 
+  if [[[ "$glucat_use_eigenvalues" == "arma" ]]]; then
+    glucat_have_lapack="yes"
+    glucat_add_libs=""
+    GLUCAT_CHECK_LIB([blas],  [main],[glucat_add_libs="-lblas $glucat_add_libs"],  [glucat_have_lapack="no"])
+    GLUCAT_CHECK_LIB([lapack],[main],[glucat_add_libs="-llapack $glucat_add_libs"],[glucat_have_lapack="no"])
+    if [[[ "$glucat_have_lapack" != "no" ]]]; then
+      glucat_have_arma="yes"
+      GLUCAT_CHECK_HEADERS([armadillo],
+      [
+        CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_ARMA -DARMA_DONT_USE_WRAPPER"
+        all_libraries="$all_libraries $glucat_add_libs"
+      ],
+      [glucat_have_arma="no"],[])
+    fi
+    if [[[ "$glucat_have_arma" == "yes" && "$glucat_cxx_std" == "cxx11" ]]]; then
+      CXXFLAGS="$CXXFLAGS -DARMA_USE_CXX11"
+    fi
+    if [[[ "$glucat_have_lapack" == "no" ]]]; then
+      AC_MSG_WARN([Cannot build using LAPACK.])
+    fi
+    if [[[ "$glucat_have_arma" != "yes" ]]]; then
+      AC_MSG_WARN([Cannot build using Armadillo.])
+    fi
+  fi
+
   if [[[ "$glucat_use_eigenvalues" == "bindings" ]]]; then
     glucat_have_lapack="yes"
     glucat_add_libs=""
@@ -405,7 +433,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     if [[[ "$glucat_have_lapack" == "no" ]]]; then
       AC_MSG_WARN([Cannot build using LAPACK.])
     fi
-    if [[[ "$glucat_have_bindings" == "no" ]]]; then
+    if [[[ "$glucat_have_bindings" != "yes" ]]]; then
       AC_MSG_WARN([Cannot build using Boost bindings.])
     fi
   fi

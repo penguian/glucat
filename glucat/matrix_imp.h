@@ -50,6 +50,10 @@
 #include <boost/numeric/ublas/operation.hpp>
 #include <boost/numeric/ublas/operation_sparse.hpp>
 
+#if defined(_GLUCAT_USE_ARMA)
+# include <armadillo>
+#endif
+
 #if defined(_GLUCAT_USE_BINDINGS)
 # include <boost/numeric/bindings/lapack/driver/gees.hpp>
 # include <boost/numeric/bindings/ublas.hpp>
@@ -455,6 +459,39 @@ namespace glucat { namespace matrix
     return result;
   }
 
+#if defined(_GLUCAT_USE_ARMA)
+  /// Convert matrix to Armadillo format
+  template< typename Matrix_T >
+  static
+  arma::Mat<double>
+  to_arma(const Matrix_T& val)
+  {
+    typedef typename Matrix_T::size_type matrix_index_t;
+    const matrix_index_t s1 = val.size1();
+    const matrix_index_t s2 = val.size2();
+
+    typedef typename arma::Mat<double> arma_matrix_t;
+    arma_matrix_t result(s1, s2);
+
+    typedef typename Matrix_T::value_type Scalar_T;
+    typedef numeric_traits<Scalar_T> traits_t;
+
+    typedef typename Matrix_T::const_iterator1 const_iterator1;
+    typedef typename Matrix_T::const_iterator2 const_iterator2;
+    for (const_iterator1
+        val_it1 = val.begin1();
+        val_it1 != val.end1();
+        ++val_it1)
+      for (const_iterator2
+          val_it2 = val_it1.begin();
+          val_it2 != val_it1.end();
+          ++val_it2)
+         result(val_it2.index1(), val_it2.index2()) = traits_t::to_double(*val_it2);
+
+      return result;
+  }
+#endif
+
 #if defined(_GLUCAT_USE_BINDINGS)
   /// Convert matrix to LAPACK format
   template< typename Matrix_T >
@@ -502,6 +539,16 @@ namespace glucat { namespace matrix
     complex_vector_t lambda = complex_vector_t(dim);
     lambda.clear();
 
+#if defined(_GLUCAT_USE_ARMA)
+    typedef typename arma::Mat<double> arma_matrix_t;
+    typedef typename arma::Col<complex_t> arma_vector_t;
+
+    arma_vector_t eigval = arma::eig_gen(to_arma(val));
+
+    for (complex_vector_t::size_type  k=0; k!= dim; ++k)
+      lambda[k] = eigval(k);
+#endif
+
 #if defined(_GLUCAT_USE_BINDINGS)
     namespace lapack = boost::numeric::bindings::lapack;
     typedef typename ublas::matrix<double, ublas::column_major> lapack_matrix_t;
@@ -515,7 +562,6 @@ namespace glucat { namespace matrix
 
     lapack::gees ('N', 'N', (external_fp)0, T, sdim, real_lambda, imag_lambda, V );
 
-    lambda.clear();
     for (vector_t::size_type  k=0; k!= dim; ++k)
       lambda[k] = complex_t(real_lambda[k], imag_lambda[k]);
 #endif
