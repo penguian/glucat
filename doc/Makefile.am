@@ -18,17 +18,17 @@ doc: html pdf
 
 html: $(nodist_html_DATA) 
 
-$(nodist_html_DATA): .doxygen.out
+$(nodist_html_DATA): .doxygen-out
 
-.doxygen.out: $(glucatHEADERS) $(testHEADERS) $(PyClicalSOURCE)
+.doxygen-out: $(glucatHEADERS) $(testHEADERS) $(PyClicalSOURCE)
 	mkdir -p api/html
 	mkdir -p api/latex
-	$(DOXYGEN) -u $(doxydir)/Doxyfile > .doxygen-u.out 2>&1
-	$(DOXYGEN) $(DOXYFLAGS) $(doxydir)/Doxyfile > .doxygen.out
+	$(DOXYGEN) -u $(doxydir)/Doxyfile > .doxygen-u-out 2>&1
+	$(DOXYGEN) $(DOXYFLAGS) $(doxydir)/Doxyfile > .doxygen-out
 
 pdf: $(nodist_pdf_DATA)
 
-$(nodist_pdf_DATA): .doxygen.out
+$(nodist_pdf_DATA): .doxygen-out
 	sed -i "s/operator\%/operator\\\%/g" api/latex/*.tex
 	$(MAKE) -C api/latex > api/latex/make.out
 	cp api/latex/refman.pdf $@
@@ -36,8 +36,8 @@ $(nodist_pdf_DATA): .doxygen.out
 
 clean-local:
 	rm -rf api
-	rm -f .doxygen-u.out
-	rm -f .doxygen.out
+	rm -f .doxygen-u-out
+	rm -f .doxygen-out
 
 .PHONY: doc html pdf
 
