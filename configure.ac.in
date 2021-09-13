@@ -32,9 +32,11 @@ dnl    Boston, MA 02111-1307, USA.
 
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([glucat],[0.8.4])
+AC_INIT([glucat],[0.8.5])
 AC_CONFIG_MACRO_DIR([m4])
 m4_include([m4/acinclude.m4])
+m4_include([m4/m4_ax_cxx_compile_stdcxx.m4])
+m4_include([m4/m4_ax_cxx_header_unordered_map.m4])
 AC_CONFIG_SRCDIR([aclocal.m4]) dnl a source file from your sub dir
 
 AC_DEFUN([GLUCAT_TOUPPER],[$(echo $1 | tr ["[a-z]" "[A-Z]"])])
@@ -53,7 +55,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
 
   dnl process the command line arguments
 
-  AC_ARG_ENABLE([debug],      [[  --enable-debug[=ARG]    enables debug symbols (yes|no|full) [default=no]]],
+  AC_ARG_ENABLE([debug],      [[  --enable-debug[=ARG]    enable debug symbols (yes|no|full) [default=no]]],
   [
     case "$enableval" in
       yes)
@@ -79,9 +81,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   ])
 
   dnl Just for configure --help
-  AC_ARG_ENABLE([dummyoption],[[  --disable-debug         disables debug output and debug symbols [default=yes]]],[],[])
+  AC_ARG_ENABLE([dummyoption],[[  --disable-debug         disable debug output and debug symbols [default=yes]]],[],[])
 
-  AC_ARG_ENABLE([strict],     [[  --enable-strict         compiles with strict compiler options (may not work!)]],
+  AC_ARG_ENABLE([strict],     [[  --enable-strict         compile with strict compiler options (may not work!)]],
   [
     if [[[ "$enableval" == "no" ]]]; then
       glucat_use_strict_options="no"
@@ -90,25 +92,25 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     fi
   ],[glucat_use_strict_options="no"])
 
-  AC_ARG_ENABLE([warnings],   [[  --disable-warnings      disables compilation with -Wall and similiar]],
+  AC_ARG_ENABLE([warnings],   [[  --disable-warnings      disable compilation with -Wall and similiar]],
   [
     if [[[ "$enableval" == "no" ]]]; then
       glucat_use_warnings="no"
     else
       glucat_use_warnings="yes"
     fi
-  ], [glucat_use_warnings="yes"])
+  ],[glucat_use_warnings="yes"])
 
   dnl enable warnings for debug build
   if [[[ "$glucat_use_debug_code" != "no" ]]]; then
     glucat_use_warnings="yes"
   fi
 
-  AC_ARG_ENABLE([profile],    [[  --enable-profile        creates profiling infos [default=no]]],
+  AC_ARG_ENABLE([profile],    [[  --enable-profile        create profiling infos [default=no]]],
     [glucat_use_profiling="$enableval"],
     [glucat_use_profiling="no"])
 
-  AC_ARG_ENABLE([pyclical],   [[  --enable-pyclical       uses Cython to build the PyClical Python extension module [default=yes]]],
+  AC_ARG_ENABLE([pyclical],   [[  --enable-pyclical       use Cython to build the PyClical Python extension module [default=yes]]],
     [glucat_use_pyclical="$enableval"],
     [glucat_use_pyclical="yes"])
 
@@ -117,7 +119,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     [glucat_check_isnan="yes"])
 
   AC_ARG_WITH([demo-dir],
-    AS_HELP_STRING([--with-demo-dir=DIR],                [defines the installation directory for the PyClical demos [default=$DATAROOTDIR/pyclical/demos]]),,
+    AS_HELP_STRING([--with-demo-dir=DIR],                [define the installation directory for the PyClical demos [default=$DATAROOTDIR/pyclical/demos]]),,
     [with_demo_dir="${datarootdir}/pyclical/demos"])
   demodir="$with_demo_dir"
   AC_SUBST([demodir])
@@ -152,11 +154,11 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     esac
   ],[glucat_use_map="stdunordered"])
 
-  AC_ARG_WITH([dense-mat],    [[  --with-dense-mat        uses dense matrices [default=yes]]],
+  AC_ARG_WITH([dense-mat],    [[  --with-dense-mat        use dense matrices [default=yes]]],
     [glucat_use_dense_mat="$withval"],
     [glucat_use_dense_mat="yes"])
 
-  AC_ARG_WITH([qd],           [[  --with-qd               uses dd_real and qd_real [default=no]]],
+  AC_ARG_WITH([qd],           [[  --with-qd               use dd_real and qd_real [default=no]]],
     [glucat_use_qd="$withval"],
     [glucat_use_qd="no"])
 
@@ -195,93 +197,121 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     [glucat_use_boost_pool_alloc="no"])
 
   AC_ARG_WITH([tuning],     [[  --with-tuning[=ARG]     set of tuning parameters to use for testing (slow|naive|fast|promoted|demoted)]],
-    [glucat_test_tuning="$withval"],
+    [
+      case "$withval" in
+        slow|naive|fast|promoted|demoted)
+          glucat_test_tuning="$withval"
+          ;;
+        *)
+          AC_MSG_ERROR([Unknown option for --with-tuning])
+          ;;
+      esac
+      ],
     [glucat_test_tuning="default"])
 
+  dnl Check for a C++ compiler
   AC_LANG([C]++)
 
   AC_REQUIRE([AC_PROG_CXX])
   AC_PROG_CXX
-
   basename_cxx="$(basename $CXX)"
 
-  if [[[ "$basename_cxx" == "clang++" && "$glucat_use_stdlib" == "libcxx" ]]]; then
-    GLUCAT_CHECK_COMPILER_FLAG([stdlib=libc++],[CXXFLAGS="-stdlib=libc++ $CXXFLAGS"])
-  fi
-
+  dnl Check the compiler version
   AC_MSG_CHECKING([for $CXX version])
-  if [[[ "$GXX" == "yes" ]]]; then
-    if [[[ "$basename_cxx" == "clang++" ]]]; then
+  case "$basename_cxx" in
+    "clang++"*)
       dnl The following test is from user PHV on www.tek-tips.com
       clangxxversion=`$CXX -v < /dev/null 2>&1 | head -n 1 | awk '{for(i=1;i<NF;++i) if ([\$]i ~ /version/) print [\$](i+1)}'`
       AC_MSG_RESULT([$clangxxversion])
-    fi
-    if [[[ "$basename_cxx" == "g++"* ]]]; then
+      ;;
+    "g++"*)
       dnl The following test is borrowed from VXL Project http://vxl.sourceforge.net/
       cxxversion=`$CXX -v < /dev/null 2>&1 | grep 'gcc version' | awk '{print [\$]3}'`
       AC_MSG_RESULT([$cxxversion])
-    fi
-    if [[[ "$basename_cxx" == "icpc" ]]]; then
+      ;;
+    "icp"[cx])
       icpcversion=`$CXX -dumpversion`
       AC_MSG_RESULT([$icpcversion])
-    fi
-  fi
-  if [[[ "$basename_cxx" == "icpc" ]]]; then
-    CXXFLAGS="$CXXFLAGS -DBOOST_UBLAS_USE_LONG_DOUBLE"
-    GLUCAT_CHECK_COMPILER_FLAG([fp-model precise],[CXXFLAGS="-fp-model precise $CXXFLAGS"])
-    GLUCAT_CHECK_COMPILER_FLAG([fp-model source], [CXXFLAGS="-fp-model source $CXXFLAGS"])
-  fi
-  if [[[ "$GXX" == "yes" ]]]; then
-    GLUCAT_CXX_DEBUG_FLAG=""
-    if [[[ "$glucat_use_debug_code" != "no" ]]]; then
-      GLUCAT_CHECK_COMPILER_FLAG([finline-limit=400],[CXXFLAGS="-finline-limit=400 $CXXFLAGS"])
-      if [[[ "$glucat_use_debug_code" == "full" ]]]; then
-        CXXFLAGS="-O0 $CXXFLAGS"
-        GLUCAT_CXX_DEBUG_FLAG="-g3"
-      else
-        CXXFLAGS="-O1 $CXXFLAGS"
-        GLUCAT_CXX_DEBUG_FLAG="-g"
-      fi
+      ;;
+    *)
+      AC_MSG_RESULT([unknown])
+      ;;
+  esac
 
-      dnl convenience compiler flags
-      GLUCAT_CHECK_COMPILER_FLAG([Woverloaded-virtual],[WOVERLOADED_VIRTUAL="-Woverloaded-virtual"],[WOVERLOADED_VIRTUAL=""])
-      AC_SUBST([WOVERLOADED_VIRTUAL])
-    else
+  dnl Process $glucat_use_stdlib options: which standard C++ library to use
+  case "$glucat_use_stdlib" in
+    "libcxx")
+      case "$basename_cxx" in
+        "clang++"*)
+          GLUCAT_CHECK_COMPILER_FLAG([stdlib=libc++],
+                          [CXXFLAGS="-stdlib=libc++ $CXXFLAGS"])
+          ;;
+        *)
+          ;;
+      esac
+      ;;
+  esac
+
+  dnl Handle $glucat_use_debug_code: debug symbols and debug level
+  GLUCAT_CXX_DEBUG_FLAG=""
+  case "$glucat_use_debug_code" in
+    full|yes)
+      GLUCAT_CHECK_COMPILER_FLAG([finline-limit=400],
+                      [CXXFLAGS="-finline-limit=400 $CXXFLAGS"])
+      case "$glucat_use_debug_code" in
+        full)
+          CXXFLAGS="-O0 $CXXFLAGS"
+          GLUCAT_CXX_DEBUG_FLAG="-g3"
+          ;;
+        yes)
+          CXXFLAGS="-O1 $CXXFLAGS"
+          GLUCAT_CXX_DEBUG_FLAG="-g"
+          ;;
+      esac
+      ;;
+    no)
       CXXFLAGS="-O3 $CXXFLAGS"
-      if [[[ "$basename_cxx" == "g++"* ]]]; then
-        GLUCAT_CHECK_COMPILER_FLAG([march=native],[CXXFLAGS="$CXXFLAGS -march=native"])
-        GLUCAT_CHECK_COMPILER_FLAG([finline-limit=8000],[CXXFLAGS="$CXXFLAGS -finline-limit=8000"])
-        GLUCAT_CHECK_COMPILER_FLAG([-param large-function-insns=8000],[CXXFLAGS="$CXXFLAGS --param large-function-insns=8000"])
-        GLUCAT_CHECK_COMPILER_FLAG([-param max-inline-insns-auto=8000],[CXXFLAGS="$CXXFLAGS --param max-inline-insns-auto=8000"])
-        GLUCAT_CHECK_COMPILER_FLAG([-param max-inline-insns-single=8000],[CXXFLAGS="$CXXFLAGS --param max-inline-insns-single=8000"])
-        GLUCAT_CHECK_COMPILER_FLAG([-param inline-unit-growth=200],[CXXFLAGS="$CXXFLAGS --param inline-unit-growth=200"])
-        GLUCAT_CHECK_COMPILER_FLAG([-param large-function-growth=200],[CXXFLAGS="$CXXFLAGS --param large-function-growth=200"])
-        GLUCAT_CHECK_COMPILER_FLAG([funroll-loops],[CXXFLAGS="$CXXFLAGS -funroll-loops"])
-        GLUCAT_CHECK_COMPILER_FLAG([fvariable-expansion-in-unroller],[CXXFLAGS="$CXXFLAGS -fvariable-expansion-in-unroller"])
-        GLUCAT_CXX_DEBUG_FLAG="-g"
-      fi
-      if [[[ "$basename_cxx" == "icpc" ]]]; then
-        GLUCAT_CHECK_COMPILER_FLAG([xHost],[CXXFLAGS="$CXXFLAGS -xHost"])
-      fi
-    fi
-    CXXFLAGS="$GLUCAT_CXX_DEBUG_FLAG $CXXFLAGS"
-  fi
+      case "$basename_cxx" in
+        "clang++"*|"icp"[cx])
+          ;;
+        "g++"*)
+          GLUCAT_CHECK_COMPILER_FLAG([march=native],
+                [CXXFLAGS="$CXXFLAGS -march=native"])
+          GLUCAT_CHECK_COMPILER_FLAG([finline-limit=8000],
+                [CXXFLAGS="$CXXFLAGS -finline-limit=8000"])
+          GLUCAT_CHECK_COMPILER_FLAG([-param large-function-insns=8000],
+                [CXXFLAGS="$CXXFLAGS --param large-function-insns=8000"])
+          GLUCAT_CHECK_COMPILER_FLAG([-param max-inline-insns-auto=8000],
+                [CXXFLAGS="$CXXFLAGS --param max-inline-insns-auto=8000"])
+          GLUCAT_CHECK_COMPILER_FLAG([-param max-inline-insns-single=8000],
+                [CXXFLAGS="$CXXFLAGS --param max-inline-insns-single=8000"])
+          GLUCAT_CHECK_COMPILER_FLAG([-param inline-unit-growth=200],
+                [CXXFLAGS="$CXXFLAGS --param inline-unit-growth=200"])
+          GLUCAT_CHECK_COMPILER_FLAG([-param large-function-growth=200],
+                [CXXFLAGS="$CXXFLAGS --param large-function-growth=200"])
+          GLUCAT_CHECK_COMPILER_FLAG([funroll-loops],
+                [CXXFLAGS="$CXXFLAGS -funroll-loops"])
+          GLUCAT_CHECK_COMPILER_FLAG([fvariable-expansion-in-unroller],
+                [CXXFLAGS="$CXXFLAGS -fvariable-expansion-in-unroller"])
+          GLUCAT_CXX_DEBUG_FLAG="-g"
+          ;;
+        *)
+          ;;
+      esac
+  esac
+  CXXFLAGS="$GLUCAT_CXX_DEBUG_FLAG $CXXFLAGS"
 
+  dnl Handle $glucat_use_ndebug_define: NDEBUG definition used by uBLAS
   if [[[ "$glucat_use_ndebug_define" == "yes" ]]]; then
     CXXFLAGS="$CXXFLAGS -DNDEBUG"
   fi
 
   if [[[ "$glucat_use_profiling" == "yes" ]]]; then
-    GLUCAT_CHECK_COMPILER_FLAG([pg],[CXXFLAGS="$CXXFLAGS -pg"])
+    GLUCAT_CHECK_COMPILER_FLAG([pg],
+          [CXXFLAGS="$CXXFLAGS -pg"])
   fi
 
-  dnl For compatibility with Cygwin gcc
-  GLUCAT_CHECK_HEADERS([bits/wordsize.h],[CXXFLAGS="$CXXFLAGS -DHAVE_BITS_WORDSIZE_H"],[],[])
-
-  dnl To work around backwards incompatibility of boost::serialization changes
-  GLUCAT_CHECK_HEADERS([boost/serialization/array_wrapper.hpp],
-    [CXXFLAGS="$CXXFLAGS -D_GLUCAT_HAVE_BOOST_SERIALIZATION_ARRAY_WRAPPER_H"],[],[])
-
+  dnl Handle $glucat_use_pyclical: build the PyClical Python extension module
   glucat_extra_cxxflags_pyclical=""
   glucat_use_cython="no"
   if [[[ "$glucat_use_pyclical" != "no" ]]]; then
@@ -294,16 +324,28 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       AC_MSG_RESULT([$cythonversion])
       glucat_use_cython="yes"
     fi
-    if [[[ "$GXX" == "yes" ]]]; then
-      GLUCAT_CHECK_COMPILER_FLAG([fno-strict-aliasing],
-        [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -fno-strict-aliasing"])
-      GLUCAT_CHECK_COMPILER_FLAG([Wno-unused],
-        [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-unused"])
-    fi
-    if [[[ "$basename_cxx" == "icpc" ]]]; then
-      GLUCAT_CHECK_LIB([imf],[cos],[],
-      [glucat_use_pyclical="no"])
-    fi
+    case "$basename_cxx" in
+      "clang++"*)
+        ;;
+      "g++"*)
+        GLUCAT_CHECK_COMPILER_FLAG([fno-strict-aliasing],
+          [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -fno-strict-aliasing"])
+        GLUCAT_CHECK_COMPILER_FLAG([Wno-unused],
+          [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-unused"])
+        ;;
+      "icp"[cx])
+        GLUCAT_CHECK_COMPILER_FLAG([diag-disable=1292],
+          [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -diag-disable=1292"])
+        GLUCAT_CHECK_COMPILER_FLAG([Wno-deprecated],
+          [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-deprecated"])
+        GLUCAT_CHECK_LIB([imf],[cos],
+        [],
+        [glucat_use_pyclical="no"])
+        ;;
+      *)
+        ;;
+    esac
+
     if [[[ "$glucat_use_cython" == "no" ]]]; then
       AC_MSG_WARN([Cannot build using Cython.])
       AC_CHECK_FILE([pyclical/PyClical_nocython.cpp],
@@ -319,23 +361,30 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   fi
   AC_SUBST([glucat_extra_cxxflags_pyclical])
 
+  dnl Handle $glucat_use_map: type of map to use
   glucat_cxx_std="ansi"
-  if [[[ "$glucat_use_map" == "stdunordered" ]]]; then
-    save_CXXFLAGS="$CXXFLAGS"
-    if [[[ "$GXX" == "yes" ]]]; then
-      CXXFLAGS="-std=c++11 $CXXFLAGS"
-    fi
-    GLUCAT_CHECK_HEADERS([unordered_map],
-    [
-      CXXFLAGS="$save_CXXFLAGS -D_GLUCAT_USE_STD_UNORDERED_MAP"
-      glucat_cxx_std="cxx11"
-    ],[CXXFLAGS="$save_CXXFLAGS"],[#include <map>])
-  fi
+  case "$glucat_use_map" in
+    stdunordered)
+      save_CXXFLAGS="$CXXFLAGS"
+      AX_CXX_HEADER_UNORDERED_MAP
+      if [[[ "$ax_cv_cxx_unordered_map" == "yes" ]]]; then
+        CXXFLAGS="$save_CXXFLAGS -D_GLUCAT_USE_STD_UNORDERED_MAP"
+      fi
+      if [[[ -z "$HAVE_CXX11" ]]]; then
+        AX_CXX_COMPILE_STDCXX(11, noext, mandatory)
+      fi
+      ;;
+    *)
+      ;;
+  esac
 
+  dnl Handle $glucat_use_qd: use dd_real and qd_real
   if [[[ "$glucat_use_qd" != "no" ]]]; then
     glucat_have_qd="yes"
     glucat_add_libs=""
-    GLUCAT_CHECK_LIB([qd],[main],[glucat_add_libs="-lqd $glucat_add_libs"],[glucat_have_qd="no"])
+    GLUCAT_CHECK_LIB([qd],[main],
+    [glucat_add_libs="-lqd $glucat_add_libs"],
+    [glucat_have_qd="no"])
     if [[[ "$glucat_have_qd" != "no" ]]]; then
       GLUCAT_CHECK_HEADERS([qd/qd_real.h],
       [
@@ -348,39 +397,58 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     fi
   fi
 
-  if [[[ "$glucat_use_random" == "gsl" ]]]; then
-    glucat_have_gsl="yes"
-    glucat_add_libs=""
-    if [[[ "$basename_cxx" == "icpc" ]]]; then
-      GLUCAT_CHECK_LIB([imf],   [cos],           [],                                             [glucat_have_gsl="no"])
-    else
-      GLUCAT_CHECK_LIB([m],     [cos],           [glucat_add_libs="-lm $glucat_add_libs"],       [glucat_have_gsl="no"])
-    fi
-    GLUCAT_CHECK_LIB([gslcblas],[cblas_dgemm],   [glucat_add_libs="-lgslcblas $glucat_add_libs"],[glucat_have_gsl="no"])
-    GLUCAT_CHECK_LIBS([gsl],    [gsl_blas_dgemm],[glucat_add_libs="-lgsl $glucat_add_libs"],     [glucat_have_gsl="no"],[-lgslcblas])
-    if [[[ "$glucat_have_gsl" != "no" ]]]; then
-      GLUCAT_CHECK_HEADERS([gsl/gsl_rng.h],
-      [
-        CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_GSL_RANDOM";
-        all_libraries="$all_libraries $glucat_add_libs"
-      ],
-      [glucat_have_gsl="no"],[])
-    fi
-    if [[[ "$glucat_have_gsl" == "no" ]]]; then
-      AC_MSG_WARN([Cannot build using GSL random number generators.])
-    fi
-  fi
+  dnl Handle $glucat_use_random: type of random number generator to use
+  case "$glucat_use_random" in
+    gsl)
+      glucat_have_gsl="yes"
+      glucat_add_libs=""
+      case "$basename_cxx" in
+        "clang++"*|"g++"*)
+          GLUCAT_CHECK_LIB([m],[cos],
+          [glucat_add_libs="-lm $glucat_add_libs"],
+          [glucat_have_gsl="no"])
+          ;;
+        "icp"[cx])
+          GLUCAT_CHECK_LIB([imf],[cos],
+          [],
+          [glucat_have_gsl="no"])
+          ;;
+        *)
+          ;;
+      esac
+
+      GLUCAT_CHECK_LIB([gslcblas],[cblas_dgemm],
+      [glucat_add_libs="-lgslcblas $glucat_add_libs"],
+      [glucat_have_gsl="no"])
+      GLUCAT_CHECK_LIBS([gsl],[gsl_blas_dgemm],
+      [glucat_add_libs="-lgsl $glucat_add_libs"],
+      [glucat_have_gsl="no"],[-lgslcblas])
+
+      if [[[ "$glucat_have_gsl" != "no" ]]]; then
+        GLUCAT_CHECK_HEADERS([gsl/gsl_rng.h],
+        [
+          CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_GSL_RANDOM";
+          all_libraries="$all_libraries $glucat_add_libs"
+        ],
+        [glucat_have_gsl="no"],[])
+      fi
+      if [[[ "$glucat_have_gsl" == "no" ]]]; then
+        AC_MSG_WARN([Cannot build using GSL random number generators.])
+      fi
+      ;;
+    std)
+      ;;
+  esac
   if [[[ "$glucat_use_random" == "std" || "$glucat_have_gsl" == "no" ]]]; then
     save_CXXFLAGS="$CXXFLAGS"
-    if [[[ "$GXX" == "yes" ]]]; then
-      CXXFLAGS="-std=c++11 $CXXFLAGS"
+    if [[[ -z "$HAVE_CXX11" ]]]; then
+      AX_CXX_COMPILE_STDCXX(11, noext, mandatory)
     fi
     glucat_have_std_random="no"
     GLUCAT_CHECK_HEADERS([random],
     [
       CXXFLAGS="$save_CXXFLAGS"
       glucat_have_std_random="yes"
-      glucat_cxx_std="cxx11"
     ],
     [CXXFLAGS="$save_CXXFLAGS"])
     if [[[ "glucat_have_std_random" == "no" ]]]; then
@@ -388,38 +456,51 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     fi
   fi
 
-  if [[[ "$glucat_use_eigenvalues" == "bindings" ]]]; then
-    glucat_have_lapack="yes"
-    glucat_add_libs=""
-    GLUCAT_CHECK_LIB([blas],  [main],[glucat_add_libs="-lblas $glucat_add_libs"],  [glucat_have_lapack="no"])
-    GLUCAT_CHECK_LIB([lapack],[main],[glucat_add_libs="-llapack $glucat_add_libs"],[glucat_have_lapack="no"])
-    if [[[ "$glucat_have_lapack" != "no" ]]]; then
-      glucat_have_bindings="yes"
-      GLUCAT_CHECK_HEADERS([boost/numeric/bindings/lapack/driver/gees.hpp],
-      [
-        CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BINDINGS"
-        all_libraries="$all_libraries $glucat_add_libs"
-      ],
-      [glucat_have_bindings="no"],[])
-    fi
-    if [[[ "$glucat_have_lapack" == "no" ]]]; then
-      AC_MSG_WARN([Cannot build using LAPACK.])
-    fi
-    if [[[ "$glucat_have_bindings" == "no" ]]]; then
-      AC_MSG_WARN([Cannot build using Boost bindings.])
-    fi
-  fi
+  dnl Handle $glucat_use_eigenvalues: library to use for eigenvalues
+  case "$glucat_use_eigenvalues" in
+    bindings)
+      glucat_have_lapack="yes"
+      glucat_add_libs=""
+      GLUCAT_CHECK_LIB([blas],[main],
+      [glucat_add_libs="-lblas $glucat_add_libs"],
+      [glucat_have_lapack="no"])
+      GLUCAT_CHECK_LIB([lapack],[main],
+      [glucat_add_libs="-llapack $glucat_add_libs"],
+      [glucat_have_lapack="no"])
+      if [[[ "$glucat_have_lapack" != "no" ]]]; then
+        glucat_have_bindings="yes"
+        GLUCAT_CHECK_HEADERS([boost/numeric/bindings/lapack/driver/gees.hpp],
+        [
+          CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BINDINGS"
+          all_libraries="$all_libraries $glucat_add_libs"
+        ],
+        [glucat_have_bindings="no"],[])
+      fi
+      if [[[ "$glucat_have_lapack" == "no" ]]]; then
+        AC_MSG_WARN([Cannot build using LAPACK.])
+      fi
+      if [[[ "$glucat_have_bindings" == "no" ]]]; then
+        AC_MSG_WARN([Cannot build using Boost bindings.])
+      fi
+      ;;
+    *)
+      ;;
+  esac
 
+  dnl Handle glucat_use_boost_pool_alloc: glucat_use_boost_pool_alloc
   if [[[ "$glucat_use_boost_pool_alloc" != "no" ]]]; then
     glucat_have_boost_pool_alloc=yes
     glucat_add_libs=""
-    GLUCAT_CHECK_LIB([boost_system],[main],[glucat_add_libs="$glucat_add_libs -lboost_system"],[glucat_have_boost_pool_alloc=no])
+    GLUCAT_CHECK_LIB([boost_system],[main],
+    [glucat_add_libs="$glucat_add_libs -lboost_system"],
+    [glucat_have_boost_pool_alloc=no])
     if [[[ "$glucat_have_boost_pool_alloc" != "no" ]]]; then
       GLUCAT_CHECK_HEADERS([boost/pool/poolfwd.hpp],   [],[glucat_have_boost_pool_alloc="no"],[])
       GLUCAT_CHECK_HEADERS([boost/pool/pool_alloc.hpp],[],[glucat_have_boost_pool_alloc="no"],[])
     fi
     if [[[ "$glucat_have_boost_pool_alloc" != "no" ]]]; then
-      GLUCAT_CHECK_COMPILER_FLAG([Wno-unused-variable],[CXXFLAGS="$CXXFLAGS -Wno-unused-variable"])
+      GLUCAT_CHECK_COMPILER_FLAG([Wno-unused-variable],
+            [CXXFLAGS="$CXXFLAGS -Wno-unused-variable"])
       CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_BOOST_POOL_ALLOC";
       all_libraries="$all_libraries $glucat_add_libs"
     else
@@ -427,66 +508,118 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     fi
   fi
 
+  dnl Handle $glucat_use_dense_mat: use dense matrices
   if [[[ "$glucat_use_dense_mat" != "no" ]]]; then
     CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_DENSE_MATRICES"
   fi
 
+  dnl Handle $glucat_check_isnan: check for NaN values at various places in the code
   if [[[ "$glucat_check_isnan" != "no" ]]]; then
     CXXFLAGS="$CXXFLAGS -D_GLUCAT_CHECK_ISNAN"
   fi
 
-  if [[[ "$glucat_test_tuning" != "default" ]]]; then
-    glucat_test_tuning_suffix=GLUCAT_TOUPPER([$glucat_test_tuning]);
-    CXXFLAGS="$CXXFLAGS -D_GLUCAT_TEST_TUNING_$glucat_test_tuning_suffix";
-  fi
+  dnl Handle $glucat_test_tuning: set of tuning parameters to use for testing
+  case "$glucat_test_tuning" in
+    default)
+      ;;
+    *)
+      glucat_test_tuning_suffix=GLUCAT_TOUPPER([$glucat_test_tuning]);
+      CXXFLAGS="$CXXFLAGS -D_GLUCAT_TEST_TUNING_$glucat_test_tuning_suffix";
+      ;;
+  esac
 
-  if [[[ "$GXX" == "yes" ]]]; then
-    case $host in
-      *-*-linux-gnu)
-        if [[[ "$glucat_cxx_std" == "cxx11" ]]]; then
-          CXXFLAGS="-std=c++11 $CXXFLAGS"
-        else
-          if [[[ "$basename_cxx" == "clang++" ]]]; then
-            CXXFLAGS="-std=c++98 $CXXFLAGS"
-          else
-            CXXFLAGS="-ansi $CXXFLAGS"
-          fi
-        fi
-        ;;
-    esac
-  fi
-
+  dnl Handle $glucat_use_warnings: disable compilation with -Wall and similiar
   if [[[ "$glucat_use_warnings" == "yes" ]]]; then
-    if [[[ "$GXX" == "yes" ]]]; then
       CXXFLAGS="-Wall $CXXFLAGS"
-      if [[[ "$basename_cxx" == "clang++" || "$basename_cxx" == "g++"* ]]]; then
-        GLUCAT_CHECK_COMPILER_FLAG([Wno-misleading-indentation],[CXXFLAGS="$CXXFLAGS -Wno-misleading-indentation"])
-        GLUCAT_CHECK_COMPILER_FLAG([Wno-self-assign-overloaded],[CXXFLAGS="$CXXFLAGS -Wno-self-assign-overloaded"])
-        GLUCAT_CHECK_COMPILER_FLAG([Wno-unused-local-typedefs],[CXXFLAGS="$CXXFLAGS -Wno-unused-local-typedefs"])
-        if [[[ "$glucat_cxx_std" != "cxx17" ]]]; then
-          GLUCAT_CHECK_COMPILER_FLAG([Wno-deprecated-register],[CXXFLAGS="$CXXFLAGS -Wno-deprecated-register"])
-        fi
+      case "$basename_cxx" in
+        "clang++"*|"g++"*|"icp"[cx])
+          GLUCAT_CHECK_COMPILER_FLAG([Wno-misleading-indentation],
+                [CXXFLAGS="$CXXFLAGS -Wno-misleading-indentation"])
+          GLUCAT_CHECK_COMPILER_FLAG([Wno-self-assign-overloaded],
+                [CXXFLAGS="$CXXFLAGS -Wno-self-assign-overloaded"])
+          GLUCAT_CHECK_COMPILER_FLAG([Wno-unused-local-typedefs],
+                [CXXFLAGS="$CXXFLAGS -Wno-unused-local-typedefs"])
+          GLUCAT_CHECK_COMPILER_FLAG([Wno-deprecated-register],
+                [CXXFLAGS="$CXXFLAGS -Wno-deprecated-register"])
+          ;;
+        *)
+          ;;
+      esac
+  fi
+
+  dnl Handle $glucat_use_strict_options: compile with strict compiler options
+  if [[[ "$glucat_use_strict_options" == "yes" ]]]; then
+    GLUCAT_CHECK_COMPILER_FLAG([pedantic],
+          [CXXFLAGS="$CXXFLAGS -pedantic"])
+    GLUCAT_CHECK_COMPILER_FLAG([Wextra],
+          [CXXFLAGS="$CXXFLAGS -Wextra"])
+    GLUCAT_CHECK_COMPILER_FLAG([Wno-unused-parameter],
+          [CXXFLAGS="$CXXFLAGS -Wno-unused-parameter"])
+  fi
+
+  dnl Set the language standard
+  case $host in
+    *-*-linux-gnu)
+      if [[[ -z "$HAVE_CXX11" ]]]; then
+        case "$basename_cxx" in
+          "clang++"*)
+            GLUCAT_CHECK_COMPILER_FLAG([std=c++98],
+                            [CXXFLAGS="-std=c++98 $CXXFLAGS"])
+            ;;
+          "g++"*)
+            CXXFLAGS="-ansi $CXXFLAGS"
+            GLUCAT_CHECK_COMPILER_FLAG([ansi],
+                             [CXXFLAGS="ansi $CXXFLAGS"])
+            ;;
+          "icp"[cx])
+            ;;
+          *)
+            ;;
+        esac
       fi
-    fi
-  fi
+      ;;
+  esac
 
-  if [[[ "$GXX" == "yes" && "$glucat_use_strict_options" == "yes" ]]]; then
-    GLUCAT_CHECK_COMPILER_FLAG([pedantic],[CXXFLAGS="$CXXFLAGS -pedantic"])
-    GLUCAT_CHECK_COMPILER_FLAG([Wextra],[CXXFLAGS="$CXXFLAGS -Wextra"])
-    GLUCAT_CHECK_COMPILER_FLAG([Wno-unused-parameter],[CXXFLAGS="$CXXFLAGS -Wno-unused-parameter"])
-  fi
+  dnl Cater to compiler quirks
+  case "$basename_cxx" in
+    "clang++"*)
+      ;;
+    "g++"*)
+      GLUCAT_CHECK_COMPILER_FLAG([fno-check-new],
+            [CXXFLAGS="$CXXFLAGS -fno-check-new"])
+      dnl For compatibility with Cygwin gcc
+      GLUCAT_CHECK_HEADERS([bits/wordsize.h],[CXXFLAGS="$CXXFLAGS -DHAVE_BITS_WORDSIZE_H"],[],[])
+      if [[[ "$cxxversion" > "4.8" && "$cxxversion" < "5" ]]]; then
+        CXXFLAGS="$CXXFLAGS -D_GLUCAT_GCC_IGNORE_UNUSED_LOCAL_TYPEDEFS"
+      fi
+      ;;
+    "icp"[cx])
+      GLUCAT_CHECK_COMPILER_FLAG([fno-check-new],
+            [CXXFLAGS="$CXXFLAGS -fno-check-new"])
+      GLUCAT_CHECK_COMPILER_FLAG([fp-model source], 
+                      [CXXFLAGS="-fp-model source $CXXFLAGS"])
+      GLUCAT_CHECK_COMPILER_FLAG([fp-model precise],
+                      [CXXFLAGS="-fp-model precise $CXXFLAGS"])
+      GLUCAT_CHECK_COMPILER_FLAG([xHost],
+            [CXXFLAGS="$CXXFLAGS -xHost"])
+      CXXFLAGS="$CXXFLAGS -DBOOST_UBLAS_USE_LONG_DOUBLE"
+      ;;
+    *)
+      ;;
+  esac
 
-  if [[[ "$GXX" == "yes" ]]]; then
-    if [[[ "$basename_cxx" != "clang++" ]]]; then
-      GLUCAT_CHECK_COMPILER_FLAG([fno-check-new],[CXXFLAGS="$CXXFLAGS -fno-check-new"])
-    fi
-    GLUCAT_CHECK_COMPILER_FLAG([fexceptions],[USE_EXCEPTIONS="-fexceptions"],[USE_EXCEPTIONS=""])
-  fi
+  dnl To work around backwards incompatibility of boost::serialization changes
+  GLUCAT_CHECK_HEADERS([boost/serialization/array_wrapper.hpp],
+    [CXXFLAGS="$CXXFLAGS -D_GLUCAT_HAVE_BOOST_SERIALIZATION_ARRAY_WRAPPER_H"],[],[])
+
+  GLUCAT_CHECK_COMPILER_FLAG([fexceptions],
+            [USE_EXCEPTIONS="-fexceptions"],
+            [USE_EXCEPTIONS=""])
   AC_SUBST([USE_EXCEPTIONS])
-
-  dnl obsolete macro - provided to keep things going
-  USE_RTTI=""
-  AC_SUBST([USE_RTTI])
+  GLUCAT_CHECK_COMPILER_FLAG([Woverloaded-virtual],
+       [WOVERLOADED_VIRTUAL="-Woverloaded-virtual"],
+       [WOVERLOADED_VIRTUAL=""])
+  AC_SUBST([WOVERLOADED_VIRTUAL])
 
   AC_PROG_CXXCPP
 
@@ -541,7 +674,7 @@ GLUCAT_CHECK_COMPILERS
 CXXFLAGS="$CXXFLAGS $USE_EXCEPTIONS"
 
 # From http://chris-miceli.blogspot.com.au/2011/01/integrating-doxygen-with-autotools.html
-AC_CHECK_PROGS([DOXYGEN], [doxygen])
+AC_CHECK_PROGS([DOXYGEN],[doxygen])
 if [[[ -z "$DOXYGEN" ]]]; then
   AC_MSG_WARN([Doxygen not found - continuing without Doxygen support])
 fi
