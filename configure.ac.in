@@ -329,15 +329,18 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
         ;;
       "g++"*)
         GLUCAT_CHECK_COMPILER_FLAG([fno-strict-aliasing],
-          [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -fno-strict-aliasing"])
+        [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -fno-strict-aliasing"])
         GLUCAT_CHECK_COMPILER_FLAG([Wno-unused],
-          [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-unused"])
+        [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-unused"])
+        GLUCAT_CHECK_COMPILER_FLAG([ffile-prefix-map=/=1],
+        [],
+        [glucat_use_pyclical="no"])
         ;;
       "icp"[cx])
         GLUCAT_CHECK_COMPILER_FLAG([diag-disable=1292],
-          [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -diag-disable=1292"])
+        [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -diag-disable=1292"])
         GLUCAT_CHECK_COMPILER_FLAG([Wno-deprecated],
-          [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-deprecated"])
+        [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-deprecated"])
         GLUCAT_CHECK_LIB([imf],[cos],
         [],
         [glucat_use_pyclical="no"])
@@ -567,9 +570,8 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
                             [CXXFLAGS="-std=c++98 $CXXFLAGS"])
             ;;
           "g++"*)
-            CXXFLAGS="-ansi $CXXFLAGS"
             GLUCAT_CHECK_COMPILER_FLAG([ansi],
-                             [CXXFLAGS="ansi $CXXFLAGS"])
+                            [CXXFLAGS="-ansi $CXXFLAGS"])
             ;;
           "icp"[cx])
             ;;
