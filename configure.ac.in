@@ -229,7 +229,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       cxxversion=`$CXX -v < /dev/null 2>&1 | grep 'gcc version' | awk '{print [\$]3}'`
       AC_MSG_RESULT([$cxxversion])
       ;;
-    "icp"[cx])
+    icpc|icpx)
       icpcversion=`$CXX -dumpversion`
       AC_MSG_RESULT([$icpcversion])
       ;;
@@ -272,7 +272,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     no)
       CXXFLAGS="-O3 $CXXFLAGS"
       case "$basename_cxx" in
-        "clang++"*|"icp"[cx])
+        "clang++"*|icpc|icpx)
           ;;
         "g++"*)
           GLUCAT_CHECK_COMPILER_FLAG([march=native],
@@ -336,7 +336,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
         [],
         [glucat_use_pyclical="no"])
         ;;
-      "icp"[cx])
+      icpc|icpx)
         GLUCAT_CHECK_COMPILER_FLAG([diag-disable=1292],
         [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -diag-disable=1292"])
         GLUCAT_CHECK_COMPILER_FLAG([Wno-deprecated],
@@ -411,7 +411,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
           [glucat_add_libs="-lm $glucat_add_libs"],
           [glucat_have_gsl="no"])
           ;;
-        "icp"[cx])
+        icpc|icpx)
           GLUCAT_CHECK_LIB([imf],[cos],
           [],
           [glucat_have_gsl="no"])
@@ -531,15 +531,11 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       ;;
   esac
 
-  dnl Handle $glucat_use_warnings: disable compilation with -Wall and similiar
+  dnl Handle $glucat_use_warnings: enable compilation with -Wall and similiar
   if [[[ "$glucat_use_warnings" == "yes" ]]]; then
       CXXFLAGS="-Wall $CXXFLAGS"
       case "$basename_cxx" in
-        "clang++"*|"g++"*|"icp"[cx])
-          GLUCAT_CHECK_COMPILER_FLAG([Wno-misleading-indentation],
-                [CXXFLAGS="$CXXFLAGS -Wno-misleading-indentation"])
-          GLUCAT_CHECK_COMPILER_FLAG([Wno-self-assign-overloaded],
-                [CXXFLAGS="$CXXFLAGS -Wno-self-assign-overloaded"])
+        "clang++"*|"g++"*|icpc|icpx)
           GLUCAT_CHECK_COMPILER_FLAG([Wno-unused-local-typedefs],
                 [CXXFLAGS="$CXXFLAGS -Wno-unused-local-typedefs"])
           GLUCAT_CHECK_COMPILER_FLAG([Wno-deprecated-register],
@@ -573,7 +569,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
             GLUCAT_CHECK_COMPILER_FLAG([ansi],
                             [CXXFLAGS="-ansi $CXXFLAGS"])
             ;;
-          "icp"[cx])
+          icpc|icpx)
             ;;
           *)
             ;;
@@ -595,7 +591,11 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
         CXXFLAGS="$CXXFLAGS -D_GLUCAT_GCC_IGNORE_UNUSED_LOCAL_TYPEDEFS"
       fi
       ;;
-    "icp"[cx])
+    icpc|icpx)
+      GLUCAT_CHECK_LIB([imf],[cos],
+      [all_libraries="$all_libraries -limf"],
+      [],
+      [glucat_have_gsl="no"])
       GLUCAT_CHECK_COMPILER_FLAG([fno-check-new],
             [CXXFLAGS="$CXXFLAGS -fno-check-new"])
       GLUCAT_CHECK_COMPILER_FLAG([fp-model source], 
