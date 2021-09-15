@@ -812,17 +812,8 @@ namespace glucat
   {
     if (m < 0)
       throw error_t("outer_pow(m): negative exponent");
-    framed_multi_t result = Scalar_T(1);
     framed_multi_t a = *this;
-    for (;
-        m != 0;
-        m >>= 1)
-    {
-      if (m & 1)
-        result ^= a;
-      a ^= a;
-    }
-    return result;
+    return a.outer_pow(m);
   }
 
   /// Grade of multivector: maximum of the grades of each term

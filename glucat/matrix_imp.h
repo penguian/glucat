@@ -483,9 +483,9 @@ namespace glucat { namespace matrix
           val_it2 = val_it1.begin();
           val_it2 != val_it1.end();
           ++val_it2)
-         result(val_it2.index1(), val_it2.index2()) = traits_t::to_double(*val_it2);
+        result(val_it2.index1(), val_it2.index2()) = traits_t::to_double(*val_it2);
 
-      return result;
+    return result;
   }
 #endif
 

@@ -984,7 +984,7 @@ namespace glucat
     multivector_t a = *this;
     for (;
         m != 0;
-        m >>= 1, a ^= a)
+        m >>= 1, a = a ^ a)
       if (m & 1)
         result ^= a;
     return result;
