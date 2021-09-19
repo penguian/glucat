@@ -44,6 +44,12 @@ class cxx_build_ext(build_ext):
     def build_extensions(self):
         # Allow a custom C++ compiler through the environment variables.
         new_compiler = os.environ.get('CXX')
+        cxxversion = os.environ.get('CXXVERSION')
+        cxxversion_split = cxxversion.split(".")
+        try:
+            cxxmajor = int(cxxversion_split[0])
+        except ValueError:
+            cxxmajor = 0
         if new_compiler is not None:
             # From stackoveflow user subdir 2012-03-16
             # See also https://docs.python.org/2/distutils/apiref.html
@@ -51,7 +57,7 @@ class cxx_build_ext(build_ext):
                 {
                 '-Wstrict-prototypes'
                 }
-                if new_compiler == "g++" else
+                if new_compiler.startswith("g++") else
                 {
                 '-fstack-protector-strong',
                 '-Wdate-time',
@@ -59,9 +65,30 @@ class cxx_build_ext(build_ext):
                 '-Wstrict-prototypes'
                 }
             )
-            new_compiler_so = [new_compiler] + [word for word in self.compiler.compiler_so[1:] if not word in ignore_flags]
-            new_compiler_so.append('-fstack-protector')
-            new_linker_so =   [new_compiler] + [word for word in self.compiler.linker_so[1:] if not word in ignore_flags]
+            map_flag = "-ffile-prefix-map"
+            ignore_map_flag = (
+                (new_compiler.startswith("g++") and cxxmajor < 8) or
+                (new_compiler.startswith("clang++") and cxxmajor < 10)
+            )
+            new_compiler_flags = [
+                word for word in self.compiler.compiler_so[1:]
+                if not word in ignore_flags]
+            if ignore_map_flag:
+                new_compiler_flags = [
+                    word for word in new_compiler_flags
+                    if not word.startswith(map_flag)]
+            new_compiler_flags.append('-fstack-protector')
+
+            new_linker_flags = [
+                word for word in self.compiler.linker_so[1:]
+                if not word in ignore_flags]
+            if ignore_map_flag:
+                new_linker_flags = [
+                    word for word in new_linker_flags
+                    if not word.startswith(map_flag)]
+
+            new_compiler_so = [new_compiler] + new_compiler_flags
+            new_linker_so =   [new_compiler] + new_linker_flags
             args = {}
             args['compiler_so'] = " ".join(new_compiler_so)
             args['linker_so'] = " ".join(new_linker_so)
