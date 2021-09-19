@@ -2,7 +2,7 @@
     GluCat : Generic library of universal Clifford algebra templates
     PyClical.h : C++ definitions needed by PyClical
                              -------------------
-    copyright            : (C) 2008-2012 by Paul C. Leopardi
+    copyright            : (C) 2008-2021 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -31,6 +31,7 @@
 // [DL]:
 // C. Doran and A. Lasenby, "Geometric algebra for physicists", Cambridge, 2003.
 
+#include "glucat/glucat_config.h"
 #include "glucat/glucat.h"
 
 typedef glucat::tuning
@@ -64,6 +65,8 @@ inline PyObject* PyFloat_FromDouble(Scalar_T v)
 // String representations for use by PyClical Python classes.
 
 typedef std::string String;
+
+String glucat_package_version = GLUCAT_PACKAGE_VERSION;
 
 /// The “official” string representation of Index_Set_T ist.
 template<typename Index_Set_T>
