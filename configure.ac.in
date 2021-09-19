@@ -34,9 +34,8 @@ dnl Process this file with autoconf to produce a configure script.
 
 AC_INIT([glucat],[0.8.5])
 AC_CONFIG_MACRO_DIR([m4])
-m4_include([m4/acinclude.m4])
 m4_include([m4/m4_ax_cxx_compile_stdcxx.m4])
-m4_include([m4/m4_ax_cxx_header_unordered_map.m4])
+m4_include([m4/acinclude.m4])
 AC_CONFIG_SRCDIR([aclocal.m4]) dnl a source file from your sub dir
 
 AC_DEFUN([GLUCAT_TOUPPER],[$(echo $1 | tr ["[a-z]" "[A-Z]"])])
@@ -220,23 +219,27 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   AC_MSG_CHECKING([for $CXX version])
   case "$basename_cxx" in
     "clang++"*)
-      dnl The following test is from user PHV on www.tek-tips.com
-      clangxxversion=`$CXX -v < /dev/null 2>&1 | head -n 1 | awk '{for(i=1;i<NF;++i) if ([\$]i ~ /version/) print [\$](i+1)}'`
-      AC_MSG_RESULT([$clangxxversion])
+      CXXVERSION=$($CXX --version | head -n 1 | sed 's/^.*version //' | cut -d'-' -f1)
+      AC_MSG_RESULT([$CXXVERSION])
       ;;
     "g++"*)
-      dnl The following test is borrowed from VXL Project http://vxl.sourceforge.net/
-      cxxversion=`$CXX -v < /dev/null 2>&1 | grep 'gcc version' | awk '{print [\$]3}'`
-      AC_MSG_RESULT([$cxxversion])
+      CXXVERSION=$($CXX --version | head -n1 | sed 's/^.* //')
+      AC_MSG_RESULT([$CXXVERSION])
       ;;
-    icpc|icpx)
-      icpcversion=`$CXX -dumpversion`
-      AC_MSG_RESULT([$icpcversion])
+    icpc)
+      CXXVERSION=$($CXX -dumpversion)
+      AC_MSG_RESULT([$CXXVERSION])
+      ;;
+    icpx)
+      CXXVERSION=$($CXX --version | head -n 1 | cut -d'(' -f3 | cut -d')' -f1)
+      AC_MSG_RESULT([$CXXVERSION])
       ;;
     *)
+      CXXVERSION=''
       AC_MSG_RESULT([unknown])
       ;;
   esac
+  AC_SUBST([CXXVERSION])
 
   dnl Process $glucat_use_stdlib options: which standard C++ library to use
   case "$glucat_use_stdlib" in
@@ -256,8 +259,16 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   GLUCAT_CXX_DEBUG_FLAG=""
   case "$glucat_use_debug_code" in
     full|yes)
-      GLUCAT_CHECK_COMPILER_FLAG([finline-limit=400],
-                      [CXXFLAGS="-finline-limit=400 $CXXFLAGS"])
+      case "$basename_cxx" in
+        "clang++"*|icpc|icpx)
+          ;;
+        "g++"*)
+          GLUCAT_CHECK_COMPILER_FLAG([finline-limit=400],
+                          [CXXFLAGS="-finline-limit=400 $CXXFLAGS"])
+          ;;
+        *)
+          ;;
+      esac
       case "$glucat_use_debug_code" in
         full)
           CXXFLAGS="-O0 $CXXFLAGS"
@@ -326,15 +337,18 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     fi
     case "$basename_cxx" in
       "clang++"*)
+        dnl GLUCAT_CHECK_COMPILER_FLAG([ffile-prefix-map=/=1],
+        dnl [],
+        dnl [glucat_use_pyclical="no"])
         ;;
       "g++"*)
         GLUCAT_CHECK_COMPILER_FLAG([fno-strict-aliasing],
         [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -fno-strict-aliasing"])
         GLUCAT_CHECK_COMPILER_FLAG([Wno-unused],
         [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-unused"])
-        GLUCAT_CHECK_COMPILER_FLAG([ffile-prefix-map=/=1],
-        [],
-        [glucat_use_pyclical="no"])
+        dnl GLUCAT_CHECK_COMPILER_FLAG([ffile-prefix-map=/=1],
+        dnl [],
+        dnl [glucat_use_pyclical="no"])
         ;;
       icpc|icpx)
         GLUCAT_CHECK_COMPILER_FLAG([diag-disable=1292],
@@ -365,17 +379,12 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   AC_SUBST([glucat_extra_cxxflags_pyclical])
 
   dnl Handle $glucat_use_map: type of map to use
-  glucat_cxx_std="ansi"
   case "$glucat_use_map" in
     stdunordered)
-      save_CXXFLAGS="$CXXFLAGS"
-      AX_CXX_HEADER_UNORDERED_MAP
-      if [[[ "$ax_cv_cxx_unordered_map" == "yes" ]]]; then
-        CXXFLAGS="$save_CXXFLAGS -D_GLUCAT_USE_STD_UNORDERED_MAP"
-      fi
-      if [[[ -z "$HAVE_CXX11" ]]]; then
-        AX_CXX_COMPILE_STDCXX(11, noext, mandatory)
-      fi
+      GLUCAT_CHECK_CXX11_HEADERS([unordered_map],
+      [CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_STD_UNORDERED_MAP"],
+      [],
+      [#include <map>])
       ;;
     *)
       ;;
@@ -443,17 +452,10 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       ;;
   esac
   if [[[ "$glucat_use_random" == "std" || "$glucat_have_gsl" == "no" ]]]; then
-    save_CXXFLAGS="$CXXFLAGS"
-    if [[[ -z "$HAVE_CXX11" ]]]; then
-      AX_CXX_COMPILE_STDCXX(11, noext, mandatory)
-    fi
-    glucat_have_std_random="no"
-    GLUCAT_CHECK_HEADERS([random],
-    [
-      CXXFLAGS="$save_CXXFLAGS"
-      glucat_have_std_random="yes"
-    ],
-    [CXXFLAGS="$save_CXXFLAGS"])
+    GLUCAT_CHECK_CXX11_HEADERS([random],
+    [glucat_have_std_random="yes"],
+    [glucat_have_std_random="no"],
+    [#include <map>])
     if [[[ "glucat_have_std_random" == "no" ]]]; then
       AC_MSG_WARN([Cannot build using STD random number generators.])
     fi
@@ -587,7 +589,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
             [CXXFLAGS="$CXXFLAGS -fno-check-new"])
       dnl For compatibility with Cygwin gcc
       GLUCAT_CHECK_HEADERS([bits/wordsize.h],[CXXFLAGS="$CXXFLAGS -DHAVE_BITS_WORDSIZE_H"],[],[])
-      if [[[ "$cxxversion" > "4.8" && "$cxxversion" < "5" ]]]; then
+      if [[[ "$CXXVERSION" > "4.8" && "$CXXVERSION" < "5" ]]]; then
         CXXFLAGS="$CXXFLAGS -D_GLUCAT_GCC_IGNORE_UNUSED_LOCAL_TYPEDEFS"
       fi
       ;;
