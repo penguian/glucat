@@ -328,7 +328,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   if [[[ "$glucat_use_pyclical" != "no" ]]]; then
     AM_PATH_PYTHON([3])
     AC_MSG_CHECKING([for Cython version])
-    cythonversion=`$PYTHON -c $'try:\n import Cython\n print(Cython.__version__)\nexcept:\n pass'`
+    cythonversion=$($PYTHON -c $'try:\n import Cython\n print(Cython.__version__)\nexcept:\n pass')
     if [[[ "$cythonversion" == "" ]]]; then
       AC_MSG_RESULT([not found])
     else
@@ -337,24 +337,24 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     fi
     case "$basename_cxx" in
       "clang++"*)
-        dnl GLUCAT_CHECK_COMPILER_FLAG([ffile-prefix-map=/=1],
-        dnl [],
-        dnl [glucat_use_pyclical="no"])
         ;;
       "g++"*)
         GLUCAT_CHECK_COMPILER_FLAG([fno-strict-aliasing],
         [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -fno-strict-aliasing"])
         GLUCAT_CHECK_COMPILER_FLAG([Wno-unused],
         [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-unused"])
-        dnl GLUCAT_CHECK_COMPILER_FLAG([ffile-prefix-map=/=1],
-        dnl [],
-        dnl [glucat_use_pyclical="no"])
         ;;
       icpc|icpx)
-        GLUCAT_CHECK_COMPILER_FLAG([diag-disable=1292],
-        [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -diag-disable=1292"])
-        GLUCAT_CHECK_COMPILER_FLAG([Wno-deprecated],
-        [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-deprecated"])
+        case "$basename_cxx" in
+          icpc)
+            GLUCAT_CHECK_COMPILER_FLAG([diag-disable=1292],
+            [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -diag-disable=1292"])
+            ;;
+          icpx)
+            GLUCAT_CHECK_COMPILER_FLAG([Wno-deprecated],
+            [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-deprecated"])
+            ;;
+        esac
         GLUCAT_CHECK_LIB([imf],[cos],
         [],
         [glucat_use_pyclical="no"])
@@ -537,7 +537,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   if [[[ "$glucat_use_warnings" == "yes" ]]]; then
       CXXFLAGS="-Wall $CXXFLAGS"
       case "$basename_cxx" in
-        "clang++"*|"g++"*|icpc|icpx)
+        "clang++"*|"g++"*|icpx)
           GLUCAT_CHECK_COMPILER_FLAG([Wno-unused-local-typedefs],
                 [CXXFLAGS="$CXXFLAGS -Wno-unused-local-typedefs"])
           GLUCAT_CHECK_COMPILER_FLAG([Wno-deprecated-register],
