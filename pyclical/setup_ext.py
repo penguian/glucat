@@ -80,7 +80,7 @@ class cxx_build_ext(build_ext):
             new_compiler_flags.append('-fstack-protector')
 
             new_linker_flags = [
-                word for word in self.compiler.linker_so[1:]
+                word for word in ["-Wl,-z,notext"] + self.compiler.linker_so[1:]
                 if not word in ignore_flags]
             if ignore_map_flag:
                 new_linker_flags = [
