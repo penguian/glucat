@@ -213,25 +213,25 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
 
   AC_REQUIRE([AC_PROG_CXX])
   AC_PROG_CXX
-  basename_cxx="$(basename $CXX)"
+  basename_cxx=[$(basename $CXX)]
 
   dnl Check the compiler version
   AC_MSG_CHECKING([for $CXX version])
   case "$basename_cxx" in
     "clang++"*)
-      CXXVERSION=$($CXX --version | head -n 1 | sed 's/^.*version //' | cut -d'-' -f1)
+      CXXVERSION=[$($CXX --version | head -n 1 | sed 's/^.*version //' | cut -d'-' -f1)]
       AC_MSG_RESULT([$CXXVERSION])
       ;;
     "g++"*)
-      CXXVERSION=$($CXX --version | head -n1 | sed 's/^.* //')
+      CXXVERSION=[$($CXX --version | head -n1 | sed 's/^[^)]*) //' | cut -d' ' -f1)]
       AC_MSG_RESULT([$CXXVERSION])
       ;;
     icpc)
-      CXXVERSION=$($CXX -dumpversion)
+      CXXVERSION=[$($CXX -dumpversion)]
       AC_MSG_RESULT([$CXXVERSION])
       ;;
     icpx)
-      CXXVERSION=$($CXX --version | head -n 1 | cut -d'(' -f3 | cut -d')' -f1)
+      CXXVERSION=[$($CXX --version | head -n 1 | cut -d'(' -f3 | cut -d')' -f1)]
       AC_MSG_RESULT([$CXXVERSION])
       ;;
     *)
@@ -328,7 +328,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   if [[[ "$glucat_use_pyclical" != "no" ]]]; then
     AM_PATH_PYTHON([3])
     AC_MSG_CHECKING([for Cython version])
-    cythonversion=$($PYTHON -c $'try:\n import Cython\n print(Cython.__version__)\nexcept:\n pass')
+    cythonversion=[$($PYTHON -c $'try:\n import Cython\n print(Cython.__version__)\nexcept:\n pass')]
     if [[[ "$cythonversion" == "" ]]]; then
       AC_MSG_RESULT([not found])
     else
