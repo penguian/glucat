@@ -1,4 +1,4 @@
-TODO for GluCat 0.8.4 with PyClical
+TODO for GluCat 0.8.5 with PyClical
 ===================================
 
 Documentation:
@@ -34,7 +34,7 @@ o Investigate the use of matrix decompositions in the evaluation of
 Experimental:
 o Expand the use of numeric type promotion and demotion from transcendental
   functions to operations such as division.
-o Port to C++14 to take maximum advantage of C++11 and C++14 semantics and idioms.
+o Port to C++17 to take maximum advantage of C++17 semantics and idioms.
 o Investigate the use of expression templates.
 o Try refactoring the relationship between matrix_multi, framed_multi and
   clifford_algebra to allow more flexibility with template parameters.
