@@ -264,11 +264,11 @@ University Press, 1995.
 Web sites
 ---------
 o Rafal Ablamowitz
-  http://math.tntech.edu/rafal/
+  https://web.archive.org/web/20210211165810/https://math.tntech.edu/rafal/
 o William Baylis:
   http://cronus.uwindsor.ca/baylis-research
 o The Clifford Research Group at Ghent University
-  http://cage.ugent.be/crg/
+  https://web.archive.org/web/20190917051859/http://cage.ugent.be/crg/
 o Leo Dorst
   https://staff.fnwi.uva.nl/l.dorst/clifford/index.html
 o The Geometric Algebra Research Group at Cambridge:
@@ -276,7 +276,7 @@ o The Geometric Algebra Research Group at Cambridge:
 o David Hestenes
   http://geocalc.clas.asu.edu/
 o Soeren Krausshar
-  http://www.uni-erfurt.de/mathematik/mathematik/team/prof-dr-soeren-krausshar/
+  https://www.uni-erfurt.de/erziehungswissenschaftliche-fakultaet/fakultaet/profil/fachgebiete-und-professuren/mathematik-und-mathematikdidaktik/team/soeren-krausshar
 o Pertti Lounesto
   https://users.aalto.fi/~ppuska/mirror/Lounesto/
 o Alan Macdonald
@@ -290,19 +290,23 @@ o Wikipedia: Geometric algebra
 Other Clifford algebra software
 -------------------------------
  Current
- o CLIFFORD for Maple 16
-   http://math.tntech.edu/rafal/cliff16/index.html
- o CLUCalc, 3D calculation and visualization software
-   http://www.clucalc.info/   
  o GABLE, a Matlab package with a geometric algebra tutorial
    https://staff.fnwi.uva.nl/l.dorst/GABLE/index.html
  o Gaigen 2.5, a C++ code optimized geometric algebra implementation generator
    http://sourceforge.net/projects/g25/
  o galgebra: geometric algebra/calculus modules for sympy
-   https://github.com/brombo/galgebra
+   https://github.com/pygae/galgebra
 
  Historical
  o CLICAL, a Clifford algebra calculator
    https://users.aalto.fi/~ppuska/mirror/Lounesto/CLICAL.htm
+ o CLIFFORD 2017 for Maple 2017
+   https://web.archive.org/web/20171004075723/http://math.tntech.edu/rafal/cliff2017/index.html
+ o CLUCalc, 3D calculation and visualization software
+   https://github.com/foobarz/CLUCalcSource-4.3.3
  o GA Package for Maple
    http://www.mrao.cam.ac.uk/~maja1/software/GA/
+
+ swMATH
+ https://www.swmath.org/?term=clifford+algebras
+ 
