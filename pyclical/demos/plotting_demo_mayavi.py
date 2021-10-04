@@ -134,6 +134,10 @@ def draw_orbit(r, s,
                     scale_factor=radius,
                     resolution=resolution,
                     opacity=opacity)
+    #
+    # Show the plot.
+    #
+    ml.show()
 
 #
 # Default values for demo.
