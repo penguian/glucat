@@ -1,4 +1,4 @@
-INSTALL for GluCat 0.8.4 with PyClical
+INSTALL for GluCat 0.8.5 with PyClical
 ========================================
 
 Prerequisites: Before You Begin
@@ -30,13 +30,13 @@ You can install GluCat in one of two ways:
 To install the first way, from (e.g.) GitHub, run the following commands on a
 Linux machine or equivalent Posix environment connected to the Internet:
 
-> git clone git@github.com:penguian/glucat.git glucat-0.8.4
-> cd glucat-0.8.4
+> git clone git@github.com:penguian/glucat.git glucat-0.8.5
+> cd glucat-0.8.5
 > make -f admin/Makefile.common cvs
 
-This results in a directory structure that includes glucat-0.8.4/configure,
+This results in a directory structure that includes glucat-0.8.5/configure,
 allowing you to make and install GluCat in the same way as if you had downloaded
-and unzipped the tarball glucat-0.8.4.tar.gz.
+and unzipped the tarball glucat-0.8.5.tar.gz.
 
 
 Directory Structure
@@ -44,11 +44,11 @@ Directory Structure
 
 Once you have downloaded, unzipped and untarred the source code, or followed
 the instructions above to install from Git clone, you should have a directory,
-glucat-0.8.4. Under this directory you should see a number
+glucat-0.8.5. Under this directory you should see a number
 of subdirectories, including ./admin, ./doc, ./glucat, ./gfft_test, ./products,
 ./pyclical, ./squaring, ./test, ./test_runtime, ./testxx, and ./transforms.
 
-The following instructions are meant to be used with glucat-0.8.4 as the
+The following instructions are meant to be used with glucat-0.8.5 as the
 current directory.
 
 
@@ -146,7 +146,7 @@ subdirectories.
 
 As briefly described above, the simplest way to install this package is:
 
- 1. "cd" to the glucat-0.8.4 directory containing the source code and type
+ 1. "cd" to the glucat-0.8.5 directory containing the source code and type
     "./configure" to configure GluCat with PyClical for your system.
     If you are using "csh" on an old version of System V, you might need to type
     "sh ./configure" instead to prevent "csh" from trying to execute
@@ -688,14 +688,15 @@ The ./test_runtime directory contains 19 sample versions of the regression test
 results, corresponding to 19 different combinations of configuration parameters.
 The tests were all run on an Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz+ with
 
-    Linux 5.3.0-62-generic #56-Ubuntu SMP x86_64
-    Kubuntu 19.10
-    gcc version 9.2.1 20191008 (Ubuntu 9.2.1-9ubuntu2)
-    Boost 1.67.0
+    Linux 5.11.0-25-generic #27-Ubuntu SMP x86_64
+    Kubuntu 21.04
+    gcc version 10.3.0 (Ubuntu 10.3.0-1ubuntu1)
+    Boost 1.74 (1.74.0-8ubuntu2)
     Boost Numeric Bindings
-    QD 2.3.22
-    Cython 0.29.10
-    Python 3.7.5
+    GSL 2.6 (2.6+dfsg-2)
+    QD 2.3.22 (2.3.22+dfsg.1-3build1)
+    Cython version 0.29.21
+    Python 3.9.5
 
 The test output file names and corresponding configuration commands are defined
 in ./test/config-options.txt and are:
@@ -867,9 +868,9 @@ speeding up the entire testing process.
 
 Rather than running the regression tests in-place and copying the output
 directly into ./test_runtime, the script ./test/test-all-config-options.sh
-produces as many copies of the whole direcory glucat-0.8.4 as there are lines
-in ./test/config-options.txt, naming them glucat-0.8.4 to glucat-0.8.49,
-in the parent directory of glucat-0.8.4. This allows the effect of each set
+produces as many copies of the whole direcory glucat-0.8.5 as there are lines
+in ./test/config-options.txt, naming them glucat-0.8.5.1 to glucat-0.8.5.19,
+in the parent directory of glucat-0.8.5. This allows the effect of each set
 of configuration options to be directly compared, and also ensures that any
 side-effect of a configuration does not affect the test results of another
 configuration.
@@ -881,9 +882,9 @@ line 11 of ./test/config-options.txt
 map-map-gsl:                 --with-map=map --with-random=gsl
 
 causes ./test/diff-all-config-outputs.sh to use diff to compare
-glucat-0.8.4.11/test_runtime/test.configure.map-map-gsl.out to
-glucat-0.8.4/test_runtime/test.configure.map-map-gsl.out, and compare
-glucat-0.8.4.11/pyclical/test.out to glucat-0.8.4/pyclical/test.out.
+glucat-0.8.5.11/test_runtime/test.configure.map-map-gsl.out to
+glucat-0.8.5/test_runtime/test.configure.map-map-gsl.out, and compare
+glucat-0.8.5.11/pyclical/test.out to glucat-0.8.5/pyclical/test.out.
 
 Each comparison should only produce a line containing the line number of
 the configuration being compared: 1 to 19.
@@ -938,12 +939,12 @@ built and run using the configure command:
     ./configure --with-qd --with-eig=bindings  \
                 --with-extra-includes=$PATHTO/numeric_bindings
 on  Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz+ with
-    Linux 5.3.0-51-generic #44-Ubuntu SMP x86_64
-    gcc version 9.2.1 20191008 (Ubuntu 9.2.1-9ubuntu2)
-    Boost 1.67.0
+    Linux 5.11.0-25-generic #27-Ubuntu SMP x86_64
+    Kubuntu 21.04
+    gcc version 10.3.0 (Ubuntu 10.3.0-1ubuntu1)
+    Boost 1.74 (1.74.0-8ubuntu2)
     Boost Numeric Bindings
-    QD 2.3.22
-
+    QD 2.3.22 (2.3.22+dfsg.1-3build1)
 
 Testing PyClical
 ----------------
@@ -993,39 +994,68 @@ to use sudo, login as root, or su to root before you run make install.
  List of Successful Builds
  =========================
 
- GluCat 0.8.4 with PyClical has so far been built and tested using:
+ GluCat 0.8.5 with PyClical has so far been built and tested using:
 
- 1) 4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
+ 1) Pensieri:
+    4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
 
-    Linux 5.3.0-62-generic #56-Ubuntu SMP x86_64
-    Kubuntu 19.10
+    Linux 5.11.0-25-generic #27-Ubuntu SMP x86_64
+    Kubuntu 21.04
 
     The following compiler versions:
-    1) gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~19.10)
-    2) gcc version 8.4.0 (Ubuntu 8.4.0-1ubuntu1~19.10)
-    3) gcc version 9.2.1 20191008 (Ubuntu 9.2.1-9ubuntu2)
-    4) clang version 9.0.0-2 (tags/RELEASE_900/final)
-    5) icpc version 19.1.1.217 (gcc version 9.2.1 compatibility)
+    1) gcc version 7.5.0 (Ubuntu 7.5.0-6ubuntu4)
+    2) gcc version 8.4.0 (Ubuntu 8.4.0-7ubuntu3)
+    3) gcc version 9.3.0 (Ubuntu 9.3.0-23ubuntu2) 
+    4) gcc version 10.3.0 (Ubuntu 10.3.0-1ubuntu1)
+    5) clang version 9.0.1 (9.0.1-16)
+    6) clang version 11.0.1 (11.0.1-2ubuntu4)
+    7) clang version 12.0.0 (12.0.0-3ubuntu1~21.04.2)
+    8) icpx version 2021.3.0 (2021.3.0.20210619)
 
-    Boost 1.67.0
+    Boost 1.74.0
     Boost Numeric Bindings
+    GSL 2.6
     QD 2.3.22
-    Cython 0.29.10
-    Python 3.7.5
-    Numpy 1.16.2
-    Matplotlib 3.0.2
-    Mayavi2 4.5.0
-    Doxygen 1.8.13
-    pdfTeX 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian)
+    Cython 0.29.21
+    Python 3.9.5
+    Numpy 1.19.5
+    Matplotlib 3.3.4
+    Mayavi2 4.7.1
+    VTK 7.1.1
+    Doxygen 1.9.1
+    pdfTeX 3.14159265-2.6-1.40.21 (TeX Live 2020/Debian)
 
     All 19 configuration commands corresponding to each of the 19
     test.configure*.out files in ./test_runtime
 
- 2) 2 core AMD E-350 Processor with
+2)  Pensieri (VirtualBox): 
+    Virtual 1 core Intel(R) Core(TM) i7 CPU 870 @ 2.93GHz with
 
-    Linux 5.4.0-40-generic #44-Ubuntu SMP x86_64
-    Kubuntu 20.04 LTS
-    gcc version 9.3.0 (Ubuntu 9.3.0-10ubuntu2)
+    Linux 5.14.6-1-default #1 SMP
+    openSUSE Tumbleweed Release 20210929
+    gcc (SUSE Linux) 11.2.1 20210816
+    Boost 1.76.0
+    Boost Numeric Bindings
+    GSL 2.6-6.3
+    QD 2.3.22-1.12
+    Cython 0.29.24
+    Python 3.8.12
+    Numpy 1.21.2-1.1
+    Matplotlib 3.4.2-3.2
+    Mayavi2 4.7.2-1.9
+    VTK 9.0.1-3.5
+    Doxygen 1.9.1-23
+    pdfTeX 3.141592653-2.6-1.40.22 (TeX Live 2021/TeX Live for SUSE Linux)
+
+    ./configure --with-qd --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
+
+ 3) Notturno:
+    2 core AMD E-350 Processor 931.6 MHz with
+
+    Linux 5.4.0-81-generic #91-Ubuntu SMP x86_64
+    Kubuntu 20.04.3 LTS
+    gcc version 9.3.0 (Ubuntu 9.3.0-17ubuntu1~20.04)
+    TBD
     Boost 1.71.0
     Boost Numeric Bindings
     QD 2.3.22
@@ -1037,90 +1067,104 @@ to use sudo, login as root, or su to root before you run make install.
     Doxygen 1.8.17
     pdfTeX 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian)
 
+    ./configure --with-qd --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
+    
+ 4) NCI Gadi: 
+    48 core Intel(R) Xeon(R) Platinum 8274 CPU @ 3.20GHz with
+
+    Linux 4.18.0-305.7.1.el8.nci.x86_64 SMP x86_64
+    CentOS Linux release 8.4.2105
+    1) gcc version 8.4.1
+    2) icpc version 2019.3.199
+    3) icpc version 2021.3.0
+    4) icpx version 2021.3.0
+    Boost 1.72.0
+    Boost Numeric Bindings
+    Cython 0.29.24
+    Python 3.8.8
+    Numpy 1.20.2
+    
     ./configure --with-qd --with-eig=bindings \
-    --with-extra-includes=$PATHTO/numeric_bindings
+                --with-extra-includes="${PATHTO}/numeric_bindings" --with-tuning=promoted 
+                   
+ 5) CoCalc: 
+    Virtual 8 core Intel(R) Xeon(R) CPU @ 2.80GHz with
 
- 3) Virtual 4 core Intel(R) Xeon(R) CPU @ 2.30GHz with
-
-    Linux 4.15.0-1037-gcp #39-Ubuntu SMP x86_64
-    Ubuntu 18.04.4 LTS
+    Linux 5.8.0-1035-gcp #37~20.04.1-Ubuntu SMP x86_64
+    Ubuntu 18.04.5 LTS
     gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)
     Boost 1.65.1
     Boost Numeric Bindings
-    Cython 0.29.20
+    Cython 0.29.21
     Python 3.6.9
     Numpy 1.18.5
 
     ./configure --with-eig=bindings --with-extra-includes=$HOME/usr/local/include
 
-4) Virtual 8 processor Intel Xeon E312xx (Sandy Bridge, IBRS update) with
+6)  AWS Graviton: 
+    Virtual 4 core ARM Cortex-A72 Model 3 (AWS Graviton A1 image) with
 
-    Linux 2.6.32-754.18.2.el6.x86_64 #1 SMP x86_64
-    CentOS release 6.10 (Final)
-    gcc (GCC) 9.1.0
-    Boost 1.66.0
+    Linux 5.4.0-1020-aws #20-Ubuntu SMP aarch64
+    Ubuntu 20.04 LTS
+    gcc version 9.3.0 (Ubuntu 9.3.0-10ubuntu2)
+    Boost 1.71.1
     Boost Numeric Bindings
-    Cython 0.29.21
-    Python 3.7.7
-    Numpy 1.19.0
+    No Cython # 0.29.20
+    Python 3.8.2
 
-    ./configure --with-eig=bindings --with-extra-includes=$HOME/usr/local/include
+    ./configure --with-tuning=promoted --with-qd --with-eig=bindings \
+                --with-extra-includes=/home/ubuntu/usr/local/include
 
-5) Virtual 4 core Intel(R) Core(TM) i7 CPU 870 @ 2.93GHz with
-
-    Linux 5.7.7-1-default #1 SMP x86_64
-    openSUSE Tumbleweed Release 20200708
-    gcc (SUSE Linux) 10.1.1 20200625 [revision c91e43e9363bd119a695d64505f96539fa451bf2]
-    Boost 1.71.0
-    Boost Numeric Bindings
-    Cython 0.29.20
-    Python 3.8.3
-    Numpy 1.18.4
-    Matplotlib 3.2.2
-    Mayavi2 4.7.1
-    Doxygen 1.8.13
-    pdfTeX 3.14159265-2.6-1.40.21 (TeX Live for SUSE Linux)
-
-    ./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
-
-
+                
 Notes on software versions
 --------------------------
 
-    GluCat 0.8.4 contains essentially the same header code as GluCat 0.8.2.
+    Building the documentation requires recent versions of both doxygen and
+    latex, (e.g. texlive-2021).
+
+    
+    Using gcc version 11.X with Cython from any Conda environment that uses
+    libstdc++ from gcc version 10.X and earlier (e.g. version 4.8.3) results
+    in incompatible libstdc++ versions.
+    see https://github.com/conda/conda/issues/10757
+    and https://github.com/cython/cython/issues/4218
+    and https://github.com/stan-dev/pystan/issues/294
+
+    
     PyClical is now compatible with Python 3 and is backwards incompatible
     with Python 2.
 
+    
     The PyClical plotting demos use Numpy and either Matplotlib or Mayavi2.
     The versions used need to be compatible with each other and with Python.
-    In particular, for Mayavi2 the versions of VTK and TVTK used need to be
-    compatible.
+    For Mayavi2 the versions of VTK and TVTK used also need to be compatible. 
+    Version incompatibilities discovered in testing pyclical/demos:
+    
+ 1. Using Mayavi2 4.7.1 with VTK 7.1.1 as per Kubuntu 21.04 yields two bugs
+    likely caused by version mismatch:
+    1. Running pyclical/demos/plotting_demo_mayavi.py results in:
+    
+       Warning: In ./Common/ExecutionModel/vtkAlgorithm.cxx, line 1419
+       vtkGlyph3D (): Attempt to get connection index 0 for input port 0, 
+       which has 0 connections. 
+       
+       A similar issue: 
+       https://vtk.org/pipermail/vtk-developers/2014-May/014965.html
+    2. The 3D plots produced by pyclical/demos/plotting_demo_mayavi.py have
+       an incorrect z-order. A similar issue: 
+       https://github.com/enthought/mayavi/issues/656
 
-    Building the documentation requires recent versions of both doxygen and
-    latex, (e.g. texlive-2019).
-
-    GluCat 0.8.2 was not tested with gcc versions earlier than 4.8.5,
-    Clang versions earlier than 3.9, Intel C++ versions earlier than 16.0.2,
-    Boost versions earlier than 1.53.0, QD versions earlier than 2.3.13,
-    Python versions earlier than 2.7.10, or Cython versions earlier than 0.23.3.
-
-    The following version incompatibility was observed during testing with
-    GluCat 0.8.2:
-
-    With g++ 5.3.1 and Boost 1.53.0 or Boost 1.55.0, the header file
-    <boost/smart_ptr/shared_ptr.hpp> generates multiple warnings of the form:
-
-warning: ‘template<class> class std::auto_ptr’ is deprecated [-Wdeprecated-declarations]
-
-    This does not occur with g++ 4.8.5 and Boost 1.53.0, 1.55.0 or 1.61.0,
-    nor with g++ 5.3.1 and Boost 1.58.0 or Boost 1.61.0.
-
-See https://svn.boost.org/trac/boost/ticket/11411
-    https://svn.boost.org/trac/boost/ticket/11622
-
-
+ 2. Using Mayavi2 4.7.2 with VTK 9.0.1 and Python 3.8 as per OpenSuse
+    Tumbleweed results in the following warning message when running
+    pyclical/demos/plotting_demo_mayavi.py 
+    
+    /usr/lib64/python3.8/site-packages/vtkmodules/numpy_interface/algorithms.py:
+    209: SyntaxWarning: "is" with a literal. Did you mean "=="?
+      if max_dims is 1:
+     
+        
     The following bugs and workarounds apply to earlier versions of GluCat,
-    and may still be applicable to GluCat 0.8.4, but have not been checked
+    and may still be applicable to GluCat 0.8.5, but have not been checked
     for this version.
 
  1. GluCat needs an include library which either defines the macro isnan or
@@ -1153,3 +1197,17 @@ clang: warning: argument unused during compilation: '--param ssp-buffer-size=4'
 
     This is harmless, and was fixed after Clang version 3.2.
     See http://llvm.org/bugs/show_bug.cgi?id=15327
+
+ 6. The following version incompatibility was observed during testing with
+    GluCat 0.8.2:
+
+    With g++ 5.3.1 and Boost 1.53.0 or Boost 1.55.0, the header file
+    <boost/smart_ptr/shared_ptr.hpp> generates multiple warnings of the form:
+
+warning: ‘template<class> class std::auto_ptr’ is deprecated [-Wdeprecated-declarations]
+
+    This does not occur with g++ 4.8.5 and Boost 1.53.0, 1.55.0 or 1.61.0,
+    nor with g++ 5.3.1 and Boost 1.58.0 or Boost 1.61.0.
+
+See https://svn.boost.org/trac/boost/ticket/11411
+    https://svn.boost.org/trac/boost/ticket/11622
