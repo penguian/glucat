@@ -1,3 +1,162 @@
+2021-10-06  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #17 from
+	penguian/issue-16-Support_Intel_OneAPI_compilers Support Intel oneAPI compilers
+
+2021-10-06  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* NEWS: NEWS for version 0.8.5
+
+2021-10-05  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL: Update the installation notes to 0.8.5
+
+2021-10-04  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/plotting_demo.py: Use fig.add_subplot and
+	matplotlib.animation so that demo works with new versions of
+	Matplotlib
+
+2021-10-04  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/plotting_demo_mayavi.py: Use ml.show() to display
+	each orbit
+
+2021-10-03  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* AUTHORS: Update URLs
+
+2021-10-03  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* AUTHORS, README, TODO, glucat.lsm: Bump version to 0.8.5 and
+	update if necessary
+
+2021-10-01  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/gfft_test-11.out, test_runtime/products-8.out,
+	test_runtime/squaring-11.out, test_runtime/transforms-8.out: Update
+	timing tests
+
+2021-09-28  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in: Generalize g++ version detection. Consistently
+	quote bash command substitution
+
+2021-09-20  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in: Do use use -Wno-xxx with icpc. Clean up.
+
+2021-09-20  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/setup_ext.py: Suppress warnings about DT_TEXTREL in a
+	shared object
+
+2021-09-20  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* m4/acinclude.m4: Add a quote level to the 4th parameter to
+	AC_CHECK_HEADER
+
+2021-09-20  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* m4/acinclude.m4: Use all 4 parameters of AC_CHECK_HEADER
+
+2021-09-19  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* m4/m4_ax_cxx_header_unordered_map.m4: Remove unused macro
+
+2021-09-19  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in: Deal with compiler differences more consistently
+
+2021-09-19  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/setup_ext.py: Deal with differences in compiler versions
+
+2021-09-19  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/Makefile.am: Pass CXXVERSION through to setup.py to deal
+	with compiler differences
+
+2021-09-19  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/test.out: Bump package version
+
+2021-09-19  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/PyClical.h, pyclical/PyClical.pxd, pyclical/PyClical.pyx: 
+	Inherit __version__ from glucat_config.h
+
+2021-09-19  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* m4/acinclude.m4: Add GLUCAT_CHECK_CXX11_HEADERS to simplify
+	configure.ac.in
+
+2021-09-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/test.configure.compressed-mat.out,
+	test_runtime/test.configure.debug-full.out,
+	test_runtime/test.configure.debug-yes.out,
+	test_runtime/test.configure.default.out,
+	test_runtime/test.configure.disable-check-isnan.out,
+	test_runtime/test.configure.disable-dependency.out,
+	test_runtime/test.configure.disable-pyclical.out,
+	test_runtime/test.configure.eig-bindings.out,
+	test_runtime/test.configure.prefix-home-opt.out,
+	test_runtime/test.configure.qd-eig-bindings-demoted.out,
+	test_runtime/test.configure.qd-eig-bindings-gsl.out,
+	test_runtime/test.configure.qd-eig-bindings-promoted.out,
+	test_runtime/test.configure.qd-eig-bindings.out,
+	test_runtime/test.configure.stdlib-libcxx.out: Update results of
+	test-all-config-options to match current test environment
+
+2021-09-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in: Correct icpc and icpx cases. Use libimf. Warn on
+	misleading indentation and overloaded self-assign.
+
+2021-09-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h, glucat/matrix_imp.h,
+	glucat/matrix_multi_imp.h: Fix misleading indentation and
+	self-assignment problems
+
+2021-09-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in: Fix problems with -ansi and -ffile-prefix-map.
+	Tidy up.
+
+2021-09-13  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/portability.h: Remove redundant workaround
+
+2021-09-13  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in: Add support for icpx. Use macros from
+	autoconf-archive. Clean up.
+
+2021-09-13  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* m4/m4_ax_cxx_compile_stdcxx.m4,
+	m4/m4_ax_cxx_header_unordered_map.m4: Add some useful macros from
+	autoconf-archive
+
+2021-09-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* doc/Makefile.am: Rename a rule so that it is not mistaken for a
+	double-suffix rule
+
+2021-09-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* admin/config.guess, admin/config.sub: Bring GNU config up to date
+
+2020-07-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #15 from penguian/14-cope-with-missing-cython Properly cope with missing Cython
+
+2020-07-12  Paul Leopardi <leopardi@users.sourceforge.net>
+
+	* ChangeLog: Update to version 0.8.4
+
 2020-07-12  Paul Leopardi <paul.leopardi@anu.edu.au>
 
 	* : Merge pull request #13 from
