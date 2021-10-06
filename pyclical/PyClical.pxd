@@ -7,7 +7,7 @@
 # PyClical.pxd: Basic Cython definitions for PyClical
 #               corresponding to C++ definitions from PyClical.h.
 #
-#    copyright            : (C) 2008-2020 by Paul C. Leopardi
+#    copyright            : (C) 2008-2021 by Paul C. Leopardi
 #
 #    This library is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Lesser General Public License as published
@@ -27,6 +27,8 @@ from glucat cimport IndexSet, String, Clifford, scalar_t, vector
 from libcpp.string cimport string
 
 cdef extern from "PyClical.h":
+    string glucat_package_version
+
     IndexSet operator&(IndexSet Lhs, IndexSet Rhs)
     IndexSet operator|(IndexSet Lhs, IndexSet Rhs)
     IndexSet operator^(IndexSet Lhs, IndexSet Rhs)

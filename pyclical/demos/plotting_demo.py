@@ -9,7 +9,7 @@
 #    Reference:
 #    [B] Michael F. Barnsley, Superfractals, http://www.superfractals.com/
 #
-#    copyright            : (C) 2010-2014 by Paul C. Leopardi
+#    copyright            : (C) 2010-2021 by Paul C. Leopardi
 #
 #    This library is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Lesser General Public License as published
@@ -32,19 +32,19 @@ from PyClical import *
 #
 default_nbr_points  = 20000
 default_segment_len =  5000
+default_fignum      =     1
 default_figwidth    =    15
 default_figheight   =    12
 default_azimuth     =   210
-default_rot_angle   =    15
 default_jitter      =     1
 
 def draw_orbit(r, s,
         nbr_points  = default_nbr_points,
         segment_len = default_segment_len,
+        fignum      = default_fignum,
         figwidth    = default_figwidth,
         figheight   = default_figheight,
         azimuth     = default_azimuth,
-        rot_angle   = default_rot_angle,
         jitter      = default_jitter):
     """
     Plot a curve created by a random sequence using the rotors r and s,
@@ -55,9 +55,9 @@ def draw_orbit(r, s,
     nbr_points  : Number of points overall.
     segment_len : Number of points in a curve segment.
     azimuth     : Angle about a vertical axis used to define the viewpoint.
+    fignum      : Figure number.
     figwidth    : Width of figure.
     figheight   : Height of figure.
-    rot_angle   : Angle in degrees to use to rotate each curve for display.
     jitter      : Angle in degrees to use for each step in the rotation.
     """
     #
@@ -65,6 +65,7 @@ def draw_orbit(r, s,
     #
     import numpy as np
     from mpl_toolkits.mplot3d import Axes3D
+    from matplotlib.animation import FuncAnimation
     import matplotlib.pyplot as plt
     #
     # Frame for 3D Euclidean space R^3.
@@ -98,8 +99,8 @@ def draw_orbit(r, s,
     #
     # Use a new figure.
     #
-    fig = plt.figure(figsize = (figwidth, figheight))
-    ax  = fig.gca(projection = '3d')
+    fig = plt.figure(num=fignum, figsize=(figwidth, figheight))
+    ax  = fig.add_subplot(projection='3d')
     ax.view_init(azim=azimuth)
     #
     # Draw the origin as a white point. This works around a bug in mplot3d where
@@ -156,12 +157,18 @@ def draw_orbit(r, s,
         #
         ax.scatter(p[:, 0], p[:, 1], p[:, 2], c=c)
         plt.draw()
-    #
-    # Rotate the plot about a vertical axis by rot_angle degrees
-    #
-    for phi in range(jitter, rot_angle + jitter, jitter):
+
+    def update(frame_number):
+        #
+        # Rotate the plot about a vertical axis by phi degrees.
+        #
+        phi = jitter * frame_number
         ax.view_init(azim=azimuth + phi)
-        plt.draw()
+    #
+    # Construct an animation that rotates the plot about a vertical axis.
+    #
+    rotate = FuncAnimation(fig, update, interval=1)
+    plt.show()
 
 #
 # Default values for demo.
@@ -177,7 +184,6 @@ def demo(
         figwidth    = default_figwidth,
         figheight   = default_figheight,
         azimuth     = default_azimuth,
-        rot_angle   = default_rot_angle,
         jitter      = default_jitter):
     """
     Plot curves created by exponentiating a random bivector and its reciprocal in R_{4,0}.
@@ -190,7 +196,6 @@ def demo(
     figwidth    : Width of figure.
     figheight   : Height of figure.
     azimuth     : Angle about a vertical axis used to define the viewpoint.
-    rot_angle   : Angle in degrees to use to rotate each curve for display.
     jitter      : Angle in degrees to use for each step in the rotation.
     """
     #
@@ -217,7 +222,9 @@ def demo(
         #
         # Draw the curve.
         #
-        draw_orbit(r, s, nbr_points, segment_len, figwidth, figheight, azimuth, rot_angle, jitter)
+        fignum = i + 1
+        draw_orbit(r, s, nbr_points, segment_len,
+                   fignum, figwidth, figheight, azimuth, jitter)
 
 
 if __name__ == "__main__":

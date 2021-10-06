@@ -62,7 +62,7 @@ AC_LANG_SAVE
    glucat_safe_cppflags=$CPPFLAGS
    CPPFLAGS="$CPPFLAGS $all_includes $CXXFLAGS"
    AC_LANG([C++])
-   AC_CHECK_HEADER($1, $2, $3)
+   AC_CHECK_HEADER($1, $2, $3, [$4])
    CPPFLAGS=$glucat_safe_cppflags
    AC_LANG_POP([])
 ])
@@ -74,10 +74,35 @@ AC_LANG_SAVE
    CPPFLAGS="$CPPFLAGS $all_includes $CXXFLAGS"
    AC_LANG([C++])
    for k_header in $1; do
-      AC_CHECK_HEADER($k_header, $2, $3)
+      AC_CHECK_HEADER($k_header, $2, $3, [$4])
    done
    CPPFLAGS=$glucat_safe_cppflags
    AC_LANG_POP([])
+])
+
+AC_DEFUN([GLUCAT_CHECK_CXX11_HEADERS],
+[
+  save_CXX="$CXX"
+  save_CXXFLAGS="$CXXFLAGS"
+  save_HAVE_CXX11="$HAVE_CXX11"
+  if test -z "$save_HAVE_CXX11"; then
+    AX_CXX_COMPILE_STDCXX(11, noext, mandatory)
+  fi
+  GLUCAT_CHECK_HEADERS($1,
+  [
+    CXX="$save_CXX"
+    CXXFLAGS="$save_CXXFLAGS"
+    if test -z "$save_HAVE_CXX11"; then
+      AX_CXX_COMPILE_STDCXX(11, noext, mandatory)
+    fi
+    $2
+  ],
+  [
+    CXX="$save_CXX"
+    CXXFLAGS="$save_CXXFLAGS"
+    $3
+  ],
+  [$4])
 ])
 
 AC_DEFUN([GLUCAT_CHECK_COMPILER_FLAG],

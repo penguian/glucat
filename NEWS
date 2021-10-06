@@ -1,10 +1,21 @@
-NEWS for GluCat 0.8.4 with PyClical
+NEWS for GluCat 0.8.5 with PyClical
 ===================================
+
+2021-10-06: 0.8.5
+GluCat now supports the Intel icpx oneAPI C++ compiler.
+
+The GluCat headers compile with recent Clang, GCC and Intel C++ compilers,
+but are mostly unchanged. The ./configure script has been restructured to
+provide better support for configuration options and compiler differences.
+The PyClical plotting demo has been updated to support more recent versions
+of Matplotlib Pyplot.
+
+See INSTALL for details.
 
 2020-07-12: 0.8.4
 PyClical is now compatible with Python 3.
 
-PyClical had now been ported to Python 3, and can mo longer be used with
+PyClical has now been ported to Python 3, and can no longer be used with
 Python 2. The PyClical classes are unchanged except that the constructors
 now use Python 3 default Unicode strings rather than Python 2 byte strings.
 The C++ code is essentially unchanged.

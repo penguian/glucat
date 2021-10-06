@@ -34,11 +34,6 @@
 #include <boost/version.hpp>
 #include <cmath>
 
-// Workaround for GCC
-#if (__GNUC__ == 4 && __GNUC_MINOR__ >= 8)
-# define _GLUCAT_GCC_IGNORE_UNUSED_LOCAL_TYPEDEFS
-#endif
-
 // Workaround for isnan and isinf
 #if __cplusplus > 199711L
 # define _GLUCAT_ISNAN(x) (std::isnan(x))
