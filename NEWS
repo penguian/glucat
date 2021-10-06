@@ -2,7 +2,7 @@ NEWS for GluCat 0.8.5 with PyClical
 ===================================
 
 2021-10-06: 0.8.5
-GluCat now supports the Intel icx C++ compiler.
+GluCat now supports the Intel icpx oneAPI C++ compiler.
 
 The GluCat headers compile with recent Clang, GCC and Intel C++ compilers,
 but are mostly unchanged. The ./configure script has been restructured to
