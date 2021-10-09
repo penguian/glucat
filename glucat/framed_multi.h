@@ -199,7 +199,7 @@ namespace glucat
     /// Class name used in messages
     static const std::string classname();
     /// Destructor
-    ~framed_multi() {};
+    ~framed_multi() override {};
     /// Default constructor
     framed_multi();
 

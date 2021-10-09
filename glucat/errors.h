@@ -44,7 +44,7 @@ namespace glucat
     glucat_error(const std::string& context, const std::string& msg)
     : logic_error(msg), name(context)
     { }
-    ~glucat_error() throw()
+    ~glucat_error() throw() override
     { }
     virtual const std::string heading() const throw() =0;
     virtual const std::string classname() const throw() =0;
@@ -59,9 +59,9 @@ namespace glucat
   public:
     error(const std::string& msg);
     error(const std::string& context, const std::string& msg);
-    virtual const std::string heading() const throw();
-    virtual const std::string classname() const throw();
-    virtual void print_error_msg() const;
+    const std::string heading() const throw() override;
+    const std::string classname() const throw() override;
+    void print_error_msg() const override;
   };
 }
 #endif // _GLUCAT_ERRORS_H

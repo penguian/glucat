@@ -132,45 +132,45 @@ namespace glucat
 
 #ifndef _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
 #define _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS \
-    bool                operator==  (const multivector_t& val) const; \
-    bool                operator==  (const Scalar_T& scr) const;      \
-    multivector_t&      operator+=  (const multivector_t& rhs);       \
-    multivector_t&      operator+=  (const Scalar_T& scr);            \
-    multivector_t&      operator-=  (const multivector_t& rhs);       \
-    const multivector_t operator-   () const;                         \
-    multivector_t&      operator*=  (const Scalar_T& scr);            \
-    multivector_t&      operator*=  (const multivector_t& rhs);       \
-    multivector_t&      operator%=  (const multivector_t& rhs);       \
-    multivector_t&      operator&=  (const multivector_t& rhs);       \
-    multivector_t&      operator^=  (const multivector_t& rhs);       \
-    multivector_t&      operator/=  (const Scalar_T& scr);            \
-    multivector_t&      operator/=  (const multivector_t& rhs);       \
-    multivector_t&      operator|=  (const multivector_t& rhs);       \
-    const multivector_t inv         () const;                         \
-    const multivector_t pow         (int m) const;                    \
-    const multivector_t outer_pow   (int m) const;                    \
-    const index_set_t   frame()     const;                            \
-    index_t             grade()     const;                            \
-    Scalar_T            operator[]  (const index_set_t ist) const;    \
-    const multivector_t operator()  (index_t grade) const;            \
-    Scalar_T            scalar()    const;                            \
-    const multivector_t pure()      const;                            \
-    const multivector_t even()      const;                            \
-    const multivector_t odd()       const;                            \
-    const vector_t      vector_part() const;                          \
+    bool                operator==  (const multivector_t& val) const override; \
+    bool                operator==  (const Scalar_T& scr) const override;      \
+    multivector_t&      operator+=  (const multivector_t& rhs) override;       \
+    multivector_t&      operator+=  (const Scalar_T& scr) override;            \
+    multivector_t&      operator-=  (const multivector_t& rhs) override;       \
+    const multivector_t operator-   () const override;                         \
+    multivector_t&      operator*=  (const Scalar_T& scr) override;            \
+    multivector_t&      operator*=  (const multivector_t& rhs) override;       \
+    multivector_t&      operator%=  (const multivector_t& rhs) override;       \
+    multivector_t&      operator&=  (const multivector_t& rhs) override;       \
+    multivector_t&      operator^=  (const multivector_t& rhs) override;       \
+    multivector_t&      operator/=  (const Scalar_T& scr) override;            \
+    multivector_t&      operator/=  (const multivector_t& rhs) override;       \
+    multivector_t&      operator|=  (const multivector_t& rhs) override;       \
+    const multivector_t inv         () const override;                         \
+    const multivector_t pow         (int m) const override;                    \
+    const multivector_t outer_pow   (int m) const override;                    \
+    const index_set_t   frame()     const override;                            \
+    index_t             grade()     const override;                            \
+    Scalar_T            operator[]  (const index_set_t ist) const override;    \
+    const multivector_t operator()  (index_t grade) const override;            \
+    Scalar_T            scalar()    const override;                            \
+    const multivector_t pure()      const override;                            \
+    const multivector_t even()      const override;                            \
+    const multivector_t odd()       const override;                            \
+    const vector_t      vector_part() const override;                          \
     const vector_t      vector_part                                   \
-         (const index_set_t frm, const bool prechecked = false) const;\
-    const multivector_t involute()  const;                            \
-    const multivector_t reverse()   const;                            \
-    const multivector_t conj()      const;                            \
-    Scalar_T            quad()      const;                            \
-    Scalar_T            norm()      const;                            \
-    Scalar_T            max_abs()   const;                            \
-    const multivector_t truncated                                     \
-         (const Scalar_T& limit = Scalar_T(DEFAULT_TRUNCATION)) const;\
-    bool                isnan       () const;                         \
-    void                write       (const std::string& msg="") const;\
-    void                write       (std::ofstream& ofile, const std::string& msg="") const;
+         (const index_set_t frm, const bool prechecked = false) const override;\
+    const multivector_t involute()  const override;                            \
+    const multivector_t reverse()   const override;                            \
+    const multivector_t conj()      const override;                            \
+    Scalar_T            quad()      const override;                            \
+    Scalar_T            norm()      const override;                            \
+    Scalar_T            max_abs()   const override;                            \
+    const multivector_t truncated                                              \
+         (const Scalar_T& limit = Scalar_T(DEFAULT_TRUNCATION)) const override;\
+    bool                isnan       () const override;                         \
+    void                write       (const std::string& msg="") const override;\
+    void                write       (std::ofstream& ofile, const std::string& msg="") const override;
 #endif // _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
 
   /// Test for inequality of multivectors
@@ -531,7 +531,7 @@ namespace glucat
   >
   const Multivector<Scalar_T,LO,HI>
   complexifier(const Multivector<Scalar_T,LO,HI>& val);
-  
+
   /// Square root of -1 which commutes with all members of the frame of the given multivector
   /// The name "elliptic" is now deprecated: use "complexifier" instead.
   template
@@ -569,7 +569,7 @@ namespace glucat
   >
   const Multivector<Scalar_T,LO,HI>
   clifford_exp(const Multivector<Scalar_T,LO,HI>& val);
-  
+
   /// Natural logarithm of multivector with specified complexifier
   template
   <
