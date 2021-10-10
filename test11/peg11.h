@@ -145,7 +145,7 @@ namespace peg11
     static const index_t v_lo = index_set_t::v_lo;
     static const index_t v_hi = index_set_t::v_hi;
     static const index_t max_n = min(-v_lo, v_hi);
-    const index_t max_index = index_t(n);
+    const auto max_index = index_t(n);
     if (max_index > max_n)
     {
       cout << "Value " << max_index << " is too big." << endl;

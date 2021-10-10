@@ -166,7 +166,7 @@ namespace glucat
   {
     if (!prechecked && index_t(vec.size()) != frm.count())
       throw error_t("multivector_t(vec,frm): cannot initialize with vector not matching frame");
-    typename vector_t::const_iterator vec_it = vec.begin();
+    auto vec_it = vec.begin();
     const index_t begin_index = frm.min();
     const index_t end_index = frm.max()+1;
     for (index_t
@@ -339,7 +339,7 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   operator+= (const multivector_t& rhs)
   { // simply add terms
-    for (const_iterator
+    for (auto
         rhs_it = rhs.begin();
         rhs_it != rhs.end();
         ++rhs_it)
@@ -354,7 +354,7 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   operator-= (const multivector_t& rhs)
   {
-    for (const_iterator
+    for (auto
         rhs_it = rhs.begin();
         rhs_it != rhs.end();
         ++rhs_it)
@@ -386,7 +386,7 @@ namespace glucat
       else
         this->clear();
     else
-      for (iterator
+      for (auto
           this_it = this->begin();
           this_it != this->end();
           ++this_it)
@@ -538,7 +538,7 @@ namespace glucat
         const index_set_t result_ist = index_set_t(result_stv, our_frame, true);
         const index_set_t lhs_result_frame = lhs_frame & result_ist;
         const set_value_t lhs_result_dim = 1 << lhs_result_frame.count();
-        Scalar_T result_crd = Scalar_T(0);
+        auto result_crd = Scalar_T(0);
         for (set_value_t
             lhs_stv = 0;
             lhs_stv != lhs_result_dim;
@@ -633,7 +633,7 @@ namespace glucat
         const index_set_t result_ist = index_set_t(result_stv, our_frame, true);
         const index_set_t comp_frame = our_frame & ~result_ist;
         const set_value_t comp_dim = 1 << comp_frame.count();
-        Scalar_T result_crd = Scalar_T(0);
+        auto result_crd = Scalar_T(0);
         for (set_value_t
             comp_stv = 1;
             comp_stv != comp_dim;
@@ -788,7 +788,7 @@ namespace glucat
         const index_set_t result_ist = index_set_t(result_stv, our_frame, true);
         const index_set_t comp_frame = lhs_frame & ~result_ist;
         const set_value_t comp_dim = 1 << comp_frame.count();
-        Scalar_T result_crd = Scalar_T(0);
+        auto result_crd = Scalar_T(0);
         for (set_value_t
             comp_stv = 0;
             comp_stv != comp_dim;
@@ -859,7 +859,7 @@ namespace glucat
     typedef typename map_t::const_iterator const_iterator;
     typedef typename multivector_t::index_set_t index_set_t;
 
-    Scalar_T result = Scalar_T(0);
+    auto result = Scalar_T(0);
     const bool small_star_large = lhs.size() < rhs.size();
     const multivector_t* smallp =
       small_star_large
@@ -870,7 +870,7 @@ namespace glucat
       ? &rhs
       : &lhs;
 
-    for (const_iterator
+    for (auto
          small_it = smallp->begin();
          small_it != smallp->end();
          ++small_it)
@@ -899,7 +899,7 @@ namespace glucat
       else
         this->clear();
     else
-      for (iterator
+      for (auto
           this_it = this->begin();
           this_it != this->end();
           ++this_it)
@@ -998,7 +998,7 @@ namespace glucat
   frame() const
   {
     index_set_t result;
-    for (const_iterator
+    for (auto
         this_it = this->begin();
         this_it != this->end();
         ++this_it)
@@ -1014,7 +1014,7 @@ namespace glucat
   grade() const
   {
     index_t result = 0;
-    for (const_iterator
+    for (auto
         this_it = this->begin();
         this_it != this->end();
         ++this_it)
@@ -1047,7 +1047,7 @@ namespace glucat
     else
     {
       multivector_t result;
-      for (const_iterator
+      for (auto
           this_it = this->begin();
           this_it != this->end();
           ++this_it)
@@ -1080,7 +1080,7 @@ namespace glucat
   even() const
   { // even part of x, sum of the pure(count) with even count
     multivector_t result;
-    for (const_iterator
+    for (auto
         this_it = this->begin();
         this_it != this->end();
         ++this_it)
@@ -1096,7 +1096,7 @@ namespace glucat
   odd() const
   { // even part of x, sum of the pure(count) with even count
     multivector_t result;
-    for (const_iterator
+    for (auto
         this_it = this->begin();
         this_it != this->end();
         ++this_it)
@@ -1141,7 +1141,7 @@ namespace glucat
   involute() const
   {
     multivector_t result = *this;
-    for (iterator
+    for (auto
         result_it = result.begin();
         result_it != result.end();
         ++result_it)
@@ -1159,7 +1159,7 @@ namespace glucat
   reverse() const
   {
     multivector_t result = *this;
-    for (iterator
+    for (auto
         result_it = result.begin();
         result_it != result.end();
         ++result_it)
@@ -1184,7 +1184,7 @@ namespace glucat
   conj() const
   {
     multivector_t result = *this;
-    for (iterator
+    for (auto
         result_it = result.begin();
         result_it != result.end();
         ++result_it)
@@ -1210,8 +1210,8 @@ namespace glucat
   {
     // scalar(conj(x)*x) = 2*quad(even(x)) - quad(x)
     // ref: old clical: quadfunction(p:pter):pterm in file compmod.pas
-    Scalar_T result = Scalar_T(0);
-    for (const_iterator
+    auto result = Scalar_T(0);
+    for (auto
         this_it = this->begin();
         this_it != this->end();
         ++this_it)
@@ -1233,8 +1233,8 @@ namespace glucat
   {
     typedef numeric_traits<Scalar_T> traits_t;
 
-    Scalar_T result = Scalar_T(0);
-    for (const_iterator
+    auto result = Scalar_T(0);
+    for (auto
         this_it = this->begin();
         this_it != this->end();
         ++this_it)
@@ -1253,8 +1253,8 @@ namespace glucat
   {
     typedef numeric_traits<Scalar_T> traits_t;
 
-    Scalar_T result = Scalar_T(0);
-    for (const_iterator
+    auto result = Scalar_T(0);
+    for (auto
         this_it = this->begin();
         this_it != this->end();
         ++this_it)
@@ -1332,7 +1332,7 @@ namespace glucat
 
     sorted_range (Sorted_Map_T &sorted_val, const Map_T& val)
     {
-      for (typename map_t::const_iterator
+      for (auto
           val_it = val.begin();
           val_it != val.end();
           ++val_it)
@@ -1377,7 +1377,7 @@ namespace glucat
       typedef typename sorted_map_t::const_iterator sorted_iterator;
       sorted_map_t sorted_val;
       sorted_range< map_t, sorted_map_t > sorted_val_range(sorted_val, val);
-      sorted_iterator sorted_it = sorted_val_range.sorted_begin;
+      auto sorted_it = sorted_val_range.sorted_begin;
       os << *sorted_it;
       for (++sorted_it;
           sorted_it != sorted_val_range.sorted_end;
@@ -1455,7 +1455,7 @@ namespace glucat
       // A term consists of an optional scalar, followed by an optional index set.
       // At least one of the two must be present.
       // Default coordinate is Scalar_T(1).
-      Scalar_T  coordinate  = Scalar_T(1);
+      auto  coordinate  = Scalar_T(1);
       // Default index set is empty.
       index_set<LO,HI> ist;
       // First, check for an opening brace.
@@ -1575,7 +1575,7 @@ namespace glucat
     typedef numeric_traits<Scalar_T> traits_t;
 
     if (std::numeric_limits<Scalar_T>::has_quiet_NaN)
-      for (const_iterator
+      for (auto
           this_it = this->begin();
           this_it != this->end();
           ++this_it)
@@ -1598,7 +1598,7 @@ namespace glucat
     Scalar_T top = max_abs();
     multivector_t result;
     if (top != Scalar_T(0))
-      for (const_iterator
+      for (auto
           this_it = this->begin();
           this_it != this->end();
           ++this_it)
@@ -1618,7 +1618,7 @@ namespace glucat
     else
     {
       multivector_t result;
-      for (const_iterator
+      for (auto
           this_it = this->begin();
           this_it != this->end();
           ++this_it)
@@ -1638,7 +1638,7 @@ namespace glucat
     else
     {
       multivector_t result;
-      for (const_iterator
+      for (auto
           this_it = this->begin();
           this_it != this->end();
           ++this_it)
@@ -1782,7 +1782,7 @@ namespace glucat
   {
     multivector_t quo;
     multivector_t rem;
-    for (const_iterator
+    for (auto
         this_it = this->begin();
         this_it != this->end();
         ++this_it)

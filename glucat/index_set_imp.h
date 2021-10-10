@@ -118,7 +118,7 @@ namespace glucat
   index_set<LO,HI>::
   operator== (const index_set_t rhs) const
   {
-    const bitset_t* pthis = static_cast<const bitset_t*>(this);
+    const auto* pthis = static_cast<const bitset_t*>(this);
     return *pthis == static_cast<bitset_t>(rhs);
   }
 
@@ -129,7 +129,7 @@ namespace glucat
   index_set<LO,HI>::
   operator!= (const index_set_t rhs) const
   {
-    const bitset_t* pthis = static_cast<const bitset_t*>(this);
+    const auto* pthis = static_cast<const bitset_t*>(this);
     return *pthis != static_cast<bitset_t>(rhs);
   }
 
@@ -375,7 +375,7 @@ namespace glucat
   index_set<LO,HI>::
   count_pos() const
   {
-    const bitset_t* pthis = static_cast<const bitset_t*>(this);
+    const auto* pthis = static_cast<const bitset_t*>(this);
     const index_set_t pos_part = *pthis >> -LO;
     return pos_part.count();
   }

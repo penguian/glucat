@@ -250,7 +250,7 @@ namespace glucat { namespace matrix
     const matrix_index_t res_s1 = rhs_s1 / lhs_s1;
     const matrix_index_t res_s2 = rhs_s2 / lhs_s2;
     typedef typename matrix_t::value_type Scalar_T;
-    const Scalar_T norm_frob2_lhs = Scalar_T( double(lhs_s1) );
+    const auto norm_frob2_lhs = Scalar_T( double(lhs_s1) );
     matrix_t result(res_s1, res_s2);
     result.clear();
     for (typename LHS_T::const_iterator1
@@ -392,7 +392,7 @@ namespace glucat { namespace matrix
   Scalar_T
   inner(const LHS_T& lhs, const RHS_T& rhs)
   {
-    Scalar_T result = Scalar_T(0);
+    auto result = Scalar_T(0);
     for (typename LHS_T::const_iterator1
         lhs_it1 = lhs.begin1();
         lhs_it1 != lhs.end1();
@@ -416,7 +416,7 @@ namespace glucat { namespace matrix
   {
     typedef typename Matrix_T::value_type Scalar_T;
 
-    Scalar_T result = Scalar_T(0);
+    auto result = Scalar_T(0);
     for (typename Matrix_T::const_iterator1
         val_it1 = val.begin1();
         val_it1 != val.end1();
@@ -441,7 +441,7 @@ namespace glucat { namespace matrix
     typedef typename Matrix_T::value_type Scalar_T;
     typedef typename Matrix_T::size_type matrix_index_t;
 
-    Scalar_T result = Scalar_T(0);
+    auto result = Scalar_T(0);
     matrix_index_t dim = val.size1();
     for (matrix_index_t ndx=0;
         ndx != dim;
@@ -581,7 +581,7 @@ namespace glucat { namespace matrix
 
     if (result.m_eig_case == both_eig_case)
     {
-      typename std::set<double>::const_iterator arg_it = arg_set.begin();
+      auto arg_it = arg_set.begin();
       double first_arg = *arg_it;
       double best_arg = first_arg;
       double best_diff = 0.0;

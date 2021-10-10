@@ -171,7 +171,7 @@ namespace glucat
   matrix_multi(const index_set_t ist, const Scalar_T& crd)
   : m_frame( ist )
   {
-    const matrix_index_t dim = folded_dim<matrix_index_t>(this->m_frame);
+    const auto dim = folded_dim<matrix_index_t>(this->m_frame);
     this->m_matrix.resize(dim, dim, false);
     this->m_matrix.clear();
     *this += term_t(ist, crd);
@@ -197,7 +197,7 @@ namespace glucat
   matrix_multi(const Scalar_T& scr, const index_set_t frm)
   : m_frame( frm )
   {
-    const matrix_index_t dim = folded_dim<matrix_index_t>(frm);
+    const auto dim = folded_dim<matrix_index_t>(frm);
     this->m_matrix.resize(dim, dim, false);
     this->m_matrix.clear();
     *this += term_t(index_set_t(), scr);
@@ -218,10 +218,10 @@ namespace glucat
   {
     if (!prechecked && index_t(vec.size()) != frm.count())
       throw error_t("multivector_t(vec,frm): cannot initialize with vector not matching frame");
-    const matrix_index_t dim = folded_dim<matrix_index_t>(frm);
+    const auto dim = folded_dim<matrix_index_t>(frm);
     this->m_matrix.resize(dim, dim, false);
     this->m_matrix.clear();
-    typename vector_t::const_iterator vec_it = vec.begin();
+    auto vec_it = vec.begin();
     const index_t begin_index = frm.min();
     const index_t end_index = frm.max()+1;
 
@@ -263,12 +263,12 @@ namespace glucat
       }
       catch (const glucat_error& e)
       { }
-    const matrix_index_t dim = folded_dim<matrix_index_t>(this->m_frame);
+    const auto dim = folded_dim<matrix_index_t>(this->m_frame);
     this->m_matrix.resize(dim, dim, false);
     this->m_matrix.clear();
 
     typedef framed_multi<Other_Scalar_T,LO,HI> framed_multi_t;
-    for (typename framed_multi_t::const_iterator
+    for (auto
         val_it = val.begin();
         val_it != val.end();
         ++val_it)
@@ -291,12 +291,12 @@ namespace glucat
       catch (const glucat_error& e)
       { }
     this->m_frame = our_frame;
-    const matrix_index_t dim = folded_dim<matrix_index_t>(our_frame);
+    const auto dim = folded_dim<matrix_index_t>(our_frame);
     this->m_matrix.resize(dim, dim, false);
     this->m_matrix.clear();
 
     typedef framed_multi<Other_Scalar_T,LO,HI> framed_multi_t;
-    for (typename framed_multi_t::const_iterator
+    for (auto
         val_it = val.begin();
         val_it != val.end();
         ++val_it)
@@ -1281,7 +1281,7 @@ namespace glucat
         result = matrix::mono_prod(result, e[k]);
     if (use_cache)
     {
-      basis_matrix_t* result_ptr = new basis_matrix_t(result);
+      auto* result_ptr = new basis_matrix_t(result);
       basis_cache.insert(basis_pair_t(folded_pair, result_ptr));
       basis_cache.insert(basis_pair_t(unfolded_pair, result_ptr));
     }
@@ -1684,7 +1684,7 @@ namespace glucat
       rescale = i * sqrt_scale;
 
     const multivector_t& unitval = val / scale;
-    const Scalar_T max_norm = Scalar_T(1.0/4.0);
+    const auto max_norm = Scalar_T(1.0/4.0);
 
 #if defined(_GLUCAT_USE_EIGENVALUES)
     multivector_t scaled_result;
@@ -1978,13 +1978,13 @@ namespace glucat{
     typedef std::numeric_limits<Scalar_T> limits_t;
     static const Scalar_T epsilon = limits_t::epsilon();
     static const Scalar_T max_inner_norm = traits_t::pow(epsilon, 2);
-    static const Scalar_T max_outer_norm = Scalar_T(6.0/limits_t::digits);
+    static const auto max_outer_norm = Scalar_T(6.0/limits_t::digits);
     multivector_t Y = val;
     multivector_t E = Scalar_T(0);
     Scalar_T norm_Y_1;
     int outer_step;
-    Scalar_T pow_2_outer_step = Scalar_T(1);
-    Scalar_T pow_4_outer_step = Scalar_T(1);
+    auto pow_2_outer_step = Scalar_T(1);
+    auto pow_4_outer_step = Scalar_T(1);
     for (outer_step = 0, norm_Y_1 = norm(Y - Scalar_T(1));
         outer_step != Tune_P::log_max_outer_steps && norm_Y_1 * pow_2_outer_step > max_outer_norm;
         ++outer_step,    norm_Y_1 = norm(Y - Scalar_T(1)))
@@ -2081,7 +2081,7 @@ namespace glucat{
       return matrix_log(-i * val, i) + i * pi/Scalar_T(2);
 #endif
     // Scale val towards abs(A) == 1 or towards A == 1 as appropriate
-    const Scalar_T max_norm = Scalar_T(1.0/9.0);
+    const auto max_norm = Scalar_T(1.0/9.0);
     const Scalar_T scale =
       (realval != Scalar_T(0) && norm(val/realval - Scalar_T(1)) < max_norm)
       ? realval
