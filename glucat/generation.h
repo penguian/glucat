@@ -68,8 +68,8 @@ namespace glucat { namespace gen
     // Reference: A. Alexandrescu, "Modern C++ Design", Chapter 6
     generator_table() = default;
     ~generator_table() = default;
-    generator_table(const generator_table&);
-    generator_table& operator= (const generator_table&);
+    generator_table(const generator_table&) = delete;
+    generator_table& operator= (const generator_table&) = delete;
     
     /// Friend declaration to avoid compiler warning:
     /// "... only defines a private destructor and has no friends"

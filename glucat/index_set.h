@@ -178,7 +178,7 @@ namespace glucat
       friend class index_set;
 
       /// Private default constructor is left undefined
-      reference();
+      reference() = delete;
     public:
       reference   (index_set_t& ist, index_t idx);
       ~reference  () = default;

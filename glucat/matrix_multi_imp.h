@@ -1221,8 +1221,8 @@ namespace glucat
     // Reference: A. Alexandrescu, "Modern C++ Design", Chapter 6
     basis_table() = default;
     ~basis_table() = default;
-    basis_table(const basis_table&);
-    basis_table& operator= (const basis_table&);
+    basis_table(const basis_table&) = delete;
+    basis_table& operator= (const basis_table&) = delete;
 
     /// Friend declaration to avoid compiler warning:
     /// "... only defines a private destructor and has no friends"

@@ -54,8 +54,8 @@ namespace glucat
     /// "... only defines a private destructor and has no friends"
     /// Ref: Carlos O'Ryan, ACE http://doc.ece.uci.edu
     friend class friend_for_private_destructor;
-    random_generator(const random_generator&);
-    random_generator& operator= (const random_generator&);
+    random_generator(const random_generator&) = delete;
+    random_generator& operator= (const random_generator&) = delete;
     static const unsigned long seed = 19590921UL;
 #if defined(_GLUCAT_USE_GSL_RANDOM)
 
