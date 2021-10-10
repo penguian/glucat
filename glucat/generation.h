@@ -66,8 +66,8 @@ namespace glucat { namespace gen
 
     // Enforce singleton
     // Reference: A. Alexandrescu, "Modern C++ Design", Chapter 6
-    generator_table() {}
-    ~generator_table() {}
+    generator_table() = default;
+    ~generator_table() = default;
     generator_table(const generator_table&);
     generator_table& operator= (const generator_table&);
     

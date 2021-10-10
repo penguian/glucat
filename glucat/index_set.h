@@ -89,7 +89,7 @@ namespace glucat
 
     static const std::string  classname();
     /// Default constructor creates an empty set
-    index_set    () { }
+    index_set    () = default;
     /// Constructor from bitset_t
     index_set    (const bitset_t bst);
     /// Constructor from index
@@ -181,7 +181,7 @@ namespace glucat
       reference();
     public:
       reference   (index_set_t& ist, index_t idx);
-      ~reference  () {}
+      ~reference  () = default;
       /// for b[i] = x;
       reference&  operator= (const bool x);
       /// for b[i] = b[j];

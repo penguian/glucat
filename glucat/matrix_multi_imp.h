@@ -1219,8 +1219,8 @@ namespace glucat
   private:
     // Enforce singleton
     // Reference: A. Alexandrescu, "Modern C++ Design", Chapter 6
-    basis_table() {}
-    ~basis_table() {}
+    basis_table() = default;
+    ~basis_table() = default;
     basis_table(const basis_table&);
     basis_table& operator= (const basis_table&);
 

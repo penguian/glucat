@@ -162,7 +162,7 @@ namespace glucat
     /// Class name used in messages
     static const std::string classname();
     /// Destructor
-    ~matrix_multi() override {};
+    ~matrix_multi() override = default;
     /// Default constructor
     matrix_multi();
     /// Construct a multivector from a multivector with a different scalar type

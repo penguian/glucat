@@ -56,8 +56,8 @@ namespace glucat
     control_t(int argc, char ** argv);
     // Enforce singleton
     // Reference: A. Alexandrescu, "Modern C++ Design", Chapter 6
-    control_t() {}
-    ~control_t() {}
+    control_t() = default;
+    ~control_t() = default;
     control_t(const control_t&);
     control_t& operator= (const control_t&);
 

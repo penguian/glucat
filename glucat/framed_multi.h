@@ -199,7 +199,7 @@ namespace glucat
     /// Class name used in messages
     static const std::string classname();
     /// Destructor
-    ~framed_multi() override {};
+    ~framed_multi() override = default;
     /// Default constructor
     framed_multi();
 
@@ -315,7 +315,7 @@ namespace glucat
       static const std::string classname()
       { return "var_term"; };
       /// Destructor
-      ~var_term() {};
+      ~var_term() = default;
       /// Default constructor
       var_term()
       : var_pair_t(index_set_t(), Scalar_T(1))

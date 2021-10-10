@@ -84,8 +84,7 @@ namespace glucat
     uint_gen(), uniform_dist(0.0, 1.0), normal_dist(0.0, 1.0)
     { this->uint_gen.seed(seed); }
 
-    ~random_generator()
-    { }
+    ~random_generator() = default;
 
   public:
     Scalar_T uniform()

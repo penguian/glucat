@@ -50,7 +50,7 @@ namespace glucat
 
     static  const std::string   classname();
 
-    virtual ~clifford_algebra() {};
+    virtual ~clifford_algebra() = default;
 
   // clifford_algebra operations
     /// Test for equality of multivectors
