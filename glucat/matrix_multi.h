@@ -133,30 +133,29 @@ namespace glucat
   public clifford_algebra< Scalar_T, index_set<LO,HI>, matrix_multi<Scalar_T,LO,HI> >
   {
   public:
-    typedef matrix_multi                               multivector_t;
-    typedef multivector_t                              matrix_multi_t;
-    typedef Scalar_T                                   scalar_t;
-    typedef index_set<LO,HI>                           index_set_t;
-    typedef std::pair<const index_set_t, Scalar_T>     term_t;
-    typedef std::vector<Scalar_T>                      vector_t;
-    typedef error<multivector_t>                       error_t;
-    typedef      framed_multi<Scalar_T,LO,HI>          framed_multi_t;
+    using multivector_t = matrix_multi;
+    using matrix_multi_t = multivector_t;
+    using scalar_t = Scalar_T;
+    using index_set_t = index_set<LO, HI>;
+    using term_t = std::pair<const index_set_t, Scalar_T>;
+    using vector_t = std::vector<Scalar_T>;
+    using error_t = error<multivector_t>;
+    using framed_multi_t = framed_multi<Scalar_T, LO, HI>;
     template< typename Other_Scalar_T, const index_t Other_LO, const index_t Other_HI >
     friend class framed_multi;
     template< typename Other_Scalar_T, const index_t Other_LO, const index_t Other_HI >
     friend class matrix_multi;
 
   private:
-    typedef ublas::row_major                           orientation_t;
-    typedef ublas::compressed_matrix< int, orientation_t >
-                                                       basis_matrix_t;
+    using orientation_t = ublas::row_major;
+    using basis_matrix_t = ublas::compressed_matrix<int, orientation_t>;
 #if defined(_GLUCAT_USE_DENSE_MATRICES)
-    typedef ublas::matrix< Scalar_T, orientation_t >   matrix_t;
+    using matrix_t = ublas::matrix<Scalar_T, orientation_t>;
 #else
     typedef ublas::compressed_matrix< Scalar_T, orientation_t >
                                                        matrix_t;
 #endif
-    typedef typename matrix_t::size_type               matrix_index_t;
+    using matrix_index_t = typename matrix_t::size_type;
 
   public:
     /// Class name used in messages

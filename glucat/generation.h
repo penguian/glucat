@@ -40,7 +40,7 @@ namespace glucat { namespace gen
   namespace ublas = boost::numeric::ublas;
   
   /// A signature is a pair of indices, p, q, with p == frame.max(), q == -frame.min()
-  typedef std::pair<index_t, index_t> signature_t;
+  using signature_t = std::pair<index_t, index_t>;
 
   /// Table of generators for specific signatures
   template< class Matrix_T >

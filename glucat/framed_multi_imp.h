@@ -82,8 +82,8 @@ namespace glucat
   framed_multi(const framed_multi<Other_Scalar_T,LO,HI>& val)
   : map_t(_GLUCAT_HASH_N(val.size()))
   {
-    typedef framed_multi<Other_Scalar_T,LO,HI> other_framed_multi_t;
-    typedef typename other_framed_multi_t::const_iterator other_const_iterator;
+    using other_framed_multi_t = framed_multi<Other_Scalar_T, LO, HI>;
+    using other_const_iterator = typename other_framed_multi_t::const_iterator;
     const other_const_iterator val_begin = val.begin();
     const other_const_iterator val_end   = val.end();
     for (other_const_iterator val_it = val_begin; val_it != val_end; ++val_it)
@@ -98,8 +98,8 @@ namespace glucat
                const index_set_t frm, const bool prechecked)
   : map_t(_GLUCAT_HASH_N(val.size()))
   {
-    typedef framed_multi<Other_Scalar_T,LO,HI> other_framed_multi_t;
-    typedef typename other_framed_multi_t::const_iterator other_const_iterator;
+    using other_framed_multi_t = framed_multi<Other_Scalar_T, LO, HI>;
+    using other_const_iterator = typename other_framed_multi_t::const_iterator;
     const other_const_iterator val_begin = val.begin();
     const other_const_iterator val_end   = val.end();
     for (other_const_iterator val_it = val_begin; val_it != val_end; ++val_it)
@@ -218,9 +218,9 @@ namespace glucat
     if (val == Other_Scalar_T(0))
       return;
 
-    typedef typename matrix_multi_t::matrix_index_t matrix_index_t;
+    using matrix_index_t = typename matrix_multi_t::matrix_index_t;
     const matrix_index_t dim = val.m_matrix.size1();
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
     if (dim == 1)
     {
       this->insert(term_t(index_set_t(), traits_t::to_scalar_t(val.m_matrix(0, 0))));
@@ -376,7 +376,7 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   operator*= (const Scalar_T& scr)
   { // multiply coordinates of all terms by scalar
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
 
     if (traits_t::isNaN_or_isInf(scr))
       return *this = traits_t::NaN();
@@ -399,12 +399,12 @@ namespace glucat
   const framed_multi<Scalar_T,LO,HI>
   operator* (const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs)
   {
-    typedef framed_multi<Scalar_T,LO,HI> multivector_t;
-    typedef numeric_traits<Scalar_T> traits_t;
-    typedef typename multivector_t::index_set_t index_set_t;
-    typedef typename multivector_t::term_t term_t;
-    typedef typename multivector_t::map_t map_t;
-    typedef typename map_t::const_iterator const_iterator;
+    using multivector_t = framed_multi<Scalar_T, LO, HI>;
+    using traits_t = numeric_traits<Scalar_T>;
+    using index_set_t = typename multivector_t::index_set_t;
+    using term_t = typename multivector_t::term_t;
+    using map_t = typename multivector_t::map_t;
+    using const_iterator = typename map_t::const_iterator;
 
     if (lhs.isnan() || rhs.isnan())
       return traits_t::NaN();
@@ -481,7 +481,7 @@ namespace glucat
 #endif
     else
     { // Past a certain threshold, the matrix algorithm is fastest
-      typedef typename multivector_t::matrix_multi_t matrix_multi_t;
+      using matrix_multi_t = typename multivector_t::matrix_multi_t;
       return matrix_multi_t(lhs, our_frame, true) *
              matrix_multi_t(rhs, our_frame, true);
     }
@@ -505,11 +505,11 @@ namespace glucat
     if (lhs.empty() || rhs.empty())
       return Scalar_T(0);
 
-    typedef framed_multi<Scalar_T,LO,HI> multivector_t;
-    typedef typename multivector_t::index_set_t index_set_t;
-    typedef typename multivector_t::term_t term_t;
-    typedef typename multivector_t::map_t map_t;
-    typedef typename map_t::const_iterator const_iterator;
+    using multivector_t = framed_multi<Scalar_T, LO, HI>;
+    using index_set_t = typename multivector_t::index_set_t;
+    using term_t = typename multivector_t::term_t;
+    using map_t = typename multivector_t::map_t;
+    using const_iterator = typename map_t::const_iterator;
 
     multivector_t result;
     const index_set_t empty_set = index_set_t();
@@ -605,11 +605,11 @@ namespace glucat
     if (lhs.empty() || rhs.empty())
       return Scalar_T(0);
 
-    typedef framed_multi<Scalar_T,LO,HI> multivector_t;
-    typedef typename multivector_t::index_set_t index_set_t;
-    typedef typename multivector_t::term_t term_t;
-    typedef typename multivector_t::map_t map_t;
-    typedef typename map_t::const_iterator const_iterator;
+    using multivector_t = framed_multi<Scalar_T, LO, HI>;
+    using index_set_t = typename multivector_t::index_set_t;
+    using term_t = typename multivector_t::term_t;
+    using map_t = typename multivector_t::map_t;
+    using const_iterator = typename map_t::const_iterator;
 
     const const_iterator lhs_end   = lhs.end();
     const const_iterator rhs_end   = rhs.end();
@@ -726,11 +726,11 @@ namespace glucat
     if (lhs.empty() || rhs.empty())
       return Scalar_T(0);
 
-    typedef framed_multi<Scalar_T,LO,HI> multivector_t;
-    typedef typename multivector_t::index_set_t index_set_t;
-    typedef typename multivector_t::term_t term_t;
-    typedef typename multivector_t::map_t map_t;
-    typedef typename map_t::const_iterator const_iterator;
+    using multivector_t = framed_multi<Scalar_T, LO, HI>;
+    using index_set_t = typename multivector_t::index_set_t;
+    using term_t = typename multivector_t::term_t;
+    using map_t = typename multivector_t::map_t;
+    using const_iterator = typename map_t::const_iterator;
 
 #if defined(_GLUCAT_MAP_IS_ORDERED)
     // Both lhs and rhs are sorted by increasing grade, then lexicographically,
@@ -854,10 +854,10 @@ namespace glucat
   Scalar_T
   star(const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs)
   {
-    typedef framed_multi<Scalar_T,LO,HI> multivector_t;
-    typedef typename multivector_t::map_t map_t;
-    typedef typename map_t::const_iterator const_iterator;
-    typedef typename multivector_t::index_set_t index_set_t;
+    using multivector_t = framed_multi<Scalar_T, LO, HI>;
+    using map_t = typename multivector_t::map_t;
+    using const_iterator = typename map_t::const_iterator;
+    using index_set_t = typename multivector_t::index_set_t;
 
     auto result = Scalar_T(0);
     const bool small_star_large = lhs.size() < rhs.size();
@@ -889,7 +889,7 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   operator/= (const Scalar_T& scr)
   { // Divide coordinates of all terms by scr
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
 
     if (traits_t::isNaN(scr))
       return *this = traits_t::NaN();
@@ -913,10 +913,10 @@ namespace glucat
   const framed_multi<Scalar_T,LO,HI>
   operator/ (const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs)
   {
-    typedef framed_multi<Scalar_T,LO,HI> multivector_t;
-    typedef numeric_traits<Scalar_T> traits_t;
-    typedef typename multivector_t::index_set_t index_set_t;
-    typedef typename multivector_t::matrix_multi_t matrix_multi_t;
+    using multivector_t = framed_multi<Scalar_T, LO, HI>;
+    using traits_t = numeric_traits<Scalar_T>;
+    using index_set_t = typename multivector_t::index_set_t;
+    using matrix_multi_t = typename multivector_t::matrix_multi_t;
 
     if (rhs == Scalar_T(0))
       return traits_t::NaN();
@@ -939,8 +939,8 @@ namespace glucat
   const framed_multi<Scalar_T,LO,HI>
   operator| (const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs)
   {
-    typedef framed_multi<Scalar_T,LO,HI> multivector_t;
-    typedef typename multivector_t::matrix_multi_t matrix_multi_t;
+    using multivector_t = framed_multi<Scalar_T, LO, HI>;
+    using matrix_multi_t = typename multivector_t::matrix_multi_t;
 
     return matrix_multi_t(rhs) * matrix_multi_t(lhs) / matrix_multi_t(rhs.involute());
   }
@@ -1231,7 +1231,7 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   norm() const
   {
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
 
     auto result = Scalar_T(0);
     for (auto
@@ -1251,7 +1251,7 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   max_abs() const
   {
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
 
     auto result = Scalar_T(0);
     for (auto
@@ -1272,11 +1272,11 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   random(const index_set<LO,HI> frm, Scalar_T fill)
   {
-    typedef framed_multi<Scalar_T,LO,HI> multivector_t;
-    typedef typename multivector_t::index_set_t index_set_t;
-    typedef typename multivector_t::term_t term_t;
+    using multivector_t = framed_multi<Scalar_T, LO, HI>;
+    using index_set_t = typename multivector_t::index_set_t;
+    using term_t = typename multivector_t::term_t;
 
-    typedef random_generator<Scalar_T> random_generator_t;
+    using random_generator_t = random_generator<Scalar_T>;
     random_generator_t& generator = random_generator_t::generator();
 
     fill =
@@ -1286,7 +1286,7 @@ namespace glucat
         ? Scalar_T(1)
         : fill;
     const set_value_t algebra_dim = 1 << frm.count();
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
     const Scalar_T mean_abs = traits_t::sqrt(Scalar_T(double(algebra_dim)));
     multivector_t result;
     for (set_value_t
@@ -1326,9 +1326,9 @@ namespace glucat
   class sorted_range
   {
   public:
-    typedef Map_T map_t;
-    typedef Sorted_Map_T sorted_map_t;
-    typedef typename Sorted_Map_T::const_iterator sorted_iterator;
+    using map_t = Map_T;
+    using sorted_map_t = Sorted_Map_T;
+    using sorted_iterator = typename Sorted_Map_T::const_iterator;
 
     sorted_range (Sorted_Map_T &sorted_val, const Map_T& val)
     {
@@ -1348,9 +1348,9 @@ namespace glucat
   class sorted_range< Sorted_Map_T, Sorted_Map_T >
   {
   public:
-    typedef Sorted_Map_T map_t;
-    typedef Sorted_Map_T sorted_map_t;
-    typedef typename Sorted_Map_T::const_iterator sorted_iterator;
+    using map_t = Sorted_Map_T;
+    using sorted_map_t = Sorted_Map_T;
+    using sorted_iterator = typename Sorted_Map_T::const_iterator;
 
     sorted_range (Sorted_Map_T &sorted_val, const Sorted_Map_T& val)
     : sorted_begin( val.begin() ),
@@ -1371,10 +1371,10 @@ namespace glucat
       os << std::numeric_limits<Scalar_T>::quiet_NaN();
     else
     {
-      typedef framed_multi<Scalar_T,LO,HI>  multivector_t;
-      typedef typename multivector_t::map_t map_t;
-      typedef typename multivector_t::sorted_map_t sorted_map_t;
-      typedef typename sorted_map_t::const_iterator sorted_iterator;
+      using multivector_t = framed_multi<Scalar_T, LO, HI>;
+      using map_t = typename multivector_t::map_t;
+      using sorted_map_t = typename multivector_t::sorted_map_t;
+      using sorted_iterator = typename sorted_map_t::const_iterator;
       sorted_map_t sorted_val;
       sorted_range< map_t, sorted_map_t > sorted_val_range(sorted_val, val);
       auto sorted_it = sorted_val_range.sorted_begin;
@@ -1435,7 +1435,7 @@ namespace glucat
   std::istream&
   operator>> (std::istream& s, framed_multi<Scalar_T,LO,HI> & val)
   { // Input looks like 1.0-2.0{1,2}+3.2{3,4}.
-    typedef framed_multi<Scalar_T,LO,HI> multivector_t;
+    using multivector_t = framed_multi<Scalar_T, LO, HI>;
     // Parsing variables.
     multivector_t local_val;
     int c = 0;
@@ -1500,7 +1500,7 @@ namespace glucat
             negative
             ? -coordinate
             :  coordinate;
-          typedef typename multivector_t::term_t term_t;
+          using term_t = typename multivector_t::term_t;
           local_val += term_t(ist, coordinate);
         }
       }
@@ -1572,7 +1572,7 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   isnan() const
   {
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
 
     if (std::numeric_limits<Scalar_T>::has_quiet_NaN)
       for (auto
@@ -1590,7 +1590,7 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   truncated(const Scalar_T& limit) const
   {
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
 
     const Scalar_T abs_limit = traits_t::abs(limit);
     if (this->isnan())
@@ -1659,7 +1659,7 @@ namespace glucat
       throw error_t("centre_pm4_qp4(p,q): LO is too high to represent this value");
     if (this->frame().max() > p-4)
     {
-      typedef typename index_set_t::index_pair_t index_pair_t;
+      using index_pair_t = typename index_set_t::index_pair_t;
       const index_set_t pm3210(index_pair_t(p-3,p), true);
       const index_set_t qm4321(index_pair_t(-q-4,-q-1), true);
       const term_t& tqm4321 = term_t(qm4321, Scalar_T(1));
@@ -1704,7 +1704,7 @@ namespace glucat
       throw error_t("centre_pp4_qm4(p,q): HI is too low to represent this value");
     if (this->frame().min() < -q+4)
     {
-      typedef typename index_set_t::index_pair_t index_pair_t;
+      using index_pair_t = typename index_set_t::index_pair_t;
       const index_set_t qp0123(index_pair_t(-q,-q+3), true);
       const index_set_t pp1234(index_pair_t(p+1,p+4), true);
       const term_t& tpp1234 = term_t(pp1234, Scalar_T(1));
@@ -1802,7 +1802,7 @@ namespace glucat
     // Assume val is already folded and centred
     if (this->empty())
     {
-      typedef typename matrix_multi_t::matrix_index_t matrix_index_t;
+      using matrix_index_t = typename matrix_multi_t::matrix_index_t;
       const matrix_index_t dim = 1 << level;
       matrix_t result(dim, dim);
       result.clear();
@@ -1811,8 +1811,8 @@ namespace glucat
     if (level == 0)
       return matrix::unit<matrix_t>(1) * this->scalar();
 
-    typedef typename matrix_multi_t::basis_matrix_t basis_matrix_t;
-    typedef typename basis_matrix_t::value_type basis_scalar_t;
+    using basis_matrix_t = typename matrix_multi_t::basis_matrix_t;
+    using basis_scalar_t = typename basis_matrix_t::value_type;
 
     const basis_matrix_t&  I = matrix::unit<basis_matrix_t>(2);
     basis_matrix_t J(2,2,2);
@@ -1914,7 +1914,7 @@ namespace glucat
   operator* (const std::pair<const index_set<LO,HI>, Scalar_T>& lhs,
              const std::pair<const index_set<LO,HI>, Scalar_T>& rhs)
   {
-    typedef std::pair<const index_set<LO,HI>, Scalar_T> term_t;
+    using term_t = std::pair<const index_set<LO, HI>, Scalar_T>;
     return term_t(lhs.first ^ rhs.first, crd_of_mult(lhs, rhs));
   }
 
@@ -1923,7 +1923,7 @@ namespace glucat
   const framed_multi<Scalar_T,LO,HI>
   sqrt(const framed_multi<Scalar_T,LO,HI>& val, const framed_multi<Scalar_T,LO,HI>& i, bool prechecked)
   {
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
       return traits_t::NaN();
 
@@ -1937,7 +1937,7 @@ namespace glucat
       else
         return traits_t::sqrt(realval);
     }
-    typedef typename framed_multi<Scalar_T,LO,HI>::matrix_multi_t matrix_multi_t;
+    using matrix_multi_t = typename framed_multi<Scalar_T, LO, HI>::matrix_multi_t;
     return sqrt(matrix_multi_t(val), matrix_multi_t(i), prechecked);
   }
 
@@ -1946,7 +1946,7 @@ namespace glucat
   const framed_multi<Scalar_T,LO,HI>
   exp(const framed_multi<Scalar_T,LO,HI>& val)
   {
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
       return traits_t::NaN();
 
@@ -1964,8 +1964,8 @@ namespace glucat
       {
       case precision_demoted:
         {
-          typedef typename traits_t::demoted::type demoted_scalar_t;
-          typedef framed_multi<demoted_scalar_t,LO,HI> demoted_multivector_t;
+          using demoted_scalar_t = typename traits_t::demoted::type;
+          using demoted_multivector_t = framed_multi<demoted_scalar_t, LO, HI>;
 
           const demoted_multivector_t& demoted_val = demoted_multivector_t(val);
           return clifford_exp(demoted_val);
@@ -1973,8 +1973,8 @@ namespace glucat
         break;
       case precision_promoted:
         {
-          typedef typename traits_t::promoted::type promoted_scalar_t;
-          typedef framed_multi<promoted_scalar_t,LO,HI> promoted_multivector_t;
+          using promoted_scalar_t = typename traits_t::promoted::type;
+          using promoted_multivector_t = framed_multi<promoted_scalar_t, LO, HI>;
 
           const promoted_multivector_t& promoted_val = promoted_multivector_t(val);
           return clifford_exp(promoted_val);
@@ -1986,7 +1986,7 @@ namespace glucat
     }
     else
     {
-      typedef matrix_multi<Scalar_T,LO,HI> matrix_multi_t;
+      using matrix_multi_t = matrix_multi<Scalar_T, LO, HI>;
       return exp(matrix_multi_t(val));
     }
   }
@@ -1996,7 +1996,7 @@ namespace glucat
   const framed_multi<Scalar_T,LO,HI>
   log(const framed_multi<Scalar_T,LO,HI>& val, const framed_multi<Scalar_T,LO,HI>& i, bool prechecked)
   {
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
     if (val == Scalar_T(0) || val.isnan())
       return traits_t::NaN();
 
@@ -2010,7 +2010,7 @@ namespace glucat
       else
         return traits_t::log(realval);
     }
-    typedef typename framed_multi<Scalar_T,LO,HI>::matrix_multi_t matrix_multi_t;
+    using matrix_multi_t = typename framed_multi<Scalar_T, LO, HI>::matrix_multi_t;
     return log(matrix_multi_t(val), matrix_multi_t(i), prechecked);
   }
 }

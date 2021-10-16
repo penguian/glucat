@@ -197,7 +197,7 @@ namespace glucat
   const Multivector<Scalar_T,LO,HI>
   operator* (const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs)
   {
-    typedef Multivector<Scalar_T,LO,HI> multivector_t;
+    using multivector_t = Multivector<Scalar_T, LO, HI>;
     return lhs * multivector_t(rhs);
   }
 
@@ -212,7 +212,7 @@ namespace glucat
   const Multivector<Scalar_T,LO,HI>
   operator^ (const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs)
   {
-    typedef Multivector<Scalar_T,LO,HI> multivector_t;
+    using multivector_t = Multivector<Scalar_T, LO, HI>;
     return lhs ^ multivector_t(rhs);
   }
 
@@ -227,7 +227,7 @@ namespace glucat
   const Multivector<Scalar_T,LO,HI>
   operator& (const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs)
   {
-    typedef Multivector<Scalar_T,LO,HI> multivector_t;
+    using multivector_t = Multivector<Scalar_T, LO, HI>;
     return lhs & multivector_t(rhs);
   }
 
@@ -242,7 +242,7 @@ namespace glucat
   const Multivector<Scalar_T,LO,HI>
   operator% (const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs)
   {
-    typedef Multivector<Scalar_T,LO,HI> multivector_t;
+    using multivector_t = Multivector<Scalar_T, LO, HI>;
     return lhs % multivector_t(rhs);
   }
 
@@ -257,7 +257,7 @@ namespace glucat
   Scalar_T
   star (const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs)
   {
-    typedef Multivector<Scalar_T,LO,HI> multivector_t;
+    using multivector_t = Multivector<Scalar_T, LO, HI>;
     return star(lhs, multivector_t(rhs));
   }
 
@@ -294,7 +294,7 @@ namespace glucat
   const Multivector<Scalar_T,LO,HI>
   operator/ (const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs)
   {
-    typedef Multivector<Scalar_T,LO,HI> multivector_t;
+    using multivector_t = Multivector<Scalar_T, LO, HI>;
     return lhs / multivector_t(rhs);
   }
 
@@ -309,7 +309,7 @@ namespace glucat
   const Multivector<Scalar_T,LO,HI>
   operator| (const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs)
   {
-    typedef Multivector<Scalar_T,LO,HI> multivector_t;
+    using multivector_t = Multivector<Scalar_T, LO, HI>;
     return lhs | multivector_t(rhs);
   }
 
@@ -327,8 +327,8 @@ namespace glucat
   const Multivector<Scalar_T,LO,HI>
   pow(const Multivector<Scalar_T,LO,HI>& lhs, int rhs)
   {
-    typedef Multivector<Scalar_T,LO,HI> multivector_t;
-    typedef numeric_traits<Scalar_T> traits_t;
+    using multivector_t = Multivector<Scalar_T, LO, HI>;
+    using traits_t = numeric_traits<Scalar_T>;
 
     multivector_t a;
     if (rhs < 0)
@@ -360,7 +360,7 @@ namespace glucat
   const Multivector<Scalar_T,LO,HI>
   pow(const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs)
   {
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
 
     if (lhs == Scalar_T(0))
     {
@@ -505,9 +505,9 @@ namespace glucat
   const Multivector<Scalar_T,LO,HI>
   complexifier(const Multivector<Scalar_T,LO,HI>& val)
   {
-    typedef Multivector<Scalar_T,LO,HI> multivector_t;
-    typedef numeric_traits<Scalar_T> traits_t;
-    typedef typename multivector_t::index_set_t index_set_t;
+    using multivector_t = Multivector<Scalar_T, LO, HI>;
+    using traits_t = numeric_traits<Scalar_T>;
+    using index_set_t = typename multivector_t::index_set_t;
 
     index_set_t frm = val.frame();
     index_t incp[] = {0, 2, 1, 0};
@@ -568,9 +568,9 @@ namespace glucat
   {
     if (!prechecked)
     {
-      typedef Multivector<Scalar_T,LO,HI> multivector_t;
-      typedef typename multivector_t::index_set_t index_set_t;
-      typedef typename multivector_t::error_t error_t;
+      using multivector_t = Multivector<Scalar_T, LO, HI>;
+      using index_set_t = typename multivector_t::index_set_t;
+      using error_t = typename multivector_t::error_t;
 
       const index_set_t i_frame = i.frame();
       // We need i to be a complexifier whose frame is large enough to represent val
@@ -607,7 +607,7 @@ namespace glucat
     // Reference: [GL], Section 11.3, p572-576
     // Reference: [H]
 
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
 
     const Scalar_T scalar_val = scalar(val);
     const Scalar_T scalar_exp = traits_t::exp(scalar_val);
@@ -616,7 +616,7 @@ namespace glucat
     if (val == scalar_val)
       return scalar_exp;
 
-    typedef Multivector<Scalar_T,LO,HI> multivector_t;
+    using multivector_t = Multivector<Scalar_T, LO, HI>;
     multivector_t A = val - scalar_val;
     const Scalar_T pure_scale2 = A.norm();
 
@@ -634,7 +634,7 @@ namespace glucat
     A /= i_scale;
     multivector_t pure_exp;
     {
-      typedef std::numeric_limits<Scalar_T> limits_t;
+      using limits_t = std::numeric_limits<Scalar_T>;
       const int nbr_even_powers = 2*(limits_t::digits / 32) + 4;
 
       // Create an array of coefficients
@@ -719,7 +719,7 @@ namespace glucat
   const Multivector<Scalar_T,LO,HI>
   cosh(const Multivector<Scalar_T,LO,HI>& val)
   {
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
       return traits_t::NaN();
 
@@ -737,12 +737,12 @@ namespace glucat
   const Multivector<Scalar_T,LO,HI>
   acosh(const Multivector<Scalar_T,LO,HI>& val, const Multivector<Scalar_T,LO,HI>& i, bool prechecked)
   {
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
     check_complex(val, i, prechecked);
     if (val.isnan())
       return traits_t::NaN();
 
-    typedef Multivector<Scalar_T,LO,HI> multivector_t;
+    using multivector_t = Multivector<Scalar_T, LO, HI>;
     const multivector_t radical = sqrt(val*val - Scalar_T(1), i, true);
     return (norm(val + radical) >= norm(val))
            ?  log(val + radical, i, true)
@@ -764,7 +764,7 @@ namespace glucat
   const Multivector<Scalar_T,LO,HI>
   cos(const Multivector<Scalar_T,LO,HI>& val, const Multivector<Scalar_T,LO,HI>& i, bool prechecked)
   {
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
       return traits_t::NaN();
 
@@ -774,7 +774,7 @@ namespace glucat
 
     check_complex(val, i, prechecked);
 
-    typedef Multivector<Scalar_T,LO,HI> multivector_t;
+    using multivector_t = Multivector<Scalar_T, LO, HI>;
     static const Scalar_T& twopi = Scalar_T(2) * traits_t::pi();
     const multivector_t& z = i *
       (val - s + traits_t::fmod(s, twopi));
@@ -797,7 +797,7 @@ namespace glucat
   const Multivector<Scalar_T,LO,HI>
   acos(const Multivector<Scalar_T,LO,HI>& val, const Multivector<Scalar_T,LO,HI>& i, bool prechecked)
   {
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
       return traits_t::NaN();
 
@@ -825,7 +825,7 @@ namespace glucat
   const Multivector<Scalar_T,LO,HI>
   sinh(const Multivector<Scalar_T,LO,HI>& val)
   {
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
       return traits_t::NaN();
 
@@ -844,12 +844,12 @@ namespace glucat
   const Multivector<Scalar_T,LO,HI>
   asinh(const Multivector<Scalar_T,LO,HI>& val, const Multivector<Scalar_T,LO,HI>& i, bool prechecked)
   {
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
     check_complex(val, i, prechecked);
     if (val.isnan())
       return traits_t::NaN();
 
-    typedef Multivector<Scalar_T,LO,HI> multivector_t;
+    using multivector_t = Multivector<Scalar_T, LO, HI>;
     const multivector_t radical = sqrt(val*val + Scalar_T(1), i, true);
     return (norm(val + radical) >= norm(val))
            ?  log( val + radical, i, true)
@@ -871,7 +871,7 @@ namespace glucat
   const Multivector<Scalar_T,LO,HI>
   sin(const Multivector<Scalar_T,LO,HI>& val, const Multivector<Scalar_T,LO,HI>& i, bool prechecked)
   {
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
       return traits_t::NaN();
 
@@ -881,7 +881,7 @@ namespace glucat
 
     check_complex(val, i, prechecked);
 
-    typedef Multivector<Scalar_T,LO,HI> multivector_t;
+    using multivector_t = Multivector<Scalar_T, LO, HI>;
     static const Scalar_T& twopi = Scalar_T(2) * traits_t::pi();
     const multivector_t& z = i *
       (val - s + traits_t::fmod(s, twopi));
@@ -904,7 +904,7 @@ namespace glucat
   const Multivector<Scalar_T,LO,HI>
   asin(const Multivector<Scalar_T,LO,HI>& val, const Multivector<Scalar_T,LO,HI>& i, bool prechecked)
   {
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
       return traits_t::NaN();
 
@@ -932,7 +932,7 @@ namespace glucat
   const Multivector<Scalar_T,LO,HI>
   tanh(const Multivector<Scalar_T,LO,HI>& val)
   {
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
       return traits_t::NaN();
 
@@ -951,7 +951,7 @@ namespace glucat
   const Multivector<Scalar_T,LO,HI>
   atanh(const Multivector<Scalar_T,LO,HI>& val, const Multivector<Scalar_T,LO,HI>& i, bool prechecked)
   {
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
     check_complex(val, i, prechecked);
     return val.isnan()
         ? traits_t::NaN()
@@ -976,7 +976,7 @@ namespace glucat
   const Multivector<Scalar_T,LO,HI>
   tan(const Multivector<Scalar_T,LO,HI>& val, const Multivector<Scalar_T,LO,HI>& i, bool prechecked)
   {
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
       return traits_t::NaN();
 
@@ -1004,7 +1004,7 @@ namespace glucat
   const Multivector<Scalar_T,LO,HI>
   atan(const Multivector<Scalar_T,LO,HI>& val, const Multivector<Scalar_T,LO,HI>& i, bool prechecked)
   {
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
       return traits_t::NaN();
 

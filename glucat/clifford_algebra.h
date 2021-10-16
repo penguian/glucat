@@ -42,11 +42,11 @@ namespace glucat
   class clifford_algebra
   {
   public:
-    typedef Scalar_T                      scalar_t;
-    typedef Index_Set_T                   index_set_t;
-    typedef Multivector_T                 multivector_t;
-    typedef std::pair< const index_set_t, Scalar_T > pair_t;
-    typedef std::vector<Scalar_T>         vector_t;
+    using scalar_t = Scalar_T;
+    using index_set_t = Index_Set_T;
+    using multivector_t = Multivector_T;
+    using pair_t = std::pair<const index_set_t, Scalar_T>;
+    using vector_t = std::vector<Scalar_T>;
 
     static  const std::string   classname();
 

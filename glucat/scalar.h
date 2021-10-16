@@ -141,10 +141,10 @@ namespace glucat
     { return static_cast<Scalar_T>(val); }
 
     /// Promoted type
-    struct promoted {typedef double type;};
+    struct promoted {using type = double;};
 
     /// Demoted type
-    struct demoted {typedef float type;};
+    struct demoted {using type = float;};
 
     /// Modulo function for scalar
     inline

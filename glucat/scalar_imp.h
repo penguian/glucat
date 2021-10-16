@@ -123,7 +123,7 @@ namespace glucat
   typename numeric_traits<Scalar_T>::promoted::type
   to_promote(const Scalar_T& val)
   {
-    typedef typename numeric_traits<Scalar_T>::promoted::type promoted_scalar_t;
+    using promoted_scalar_t = typename numeric_traits<Scalar_T>::promoted::type;
     return numeric_traits<promoted_scalar_t>::to_scalar_t(val);
   }
 
@@ -133,7 +133,7 @@ namespace glucat
   typename numeric_traits<Scalar_T>::demoted::type
   to_demote(const Scalar_T& val)
   {
-    typedef typename numeric_traits<Scalar_T>::demoted::type demoted_scalar_t;
+    using demoted_scalar_t = typename numeric_traits<Scalar_T>::demoted::type;
     return numeric_traits<demoted_scalar_t>::to_scalar_t(val);
   }
 }

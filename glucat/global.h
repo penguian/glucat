@@ -74,9 +74,9 @@ namespace glucat
 
   // Global types which determine sizes
   /// Size of index_t should be enough to represent LO, HI
-  typedef int           index_t;
+  using index_t = int;
   /// Size of set_value_t should be enough to contain index_set<LO,HI>
-  typedef unsigned long set_value_t;
+  using set_value_t = unsigned long;
 
   // Global constants
   /// Timing constant: deprecated here - moved to test/timing.h

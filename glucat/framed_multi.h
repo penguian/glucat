@@ -126,7 +126,7 @@ namespace glucat
   class index_set_hash
   {
   public:
-    typedef index_set<LO,HI> index_set_t;
+    using index_set_t = index_set<LO, HI>;
     inline size_t operator()(index_set_t val) const { return val.hash_fn(); }
   };
 
@@ -146,14 +146,14 @@ namespace glucat
 #endif
   {
   public:
-    typedef framed_multi                               multivector_t;
-    typedef multivector_t                              framed_multi_t;
-    typedef Scalar_T                                   scalar_t;
-    typedef index_set<LO,HI>                           index_set_t;
-    typedef std::pair<const index_set_t, Scalar_T>     term_t;
-    typedef std::vector<Scalar_T>                      vector_t;
-    typedef error<multivector_t>                       error_t;
-    typedef      matrix_multi<Scalar_T,LO,HI>          matrix_multi_t;
+    using multivector_t = framed_multi;
+    using framed_multi_t = multivector_t;
+    using scalar_t = Scalar_T;
+    using index_set_t = index_set<LO, HI>;
+    using term_t = std::pair<const index_set_t, Scalar_T>;
+    using vector_t = std::vector<Scalar_T>;
+    using error_t = error<multivector_t>;
+    using matrix_multi_t = matrix_multi<Scalar_T, LO, HI>;
     template< typename Other_Scalar_T, const index_t Other_LO, const index_t Other_HI >
     friend class matrix_multi;
     template< typename Other_Scalar_T, const index_t Other_LO, const index_t Other_HI >
@@ -161,18 +161,11 @@ namespace glucat
 
   private:
     class                                              var_term; // forward
-    typedef class var_term                             var_term_t;
-    typedef typename matrix_multi_t::matrix_t          matrix_t;
-    typedef std::map< index_set_t, Scalar_T,
-                      std::less<const index_set_t>
-#if defined(_GLUCAT_USE_BOOST_POOL_ALLOC)
-                    , boost::fast_pool_allocator<term_t>
-#endif
-                    >
-                                                       sorted_map_t;
+    using var_term_t = class var_term;
+    using matrix_t = typename matrix_multi_t::matrix_t;
+    using sorted_map_t = std::map<index_set_t, Scalar_T, std::less<const index_set_t>>;
 #if defined(_GLUCAT_USE_STD_UNORDERED_MAP)
-    typedef std::unordered_map< index_set_t, Scalar_T, index_set_hash<LO,HI> >
-                                                       map_t;
+    using map_t = std::unordered_map<index_set_t, Scalar_T, index_set_hash<LO, HI>>;
 #else
     typedef sorted_map_t                               map_t;
 #endif
@@ -189,11 +182,10 @@ namespace glucat
       size_t n;
     };
 
-    typedef std::pair< const multivector_t, const multivector_t >
-                                                       framed_pair_t;
-    typedef typename map_t::size_type                  size_type;
-    typedef typename map_t::iterator                   iterator;
-    typedef typename map_t::const_iterator             const_iterator;
+    using framed_pair_t = std::pair<const multivector_t, const multivector_t>;
+    using size_type = typename map_t::size_type;
+    using iterator = typename map_t::iterator;
+    using const_iterator = typename map_t::const_iterator;
 
   public:
     /// Class name used in messages
@@ -309,7 +301,7 @@ namespace glucat
     public std::pair<index_set<LO,HI>, Scalar_T>
     {
     public:
-      typedef std::pair<index_set<LO,HI>, Scalar_T>      var_pair_t;
+      using var_pair_t = std::pair<index_set<LO, HI>, Scalar_T>;
 
       /// Class name used in messages
       static const std::string classname()

@@ -46,7 +46,7 @@ namespace glucat
   template<>
   struct
   numeric_traits<long double>::
-  demoted {typedef long double type;};
+  demoted {using type = long double;};
 #else
   /// Promoted type for double
   template<>

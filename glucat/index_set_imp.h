@@ -161,8 +161,8 @@ namespace glucat
   operator^ (const index_set<LO,HI>& lhs,
              const index_set<LO,HI>& rhs)
   {
-    typedef index_set<LO,HI> index_set_t;
-    typedef typename index_set_t::bitset_t bitset_t;
+    using index_set_t = index_set<LO, HI>;
+    using bitset_t = typename index_set_t::bitset_t;
     return static_cast<bitset_t>(lhs) ^ static_cast<bitset_t>(rhs);
   }
 
@@ -186,8 +186,8 @@ namespace glucat
   operator& (const index_set<LO,HI>& lhs,
              const index_set<LO,HI>& rhs)
   {
-    typedef index_set<LO,HI> index_set_t;
-    typedef typename index_set_t::bitset_t bitset_t;
+    using index_set_t = index_set<LO, HI>;
+    using bitset_t = typename index_set_t::bitset_t;
     return static_cast<bitset_t>(lhs) & static_cast<bitset_t>(rhs);
   }
 
@@ -211,8 +211,8 @@ namespace glucat
   operator| (const index_set<LO,HI>& lhs,
              const index_set<LO,HI>& rhs)
   {
-    typedef index_set<LO,HI> index_set_t;
-    typedef typename index_set_t::bitset_t bitset_t;
+    using index_set_t = index_set<LO, HI>;
+    using bitset_t = typename index_set_t::bitset_t;
     return static_cast<bitset_t>(lhs) | static_cast<bitset_t>(rhs);
   }
 

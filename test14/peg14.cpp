@@ -37,8 +37,8 @@ int test14()
   using namespace glucat;
   using namespace std;
   cout << "Programming example 14 : framed_multi <-> matrix_multi" << endl;
-  typedef matrix_multi<long double> cm;
-  typedef framed_multi<long double> cf;
+  using cm = matrix_multi<long double>;
+  using cf = framed_multi<long double>;
   cf a("{-3}+{-2}+{-1}");
   cf b("1.e4{-1}+1.e-4{-2}");
   cf c;

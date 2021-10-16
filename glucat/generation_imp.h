@@ -126,7 +126,7 @@ namespace glucat { namespace gen
   generator_table<Matrix_T>::
   gen_from_pm1_qm1(const std::vector<Matrix_T>& old, const signature_t sig)
   {
-    typedef typename Matrix_T::size_type matrix_index_t;
+    using matrix_index_t = typename Matrix_T::size_type;
     Matrix_T neg(2,2,2);
     neg(0,1) =    -1;
     neg(1,0) = 1;

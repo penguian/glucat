@@ -46,13 +46,13 @@ namespace glucat
   template<>
   struct
   numeric_traits<double>::
-  promoted {typedef dd_real type;};
+  promoted {using type = dd_real;};
 
   /// Promoted type for long double
   template<>
   struct
   numeric_traits<long double>::
-  promoted {typedef dd_real type;};
+  promoted {using type = dd_real;};
 
 #define _GLUCAT_QD_F(_T, _F) \
   template<>           \
@@ -106,13 +106,13 @@ namespace glucat
   template<>
   struct
   numeric_traits<dd_real>::
-  promoted {typedef qd_real type;};
+  promoted {using type = qd_real;};
 
   /// Demoted type for dd_real
   template<>
   struct
   numeric_traits<dd_real>::
-  demoted {typedef double type;};
+  demoted {using type = double;};
 
   /// Modulo function for dd_real
   template<>
@@ -230,13 +230,13 @@ namespace glucat
   template<>
   struct
   numeric_traits<qd_real>::
-  promoted {typedef qd_real type;};
+  promoted {using type = qd_real;};
 
   /// Demoted type for qd_real
   template<>
   struct
   numeric_traits<qd_real>::
-  demoted {typedef qd_real type;};
+  demoted {using type = qd_real;};
 
   /// Modulo function for qd_real
   template<>

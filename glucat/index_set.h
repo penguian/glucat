@@ -78,11 +78,11 @@ namespace glucat
                        (-LO    <  _GLUCAT_BITS_PER_ULONG)   && \
                        ( HI    <  _GLUCAT_BITS_PER_ULONG)   && \
                        ( HI-LO <= _GLUCAT_BITS_PER_ULONG));
-    typedef std::bitset<HI-LO>          bitset_t;
-    typedef error<index_set>            error_t;
+    using bitset_t = std::bitset<HI - LO>;
+    using error_t = error<index_set>;
   public:
-    typedef index_set                   index_set_t;
-    typedef std::pair<index_t,index_t>  index_pair_t;
+    using index_set_t = index_set;
+    using index_pair_t = std::pair<index_t, index_t>;
 
     static const index_t v_lo = LO;
     static const index_t v_hi = HI;

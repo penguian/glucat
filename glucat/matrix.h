@@ -124,13 +124,13 @@ namespace glucat
     eigenvalues(const Matrix_T& val);
 
     /// Classification of eigenvalues of a matrix
-    typedef enum {safe_eig_case, negative_eig_case, both_eig_case} eig_case_t;
+    using eig_case_t = enum {safe_eig_case, negative_eig_case, both_eig_case};
 
     ///  Structure containing classification of eigenvalues
     template< typename Matrix_T >
     struct eig_genus
     {
-      typedef typename Matrix_T::value_type Scalar_T;
+      using Scalar_T = typename Matrix_T::value_type;
       /// What kind of eigenvalues does the matrix contain?
       eig_case_t m_eig_case;
       /// Argument such that exp(pi-m_safe_arg) lies between arguments of eigenvalues
