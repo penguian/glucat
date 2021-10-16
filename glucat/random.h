@@ -46,16 +46,17 @@ namespace glucat
   template< typename Scalar_T >
   class random_generator
   {
-  public:
-    /// Single instance of Random number generator
-    static random_generator& generator() { static random_generator g; return g;}
   private:
     /// Friend declaration to avoid compiler warning:
     /// "... only defines a private destructor and has no friends"
     /// Ref: Carlos O'Ryan, ACE http://doc.ece.uci.edu
     friend class friend_for_private_destructor;
+  public:
+    /// Single instance of Random number generator
+    static random_generator& generator() { static random_generator g; return g;}
     random_generator(const random_generator&) = delete;
     random_generator& operator= (const random_generator&) = delete;
+  private:
     static const unsigned long seed = 19590921UL;
 #if defined(_GLUCAT_USE_GSL_RANDOM)
 

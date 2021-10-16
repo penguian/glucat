@@ -64,17 +64,17 @@ namespace glucat { namespace gen
     /// Construct generators for p,q given generators for q+1,p-1
     void gen_from_qp1_pm1(const std::vector<Matrix_T>& old, const signature_t sig);
 
-    // Enforce singleton
-    // Reference: A. Alexandrescu, "Modern C++ Design", Chapter 6
-    generator_table() = default;
-    ~generator_table() = default;
-    generator_table(const generator_table&) = delete;
-    generator_table& operator= (const generator_table&) = delete;
-    
     /// Friend declaration to avoid compiler warning:
     /// "... only defines a private destructor and has no friends"
     /// Ref: Carlos O'Ryan, ACE http://doc.ece.uci.edu
     friend class friend_for_private_destructor;
+    // Enforce singleton
+    // Reference: A. Alexandrescu, "Modern C++ Design", Chapter 6
+    generator_table() = default;
+    ~generator_table() = default;
+  public:
+    generator_table(const generator_table&) = delete;
+    generator_table& operator= (const generator_table&) = delete;
   };
 
   /// Offsets between the current signature and that of the real superalgebra
