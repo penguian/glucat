@@ -57,6 +57,7 @@
 
 #include <fstream>
 #include <iomanip>
+#include <array>
 
 namespace glucat
 {
@@ -80,7 +81,7 @@ namespace glucat
   {
     // Offsets between the log2 of the matrix dimension for the current signature
     // and that of the real superalgebra
-    static const int offset_log2_dim[] = {0, 1, 0, 1, 1, 2, 1, 1};
+    static const std::array<int, 8> offset_log2_dim = {0, 1, 0, 1, 1, 2, 1, 1};
     const index_t bott = pos_mod(p-q, 8);
     return (p+q)/2 + offset_log2_dim[bott];
   }
@@ -1289,11 +1290,14 @@ namespace glucat
   }
 
   /// Pade' approximation
-  template< typename Scalar_T, const index_t LO, const index_t HI >
+  template< typename Scalar_T, const index_t LO, const index_t HI, const size_t Size >
   inline
   static
   const matrix_multi<Scalar_T,LO,HI>
-  pade_approx(const int array_size, const Scalar_T a[], const Scalar_T b[], const matrix_multi<Scalar_T,LO,HI>& X)
+  pade_approx(
+    const std::array<Scalar_T, Size>& numer,
+    const std::array<Scalar_T, Size>& denom,
+    const matrix_multi<Scalar_T,LO,HI>& X)
   {
     // Pade' approximation
     // Reference: [GW], Section 4.3, pp318-322
@@ -1306,45 +1310,45 @@ namespace glucat
       return traits_t::NaN();
 
     // Array size is assumed to be even
-    const int nbr_even_powers = array_size/2 - 1;
+    const size_t nbr_even_powers = Size/2 - 1;
 
     // Create an array of even powers
     std::vector<multivector_t> XX(nbr_even_powers);
     XX[0] = X * X;
     XX[1] = XX[0] * XX[0];
-    for (int
+    for (size_t
       k = 2;
       k != nbr_even_powers;
       ++k)
       XX[k] = XX[k-2] * XX[1];
 
     // Calculate numerator N and denominator D
-    multivector_t N = a[1];
-    for (int
+    multivector_t N = numer[1];
+    for (size_t
         k = 0;
         k != nbr_even_powers;
         ++k)
-      N += XX[k] * a[2*k + 3];
+      N += XX[k] * numer[2*k + 3];
     N *= X;
-    N += a[0];
-    for (int
+    N += numer[0];
+    for (size_t
         k = 0;
         k != nbr_even_powers;
         ++k)
-      N += XX[k] * a[2*k + 2];
-    multivector_t D = b[1];
-    for (int
+      N += XX[k] * numer[2*k + 2];
+    multivector_t D = denom[1];
+    for (size_t
         k = 0;
         k != nbr_even_powers;
         ++k)
-      D += XX[k] * b[2*k + 3];
+      D += XX[k] * denom[2*k + 3];
     D *= X;
-    D += b[0];
-    for (int
+    D += denom[0];
+    for (size_t
         k = 0;
         k != nbr_even_powers;
         ++k)
-      D += XX[k] * b[2*k + 2];
+      D += XX[k] * denom[2*k + 2];
     return N / D;
   }
 
@@ -1399,35 +1403,34 @@ namespace glucat
   }
 }
 
-namespace {
+namespace pade {
   /// Coefficients of numerator polynomials of Pade approximations produced by Pade1(sqrt(1+x),x,n,n)
   // Reference: [Z], Pade1
   template< typename Scalar_T >
-  struct pade_sqrt_a
+  struct pade_sqrt_numer
   {
-    static const int array_size = 14;
-    static const Scalar_T array[array_size];
+    using array = std::array<Scalar_T, 14>;
+    static const array numer;
   };
-
-  /// Coefficients of denominator polynomials of Pade approximations produced by Pade1(sqrt(1+x),x,n,n)
-  // Reference: [Z], Pade1
   template< typename Scalar_T >
-  struct pade_sqrt_b
-  {
-    static const int array_size = 14;
-    static const Scalar_T array[array_size];
-  };
-
-  template< typename Scalar_T >
-  const Scalar_T pade_sqrt_a<Scalar_T>::array[pade_sqrt_a<Scalar_T>::array_size] =
+  const typename pade_sqrt_numer<Scalar_T>::array pade_sqrt_numer<Scalar_T>::numer =
   {
         1.0,               27.0/4.0,         81.0/4.0,       2277.0/64.0,
     10395.0/256.0,      32319.0/1024.0,    8721.0/512.0,    26163.0/4096.0,
     53703.0/32768.0,    36465.0/131072.0,  3861.0/131072.0,  7371.0/4194304.0,
       819.0/16777216.0,    27.0/67108864.0
   };
+
+  /// Coefficients of denominator polynomials of Pade approximations produced by Pade1(sqrt(1+x),x,n,n)
+  // Reference: [Z], Pade1
   template< typename Scalar_T >
-  const Scalar_T pade_sqrt_b<Scalar_T>::array[pade_sqrt_b<Scalar_T>::array_size] =
+  struct pade_sqrt_denom
+  {
+    using array = std::array<Scalar_T, 14>;
+    static const array denom;
+  };
+  template< typename Scalar_T >
+  const typename pade_sqrt_denom<Scalar_T>::array pade_sqrt_denom<Scalar_T>::denom =
   {
         1.0,               25.0/4.0,         69.0/4.0,       1771.0/64.0,
      7315.0/256.0,      20349.0/1024.0,    4845.0/512.0,    12597.0/4096.0,
@@ -1436,24 +1439,24 @@ namespace {
   };
 
   template< >
-  struct pade_sqrt_a<float>
+  struct pade_sqrt_numer<float>
   {
-    static const int array_size = 10;
-    static const float array[array_size];
+    using array = std::array<float, 10>;
+    static const array numer;
   };
-  template< >
-  struct pade_sqrt_b<float>
-  {
-    static const int array_size = 10;
-    static const float array[array_size];
-  };
-  const float pade_sqrt_a<float>::array[pade_sqrt_a<float>::array_size] =
+  const typename pade_sqrt_numer<float>::array pade_sqrt_numer<float>::numer =
   {
        1.0,            19.0/4.0,        19.0/2.0,      665.0/64.0,
     1729.0/256.0,    2717.0/1024.0,    627.0/1024.0,   627.0/8192.0,
      285.0/65536.0,    19.0/262144.0
   };
-  const float pade_sqrt_b<float>::array[pade_sqrt_a<float>::array_size] =
+  template< >
+  struct pade_sqrt_denom<float>
+  {
+    using array = std::array<float, 10>;
+    static const array denom;
+  };
+  const typename pade_sqrt_denom<float>::array pade_sqrt_denom<float>::denom =
   {
        1.0,            17.0/4.0,        15.0/2.0,      455.0/64.0,
     1001.0/256.0,    1287.0/1024.0,    231.0/1024.0,   165.0/8192.0,
@@ -1461,18 +1464,12 @@ namespace {
   };
 
   template< >
-  struct pade_sqrt_a<long double>
+  struct pade_sqrt_numer<long double>
   {
-    static const int array_size = 18;
-    static const  long double array[array_size];
+    using array = std::array<long double, 18>;
+    static const array numer;
   };
-  template< >
-  struct pade_sqrt_b<long double>
-  {
-    static const int array_size = 18;
-    static const long double array[array_size];
-  };
-  const long double pade_sqrt_a<long double>::array[pade_sqrt_a<long double>::array_size] =
+  const typename pade_sqrt_numer<long double>::array pade_sqrt_numer<long double>::numer =
   {
         1.0L,                   35.0L/4.0L,             35.0L,               5425.0L/64.0L,
     35525.0L/256.0L,        166257.0L/1024.0L,      143325.0L/1024.0L,     740025.0L/8192.0L,
@@ -1480,7 +1477,13 @@ namespace {
   1028755.0L/8388608.0L,    395675.0L/33554432.0L,   24225.0L/33554432.0L,   6783.0L/268435456.0L,
      1785.0L/4294967296.0L,     35.0L/17179869184.0L
   };
-  const long double pade_sqrt_b<long double>::array[pade_sqrt_a<long double>::array_size] =
+  template< >
+  struct pade_sqrt_denom<long double>
+  {
+    using array = std::array<long double, 18>;
+    static const array denom;
+  };
+  const typename pade_sqrt_denom<long double>::array pade_sqrt_denom<long double>::denom =
   {
         1.0L,                   33.0L/4.0L,             31.0L,               4495.0L/64.0L,
     27405.0L/256.0L,        118755.0L/1024.0L,       94185.0L/1024.0L,     444015.0L/8192.0L,
@@ -1491,18 +1494,12 @@ namespace {
 
 #if defined(_GLUCAT_USE_QD)
   template< >
-  struct pade_sqrt_a<dd_real>
+  struct pade_sqrt_numer<dd_real>
   {
-    static const int array_size = 22;
-    static const  dd_real array[array_size];
+    using array = std::array<dd_real, 22>;
+    static const array numer;
   };
-  template< >
-  struct pade_sqrt_b<dd_real>
-  {
-    static const int array_size = 22;
-    static const dd_real array[array_size];
-  };
-  const dd_real pade_sqrt_a<dd_real>::array[pade_sqrt_a<dd_real>::array_size] =
+  const typename pade_sqrt_numer<dd_real>::array pade_sqrt_numer<dd_real>::numer =
   {
           dd_real("1"),                               dd_real("43")/dd_real("4"),
         dd_real("215")/dd_real("4"),               dd_real("10621")/dd_real("64"),
@@ -1516,8 +1513,14 @@ namespace {
      dd_real("206701")/dd_real("17179869184"),     dd_real("76153")/dd_real("274877906944"),
        dd_real("3311")/dd_real("1099511627776") ,     dd_real("43")/dd_real("4398046511104")
   };
-  const dd_real pade_sqrt_b<dd_real>::array[pade_sqrt_a<dd_real>::array_size] =
-{
+  template< >
+  struct pade_sqrt_denom<dd_real>
+  {
+    using array = std::array<dd_real, 22>;
+    static const array denom;
+  };
+  const typename pade_sqrt_denom<dd_real>::array pade_sqrt_denom<dd_real>::denom =
+  {
           dd_real("1"),                               dd_real("41")/dd_real("4"),
         dd_real("195")/dd_real("4"),                dd_real("9139")/dd_real("64"),
       dd_real("73815")/dd_real("256"),            dd_real("435897")/dd_real("1024"),
@@ -1532,18 +1535,12 @@ namespace {
   };
 
   template< >
-  struct pade_sqrt_a<qd_real>
+  struct pade_sqrt_numer<qd_real>
   {
-    static const int array_size = 34;
-    static const  qd_real array[array_size];
+    using array = std::array<qd_real, 34>;
+    static const array numer;
   };
-  template< >
-  struct pade_sqrt_b<qd_real>
-  {
-    static const int array_size = 34;
-    static const qd_real array[array_size];
-  };
-  const qd_real pade_sqrt_a<qd_real>::array[pade_sqrt_a<qd_real>::array_size] =
+  const typename pade_sqrt_numer<qd_real>::array pade_sqrt_numer<qd_real>::numer =
   {
               qd_real("1"),                                            qd_real("67")/qd_real("4"),
             qd_real("134"),                                         qd_real("43617")/qd_real("64"),
@@ -1563,7 +1560,13 @@ namespace {
         qd_real("1165197")/qd_real("72057594037927936"),            qd_real("87703")/qd_real("576460752303423488"),
           qd_real("12529")/qd_real("18446744073709551616"),            qd_real("67")/qd_real("73786976294838206464")
   };
-  const qd_real pade_sqrt_b<qd_real>::array[pade_sqrt_a<qd_real>::array_size] =
+  template< >
+  struct pade_sqrt_denom<qd_real>
+  {
+    using array = std::array<qd_real, 34>;
+    static const array denom;
+  };
+  const typename pade_sqrt_denom<qd_real>::array pade_sqrt_denom<qd_real>::denom =
   {
             qd_real("1"),                                              qd_real("65")/qd_real("4"),
           qd_real("126"),                                           qd_real("39711")/qd_real("64"),
@@ -1707,9 +1710,8 @@ namespace glucat
       scaled_result =
         (norm(unitval - Scalar_T(1)) < max_norm)
           // Pade' approximation of square root
-        ? pade_approx(pade_sqrt_a<Scalar_T>::array_size,
-                      pade_sqrt_a<Scalar_T>::array,
-                      pade_sqrt_b<Scalar_T>::array,
+        ? pade_approx(pade::pade_sqrt_numer<Scalar_T>::numer,
+                      pade::pade_sqrt_denom<Scalar_T>::denom,
                       unitval - Scalar_T(1))
           // Product form of Denman-Beavers square root iteration
         : db_sqrt(unitval);
@@ -1723,9 +1725,8 @@ namespace glucat
     const multivector_t& scaled_result =
       (norm(unitval - Scalar_T(1)) < max_norm)
         // Pade' approximation of square root
-      ? pade_approx(pade_sqrt_a<Scalar_T>::array_size,
-                    pade_sqrt_a<Scalar_T>::array,
-                    pade_sqrt_b<Scalar_T>::array,
+      ? pade_approx(pade::pade_sqrt_numer<Scalar_T>::numer,
+                    pade::pade_sqrt_denom<Scalar_T>::denom,
                     unitval - Scalar_T(1))
         // Product form of Denman-Beavers square root iteration
       : db_sqrt(unitval);
@@ -1739,9 +1740,8 @@ namespace glucat
       const multivector_t& scaled_mi_result =
         (norm(mi_unitval - Scalar_T(1)) < max_norm)
           // Pade' approximation of square root
-        ? pade_approx(pade_sqrt_a<Scalar_T>::array_size,
-                      pade_sqrt_a<Scalar_T>::array,
-                      pade_sqrt_b<Scalar_T>::array,
+        ? pade_approx(pade::pade_sqrt_numer<Scalar_T>::numer,
+                      pade::pade_sqrt_denom<Scalar_T>::denom,
                       mi_unitval - Scalar_T(1))
           // Product form of Denman-Beavers square root iteration
         : db_sqrt(mi_unitval);
@@ -1756,34 +1756,34 @@ namespace glucat
   }
 }
 
-namespace {
+namespace pade {
   /// Coefficients of numerator polynomials of Pade approximations produced by Pade1(log(1+x),x,n,n)
   // Reference: [Z], Pade1
   template< typename Scalar_T >
-  struct pade_log_a
+  struct pade_log_numer
   {
-    static const int array_size = 14;
-    static const Scalar_T array[array_size];
-  };
-
-  /// Coefficients of denominator polynomials of Pade approximations produced by Pade1(log(1+x),x,n,n)
-  // Reference: [Z], Pade1
-  template< typename Scalar_T >
-  struct pade_log_b
-  {
-    static const int array_size = 14;
-    static const Scalar_T array[array_size];
+    using array = std::array<Scalar_T, 14>;
+    static const array numer;
   };
   template< typename Scalar_T >
-  const Scalar_T pade_log_a<Scalar_T>::array[pade_log_a<Scalar_T>::array_size] =
+  const typename pade_log_numer<Scalar_T>::array pade_log_numer<Scalar_T>::numer =
   {
          0.0,                     1.0,                    6.0,            4741.0/300.0,
       1441.0/60.0,           107091.0/4600.0,          8638.0/575.0,    263111.0/40250.0,
     153081.0/80500.0,        395243.0/1101240.0,      28549.0/688275.0, 605453.0/228813200.0,
     785633.0/10296594000.0, 1145993.0/1873980108000.0
   };
+
+  /// Coefficients of denominator polynomials of Pade approximations produced by Pade1(log(1+x),x,n,n)
+  // Reference: [Z], Pade1
   template< typename Scalar_T >
-  const Scalar_T pade_log_b<Scalar_T>::array[pade_log_b<Scalar_T>::array_size] =
+  struct pade_log_denom
+  {
+    using array = std::array<Scalar_T, 14>;
+    static const array denom;
+  };
+  template< typename Scalar_T >
+  const typename pade_log_denom<Scalar_T>::array pade_log_denom<Scalar_T>::denom =
   {
          1.0,                    13.0/2.0,             468.0/25.0,        1573.0/50.0,
       1573.0/46.0,            11583.0/460.0,         10296.0/805.0,       2574.0/575.0,
@@ -1792,24 +1792,24 @@ namespace {
   };
 
   template< >
-  struct pade_log_a<float>
+  struct pade_log_numer<float>
   {
-    static const int array_size = 10;
-    static const float array[array_size];
+    using array = std::array<float, 10>;
+    static const array numer;
   };
-  template< >
-  struct pade_log_b<float>
-  {
-    static const int array_size = 10;
-    static const float array[array_size];
-  };
-  const float pade_log_a<float>::array[pade_log_a<float>::array_size] =
+  const typename pade_log_numer<float>::array pade_log_numer<float>::numer =
   {
       0.0,            1.0,             4.0,       1337.0/204.0,
     385.0/68.0,    1879.0/680.0,     193.0/255.0,  197.0/1820.0,
     419.0/61880.0, 7129.0/61261200.0
   };
-  const float pade_log_b<float>::array[pade_log_a<float>::array_size] =
+  template< >
+  struct pade_log_denom<float>
+  {
+    using array = std::array<float, 10>;
+    static const array denom;
+  };
+  const typename pade_log_denom<float>::array pade_log_denom<float>::denom =
   {
       1.0,            9.0/2.0,       144.0/17.0,   147.0/17.0,
     441.0/85.0,      63.0/34.0,       84.0/221.0,    9.0/221.0,
@@ -1817,18 +1817,12 @@ namespace {
   };
 
   template< >
-  struct pade_log_a<long double>
+  struct pade_log_numer<long double>
   {
-    static const int array_size = 18;
-    static const  long double array[array_size];
+    using array = std::array<long double, 18>;
+    static const array numer;
   };
-  template< >
-  struct pade_log_b<long double>
-  {
-    static const int array_size = 18;
-    static const long double array[array_size];
-  };
-  const long double pade_log_a<long double>::array[pade_log_a<long double>::array_size] =
+  const typename pade_log_numer<long double>::array pade_log_numer<long double>::numer =
   {
          0.0L,                       1.0L,                           8.0L,                    3835.0L/132.0L,
       8365.0L/132.0L,         11363807.0L/122760.0L,            162981.0L/1705.0L,         9036157.0L/125860.0L,
@@ -1836,7 +1830,13 @@ namespace {
     172459.0L/1068012.0L,    116317061.0L/7025382936.0L,      19679783.0L/18441630207.0L, 23763863.0L/614721006900.0L,
      50747.0L/79318839600.0L, 42142223.0L/14295951736466400.0L
   };
-  const long double pade_log_b<long double>::array[pade_log_a<long double>::array_size] =
+  template< >
+  struct pade_log_denom<long double>
+  {
+    using array = std::array<long double, 18>;
+    static const array denom;
+  };
+  const typename pade_log_denom<long double>::array pade_log_denom<long double>::denom =
   {
          1.0L,                      17.0L/2.0L,                   1088.0L/33.0L,               850.0L/11.0L,
      41650.0L/341.0L,           140777.0L/1023.0L,             1126216.0L/9889.0L,           63206.0L/899.0L,
@@ -1846,18 +1846,12 @@ namespace {
   };
 #if defined(_GLUCAT_USE_QD)
   template< >
-  struct pade_log_a<dd_real>
+  struct pade_log_numer<dd_real>
   {
-    static const int array_size = 22;
-    static const  dd_real array[array_size];
+    using array = std::array<dd_real, 22>;
+    static const array numer;
   };
-  template< >
-  struct pade_log_b<dd_real>
-  {
-    static const int array_size = 22;
-    static const dd_real array[array_size];
-  };
-  const dd_real pade_log_a<dd_real>::array[pade_log_a<dd_real>::array_size] =
+  const typename pade_log_numer<dd_real>::array pade_log_numer<dd_real>::numer =
   {
           dd_real("0"),                                  dd_real("1"),
          dd_real("10"),                              dd_real("22781")/dd_real("492"),
@@ -1871,7 +1865,13 @@ namespace {
      dd_real("969715")/dd_real("53502994116"),    dd_real("11098301")/dd_real("26204577562592"),
      dd_real("118999")/dd_real("26204577562592"), dd_real("18858053")/dd_real("1392249205900512960")
   };
-  const dd_real pade_log_b<dd_real>::array[pade_log_a<dd_real>::array_size] =
+  template< >
+  struct pade_log_denom<dd_real>
+  {
+    using array = std::array<dd_real, 22>;
+    static const array denom;
+  };
+  const typename pade_log_denom<dd_real>::array pade_log_denom<dd_real>::denom =
   {
           dd_real("1"),                                 dd_real("21")/dd_real("2"),
        dd_real("2100")/dd_real("41"),                dd_real("12635")/dd_real("82"),
@@ -1887,18 +1887,12 @@ namespace {
   };
 
   template< >
-  struct pade_log_a<qd_real>
+  struct pade_log_numer<qd_real>
   {
-    static const int array_size = 34;
-    static const  qd_real array[array_size];
+    using array = std::array<qd_real, 34>;
+    static const array numer;
   };
-  template< >
-  struct pade_log_b<qd_real>
-  {
-    static const int array_size = 34;
-    static const qd_real array[array_size];
-  };
-  const qd_real pade_log_a<qd_real>::array[pade_log_a<qd_real>::array_size] =
+  const typename pade_log_numer<qd_real>::array pade_log_numer<qd_real>::numer =
   {
                 qd_real("0"),                                                          qd_real("1"),
                 qd_real("16"),                                                     qd_real("95201")/qd_real("780"),
@@ -1918,7 +1912,13 @@ namespace {
      qd_real("8802625510547")/qd_real("361639950529787563499775"),       qd_real("373831661521439")/qd_real("1659204093030665341336967700"),
    qd_real("446033437968239")/qd_real("464577146048586295574350956000"),  qd_real("53676090078349")/qd_real("47386868896955802148583797512000")
       };
-  const qd_real pade_log_b<qd_real>::array[pade_log_a<qd_real>::array_size] =
+  template< >
+  struct pade_log_denom<qd_real>
+  {
+    using array = std::array<qd_real, 34>;
+    static const array denom;
+  };
+  const typename pade_log_denom<qd_real>::array pade_log_denom<qd_real>::denom =
   {
                  qd_real("1"),                                                        qd_real("33")/qd_real("2"),
               qd_real("8448")/qd_real("65"),                                       qd_real("42284")/qd_real("65"),
@@ -1957,9 +1957,8 @@ namespace glucat{
     if (val == Scalar_T(0) || val.isnan())
       return traits_t::NaN();
     else
-      return pade_approx(pade_log_a<Scalar_T>::array_size,
-                         pade_log_a<Scalar_T>::array,
-                         pade_log_b<Scalar_T>::array,
+      return pade_approx(pade::pade_log_numer<Scalar_T>::numer,
+                         pade::pade_log_denom<Scalar_T>::denom,
                          val - Scalar_T(1));
   }
 

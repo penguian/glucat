@@ -58,6 +58,8 @@
 
 #include <glucat/scalar.h>
 
+#include <array>
+
 namespace glucat
 {
   template< typename Scalar_T, typename Index_Set_T, typename Multivector_T>
@@ -510,8 +512,8 @@ namespace glucat
     using index_set_t = typename multivector_t::index_set_t;
 
     index_set_t frm = val.frame();
-    index_t incp[] = {0, 2, 1, 0};
-    index_t incq[] = {1, 0, 0, 0};
+    std::array<index_t, 4> incp = {0, 2, 1, 0};
+    std::array<index_t, 4> incq = {1, 0, 0, 0};
     index_t bott = pos_mod((frm.count_pos() - frm.count_neg()), 4);
     for (index_t
         k = 0;
@@ -639,7 +641,7 @@ namespace glucat
 
       // Create an array of coefficients
       const int max_power = 2*nbr_even_powers + 1;
-      static Scalar_T c[max_power+1];
+      static std::array<Scalar_T, max_power+1> c;
       if (c[0] != Scalar_T(1))
       {
         c[0] = Scalar_T(1);
@@ -651,7 +653,7 @@ namespace glucat
       }
 
       // Create an array of even powers
-      multivector_t AA[nbr_even_powers];
+      std::array<multivector_t, nbr_even_powers> AA;
       AA[0] = A * A;
       AA[1] = AA[0] * AA[0];
       for (int
