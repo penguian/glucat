@@ -49,13 +49,13 @@ namespace glucat
   template< class Class_T >
   const std::string
   error<Class_T>::
-  heading() const throw()
+  heading() const noexcept
   { return "Error in glucat::"; }
 
   template< class Class_T >
   const std::string
   error<Class_T>::
-  classname() const throw()
+  classname() const noexcept
   { return name; }
 
   template< class Class_T >
