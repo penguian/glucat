@@ -513,7 +513,7 @@ namespace glucat { namespace matrix
     vector_t imag_lambda = vector_t(dim);
     fortran_int_t sdim = 0;
 
-    lapack::gees ('N', 'N', (external_fp)0, T, sdim, real_lambda, imag_lambda, V );
+    lapack::gees ('N', 'N', nullptr, T, sdim, real_lambda, imag_lambda, V );
 
     lambda.clear();
     for (vector_t::size_type  k=0; k!= dim; ++k)
