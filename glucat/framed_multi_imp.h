@@ -324,9 +324,9 @@ namespace glucat
   /// Geometric sum of multivector and scalar
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  framed_multi<Scalar_T,LO,HI> &
+  auto
   framed_multi<Scalar_T,LO,HI>::
-  operator+= (const Scalar_T& scr)
+  operator+= (const Scalar_T& scr) -> multivector_t&
   {
     *this += term_t(index_set_t(),scr);
     return *this;
@@ -335,9 +335,9 @@ namespace glucat
   /// Geometric sum
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  framed_multi<Scalar_T,LO,HI> &
+  auto
   framed_multi<Scalar_T,LO,HI>::
-  operator+= (const multivector_t& rhs)
+  operator+= (const multivector_t& rhs) -> multivector_t&
   { // simply add terms
     for (auto
         rhs_it = rhs.begin();
@@ -350,9 +350,9 @@ namespace glucat
   /// Geometric difference
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  framed_multi<Scalar_T,LO,HI> &
+  auto
   framed_multi<Scalar_T,LO,HI>::
-  operator-= (const multivector_t& rhs)
+  operator-= (const multivector_t& rhs) -> multivector_t&
   {
     for (auto
         rhs_it = rhs.begin();
@@ -372,9 +372,9 @@ namespace glucat
 
   /// Product of multivector and scalar
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  framed_multi<Scalar_T,LO,HI> &
+  auto
   framed_multi<Scalar_T,LO,HI>::
-  operator*= (const Scalar_T& scr)
+  operator*= (const Scalar_T& scr) -> multivector_t&
   { // multiply coordinates of all terms by scalar
     using traits_t = numeric_traits<Scalar_T>;
 
@@ -490,9 +490,9 @@ namespace glucat
   /// Geometric product
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  framed_multi<Scalar_T,LO,HI> &
+  auto
   framed_multi<Scalar_T,LO,HI>::
-  operator*= (const multivector_t& rhs)
+  operator*= (const multivector_t& rhs) -> multivector_t&
   { return *this = *this * rhs; }
 
   /// Outer product
@@ -590,9 +590,9 @@ namespace glucat
   /// Outer product
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  framed_multi<Scalar_T,LO,HI> &
+  auto
   framed_multi<Scalar_T,LO,HI>::
-  operator^= (const multivector_t& rhs)
+  operator^= (const multivector_t& rhs) -> multivector_t&
   { return *this = *this ^ rhs; }
 
   /// Inner product
@@ -708,9 +708,9 @@ namespace glucat
   /// Inner product
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  framed_multi<Scalar_T,LO,HI> &
+  auto
   framed_multi<Scalar_T,LO,HI>::
-  operator&= (const multivector_t& rhs)
+  operator&= (const multivector_t& rhs) -> multivector_t&
   { return *this = *this & rhs; }
 
   /// Left contraction
@@ -844,9 +844,9 @@ namespace glucat
   /// Left contraction
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  framed_multi<Scalar_T,LO,HI> &
+  auto
   framed_multi<Scalar_T,LO,HI>::
-  operator%= (const multivector_t& rhs)
+  operator%= (const multivector_t& rhs) -> multivector_t&
   { return *this = *this % rhs; }
 
   /// Hestenes scalar product
@@ -885,9 +885,9 @@ namespace glucat
 
   /// Quotient of multivector and scalar
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  framed_multi<Scalar_T,LO,HI> &
+  auto
   framed_multi<Scalar_T,LO,HI>::
-  operator/= (const Scalar_T& scr)
+  operator/= (const Scalar_T& scr) -> multivector_t&
   { // Divide coordinates of all terms by scr
     using traits_t = numeric_traits<Scalar_T>;
 
@@ -928,9 +928,9 @@ namespace glucat
   /// Geometric quotient
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  framed_multi<Scalar_T,LO,HI> &
+  auto
   framed_multi<Scalar_T,LO,HI>::
-  operator/= (const multivector_t& rhs)
+  operator/= (const multivector_t& rhs) -> multivector_t&
   { return *this = *this / rhs; }
 
   /// Transformation via twisted adjoint action
@@ -948,9 +948,9 @@ namespace glucat
   /// Transformation via twisted adjoint action
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  framed_multi<Scalar_T,LO,HI>&
+  auto
   framed_multi<Scalar_T,LO,HI>::
-  operator|= (const multivector_t& rhs)
+  operator|= (const multivector_t& rhs) -> multivector_t&
   { return *this = *this | rhs; }
 
   /// Clifford multiplicative inverse

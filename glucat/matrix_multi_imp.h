@@ -469,17 +469,17 @@ namespace glucat
   /// Geometric sum of multivector and scalar
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  matrix_multi<Scalar_T,LO,HI>&
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  operator+= (const Scalar_T& scr)
+  operator+= (const Scalar_T& scr) -> multivector_t&
   { return *this += term_t(index_set_t(), scr); }
 
   /// Geometric sum
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  matrix_multi<Scalar_T,LO,HI>&
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  operator+= (const multivector_t& rhs)
+  operator+= (const multivector_t& rhs) -> multivector_t&
   {
     // Ensure that there is no aliasing
     if (this == &rhs)
@@ -499,9 +499,9 @@ namespace glucat
   /// Geometric difference
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  matrix_multi<Scalar_T,LO,HI>&
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  operator-= (const multivector_t& rhs)
+  operator-= (const multivector_t& rhs) -> multivector_t&
   {
     // Ensure that there is no aliasing
     if (this == &rhs)
@@ -529,9 +529,9 @@ namespace glucat
   /// Product of multivector and scalar
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  matrix_multi<Scalar_T,LO,HI>&
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  operator*= (const Scalar_T& scr)
+  operator*= (const Scalar_T& scr) -> multivector_t&
   { // multiply coordinates of all terms by scalar
 
     using traits_t = numeric_traits<Scalar_T>;
@@ -589,9 +589,9 @@ namespace glucat
   /// Geometric product
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  matrix_multi<Scalar_T,LO,HI>&
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  operator*= (const multivector_t& rhs)
+  operator*= (const multivector_t& rhs) -> multivector_t&
   { return *this = *this * rhs; }
 
   /// Outer product
@@ -608,9 +608,9 @@ namespace glucat
   /// Outer product
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  matrix_multi<Scalar_T,LO,HI>&
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  operator^= (const multivector_t& rhs)
+  operator^= (const multivector_t& rhs) -> multivector_t&
   { return *this = *this ^ rhs; }
 
   /// Inner product
@@ -627,9 +627,9 @@ namespace glucat
   /// Inner product
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  matrix_multi<Scalar_T,LO,HI>&
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  operator&= (const multivector_t& rhs)
+  operator&= (const multivector_t& rhs) -> multivector_t&
   { return *this = *this & rhs; }
 
   /// Left contraction
@@ -646,9 +646,9 @@ namespace glucat
   /// Left contraction
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  matrix_multi<Scalar_T,LO,HI>&
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  operator%= (const multivector_t& rhs)
+  operator%= (const multivector_t& rhs) -> multivector_t&
   { return *this = *this % rhs; }
 
   /// Hestenes scalar product
@@ -661,9 +661,9 @@ namespace glucat
   /// Quotient of multivector and scalar
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  matrix_multi<Scalar_T,LO,HI>&
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  operator/= (const Scalar_T& scr)
+  operator/= (const Scalar_T& scr) -> multivector_t&
   { return *this *= Scalar_T(1)/scr; }
 
   /// Geometric quotient
@@ -769,9 +769,9 @@ namespace glucat
   /// Geometric quotient
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  matrix_multi<Scalar_T,LO,HI>&
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  operator/= (const multivector_t& rhs)
+  operator/= (const multivector_t& rhs) -> multivector_t&
   { return *this = *this / rhs; }
 
   /// Transformation via twisted adjoint action
@@ -784,9 +784,9 @@ namespace glucat
   /// Transformation via twisted adjoint action
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  matrix_multi<Scalar_T,LO,HI>&
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  operator|= (const multivector_t& rhs)
+  operator|= (const multivector_t& rhs) -> multivector_t&
   { return *this = rhs * *this / rhs.involute(); }
 
   /// Clifford multiplicative inverse
