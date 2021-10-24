@@ -69,48 +69,48 @@ namespace glucat
 
   /// Geometric product
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const framed_multi<Scalar_T,LO,HI>
-  operator* (const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs);
+  auto
+  operator* (const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs) -> const framed_multi<Scalar_T,LO,HI>;
 
   /// Outer product
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const framed_multi<Scalar_T,LO,HI>
-  operator^ (const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs);
+  auto
+  operator^ (const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs) -> const framed_multi<Scalar_T,LO,HI>;
 
   /// Inner product
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const framed_multi<Scalar_T,LO,HI>
-  operator& (const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs);
+  auto
+  operator& (const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs) -> const framed_multi<Scalar_T,LO,HI>;
 
   /// Left contraction
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const framed_multi<Scalar_T,LO,HI>
-  operator% (const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs);
+  auto
+  operator% (const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs) -> const framed_multi<Scalar_T,LO,HI>;
 
   /// Hestenes scalar product
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  Scalar_T
-  star(const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs);
+  auto
+  star(const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs) -> Scalar_T;
 
   /// Geometric quotient
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const framed_multi<Scalar_T,LO,HI>
-  operator/ (const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs);
+  auto
+  operator/ (const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs) -> const framed_multi<Scalar_T,LO,HI>;
 
   /// Transformation via twisted adjoint action
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const framed_multi<Scalar_T,LO,HI>
-  operator| (const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs);
+  auto
+  operator| (const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs) -> const framed_multi<Scalar_T,LO,HI>;
 
   /// Read multivector from input
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  std::istream&
-  operator>> (std::istream& s, framed_multi<Scalar_T,LO,HI>& val);
+  auto
+  operator>> (std::istream& s, framed_multi<Scalar_T,LO,HI>& val) -> std::istream&;
 
   /// Write multivector to output
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  std::ostream&
-  operator<< (std::ostream& os, const framed_multi<Scalar_T,LO,HI>& val);
+  auto
+  operator<< (std::ostream& os, const framed_multi<Scalar_T,LO,HI>& val) -> std::ostream&;
 
   /// Write term to output
   template< typename Scalar_T, const index_t LO, const index_t HI >
@@ -119,15 +119,15 @@ namespace glucat
 
   /// Exponential of multivector
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const framed_multi<Scalar_T,LO,HI>
-  exp(const framed_multi<Scalar_T,LO,HI>& val);
+  auto
+  exp(const framed_multi<Scalar_T,LO,HI>& val) -> const framed_multi<Scalar_T,LO,HI>;
 
   template< const index_t LO, const index_t HI>
   class index_set_hash
   {
   public:
     using index_set_t = index_set<LO, HI>;
-    inline size_t operator()(index_set_t val) const { return val.hash_fn(); }
+    inline auto operator()(index_set_t val) const -> size_t { return val.hash_fn(); }
   };
 
   /// A framed_multi<Scalar_T,LO,HI> is a framed approximation to a multivector
@@ -176,7 +176,7 @@ namespace glucat
       hash_size_t(size_t hash_size)
       : n(hash_size)
       { };
-      size_t operator()() const
+      auto operator()() const -> size_t
       { return n; }
     private:
       size_t n;
@@ -189,7 +189,7 @@ namespace glucat
 
   public:
     /// Class name used in messages
-    static const std::string classname();
+    static auto classname() -> const std::string;
     /// Destructor
     ~framed_multi() override = default;
     /// Default constructor
@@ -238,63 +238,63 @@ namespace glucat
     framed_multi(const matrix_multi<Other_Scalar_T,LO,HI>& val);
     /// Use generalized FFT to construct a matrix_multi_t
     template< typename Other_Scalar_T >
-    const matrix_multi<Other_Scalar_T,LO,HI> fast_matrix_multi(const index_set_t frm) const;
+    auto fast_matrix_multi(const index_set_t frm) const -> const matrix_multi<Other_Scalar_T,LO,HI>;
     /// Use inverse generalized FFT to construct a framed_multi_t
-    const framed_multi_t fast_framed_multi() const;
+    auto fast_framed_multi() const -> const framed_multi_t;
 
     _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
 
     /// Number of terms
-    unsigned long nbr_terms() const;
+    auto nbr_terms() const -> unsigned long;
 
     /// Random multivector within a frame
-    static const framed_multi_t random(const index_set_t frm, Scalar_T fill = Scalar_T(1));
+    static auto random(const index_set_t frm, Scalar_T fill = Scalar_T(1)) -> const framed_multi_t;
 
     // Friend declarations
 
-    friend const framed_multi_t
-      operator* <>(const framed_multi_t& lhs, const framed_multi_t& rhs);
-    friend const framed_multi_t
-      operator^ <>(const framed_multi_t& lhs, const framed_multi_t& rhs);
-    friend const framed_multi_t
-      operator& <>(const framed_multi_t& lhs, const framed_multi_t& rhs);
-    friend const framed_multi_t
-      operator% <>(const framed_multi_t& lhs, const framed_multi_t& rhs);
-    friend Scalar_T
-      star      <>(const framed_multi_t& lhs, const framed_multi_t& rhs);
-    friend const framed_multi_t
-      operator/ <>(const framed_multi_t& lhs, const framed_multi_t& rhs);
-    friend const framed_multi_t
-      operator| <>(const framed_multi_t& lhs, const framed_multi_t& rhs);
+    friend auto
+      operator* <>(const framed_multi_t& lhs, const framed_multi_t& rhs) -> const framed_multi_t;
+    friend auto
+      operator^ <>(const framed_multi_t& lhs, const framed_multi_t& rhs) -> const framed_multi_t;
+    friend auto
+      operator& <>(const framed_multi_t& lhs, const framed_multi_t& rhs) -> const framed_multi_t;
+    friend auto
+      operator% <>(const framed_multi_t& lhs, const framed_multi_t& rhs) -> const framed_multi_t;
+    friend auto
+      star      <>(const framed_multi_t& lhs, const framed_multi_t& rhs) -> Scalar_T;
+    friend auto
+      operator/ <>(const framed_multi_t& lhs, const framed_multi_t& rhs) -> const framed_multi_t;
+    friend auto
+      operator| <>(const framed_multi_t& lhs, const framed_multi_t& rhs) -> const framed_multi_t;
 
-    friend std::istream&
-      operator>> <>(std::istream& s, multivector_t& val);
-    friend std::ostream&
-      operator<< <>(std::ostream& os, const multivector_t& val);
-    friend std::ostream&
-      operator<< <>(std::ostream& os, const term_t& term);
+    friend auto
+      operator>> <>(std::istream& s, multivector_t& val) -> std::istream&;
+    friend auto
+      operator<< <>(std::ostream& os, const multivector_t& val) -> std::ostream&;
+    friend auto
+      operator<< <>(std::ostream& os, const term_t& term) -> std::ostream&;
 
-    friend const framed_multi_t
-      exp <>(const framed_multi_t& val);
+    friend auto
+      exp <>(const framed_multi_t& val) -> const framed_multi_t;
 
     /// Add a term, if non-zero
-    multivector_t&      operator+= (const term_t& term);
+    auto      operator+= (const term_t& term) -> multivector_t&;
 
   private:
     /// Subalgebra isomorphism: fold each term within the given frame
-    multivector_t       fold(const index_set_t frm) const;
+    auto       fold(const index_set_t frm) const -> multivector_t;
     /// Subalgebra isomorphism: unfold each term within the given frame
-    multivector_t       unfold(const index_set_t frm) const;
+    auto       unfold(const index_set_t frm) const -> multivector_t;
     /// Subalgebra isomorphism: R_{p,q} to R_{p-4,q+4}
-    multivector_t&      centre_pm4_qp4(index_t& p, index_t& q);
+    auto      centre_pm4_qp4(index_t& p, index_t& q) -> multivector_t&;
     /// Subalgebra isomorphism: R_{p,q} to R_{p+4,q-4}
-    multivector_t&      centre_pp4_qm4(index_t& p, index_t& q);
+    auto      centre_pp4_qm4(index_t& p, index_t& q) -> multivector_t&;
     /// Subalgebra isomorphism: R_{p,q} to R_{q+1,p-1}
-    multivector_t&      centre_qp1_pm1(index_t& p, index_t& q);
+    auto      centre_qp1_pm1(index_t& p, index_t& q) -> multivector_t&;
     /// Divide multivector into part divisible by index_set and remainder
-    const framed_pair_t divide(const index_set_t ist) const;
+    auto      divide(const index_set_t ist) const -> const framed_pair_t;
     /// Generalized FFT from framed_multi_t to matrix_t
-    const matrix_t      fast(const index_t level, const bool odd) const;
+    auto      fast(const index_t level, const bool odd) const -> const matrix_t;
 
     /// Variable term
     class var_term :
@@ -304,7 +304,7 @@ namespace glucat
       using var_pair_t = std::pair<index_set<LO, HI>, Scalar_T>;
 
       /// Class name used in messages
-      static const std::string classname()
+      static auto classname() -> const std::string
       { return "var_term"; };
       /// Destructor
       ~var_term() = default;
@@ -317,7 +317,7 @@ namespace glucat
       : var_pair_t(ist, crd)
       { };
       /// Product of variable term and term
-      var_term_t& operator*= (const term_t& rhs)
+      auto operator*= (const term_t& rhs) -> var_term_t&
       {
         this->second *= rhs.second * this->first.sign_of_mult(rhs.first);
         this->first  ^= rhs.first;
@@ -332,31 +332,31 @@ namespace glucat
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
   static
-  Scalar_T
+  auto
   crd_of_mult(const std::pair<const index_set<LO,HI>, Scalar_T>& lhs,
-              const std::pair<const index_set<LO,HI>, Scalar_T>& rhs);
+              const std::pair<const index_set<LO,HI>, Scalar_T>& rhs) -> Scalar_T;
 
   /// Product of terms
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const std::pair<const index_set<LO,HI>, Scalar_T>
+  auto
   operator*
    (const std::pair<const index_set<LO,HI>, Scalar_T>& lhs,
-    const std::pair<const index_set<LO,HI>, Scalar_T>& rhs);
+    const std::pair<const index_set<LO,HI>, Scalar_T>& rhs) -> const std::pair<const index_set<LO,HI>, Scalar_T>;
 
   /// Square root of multivector with specified complexifier
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const framed_multi<Scalar_T,LO,HI>
-  sqrt(const framed_multi<Scalar_T,LO,HI>& val, const framed_multi<Scalar_T,LO,HI>& i, bool prechecked);
+  auto
+  sqrt(const framed_multi<Scalar_T,LO,HI>& val, const framed_multi<Scalar_T,LO,HI>& i, bool prechecked) -> const framed_multi<Scalar_T,LO,HI>;
 
   /// Exponential of multivector
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const framed_multi<Scalar_T,LO,HI>
-  exp(const framed_multi<Scalar_T,LO,HI>& val);
+  auto
+  exp(const framed_multi<Scalar_T,LO,HI>& val) -> const framed_multi<Scalar_T,LO,HI>;
 
   /// Natural logarithm of multivector with specified complexifier
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const framed_multi<Scalar_T,LO,HI>
-  log(const framed_multi<Scalar_T,LO,HI>& val, const framed_multi<Scalar_T,LO,HI>& i, bool prechecked);
+  auto
+  log(const framed_multi<Scalar_T,LO,HI>& val, const framed_multi<Scalar_T,LO,HI>& i, bool prechecked) -> const framed_multi<Scalar_T,LO,HI>;
 }
 
 namespace std

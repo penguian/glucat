@@ -183,8 +183,8 @@ namespace glucat
   /// Modulo function which works reliably for lhs < 0
   template< typename LHS_T, typename RHS_T >
   inline
-  LHS_T
-  pos_mod(LHS_T lhs, RHS_T rhs)
+  auto
+  pos_mod(LHS_T lhs, RHS_T rhs) -> LHS_T
   { return lhs > 0? lhs % rhs : (-lhs) % rhs == 0 ? 0 : rhs - (-lhs) % rhs; }
 
 }

@@ -50,12 +50,12 @@ namespace glucat { namespace gen
   {
   public:
     /// Pointer to generators for a specific signature
-    const Matrix_T* operator() (const index_t p, const index_t q);
+    auto operator() (const index_t p, const index_t q) -> const Matrix_T*;
     /// Single instance of generator table
-    static generator_table<Matrix_T>& generator();
+    static auto generator() -> generator_table<Matrix_T>&;
   private:
     /// Construct a vector of generators for a specific signature
-    const std::vector<Matrix_T>& gen_vector(const index_t p, const index_t q);
+    auto gen_vector(const index_t p, const index_t q) -> const std::vector<Matrix_T>&;
     /// Construct generators for p,q given generators for p-1,q-1
     void gen_from_pm1_qm1(const std::vector<Matrix_T>& old, const signature_t sig);
     /// Construct generators for p,q given generators for p-4,q+4
@@ -75,7 +75,7 @@ namespace glucat { namespace gen
     ~generator_table() = default;
   public:
     generator_table(const generator_table&) = delete;
-    generator_table& operator= (const generator_table&) = delete;
+    auto operator= (const generator_table&) -> generator_table& = delete;
   };
 
   /// Offsets between the current signature and that of the real superalgebra

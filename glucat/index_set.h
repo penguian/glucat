@@ -46,27 +46,27 @@ namespace glucat
 
   /// Symmetric set difference: exclusive or
   template<const index_t LO, const index_t HI>
-  const index_set<LO,HI>
+  auto
   operator^ (const index_set<LO,HI>& lhs,
-             const index_set<LO,HI>& rhs);
+             const index_set<LO,HI>& rhs) -> const index_set<LO,HI>;
 
   /// Set intersection: and
   template<const index_t LO, const index_t HI>
-  const index_set<LO,HI>
+  auto
   operator& (const index_set<LO,HI>& lhs,
-             const index_set<LO,HI>& rhs);
+             const index_set<LO,HI>& rhs) -> const index_set<LO,HI>;
 
   /// Set union: or
   template<const index_t LO, const index_t HI>
-  const index_set<LO,HI>
+  auto
   operator| (const index_set<LO,HI>& lhs,
-             const index_set<LO,HI>& rhs);
+             const index_set<LO,HI>& rhs) -> const index_set<LO,HI>;
 
   /// "lexicographic compare" eg. {3,4,5} is less than {3,7,8}
   // -1 if a<b, +1 if a>b, 0 if a==b
   template<const index_t LO, const index_t HI>
-  int
-  compare(const index_set<LO,HI>& a, const index_set<LO,HI>& b);
+  auto
+  compare(const index_set<LO,HI>& a, const index_set<LO,HI>& b) -> int;
 
   /// Index set class based on std::bitset<> in Gnu standard C++ library
   template<const index_t LO, const index_t HI>
@@ -87,7 +87,7 @@ namespace glucat
     static const index_t v_lo = LO;
     static const index_t v_hi = HI;
 
-    static const std::string  classname();
+    static auto classname() -> const std::string;
     /// Default constructor creates an empty set
     index_set    () = default;
     /// Constructor from bitset_t
@@ -102,72 +102,72 @@ namespace glucat
     index_set    (const std::string& str);
 
     /// Equality
-    bool         operator==  (const index_set_t rhs) const;
+    auto operator==  (const index_set_t rhs) const -> bool;
     /// Inequality
-    bool         operator!=  (const index_set_t rhs) const;
+    auto operator!=  (const index_set_t rhs) const -> bool;
     /// Set complement: not
-    index_set_t  operator~   () const;
+    auto operator~   () const -> index_set_t;
     /// Symmetric set difference: exclusive or
-    index_set_t& operator^=  (const index_set_t rhs);
+    auto operator^=  (const index_set_t rhs) -> index_set_t&;
     /// Set intersection: and
-    index_set_t& operator&=  (const index_set_t rhs);
+    auto operator&=  (const index_set_t rhs) -> index_set_t&;
     /// Set union: or
-    index_set_t& operator|=  (const index_set_t rhs);
+    auto operator|=  (const index_set_t rhs) -> index_set_t&;
     /// Subscripting: Test idx for membership: test value of bit idx
-    bool         operator[]  (const index_t idx) const;
+    auto operator[]  (const index_t idx) const -> bool;
     /// Test idx for membership: test value of bit idx
-    bool         test(const index_t idx) const;
+    auto test(const index_t idx) const -> bool;
     /// Include all indices except 0: set all bits except 0
-    index_set_t& set();
+    auto set() -> index_set_t&;
     /// Include idx: Set bit at idx if idx != 0
-    index_set_t& set(const index_t idx);
+    auto set(const index_t idx) -> index_set_t&;
     /// Set membership of idx to val if idx != 0: Set bit at idx to val if idx != 0
-    index_set_t& set(const index_t idx, const int val);
+    auto set(const index_t idx, const int val) -> index_set_t&;
     /// Make set empty: Set all bits to 0
-    index_set_t& reset();
+    auto reset() -> index_set_t&;
     /// Exclude idx:  Set bit at idx to 0
-    index_set_t& reset(const index_t idx);
+    auto reset(const index_t idx) -> index_set_t&;
     /// Set complement, except 0: flip all bits, except 0
-    index_set_t& flip();
+    auto flip() -> index_set_t&;
     /// Complement membership of idx if idx != 0: flip bit at idx if idx != 0
-    index_set_t& flip(const index_t idx);
+    auto flip(const index_t idx) -> index_set_t&;
     /// Cardinality: Number of indices included in set
-    index_t      count() const;
+    auto count() const -> index_t;
     /// Number of negative indices included in set
-    index_t      count_neg() const;
+    auto count_neg() const -> index_t;
     /// Number of positive indices included in set
-    index_t      count_pos() const;
+    auto count_pos() const -> index_t;
     /// Minimum member
-    index_t      min() const;
+    auto min() const -> index_t;
     /// Maximum member
-    index_t      max() const;
+    auto max() const -> index_t;
 
   // Functions which support Clifford algebra operations
     /// Less than operator used for comparisons, map, etc.
-    bool                  operator<     (const index_set_t rhs) const;
+    auto operator<     (const index_set_t rhs) const -> bool;
     /// Determine if the index set is contiguous, ie. has no gaps
-    bool                  is_contiguous () const;
+    auto is_contiguous () const -> bool;
     /// Fold this index set within itself as a frame
-    const index_set_t     fold          () const;
+    auto fold          () const -> const index_set_t;
     /// Fold this index set within the given frame
-    const index_set_t     fold          (const index_set_t frm, const bool prechecked = false) const;
+    auto fold          (const index_set_t frm, const bool prechecked = false) const -> const index_set_t;
     /// Unfold this index set within the given frame
-    const index_set_t     unfold        (const index_set_t frm, const bool prechecked = false) const;
+    auto unfold        (const index_set_t frm, const bool prechecked = false) const -> const index_set_t;
     /// The set value of the fold of this index set within the given frame
-    set_value_t           value_of_fold (const index_set_t frm) const;
+    auto value_of_fold (const index_set_t frm) const -> set_value_t;
     /// Sign of geometric product of two Clifford basis elements
-    int                   sign_of_mult  (const index_set_t ist) const;
+    auto sign_of_mult  (const index_set_t ist) const -> int;
     /// Sign of geometric square of a Clifford basis element
-    int                   sign_of_square()                      const;
+    auto sign_of_square()                      const -> int;
 
     /// Hash function
-    size_t                hash_fn       ()                      const;
+    auto hash_fn       ()                      const -> size_t;
 
   // Friends
-    friend const index_set_t operator^<> (const index_set_t& lhs, const index_set_t& rhs);
-    friend const index_set_t operator&<> (const index_set_t& lhs, const index_set_t& rhs);
-    friend const index_set_t operator|<> (const index_set_t& lhs, const index_set_t& rhs);
-    friend int compare<>                 (const index_set_t& lhs, const index_set_t& rhs);
+    friend auto operator^<> (const index_set_t& lhs, const index_set_t& rhs) -> const index_set_t;
+    friend auto operator&<> (const index_set_t& lhs, const index_set_t& rhs) -> const index_set_t;
+    friend auto operator|<> (const index_set_t& lhs, const index_set_t& rhs) -> const index_set_t;
+    friend auto compare<>                 (const index_set_t& lhs, const index_set_t& rhs) -> int;
 
   // Member reference:
     class reference;
@@ -183,25 +183,25 @@ namespace glucat
       reference   (index_set_t& ist, index_t idx);
       ~reference  () = default;
       /// for b[i] = x;
-      reference&  operator= (const bool x);
+      auto operator= (const bool x) -> reference&;
       /// for b[i] = b[j];
-      reference&  operator= (const reference& j);
+      auto operator= (const reference& j) -> reference&;
       /// Flips a bit
-      bool        operator~ () const;
+      auto operator~ () const -> bool;
       /// for x = b[i];
                   operator bool () const;
       /// for b[i].flip();
-      reference&  flip();
+      auto flip() -> reference&;
 
     private:
       index_set_t* m_pst;
       index_t      m_idx;
     };
     /// Subscripting: Element access
-    reference     operator[](index_t idx);
+    auto operator[](index_t idx) -> reference;
   private:
     /// Lexicographic ordering of two sets: *this < rhs
-    bool          lex_less_than (const index_set_t rhs) const;
+    auto lex_less_than (const index_set_t rhs) const -> bool;
   };
 
   /// Size of set_value_t should be enough to contain bitset<DEFAULT_HI-DEFAULT_LO>
@@ -212,26 +212,26 @@ namespace glucat
 
   /// Write out index set
   template<const index_t LO, const index_t HI>
-  std::ostream&
-  operator<< (std::ostream& os, const index_set<LO,HI>& ist);
+  auto
+  operator<< (std::ostream& os, const index_set<LO,HI>& ist) -> std::ostream&;
 
   /// Read in index set
   template<const index_t LO, const index_t HI>
-  std::istream&
-  operator>> (std::istream& s, index_set<LO,HI>& ist);
+  auto
+  operator>> (std::istream& s, index_set<LO,HI>& ist) -> std::istream&;
 
   // Functions which support Clifford algebra operations
   /// Square of generator {j}
-  int     sign_of_square(index_t j);
+  auto sign_of_square(index_t j) -> int;
 
   /// Minimum negative index, or 0 if none
   template<const index_t LO, const index_t HI>
-  index_t
-  min_neg(const index_set<LO,HI>& ist);
+  auto
+  min_neg(const index_set<LO,HI>& ist) -> index_t;
 
   /// Maximum positive index, or 0 if none
   template<const index_t LO, const index_t HI>
-  index_t
-  max_pos(const index_set<LO,HI>& ist);
+  auto
+  max_pos(const index_set<LO,HI>& ist) -> index_t;
 }
 #endif // _GLUCAT_INDEX_SET_H

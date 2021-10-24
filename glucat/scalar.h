@@ -49,29 +49,29 @@ namespace glucat
     /// Smart isinf specialised for Scalar_T without infinity
     inline
     static
-    bool
-    isInf(const Scalar_T& val, bool_to_type<false>)
+    auto
+    isInf(const Scalar_T& val, bool_to_type<false>) -> bool
     { return false; }
 
     /// Smart isinf specialised for Scalar_T with infinity
     inline
     static
-    bool
-    isInf(const Scalar_T& val, bool_to_type<true>)
+    auto
+    isInf(const Scalar_T& val, bool_to_type<true>) -> bool
     { return _GLUCAT_ISINF(val); }
 
     /// Smart isnan specialised for Scalar_T without quiet NaN
     inline
     static
-    bool
-    isNaN(const Scalar_T& val, bool_to_type<false>)
+    auto
+    isNaN(const Scalar_T& val, bool_to_type<false>) -> bool
     { return false; }
 
     /// Smart isnan specialised for Scalar_T with quiet NaN
     inline
     static
-    bool
-    isNaN(const Scalar_T& val, bool_to_type<true>)
+    auto
+    isNaN(const Scalar_T& val, bool_to_type<true>) -> bool
     { return _GLUCAT_ISNAN(val); }
 
   public:
@@ -110,8 +110,8 @@ namespace glucat
     /// Smart NaN
     inline
     static
-    Scalar_T
-    NaN()
+    auto
+    NaN() -> Scalar_T
     {
       return std::numeric_limits<Scalar_T>::has_quiet_NaN
            ? std::numeric_limits<Scalar_T>::quiet_NaN()
@@ -136,8 +136,8 @@ namespace glucat
     template <typename Other_Scalar_T >
     inline
     static
-    Scalar_T
-    to_scalar_t(const Other_Scalar_T& val)
+    auto
+    to_scalar_t(const Other_Scalar_T& val) -> Scalar_T
     { return static_cast<Scalar_T>(val); }
 
     /// Promoted type
@@ -156,29 +156,29 @@ namespace glucat
     /// Complex conjugate of scalar
     inline
     static
-    Scalar_T
-    conj(const Scalar_T& val)
+    auto
+    conj(const Scalar_T& val) -> Scalar_T
     { return val; }
 
     /// Real part of scalar
     inline
     static
-    Scalar_T
-    real(const Scalar_T& val)
+    auto
+    real(const Scalar_T& val) -> Scalar_T
     { return val; }
 
     /// Imaginary part of scalar
     inline
     static
-    Scalar_T
-    imag(const Scalar_T& val)
+    auto
+    imag(const Scalar_T& val) -> Scalar_T
     { return Scalar_T(0); }
 
     /// Absolute value of scalar
     inline
     static
-    Scalar_T
-    abs(const Scalar_T& val)
+    auto
+    abs(const Scalar_T& val) -> Scalar_T
     { return boost::numeric::ublas::type_traits<Scalar_T>::UBLAS_ABS(val); }
 
     /// Pi
@@ -205,8 +205,8 @@ namespace glucat
     /// Square root of scalar
     inline
     static
-    Scalar_T
-    sqrt(const Scalar_T& val)
+    auto
+    sqrt(const Scalar_T& val) -> Scalar_T
     { return boost::numeric::ublas::type_traits<Scalar_T>::UBLAS_SQRT(val); }
 
     /// Exponential
@@ -226,8 +226,8 @@ namespace glucat
     /// Log base 2
     inline
     static
-    Scalar_T
-    log2(const Scalar_T& val)
+    auto
+    log2(const Scalar_T& val) -> Scalar_T
     { return log(val)/ln_2(); }
 
     /// Cosine of scalar
@@ -298,8 +298,8 @@ namespace glucat
   /// Log base 2 of scalar
   template< typename Scalar_T >
   inline
-  Scalar_T
-  log2(const Scalar_T& x)
+  auto
+  log2(const Scalar_T& x) -> Scalar_T
   { return numeric_traits<Scalar_T>::log2(x); }
 }
 

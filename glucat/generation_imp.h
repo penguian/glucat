@@ -45,18 +45,18 @@ namespace glucat { namespace gen
   /// Single instance of generator table
   // Reference: [M] Item 47
   template< class Matrix_T >
-  generator_table<Matrix_T>&
+  auto
   generator_table<Matrix_T>::
-  generator()
+  generator() -> generator_table<Matrix_T>&
   { static generator_table<Matrix_T> g; return g;}
 
   /// Pointer to generators for a specific signature
   // Reference: [P] Table 15.27, p 133
   template< class Matrix_T >
   inline
-  const Matrix_T*
+  auto
   generator_table<Matrix_T>::
-  operator() (const index_t p, const index_t q)
+  operator() (const index_t p, const index_t q) -> const Matrix_T*
   {
     const index_t bott = pos_mod(p-q, 8);
     switch(bott)
@@ -75,9 +75,9 @@ namespace glucat { namespace gen
 
   /// Construct a vector of generators for a specific signature
   template< class Matrix_T >
-  const std::vector<Matrix_T>&
+  auto
   generator_table<Matrix_T>::
-  gen_vector(const index_t p, const index_t q)
+  gen_vector(const index_t p, const index_t q) -> const std::vector<Matrix_T>&
   {
     const index_t card = p + q;
     const index_t bias = p - q;

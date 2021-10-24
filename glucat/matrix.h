@@ -44,84 +44,84 @@ namespace glucat
   {
     /// Kronecker tensor product of matrices - as per Matlab kron
     template< typename LHS_T, typename RHS_T >
-    const
-    RHS_T
-    kron(const LHS_T& lhs, const RHS_T& rhs);
+    auto
+    kron(const LHS_T& lhs, const RHS_T& rhs) -> const
+    RHS_T;
 
     /// Sparse Kronecker tensor product of monomial matrices
     template< typename LHS_T, typename RHS_T >
-    const
-    RHS_T
-    mono_kron(const LHS_T& lhs, const RHS_T& rhs);
+    auto
+    mono_kron(const LHS_T& lhs, const RHS_T& rhs) -> const
+    RHS_T;
 
     /// Left inverse of Kronecker product
     template< typename LHS_T, typename RHS_T >
-    const
-    RHS_T
-    nork(const LHS_T& lhs, const RHS_T& rhs, const bool mono = true);
+    auto
+    nork(const LHS_T& lhs, const RHS_T& rhs, const bool mono = true) -> const
+    RHS_T;
 
     /// Left inverse of Kronecker product where lhs is a signed permutation matrix
     template< typename LHS_T, typename RHS_T >
-    const
-    RHS_T
-    signed_perm_nork(const LHS_T& lhs, const RHS_T& rhs);
+    auto
+    signed_perm_nork(const LHS_T& lhs, const RHS_T& rhs) -> const
+    RHS_T;
 
     /// Number of non-zeros
     template< typename Matrix_T >
-    typename Matrix_T::size_type
-    nnz(const Matrix_T& m);
+    auto
+    nnz(const Matrix_T& m) -> typename Matrix_T::size_type;
 
     /// Not a Number
     template< typename Matrix_T >
-    bool
-    isnan(const Matrix_T& m);
+    auto
+    isnan(const Matrix_T& m) -> bool;
 
     /// Unit matrix - as per Matlab eye
     template< typename Matrix_T >
-    const
-    Matrix_T
-    unit(const typename Matrix_T::size_type n);
+    auto
+    unit(const typename Matrix_T::size_type n) -> const
+    Matrix_T;
 
     /// Product of monomial matrices
     template< typename LHS_T, typename RHS_T >
-    const
-    typename RHS_T::expression_type
+    auto
     mono_prod(const ublas::matrix_expression<LHS_T>& lhs,
-              const ublas::matrix_expression<RHS_T>& rhs);
+              const ublas::matrix_expression<RHS_T>& rhs) -> const
+    typename RHS_T::expression_type;
 
     /// Product of sparse matrices
     template< typename LHS_T, typename RHS_T >
-    const
-    typename RHS_T::expression_type
+    auto
     sparse_prod(const ublas::matrix_expression<LHS_T>& lhs,
-                const ublas::matrix_expression<RHS_T>& rhs);
+                const ublas::matrix_expression<RHS_T>& rhs) -> const
+    typename RHS_T::expression_type;
 
     /// Product of matrices
     template< typename LHS_T, typename RHS_T >
-    const
-    typename RHS_T::expression_type
+    auto
     prod(const ublas::matrix_expression<LHS_T>& lhs,
-         const ublas::matrix_expression<RHS_T>& rhs);
+         const ublas::matrix_expression<RHS_T>& rhs) -> const
+    typename RHS_T::expression_type;
 
     /// Inner product: sum(x(i,j)*y(i,j))/x.nrows()
     template< typename Scalar_T, typename LHS_T, typename RHS_T >
-    Scalar_T
-    inner(const LHS_T& lhs, const RHS_T& rhs);
+    auto
+    inner(const LHS_T& lhs, const RHS_T& rhs) -> Scalar_T;
 
     /// Square of Frobenius norm
     template< typename Matrix_T >
-    typename Matrix_T::value_type
-    norm_frob2(const Matrix_T& val);
+    auto
+    norm_frob2(const Matrix_T& val) -> typename Matrix_T::value_type;
 
     /// Matrix trace
     template< typename Matrix_T >
-    typename Matrix_T::value_type
-    trace(const Matrix_T& val);
+    auto
+    trace(const Matrix_T& val) -> typename Matrix_T::value_type;
 
     /// Eigenvalues of a matrix
     template< typename Matrix_T >
-    ublas::vector< std::complex<double> >
-    eigenvalues(const Matrix_T& val);
+    auto
+    eigenvalues(const Matrix_T& val) -> ublas::vector< std::complex<double> >;
 
     /// Classification of eigenvalues of a matrix
     using eig_case_t = enum {safe_eig_case, negative_eig_case, both_eig_case};
@@ -139,8 +139,8 @@ namespace glucat
 
     /// Classify the eigenvalues of a matrix
     template< typename Matrix_T >
-    eig_genus<Matrix_T>
-    classify_eigenvalues(const Matrix_T& val);
+    auto
+    classify_eigenvalues(const Matrix_T& val) -> eig_genus<Matrix_T>;
   }
 }
 

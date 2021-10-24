@@ -70,9 +70,9 @@ namespace glucat { namespace matrix
 
   /// Kronecker tensor product of matrices - as per Matlab kron
   template< typename LHS_T, typename RHS_T >
-  const
+  auto
+  kron(const LHS_T& lhs, const RHS_T& rhs) -> const
   RHS_T
-  kron(const LHS_T& lhs, const RHS_T& rhs)
   {
     using matrix_t = RHS_T;
     using matrix_index_t = typename matrix_t::size_type;
@@ -113,9 +113,9 @@ namespace glucat { namespace matrix
 
   /// Sparse Kronecker tensor product of monomial matrices
   template< typename LHS_T, typename RHS_T >
-  const
+  auto
+  mono_kron(const LHS_T& lhs, const RHS_T& rhs) -> const
   RHS_T
-  mono_kron(const LHS_T& lhs, const RHS_T& rhs)
   {
     using matrix_t = RHS_T;
     using matrix_index_t = typename matrix_t::size_type;
@@ -185,9 +185,9 @@ namespace glucat { namespace matrix
 
   /// Left inverse of Kronecker product
   template< typename LHS_T, typename RHS_T >
-  const
+  auto
+  nork(const LHS_T& lhs, const RHS_T& rhs, const bool mono) -> const
   RHS_T
-  nork(const LHS_T& lhs, const RHS_T& rhs, const bool mono)
   {
     // nork(A, kron(A, B)) is close to B
     // Definition matches [v] Section 4, Theorem 4.1.
@@ -234,9 +234,9 @@ namespace glucat { namespace matrix
 
   /// Left inverse of Kronecker product where lhs is a signed permutation matrix
   template< typename LHS_T, typename RHS_T >
-  const
+  auto
+  signed_perm_nork(const LHS_T& lhs, const RHS_T& rhs) -> const
   RHS_T
-  signed_perm_nork(const LHS_T& lhs, const RHS_T& rhs)
   {
     // signed_perm_nork(A, kron(A, B)) is close to B
     // Definition matches [v] Section 4, Theorem 4.1.
@@ -267,8 +267,8 @@ namespace glucat { namespace matrix
 
   /// Number of non-zeros
   template< typename Matrix_T >
-  typename Matrix_T::size_type
-  nnz(const Matrix_T& m)
+  auto
+  nnz(const Matrix_T& m) -> typename Matrix_T::size_type
   {
     using matrix_t = Matrix_T;
     using matrix_index_t = typename matrix_t::size_type;
@@ -290,8 +290,8 @@ namespace glucat { namespace matrix
 
   /// Not a Number
   template< typename Matrix_T >
-  bool
-  isnan(const Matrix_T& m)
+  auto
+  isnan(const Matrix_T& m) -> bool
   {
     using matrix_t = Matrix_T;
     using Scalar_T = typename matrix_t::value_type;
@@ -314,9 +314,9 @@ namespace glucat { namespace matrix
   /// Unit matrix - as per Matlab eye
   template< typename Matrix_T >
   inline
-  const
+  auto
+  unit(const typename Matrix_T::size_type dim) -> const
   Matrix_T
-  unit(const typename Matrix_T::size_type dim)
   {
     using Scalar_T = typename Matrix_T::value_type;
     return ublas::identity_matrix<Scalar_T>(dim);
@@ -324,9 +324,9 @@ namespace glucat { namespace matrix
 
   /// Product of monomial matrices
   template< typename LHS_T, typename RHS_T >
-  const typename RHS_T::expression_type
+  auto
   mono_prod(const ublas::matrix_expression<LHS_T>& lhs,
-            const ublas::matrix_expression<RHS_T>& rhs)
+            const ublas::matrix_expression<RHS_T>& rhs) -> const typename RHS_T::expression_type
   {
     using lhs_expression_t = const LHS_T;
     using rhs_expression_t = const RHS_T;
@@ -360,9 +360,9 @@ namespace glucat { namespace matrix
   /// Product of sparse matrices
   template< typename LHS_T, typename RHS_T >
   inline
-  const typename RHS_T::expression_type
+  auto
   sparse_prod(const ublas::matrix_expression<LHS_T>& lhs,
-              const ublas::matrix_expression<RHS_T>& rhs)
+              const ublas::matrix_expression<RHS_T>& rhs) -> const typename RHS_T::expression_type
   {
     using expression_t = typename RHS_T::expression_type;
     return ublas::sparse_prod<expression_t>(lhs(), rhs());
@@ -371,9 +371,9 @@ namespace glucat { namespace matrix
   /// Product of matrices
   template< typename LHS_T, typename RHS_T >
   inline
-  const typename RHS_T::expression_type
+  auto
   prod(const ublas::matrix_expression<LHS_T>& lhs,
-       const ublas::matrix_expression<RHS_T>& rhs)
+       const ublas::matrix_expression<RHS_T>& rhs) -> const typename RHS_T::expression_type
   {
 #if defined(_GLUCAT_USE_DENSE_MATRICES)
     using matrix_index_t = typename RHS_T::size_type;
@@ -389,8 +389,8 @@ namespace glucat { namespace matrix
 
   /// Inner product: sum(lhs(i,j)*rhs(i,j))/lhs.nrows()
   template< typename Scalar_T, typename LHS_T, typename RHS_T >
-  Scalar_T
-  inner(const LHS_T& lhs, const RHS_T& rhs)
+  auto
+  inner(const LHS_T& lhs, const RHS_T& rhs) -> Scalar_T
   {
     auto result = Scalar_T(0);
     for (typename LHS_T::const_iterator1
@@ -411,8 +411,8 @@ namespace glucat { namespace matrix
 
   /// Square of Frobenius norm
   template< typename Matrix_T >
-  typename Matrix_T::value_type
-  norm_frob2(const Matrix_T& val)
+  auto
+  norm_frob2(const Matrix_T& val) -> typename Matrix_T::value_type
   {
     using Scalar_T = typename Matrix_T::value_type;
 
@@ -435,8 +435,8 @@ namespace glucat { namespace matrix
 
   /// Matrix trace
   template< typename Matrix_T >
-  typename Matrix_T::value_type
-  trace(const Matrix_T& val)
+  auto
+  trace(const Matrix_T& val) -> typename Matrix_T::value_type
   {
     using Scalar_T = typename Matrix_T::value_type;
     using matrix_index_t = typename Matrix_T::size_type;
@@ -459,8 +459,8 @@ namespace glucat { namespace matrix
   /// Convert matrix to LAPACK format
   template< typename Matrix_T >
   static
-  ublas::matrix<double, ublas::column_major>
-  to_lapack(const Matrix_T& val)
+  auto
+  to_lapack(const Matrix_T& val) -> ublas::matrix<double, ublas::column_major>
   {
     using matrix_index_t = typename Matrix_T::size_type;
     const matrix_index_t s1 = val.size1();
@@ -491,8 +491,8 @@ namespace glucat { namespace matrix
 
   /// Eigenvalues of a matrix
   template< typename Matrix_T >
-  ublas::vector< std::complex<double> >
-  eigenvalues(const Matrix_T& val)
+  auto
+  eigenvalues(const Matrix_T& val) -> ublas::vector< std::complex<double> >
   {
     using complex_t = std::complex<double>;
     using complex_vector_t = typename ublas::vector<complex_t>;
@@ -524,8 +524,8 @@ namespace glucat { namespace matrix
 
   /// Classify the eigenvalues of a matrix
   template< typename Matrix_T >
-  eig_genus<Matrix_T>
-  classify_eigenvalues(const Matrix_T& val)
+  auto
+  classify_eigenvalues(const Matrix_T& val) -> eig_genus<Matrix_T>
   {
     using Scalar_T = typename Matrix_T::value_type;
     eig_genus<Matrix_T> result;

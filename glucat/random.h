@@ -53,9 +53,9 @@ namespace glucat
     friend class friend_for_private_destructor;
   public:
     /// Single instance of Random number generator
-    static random_generator& generator() { static random_generator g; return g;}
+    static auto generator() -> random_generator& { static random_generator g; return g;}
     random_generator(const random_generator&) = delete;
-    random_generator& operator= (const random_generator&) = delete;
+    auto operator= (const random_generator&) -> random_generator& = delete;
   private:
     static const unsigned long seed = 19590921UL;
 #if defined(_GLUCAT_USE_GSL_RANDOM)
@@ -88,9 +88,9 @@ namespace glucat
     ~random_generator() = default;
 
   public:
-    Scalar_T uniform()
+    auto uniform() -> Scalar_T
     { return Scalar_T(this->uniform_dist(this->uint_gen)); }
-    Scalar_T normal()
+    auto normal() -> Scalar_T
     { return Scalar_T(this->normal_dist(this->uint_gen)); }
 
 #endif
