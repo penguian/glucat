@@ -124,9 +124,9 @@ namespace glucat
     /// Check if a multivector contains any IEEE NaN values
     virtual auto isnan       () const -> bool = 0;
     /// Write formatted multivector to output
-    virtual auto write       (const std::string& msg="") const -> void = 0;
+    virtual void write       (const std::string& msg="") const = 0;
     /// Write formatted multivector to file
-    virtual auto write       (std::ofstream& ofile, const std::string& msg="") const -> void = 0;
+    virtual void write       (std::ofstream& ofile, const std::string& msg="") const = 0;
   };
 
 #ifndef _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
@@ -168,9 +168,8 @@ namespace glucat
     auto truncated   (const Scalar_T& limit = Scalar_T(DEFAULT_TRUNCATION)) const      \
                                                        -> const multivector_t override;\
     auto isnan       () const                          -> bool                override;\
-    auto write       (const std::string& msg="") const -> void                override;\
-    auto write       (std::ofstream& ofile, const std::string& msg="") const           \
-                                                       -> void override;
+    void write       (const std::string& msg="") const                        override;\
+    void write       (std::ofstream& ofile, const std::string& msg="") const  override;
 #endif // _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
 
   /// Test for inequality of multivectors

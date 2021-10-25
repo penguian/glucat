@@ -189,7 +189,7 @@ namespace glucat
       /// Flips a bit
       auto operator~ () const -> bool;
       /// for x = b[i];
-                  operator bool () const;
+           operator bool () const;
       /// for b[i].flip();
       auto flip() -> reference&;
 

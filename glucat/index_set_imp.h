@@ -138,7 +138,7 @@ namespace glucat
   inline
   auto
   index_set<LO,HI>::
-  operator~ () const -> index_set<LO,HI>
+  operator~ () const -> index_set_t
   { return bitset_t::operator~(); }
 
   /// Symmetric set difference: exclusive or
@@ -146,7 +146,7 @@ namespace glucat
   inline
   auto
   index_set<LO,HI>::
-  operator^= (const index_set_t rhs) -> index_set<LO,HI>&
+  operator^= (const index_set_t rhs) -> index_set_t&
   {
     bitset_t* pthis = this;
     *pthis ^= static_cast<bitset_t>(rhs);
@@ -171,7 +171,7 @@ namespace glucat
   inline
   auto
   index_set<LO,HI>::
-  operator&= (const index_set_t rhs) -> index_set<LO,HI>&
+  operator&= (const index_set_t rhs) -> index_set_t&
   {
     bitset_t* pthis = this;
     *pthis &= static_cast<bitset_t>(rhs);
@@ -196,7 +196,7 @@ namespace glucat
   inline
   auto
   index_set<LO,HI>::
-  operator|= (const index_set_t rhs) -> index_set<LO,HI>&
+  operator|= (const index_set_t rhs) -> index_set_t&
   {
     bitset_t* pthis = this;
     *pthis |= static_cast<bitset_t>(rhs);
@@ -221,7 +221,7 @@ namespace glucat
   inline
   auto
   index_set<LO,HI>::
-  operator[] (const index_t idx) -> typename index_set<LO,HI>::reference
+  operator[] (const index_t idx) -> reference
   { return reference(*this, idx); }
 
   /// Subscripting: Test idx for membership: test value of bit idx
@@ -252,7 +252,7 @@ namespace glucat
   inline
   auto
   index_set<LO,HI>::
-  set() -> index_set<LO,HI>&
+  set() -> index_set_t&
   {
     bitset_t::set();
     return *this;
@@ -263,7 +263,7 @@ namespace glucat
   inline
   auto
   index_set<LO,HI>::
-  set(index_t idx) -> index_set<LO,HI>&
+  set(index_t idx) -> index_set_t&
   {
     if (idx > 0)
       bitset_t::set(idx-LO-1);
@@ -277,7 +277,7 @@ namespace glucat
   inline
   auto
   index_set<LO,HI>::
-  set(const index_t idx, const int val) -> index_set<LO,HI>&
+  set(const index_t idx, const int val) -> index_set_t&
   {
     if (idx > 0)
       bitset_t::set(idx-LO-1, val);
@@ -291,7 +291,7 @@ namespace glucat
   inline
   auto
   index_set<LO,HI>::
-  reset() -> index_set<LO,HI>&
+  reset() -> index_set_t&
   {
     bitset_t::reset();
     return *this;
@@ -302,7 +302,7 @@ namespace glucat
   inline
   auto
   index_set<LO,HI>::
-  reset(const index_t idx) -> index_set<LO,HI>&
+  reset(const index_t idx) -> index_set_t&
   {
     if (idx > 0)
       bitset_t::reset(idx-LO-1);
@@ -327,7 +327,7 @@ namespace glucat
   inline
   auto
   index_set<LO,HI>::
-  flip(const index_t idx) -> index_set<LO,HI>&
+  flip(const index_t idx) -> index_set_t&
   {
     if (idx > 0)
       bitset_t::flip(idx-LO-1);
@@ -456,9 +456,9 @@ namespace glucat
 #else
   /// Minimum member, or 0 if none
   template<const index_t LO, const index_t HI>
-  index_t
+  auto
   index_set<LO,HI>::
-  min() const
+  min() const -> index_t
   {
     for (index_t
         idx = LO;
@@ -514,9 +514,9 @@ namespace glucat
   /// Maximum member, or 0 if none: default for 32-bit cpus
   template<const index_t LO, const index_t HI>
   inline
-  index_t
+  auto
   index_set<LO,HI>::
-  max() const
+  max() const -> index_t
   {
     // Reference: [JA], 1.6
     unsigned long val = bitset_t::to_ulong();
@@ -545,9 +545,9 @@ namespace glucat
 #else
   /// Maximum member, or 0 if none
   template<const index_t LO, const index_t HI>
-  index_t
+  auto
   index_set<LO,HI>::
-  max() const
+  max() const -> index_t
   {
     for (index_t
         idx = HI;
@@ -790,8 +790,7 @@ namespace glucat
   template<const index_t LO, const index_t HI>
   auto
   index_set<LO,HI>::
-  unfold(const index_set_t frm, const bool prechecked) const -> const
-  index_set<LO,HI>
+  unfold(const index_set_t frm, const bool prechecked) const -> const index_set_t
   {
     const char* msg =
       "unfold(frm): cannot unfold into a smaller frame";
@@ -990,7 +989,7 @@ namespace glucat
   inline
   auto
   index_set<LO,HI>::reference::
-  operator= (bool x) -> typename index_set<LO,HI>::reference&
+  operator= (bool x) -> reference&
   {
     if ( x )
       m_pst->set(m_idx);
@@ -1004,7 +1003,7 @@ namespace glucat
   inline
   auto
   index_set<LO,HI>::reference::
-  operator= (const reference& j) -> typename index_set<LO,HI>::reference&
+  operator= (const reference& j) -> reference&
   {
     if ( (j.m_pst)[j.m_idx] )
       m_pst->set(m_idx);
@@ -1033,7 +1032,7 @@ namespace glucat
   inline
   auto
   index_set<LO,HI>::reference::
-  flip() -> typename index_set<LO,HI>::reference&
+  flip() -> reference&
   {
     m_pst->flip(m_idx);
     return *this;
