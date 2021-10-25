@@ -160,14 +160,19 @@ namespace glucat
     friend class framed_multi;
 
   private:
-    class                                              var_term; // forward
+    class var_term; // forward
     using var_term_t = class var_term;
     using matrix_t = typename matrix_multi_t::matrix_t;
-    using sorted_map_t = std::map<index_set_t, Scalar_T, std::less<const index_set_t>>;
+    using sorted_map_t = std::map< index_set_t, Scalar_T, std::less<const index_set_t>
+#if defined(_GLUCAT_USE_BOOST_POOL_ALLOC)
+                                 , boost::fast_pool_allocator<term_t> >;
+#else
+                                 >;
+#endif
 #if defined(_GLUCAT_USE_STD_UNORDERED_MAP)
     using map_t = std::unordered_map<index_set_t, Scalar_T, index_set_hash<LO, HI>>;
 #else
-    typedef sorted_map_t                               map_t;
+    using map_t = sorted_map_t;
 #endif
 
     class hash_size_t
@@ -248,24 +253,24 @@ namespace glucat
     auto nbr_terms() const -> unsigned long;
 
     /// Random multivector within a frame
-    static auto random(const index_set_t frm, Scalar_T fill = Scalar_T(1)) -> const framed_multi_t;
+    static auto random(const index_set_t frm, Scalar_T fill = Scalar_T(1)) -> const multivector_t;
 
     // Friend declarations
 
     friend auto
-      operator* <>(const framed_multi_t& lhs, const framed_multi_t& rhs) -> const framed_multi_t;
+      operator* <>(const multivector_t& lhs, const multivector_t& rhs) -> const multivector_t;
     friend auto
-      operator^ <>(const framed_multi_t& lhs, const framed_multi_t& rhs) -> const framed_multi_t;
+      operator^ <>(const multivector_t& lhs, const multivector_t& rhs) -> const multivector_t;
     friend auto
-      operator& <>(const framed_multi_t& lhs, const framed_multi_t& rhs) -> const framed_multi_t;
+      operator& <>(const multivector_t& lhs, const multivector_t& rhs) -> const multivector_t;
     friend auto
-      operator% <>(const framed_multi_t& lhs, const framed_multi_t& rhs) -> const framed_multi_t;
+      operator% <>(const multivector_t& lhs, const multivector_t& rhs) -> const multivector_t;
     friend auto
-      star      <>(const framed_multi_t& lhs, const framed_multi_t& rhs) -> Scalar_T;
+      star      <>(const multivector_t& lhs, const multivector_t& rhs) -> Scalar_T;
     friend auto
-      operator/ <>(const framed_multi_t& lhs, const framed_multi_t& rhs) -> const framed_multi_t;
+      operator/ <>(const multivector_t& lhs, const multivector_t& rhs) -> const multivector_t;
     friend auto
-      operator| <>(const framed_multi_t& lhs, const framed_multi_t& rhs) -> const framed_multi_t;
+      operator| <>(const multivector_t& lhs, const multivector_t& rhs) -> const multivector_t;
 
     friend auto
       operator>> <>(std::istream& s, multivector_t& val) -> std::istream&;
@@ -275,7 +280,7 @@ namespace glucat
       operator<< <>(std::ostream& os, const term_t& term) -> std::ostream&;
 
     friend auto
-      exp <>(const framed_multi_t& val) -> const framed_multi_t;
+      exp <>(const multivector_t& val) -> const multivector_t;
 
     /// Add a term, if non-zero
     auto      operator+= (const term_t& term) -> multivector_t&;
@@ -293,7 +298,7 @@ namespace glucat
     auto      centre_qp1_pm1(index_t& p, index_t& q) -> multivector_t&;
     /// Divide multivector into part divisible by index_set and remainder
     auto      divide(const index_set_t ist) const -> const framed_pair_t;
-    /// Generalized FFT from framed_multi_t to matrix_t
+    /// Generalized FFT from multivector_t to matrix_t
     auto      fast(const index_t level, const bool odd) const -> const matrix_t;
 
     /// Variable term
