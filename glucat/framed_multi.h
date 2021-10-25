@@ -114,8 +114,8 @@ namespace glucat
 
   /// Write term to output
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  std::ostream&
-  operator<< (std::ostream& os, const std::pair< const index_set<LO,HI>, Scalar_T >& term);
+  auto
+  operator<< (std::ostream& os, const std::pair< const index_set<LO,HI>, Scalar_T >& term) -> std::ostream&;
 
   /// Exponential of multivector
   template< typename Scalar_T, const index_t LO, const index_t HI >

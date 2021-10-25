@@ -250,9 +250,8 @@ namespace glucat
       operator>> <>(std::istream& s, multivector_t& val) -> std::istream&;
     friend auto
       operator<< <>(std::ostream& os, const multivector_t& val) -> std::ostream&;
-    friend std::ostream&
-      operator<< <>(std::ostream& os, const term_t& term);
-
+    friend auto
+      operator<< <>(std::ostream& os, const term_t& term) -> std::ostream&;
     template< typename Other_Scalar_T, const index_t Other_LO, const index_t Other_HI >
     friend auto
     reframe (const matrix_multi<Other_Scalar_T,Other_LO,Other_HI>& lhs,    const matrix_multi<Other_Scalar_T,Other_LO,Other_HI>& rhs,
