@@ -496,6 +496,14 @@ namespace glucat
     return *this;
   }
 
+  /// Geometric difference of multivector and scalar
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
+  auto
+  matrix_multi<Scalar_T,LO,HI>::
+  operator-= (const Scalar_T& scr) -> multivector_t&
+  { return *this += term_t(index_set_t(), -scr); }
+
   /// Geometric difference
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline

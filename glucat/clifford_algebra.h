@@ -63,6 +63,8 @@ namespace glucat
     virtual auto operator+=  (const Scalar_T& scr) -> multivector_t& = 0;
     /// Geometric difference
     virtual auto operator-=  (const multivector_t& rhs) -> multivector_t& = 0;
+    /// Geometric difference of multivector and scalar
+    virtual auto operator-=  (const Scalar_T& scr) -> multivector_t& = 0;
     /// Unary -
     virtual auto operator-   () const -> const multivector_t = 0;
     /// Product of multivector and scalar
@@ -136,6 +138,7 @@ namespace glucat
     auto operator+=  (const multivector_t& rhs)        -> multivector_t&      override;\
     auto operator+=  (const Scalar_T& scr)             -> multivector_t&      override;\
     auto operator-=  (const multivector_t& rhs)        -> multivector_t&      override;\
+    auto operator-=  (const Scalar_T& scr)             -> multivector_t&      override;\
     auto operator-   () const                          -> const multivector_t override;\
     auto operator*=  (const Scalar_T& scr)             -> multivector_t&      override;\
     auto operator*=  (const multivector_t& rhs)        -> multivector_t&      override;\

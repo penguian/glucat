@@ -140,7 +140,7 @@ namespace glucat
   operator- (const Multivector<Scalar_T,LO,HI>& lhs, const Scalar_T& scr) -> const Multivector<Scalar_T,LO,HI>
   {
     Multivector<Scalar_T,LO,HI> result = lhs;
-    return result += -scr;
+    return result -= scr;
   }
 
   /// Geometric difference of scalar and multivector
