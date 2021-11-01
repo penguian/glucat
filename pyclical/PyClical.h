@@ -34,7 +34,7 @@
 #include "glucat/glucat_config.h"
 #include "glucat/glucat.h"
 
-typedef glucat::tuning
+using Tune_P = glucat::tuning
   <
     glucat::DEFAULT_Mult_Matrix_Threshold,
     glucat::DEFAULT_Div_Max_Steps,
@@ -46,8 +46,7 @@ typedef glucat::tuning
     glucat::DEFAULT_Inv_Fast_Dim_Threshold,
     glucat::DEFAULT_Products_Size_Threshold,
     glucat::precision_promoted
-  >
-  Tune_P;
+  >;
 
 #include "glucat/glucat_imp.h"
 #include <iostream>
@@ -64,7 +63,7 @@ inline PyObject* PyFloat_FromDouble(Scalar_T v)
 
 // String representations for use by PyClical Python classes.
 
-typedef std::string String;
+using String = std::string;
 
 String glucat_package_version = GLUCAT_PACKAGE_VERSION;
 
@@ -90,7 +89,7 @@ inline String index_set_to_str(const Index_Set_T& ist)
 template<typename Multivector_T>
 inline String clifford_to_repr(const Multivector_T& mv)
 {
-  typedef typename Multivector_T::scalar_t scalar_t;
+  using scalar_t = typename Multivector_T::scalar_t;
   std::ostringstream os;
   os << std::setprecision(std::numeric_limits<scalar_t>::digits10 + 1);
   os << "clifford(\"" << mv << "\")";
@@ -101,7 +100,7 @@ inline String clifford_to_repr(const Multivector_T& mv)
 template<typename Multivector_T>
 inline String clifford_to_str(const Multivector_T& mv)
 {
-  typedef typename Multivector_T::scalar_t scalar_t;
+  using scalar_t = typename Multivector_T::scalar_t;
   std::ostringstream os;
   if (abs(mv) < std::numeric_limits<scalar_t>::epsilon())
     os << 0.0;
@@ -118,8 +117,8 @@ namespace cga3
   template<typename Multivector_T>
   inline Multivector_T cga3(const Multivector_T& x)
   {
-    typedef Multivector_T cl;
-    typedef typename cl::index_set_t ist;
+    using cl = Multivector_T;
+    using ist = typename cl::index_set_t;
     static const cl ninf3 = cl(ist(4)) + cl(ist(-1));
 
     return (cl(ist(4)) - x) * ninf3 * (x - cl(ist(4)));
@@ -129,9 +128,9 @@ namespace cga3
   template<typename Multivector_T>
   inline Multivector_T cga3std(const Multivector_T& X)
   {
-    typedef Multivector_T cl;
-    typedef typename cl::index_set_t ist;
-    typedef typename cl::scalar_t scalar_t;
+    using cl = Multivector_T;
+    using ist = typename cl::index_set_t;
+    using scalar_t = typename cl::scalar_t;
     static const cl ninf3 = cl(ist(4)) + cl(ist(-1));
 
     return scalar_t(-2.0) * X / (X & ninf3);
@@ -141,9 +140,9 @@ namespace cga3
   template<typename Multivector_T>
   inline Multivector_T agc3(const Multivector_T& X)
   {
-    typedef Multivector_T cl;
-    typedef typename cl::index_set_t ist;
-    typedef typename cl::scalar_t scalar_t;
+    using cl = Multivector_T;
+    using ist = typename cl::index_set_t;
+    using scalar_t = typename cl::scalar_t;
 
     const cl& cga3stdX = cga3std(X);
     return (cl(ist(1))*cga3stdX[ist(1)] +
@@ -158,10 +157,10 @@ namespace cga3
 using namespace glucat;
 const index_t lo_ndx = DEFAULT_LO;
 const index_t hi_ndx = DEFAULT_HI;
-typedef index_set<lo_ndx,hi_ndx> IndexSet;
+using IndexSet = index_set<lo_ndx, hi_ndx>;
 
-typedef double scalar_t;
-typedef matrix_multi<scalar_t> Clifford;
+using scalar_t = double;
+using Clifford = matrix_multi<scalar_t>;
 
 const scalar_t epsilon = std::numeric_limits<scalar_t>::epsilon();
 

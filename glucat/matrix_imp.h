@@ -70,22 +70,22 @@ namespace glucat { namespace matrix
 
   /// Kronecker tensor product of matrices - as per Matlab kron
   template< typename LHS_T, typename RHS_T >
-  const
+  auto
+  kron(const LHS_T& lhs, const RHS_T& rhs) -> const
   RHS_T
-  kron(const LHS_T& lhs, const RHS_T& rhs)
   {
-    typedef RHS_T matrix_t;
-    typedef typename matrix_t::size_type matrix_index_t;
+    using matrix_t = RHS_T;
+    using matrix_index_t = typename matrix_t::size_type;
     const matrix_index_t rhs_s1 = rhs.size1();
     const matrix_index_t rhs_s2 = rhs.size2();
     matrix_t result(lhs.size1()*rhs_s1, lhs.size2()*rhs_s2);
     result.clear();
 
-    typedef typename matrix_t::value_type Scalar_T;
-    typedef typename LHS_T::const_iterator1 lhs_const_iterator1;
-    typedef typename LHS_T::const_iterator2 lhs_const_iterator2;
-    typedef typename RHS_T::const_iterator1 rhs_const_iterator1;
-    typedef typename RHS_T::const_iterator2 rhs_const_iterator2;
+    using Scalar_T = typename matrix_t::value_type;
+    using lhs_const_iterator1 = typename LHS_T::const_iterator1;
+    using lhs_const_iterator2 = typename LHS_T::const_iterator2;
+    using rhs_const_iterator1 = typename RHS_T::const_iterator1;
+    using rhs_const_iterator2 = typename RHS_T::const_iterator2;
     for (lhs_const_iterator1
         lhs_it1 = lhs.begin1();
         lhs_it1 != lhs.end1();
@@ -113,23 +113,23 @@ namespace glucat { namespace matrix
 
   /// Sparse Kronecker tensor product of monomial matrices
   template< typename LHS_T, typename RHS_T >
-  const
+  auto
+  mono_kron(const LHS_T& lhs, const RHS_T& rhs) -> const
   RHS_T
-  mono_kron(const LHS_T& lhs, const RHS_T& rhs)
   {
-    typedef RHS_T matrix_t;
-    typedef typename matrix_t::size_type matrix_index_t;
+    using matrix_t = RHS_T;
+    using matrix_index_t = typename matrix_t::size_type;
     const matrix_index_t rhs_s1 = rhs.size1();
     const matrix_index_t rhs_s2 = rhs.size2();
     const matrix_index_t dim = lhs.size1()*rhs_s1;
     matrix_t result(dim, dim, dim);
     result.clear();
 
-    typedef typename matrix_t::value_type Scalar_T;
-    typedef typename LHS_T::const_iterator1 lhs_const_iterator1;
-    typedef typename LHS_T::const_iterator2 lhs_const_iterator2;
-    typedef typename RHS_T::const_iterator1 rhs_const_iterator1;
-    typedef typename RHS_T::const_iterator2 rhs_const_iterator2;
+    using Scalar_T = typename matrix_t::value_type;
+    using lhs_const_iterator1 = typename LHS_T::const_iterator1;
+    using lhs_const_iterator2 = typename LHS_T::const_iterator2;
+    using rhs_const_iterator1 = typename RHS_T::const_iterator1;
+    using rhs_const_iterator2 = typename RHS_T::const_iterator2;
     for (lhs_const_iterator1
         lhs_it1 = lhs.begin1();
         lhs_it1 != lhs.end1();
@@ -161,16 +161,16 @@ namespace glucat { namespace matrix
              const typename RHS_T::size_type res_s2)
   {
     // Definition matches [v] Section 4, Theorem 4.1.
-    typedef RHS_T matrix_t;
-    typedef typename matrix_t::size_type matrix_index_t;
+    using matrix_t = RHS_T;
+    using matrix_index_t = typename matrix_t::size_type;
     const matrix_index_t start1 = res_s1 * lhs_it2.index1();
     const matrix_index_t start2 = res_s2 * lhs_it2.index2();
     using ublas::range;
     const range& range1 = range(start1, start1 + res_s1);
     const range& range2 = range(start2, start2 + res_s2);
-    typedef ublas::matrix_range<const matrix_t> matrix_range_t;
+    using matrix_range_t = ublas::matrix_range<const matrix_t>;
     const matrix_range_t& rhs_range = matrix_range_t(rhs, range1, range2);
-    typedef typename matrix_t::value_type Scalar_T;
+    using Scalar_T = typename matrix_t::value_type;
     const Scalar_T lhs_val = numeric_traits<Scalar_T>::to_scalar_t(*lhs_it2);
     for (typename matrix_range_t::const_iterator1
         rhs_it1 = rhs_range.begin1();
@@ -185,26 +185,26 @@ namespace glucat { namespace matrix
 
   /// Left inverse of Kronecker product
   template< typename LHS_T, typename RHS_T >
-  const
+  auto
+  nork(const LHS_T& lhs, const RHS_T& rhs, const bool mono) -> const
   RHS_T
-  nork(const LHS_T& lhs, const RHS_T& rhs, const bool mono)
   {
     // nork(A, kron(A, B)) is close to B
     // Definition matches [v] Section 4, Theorem 4.1.
-    typedef RHS_T matrix_t;
-    typedef typename LHS_T::size_type lhs_index_t;
-    typedef typename matrix_t::size_type matrix_index_t;
+    using matrix_t = RHS_T;
+    using lhs_index_t = typename LHS_T::size_type;
+    using matrix_index_t = typename matrix_t::size_type;
     const lhs_index_t lhs_s1 = lhs.size1();
     const lhs_index_t lhs_s2 = lhs.size2();
     const matrix_index_t rhs_s1 = rhs.size1();
     const matrix_index_t rhs_s2 = rhs.size2();
     const matrix_index_t res_s1 = rhs_s1 / lhs_s1;
     const matrix_index_t res_s2 = rhs_s2 / lhs_s2;
-    typedef typename matrix_t::value_type Scalar_T;
+    using Scalar_T = typename matrix_t::value_type;
     const Scalar_T norm_frob2_lhs = norm_frob2(lhs);
     if (!mono)
     {
-      typedef error<matrix_t> error_t;
+      using error_t = error<matrix_t>;
       if (rhs_s1 == 0)
         throw error_t("matrix", "nork: number of rows must not be 0");
       if (rhs_s2 == 0)
@@ -234,23 +234,23 @@ namespace glucat { namespace matrix
 
   /// Left inverse of Kronecker product where lhs is a signed permutation matrix
   template< typename LHS_T, typename RHS_T >
-  const
+  auto
+  signed_perm_nork(const LHS_T& lhs, const RHS_T& rhs) -> const
   RHS_T
-  signed_perm_nork(const LHS_T& lhs, const RHS_T& rhs)
   {
     // signed_perm_nork(A, kron(A, B)) is close to B
     // Definition matches [v] Section 4, Theorem 4.1.
-    typedef RHS_T matrix_t;
-    typedef typename LHS_T::size_type lhs_index_t;
-    typedef typename matrix_t::size_type matrix_index_t;
+    using matrix_t = RHS_T;
+    using lhs_index_t = typename LHS_T::size_type;
+    using matrix_index_t = typename matrix_t::size_type;
     const lhs_index_t lhs_s1 = lhs.size1();
     const lhs_index_t lhs_s2 = lhs.size2();
     const matrix_index_t rhs_s1 = rhs.size1();
     const matrix_index_t rhs_s2 = rhs.size2();
     const matrix_index_t res_s1 = rhs_s1 / lhs_s1;
     const matrix_index_t res_s2 = rhs_s2 / lhs_s2;
-    typedef typename matrix_t::value_type Scalar_T;
-    const Scalar_T norm_frob2_lhs = Scalar_T( double(lhs_s1) );
+    using Scalar_T = typename matrix_t::value_type;
+    const auto norm_frob2_lhs = Scalar_T( double(lhs_s1) );
     matrix_t result(res_s1, res_s2);
     result.clear();
     for (typename LHS_T::const_iterator1
@@ -267,13 +267,13 @@ namespace glucat { namespace matrix
 
   /// Number of non-zeros
   template< typename Matrix_T >
-  typename Matrix_T::size_type
-  nnz(const Matrix_T& m)
+  auto
+  nnz(const Matrix_T& m) -> typename Matrix_T::size_type
   {
-    typedef Matrix_T matrix_t;
-    typedef typename matrix_t::size_type matrix_index_t;
-    typedef typename matrix_t::const_iterator1 const_iterator1;
-    typedef typename matrix_t::const_iterator2 const_iterator2;
+    using matrix_t = Matrix_T;
+    using matrix_index_t = typename matrix_t::size_type;
+    using const_iterator1 = typename matrix_t::const_iterator1;
+    using const_iterator2 = typename matrix_t::const_iterator2;
     matrix_index_t result = 0;
     for (const_iterator1
         it1 = m.begin1();
@@ -290,13 +290,13 @@ namespace glucat { namespace matrix
 
   /// Not a Number
   template< typename Matrix_T >
-  bool
-  isnan(const Matrix_T& m)
+  auto
+  isnan(const Matrix_T& m) -> bool
   {
-    typedef Matrix_T matrix_t;
-    typedef typename matrix_t::value_type Scalar_T;
-    typedef typename matrix_t::const_iterator1 const_iterator1;
-    typedef typename matrix_t::const_iterator2 const_iterator2;
+    using matrix_t = Matrix_T;
+    using Scalar_T = typename matrix_t::value_type;
+    using const_iterator1 = typename matrix_t::const_iterator1;
+    using const_iterator2 = typename matrix_t::const_iterator2;
     for (const_iterator1
         it1 = m.begin1();
         it1 != m.end1();
@@ -314,28 +314,28 @@ namespace glucat { namespace matrix
   /// Unit matrix - as per Matlab eye
   template< typename Matrix_T >
   inline
-  const
+  auto
+  unit(const typename Matrix_T::size_type dim) -> const
   Matrix_T
-  unit(const typename Matrix_T::size_type dim)
   {
-    typedef typename Matrix_T::value_type Scalar_T;
+    using Scalar_T = typename Matrix_T::value_type;
     return ublas::identity_matrix<Scalar_T>(dim);
   }
 
   /// Product of monomial matrices
   template< typename LHS_T, typename RHS_T >
-  const typename RHS_T::expression_type
+  auto
   mono_prod(const ublas::matrix_expression<LHS_T>& lhs,
-            const ublas::matrix_expression<RHS_T>& rhs)
+            const ublas::matrix_expression<RHS_T>& rhs) -> const typename RHS_T::expression_type
   {
-    typedef const LHS_T lhs_expression_t;
-    typedef const RHS_T rhs_expression_t;
-    typedef typename RHS_T::expression_type matrix_t;
-    typedef typename matrix_t::size_type  matrix_index_t;
-    typedef typename lhs_expression_t::const_iterator1   lhs_const_iterator1;
-    typedef typename lhs_expression_t::const_iterator2   lhs_const_iterator2;
-    typedef typename ublas::matrix_row<rhs_expression_t> matrix_row_t;
-    typedef typename matrix_row_t::const_iterator        row_const_iterator;
+    using lhs_expression_t = const LHS_T;
+    using rhs_expression_t = const RHS_T;
+    using matrix_t = typename RHS_T::expression_type;
+    using matrix_index_t = typename matrix_t::size_type;
+    using lhs_const_iterator1 = typename lhs_expression_t::const_iterator1;
+    using lhs_const_iterator2 = typename lhs_expression_t::const_iterator2;
+    using matrix_row_t = typename ublas::matrix_row<rhs_expression_t>;
+    using row_const_iterator = typename matrix_row_t::const_iterator;
 
     const matrix_index_t dim = lhs().size1();
     // The following assumes that matrix_t is a sparse matrix type.
@@ -360,23 +360,23 @@ namespace glucat { namespace matrix
   /// Product of sparse matrices
   template< typename LHS_T, typename RHS_T >
   inline
-  const typename RHS_T::expression_type
+  auto
   sparse_prod(const ublas::matrix_expression<LHS_T>& lhs,
-              const ublas::matrix_expression<RHS_T>& rhs)
+              const ublas::matrix_expression<RHS_T>& rhs) -> const typename RHS_T::expression_type
   {
-    typedef typename RHS_T::expression_type expression_t;
+    using expression_t = typename RHS_T::expression_type;
     return ublas::sparse_prod<expression_t>(lhs(), rhs());
   }
 
   /// Product of matrices
   template< typename LHS_T, typename RHS_T >
   inline
-  const typename RHS_T::expression_type
+  auto
   prod(const ublas::matrix_expression<LHS_T>& lhs,
-       const ublas::matrix_expression<RHS_T>& rhs)
+       const ublas::matrix_expression<RHS_T>& rhs) -> const typename RHS_T::expression_type
   {
 #if defined(_GLUCAT_USE_DENSE_MATRICES)
-    typedef typename RHS_T::size_type matrix_index_t;
+    using matrix_index_t = typename RHS_T::size_type;
     const matrix_index_t dim = lhs().size1();
     RHS_T result(dim, dim);
     ublas::axpy_prod(lhs, rhs, result, true);
@@ -389,10 +389,10 @@ namespace glucat { namespace matrix
 
   /// Inner product: sum(lhs(i,j)*rhs(i,j))/lhs.nrows()
   template< typename Scalar_T, typename LHS_T, typename RHS_T >
-  Scalar_T
-  inner(const LHS_T& lhs, const RHS_T& rhs)
+  auto
+  inner(const LHS_T& lhs, const RHS_T& rhs) -> Scalar_T
   {
-    Scalar_T result = Scalar_T(0);
+    auto result = Scalar_T(0);
     for (typename LHS_T::const_iterator1
         lhs_it1 = lhs.begin1();
         lhs_it1 != lhs.end1();
@@ -411,12 +411,12 @@ namespace glucat { namespace matrix
 
   /// Square of Frobenius norm
   template< typename Matrix_T >
-  typename Matrix_T::value_type
-  norm_frob2(const Matrix_T& val)
+  auto
+  norm_frob2(const Matrix_T& val) -> typename Matrix_T::value_type
   {
-    typedef typename Matrix_T::value_type Scalar_T;
+    using Scalar_T = typename Matrix_T::value_type;
 
-    Scalar_T result = Scalar_T(0);
+    auto result = Scalar_T(0);
     for (typename Matrix_T::const_iterator1
         val_it1 = val.begin1();
         val_it1 != val.end1();
@@ -435,13 +435,13 @@ namespace glucat { namespace matrix
 
   /// Matrix trace
   template< typename Matrix_T >
-  typename Matrix_T::value_type
-  trace(const Matrix_T& val)
+  auto
+  trace(const Matrix_T& val) -> typename Matrix_T::value_type
   {
-    typedef typename Matrix_T::value_type Scalar_T;
-    typedef typename Matrix_T::size_type matrix_index_t;
+    using Scalar_T = typename Matrix_T::value_type;
+    using matrix_index_t = typename Matrix_T::size_type;
 
-    Scalar_T result = Scalar_T(0);
+    auto result = Scalar_T(0);
     matrix_index_t dim = val.size1();
     for (matrix_index_t ndx=0;
         ndx != dim;
@@ -459,22 +459,22 @@ namespace glucat { namespace matrix
   /// Convert matrix to LAPACK format
   template< typename Matrix_T >
   static
-  ublas::matrix<double, ublas::column_major>
-  to_lapack(const Matrix_T& val)
+  auto
+  to_lapack(const Matrix_T& val) -> ublas::matrix<double, ublas::column_major>
   {
-    typedef typename Matrix_T::size_type matrix_index_t;
+    using matrix_index_t = typename Matrix_T::size_type;
     const matrix_index_t s1 = val.size1();
     const matrix_index_t s2 = val.size2();
 
-    typedef typename ublas::matrix<double, ublas::column_major> lapack_matrix_t;
+    using lapack_matrix_t = typename ublas::matrix<double, ublas::column_major>;
     lapack_matrix_t result(s1, s2);
     result.clear();
 
-    typedef typename Matrix_T::value_type Scalar_T;
-    typedef numeric_traits<Scalar_T> traits_t;
+    using Scalar_T = typename Matrix_T::value_type;
+    using traits_t = numeric_traits<Scalar_T>;
 
-    typedef typename Matrix_T::const_iterator1 const_iterator1;
-    typedef typename Matrix_T::const_iterator2 const_iterator2;
+    using const_iterator1 = typename Matrix_T::const_iterator1;
+    using const_iterator2 = typename Matrix_T::const_iterator2;
     for (const_iterator1
         val_it1 = val.begin1();
         val_it1 != val.end1();
@@ -491,12 +491,12 @@ namespace glucat { namespace matrix
 
   /// Eigenvalues of a matrix
   template< typename Matrix_T >
-  ublas::vector< std::complex<double> >
-  eigenvalues(const Matrix_T& val)
+  auto
+  eigenvalues(const Matrix_T& val) -> ublas::vector< std::complex<double> >
   {
-    typedef std::complex<double> complex_t;
-    typedef typename ublas::vector<complex_t> complex_vector_t;
-    typedef typename Matrix_T::size_type matrix_index_t;
+    using complex_t = std::complex<double>;
+    using complex_vector_t = typename ublas::vector<complex_t>;
+    using matrix_index_t = typename Matrix_T::size_type;
 
     const matrix_index_t dim = val.size1();
     complex_vector_t lambda = complex_vector_t(dim);
@@ -504,16 +504,16 @@ namespace glucat { namespace matrix
 
 #if defined(_GLUCAT_USE_BINDINGS)
     namespace lapack = boost::numeric::bindings::lapack;
-    typedef typename ublas::matrix<double, ublas::column_major> lapack_matrix_t;
+    using lapack_matrix_t = typename ublas::matrix<double, ublas::column_major>;
 
     lapack_matrix_t T = to_lapack(val);
     lapack_matrix_t V = T;
-    typedef typename ublas::vector<double> vector_t;
+    using vector_t = typename ublas::vector<double>;
     vector_t real_lambda = vector_t(dim);
     vector_t imag_lambda = vector_t(dim);
     fortran_int_t sdim = 0;
 
-    lapack::gees ('N', 'N', (external_fp)0, T, sdim, real_lambda, imag_lambda, V );
+    lapack::gees ('N', 'N', nullptr, T, sdim, real_lambda, imag_lambda, V );
 
     lambda.clear();
     for (vector_t::size_type  k=0; k!= dim; ++k)
@@ -524,21 +524,21 @@ namespace glucat { namespace matrix
 
   /// Classify the eigenvalues of a matrix
   template< typename Matrix_T >
-  eig_genus<Matrix_T>
-  classify_eigenvalues(const Matrix_T& val)
+  auto
+  classify_eigenvalues(const Matrix_T& val) -> eig_genus<Matrix_T>
   {
-    typedef typename Matrix_T::value_type Scalar_T;
+    using Scalar_T = typename Matrix_T::value_type;
     eig_genus<Matrix_T> result;
     result.m_eig_case = safe_eig_case;
     result.m_safe_arg = Scalar_T(0);
 
-    typedef std::complex<double> complex_t;
-    typedef typename ublas::vector<complex_t> complex_vector_t;
+    using complex_t = std::complex<double>;
+    using complex_vector_t = typename ublas::vector<complex_t>;
     complex_vector_t lambda = eigenvalues(val);
 
     std::set<double> arg_set;
 
-    typedef typename complex_vector_t::size_type vector_index_t;
+    using vector_index_t = typename complex_vector_t::size_type;
     const vector_index_t dim = lambda.size();
     static const double epsilon =
       std::max(std::numeric_limits<double>::epsilon(),
@@ -581,7 +581,7 @@ namespace glucat { namespace matrix
 
     if (result.m_eig_case == both_eig_case)
     {
-      typename std::set<double>::const_iterator arg_it = arg_set.begin();
+      auto arg_it = arg_set.begin();
       double first_arg = *arg_it;
       double best_arg = first_arg;
       double best_diff = 0.0;

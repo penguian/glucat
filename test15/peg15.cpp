@@ -37,9 +37,9 @@ int test15()
   using namespace glucat;
   using namespace std;
   cout << "Programming example 15 : Subscripts and parts" << endl;
-  typedef matrix_multi<double> cm;
-  typedef framed_multi<double> cf;
-  typedef cm::index_set_t e;
+  using cm = matrix_multi<double>;
+  using cf = framed_multi<double>;
+  using e = cm::index_set_t;
   cf a("{-3}+{-2}+{-1}+2.0{1,2,3}");
   cf b("1.0+1.e8{-1}+1.e-8{1}");
   cf c = a * b;

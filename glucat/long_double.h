@@ -46,7 +46,7 @@ namespace glucat
   template<>
   struct
   numeric_traits<long double>::
-  demoted {typedef long double type;};
+  demoted {using type = long double;};
 #else
   /// Promoted type for double
   template<>
@@ -70,17 +70,17 @@ namespace glucat
   /// Pi for long double
   template<>
   inline
-  long double
+  auto
   numeric_traits<long double>::
-  pi()
+  pi() -> long double
   { return l_pi; }
 
   /// log(2) for long double
   template<>
   inline
-  long double
+  auto
   numeric_traits<long double>::
-  ln_2()
+  ln_2() -> long double
   { return l_ln2; }
 }
 #endif // _GLUCAT_LONG_DOUBLE_H

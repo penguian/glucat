@@ -559,26 +559,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   fi
 
   dnl Set the language standard
-  case $host in
-    *-*-linux-gnu)
-      if [[[ -z "$HAVE_CXX11" ]]]; then
-        case "$basename_cxx" in
-          "clang++"*)
-            GLUCAT_CHECK_COMPILER_FLAG([std=c++98],
-                            [CXXFLAGS="-std=c++98 $CXXFLAGS"])
-            ;;
-          "g++"*)
-            GLUCAT_CHECK_COMPILER_FLAG([ansi],
-                            [CXXFLAGS="-ansi $CXXFLAGS"])
-            ;;
-          icpc|icpx)
-            ;;
-          *)
-            ;;
-        esac
-      fi
-      ;;
-  esac
+  AX_CXX_COMPILE_STDCXX(11, noext, mandatory)
 
   dnl Cater to compiler quirks
   case "$basename_cxx" in

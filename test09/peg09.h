@@ -55,7 +55,7 @@ namespace peg09
     cout << "a_vec = a.vector_part() =" << endl;
     index_t idx = a_frm.min();
     const index_t a_frm_end = a_frm.max()+1;
-    for (typename vector_t::const_iterator scvec = a_vec.begin();
+    for (auto scvec = a_vec.begin();
          scvec != a_vec.end(); ++scvec)
       {
         while(idx != a_frm_end && !a_frm[idx])

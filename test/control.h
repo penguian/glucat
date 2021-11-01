@@ -56,10 +56,10 @@ namespace glucat
     control_t(int argc, char ** argv);
     // Enforce singleton
     // Reference: A. Alexandrescu, "Modern C++ Design", Chapter 6
-    control_t() {}
-    ~control_t() {}
-    control_t(const control_t&);
-    control_t& operator= (const control_t&);
+    control_t() = default;
+    ~control_t() = default;
+    control_t(const control_t&) = delete;
+    control_t& operator= (const control_t&) = delete;
 
     /// Friend declaration to avoid compiler warning:
     /// "... only defines a private destructor and has no friends"

@@ -46,88 +46,88 @@ namespace glucat
   template<>
   struct
   numeric_traits<double>::
-  promoted {typedef dd_real type;};
+  promoted {using type = dd_real;};
 
   /// Promoted type for long double
   template<>
   struct
   numeric_traits<long double>::
-  promoted {typedef dd_real type;};
+  promoted {using type = dd_real;};
 
 #define _GLUCAT_QD_F(_T, _F) \
-  template<>           \
-  inline               \
-  _T                   \
-  numeric_traits<_T>:: \
-  _F(const _T& val)    \
+  template<>              \
+  inline                  \
+  auto                    \
+  numeric_traits<_T>::    \
+  _F(const _T& val) -> _T \
   { return ::_F(val); }
 
   /// Smart isnan for dd_real
   template<>
   inline
-  bool
+  auto
   numeric_traits<dd_real>::
-  isNaN(const dd_real& val)
+  isNaN(const dd_real& val) -> bool
   { return val.isnan(); }
 
   /// Smart isinf for dd_real
   template<>
   inline
-  bool
+  auto
   numeric_traits<dd_real>::
-  isInf(const dd_real& val)
+  isInf(const dd_real& val) -> bool
   { return val.isinf(); }
 
   /// Smart isnan or isinf for dd_real
   template<>
   inline
-  bool
+  auto
   numeric_traits<dd_real>::
-  isNaN_or_isInf(const dd_real& val)
+  isNaN_or_isInf(const dd_real& val) -> bool
   { return val.isnan() || val.isinf(); }
 
   /// to_int for dd_real
   template<>
   inline
-  int
+  auto
   numeric_traits<dd_real>::
-  to_int(const dd_real& val)
+  to_int(const dd_real& val) -> int
   { return ::to_int(val); }
 
   /// to_double for dd_real
   template<>
   inline
-  double
+  auto
   numeric_traits<dd_real>::
-  to_double(const dd_real& val)
+  to_double(const dd_real& val) -> double
   { return ::to_double(val); }
 
   /// Promoted type for dd_real
   template<>
   struct
   numeric_traits<dd_real>::
-  promoted {typedef qd_real type;};
+  promoted {using type = qd_real;};
 
   /// Demoted type for dd_real
   template<>
   struct
   numeric_traits<dd_real>::
-  demoted {typedef double type;};
+  demoted {using type = double;};
 
   /// Modulo function for dd_real
   template<>
   inline
-  dd_real
+  auto
   numeric_traits<dd_real>::
-  fmod(const dd_real& lhs, const dd_real& rhs)
+  fmod(const dd_real& lhs, const dd_real& rhs) -> dd_real
   { return ::fmod(lhs, rhs); }
 
   /// pow for dd_real
   template<>
   inline
-  dd_real
+  auto
   numeric_traits<dd_real>::
-  pow(const dd_real& val, int n)
+  pow(const dd_real& val, int n) -> dd_real
   {
     dd_real result = 1.0;
     dd_real pow2 = val;
@@ -140,17 +140,17 @@ namespace glucat
   /// Pi for dd_real
   template<>
   inline
-  dd_real
+  auto
   numeric_traits<dd_real>::
-  pi()
+  pi() -> dd_real
   { return dd_real::_pi; }
 
   /// log(2) for dd_real
   template<>
   inline
-  dd_real
+  auto
   numeric_traits<dd_real>::
-  ln_2()
+  ln_2() -> dd_real
   { return dd_real::_log2; }
 
   /// Exp of dd_real
@@ -189,69 +189,69 @@ namespace glucat
   /// Smart isnan for qd_real
   template<>
   inline
-  bool
+  auto
   numeric_traits<qd_real>::
-  isNaN(const qd_real& val)
+  isNaN(const qd_real& val) -> bool
   { return val.isnan(); }
 
   /// Smart isinf for qd_real
   template<>
   inline
-  bool
+  auto
   numeric_traits<qd_real>::
-  isInf(const qd_real& val)
+  isInf(const qd_real& val) -> bool
   { return val.isinf(); }
 
   /// Smart isnan or isinf for qd_real
   template<>
   inline
-  bool
+  auto
   numeric_traits<qd_real>::
-  isNaN_or_isInf(const qd_real& val)
+  isNaN_or_isInf(const qd_real& val) -> bool
   { return val.isnan() || val.isinf(); }
 
   /// to_int for qd_real
   template<>
   inline
-  int
+  auto
   numeric_traits<qd_real>::
-  to_int(const qd_real& val)
+  to_int(const qd_real& val) -> int
   { return ::to_int(val); }
 
   /// to_double for qd_real
   template<>
   inline
-  double
+  auto
   numeric_traits<qd_real>::
-  to_double(const qd_real& val)
+  to_double(const qd_real& val) -> double
   { return ::to_double(val); }
 
   /// Promoted type for qd_real
   template<>
   struct
   numeric_traits<qd_real>::
-  promoted {typedef qd_real type;};
+  promoted {using type = qd_real;};
 
   /// Demoted type for qd_real
   template<>
   struct
   numeric_traits<qd_real>::
-  demoted {typedef qd_real type;};
+  demoted {using type = qd_real;};
 
   /// Modulo function for qd_real
   template<>
   inline
-  qd_real
+  auto
   numeric_traits<qd_real>::
-  fmod(const qd_real& lhs, const qd_real& rhs)
+  fmod(const qd_real& lhs, const qd_real& rhs) -> qd_real
   { return ::fmod(lhs, rhs); }
 
   /// pow for qd_real
   template<>
   inline
-  qd_real
+  auto
   numeric_traits<qd_real>::
-  pow(const qd_real& val, int n)
+  pow(const qd_real& val, int n) -> qd_real
   {
     qd_real result = 1.0;
     qd_real pow2 = val;
@@ -264,17 +264,17 @@ namespace glucat
   /// Pi for qd_real
   template<>
   inline
-  qd_real
+  auto
   numeric_traits<qd_real>::
-  pi()
+  pi() -> qd_real
   { return qd_real::_pi; }
 
   /// log(2) for qd_real
   template<>
   inline
-  qd_real
+  auto
   numeric_traits<qd_real>::
-  ln_2()
+  ln_2() -> qd_real
   { return qd_real::_log2; }
 
   /// Exp of qd_real

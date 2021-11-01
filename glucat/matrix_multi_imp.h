@@ -57,6 +57,7 @@
 
 #include <fstream>
 #include <iomanip>
+#include <array>
 
 namespace glucat
 {
@@ -67,20 +68,20 @@ namespace glucat
 
   /// Class name used in messages
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const std::string
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  classname()
+  classname() -> const std::string
   { return "matrix_multi"; }
 
   /// Determine the log2 dim corresponding to signature p, q
   // Reference: [P] Table 15.27, p 133
   inline
-  index_t
-  offset_level(const index_t p, const index_t q)
+  auto
+  offset_level(const index_t p, const index_t q) -> index_t
   {
     // Offsets between the log2 of the matrix dimension for the current signature
     // and that of the real superalgebra
-    static const int offset_log2_dim[] = {0, 1, 0, 1, 1, 2, 1, 1};
+    static const std::array<int, 8> offset_log2_dim = {0, 1, 0, 1, 1, 2, 1, 1};
     const index_t bott = pos_mod(p-q, 8);
     return (p+q)/2 + offset_log2_dim[bott];
   }
@@ -90,8 +91,8 @@ namespace glucat
   template< typename Matrix_Index_T, const index_t LO, const index_t HI >
   inline
   static
-  Matrix_Index_T
-  folded_dim( const index_set<LO,HI>& sub )
+  auto
+  folded_dim( const index_set<LO,HI>& sub ) -> Matrix_Index_T
   { return 1 << offset_level(sub.count_pos(), sub.count_neg()); }
 
   /// Default constructor
@@ -110,9 +111,9 @@ namespace glucat
   : m_frame( val.m_frame ), m_matrix( val.m_matrix.size1(), val.m_matrix.size2() )
   {
     this->m_matrix.clear();
-    typedef typename matrix_multi<Other_Scalar_T,LO,HI>::matrix_t other_matrix_t;
-    typedef typename other_matrix_t::const_iterator1 other_const_iterator1;
-    typedef typename other_matrix_t::const_iterator2 other_const_iterator2;
+    using other_matrix_t = typename matrix_multi<Other_Scalar_T, LO, HI>::matrix_t;
+    using other_const_iterator1 = typename other_matrix_t::const_iterator1;
+    using other_const_iterator2 = typename other_matrix_t::const_iterator2;
     for (other_const_iterator1
         val_it1 = val.m_matrix.begin1();
         val_it1 != val.m_matrix.end1();
@@ -138,9 +139,9 @@ namespace glucat
       const matrix_index_t dim = folded_dim<matrix_index_t>(frm);
       this->m_matrix.resize(dim, dim, false);
       this->m_matrix.clear();
-      typedef typename matrix_multi<Other_Scalar_T,LO,HI>::matrix_t other_matrix_t;
-      typedef typename other_matrix_t::const_iterator1 other_const_iterator1;
-      typedef typename other_matrix_t::const_iterator2 other_const_iterator2;
+      using other_matrix_t = typename matrix_multi<Other_Scalar_T, LO, HI>::matrix_t;
+      using other_const_iterator1 = typename other_matrix_t::const_iterator1;
+      using other_const_iterator2 = typename other_matrix_t::const_iterator2;
       for (other_const_iterator1
           val_it1 = val.m_matrix.begin1();
           val_it1 != val.m_matrix.end1();
@@ -171,7 +172,7 @@ namespace glucat
   matrix_multi(const index_set_t ist, const Scalar_T& crd)
   : m_frame( ist )
   {
-    const matrix_index_t dim = folded_dim<matrix_index_t>(this->m_frame);
+    const auto dim = folded_dim<matrix_index_t>(this->m_frame);
     this->m_matrix.resize(dim, dim, false);
     this->m_matrix.clear();
     *this += term_t(ist, crd);
@@ -197,7 +198,7 @@ namespace glucat
   matrix_multi(const Scalar_T& scr, const index_set_t frm)
   : m_frame( frm )
   {
-    const matrix_index_t dim = folded_dim<matrix_index_t>(frm);
+    const auto dim = folded_dim<matrix_index_t>(frm);
     this->m_matrix.resize(dim, dim, false);
     this->m_matrix.clear();
     *this += term_t(index_set_t(), scr);
@@ -218,10 +219,10 @@ namespace glucat
   {
     if (!prechecked && index_t(vec.size()) != frm.count())
       throw error_t("multivector_t(vec,frm): cannot initialize with vector not matching frame");
-    const matrix_index_t dim = folded_dim<matrix_index_t>(frm);
+    const auto dim = folded_dim<matrix_index_t>(frm);
     this->m_matrix.resize(dim, dim, false);
     this->m_matrix.clear();
-    typename vector_t::const_iterator vec_it = vec.begin();
+    auto vec_it = vec.begin();
     const index_t begin_index = frm.min();
     const index_t end_index = frm.max()+1;
 
@@ -263,12 +264,12 @@ namespace glucat
       }
       catch (const glucat_error& e)
       { }
-    const matrix_index_t dim = folded_dim<matrix_index_t>(this->m_frame);
+    const auto dim = folded_dim<matrix_index_t>(this->m_frame);
     this->m_matrix.resize(dim, dim, false);
     this->m_matrix.clear();
 
-    typedef framed_multi<Other_Scalar_T,LO,HI> framed_multi_t;
-    for (typename framed_multi_t::const_iterator
+    using framed_multi_t = framed_multi<Other_Scalar_T, LO, HI>;
+    for (auto
         val_it = val.begin();
         val_it != val.end();
         ++val_it)
@@ -291,12 +292,12 @@ namespace glucat
       catch (const glucat_error& e)
       { }
     this->m_frame = our_frame;
-    const matrix_index_t dim = folded_dim<matrix_index_t>(our_frame);
+    const auto dim = folded_dim<matrix_index_t>(our_frame);
     this->m_matrix.resize(dim, dim, false);
     this->m_matrix.clear();
 
-    typedef framed_multi<Other_Scalar_T,LO,HI> framed_multi_t;
-    for (typename framed_multi_t::const_iterator
+    using framed_multi_t = framed_multi<Other_Scalar_T, LO, HI>;
+    for (auto
         val_it = val.begin();
         val_it != val.end();
         ++val_it)
@@ -312,8 +313,8 @@ namespace glucat
   {
     this->m_matrix.clear();
 
-    typedef typename Matrix_T::const_iterator1 const_iterator1;
-    typedef typename Matrix_T::const_iterator2 const_iterator2;
+    using const_iterator1 = typename Matrix_T::const_iterator1;
+    using const_iterator2 = typename Matrix_T::const_iterator2;
     for (const_iterator1
         mtx_it1 = mtx.begin1();
         mtx_it1 != mtx.end1();
@@ -334,9 +335,9 @@ namespace glucat
 
   /// Assignment operator
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  matrix_multi<Scalar_T,LO,HI>&
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  operator= (const matrix_multi_t& rhs)
+  operator= (const multivector_t& rhs) -> multivector_t&
   {
     // Check for assignment to self
     if (this == &rhs)
@@ -349,13 +350,13 @@ namespace glucat
   /// Find a common frame for operands of a binary operator
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  const index_set<LO,HI>
+  auto
   reframe (const matrix_multi<Scalar_T,LO,HI>& lhs,    const matrix_multi<Scalar_T,LO,HI>& rhs,
-                 matrix_multi<Scalar_T,LO,HI>& lhs_reframed, matrix_multi<Scalar_T,LO,HI>& rhs_reframed)
+                 matrix_multi<Scalar_T,LO,HI>& lhs_reframed, matrix_multi<Scalar_T,LO,HI>& rhs_reframed) -> const index_set<LO,HI>
   {
-    typedef index_set<LO,HI> index_set_t;
-    typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
-    typedef typename multivector_t::framed_multi_t framed_multi_t;
+    using index_set_t = index_set<LO, HI>;
+    using multivector_t = matrix_multi<Scalar_T, LO, HI>;
+    using framed_multi_t = typename multivector_t::framed_multi_t;
     // Determine the initial common frame
     index_set_t our_frame = lhs.m_frame | rhs.m_frame;
     framed_multi_t framed_lhs;
@@ -377,9 +378,9 @@ namespace glucat
 
   /// Test for equality of multivectors
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  bool
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  operator==  (const multivector_t& rhs) const
+  operator== (const multivector_t& rhs) const -> bool
   {
     // Ensure that there is no aliasing
     if (this == &rhs)
@@ -450,9 +451,9 @@ namespace glucat
   // Test for equality of multivector and scalar
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  bool
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  operator==  (const Scalar_T& scr) const
+  operator== (const Scalar_T& scr) const -> bool
   {
     if (scr != Scalar_T(0))
       return *this == multivector_t(framed_multi_t(scr), this->m_frame, true);
@@ -468,17 +469,17 @@ namespace glucat
   /// Geometric sum of multivector and scalar
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  matrix_multi<Scalar_T,LO,HI>&
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  operator+= (const Scalar_T& scr)
+  operator+= (const Scalar_T& scr) -> multivector_t&
   { return *this += term_t(index_set_t(), scr); }
 
   /// Geometric sum
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  matrix_multi<Scalar_T,LO,HI>&
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  operator+= (const multivector_t& rhs)
+  operator+= (const multivector_t& rhs) -> multivector_t&
   {
     // Ensure that there is no aliasing
     if (this == &rhs)
@@ -495,12 +496,20 @@ namespace glucat
     return *this;
   }
 
+  /// Geometric difference of multivector and scalar
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
+  auto
+  matrix_multi<Scalar_T,LO,HI>::
+  operator-= (const Scalar_T& scr) -> multivector_t&
+  { return *this += term_t(index_set_t(), -scr); }
+
   /// Geometric difference
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  matrix_multi<Scalar_T,LO,HI>&
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  operator-= (const multivector_t& rhs)
+  operator-= (const multivector_t& rhs) -> multivector_t&
   {
     // Ensure that there is no aliasing
     if (this == &rhs)
@@ -520,20 +529,20 @@ namespace glucat
   /// Unary -
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  const matrix_multi<Scalar_T,LO,HI>
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  operator- () const
+  operator- () const -> const multivector_t
   { return multivector_t(-(this->m_matrix), this->m_frame); }
 
   /// Product of multivector and scalar
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  matrix_multi<Scalar_T,LO,HI>&
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  operator*= (const Scalar_T& scr)
+  operator*= (const Scalar_T& scr) -> multivector_t&
   { // multiply coordinates of all terms by scalar
 
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
     if (traits_t::isNaN_or_isInf(scr) || this->isnan())
       return *this = traits_t::NaN();
     if (scr == Scalar_T(0))
@@ -546,11 +555,11 @@ namespace glucat
   /// Geometric product
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  const matrix_multi<Scalar_T,LO,HI>
-  operator* (const matrix_multi<Scalar_T,LO,HI>& lhs, const matrix_multi<Scalar_T,LO,HI>& rhs)
+  auto
+  operator* (const matrix_multi<Scalar_T,LO,HI>& lhs, const matrix_multi<Scalar_T,LO,HI>& rhs) -> const matrix_multi<Scalar_T,LO,HI>
   {
-    typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
-    typedef typename multivector_t::index_set_t index_set_t;
+    using multivector_t = matrix_multi<Scalar_T, LO, HI>;
+    using index_set_t = typename multivector_t::index_set_t;
 
 #if defined(_GLUCAT_CHECK_ISNAN)
     if (lhs.isnan() || rhs.isnan())
@@ -568,9 +577,9 @@ namespace glucat
       ? rhs
       : rhs_reframed;
 
-    typedef typename multivector_t::matrix_t matrix_t;
+    using matrix_t = typename multivector_t::matrix_t;
 #if defined(_GLUCAT_USE_DENSE_MATRICES)
-    typedef typename matrix_t::size_type matrix_index_t;
+    using matrix_index_t = typename matrix_t::size_type;
 
     const matrix_index_t dim = lhs_ref.m_matrix.size1();
     multivector_t result = multivector_t(matrix_t(dim, dim), our_frame);
@@ -588,89 +597,89 @@ namespace glucat
   /// Geometric product
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  matrix_multi<Scalar_T,LO,HI>&
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  operator*= (const multivector_t& rhs)
+  operator*= (const multivector_t& rhs) -> multivector_t&
   { return *this = *this * rhs; }
 
   /// Outer product
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  const matrix_multi<Scalar_T,LO,HI>
-  operator^ (const matrix_multi<Scalar_T,LO,HI>& lhs, const matrix_multi<Scalar_T,LO,HI>& rhs)
+  auto
+  operator^ (const matrix_multi<Scalar_T,LO,HI>& lhs, const matrix_multi<Scalar_T,LO,HI>& rhs) -> const matrix_multi<Scalar_T,LO,HI>
   {
-    typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
-    typedef typename multivector_t::framed_multi_t framed_multi_t;
+    using multivector_t = matrix_multi<Scalar_T, LO, HI>;
+    using framed_multi_t = typename multivector_t::framed_multi_t;
     return framed_multi_t(lhs) ^ framed_multi_t(rhs);
   }
 
   /// Outer product
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  matrix_multi<Scalar_T,LO,HI>&
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  operator^= (const multivector_t& rhs)
+  operator^= (const multivector_t& rhs) -> multivector_t&
   { return *this = *this ^ rhs; }
 
   /// Inner product
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  const matrix_multi<Scalar_T,LO,HI>
-  operator& (const matrix_multi<Scalar_T,LO,HI>& lhs, const matrix_multi<Scalar_T,LO,HI>& rhs)
+  auto
+  operator& (const matrix_multi<Scalar_T,LO,HI>& lhs, const matrix_multi<Scalar_T,LO,HI>& rhs) -> const matrix_multi<Scalar_T,LO,HI>
   {
-    typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
-    typedef typename multivector_t::framed_multi_t framed_multi_t;
+    using multivector_t = matrix_multi<Scalar_T, LO, HI>;
+    using framed_multi_t = typename multivector_t::framed_multi_t;
     return framed_multi_t(lhs) & framed_multi_t(rhs);
   }
 
   /// Inner product
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  matrix_multi<Scalar_T,LO,HI>&
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  operator&= (const multivector_t& rhs)
+  operator&= (const multivector_t& rhs) -> multivector_t&
   { return *this = *this & rhs; }
 
   /// Left contraction
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  const matrix_multi<Scalar_T,LO,HI>
-  operator% (const matrix_multi<Scalar_T,LO,HI>& lhs, const matrix_multi<Scalar_T,LO,HI>& rhs)
+  auto
+  operator% (const matrix_multi<Scalar_T,LO,HI>& lhs, const matrix_multi<Scalar_T,LO,HI>& rhs) -> const matrix_multi<Scalar_T,LO,HI>
   {
-    typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
-    typedef typename multivector_t::framed_multi_t framed_multi_t;
+    using multivector_t = matrix_multi<Scalar_T, LO, HI>;
+    using framed_multi_t = typename multivector_t::framed_multi_t;
     return framed_multi_t(lhs) % framed_multi_t(rhs);
   }
 
   /// Left contraction
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  matrix_multi<Scalar_T,LO,HI>&
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  operator%= (const multivector_t& rhs)
+  operator%= (const multivector_t& rhs) -> multivector_t&
   { return *this = *this % rhs; }
 
   /// Hestenes scalar product
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  Scalar_T
-  star(const matrix_multi<Scalar_T,LO,HI>& lhs, const matrix_multi<Scalar_T,LO,HI>& rhs)
+  auto
+  star(const matrix_multi<Scalar_T,LO,HI>& lhs, const matrix_multi<Scalar_T,LO,HI>& rhs) -> Scalar_T
   { return (lhs * rhs).scalar(); }
 
   /// Quotient of multivector and scalar
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  matrix_multi<Scalar_T,LO,HI>&
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  operator/= (const Scalar_T& scr)
+  operator/= (const Scalar_T& scr) -> multivector_t&
   { return *this *= Scalar_T(1)/scr; }
 
   /// Geometric quotient
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const matrix_multi<Scalar_T,LO,HI>
-  operator/ (const matrix_multi<Scalar_T,LO,HI>& lhs, const matrix_multi<Scalar_T,LO,HI>& rhs)
+  auto
+  operator/ (const matrix_multi<Scalar_T,LO,HI>& lhs, const matrix_multi<Scalar_T,LO,HI>& rhs) -> const matrix_multi<Scalar_T,LO,HI>
   {
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
 
 #if defined(_GLUCAT_CHECK_ISNAN)
     if (lhs.isnan() || rhs.isnan())
@@ -680,8 +689,8 @@ namespace glucat
     if (rhs == Scalar_T(0))
       return traits_t::NaN();
 
-    typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
-    typedef typename multivector_t::index_set_t index_set_t;
+    using multivector_t = matrix_multi<Scalar_T, LO, HI>;
+    using index_set_t = typename multivector_t::index_set_t;
 
     // Operate only within a common frame
     multivector_t lhs_reframed;
@@ -700,13 +709,13 @@ namespace glucat
     // X == B/A <=> X*A == B <=> AT*XT == BT
     // So, we solve AT*XT == BT
 
-    typedef typename multivector_t::matrix_t matrix_t;
-    typedef typename matrix_t::size_type matrix_index_t;
+    using matrix_t = typename multivector_t::matrix_t;
+    using matrix_index_t = typename matrix_t::size_type;
 
     const matrix_t& AT = ublas::trans(rhs_ref.m_matrix);
     matrix_t LU = AT;
 
-    typedef ublas::permutation_matrix<matrix_index_t> permutation_t;
+    using permutation_t = ublas::permutation_matrix<matrix_index_t>;
 
     permutation_t pvector(AT.size1());
     if (! ublas::lu_factorize(LU, pvector))
@@ -768,47 +777,47 @@ namespace glucat
   /// Geometric quotient
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  matrix_multi<Scalar_T,LO,HI>&
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  operator/= (const multivector_t& rhs)
+  operator/= (const multivector_t& rhs) -> multivector_t&
   { return *this = *this / rhs; }
 
   /// Transformation via twisted adjoint action
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  const matrix_multi<Scalar_T,LO,HI>
-  operator| (const matrix_multi<Scalar_T,LO,HI>& lhs, const matrix_multi<Scalar_T,LO,HI>& rhs)
+  auto
+  operator| (const matrix_multi<Scalar_T,LO,HI>& lhs, const matrix_multi<Scalar_T,LO,HI>& rhs) -> const matrix_multi<Scalar_T,LO,HI>
   { return rhs * lhs / rhs.involute(); }
 
   /// Transformation via twisted adjoint action
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  matrix_multi<Scalar_T,LO,HI>&
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  operator|= (const multivector_t& rhs)
+  operator|= (const multivector_t& rhs) -> multivector_t&
   { return *this = rhs * *this / rhs.involute(); }
 
   /// Clifford multiplicative inverse
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  const matrix_multi<Scalar_T,LO,HI>
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  inv() const
+  inv() const -> const multivector_t
   { return multivector_t(Scalar_T(1), this->m_frame) / *this; }
 
   /// Integer power of multivector: *this to the m
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  const matrix_multi<Scalar_T,LO,HI>
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  pow(int m) const
+  pow(int m) const -> const multivector_t
   { return glucat::pow(*this, m); }
 
   /// Outer product power of multivector
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const matrix_multi<Scalar_T,LO,HI>
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  outer_pow(int m) const
+  outer_pow(int m) const -> const multivector_t
   {
     if (m < 0)
       throw error_t("outer_pow(m): negative exponent");
@@ -819,25 +828,25 @@ namespace glucat
   /// Grade of multivector: maximum of the grades of each term
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  index_t
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  grade() const
+  grade() const -> index_t
   { return framed_multi_t(*this).grade(); }
 
   /// Frame of multivector: union of index sets of terms
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  const index_set<LO,HI>
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  frame() const
+  frame() const -> const index_set_t
   { return this->m_frame; }
 
   /// Subscripting: map from index set to scalar coordinate
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  Scalar_T
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  operator[] (const index_set_t ist) const
+  operator[] (const index_set_t ist) const -> Scalar_T
   {
     // Use matrix inner product only if ist is in frame
     if ( (ist | this->m_frame) == this->m_frame)
@@ -849,9 +858,9 @@ namespace glucat
   /// Grading: part where each term is a grade-vector
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  const matrix_multi<Scalar_T,LO,HI>
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  operator() (index_t grade) const
+  operator() (index_t grade) const -> const multivector_t
   {
     if ((grade < 0) || (grade > HI-LO))
       return 0;
@@ -862,9 +871,9 @@ namespace glucat
   /// Scalar part
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  Scalar_T
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  scalar() const
+  scalar() const -> Scalar_T
   {
     const matrix_index_t dim = this->m_matrix.size1();
     return matrix::trace(this->m_matrix) / Scalar_T( double(dim) );
@@ -873,39 +882,39 @@ namespace glucat
   /// Pure part
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  const matrix_multi<Scalar_T,LO,HI>
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  pure() const
+  pure() const -> const multivector_t
   { return *this - this->scalar(); }
 
   /// Even part, sum of the even grade terms
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  const matrix_multi<Scalar_T,LO,HI>
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  even() const
+  even() const -> const multivector_t
   { return framed_multi_t(*this).even(); }
 
   /// Odd part, sum of the odd grade terms
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  const matrix_multi<Scalar_T,LO,HI>
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  odd() const
+  odd() const -> const multivector_t
   { return framed_multi_t(*this).odd(); }
 
   /// Vector part of multivector, as a vector_t
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const typename matrix_multi<Scalar_T,LO,HI>::vector_t
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  vector_part() const
+  vector_part() const -> const vector_t
   { return this->vector_part(this->frame(), true); }
 
   /// Vector part of multivector, as a vector_t
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const typename matrix_multi<Scalar_T,LO,HI>::vector_t
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  vector_part(const index_set_t frm, const bool prechecked) const
+  vector_part(const index_set_t frm, const bool prechecked) const -> const vector_t
   {
     if (!prechecked && (this->frame() | frm) != frm)
       throw error_t("vector_part(frm): value is outside of requested frame");
@@ -932,33 +941,33 @@ namespace glucat
   /// Main involution, each {i} is replaced by -{i} in each term
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  const matrix_multi<Scalar_T,LO,HI>
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  involute() const
+  involute() const -> const multivector_t
   { return framed_multi_t(*this).involute(); }
 
   /// Reversion, order of {i} is reversed in each term
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  const matrix_multi<Scalar_T,LO,HI>
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  reverse() const
+  reverse() const -> const multivector_t
   { return framed_multi_t(*this).reverse(); }
 
   /// Conjugation, conj == reverse o involute == involute o reverse
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  const matrix_multi<Scalar_T,LO,HI>
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  conj() const
+  conj() const -> const multivector_t
   { return framed_multi_t(*this).conj(); }
 
   /// Quadratic form := scalar part of rev(x)*x
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  Scalar_T
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  quad() const
+  quad() const -> Scalar_T
   { // scalar(conj(x)*x) = 2*quad(even(x)) - quad(x)
     // Arvind Raja ref: "old clical: quadfunction(p:pter):pterm in file compmod.pas"
     return framed_multi_t(*this).quad();
@@ -967,9 +976,9 @@ namespace glucat
   /// Scalar_T norm squared= sum of norm squared of coordinates
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  Scalar_T
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  norm() const
+  norm() const -> Scalar_T
   {
     const matrix_index_t dim = this->m_matrix.size1();
     return matrix::norm_frob2(this->m_matrix) / Scalar_T( double(dim) );
@@ -978,16 +987,16 @@ namespace glucat
   /// Maximum of absolute values of components of multivector: multivector infinity norm
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  Scalar_T
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  max_abs() const
+  max_abs() const -> Scalar_T
   { return framed_multi_t(*this).max_abs(); }
 
   /// Random multivector within a frame
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const matrix_multi<Scalar_T,LO,HI>
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  random(const index_set<LO,HI> frm, Scalar_T fill)
+  random(const index_set<LO,HI> frm, Scalar_T fill) -> const multivector_t
   {
     return framed_multi<Scalar_T,LO,HI>::random(frm, fill);
   }
@@ -1015,8 +1024,8 @@ namespace glucat
   /// Write multivector to output
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  std::ostream&
-  operator<< (std::ostream& os, const matrix_multi<Scalar_T,LO,HI>& val)
+  auto
+  operator<< (std::ostream& os, const matrix_multi<Scalar_T,LO,HI>& val) -> std::ostream&
   {
     os << typename matrix_multi<Scalar_T,LO,HI>::framed_multi_t(val);
     return os;
@@ -1025,8 +1034,8 @@ namespace glucat
   /// Read multivector from input
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  std::istream&
-  operator>> (std::istream& s, matrix_multi<Scalar_T,LO,HI>& val)
+  auto
+  operator>> (std::istream& s, matrix_multi<Scalar_T,LO,HI>& val) -> std::istream&
   { // Input looks like 1.0-2.0{1,2}+3.2{3,4}
     framed_multi<Scalar_T,LO,HI> local;
     s >> local;
@@ -1040,9 +1049,9 @@ namespace glucat
   /// Check if a multivector contains any IEEE NaN values
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  bool
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  isnan() const
+  isnan() const -> bool
   {
     if (std::numeric_limits<Scalar_T>::has_quiet_NaN)
       return matrix::isnan(this->m_matrix);
@@ -1053,17 +1062,17 @@ namespace glucat
   /// Remove all terms with relative size smaller than limit
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  const matrix_multi<Scalar_T,LO,HI>
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  truncated(const Scalar_T& limit) const
+  truncated(const Scalar_T& limit) const -> const multivector_t
   { return framed_multi_t(*this).truncated(limit); }
 
   /// Add a term, if non-zero
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  matrix_multi<Scalar_T,LO,HI>&
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  operator+= (const term_t& term)
+  operator+= (const term_t& term) -> multivector_t&
   {
     if (term.second != Scalar_T(0))
       this->m_matrix.plus_assign(matrix_t(this->basis_element(term.first)) * term.second);
@@ -1073,17 +1082,17 @@ namespace glucat
   /// Inverse generalized Fast Fourier Transform
   template< typename Multivector_T, typename Matrix_T, typename Basis_Matrix_T >
   static
-  Multivector_T
-  fast(const Matrix_T& X, index_t level)
+  auto
+  fast(const Matrix_T& X, index_t level) -> Multivector_T
   {
-    typedef Multivector_T framed_multi_t;
+    using framed_multi_t = Multivector_T;
 
-    typedef typename framed_multi_t::index_set_t index_set_t;
-    typedef typename framed_multi_t::scalar_t Scalar_T;
-    typedef Matrix_T matrix_t;
-    typedef Basis_Matrix_T basis_matrix_t;
-    typedef typename basis_matrix_t::value_type  basis_scalar_t;
-    typedef numeric_traits<Scalar_T> traits_t;
+    using index_set_t = typename framed_multi_t::index_set_t;
+    using Scalar_T = typename framed_multi_t::scalar_t;
+    using matrix_t = Matrix_T;
+    using basis_matrix_t = Basis_Matrix_T;
+    using basis_scalar_t = typename basis_matrix_t::value_type;
+    using traits_t = numeric_traits<Scalar_T>;
 
     if (level == 0)
       return framed_multi_t(traits_t::to_scalar_t(X(0,0)));
@@ -1107,7 +1116,7 @@ namespace glucat
     const index_set_t ist_mnpn = ist_mn | ist_pn;
     if (level == 1)
     {
-      typedef typename framed_multi_t::term_t term_t;
+      using term_t = typename framed_multi_t::term_t;
       const Scalar_T i_x  = traits_t::to_scalar_t(signed_perm_nork(I, X)(0, 0));
       const Scalar_T j_x  = traits_t::to_scalar_t(signed_perm_nork(J, X)(0, 0));
       const Scalar_T k_x  = traits_t::to_scalar_t(signed_perm_nork(K, X)(0, 0));
@@ -1142,9 +1151,9 @@ namespace glucat
   /// Use generalized FFT to construct a matrix_multi_t
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
-  const matrix_multi<Scalar_T,LO,HI>
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  fast_matrix_multi(const index_set_t frm) const
+  fast_matrix_multi(const index_set_t frm) const -> const multivector_t
   {
     if (this->m_frame == frm)
       return *this;
@@ -1155,9 +1164,9 @@ namespace glucat
   /// Use inverse generalized FFT to construct a framed_multi_t
   template< typename Scalar_T, const index_t LO, const index_t HI >
   template <typename Other_Scalar_T>
-  const framed_multi<Other_Scalar_T,LO,HI>
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  fast_framed_multi() const
+  fast_framed_multi() const -> const framed_multi<Other_Scalar_T,LO,HI>
   {
     // Determine the amount of off-centering needed
     index_t p = this->m_frame.count_pos();
@@ -1182,7 +1191,7 @@ namespace glucat
     const index_t level = (p+q)/2;
 
     // Do the inverse fast transform
-    typedef framed_multi<Other_Scalar_T,LO,HI> framed_multi_t;
+    using framed_multi_t = framed_multi<Other_Scalar_T, LO, HI>;
     framed_multi_t val = fast<framed_multi_t, matrix_t, basis_matrix_t>(this->m_matrix, level);
 
     // Off-centre val
@@ -1215,32 +1224,32 @@ namespace glucat
   {
   public:
     /// Single instance of basis table
-    static basis_table& basis() { static basis_table b; return b;}
+    static auto basis() -> basis_table& { static basis_table b; return b;}
   private:
-    // Enforce singleton
-    // Reference: A. Alexandrescu, "Modern C++ Design", Chapter 6
-    basis_table() {}
-    ~basis_table() {}
-    basis_table(const basis_table&);
-    basis_table& operator= (const basis_table&);
-
     /// Friend declaration to avoid compiler warning:
     /// "... only defines a private destructor and has no friends"
     /// Ref: Carlos O'Ryan, ACE http://doc.ece.uci.edu
     friend class friend_for_private_destructor;
+    // Enforce singleton
+    // Reference: A. Alexandrescu, "Modern C++ Design", Chapter 6
+    basis_table() = default;
+    ~basis_table() = default;
+  public:
+    basis_table(const basis_table&) = delete;
+    auto operator= (const basis_table&) -> basis_table& = delete;
   };
 
   /// Create a basis element matrix within the current frame
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const typename matrix_multi<Scalar_T,LO,HI>::basis_matrix_t
+  auto
   matrix_multi<Scalar_T,LO,HI>::
-  basis_element(const index_set_t& ist) const
+  basis_element(const index_set_t& ist) const -> const basis_matrix_t
   {
-    typedef std::pair<const index_set_t, const index_set_t>     index_set_pair_t;
+    using index_set_pair_t = std::pair<const index_set_t, const index_set_t>;
     const index_set_pair_t& unfolded_pair = index_set_pair_t(ist, this->m_frame);
 
-    typedef basis_table<Scalar_T,LO,HI,basis_matrix_t>          basis_table_t;
-    typedef typename basis_table_t::const_iterator              basis_const_iterator_t;
+    using basis_table_t = basis_table<Scalar_T, LO, HI, basis_matrix_t>;
+    using basis_const_iterator_t = typename basis_table_t::const_iterator;
     basis_table_t& basis_cache = basis_table_t::basis();
 
     const index_t frame_count = this->m_frame.count();
@@ -1255,7 +1264,7 @@ namespace glucat
     const index_set_t folded_set = ist.fold(this->m_frame);
     const index_set_t folded_frame = this->m_frame.fold();
     const index_set_pair_t& folded_pair = index_set_pair_t(folded_set, folded_frame);
-    typedef std::pair<const index_set_pair_t, basis_matrix_t*>  basis_pair_t;
+    using basis_pair_t = std::pair<const index_set_pair_t, basis_matrix_t *>;
     if (use_cache)
     {
       const basis_const_iterator_t basis_it = basis_cache.find(folded_pair);
@@ -1281,7 +1290,7 @@ namespace glucat
         result = matrix::mono_prod(result, e[k]);
     if (use_cache)
     {
-      basis_matrix_t* result_ptr = new basis_matrix_t(result);
+      auto* result_ptr = new basis_matrix_t(result);
       basis_cache.insert(basis_pair_t(folded_pair, result_ptr));
       basis_cache.insert(basis_pair_t(unfolded_pair, result_ptr));
     }
@@ -1289,62 +1298,65 @@ namespace glucat
   }
 
   /// Pade' approximation
-  template< typename Scalar_T, const index_t LO, const index_t HI >
+  template< typename Scalar_T, const index_t LO, const index_t HI, const size_t Size >
   inline
   static
-  const matrix_multi<Scalar_T,LO,HI>
-  pade_approx(const int array_size, const Scalar_T a[], const Scalar_T b[], const matrix_multi<Scalar_T,LO,HI>& X)
+  auto
+  pade_approx(
+    const std::array<Scalar_T, Size>& numer,
+    const std::array<Scalar_T, Size>& denom,
+    const matrix_multi<Scalar_T,LO,HI>& X) -> const matrix_multi<Scalar_T,LO,HI>
   {
     // Pade' approximation
     // Reference: [GW], Section 4.3, pp318-322
     // Reference: [GL], Section 11.3, p572-576.
 
-    typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
-    typedef numeric_traits<Scalar_T> traits_t;
+    using multivector_t = matrix_multi<Scalar_T, LO, HI>;
+    using traits_t = numeric_traits<Scalar_T>;
 
     if (X.isnan())
       return traits_t::NaN();
 
     // Array size is assumed to be even
-    const int nbr_even_powers = array_size/2 - 1;
+    const size_t nbr_even_powers = Size/2 - 1;
 
     // Create an array of even powers
     std::vector<multivector_t> XX(nbr_even_powers);
     XX[0] = X * X;
     XX[1] = XX[0] * XX[0];
-    for (int
+    for (size_t
       k = 2;
       k != nbr_even_powers;
       ++k)
       XX[k] = XX[k-2] * XX[1];
 
     // Calculate numerator N and denominator D
-    multivector_t N = a[1];
-    for (int
+    multivector_t N = numer[1];
+    for (size_t
         k = 0;
         k != nbr_even_powers;
         ++k)
-      N += XX[k] * a[2*k + 3];
+      N += XX[k] * numer[2*k + 3];
     N *= X;
-    N += a[0];
-    for (int
+    N += numer[0];
+    for (size_t
         k = 0;
         k != nbr_even_powers;
         ++k)
-      N += XX[k] * a[2*k + 2];
-    multivector_t D = b[1];
-    for (int
+      N += XX[k] * numer[2*k + 2];
+    multivector_t D = denom[1];
+    for (size_t
         k = 0;
         k != nbr_even_powers;
         ++k)
-      D += XX[k] * b[2*k + 3];
+      D += XX[k] * denom[2*k + 3];
     D *= X;
-    D += b[0];
-    for (int
+    D += denom[0];
+    for (size_t
         k = 0;
         k != nbr_even_powers;
         ++k)
-      D += XX[k] * b[2*k + 2];
+      D += XX[k] * denom[2*k + 2];
     return N / D;
   }
 
@@ -1356,7 +1368,7 @@ namespace glucat
   db_step(matrix_multi<Scalar_T,LO,HI>& M, matrix_multi<Scalar_T,LO,HI>& Y)
   {
     // Reference: [CHKL]
-    typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
+    using multivector_t = matrix_multi<Scalar_T, LO, HI>;
     const multivector_t& invM = inv(M);
     M = ((M + invM)/Scalar_T(2) + Scalar_T(1)) / Scalar_T(2);
     Y *= (invM + Scalar_T(1)) / Scalar_T(2);
@@ -1365,23 +1377,23 @@ namespace glucat
   /// Product form of Denman-Beavers square root iteration
   template< typename Scalar_T, const index_t LO, const index_t HI >
   static
-  const matrix_multi<Scalar_T,LO,HI>
-  db_sqrt(const matrix_multi<Scalar_T,LO,HI>& val)
+  auto
+  db_sqrt(const matrix_multi<Scalar_T,LO,HI>& val) -> const matrix_multi<Scalar_T,LO,HI>
   {
     // Reference: [CHKL]
-    typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
+    using multivector_t = matrix_multi<Scalar_T, LO, HI>;
 
     if (val == Scalar_T(0))
       return val;
 
-    typedef std::numeric_limits<Scalar_T> limits_t;
+    using limits_t = std::numeric_limits<Scalar_T>;
     static const Scalar_T tol = std::pow(limits_t::epsilon(), 2);
     static const Scalar_T tol2 = tol * tol;
     static const int sqrt_max_steps = Tune_P::sqrt_max_steps;
     multivector_t M = val;
     multivector_t Y = val;
     Scalar_T norm_M_1 = norm(M - Scalar_T(1));
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
 
     for (int step = 0;
         step != sqrt_max_steps && norm_M_1 > tol2;
@@ -1399,35 +1411,34 @@ namespace glucat
   }
 }
 
-namespace {
+namespace pade {
   /// Coefficients of numerator polynomials of Pade approximations produced by Pade1(sqrt(1+x),x,n,n)
   // Reference: [Z], Pade1
   template< typename Scalar_T >
-  struct pade_sqrt_a
+  struct pade_sqrt_numer
   {
-    static const int array_size = 14;
-    static const Scalar_T array[array_size];
+    using array = std::array<Scalar_T, 14>;
+    static const array numer;
   };
-
-  /// Coefficients of denominator polynomials of Pade approximations produced by Pade1(sqrt(1+x),x,n,n)
-  // Reference: [Z], Pade1
   template< typename Scalar_T >
-  struct pade_sqrt_b
-  {
-    static const int array_size = 14;
-    static const Scalar_T array[array_size];
-  };
-
-  template< typename Scalar_T >
-  const Scalar_T pade_sqrt_a<Scalar_T>::array[pade_sqrt_a<Scalar_T>::array_size] =
+  const typename pade_sqrt_numer<Scalar_T>::array pade_sqrt_numer<Scalar_T>::numer =
   {
         1.0,               27.0/4.0,         81.0/4.0,       2277.0/64.0,
     10395.0/256.0,      32319.0/1024.0,    8721.0/512.0,    26163.0/4096.0,
     53703.0/32768.0,    36465.0/131072.0,  3861.0/131072.0,  7371.0/4194304.0,
       819.0/16777216.0,    27.0/67108864.0
   };
+
+  /// Coefficients of denominator polynomials of Pade approximations produced by Pade1(sqrt(1+x),x,n,n)
+  // Reference: [Z], Pade1
   template< typename Scalar_T >
-  const Scalar_T pade_sqrt_b<Scalar_T>::array[pade_sqrt_b<Scalar_T>::array_size] =
+  struct pade_sqrt_denom
+  {
+    using array = std::array<Scalar_T, 14>;
+    static const array denom;
+  };
+  template< typename Scalar_T >
+  const typename pade_sqrt_denom<Scalar_T>::array pade_sqrt_denom<Scalar_T>::denom =
   {
         1.0,               25.0/4.0,         69.0/4.0,       1771.0/64.0,
      7315.0/256.0,      20349.0/1024.0,    4845.0/512.0,    12597.0/4096.0,
@@ -1436,24 +1447,24 @@ namespace {
   };
 
   template< >
-  struct pade_sqrt_a<float>
+  struct pade_sqrt_numer<float>
   {
-    static const int array_size = 10;
-    static const float array[array_size];
+    using array = std::array<float, 10>;
+    static const array numer;
   };
-  template< >
-  struct pade_sqrt_b<float>
-  {
-    static const int array_size = 10;
-    static const float array[array_size];
-  };
-  const float pade_sqrt_a<float>::array[pade_sqrt_a<float>::array_size] =
+  const typename pade_sqrt_numer<float>::array pade_sqrt_numer<float>::numer =
   {
        1.0,            19.0/4.0,        19.0/2.0,      665.0/64.0,
     1729.0/256.0,    2717.0/1024.0,    627.0/1024.0,   627.0/8192.0,
      285.0/65536.0,    19.0/262144.0
   };
-  const float pade_sqrt_b<float>::array[pade_sqrt_a<float>::array_size] =
+  template< >
+  struct pade_sqrt_denom<float>
+  {
+    using array = std::array<float, 10>;
+    static const array denom;
+  };
+  const typename pade_sqrt_denom<float>::array pade_sqrt_denom<float>::denom =
   {
        1.0,            17.0/4.0,        15.0/2.0,      455.0/64.0,
     1001.0/256.0,    1287.0/1024.0,    231.0/1024.0,   165.0/8192.0,
@@ -1461,18 +1472,12 @@ namespace {
   };
 
   template< >
-  struct pade_sqrt_a<long double>
+  struct pade_sqrt_numer<long double>
   {
-    static const int array_size = 18;
-    static const  long double array[array_size];
+    using array = std::array<long double, 18>;
+    static const array numer;
   };
-  template< >
-  struct pade_sqrt_b<long double>
-  {
-    static const int array_size = 18;
-    static const long double array[array_size];
-  };
-  const long double pade_sqrt_a<long double>::array[pade_sqrt_a<long double>::array_size] =
+  const typename pade_sqrt_numer<long double>::array pade_sqrt_numer<long double>::numer =
   {
         1.0L,                   35.0L/4.0L,             35.0L,               5425.0L/64.0L,
     35525.0L/256.0L,        166257.0L/1024.0L,      143325.0L/1024.0L,     740025.0L/8192.0L,
@@ -1480,7 +1485,13 @@ namespace {
   1028755.0L/8388608.0L,    395675.0L/33554432.0L,   24225.0L/33554432.0L,   6783.0L/268435456.0L,
      1785.0L/4294967296.0L,     35.0L/17179869184.0L
   };
-  const long double pade_sqrt_b<long double>::array[pade_sqrt_a<long double>::array_size] =
+  template< >
+  struct pade_sqrt_denom<long double>
+  {
+    using array = std::array<long double, 18>;
+    static const array denom;
+  };
+  const typename pade_sqrt_denom<long double>::array pade_sqrt_denom<long double>::denom =
   {
         1.0L,                   33.0L/4.0L,             31.0L,               4495.0L/64.0L,
     27405.0L/256.0L,        118755.0L/1024.0L,       94185.0L/1024.0L,     444015.0L/8192.0L,
@@ -1491,18 +1502,12 @@ namespace {
 
 #if defined(_GLUCAT_USE_QD)
   template< >
-  struct pade_sqrt_a<dd_real>
+  struct pade_sqrt_numer<dd_real>
   {
-    static const int array_size = 22;
-    static const  dd_real array[array_size];
+    using array = std::array<dd_real, 22>;
+    static const array numer;
   };
-  template< >
-  struct pade_sqrt_b<dd_real>
-  {
-    static const int array_size = 22;
-    static const dd_real array[array_size];
-  };
-  const dd_real pade_sqrt_a<dd_real>::array[pade_sqrt_a<dd_real>::array_size] =
+  const typename pade_sqrt_numer<dd_real>::array pade_sqrt_numer<dd_real>::numer =
   {
           dd_real("1"),                               dd_real("43")/dd_real("4"),
         dd_real("215")/dd_real("4"),               dd_real("10621")/dd_real("64"),
@@ -1516,8 +1521,14 @@ namespace {
      dd_real("206701")/dd_real("17179869184"),     dd_real("76153")/dd_real("274877906944"),
        dd_real("3311")/dd_real("1099511627776") ,     dd_real("43")/dd_real("4398046511104")
   };
-  const dd_real pade_sqrt_b<dd_real>::array[pade_sqrt_a<dd_real>::array_size] =
-{
+  template< >
+  struct pade_sqrt_denom<dd_real>
+  {
+    using array = std::array<dd_real, 22>;
+    static const array denom;
+  };
+  const typename pade_sqrt_denom<dd_real>::array pade_sqrt_denom<dd_real>::denom =
+  {
           dd_real("1"),                               dd_real("41")/dd_real("4"),
         dd_real("195")/dd_real("4"),                dd_real("9139")/dd_real("64"),
       dd_real("73815")/dd_real("256"),            dd_real("435897")/dd_real("1024"),
@@ -1532,18 +1543,12 @@ namespace {
   };
 
   template< >
-  struct pade_sqrt_a<qd_real>
+  struct pade_sqrt_numer<qd_real>
   {
-    static const int array_size = 34;
-    static const  qd_real array[array_size];
+    using array = std::array<qd_real, 34>;
+    static const array numer;
   };
-  template< >
-  struct pade_sqrt_b<qd_real>
-  {
-    static const int array_size = 34;
-    static const qd_real array[array_size];
-  };
-  const qd_real pade_sqrt_a<qd_real>::array[pade_sqrt_a<qd_real>::array_size] =
+  const typename pade_sqrt_numer<qd_real>::array pade_sqrt_numer<qd_real>::numer =
   {
               qd_real("1"),                                            qd_real("67")/qd_real("4"),
             qd_real("134"),                                         qd_real("43617")/qd_real("64"),
@@ -1563,7 +1568,13 @@ namespace {
         qd_real("1165197")/qd_real("72057594037927936"),            qd_real("87703")/qd_real("576460752303423488"),
           qd_real("12529")/qd_real("18446744073709551616"),            qd_real("67")/qd_real("73786976294838206464")
   };
-  const qd_real pade_sqrt_b<qd_real>::array[pade_sqrt_a<qd_real>::array_size] =
+  template< >
+  struct pade_sqrt_denom<qd_real>
+  {
+    using array = std::array<qd_real, 34>;
+    static const array denom;
+  };
+  const typename pade_sqrt_denom<qd_real>::array pade_sqrt_denom<qd_real>::denom =
   {
             qd_real("1"),                                              qd_real("65")/qd_real("4"),
           qd_real("126"),                                           qd_real("39711")/qd_real("64"),
@@ -1590,14 +1601,14 @@ namespace glucat
 {
   /// Square root of multivector with specified complexifier
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const matrix_multi<Scalar_T,LO,HI>
-  sqrt(const matrix_multi<Scalar_T,LO,HI>& val, const matrix_multi<Scalar_T,LO,HI>& i, bool prechecked)
+  auto
+  sqrt(const matrix_multi<Scalar_T,LO,HI>& val, const matrix_multi<Scalar_T,LO,HI>& i, bool prechecked) -> const matrix_multi<Scalar_T,LO,HI>
   {
     // Reference: [GW], Section 4.3, pp318-322
     // Reference: [GL], Section 11.3, p572-576
     // Reference: [Z], Pade1
 
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
 
     if (val.isnan())
       return traits_t::NaN();
@@ -1608,8 +1619,8 @@ namespace glucat
     {
     case precision_demoted:
       {
-        typedef typename traits_t::demoted::type demoted_scalar_t;
-        typedef matrix_multi<demoted_scalar_t,LO,HI> demoted_multivector_t;
+        using demoted_scalar_t = typename traits_t::demoted::type;
+        using demoted_multivector_t = matrix_multi<demoted_scalar_t, LO, HI>;
 
         const demoted_multivector_t& demoted_val = demoted_multivector_t(val);
         const demoted_multivector_t& demoted_i = demoted_multivector_t(i);
@@ -1619,8 +1630,8 @@ namespace glucat
       break;
     case precision_promoted:
       {
-        typedef typename traits_t::promoted::type promoted_scalar_t;
-        typedef matrix_multi<promoted_scalar_t,LO,HI> promoted_multivector_t;
+        using promoted_scalar_t = typename traits_t::promoted::type;
+        using promoted_multivector_t = matrix_multi<promoted_scalar_t, LO, HI>;
 
         const promoted_multivector_t& promoted_val = promoted_multivector_t(val);
         const promoted_multivector_t& promoted_i = promoted_multivector_t(i);
@@ -1635,19 +1646,19 @@ namespace glucat
 
   /// Square root of multivector with specified complexifier
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const matrix_multi<Scalar_T,LO,HI>
-  matrix_sqrt(const matrix_multi<Scalar_T,LO,HI>& val, const matrix_multi<Scalar_T,LO,HI>& i)
+  auto
+  matrix_sqrt(const matrix_multi<Scalar_T,LO,HI>& val, const matrix_multi<Scalar_T,LO,HI>& i) -> const matrix_multi<Scalar_T,LO,HI>
   {
     // Reference: [GW], Section 4.3, pp318-322
     // Reference: [GL], Section 11.3, p572-576
     // Reference: [Z], Pade1
 
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
 
     if (val.isnan())
       return traits_t::NaN();
 
-    typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
+    using multivector_t = matrix_multi<Scalar_T, LO, HI>;
 
     const Scalar_T realval = val.scalar();
     if (val == realval)
@@ -1678,17 +1689,17 @@ namespace glucat
     if (traits_t::isNaN_or_isInf(sqrt_scale))
       return traits_t::NaN();
 
-    typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
+    using multivector_t = matrix_multi<Scalar_T, LO, HI>;
     multivector_t rescale = sqrt_scale;
     if (scale < Scalar_T(0))
       rescale = i * sqrt_scale;
 
     const multivector_t& unitval = val / scale;
-    const Scalar_T max_norm = Scalar_T(1.0/4.0);
+    const auto max_norm = Scalar_T(1.0/4.0);
 
 #if defined(_GLUCAT_USE_EIGENVALUES)
     multivector_t scaled_result;
-    typedef typename multivector_t::matrix_t matrix_t;
+    using matrix_t = typename multivector_t::matrix_t;
 
     // What kind of eigenvalues does the matrix contain?
     matrix::eig_genus<matrix_t> genus = matrix::classify_eigenvalues(unitval.m_matrix);
@@ -1707,9 +1718,8 @@ namespace glucat
       scaled_result =
         (norm(unitval - Scalar_T(1)) < max_norm)
           // Pade' approximation of square root
-        ? pade_approx(pade_sqrt_a<Scalar_T>::array_size,
-                      pade_sqrt_a<Scalar_T>::array,
-                      pade_sqrt_b<Scalar_T>::array,
+        ? pade_approx(pade::pade_sqrt_numer<Scalar_T>::numer,
+                      pade::pade_sqrt_denom<Scalar_T>::denom,
                       unitval - Scalar_T(1))
           // Product form of Denman-Beavers square root iteration
         : db_sqrt(unitval);
@@ -1723,9 +1733,8 @@ namespace glucat
     const multivector_t& scaled_result =
       (norm(unitval - Scalar_T(1)) < max_norm)
         // Pade' approximation of square root
-      ? pade_approx(pade_sqrt_a<Scalar_T>::array_size,
-                    pade_sqrt_a<Scalar_T>::array,
-                    pade_sqrt_b<Scalar_T>::array,
+      ? pade_approx(pade::pade_sqrt_numer<Scalar_T>::numer,
+                    pade::pade_sqrt_denom<Scalar_T>::denom,
                     unitval - Scalar_T(1))
         // Product form of Denman-Beavers square root iteration
       : db_sqrt(unitval);
@@ -1739,9 +1748,8 @@ namespace glucat
       const multivector_t& scaled_mi_result =
         (norm(mi_unitval - Scalar_T(1)) < max_norm)
           // Pade' approximation of square root
-        ? pade_approx(pade_sqrt_a<Scalar_T>::array_size,
-                      pade_sqrt_a<Scalar_T>::array,
-                      pade_sqrt_b<Scalar_T>::array,
+        ? pade_approx(pade::pade_sqrt_numer<Scalar_T>::numer,
+                      pade::pade_sqrt_denom<Scalar_T>::denom,
                       mi_unitval - Scalar_T(1))
           // Product form of Denman-Beavers square root iteration
         : db_sqrt(mi_unitval);
@@ -1756,34 +1764,34 @@ namespace glucat
   }
 }
 
-namespace {
+namespace pade {
   /// Coefficients of numerator polynomials of Pade approximations produced by Pade1(log(1+x),x,n,n)
   // Reference: [Z], Pade1
   template< typename Scalar_T >
-  struct pade_log_a
+  struct pade_log_numer
   {
-    static const int array_size = 14;
-    static const Scalar_T array[array_size];
-  };
-
-  /// Coefficients of denominator polynomials of Pade approximations produced by Pade1(log(1+x),x,n,n)
-  // Reference: [Z], Pade1
-  template< typename Scalar_T >
-  struct pade_log_b
-  {
-    static const int array_size = 14;
-    static const Scalar_T array[array_size];
+    using array = std::array<Scalar_T, 14>;
+    static const array numer;
   };
   template< typename Scalar_T >
-  const Scalar_T pade_log_a<Scalar_T>::array[pade_log_a<Scalar_T>::array_size] =
+  const typename pade_log_numer<Scalar_T>::array pade_log_numer<Scalar_T>::numer =
   {
          0.0,                     1.0,                    6.0,            4741.0/300.0,
       1441.0/60.0,           107091.0/4600.0,          8638.0/575.0,    263111.0/40250.0,
     153081.0/80500.0,        395243.0/1101240.0,      28549.0/688275.0, 605453.0/228813200.0,
     785633.0/10296594000.0, 1145993.0/1873980108000.0
   };
+
+  /// Coefficients of denominator polynomials of Pade approximations produced by Pade1(log(1+x),x,n,n)
+  // Reference: [Z], Pade1
   template< typename Scalar_T >
-  const Scalar_T pade_log_b<Scalar_T>::array[pade_log_b<Scalar_T>::array_size] =
+  struct pade_log_denom
+  {
+    using array = std::array<Scalar_T, 14>;
+    static const array denom;
+  };
+  template< typename Scalar_T >
+  const typename pade_log_denom<Scalar_T>::array pade_log_denom<Scalar_T>::denom =
   {
          1.0,                    13.0/2.0,             468.0/25.0,        1573.0/50.0,
       1573.0/46.0,            11583.0/460.0,         10296.0/805.0,       2574.0/575.0,
@@ -1792,24 +1800,24 @@ namespace {
   };
 
   template< >
-  struct pade_log_a<float>
+  struct pade_log_numer<float>
   {
-    static const int array_size = 10;
-    static const float array[array_size];
+    using array = std::array<float, 10>;
+    static const array numer;
   };
-  template< >
-  struct pade_log_b<float>
-  {
-    static const int array_size = 10;
-    static const float array[array_size];
-  };
-  const float pade_log_a<float>::array[pade_log_a<float>::array_size] =
+  const typename pade_log_numer<float>::array pade_log_numer<float>::numer =
   {
       0.0,            1.0,             4.0,       1337.0/204.0,
     385.0/68.0,    1879.0/680.0,     193.0/255.0,  197.0/1820.0,
     419.0/61880.0, 7129.0/61261200.0
   };
-  const float pade_log_b<float>::array[pade_log_a<float>::array_size] =
+  template< >
+  struct pade_log_denom<float>
+  {
+    using array = std::array<float, 10>;
+    static const array denom;
+  };
+  const typename pade_log_denom<float>::array pade_log_denom<float>::denom =
   {
       1.0,            9.0/2.0,       144.0/17.0,   147.0/17.0,
     441.0/85.0,      63.0/34.0,       84.0/221.0,    9.0/221.0,
@@ -1817,18 +1825,12 @@ namespace {
   };
 
   template< >
-  struct pade_log_a<long double>
+  struct pade_log_numer<long double>
   {
-    static const int array_size = 18;
-    static const  long double array[array_size];
+    using array = std::array<long double, 18>;
+    static const array numer;
   };
-  template< >
-  struct pade_log_b<long double>
-  {
-    static const int array_size = 18;
-    static const long double array[array_size];
-  };
-  const long double pade_log_a<long double>::array[pade_log_a<long double>::array_size] =
+  const typename pade_log_numer<long double>::array pade_log_numer<long double>::numer =
   {
          0.0L,                       1.0L,                           8.0L,                    3835.0L/132.0L,
       8365.0L/132.0L,         11363807.0L/122760.0L,            162981.0L/1705.0L,         9036157.0L/125860.0L,
@@ -1836,7 +1838,13 @@ namespace {
     172459.0L/1068012.0L,    116317061.0L/7025382936.0L,      19679783.0L/18441630207.0L, 23763863.0L/614721006900.0L,
      50747.0L/79318839600.0L, 42142223.0L/14295951736466400.0L
   };
-  const long double pade_log_b<long double>::array[pade_log_a<long double>::array_size] =
+  template< >
+  struct pade_log_denom<long double>
+  {
+    using array = std::array<long double, 18>;
+    static const array denom;
+  };
+  const typename pade_log_denom<long double>::array pade_log_denom<long double>::denom =
   {
          1.0L,                      17.0L/2.0L,                   1088.0L/33.0L,               850.0L/11.0L,
      41650.0L/341.0L,           140777.0L/1023.0L,             1126216.0L/9889.0L,           63206.0L/899.0L,
@@ -1846,18 +1854,12 @@ namespace {
   };
 #if defined(_GLUCAT_USE_QD)
   template< >
-  struct pade_log_a<dd_real>
+  struct pade_log_numer<dd_real>
   {
-    static const int array_size = 22;
-    static const  dd_real array[array_size];
+    using array = std::array<dd_real, 22>;
+    static const array numer;
   };
-  template< >
-  struct pade_log_b<dd_real>
-  {
-    static const int array_size = 22;
-    static const dd_real array[array_size];
-  };
-  const dd_real pade_log_a<dd_real>::array[pade_log_a<dd_real>::array_size] =
+  const typename pade_log_numer<dd_real>::array pade_log_numer<dd_real>::numer =
   {
           dd_real("0"),                                  dd_real("1"),
          dd_real("10"),                              dd_real("22781")/dd_real("492"),
@@ -1871,7 +1873,13 @@ namespace {
      dd_real("969715")/dd_real("53502994116"),    dd_real("11098301")/dd_real("26204577562592"),
      dd_real("118999")/dd_real("26204577562592"), dd_real("18858053")/dd_real("1392249205900512960")
   };
-  const dd_real pade_log_b<dd_real>::array[pade_log_a<dd_real>::array_size] =
+  template< >
+  struct pade_log_denom<dd_real>
+  {
+    using array = std::array<dd_real, 22>;
+    static const array denom;
+  };
+  const typename pade_log_denom<dd_real>::array pade_log_denom<dd_real>::denom =
   {
           dd_real("1"),                                 dd_real("21")/dd_real("2"),
        dd_real("2100")/dd_real("41"),                dd_real("12635")/dd_real("82"),
@@ -1887,18 +1895,12 @@ namespace {
   };
 
   template< >
-  struct pade_log_a<qd_real>
+  struct pade_log_numer<qd_real>
   {
-    static const int array_size = 34;
-    static const  qd_real array[array_size];
+    using array = std::array<qd_real, 34>;
+    static const array numer;
   };
-  template< >
-  struct pade_log_b<qd_real>
-  {
-    static const int array_size = 34;
-    static const qd_real array[array_size];
-  };
-  const qd_real pade_log_a<qd_real>::array[pade_log_a<qd_real>::array_size] =
+  const typename pade_log_numer<qd_real>::array pade_log_numer<qd_real>::numer =
   {
                 qd_real("0"),                                                          qd_real("1"),
                 qd_real("16"),                                                     qd_real("95201")/qd_real("780"),
@@ -1918,7 +1920,13 @@ namespace {
      qd_real("8802625510547")/qd_real("361639950529787563499775"),       qd_real("373831661521439")/qd_real("1659204093030665341336967700"),
    qd_real("446033437968239")/qd_real("464577146048586295574350956000"),  qd_real("53676090078349")/qd_real("47386868896955802148583797512000")
       };
-  const qd_real pade_log_b<qd_real>::array[pade_log_a<qd_real>::array_size] =
+  template< >
+  struct pade_log_denom<qd_real>
+  {
+    using array = std::array<qd_real, 34>;
+    static const array denom;
+  };
+  const typename pade_log_denom<qd_real>::array pade_log_denom<qd_real>::denom =
   {
                  qd_real("1"),                                                        qd_real("33")/qd_real("2"),
               qd_real("8448")/qd_real("65"),                                       qd_real("42284")/qd_real("65"),
@@ -1945,46 +1953,45 @@ namespace glucat{
   /// Pade' approximation of log
   template< typename Scalar_T, const index_t LO, const index_t HI >
   static
-  const matrix_multi<Scalar_T,LO,HI>
-  pade_log(const matrix_multi<Scalar_T,LO,HI>& val)
+  auto
+  pade_log(const matrix_multi<Scalar_T,LO,HI>& val) -> const matrix_multi<Scalar_T,LO,HI>
   {
     // Reference: [GW], Section 4.3, pp318-322
     // Reference: [CHKL]
     // Reference: [GL], Section 11.3, p572-576
     // Reference: [Z], Pade1
 
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
     if (val == Scalar_T(0) || val.isnan())
       return traits_t::NaN();
     else
-      return pade_approx(pade_log_a<Scalar_T>::array_size,
-                         pade_log_a<Scalar_T>::array,
-                         pade_log_b<Scalar_T>::array,
+      return pade_approx(pade::pade_log_numer<Scalar_T>::numer,
+                         pade::pade_log_denom<Scalar_T>::denom,
                          val - Scalar_T(1));
   }
 
   /// Incomplete square root cascade and Pade' approximation of log
   template< typename Scalar_T, const index_t LO, const index_t HI >
   static
-  const matrix_multi<Scalar_T,LO,HI>
-  cascade_log(const matrix_multi<Scalar_T,LO,HI>& val)
+  auto
+  cascade_log(const matrix_multi<Scalar_T,LO,HI>& val) -> const matrix_multi<Scalar_T,LO,HI>
   {
     // Reference: [CHKL]
-    typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
-    typedef numeric_traits<Scalar_T> traits_t;
+    using multivector_t = matrix_multi<Scalar_T, LO, HI>;
+    using traits_t = numeric_traits<Scalar_T>;
     if (val == Scalar_T(0) || val.isnan())
       return traits_t::NaN();
 
-    typedef std::numeric_limits<Scalar_T> limits_t;
+    using limits_t = std::numeric_limits<Scalar_T>;
     static const Scalar_T epsilon = limits_t::epsilon();
     static const Scalar_T max_inner_norm = traits_t::pow(epsilon, 2);
-    static const Scalar_T max_outer_norm = Scalar_T(6.0/limits_t::digits);
+    static const auto max_outer_norm = Scalar_T(6.0/limits_t::digits);
     multivector_t Y = val;
     multivector_t E = Scalar_T(0);
     Scalar_T norm_Y_1;
     int outer_step;
-    Scalar_T pow_2_outer_step = Scalar_T(1);
-    Scalar_T pow_4_outer_step = Scalar_T(1);
+    auto pow_2_outer_step = Scalar_T(1);
+    auto pow_4_outer_step = Scalar_T(1);
     for (outer_step = 0, norm_Y_1 = norm(Y - Scalar_T(1));
         outer_step != Tune_P::log_max_outer_steps && norm_Y_1 * pow_2_outer_step > max_outer_norm;
         ++outer_step,    norm_Y_1 = norm(Y - Scalar_T(1)))
@@ -2013,10 +2020,10 @@ namespace glucat{
 
   /// Natural logarithm of multivector with specified complexifier
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const matrix_multi<Scalar_T,LO,HI>
-  log(const matrix_multi<Scalar_T,LO,HI>& val, const matrix_multi<Scalar_T,LO,HI>& i, bool prechecked)
+  auto
+  log(const matrix_multi<Scalar_T,LO,HI>& val, const matrix_multi<Scalar_T,LO,HI>& i, bool prechecked) -> const matrix_multi<Scalar_T,LO,HI>
   {
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
 
     if (val == Scalar_T(0) || val.isnan())
       return traits_t::NaN();
@@ -2027,8 +2034,8 @@ namespace glucat{
     {
     case precision_demoted:
       {
-        typedef typename traits_t::demoted::type demoted_scalar_t;
-        typedef matrix_multi<demoted_scalar_t,LO,HI> demoted_multivector_t;
+        using demoted_scalar_t = typename traits_t::demoted::type;
+        using demoted_multivector_t = matrix_multi<demoted_scalar_t, LO, HI>;
 
         const demoted_multivector_t& demoted_val = demoted_multivector_t(val);
         const demoted_multivector_t& demoted_i = demoted_multivector_t(i);
@@ -2038,8 +2045,8 @@ namespace glucat{
       break;
     case precision_promoted:
       {
-        typedef typename traits_t::promoted::type promoted_scalar_t;
-        typedef matrix_multi<promoted_scalar_t,LO,HI> promoted_multivector_t;
+        using promoted_scalar_t = typename traits_t::promoted::type;
+        using promoted_multivector_t = matrix_multi<promoted_scalar_t, LO, HI>;
 
         const promoted_multivector_t& promoted_val = promoted_multivector_t(val);
         const promoted_multivector_t& promoted_i = promoted_multivector_t(i);
@@ -2054,13 +2061,13 @@ namespace glucat{
 
   /// Natural logarithm of multivector with specified complexifier
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const matrix_multi<Scalar_T,LO,HI>
-  matrix_log(const matrix_multi<Scalar_T,LO,HI>& val, const matrix_multi<Scalar_T,LO,HI>& i)
+  auto
+  matrix_log(const matrix_multi<Scalar_T,LO,HI>& val, const matrix_multi<Scalar_T,LO,HI>& i) -> const matrix_multi<Scalar_T,LO,HI>
   {
     // Scaled incomplete square root cascade and scaled Pade' approximation of log
     // Reference: [CHKL]
 
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
     if (val == Scalar_T(0) || val.isnan())
       return traits_t::NaN();
 
@@ -2073,7 +2080,7 @@ namespace glucat{
       else
         return traits_t::log(realval);
     }
-    typedef matrix_multi<Scalar_T,LO,HI> multivector_t;
+    using multivector_t = matrix_multi<Scalar_T, LO, HI>;
 #if !defined(_GLUCAT_USE_EIGENVALUES)
     const multivector_t val2 = val*val;
     const Scalar_T real_val2 = val2.scalar();
@@ -2081,7 +2088,7 @@ namespace glucat{
       return matrix_log(-i * val, i) + i * pi/Scalar_T(2);
 #endif
     // Scale val towards abs(A) == 1 or towards A == 1 as appropriate
-    const Scalar_T max_norm = Scalar_T(1.0/9.0);
+    const auto max_norm = Scalar_T(1.0/9.0);
     const Scalar_T scale =
       (realval != Scalar_T(0) && norm(val/realval - Scalar_T(1)) < max_norm)
       ? realval
@@ -2100,7 +2107,7 @@ namespace glucat{
       return traits_t::NaN();
 #if defined(_GLUCAT_USE_EIGENVALUES)
     multivector_t scaled_result;
-    typedef typename multivector_t::matrix_t matrix_t;
+    using matrix_t = typename multivector_t::matrix_t;
 
     // What kind of eigenvalues does the matrix contain?
     matrix::eig_genus<matrix_t> genus = matrix::classify_eigenvalues(unitval.m_matrix);
@@ -2130,10 +2137,10 @@ namespace glucat{
 
   /// Exponential of multivector
   template< typename Scalar_T, const index_t LO, const index_t HI >
-  const matrix_multi<Scalar_T,LO,HI>
-  exp(const matrix_multi<Scalar_T,LO,HI>& val)
+  auto
+  exp(const matrix_multi<Scalar_T,LO,HI>& val) -> const matrix_multi<Scalar_T,LO,HI>
   {
-    typedef numeric_traits<Scalar_T> traits_t;
+    using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
       return traits_t::NaN();
 
@@ -2145,8 +2152,8 @@ namespace glucat{
     {
     case precision_demoted:
       {
-        typedef typename traits_t::demoted::type demoted_scalar_t;
-        typedef matrix_multi<demoted_scalar_t,LO,HI> demoted_multivector_t;
+        using demoted_scalar_t = typename traits_t::demoted::type;
+        using demoted_multivector_t = matrix_multi<demoted_scalar_t, LO, HI>;
 
         const demoted_multivector_t& demoted_val = demoted_multivector_t(val);
         return clifford_exp(demoted_val);
@@ -2154,8 +2161,8 @@ namespace glucat{
       break;
     case precision_promoted:
       {
-        typedef typename traits_t::promoted::type promoted_scalar_t;
-        typedef matrix_multi<promoted_scalar_t,LO,HI> promoted_multivector_t;
+        using promoted_scalar_t = typename traits_t::promoted::type;
+        using promoted_multivector_t = matrix_multi<promoted_scalar_t, LO, HI>;
 
         const promoted_multivector_t& promoted_val = promoted_multivector_t(val);
         return clifford_exp(promoted_val);
