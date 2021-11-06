@@ -31,8 +31,8 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
+#include "glucat/global.h"
 #include "glucat/generation.h"
-
 #include "glucat/matrix.h"
 
 namespace glucat { namespace gen

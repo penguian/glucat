@@ -54,9 +54,9 @@
 // Doron Zeilberger, "PADE" (Maple code), 2002.
 // http://www.math.rutgers.edu/~zeilberg/tokhniot/PADE
 
-#include <glucat/clifford_algebra.h>
+#include "glucat/clifford_algebra.h"
 
-#include <glucat/scalar.h>
+#include "glucat/scalar.h"
 
 #include <array>
 

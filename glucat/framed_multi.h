@@ -33,6 +33,7 @@
 
 #include "glucat/global.h"
 #include "glucat/errors.h"
+#include "glucat/index_set.h"
 #include "glucat/clifford_algebra.h"
 
 #if defined(_GLUCAT_USE_BOOST_POOL_ALLOC)

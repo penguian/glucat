@@ -32,6 +32,7 @@
  ***************************************************************************/
 
 #include "glucat/portability.h"
+#include "glucat/global.h"
 
 #include <boost/numeric/ublas/traits.hpp>
 

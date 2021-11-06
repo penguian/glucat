@@ -33,8 +33,9 @@
 
 #include "glucat/matrix_multi.h"
 
-#include "glucat/matrix.h"
+#include "glucat/scalar.h"
 #include "glucat/generation.h"
+#include "glucat/matrix.h"
 
 # if  defined(_GLUCAT_GCC_IGNORE_UNUSED_LOCAL_TYPEDEFS)
 #  pragma GCC diagnostic push

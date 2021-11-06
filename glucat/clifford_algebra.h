@@ -31,6 +31,8 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
+#include "glucat/global.h"
+
 #include <string>
 #include <utility>
 #include <vector>
