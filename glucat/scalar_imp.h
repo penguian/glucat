@@ -31,7 +31,8 @@
  See also Arvind Raja's original header comments and references in glucat.h
  ***************************************************************************/
 
-#include "glucat/portability.h"
+#include "glucat/scalar.h"
+#include "glucat/qd.h"
 
 #include <boost/numeric/ublas/traits.hpp>
 

@@ -31,6 +31,9 @@
  See also Arvind Raja's original header comments and references in glucat.h
  ***************************************************************************/
 
+#include "glucat/global.h"
+#include "glucat/scalar.h"
+
 namespace glucat
 {
 #if defined(__USE_GNU)

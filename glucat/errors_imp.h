@@ -31,6 +31,12 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
+#include "glucat/errors.h"
+
+#include <string>
+#include <iostream>
+#include <ostream>
+
 namespace glucat
 {
   /// Specific exception class

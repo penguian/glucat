@@ -32,6 +32,8 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
+#include "glucat/errors.h"
+#include "glucat/scalar.h"
 #include "glucat/matrix.h"
 
 # if  defined(_GLUCAT_GCC_IGNORE_UNUSED_LOCAL_TYPEDEFS)

@@ -34,7 +34,10 @@
 
 #include "glucat/framed_multi.h"
 
+#include "glucat/scalar.h"
 #include "glucat/random.h"
+#include "glucat/generation.h"
+#include "glucat/matrix.h"
 
 #if defined(_GLUCAT_USE_BOOST_POOL_ALLOC)
 // Use the Boost pool allocator

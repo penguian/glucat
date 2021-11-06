@@ -33,6 +33,7 @@
 
 #include "glucat/index_set.h"
 
+#include <string>
 #include <sstream>
 
 namespace glucat

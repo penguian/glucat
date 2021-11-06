@@ -31,6 +31,10 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
+#include "glucat/global.h"
+
+#include <boost/numeric/ublas/fwd.hpp>
+
 #include <utility>
 #include <array>
 #include <map>
