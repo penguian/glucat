@@ -53,6 +53,8 @@
 
 #include "glucat/qd.h"
 
+#include "glucat/promotion.h"
+
 #include "glucat/random.h"
 
 #include "glucat/clifford_algebra.h"

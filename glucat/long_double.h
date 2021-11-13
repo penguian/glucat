@@ -44,32 +44,6 @@ namespace glucat
   static const long double l_ln2 = 0.6931471805599453094172321214581766L;
 #endif
 
-#if defined(_GLUCAT_USE_QD)
-  /// Demoted type for long double
-  template<>
-  struct
-  numeric_traits<long double>::
-  demoted {using type = long double;};
-#else
-  /// Promoted type for double
-  template<>
-  struct
-  numeric_traits<double>::
-  promoted {typedef long double type;};
-
-  /// Promoted type for long double
-  template<>
-  struct
-  numeric_traits<long double>::
-  promoted {typedef long double type;};
-
-  /// Demoted type for long double
-  template<>
-  struct
-  numeric_traits<long double>::
-  demoted {typedef double type;};
-#endif
-
   /// Pi for long double
   template<>
   inline
