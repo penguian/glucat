@@ -182,10 +182,12 @@ namespace glucat
       reference() = delete;
       reference   (index_set_t& ist, index_t idx);
       ~reference  () = default;
+      /// for b[i] == c[j];
+      auto operator== (const reference& c_j) const -> bool;
       /// for b[i] = x;
       auto operator= (const bool x) -> reference&;
-      /// for b[i] = b[j];
-      auto operator= (const reference& j) -> reference&;
+      /// for b[i] = c[j];
+      auto operator= (const reference& c_j) -> reference&;
       /// Flips a bit
       auto operator~ () const -> bool;
       /// for x = b[i];
