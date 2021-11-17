@@ -293,9 +293,7 @@ namespace glucat
         this_it++)
     {
       const const_iterator& rhs_it = rhs.find(this_it->first);
-      if (rhs_it == rhs_end)
-        return false;
-      else if (rhs_it->second != this_it->second)
+      if (rhs_it == rhs_end || rhs_it->second != this_it->second)
         return false;
     }
     return true;
