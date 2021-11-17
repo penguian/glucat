@@ -36,26 +36,17 @@
 
 #if defined(_GLUCAT_USE_QD)
 # include <qd/qd_real.h>
-# if defined(QD_API)
+#endif
 
 namespace glucat
 {
   /// Extra traits which extend numeric limits
   // Reference: [AA], 2.4, p. 30-31
 
-  /// Promoted type for double
-  template<>
-  struct
-  numeric_traits<double>::
-  promoted {using type = dd_real;};
+#if defined(_GLUCAT_USE_QD) && defined(QD_API)
 
-  /// Promoted type for long double
-  template<>
-  struct
-  numeric_traits<long double>::
-  promoted {using type = dd_real;};
-
-#define _GLUCAT_QD_F(_T, _F) \
+  /// Macro to apply function _F to type _T
+# define _GLUCAT_QD_F(_T, _F) \
   template<>              \
   inline                  \
   auto                    \
@@ -102,18 +93,6 @@ namespace glucat
   numeric_traits<dd_real>::
   to_double(const dd_real& val) -> double
   { return ::to_double(val); }
-
-  /// Promoted type for dd_real
-  template<>
-  struct
-  numeric_traits<dd_real>::
-  promoted {using type = qd_real;};
-
-  /// Demoted type for dd_real
-  template<>
-  struct
-  numeric_traits<dd_real>::
-  demoted {using type = double;};
 
   /// Modulo function for dd_real
   template<>
@@ -227,18 +206,6 @@ namespace glucat
   to_double(const qd_real& val) -> double
   { return ::to_double(val); }
 
-  /// Promoted type for qd_real
-  template<>
-  struct
-  numeric_traits<qd_real>::
-  promoted {using type = qd_real;};
-
-  /// Demoted type for qd_real
-  template<>
-  struct
-  numeric_traits<qd_real>::
-  demoted {using type = qd_real;};
-
   /// Modulo function for qd_real
   template<>
   inline
@@ -310,9 +277,9 @@ namespace glucat
 
   /// Hyperbolic tangent of qd_real
   _GLUCAT_QD_F(qd_real, tanh)
-}
 
-# endif
-#endif
+#endif // !defined(_GLUCAT_USE_QD) || !defined(QD_API)
+
+} // namespace glucat
 
 #endif // _GLUCAT_QD_H
