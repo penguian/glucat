@@ -68,7 +68,7 @@ namespace glucat
   index_set<LO,HI>::
   index_set(const set_value_t folded_val, const index_set_t frm, const bool prechecked)
   {
-    if (!prechecked && folded_val >= set_value_t(1 << frm.count()))
+    if (!prechecked && folded_val >= (set_value_t(1) << frm.count()))
         throw error_t("index_set(val,frm): cannot create: value gives an index set outside of frame");
     const index_set_t folded_frame = frm.fold();
     const index_t min_index = folded_frame.min();
@@ -985,6 +985,14 @@ namespace glucat
     m_idx(idx)
   { }
 
+  /// for b[i] == c[j];
+  template<const index_t LO, const index_t HI>
+  inline
+  auto
+  index_set<LO,HI>::reference::
+  operator== (const reference& c_j) const -> bool
+  { return m_pst == c_j.m_pst && m_idx == c_j.m_idx; }
+
   /// for b[i] = x;
   template<const index_t LO, const index_t HI>
   inline
@@ -999,17 +1007,20 @@ namespace glucat
     return *this;
   }
 
-  /// for b[i] = b[j];
+  /// for b[i] = c[j];
   template<const index_t LO, const index_t HI>
   inline
   auto
   index_set<LO,HI>::reference::
-  operator= (const reference& j) -> reference&
+  operator= (const reference& c_j) -> reference&
   {
-    if ( (j.m_pst)[j.m_idx] )
-      m_pst->set(m_idx);
-    else
-      m_pst->reset(m_idx);
+    if (&c_j != this && c_j != *this)
+    {
+      if ( (c_j.m_pst)[c_j.m_idx] )
+        m_pst->set(m_idx);
+      else
+        m_pst->reset(m_idx);
+    }
     return *this;
   }
 
