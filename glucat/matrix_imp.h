@@ -290,6 +290,29 @@ namespace glucat { namespace matrix
     return result;
   }
 
+  /// Infinite
+  template< typename Matrix_T >
+  auto
+  isinf(const Matrix_T& m) -> bool
+  {
+    using matrix_t = Matrix_T;
+    using Scalar_T = typename matrix_t::value_type;
+    using const_iterator1 = typename matrix_t::const_iterator1;
+    using const_iterator2 = typename matrix_t::const_iterator2;
+    for (const_iterator1
+        it1 = m.begin1();
+        it1 != m.end1();
+        ++it1)
+      for (const_iterator2
+          it2 = it1.begin();
+          it2 != it1.end();
+          ++it2)
+        if (numeric_traits<Scalar_T>::isInf(*it2))
+          return true;
+
+    return false;
+  }
+
   /// Not a Number
   template< typename Matrix_T >
   auto

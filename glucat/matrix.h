@@ -71,6 +71,11 @@ namespace glucat
     auto
     nnz(const Matrix_T& m) -> typename Matrix_T::size_type;
 
+    /// Infinite
+    template< typename Matrix_T >
+    auto
+    isinf(const Matrix_T& m) -> bool;
+
     /// Not a Number
     template< typename Matrix_T >
     auto

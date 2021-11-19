@@ -125,6 +125,8 @@ namespace glucat
     virtual auto max_abs     () const -> Scalar_T = 0;
     /// Remove all terms with relative size smaller than limit
     virtual auto truncated   (const Scalar_T& limit = Scalar_T(DEFAULT_TRUNCATION)) const -> const multivector_t = 0;
+    /// Check if a multivector contains any infinite values
+    virtual auto isinf       () const -> bool = 0;
     /// Check if a multivector contains any IEEE NaN values
     virtual auto isnan       () const -> bool = 0;
     /// Write formatted multivector to output
@@ -172,6 +174,7 @@ namespace glucat
     auto max_abs     () const                          -> Scalar_T            override;\
     auto truncated   (const Scalar_T& limit = Scalar_T(DEFAULT_TRUNCATION)) const      \
                                                        -> const multivector_t override;\
+    auto isinf       () const                          -> bool                override;\
     auto isnan       () const                          -> bool                override;\
     void write       (const std::string& msg="") const                        override;\
     void write       (std::ofstream& ofile, const std::string& msg="") const  override;
