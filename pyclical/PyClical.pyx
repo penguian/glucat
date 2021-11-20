@@ -1203,6 +1203,15 @@ cdef class clifford:
         """
         return clifford().wrap( self.instance.truncated(limit) )
 
+    def isinf(self):
+        """
+        Check if a multivector contains any infinite values.
+
+        >>> clifford().isinf()
+        False
+        """
+        return self.instance.isnan()
+
     def isnan(self):
         """
         Check if a multivector contains any IEEE NaN values.
