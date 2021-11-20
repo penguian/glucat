@@ -1380,6 +1380,11 @@ namespace glucat
       os << 0;
     else if (val.isnan())
       os << std::numeric_limits<Scalar_T>::quiet_NaN();
+    else if (val.isinf())
+    {
+      const Scalar_T& inf = std::numeric_limits<Scalar_T>::infinity();
+      os << (scalar(val) < 0.0 ? -inf : inf);
+    }
     else
     {
       using multivector_t = framed_multi<Scalar_T, LO, HI>;
