@@ -91,6 +91,7 @@ cdef extern from "PyClical.h":
         Clifford pow(int m)
         Clifford outer_pow(int m)
         Clifford truncated(scalar_t limit)
+        bint     isinf()
         bint     isnan()
         void     write(char* msg)
 
