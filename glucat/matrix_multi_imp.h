@@ -1047,6 +1047,19 @@ namespace glucat
     return s;
   }
 
+  /// Check if a multivector contains any infinite values
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  inline
+  auto
+  matrix_multi<Scalar_T,LO,HI>::
+  isinf() const -> bool
+  {
+    if (std::numeric_limits<Scalar_T>::has_infinity)
+      return matrix::isinf(this->m_matrix);
+    else
+      return false;
+  }
+
   /// Check if a multivector contains any IEEE NaN values
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline

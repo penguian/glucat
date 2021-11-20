@@ -1577,6 +1577,24 @@ namespace glucat
     return *this;
   }
 
+  /// Check if a multivector contains any infinite values
+  template< typename Scalar_T, const index_t LO, const index_t HI >
+  auto
+  framed_multi<Scalar_T,LO,HI>::
+  isinf() const -> bool
+  {
+    using traits_t = numeric_traits<Scalar_T>;
+
+    if (std::numeric_limits<Scalar_T>::has_infinity)
+      for (auto
+          this_it = this->begin();
+          this_it != this->end();
+          ++this_it)
+          if (traits_t::isInf(this_it->second))
+            return true;
+    return false;
+  }
+
   /// Check if a multivector contains any IEEE NaN values
   template< typename Scalar_T, const index_t LO, const index_t HI >
   auto

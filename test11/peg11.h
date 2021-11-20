@@ -49,49 +49,60 @@ namespace peg11
   template< class Multivector_T >
   static
   void
-  check(const Multivector_T& A, const Multivector_T& B, const string& msg, const bool need_inv = false)
+  check(const Multivector_T& lhs, const Multivector_T& rhs, const string& msg, const bool need_inv = false)
   {
-    typedef typename Multivector_T::scalar_t scalar_t;
+    const bool lhs_isinf = lhs.isinf();
+    const bool lhs_isnan = lhs.isnan();
+    const bool rhs_isinf = rhs.isinf();
+    const bool rhs_isnan = rhs.isnan();
+    const bool exceptional =
+      (rhs_isinf && !lhs_isinf) ||
+      (rhs_isnan && !lhs_isnan) ||
+      (!rhs_isinf && !need_inv && lhs_isinf) ||
+      (!rhs_isnan && !need_inv && lhs_isnan) ||
+      (!rhs_isinf && need_inv && !inv(rhs).isinf() && lhs_isinf) ||
+      (!rhs_isnan && need_inv && !inv(rhs).isnan() && lhs_isnan);
 
-    static const scalar_t scalar_eps  = numeric_limits<scalar_t>::epsilon();
-    scalar_t tol2;
-    if (control_t::verbose())
-      tol2 = 0.0;
-    else
-    {
-     typedef typename Multivector_T::framed_multi_t framed_multi_t;
-      const double nbr_terms = framed_multi_t(A).truncated(scalar_eps).nbr_terms();
-      scalar_t tol = scalar_eps *
-                     numeric_traits<scalar_t>::pow(scalar_t(2), numeric_limits<scalar_t>::digits / 16 + 4);
-      tol2 = tol * tol * scalar_t(std::max(nbr_terms, 1.0));
-    }
-    const bool relative = (norm(A) > tol2) && (norm(B) > tol2);
-    const scalar_t abs_norm_diff = norm(A-B);
-    const scalar_t norm_diff = (relative) ? abs_norm_diff/norm(A) : abs_norm_diff;
-    const bool A_isnan = A.isnan();
-    const bool B_isnan = B.isnan();
-    if ((A_isnan && !B_isnan)
-     ||(!A_isnan && !need_inv && B_isnan)
-     ||(!A_isnan && need_inv && !inv(A).isnan() && B_isnan)
-     || norm_diff > tol2)
+    if (exceptional)
     {
       cout << "Test failed: " << msg << endl;
+      cout << "lhs == " << lhs << endl;
+      return;
+    }
+    else
+    {
+      typedef typename Multivector_T::scalar_t scalar_t;
+
+      static const scalar_t scalar_eps  = numeric_limits<scalar_t>::epsilon();
+      scalar_t tol2;
+      if (control_t::verbose())
+        tol2 = 0.0;
+      else
+      {
+       typedef typename Multivector_T::framed_multi_t framed_multi_t;
+        const double nbr_terms = framed_multi_t(rhs).truncated(scalar_eps).nbr_terms();
+        scalar_t tol = scalar_eps *
+                       numeric_traits<scalar_t>::pow(scalar_t(2), numeric_limits<scalar_t>::digits / 16 + 4);
+        tol2 = tol * tol * scalar_t(std::max(nbr_terms, 1.0));
+      }
+      const bool relative = (norm(rhs) > tol2) && (norm(lhs) > tol2);
+      const scalar_t abs_norm_diff = norm(rhs-lhs);
+      const scalar_t norm_diff = (relative) ? abs_norm_diff/norm(rhs) : abs_norm_diff;
       if (norm_diff > tol2)
       {
         const streamsize prec = cout.precision(5);
+        cout << "Test failed: " << msg << endl;
         cout << ((relative) ? "Relative" : "Absolute");
         cout << " norm of difference == "
              << numeric_traits<scalar_t>::sqrt(norm_diff) << endl;
-         if (!control_t::verbose())
-         {
-           cout.precision(numeric_limits<scalar_t>::digits10);
-           cout << "lhs==" << B << endl;
-           cout << "rhs==" << A << endl;
-         }
+        if (!control_t::verbose())
+        {
+          cout.precision(numeric_limits<scalar_t>::digits10);
+          cout << "lhs == " << lhs << endl;
+          cout << "rhs == " << rhs << endl;
+        }
         cout.precision(prec);
       }
-      else
-        cout << "lhs == " << B << endl;
     }
   }
 
@@ -108,27 +119,27 @@ namespace peg11
     else
       A.write("A");
 
-    check(m_(1), exp(A)*exp(-A),    "exp(A)*exp(-A) != 1");
-    check(m_(1), exp(-A)*exp(A),    "exp(-A)*exp(A) != 1");
-    check(exp(A), exp(scalar(A))*exp(pure(A)),
+    check(exp(A)*exp(-A), m_(1),    "exp(A)*exp(-A) != 1");
+    check(exp(-A)*exp(A), m_(1),    "exp(-A)*exp(A) != 1");
+    check(exp(scalar(A))*exp(pure(A)), exp(A),
                                     "exp(scalar(A))*exp(pure(A)) != exp(A)");
-    check(exp(complexifier(A)*A), cos(A)+complexifier(A)*sin(A),
+    check(cos(A)+complexifier(A)*sin(A), exp(complexifier(A)*A),
                                     "cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)");
-    check(exp(A), cosh(A)+sinh(A),  "cosh(A)+sinh(A) != exp(A)");
-    check(sin(A), cos(A)*tan(A),    "cos(A)*tan(A) != sin(A)");
-    check(sinh(A), cosh(A)*tanh(A), "cosh(A)*tanh(A) != sinh(A)");
+    check(cosh(A)+sinh(A), exp(A),  "cosh(A)+sinh(A) != exp(A)");
+    check(cos(A)*tan(A), sin(A),    "cos(A)*tan(A) != sin(A)");
+    check(cosh(A)*tanh(A), sinh(A), "cosh(A)*tanh(A) != sinh(A)");
 
     if ((A == scalar(A)) || !((inv(A)).isnan()))
-      check(A, sqrt(A)*sqrt(A), "sqrt(A)*sqrt(A) != A");
+      check(sqrt(A)*sqrt(A), A,     "sqrt(A)*sqrt(A) != A");
     if (!((inv(A)).isnan()))
-      check(A, exp(log(A)),   "exp(log(A)) != A", true);
-    check(A, cos(acos(A)),    "cos(acos(A)) != A", true);
-    check(A, cosh(acosh(A)),  "cosh(acosh(A)) != A", true);
-    check(A, sin(asin(A)),    "sin(asin(A)) != A", true);
-    check(A, sinh(asinh(A)),  "sinh(asinh(A)) != A", true);
-    check(A, tan(atan(A)),    "tan(atan(A)) != A", true);
+      check(exp(log(A)), A,         "exp(log(A)) != A", true);
+    check(cos(acos(A)), A,          "cos(acos(A)) != A", true);
+    check(cosh(acosh(A)), A,        "cosh(acosh(A)) != A", true);
+    check(sin(asin(A)), A,          "sin(asin(A)) != A", true);
+    check(sinh(asinh(A)), A,        "sinh(asinh(A)) != A", true);
+    check(tan(atan(A)), A,          "tan(atan(A)) != A", true);
     if (!(log(m_(1)+A).isnan() || log(m_(1)-A).isnan()))
-      check(A, tanh(atanh(A)),"tanh(atanh(A)) != A", true);
+      check(tanh(atanh(A)), A,      "tanh(atanh(A)) != A", true);
     cout << endl;
     cout.precision(prec);
   }

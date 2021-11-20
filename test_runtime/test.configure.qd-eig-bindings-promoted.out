@@ -222,7 +222,7 @@ Boost at half the velocity of light
 v =
   0.5{1}
 A =
-  -2.22045e-16+0.549306{1}
+  -2.20635e-16+0.549306{1}
 s = exp(A / 2.0) =
   1.03795+0.278119{1}
 Electric field: G = s * F / s =
@@ -582,8 +582,8 @@ A
   3.14159{1,2,3}
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 Relative norm of difference == 2.0431e-05
-lhs==0.0432148
-rhs==0.0432139
+lhs == 0.0432148
+rhs == 0.0432139
 
 A
   -3.14159{1,2,3}
@@ -592,8 +592,8 @@ A
   3.14159{-1,1,2,3,4}
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 Relative norm of difference == 2.0431e-05
-lhs==0.0432148
-rhs==0.0432139
+lhs == 0.0432148
+rhs == 0.0432139
 
 A
   -3.14159{-1,1,2,3,4}
@@ -602,8 +602,8 @@ A
   3.14159{-2,-1,1,2,3,4,5}
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 Relative norm of difference == 2.0431e-05
-lhs==0.0432148
-rhs==0.0432139
+lhs == 0.0432148
+rhs == 0.0432139
 
 A
   -3.14159{-2,-1,1,2,3,4,5}
@@ -631,8 +631,8 @@ Test failed: cos(A)*tan(A) != sin(A)
 lhs == nan
 Test failed: tan(atan(A)) != A
 Relative norm of difference == 1.488e-05
-lhs==-0.00431415+314.161{-1}
-rhs==314.159{-1}
+lhs == -0.00431415+314.161{-1}
+rhs == 314.159{-1}
 
 A
   -314.159{-1}
@@ -640,12 +640,12 @@ Test failed: cos(A)*tan(A) != sin(A)
 lhs == nan
 Test failed: tan(atan(A)) != A
 Relative norm of difference == 1.8854e-05
-lhs==0.00431399-314.155{-1}
-rhs==-314.159{-1}
+lhs == 0.00431399-314.155{-1}
+rhs == -314.159{-1}
 Test failed: tanh(atanh(A)) != A
 Relative norm of difference == 1.1657e-05
-lhs==-314.163{-1}
-rhs==-314.159{-1}
+lhs == -314.163{-1}
+rhs == -314.159{-1}
 
 A
   {1}
@@ -734,8 +734,8 @@ A
   3.14159{1,2,3}
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 Relative norm of difference == 2.0431e-05
-lhs==0.0432148
-rhs==0.0432139
+lhs == 0.0432148
+rhs == 0.0432139
 
 A
   -3.14159{1,2,3}
@@ -744,8 +744,8 @@ A
   3.14159{-1,1,2,3,4}
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 Relative norm of difference == 2.0431e-05
-lhs==0.0432148
-rhs==0.0432139
+lhs == 0.0432148
+rhs == 0.0432139
 
 A
   -3.14159{-1,1,2,3,4}
@@ -754,8 +754,8 @@ A
   3.14159{-2,-1,1,2,3,4,5}
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 Relative norm of difference == 2.0431e-05
-lhs==0.0432148
-rhs==0.0432139
+lhs == 0.0432148
+rhs == 0.0432139
 
 A
   -3.14159{-2,-1,1,2,3,4,5}
@@ -781,8 +781,8 @@ Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 lhs == nan
 Test failed: tan(atan(A)) != A
 Relative norm of difference == 1.488e-05
-lhs==-0.00431415+314.161{-1}
-rhs==314.159{-1}
+lhs == -0.00431415+314.161{-1}
+rhs == 314.159{-1}
 
 A
   -314.159{-1}
@@ -790,12 +790,12 @@ Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 lhs == nan
 Test failed: tan(atan(A)) != A
 Relative norm of difference == 1.8854e-05
-lhs==0.00431399-314.155{-1}
-rhs==-314.159{-1}
+lhs == 0.00431399-314.155{-1}
+rhs == -314.159{-1}
 Test failed: tanh(atanh(A)) != A
 Relative norm of difference == 1.1657e-05
-lhs==-314.163{-1}
-rhs==-314.159{-1}
+lhs == -314.163{-1}
+rhs == -314.159{-1}
 
 A
   {1}
@@ -884,8 +884,8 @@ A
   3.14159265358979{1,2,3}
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 Relative norm of difference == 4.0143e-14
-lhs==0.0432139182637705
-rhs==0.0432139182637723
+lhs == 0.0432139182637705
+rhs == 0.0432139182637723
 
 A
   -3.14159265358979{1,2,3}
@@ -894,8 +894,8 @@ A
   3.14159265358979{-1,1,2,3,4}
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 Relative norm of difference == 4.0143e-14
-lhs==0.0432139182637705
-rhs==0.0432139182637723
+lhs == 0.0432139182637705
+rhs == 0.0432139182637723
 
 A
   -3.14159265358979{-1,1,2,3,4}
@@ -904,8 +904,8 @@ A
   3.14159265358979{-2,-1,1,2,3,4,5}
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 Relative norm of difference == 4.0143e-14
-lhs==0.0432139182637705
-rhs==0.0432139182637723
+lhs == 0.0432139182637705
+rhs == 0.0432139182637723
 
 A
   -3.14159265358979{-2,-1,1,2,3,4,5}
@@ -1018,8 +1018,8 @@ A
   3.14159265358979{1,2,3}
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 Relative norm of difference == 4.0143e-14
-lhs==0.0432139182637705
-rhs==0.0432139182637723
+lhs == 0.0432139182637705
+rhs == 0.0432139182637723
 
 A
   -3.14159265358979{1,2,3}
@@ -1028,8 +1028,8 @@ A
   3.14159265358979{-1,1,2,3,4}
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 Relative norm of difference == 4.0143e-14
-lhs==0.0432139182637705
-rhs==0.0432139182637723
+lhs == 0.0432139182637705
+rhs == 0.0432139182637723
 
 A
   -3.14159265358979{-1,1,2,3,4}
@@ -1038,8 +1038,8 @@ A
   3.14159265358979{-2,-1,1,2,3,4,5}
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 Relative norm of difference == 4.0143e-14
-lhs==0.0432139182637705
-rhs==0.0432139182637723
+lhs == 0.0432139182637705
+rhs == 0.0432139182637723
 
 A
   -3.14159265358979{-2,-1,1,2,3,4,5}
@@ -1170,8 +1170,8 @@ A
   31.4159265358979324{-2,-1,1,2,3,4,5}
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 Absolute norm of difference == 2.2711e-14
-lhs==0
-rhs==2.27110106832409384e-14
+lhs == 0
+rhs == 2.27110106832409384e-14
 
 A
   -31.4159265358979324{-2,-1,1,2,3,4,5}
@@ -1296,8 +1296,8 @@ A
   31.4159265358979324{-2,-1,1,2,3,4,5}
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 Absolute norm of difference == 2.2711e-14
-lhs==0
-rhs==2.27110106832409384e-14
+lhs == 0
+rhs == 2.27110106832409384e-14
 
 A
   -31.4159265358979324{-2,-1,1,2,3,4,5}
@@ -1422,8 +1422,8 @@ A
   3.1415926535897932384626433832795e+01{-2,-1,1,2,3,4,5}
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 Relative norm of difference == 4.81518e-07
-lhs==2.271099974748835848004091531038e-14
-rhs==2.2711010683240938386792752390932e-14
+lhs == 2.271099974748835848004091531038e-14
+rhs == 2.2711010683240938386792752390932e-14
 
 A
   -3.1415926535897932384626433832795e+01{-2,-1,1,2,3,4,5}
@@ -1548,8 +1548,8 @@ A
   3.1415926535897932384626433832795e+01{-2,-1,1,2,3,4,5}
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 Relative norm of difference == 4.81518e-07
-lhs==2.271099974748835848004091531038e-14
-rhs==2.2711010683240938386792752390932e-14
+lhs == 2.271099974748835848004091531038e-14
+rhs == 2.2711010683240938386792752390932e-14
 
 A
   -3.1415926535897932384626433832795e+01{-2,-1,1,2,3,4,5}
@@ -1674,8 +1674,8 @@ A
   3.14159265358979323846264338327950288419716939937510582097494459e+01{-2,-1,1,2,3,4,5}
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 Relative norm of difference == 8.03612e-39
-lhs==2.27110106832409383867927523909354754447274572008972793969216094e-14
-rhs==2.27110106832409383867927523909354754449099655455022911741121068e-14
+lhs == 2.27110106832409383867927523909354754447274572008972793969216094e-14
+rhs == 2.27110106832409383867927523909354754449099655455022911741121068e-14
 
 A
   -3.14159265358979323846264338327950288419716939937510582097494459e+01{-2,-1,1,2,3,4,5}
@@ -1804,8 +1804,8 @@ A
   3.14159265358979323846264338327950288419716939937510582097494459e+01{-2,-1,1,2,3,4,5}
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 Relative norm of difference == 8.03612e-39
-lhs==2.27110106832409383867927523909354754447274572008972793969216094e-14
-rhs==2.27110106832409383867927523909354754449099655455022911741121068e-14
+lhs == 2.27110106832409383867927523909354754447274572008972793969216094e-14
+rhs == 2.27110106832409383867927523909354754449099655455022911741121068e-14
 
 A
   -3.14159265358979323846264338327950288419716939937510582097494459e+01{-2,-1,1,2,3,4,5}
