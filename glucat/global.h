@@ -110,9 +110,6 @@ namespace glucat
   /// Default highest index in an index set
   const index_t DEFAULT_HI =  index_t(BITS_PER_SET_VALUE / 2);
 
-  /// Default for truncation
-  const double DEFAULT_TRUNCATION = std::numeric_limits<float>::epsilon();
-
   /// Precision policy
   enum precision_t
   {
