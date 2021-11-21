@@ -33,6 +33,7 @@
 
 #include "glucat/global.h"
 
+#include <limits>
 #include <string>
 #include <utility>
 #include <vector>
@@ -51,6 +52,9 @@ namespace glucat
     using vector_t = std::vector<Scalar_T>;
 
     static  auto   classname() -> const std::string;
+
+    /// Default for truncation
+    static const Scalar_T default_truncation;
 
     virtual ~clifford_algebra() = default;
 
@@ -124,7 +128,7 @@ namespace glucat
     /// Maximum of absolute values of components of multivector: multivector infinity norm
     virtual auto max_abs     () const -> Scalar_T = 0;
     /// Remove all terms with relative size smaller than limit
-    virtual auto truncated   (const Scalar_T& limit = Scalar_T(DEFAULT_TRUNCATION)) const -> const multivector_t = 0;
+    virtual auto truncated   (const Scalar_T& limit = default_truncation) const -> const multivector_t = 0;
     /// Check if a multivector contains any infinite values
     virtual auto isinf       () const -> bool = 0;
     /// Check if a multivector contains any IEEE NaN values
@@ -172,7 +176,7 @@ namespace glucat
     auto quad        () const                          -> Scalar_T            override;\
     auto norm        () const                          -> Scalar_T            override;\
     auto max_abs     () const                          -> Scalar_T            override;\
-    auto truncated   (const Scalar_T& limit = Scalar_T(DEFAULT_TRUNCATION)) const      \
+    auto truncated   (const Scalar_T& limit = multivector_t::default_truncation) const \
                                                        -> const multivector_t override;\
     auto isinf       () const                          -> bool                override;\
     auto isnan       () const                          -> bool                override;\

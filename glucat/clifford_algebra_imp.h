@@ -55,7 +55,6 @@
 // http://www.math.rutgers.edu/~zeilberg/tokhniot/PADE
 
 #include "glucat/clifford_algebra.h"
-
 #include "glucat/scalar.h"
 
 #include <array>
@@ -67,6 +66,13 @@ namespace glucat
   clifford_algebra<Scalar_T,Index_Set_T,Multivector_T>::
   classname() -> const std::string
   { return "clifford_algebra"; }
+
+  /// Default for truncation
+  template< typename Scalar_T, typename Index_Set_T, typename Multivector_T>
+  const
+  Scalar_T
+  clifford_algebra<Scalar_T,Index_Set_T,Multivector_T>::
+  default_truncation = std::numeric_limits<Scalar_T>::epsilon();
 
   /// Test for inequality of multivectors
   template
