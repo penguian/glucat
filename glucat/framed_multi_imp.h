@@ -232,25 +232,25 @@ namespace glucat
     if (dim >= Tune_P::inv_fast_dim_threshold)
       try
       {
-        *this = val.template fast_framed_multi<Scalar_T>();
+        *this = (val.template fast_framed_multi<Scalar_T>()).truncated();
         return;
       }
       catch (const glucat_error& e)
       { }
 
-    const index_set_t frm = val.frame();
-    const set_value_t algebra_dim = 1 << frm.count();
     const Scalar_T val_norm = traits_t::to_scalar_t(val.norm());
     if (traits_t::isNaN_or_isInf(val_norm))
     {
       *this = traits_t::NaN();
       return;
     }
-    const Scalar_T eps = std::numeric_limits<Scalar_T>::epsilon();
-    const Scalar_T tol = traits_t::abs(val_norm * eps * eps);
+    const index_set_t frm = val.frame();
+    const set_value_t algebra_dim = 1 << frm.count();
 #if defined(_GLUCAT_MAP_IS_HASH)
     const size_t max_size = std::min<size_t>(algebra_dim, matrix::nnz(val.m_matrix));
-    *this = multivector_t(_GLUCAT_HASH_SIZE_T(max_size));
+    auto result = multivector_t(_GLUCAT_HASH_SIZE_T(max_size));
+#else
+    auto result = multivector_t();
 #endif
     for (set_value_t
         stv = 0;
@@ -260,10 +260,10 @@ namespace glucat
       const index_set_t ist = index_set_t(stv, frm, true);
       const Scalar_T crd =
         traits_t::to_scalar_t(matrix::inner<Other_Scalar_T>(val.basis_element(ist), val.m_matrix));
-      const Scalar_T abs_crd = traits_t::abs(crd);
-      if ((abs_crd * abs_crd) > tol)
-        this->insert(term_t(ist, crd));
+      if (crd != Scalar_T(0))
+        result.insert(term_t(ist, crd));
     }
+    *this = result.truncated();
   }
 
   /// Test for equality of multivectors
@@ -1376,33 +1376,57 @@ namespace glucat
   auto
   operator<< (std::ostream& os, const framed_multi<Scalar_T,LO,HI>& val) -> std::ostream&
   {
+    using limits_t = std::numeric_limits<Scalar_T>;
     if (val.empty())
       os << 0;
     else if (val.isnan())
-      os << std::numeric_limits<Scalar_T>::quiet_NaN();
+      os << limits_t::quiet_NaN();
     else if (val.isinf())
     {
-      const Scalar_T& inf = std::numeric_limits<Scalar_T>::infinity();
+      const Scalar_T& inf = limits_t::infinity();
       os << (scalar(val) < 0.0 ? -inf : inf);
     }
     else
     {
+      using traits_t = numeric_traits<Scalar_T>;
       using multivector_t = framed_multi<Scalar_T, LO, HI>;
-      using map_t = typename multivector_t::map_t;
-      using sorted_map_t = typename multivector_t::sorted_map_t;
-      using sorted_iterator = typename sorted_map_t::const_iterator;
-      sorted_map_t sorted_val;
-      sorted_range< map_t, sorted_map_t > sorted_val_range(sorted_val, val);
-      auto sorted_it = sorted_val_range.sorted_begin;
-      os << *sorted_it;
-      for (++sorted_it;
-          sorted_it != sorted_val_range.sorted_end;
-          ++sorted_it)
+      Scalar_T truncation;
+      switch (os.flags() & std::ios::floatfield)
       {
-        const Scalar_T& scr = sorted_it->second;
-        if (scr >= 0.0)
-          os << '+';
+        case std::ios_base::scientific:
+          truncation = Scalar_T(1) / traits_t::pow(Scalar_T(10), int(os.precision()) + 1);
+          break;
+        case std::ios_base::fixed:
+          truncation = Scalar_T(1) / (traits_t::pow(Scalar_T(10), int(os.precision())) * val.max_abs());
+          break;
+        case std::ios_base::fixed | std::ios_base::scientific:
+          truncation = multivector_t::default_truncation;
+          break;
+        default:
+          truncation = Scalar_T(1) / traits_t::pow(Scalar_T(10), int(os.precision()));
+          break;
+      }
+      auto truncated_val = val.truncated(truncation);
+      if (truncated_val.empty())
+        os << 0;
+      else
+      {
+        using map_t = typename multivector_t::map_t;
+        using sorted_map_t = typename multivector_t::sorted_map_t;
+        using sorted_iterator = typename sorted_map_t::const_iterator;
+        sorted_map_t sorted_val;
+        const auto sorted_val_range = sorted_range< map_t, sorted_map_t >(sorted_val, truncated_val);
+        auto sorted_it = sorted_val_range.sorted_begin;
         os << *sorted_it;
+        for (++sorted_it;
+            sorted_it != sorted_val_range.sorted_end;
+            ++sorted_it)
+        {
+          const Scalar_T& scr = sorted_it->second;
+          if (scr >= 0.0)
+            os << '+';
+          os << *sorted_it;
+        }
       }
     }
     return os;
@@ -1626,18 +1650,18 @@ namespace glucat
   {
     using traits_t = numeric_traits<Scalar_T>;
 
-    const Scalar_T abs_limit = traits_t::abs(limit);
-    if (this->isnan())
+    if (this->isnan() || this->isinf())
       return *this;
-    Scalar_T top = max_abs();
+    const Scalar_T truncation = traits_t::abs(limit);
+    const Scalar_T top = max_abs();
     multivector_t result;
     if (top != Scalar_T(0))
       for (auto
           this_it = this->begin();
           this_it != this->end();
           ++this_it)
-        if (traits_t::abs(this_it->second / top) > abs_limit)
-          result.insert(term_t(this_it->first, this_it->second));
+        if (traits_t::abs(this_it->second) > top * truncation)
+          result.insert(*this_it);
     return result;
   }
 

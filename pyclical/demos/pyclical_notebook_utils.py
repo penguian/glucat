@@ -108,7 +108,7 @@ class notebook_context(interaction_context):
     def check_exec(self, prompt, var_name, value_str):
         self.print_fill("Exercise: Enter a Python statement to " + prompt)
         self.print_exec("")
-        self.print_fill("Here is one way to do this, and then print(the result:)")
+        self.print_fill("Here is one way to do this, and then print the result:")
         self.print_exec(var_name + " = " + value_str + "; print(" + var_name + ")")
 
     def input_eval(self, prompt):

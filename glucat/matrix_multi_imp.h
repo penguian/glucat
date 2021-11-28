@@ -281,9 +281,10 @@ namespace glucat
   template< typename Scalar_T, const index_t LO, const index_t HI >
   template< typename Other_Scalar_T >
   matrix_multi<Scalar_T,LO,HI>::
-  matrix_multi(const framed_multi<Other_Scalar_T,LO,HI>& val, const index_set_t frm, const bool prechecked)
+  matrix_multi(const framed_multi<Other_Scalar_T,LO,HI>& framed_val, const index_set_t frm, const bool prechecked)
   {
-    const index_set_t our_frame = val.frame() | frm;
+    const auto val = framed_val.truncated();
+    const auto our_frame = val.frame() | frm;
     if (val.size() >= Tune_P::fast_size_threshold)
       try
       {
