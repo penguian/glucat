@@ -23,7 +23,7 @@
 >>> print(exp(log_e1))
 {1}
 >>> print(abs(exp(log_e1) - e1))
-8.659560562354932e-17
+8.654370003809434e-17
 
 >>> v = clifford('-2{1}+2{2}-3{3}')
 >>> print(v)
@@ -43,7 +43,7 @@
 >>> print(exp(log_v))
 -2{1}+2{2}-3{3}
 >>> print(abs(exp(log_v) - v))
-4.934005109421751e-16
+4.934184810516428e-16
 
 >>> x = clifford('-2{1}+2{2}-3{3}+4{-1,1,2}')
 >>> print(x)
@@ -63,17 +63,17 @@
 >>> print(exp(log_x))
 -2{1}+2{2}-3{3}+4{-1,1,2}
 >>> print(abs(exp(log_x) - x))
-9.037216795371523e-16
+9.040343256719304e-16
 
 >>> x = random_clifford(istpq(2,1))
 
 >>> sqrt_x = sqrt(x)
 >>> print(abs(sqrt_x*sqrt_x - x))
-1.0935446067931202e-16
+1.0923744464875267e-16
 
 >>> log_x = log(x)
 >>> print(abs(exp(log_x) - x))
-2.3881309437713383e-16
+2.3764198234821176e-16
 
     SQUARE ROOTS AND LOGARITHMS OF ROTORS
     in Conformal Geometric Algebra R_(4,1).
@@ -104,7 +104,7 @@
 >>> print(sqrt_R*sqrt_R)
 -2.112+3.636{-1,1}+1.855{-1,2}+3.761{1,2}-0.4664{-1,3}-1.583{1,3}+0.7184{2,3}-1.744{-1,4}-1.852{1,4}+2.32{2,4}-0.5215{3,4}-1.795{-1,1,2,3}-2.514{-1,1,2,4}+0.5386{-1,2,3,4}-0.1795{1,2,3,4}
 >>> print(abs(sqrt_R*sqrt_R - R))
-8.306989220373087e-16
+8.166697862302118e-16
 
     Now use [D+V (5.4)] to try to obtain a square root of R.
 
@@ -122,7 +122,7 @@
     The [D+V (5.4)] square root of R is even.
 
 >>> print(abs(odd(dv_sqrt_R)))
-4.029378408357573e-16
+0.0
 
      The PyClical square root of R is odd.
 
@@ -140,7 +140,7 @@
 >>> print(exp(log_R))
 -2.112+3.636{-1,1}+1.855{-1,2}+3.761{1,2}-0.4664{-1,3}-1.583{1,3}+0.7184{2,3}-1.744{-1,4}-1.852{1,4}+2.32{2,4}-0.5215{3,4}-1.795{-1,1,2,3}-2.514{-1,1,2,4}+0.5386{-1,2,3,4}-0.1795{1,2,3,4}
 >>> print(abs(exp(log_R) - R))
-1.966708266065434e-15
+1.8093490176629916e-15
 
     Now use [D+V, Section 5.3] to try to obtain a logarithm of R or -R.
 
@@ -159,15 +159,15 @@
     Check that F_m and F_p are commuting 2-blades.
 
 >>> print(abs(F_m-F_m(2)))
-8.494362503530221e-15
+7.308279820456105e-15
 >>> print(F_m**2)
 -0.8372
 >>> print(abs(F_p-F_p(2)))
-9.841720437546281e-15
+8.48279581318209e-15
 >>> print(F_p**2)
 835.8
 >>> print(abs(F_p*F_m - F_m*F_p))
-1.8568821170561153e-13
+2.2702867829832967e-13
 
     Set S_{m/p} = F_{m/p}, as per [D+V, remark before (5.26)].
 
@@ -201,9 +201,9 @@
 >>> print(exp(dv_log_R))
 2.112-3.636{-1,1}-1.855{-1,2}-3.761{1,2}+0.4664{-1,3}+1.583{1,3}-0.7184{2,3}+1.744{-1,4}+1.852{1,4}-2.32{2,4}+0.5215{3,4}+1.795{-1,1,2,3}+2.514{-1,1,2,4}-0.5386{-1,2,3,4}+0.1795{1,2,3,4}
 >>> print(abs(exp(dv_log_R) - R))
-15.555432293877459
+15.555432293877457
 >>> print(abs(exp(dv_log_R) + R))
-3.7997562635379275e-14
+4.0751198484679405e-14
 
     Use the pseudoscalar i = e({-1,1,2,3,4}) to obtain the log of -R or R.
 
@@ -227,7 +227,7 @@
     Now use the properties of i to find an expression for the log of -R or R.
 
 >>> print(abs(exp(dv_log_R + i*pi) - R))
-3.672790890243483e-14
+4.048224177362061e-14
 >>> print(abs(exp(dv_log_R + i*pi) + R))
 15.555432293877457
 
