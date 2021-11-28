@@ -1,0 +1,160 @@
+    # Time and Relative Directions in Space.
+    There is more to space and time than you might have learnt at school.
+    In this presentation, we explore space and time with the help of Grassmann's and Clifford's geometric algebras.
+    This presentation is based on one given at Aston University in 2014, hosted by John Fletcher.
+>>> from PyClical import *
+>>> from IPython.display import Image
+    A *vector* is a quantity with a *direction* and a *magnitude*.
+
+    We know how to add vectors in space ...
+>>> a = 3*e(1); print(a)
+3{1}
+>>> b = 3*e(1)+4*e(2); print(b)
+3{1}+4{2}
+>>> c = a + b; print(c)
+6{1}+4{2}
+
+    ... we know how to subtract vectors ...
+>>> d = b - a; print(d)
+4{2}
+
+    ... but how do we multiply vectors, divide vectors, rotate vectors !?
+    There is more than one way to multiply vectors.
+
+    The *scalar product* of $a$ and $b$ is denoted by $a \cdot b$ (or $(a,b)$ or $\langle a,b \rangle$).
+    If we express $b$ as $b=b_{||}+b_{\perp}$, where $b_{||}$ is parallel to $a$, and $b_{\perp}$ is orthogonal to $a$, then we have
+    $|a \cdot b| = \| a \| \| b_{||} \|$, and $a \cdot b = b \cdot a$.
+>>> print(a & b); print(b & a)
+9
+9
+    Grassmann's *exterior (wedge) product* obeys different rules ...
+    $|a \wedge b| = \|a\| \|b_{\perp}\|$, and $a \wedge b = - b \wedge a$.
+>>> print(a ^ b); print(b ^ a)
+12{1,2}
+-12{1,2}
+>>> Image(url='http://upload.wikimedia.org/wikipedia/commons/6/6c/Hermann_Gra%C3%9Fmann.jpg')
+    Hermann Grassmann (1809-1877) [Wikimedia Commons]
+    Given a basis $\\{v_1, v_2, \ldots, v_n\\} \subset \mathbb{R}^n$:
+    $v_1 \wedge v_2$ is a *bivector* - a directed area in a 2-plane.
+    $v_1 \wedge v_2 \wedge v_3$ is a *trivector* - a directed volume of a 3-space.
+    $v_1 \wedge v_2 \wedge \ldots \wedge v_n$ is an $n$-*vector* - a directed volume of an $n$-space.
+
+    There is no $n+1$-vector in $n$-space. Why?
+    The wedge product detects linear dependence.
+    The set of vectors $\\{v_1, v_2, \ldots, v_m\\}$ is linearly dependent if and only if the product $v_1 \wedge v_2 \wedge \ldots \wedge v_m = 0$.
+>>> print(a)
+3{1}
+>>> print(b)
+3{1}+4{2}
+>>> c = 3 * a - 2 * b; print(c)
+3{1}-8{2}
+>>> print(a ^ b)
+12{1,2}
+>>> print(a ^ b ^ c)
+0
+    Given a basis $\\{v_1, v_2, \ldots, v_n\\} \subset \mathbb{R}^n$, the *Grassmann algebra* of $\mathbb{R}^n$ is the $2^n$-dimensional space of *multivectors* of the form
+    $x_{\emptyset} + x_{\\{1\\}} v_1 + \ldots$$+ x_{\\{n\\}} v_n + x_{\\{1,2\\}} v_1 \wedge v_2 + \ldots + x_{\\{n-1,n\\}} v_{n-1} \wedge v_n + \ldots$$+ x_{\\{1,\ldots,n\\}} v_1 \wedge \ldots \wedge v_n$.
+
+    The wedge product and Grassmann algebras are used in differential geometry and in physics and engineering.
+    William Kingdon Clifford had other ideas ...
+>>> Image(url='http://upload.wikimedia.org/wikipedia/commons/e/eb/Clifford_William_Kingdon.jpg')
+    William Kingdon Clifford (1845-1879) [Wikimedia Commons]
+    What if we *add* the inner product to the wedge product ... ?
+>>> c = (a ^ b) + (a & b); print(c)
+9+12{1,2}
+    This is called the *Clifford* (geometric) product of vectors.
+    $a b := a \wedge b + a \cdot b$.
+>>> c = a * b; print(c)
+9+12{1,2}
+    The Clifford product has remarkable properties.
+    It detects when two vectors $v_1, v_2$ are orthogonal. In this case, they *anticommute*: $v_1 v_2 = - v_2 v_1$.
+>>> v_1 = e(1) + 2 * e(2); v_2 = e(2) - 2*e(1)
+>>> print(v_1 * v_2); print(v_2 * v_1); print(v_1 & v_2)
+5{1,2}
+-5{1,2}
+0
+    The Clifford square of a vector is the square of its length.
+    $b b = b \wedge b + b \cdot b = b \cdot b = \|b\|^2$.
+>>> b = 3*e(1)+4*e(2); print(b); print(b*b); print(abs(b)**2)
+3{1}+4{2}
+25
+25.0
+    If $\\{e_1, e_2, \ldots, e_n\\}$ is an orthogonal basis of $\mathbb{R}^n$, then the wedge and Clifford products of *disjoint* subsets of this basis coincide ...
+    $e_1 e_2 = e_1 \wedge e_2, \ldots, e_1 e_2 \ldots e_n = e_1 \wedge e_2 \wedge \ldots \wedge e_n$
+>>> print(e(1)*e(2)); print(e(1) ^ e(2))
+{1,2}
+{1,2}
+    ... so that every multivector $x$ in the $2^n$-dimensional Grassmann algebra on $\mathbb{R}^n$ can be expressed as
+    $x_{\emptyset} + x_{\\{1\\}} e_1 + \ldots$$+ x_{\\{n\\}} e_n + x_{\\{1,2\\}} e_1 e_2 + \ldots + x_{\\{n-1,n\\}} e_{n-1} e_n + \ldots$$+ x_{\\{1,\ldots,n\\}} e_1 e_2 \ldots e_n$.
+    This $2^n$-dimensional vector space with the Clifford product is called the *Clifford algebra* on $\mathbb{R}^n$.
+    So ... what about *relative directions in space*?
+    Well, now that we know that the Clifford square of every vector is the square of its length, we know how to calculate the Clifford inverse of every non-zero vector: $a^{-1} = \frac{a}{a a}$.
+>>> print(a); print(inv(a)); print(inv(a)*a); print(a*inv(a))
+3{1}
+0.3333{1}
+1
+1
+    With the convention that $a/b := a b^{-1}$, we can now divide vectors.
+>>> print(a); print(a/b); print((a/b)*b)
+3{1}
+0.36+0.48{1,2}
+3{1}
+    Fine, but what use is that?
+    It turns out that the ability to divide vectors is very useful in expressing orthogonal transformations.
+    The expression $-a b / a = -a b a^{-1}$ is the reflection of $b$ in the direction of $a$.
+    $-a b a^{-1} = -a (b_{\perp} + b_{||}) a^{-1} = -a b_{\perp} a^{-1} -a b_{||} a^{-1}$$= a a^{-1} b_{\perp} - a a^{-1} b_{||} = b_{\perp} - b_{||}$.
+>>> print(a)
+3{1}
+>>> print(b); print(abs(b))
+3{1}+4{2}
+5.0
+>>> c = -a * b / a; print(c); print(abs(c))
+-3{1}+4{2}
+5.0
+    The *Cartan-Dieudonne' Theorem* says that every orthogonal transformation on $\mathbb{R}^n$ can be expressed as the product of at most $n$ vectors.
+    In particular, $x \mapsto b a x (b a)^{-1}$ is a reflection in the direction of $a$ followed by a reflection in the direction of $b$.
+    This is also a rotation through *twice* the angle between $a$ and $b$.
+>>> x = e(1)+2*e(2); print(x); print(x*x)
+{1}+2{2}
+5
+>>> y = (b * a) * x * inv(b * a); print(y); print(y*y)
+-2.2{1}+0.4{2}
+5
+>>> print(acos((a/abs(a)) & (b/abs(b))) * 180/pi)
+53.13
+>>> print(acos((x/abs(x)) & (y/abs(y))) * 180/pi)
+106.3
+    You can take the exponential of a multivector, using the usual Taylor expansion ...
+    $\operatorname{e}^{x} = 1 + x + x^2/2 + x^3/(3!) + \ldots$
+    The exponential of a vector is always a scalar plus a vector.
+>>> print(a); print(exp(a))
+3{1}
+10.07+10.02{1}
+>>> print(b); print(exp(b))
+3{1}+4{2}
+74.21+44.52{1}+59.36{2}
+    It turns out that every special orthogonal transformation can be expressed as the exponential of a bivector (when $n \geq 2$) ...
+    $x \mapsto \operatorname{e}^{B} x \operatorname{e}^{-B} = (-\operatorname{e}^{B}) x (-\operatorname{e}^{-B})$.
+>>> print(x); print(x*x)
+{1}+2{2}
+5
+>>> y = exp(a ^ b) * x * exp(-a ^ b); print(y); print(y*y)
+-1.387{1}+1.754{2}
+5
+    ... and the set of exponentials of bivectors forms a group called the *Spin group* $\operatorname{Spin}(n)$ over $\mathbb{R}^n$.
+    But whatever happened to *time* ...?
+    Einstein and Minkowski showed that *space-time* can be described using the *Minkowski space* $\mathbb{R}^{3,1}$.
+    This is a space with a basis $\\{e_{\\{-1\\}},e_{\\{1\\}},e_{\\{2\\}},e_{\\{3\\}}\\}$, where $e_{\\{-1\\}}^2 = -1$.
+    In this space, the special orthogonal transformations connected to the identity are called the *restricted Lorentz transformations*.
+    Just like rotations in space, these can also be expressed as the exponential of a bivector.
+>>> A = -3*e({-1,1})-e({-1,2})-2*e({-1,3}); print(A)
+-3{-1,1}-{-1,2}-2{-1,3}
+>>> s = exp(A/2); print(s)
+3.324-2.542{-1,1}-0.8472{-1,2}-1.694{-1,3}
+>>> x = 2*e(-1)+2*e(1)+3*e(2)+5*e(3); print(x); print(x*x)
+2{-1}+2{1}+3{2}+5{3}
+34
+>>> y = s*x/s; print(y); print(y*y)
+-64.81{-1}+50.03{1}+19.01{2}+37.02{3}
+34
+    There is even more to time and space than this, but *our* time has run out.
