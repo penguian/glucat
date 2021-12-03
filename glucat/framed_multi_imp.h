@@ -1570,9 +1570,9 @@ namespace glucat
         if (ist.max() > p-4)
         {
           auto var_term = var_term_t();
-          for (index_t
-              n = 0;
-              n != 4;
+          for (auto
+              n = index_t(0);
+              n != index_t(4);
               ++n)
             if (ist[n+p-3])
               var_term *= term_t(index_set_t(n-q-4), Scalar_T(1)) * tqm4321;
@@ -1612,9 +1612,9 @@ namespace glucat
         if (ist.min() < -q+4)
         {
           auto var_term = var_term_t();
-          for (index_t
-              n = 0;
-              n != 4;
+          for (auto
+              n = index_t(0);
+              n != index_t(4);
               ++n)
             if (ist[n-q])
               var_term *= term_t(index_set_t(n+p+1), Scalar_T(1)) * tpp1234;
@@ -1649,7 +1649,7 @@ namespace glucat
     {
       const auto ist = this_term.first;
       auto var_term = var_term_t(index_set_t(), this_term.second);
-      for (index_t
+      for (auto
           n = -q;
           n != p;
           ++n)

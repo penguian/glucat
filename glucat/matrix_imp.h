@@ -76,35 +76,28 @@ namespace glucat { namespace matrix
   kron(const LHS_T& lhs, const RHS_T& rhs) -> const
   RHS_T
   {
-    using matrix_t = RHS_T;
-    using matrix_index_t = typename matrix_t::size_type;
-    const matrix_index_t rhs_s1 = rhs.size1();
-    const matrix_index_t rhs_s2 = rhs.size2();
-    matrix_t result(lhs.size1()*rhs_s1, lhs.size2()*rhs_s2);
+    const auto rhs_s1 = rhs.size1();
+    const auto rhs_s2 = rhs.size2();
+    auto result = RHS_T(lhs.size1()*rhs_s1, lhs.size2()*rhs_s2);
     result.clear();
 
-    using Scalar_T = typename matrix_t::value_type;
-    using lhs_const_iterator1 = typename LHS_T::const_iterator1;
-    using lhs_const_iterator2 = typename LHS_T::const_iterator2;
-    using rhs_const_iterator1 = typename RHS_T::const_iterator1;
-    using rhs_const_iterator2 = typename RHS_T::const_iterator2;
-    for (lhs_const_iterator1
+    for (auto
         lhs_it1 = lhs.begin1();
         lhs_it1 != lhs.end1();
         ++lhs_it1)
-      for (lhs_const_iterator2
+      for (auto
           lhs_it2 = lhs_it1.begin();
           lhs_it2 != lhs_it1.end();
           ++lhs_it2)
       {
-        const matrix_index_t start1 = rhs_s1 * lhs_it2.index1();
-        const matrix_index_t start2 = rhs_s2 * lhs_it2.index2();
-        const Scalar_T& lhs_val = *lhs_it2;
-        for (rhs_const_iterator1
+        const auto start1 = rhs_s1 * lhs_it2.index1();
+        const auto start2 = rhs_s2 * lhs_it2.index2();
+        const auto& lhs_val = *lhs_it2;
+        for (auto
             rhs_it1 = rhs.begin1();
             rhs_it1 != rhs.end1();
             ++rhs_it1)
-          for (rhs_const_iterator2
+          for (auto
               rhs_it2 = rhs_it1.begin();
               rhs_it2 != rhs_it1.end();
               ++rhs_it2)
@@ -119,34 +112,27 @@ namespace glucat { namespace matrix
   mono_kron(const LHS_T& lhs, const RHS_T& rhs) -> const
   RHS_T
   {
-    using matrix_t = RHS_T;
-    using matrix_index_t = typename matrix_t::size_type;
-    const matrix_index_t rhs_s1 = rhs.size1();
-    const matrix_index_t rhs_s2 = rhs.size2();
-    const matrix_index_t dim = lhs.size1()*rhs_s1;
-    matrix_t result(dim, dim, dim);
+    const auto rhs_s1 = rhs.size1();
+    const auto rhs_s2 = rhs.size2();
+    const auto dim = lhs.size1()*rhs_s1;
+    auto result = RHS_T(dim, dim, dim);
     result.clear();
 
-    using Scalar_T = typename matrix_t::value_type;
-    using lhs_const_iterator1 = typename LHS_T::const_iterator1;
-    using lhs_const_iterator2 = typename LHS_T::const_iterator2;
-    using rhs_const_iterator1 = typename RHS_T::const_iterator1;
-    using rhs_const_iterator2 = typename RHS_T::const_iterator2;
-    for (lhs_const_iterator1
+    for (auto
         lhs_it1 = lhs.begin1();
         lhs_it1 != lhs.end1();
         ++lhs_it1)
     {
-      const lhs_const_iterator2 lhs_it2 = lhs_it1.begin();
-      const matrix_index_t start1 = rhs_s1 * lhs_it2.index1();
-      const matrix_index_t start2 = rhs_s2 * lhs_it2.index2();
-      const Scalar_T& lhs_val = *lhs_it2;
-      for (rhs_const_iterator1
+      const auto lhs_it2 = lhs_it1.begin();
+      const auto start1 = rhs_s1 * lhs_it2.index1();
+      const auto start2 = rhs_s2 * lhs_it2.index2();
+      const auto& lhs_val = *lhs_it2;
+      for (auto
           rhs_it1 = rhs.begin1();
           rhs_it1 != rhs.end1();
           ++rhs_it1)
       {
-        const rhs_const_iterator2 rhs_it2 = rhs_it1.begin();
+        const auto rhs_it2 = rhs_it1.begin();
         result(start1 + rhs_it2.index1(), start2 + rhs_it2.index2()) = lhs_val * *rhs_it2;
       }
     }
@@ -163,22 +149,20 @@ namespace glucat { namespace matrix
              const typename RHS_T::size_type res_s2)
   {
     // Definition matches [v] Section 4, Theorem 4.1.
-    using matrix_t = RHS_T;
-    using matrix_index_t = typename matrix_t::size_type;
-    const matrix_index_t start1 = res_s1 * lhs_it2.index1();
-    const matrix_index_t start2 = res_s2 * lhs_it2.index2();
+    const auto start1 = res_s1 * lhs_it2.index1();
+    const auto start2 = res_s2 * lhs_it2.index2();
     using ublas::range;
-    const range& range1 = range(start1, start1 + res_s1);
-    const range& range2 = range(start2, start2 + res_s2);
-    using matrix_range_t = ublas::matrix_range<const matrix_t>;
-    const matrix_range_t& rhs_range = matrix_range_t(rhs, range1, range2);
-    using Scalar_T = typename matrix_t::value_type;
-    const Scalar_T lhs_val = numeric_traits<Scalar_T>::to_scalar_t(*lhs_it2);
-    for (typename matrix_range_t::const_iterator1
+    const auto& range1 = range(start1, start1 + res_s1);
+    const auto& range2 = range(start2, start2 + res_s2);
+    using matrix_range_t = ublas::matrix_range<const RHS_T>;
+    const auto& rhs_range = matrix_range_t(rhs, range1, range2);
+    using Scalar_T = typename RHS_T::value_type;
+    const auto lhs_val = numeric_traits<Scalar_T>::to_scalar_t(*lhs_it2);
+    for (auto
         rhs_it1 = rhs_range.begin1();
         rhs_it1 != rhs_range.end1();
         ++rhs_it1)
-      for (typename matrix_range_t::const_iterator2
+      for (auto
           rhs_it2 = rhs_it1.begin();
           rhs_it2 != rhs_it1.end();
           ++rhs_it2)
@@ -193,20 +177,17 @@ namespace glucat { namespace matrix
   {
     // nork(A, kron(A, B)) is close to B
     // Definition matches [v] Section 4, Theorem 4.1.
-    using matrix_t = RHS_T;
-    using lhs_index_t = typename LHS_T::size_type;
-    using matrix_index_t = typename matrix_t::size_type;
-    const lhs_index_t lhs_s1 = lhs.size1();
-    const lhs_index_t lhs_s2 = lhs.size2();
-    const matrix_index_t rhs_s1 = rhs.size1();
-    const matrix_index_t rhs_s2 = rhs.size2();
-    const matrix_index_t res_s1 = rhs_s1 / lhs_s1;
-    const matrix_index_t res_s2 = rhs_s2 / lhs_s2;
-    using Scalar_T = typename matrix_t::value_type;
-    const Scalar_T norm_frob2_lhs = norm_frob2(lhs);
+    const auto lhs_s1 = lhs.size1();
+    const auto lhs_s2 = lhs.size2();
+    const auto rhs_s1 = rhs.size1();
+    const auto rhs_s2 = rhs.size2();
+    const auto res_s1 = rhs_s1 / lhs_s1;
+    const auto res_s2 = rhs_s2 / lhs_s2;
+    using Scalar_T = typename RHS_T::value_type;
+    const auto norm_frob2_lhs = norm_frob2(lhs);
     if (!mono)
     {
-      using error_t = error<matrix_t>;
+      using error_t = error<RHS_T>;
       if (rhs_s1 == 0)
         throw error_t("matrix", "nork: number of rows must not be 0");
       if (rhs_s2 == 0)
@@ -218,13 +199,13 @@ namespace glucat { namespace matrix
       if (norm_frob2_lhs == Scalar_T(0))
         throw error_t("matrix", "nork: LHS must not be 0");
     }
-    matrix_t result(res_s1, res_s2);
+    auto result = RHS_T(res_s1, res_s2);
     result.clear();
-    for (typename LHS_T::const_iterator1
+    for (auto
         lhs_it1 = lhs.begin1();
         lhs_it1 != lhs.end1();
         ++lhs_it1)
-      for (typename LHS_T::const_iterator2
+      for (auto
           lhs_it2 = lhs_it1.begin();
           lhs_it2 != lhs_it1.end();
           ++lhs_it2)
@@ -242,25 +223,22 @@ namespace glucat { namespace matrix
   {
     // signed_perm_nork(A, kron(A, B)) is close to B
     // Definition matches [v] Section 4, Theorem 4.1.
-    using matrix_t = RHS_T;
-    using lhs_index_t = typename LHS_T::size_type;
-    using matrix_index_t = typename matrix_t::size_type;
-    const lhs_index_t lhs_s1 = lhs.size1();
-    const lhs_index_t lhs_s2 = lhs.size2();
-    const matrix_index_t rhs_s1 = rhs.size1();
-    const matrix_index_t rhs_s2 = rhs.size2();
-    const matrix_index_t res_s1 = rhs_s1 / lhs_s1;
-    const matrix_index_t res_s2 = rhs_s2 / lhs_s2;
-    using Scalar_T = typename matrix_t::value_type;
+    const auto lhs_s1 = lhs.size1();
+    const auto lhs_s2 = lhs.size2();
+    const auto rhs_s1 = rhs.size1();
+    const auto rhs_s2 = rhs.size2();
+    const auto res_s1 = rhs_s1 / lhs_s1;
+    const auto res_s2 = rhs_s2 / lhs_s2;
+    using Scalar_T = typename RHS_T::value_type;
     const auto norm_frob2_lhs = Scalar_T( double(lhs_s1) );
-    matrix_t result(res_s1, res_s2);
+    auto result = RHS_T(res_s1, res_s2);
     result.clear();
-    for (typename LHS_T::const_iterator1
+    for (auto
         lhs_it1 = lhs.begin1();
         lhs_it1 != lhs.end1();
         ++lhs_it1)
     {
-      const typename LHS_T::const_iterator2 lhs_it2 = lhs_it1.begin();
+      const auto lhs_it2 = lhs_it1.begin();
       nork_range<LHS_T, RHS_T>(result, lhs_it2, rhs, res_s1, res_s2);
     }
     result /= norm_frob2_lhs;
@@ -272,20 +250,14 @@ namespace glucat { namespace matrix
   auto
   nnz(const Matrix_T& m) -> typename Matrix_T::size_type
   {
-    using matrix_t = Matrix_T;
-    using matrix_index_t = typename matrix_t::size_type;
-    using const_iterator1 = typename matrix_t::const_iterator1;
-    using const_iterator2 = typename matrix_t::const_iterator2;
-    matrix_index_t result = 0;
-    for (const_iterator1
+    using size_t = typename Matrix_T::size_type;
+    auto result = size_t(0);
+    for (auto
         it1 = m.begin1();
         it1 != m.end1();
         ++it1)
-      for (const_iterator2
-          it2 = it1.begin();
-          it2 != it1.end();
-          ++it2)
-        if (*it2 != 0)
+      for (auto& entry : it1)
+        if (entry != 0)
           ++result;
     return result;
   }
@@ -295,19 +267,13 @@ namespace glucat { namespace matrix
   auto
   isinf(const Matrix_T& m) -> bool
   {
-    using matrix_t = Matrix_T;
-    using Scalar_T = typename matrix_t::value_type;
-    using const_iterator1 = typename matrix_t::const_iterator1;
-    using const_iterator2 = typename matrix_t::const_iterator2;
-    for (const_iterator1
+    using Scalar_T = typename Matrix_T::value_type;
+    for (auto
         it1 = m.begin1();
         it1 != m.end1();
         ++it1)
-      for (const_iterator2
-          it2 = it1.begin();
-          it2 != it1.end();
-          ++it2)
-        if (numeric_traits<Scalar_T>::isInf(*it2))
+      for (auto& entry : it1)
+        if (numeric_traits<Scalar_T>::isInf(entry))
           return true;
 
     return false;
@@ -318,19 +284,13 @@ namespace glucat { namespace matrix
   auto
   isnan(const Matrix_T& m) -> bool
   {
-    using matrix_t = Matrix_T;
-    using Scalar_T = typename matrix_t::value_type;
-    using const_iterator1 = typename matrix_t::const_iterator1;
-    using const_iterator2 = typename matrix_t::const_iterator2;
-    for (const_iterator1
+    using Scalar_T = typename Matrix_T::value_type;
+    for (auto
         it1 = m.begin1();
         it1 != m.end1();
         ++it1)
-      for (const_iterator2
-          it2 = it1.begin();
-          it2 != it1.end();
-          ++it2)
-        if (numeric_traits<Scalar_T>::isNaN(*it2))
+      for (auto& entry : it1)
+        if (numeric_traits<Scalar_T>::isNaN(entry))
           return true;
 
     return false;
@@ -353,28 +313,22 @@ namespace glucat { namespace matrix
   mono_prod(const ublas::matrix_expression<LHS_T>& lhs,
             const ublas::matrix_expression<RHS_T>& rhs) -> const typename RHS_T::expression_type
   {
-    using lhs_expression_t = const LHS_T;
     using rhs_expression_t = const RHS_T;
-    using matrix_t = typename RHS_T::expression_type;
-    using matrix_index_t = typename matrix_t::size_type;
-    using lhs_const_iterator1 = typename lhs_expression_t::const_iterator1;
-    using lhs_const_iterator2 = typename lhs_expression_t::const_iterator2;
     using matrix_row_t = typename ublas::matrix_row<rhs_expression_t>;
-    using row_const_iterator = typename matrix_row_t::const_iterator;
 
-    const matrix_index_t dim = lhs().size1();
-    // The following assumes that matrix_t is a sparse matrix type.
-    matrix_t result = matrix_t(dim, dim, dim);
-    for (lhs_const_iterator1
+    const auto dim = lhs().size1();
+    // The following assumes that RHS_T is a sparse matrix type.
+    auto result = RHS_T(dim, dim, dim);
+    for (auto
         lhs_row = lhs().begin1();
         lhs_row != lhs().end1();
         ++lhs_row)
     {
-      const lhs_const_iterator2& lhs_it = lhs_row.begin();
+      const auto& lhs_it = lhs_row.begin();
       if (lhs_it != lhs_row.end())
       {
-        const matrix_row_t& rhs_row = matrix_row_t(rhs(), lhs_it.index2());
-        const row_const_iterator& rhs_it = rhs_row.begin();
+        const auto& rhs_row = matrix_row_t(rhs(), lhs_it.index2());
+        const auto& rhs_it = rhs_row.begin();
         if (rhs_it != rhs_row.end())
           result(lhs_it.index1(), rhs_it.index()) = (*lhs_it) * (*rhs_it);
       }
@@ -401,8 +355,7 @@ namespace glucat { namespace matrix
        const ublas::matrix_expression<RHS_T>& rhs) -> const typename RHS_T::expression_type
   {
 #if defined(_GLUCAT_USE_DENSE_MATRICES)
-    using matrix_index_t = typename RHS_T::size_type;
-    const matrix_index_t dim = lhs().size1();
+    const auto dim = lhs().size1();
     RHS_T result(dim, dim);
     ublas::axpy_prod(lhs, rhs, result, true);
     return result;
@@ -418,16 +371,16 @@ namespace glucat { namespace matrix
   inner(const LHS_T& lhs, const RHS_T& rhs) -> Scalar_T
   {
     auto result = Scalar_T(0);
-    for (typename LHS_T::const_iterator1
+    for (auto
         lhs_it1 = lhs.begin1();
         lhs_it1 != lhs.end1();
         ++lhs_it1)
-      for (typename LHS_T::const_iterator2
+      for (auto
           lhs_it2 = lhs_it1.begin();
           lhs_it2 != lhs_it1.end();
           ++lhs_it2)
       {
-        const Scalar_T& rhs_val = rhs(lhs_it2.index1(),lhs_it2.index2());
+        const auto& rhs_val = rhs(lhs_it2.index1(),lhs_it2.index2());
         if (rhs_val != Scalar_T(0))
           result += (*lhs_it2) * rhs_val;
       }
@@ -442,18 +395,15 @@ namespace glucat { namespace matrix
     using Scalar_T = typename Matrix_T::value_type;
 
     auto result = Scalar_T(0);
-    for (typename Matrix_T::const_iterator1
+    for (auto
         val_it1 = val.begin1();
         val_it1 != val.end1();
         ++val_it1)
-      for (typename Matrix_T::const_iterator2
-          val_it2 = val_it1.begin();
-          val_it2 != val_it1.end();
-          ++val_it2)
+      for (auto& val_entry : val_it1)
       {
-        if (numeric_traits<Scalar_T>::isNaN(*val_it2))
+        if (numeric_traits<Scalar_T>::isNaN(val_entry))
           return numeric_traits<Scalar_T>::NaN();
-        result += (*val_it2) * (*val_it2);
+        result += val_entry * val_entry;
       }
     return result;
   }
@@ -464,11 +414,11 @@ namespace glucat { namespace matrix
   trace(const Matrix_T& val) -> typename Matrix_T::value_type
   {
     using Scalar_T = typename Matrix_T::value_type;
-    using matrix_index_t = typename Matrix_T::size_type;
 
     auto result = Scalar_T(0);
-    matrix_index_t dim = val.size1();
-    for (matrix_index_t ndx=0;
+    auto dim = val.size1();
+    for (auto
+        ndx = decltype(dim)(0);
         ndx != dim;
         ++ndx)
     {
@@ -487,24 +437,21 @@ namespace glucat { namespace matrix
   auto
   to_lapack(const Matrix_T& val) -> ublas::matrix<double, ublas::column_major>
   {
-    using matrix_index_t = typename Matrix_T::size_type;
-    const matrix_index_t s1 = val.size1();
-    const matrix_index_t s2 = val.size2();
+    const auto s1 = val.size1();
+    const auto s2 = val.size2();
 
     using lapack_matrix_t = typename ublas::matrix<double, ublas::column_major>;
-    lapack_matrix_t result(s1, s2);
+    auto result = lapack_matrix_t(s1, s2);
     result.clear();
 
     using Scalar_T = typename Matrix_T::value_type;
     using traits_t = numeric_traits<Scalar_T>;
 
-    using const_iterator1 = typename Matrix_T::const_iterator1;
-    using const_iterator2 = typename Matrix_T::const_iterator2;
-    for (const_iterator1
+    for (auto
         val_it1 = val.begin1();
         val_it1 != val.end1();
         ++val_it1)
-      for (const_iterator2
+      for (auto
           val_it2 = val_it1.begin();
           val_it2 != val_it1.end();
           ++val_it2)
@@ -521,27 +468,29 @@ namespace glucat { namespace matrix
   {
     using complex_t = std::complex<double>;
     using complex_vector_t = typename ublas::vector<complex_t>;
-    using matrix_index_t = typename Matrix_T::size_type;
 
-    const matrix_index_t dim = val.size1();
-    complex_vector_t lambda = complex_vector_t(dim);
+    const auto dim = val.size1();
+    auto lambda = complex_vector_t(dim);
     lambda.clear();
 
 #if defined(_GLUCAT_USE_BINDINGS)
     namespace lapack = boost::numeric::bindings::lapack;
     using lapack_matrix_t = typename ublas::matrix<double, ublas::column_major>;
 
-    lapack_matrix_t T = to_lapack(val);
-    lapack_matrix_t V = T;
+    auto T = to_lapack(val);
+    auto V = T;
     using vector_t = typename ublas::vector<double>;
-    vector_t real_lambda = vector_t(dim);
-    vector_t imag_lambda = vector_t(dim);
+    auto real_lambda = vector_t(dim);
+    auto imag_lambda = vector_t(dim);
     fortran_int_t sdim = 0;
 
     lapack::gees ('N', 'N', nullptr, T, sdim, real_lambda, imag_lambda, V );
 
     lambda.clear();
-    for (vector_t::size_type  k=0; k!= dim; ++k)
+    for (auto
+        k = decltype(dim)(0);
+        k!= dim;
+        ++k)
       lambda[k] = complex_t(real_lambda[k], imag_lambda[k]);
 #endif
     return lambda;
@@ -559,26 +508,29 @@ namespace glucat { namespace matrix
 
     using complex_t = std::complex<double>;
     using complex_vector_t = typename ublas::vector<complex_t>;
-    complex_vector_t lambda = eigenvalues(val);
+    auto lambda = eigenvalues(val);
 
     std::set<double> arg_set;
 
     using vector_index_t = typename complex_vector_t::size_type;
-    const vector_index_t dim = lambda.size();
-    static const double epsilon =
+    const auto dim = lambda.size();
+    static const auto epsilon =
       std::max(std::numeric_limits<double>::epsilon(),
                numeric_traits<Scalar_T>::to_double(std::numeric_limits<Scalar_T>::epsilon()));
 
     bool negative_eig_found = false;
     bool imaginary_eig_found = false;
-    for (vector_index_t k=0; k != dim; ++k)
+    for (auto
+        k = decltype(dim)(0);
+        k != dim;
+        ++k)
     {
-      const complex_t lambda_k = lambda[k];
+      const auto lambda_k = lambda[k];
       arg_set.insert(std::arg(lambda_k));
 
-      const double real_lambda_k = std::real(lambda_k);
-      const double imag_lambda_k = std::imag(lambda_k);
-      const double norm_tol = 4096.0*epsilon*std::norm(lambda_k);
+      const auto real_lambda_k = std::real(lambda_k);
+      const auto imag_lambda_k = std::imag(lambda_k);
+      const auto norm_tol = 4096.0*epsilon*std::norm(lambda_k);
 
       if (!negative_eig_found &&
           real_lambda_k < -epsilon &&
@@ -592,7 +544,7 @@ namespace glucat { namespace matrix
         imaginary_eig_found = true;
     }
 
-    static const double pi = numeric_traits<double>::pi();
+    static const auto pi = numeric_traits<double>::pi();
     if (negative_eig_found)
     {
       if (imaginary_eig_found)
@@ -607,15 +559,15 @@ namespace glucat { namespace matrix
     if (result.m_eig_case == both_eig_case)
     {
       auto arg_it = arg_set.begin();
-      double first_arg = *arg_it;
-      double best_arg = first_arg;
-      double best_diff = 0.0;
-      double previous_arg = first_arg;
+      auto first_arg = *arg_it;
+      auto best_arg = first_arg;
+      auto best_diff = double(0.0);
+      auto previous_arg = first_arg;
       for (++arg_it;
           arg_it != arg_set.end();
           ++arg_it)
       {
-        const double arg_diff = *arg_it - previous_arg;
+        const auto arg_diff = *arg_it - previous_arg;
         if (arg_diff > best_diff)
         {
           best_diff = arg_diff;
@@ -623,7 +575,7 @@ namespace glucat { namespace matrix
         }
         previous_arg = *arg_it;
       }
-      const double arg_diff = first_arg + 2.0*pi - previous_arg;
+      const auto arg_diff = first_arg + 2.0*pi - previous_arg;
       if (arg_diff > best_diff)
       {
         best_diff = arg_diff;
