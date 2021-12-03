@@ -50,10 +50,6 @@
 
 #if defined(_GLUCAT_USE_STD_UNORDERED_MAP)
 # include <unordered_map>
-#endif
-
-#if defined(_GLUCAT_USE_STD_UNORDERED_MAP)
-# define _GLUCAT_MAP_IS_HASH
 #else
 # define _GLUCAT_MAP_IS_ORDERED
 #endif

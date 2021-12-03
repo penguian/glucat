@@ -56,12 +56,12 @@ namespace glucat
   classname() -> const std::string
   { return "framed_multi"; }
 
-#if defined(_GLUCAT_MAP_IS_HASH)
-#define _GLUCAT_HASH_N(x) (x)
-#define _GLUCAT_HASH_SIZE_T(x) (typename multivector_t::hash_size_t)(x)
+#if defined(_GLUCAT_MAP_IS_ORDERED)
+# define _GLUCAT_HASH_N(x)
+# define _GLUCAT_HASH_SIZE_T(x)
 #else
-#define _GLUCAT_HASH_N(x)
-#define _GLUCAT_HASH_SIZE_T(x)
+# define _GLUCAT_HASH_N(x) (x)
+# define _GLUCAT_HASH_SIZE_T(x) (typename multivector_t::hash_size_t)(x)
 #endif
 
   /// Default constructor
@@ -85,12 +85,8 @@ namespace glucat
   framed_multi(const framed_multi<Other_Scalar_T,LO,HI>& val)
   : map_t(_GLUCAT_HASH_N(val.size()))
   {
-    using other_multivector_t = framed_multi<Other_Scalar_T, LO, HI>;
-    using other_const_iterator = typename other_multivector_t::const_iterator;
-    const other_const_iterator val_begin = val.begin();
-    const other_const_iterator val_end   = val.end();
-    for (other_const_iterator val_it = val_begin; val_it != val_end; ++val_it)
-      this->insert(term_t(val_it->first, numeric_traits<Scalar_T>::to_scalar_t(val_it->second)));
+    for (auto& val_term : val)
+      this->insert(term_t(val_term.first, numeric_traits<Scalar_T>::to_scalar_t(val_term.second)));
   }
 
   /// Construct a multivector, within a given frame, from a given multivector
@@ -101,12 +97,10 @@ namespace glucat
                const index_set_t frm, const bool prechecked)
   : map_t(_GLUCAT_HASH_N(val.size()))
   {
-    using other_multivector_t = framed_multi<Other_Scalar_T, LO, HI>;
-    using other_const_iterator = typename other_multivector_t::const_iterator;
-    const other_const_iterator val_begin = val.begin();
-    const other_const_iterator val_end   = val.end();
-    for (other_const_iterator val_it = val_begin; val_it != val_end; ++val_it)
-      this->insert(term_t(val_it->first, static_cast<Scalar_T>(val_it->second)));
+    if (!prechecked && (val.frame() | frm) != frm)
+      throw error_t("multivector_t(val,frm): cannot initialize with value outside of frame");
+    for (auto& val_term : val)
+      this->insert(term_t(val_term.first, numeric_traits<Scalar_T>::to_scalar_t(val_term.second)));
   }
 
   /// Construct a multivector, within a given frame, from a given multivector
@@ -114,8 +108,13 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   framed_multi(const multivector_t& val,
                const index_set_t frm, const bool prechecked)
-  : map_t(val)
-  { }
+  : map_t(_GLUCAT_HASH_N(val.size()))
+  {
+    if (!prechecked && (val.frame() | frm) != frm)
+      throw error_t("multivector_t(val,frm): cannot initialize with value outside of frame");
+    for (auto& val_term : val)
+      this->insert(val_term);
+  }
 
   /// Construct a multivector from an index set and a scalar coordinate
   template< typename Scalar_T, const index_t LO, const index_t HI >
@@ -169,18 +168,17 @@ namespace glucat
   {
     if (!prechecked && index_t(vec.size()) != frm.count())
       throw error_t("multivector_t(vec,frm): cannot initialize with vector not matching frame");
-    auto vec_it = vec.begin();
-    const index_t begin_index = frm.min();
-    const index_t end_index = frm.max()+1;
-    for (index_t
-        idx = begin_index;
-        idx != end_index;
+    auto idx = frm.min();
+    const auto frm_end = frm.max()+1;
+    for (auto& crd : vec)
+    {
+      *this += term_t(index_set_t(idx), crd);
+      for (
+        ++idx;
+        idx != frm_end && !frm[idx];
         ++idx)
-      if (frm[idx])
-      {
-        *this += term_t(index_set_t(idx), *vec_it);
-        ++vec_it;
-      }
+        ;
+    }
   }
 
   /// Construct a multivector from a string: eg: "3+2{1,2}-6.1e-2{2,3}"
@@ -221,8 +219,7 @@ namespace glucat
     if (val == Other_Scalar_T(0))
       return;
 
-    using matrix_index_t = typename matrix_multi_t::matrix_index_t;
-    const matrix_index_t dim = val.m_matrix.size1();
+    const auto dim = val.m_matrix.size1();
     using traits_t = numeric_traits<Scalar_T>;
     if (dim == 1)
     {
@@ -238,27 +235,23 @@ namespace glucat
       catch (const glucat_error& e)
       { }
 
-    const Scalar_T val_norm = traits_t::to_scalar_t(val.norm());
+    const auto val_norm = traits_t::to_scalar_t(val.norm());
     if (traits_t::isNaN_or_isInf(val_norm))
     {
       *this = traits_t::NaN();
       return;
     }
-    const index_set_t frm = val.frame();
-    const set_value_t algebra_dim = 1 << frm.count();
-#if defined(_GLUCAT_MAP_IS_HASH)
-    const size_t max_size = std::min<size_t>(algebra_dim, matrix::nnz(val.m_matrix));
-    auto result = multivector_t(_GLUCAT_HASH_SIZE_T(max_size));
-#else
-    auto result = multivector_t();
-#endif
-    for (set_value_t
-        stv = 0;
+    const auto frm = val.frame();
+    const auto algebra_dim = set_value_t(1) << frm.count();
+    auto result = multivector_t(
+      _GLUCAT_HASH_SIZE_T(std::min<size_t>(algebra_dim, matrix::nnz(val.m_matrix))));
+    for (auto
+        stv = set_value_t(0);
         stv != algebra_dim;
         stv++)
     {
-      const index_set_t ist = index_set_t(stv, frm, true);
-      const Scalar_T crd =
+      const auto ist = index_set_t(stv, frm, true);
+      const auto crd =
         traits_t::to_scalar_t(matrix::inner<Other_Scalar_T>(val.basis_element(ist), val.m_matrix));
       if (crd != Scalar_T(0))
         result.insert(term_t(ist, crd));
@@ -274,12 +267,11 @@ namespace glucat
   {
     if (this->size() != rhs.size())
       return false;
-    const const_iterator this_begin = this->begin();
-    const const_iterator this_end   = this->end();
-    const const_iterator rhs_end    = rhs.end();
+    const auto rhs_end = rhs.end();
 #if defined(_GLUCAT_MAP_IS_ORDERED)
-    const_iterator this_it = this_begin;
-    const_iterator rhs_it = rhs.begin();
+    const auto this_end = this->end();
+    auto this_it = this->begin();
+    auto rhs_it = rhs.begin();
     for (;
         (this_it != this_end) && (rhs_it != rhs_end);
         this_it++, rhs_it++)
@@ -287,13 +279,10 @@ namespace glucat
         return false;
     return (this_it == this_end) && (rhs_it == rhs_end);
 #else
-    for (const_iterator
-        this_it = this_begin;
-        this_it != this_end;
-        this_it++)
+    for (auto& this_term : *this)
     {
-      const const_iterator& rhs_it = rhs.find(this_it->first);
-      if (rhs_it == rhs_end || rhs_it->second != this_it->second)
+      const const_iterator& rhs_it = rhs.find(this_term.first);
+      if (rhs_it == rhs_end || rhs_it->second != this_term.second)
         return false;
     }
     return true;
@@ -313,14 +302,13 @@ namespace glucat
       return scr == Scalar_T(0);
     case 1:
       {
-        const const_iterator& this_it = this->begin();
+        const auto& this_it = this->begin();
         return this_it->first == index_set_t() && this_it->second == scr;
       }
     default:
       return false;
     }
   }
-
 
   /// Geometric sum of multivector and scalar
   template< typename Scalar_T, const index_t LO, const index_t HI >
@@ -340,11 +328,8 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   operator+= (const multivector_t& rhs) -> multivector_t&
   { // simply add terms
-    for (auto
-        rhs_it = rhs.begin();
-        rhs_it != rhs.end();
-        ++rhs_it)
-      *this += *rhs_it;
+    for (auto& rhs_term : rhs)
+      *this += rhs_term;
     return *this;
   }
 
@@ -366,11 +351,8 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   operator-= (const multivector_t& rhs) -> multivector_t&
   {
-    for (auto
-        rhs_it = rhs.begin();
-        rhs_it != rhs.end();
-        ++rhs_it)
-      *this += term_t(rhs_it->first, -(rhs_it->second));
+    for (auto& rhs_term : rhs)
+      *this += term_t(rhs_term.first, -(rhs_term.second));
     return *this;
   }
 
@@ -380,7 +362,12 @@ namespace glucat
   auto
   framed_multi<Scalar_T,LO,HI>::
   operator- () const -> const multivector_t
-  { return *this * Scalar_T(-1); }
+  { // multiply coordinates of all terms by -1
+    auto result = *this;
+    for (auto& result_term : result)
+      result_term.second *= Scalar_T(-1);
+    return result;
+  }
 
   /// Product of multivector and scalar
   template< typename Scalar_T, const index_t LO, const index_t HI >
@@ -398,11 +385,8 @@ namespace glucat
       else
         this->clear();
     else
-      for (auto
-          this_it = this->begin();
-          this_it != this->end();
-          ++this_it)
-        this_it->second *= scr;
+      for (auto& this_term : *this)
+        this_term.second *= scr;
     return *this;
   }
 
@@ -413,77 +397,47 @@ namespace glucat
   {
     using multivector_t = framed_multi<Scalar_T, LO, HI>;
     using traits_t = numeric_traits<Scalar_T>;
-    using index_set_t = typename multivector_t::index_set_t;
-    using term_t = typename multivector_t::term_t;
-    using map_t = typename multivector_t::map_t;
-    using const_iterator = typename map_t::const_iterator;
 
     if (lhs.isnan() || rhs.isnan())
       return traits_t::NaN();
 
     const double lhs_size = lhs.size();
     const double rhs_size = rhs.size();
-    const index_set_t our_frame = lhs.frame() | rhs.frame();
-    const index_t frm_count = our_frame.count();
-    const set_value_t algebra_dim = 1 << frm_count;
-    const bool direct_mult = lhs_size * rhs_size <= double(algebra_dim)
-#if defined(_GLUCAT_MAP_IS_HASH)
+    const auto our_frame = lhs.frame() | rhs.frame();
+    const auto frm_count = our_frame.count();
+    const auto algebra_dim = set_value_t(1) << frm_count;
+    const auto direct_mult = lhs_size * rhs_size <= double(algebra_dim)
+#if !defined(_GLUCAT_MAP_IS_ORDERED)
                            || frm_count < Tune_P::mult_matrix_threshold
 #endif
                            ;
     if (direct_mult)
     { // If we have a sparse multiply, store the result directly
-      multivector_t result =
-        multivector_t(_GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
-      const const_iterator lhs_begin = lhs.begin();
-      const const_iterator lhs_end   = lhs.end();
-      const const_iterator rhs_begin = rhs.begin();
-      const const_iterator rhs_end   = rhs.end();
-
-      for (const_iterator
-          lhs_it = lhs_begin;
-          lhs_it != lhs_end;
-          ++lhs_it)
-      {
-        const term_t& lhs_term = *lhs_it;
-        for (const_iterator
-            rhs_it = rhs_begin;
-            rhs_it != rhs_end;
-            ++rhs_it)
-          result += lhs_term * *rhs_it;
-      }
+      auto result = multivector_t(
+        _GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
+      for (auto& lhs_term : lhs)
+        for (auto& rhs_term : rhs)
+          result += lhs_term * rhs_term;
       return result;
     }
-#if !defined(_GLUCAT_MAP_IS_HASH)
+#if defined(_GLUCAT_MAP_IS_ORDERED)
     else if (frm_count < Tune_P::mult_matrix_threshold)
     { // Fastest dense algorithm in low dimensions stores result in array
-      typedef std::vector<Scalar_T> array_t;
-      array_t result_array(algebra_dim, Scalar_T(0));
+      using array_t = std::vector<Scalar_T>;
+      auto result_array = array_t(algebra_dim, Scalar_T(0));
 
-      const const_iterator lhs_begin = lhs.begin();
-      const const_iterator lhs_end   = lhs.end();
-      const const_iterator rhs_begin = rhs.begin();
-      const const_iterator rhs_end   = rhs.end();
-
-      for (const_iterator
-          lhs_it = lhs_begin;
-          lhs_it != lhs_end;
-          ++lhs_it)
-      {
-        const term_t& lhs_term = *lhs_it;
-        for (const_iterator
-            rhs_it = rhs_begin;
-            rhs_it != rhs_end;
-            ++rhs_it)
+      for (auto& lhs_term : lhs)
+        for (auto& rhs_term : rhs)
         {
-          const term_t& term = lhs_term * *rhs_it;
-          const set_value_t stv = term.first.value_of_fold(our_frame);
-          result_array[stv] += term.second;
+          const auto& result_term = lhs_term * rhs_term;
+          const auto stv = result_term.first.value_of_fold(our_frame);
+          result_array[stv] += result_term.second;
         }
-      }
-      multivector_t result;
-      for (set_value_t
-          stv = 0;
+      using term_t = typename multivector_t::term_t;
+      using index_set_t = typename multivector_t::index_set_t;
+      auto result = multivector_t();
+      for (auto
+          stv = set_value_t(0);
           stv != algebra_dim;
           ++stv)
         if (result_array[stv] != Scalar_T(0))
@@ -520,50 +474,44 @@ namespace glucat
     using multivector_t = framed_multi<Scalar_T, LO, HI>;
     using index_set_t = typename multivector_t::index_set_t;
     using term_t = typename multivector_t::term_t;
-    using map_t = typename multivector_t::map_t;
-    using const_iterator = typename map_t::const_iterator;
 
-    multivector_t result;
-    const index_set_t empty_set = index_set_t();
+    const auto empty_set = index_set_t();
 
-    const const_iterator lhs_begin = lhs.begin();
-    const const_iterator lhs_end   = lhs.end();
-    const const_iterator rhs_begin = rhs.begin();
-    const const_iterator rhs_end   = rhs.end();
     const double lhs_size = lhs.size();
     const double rhs_size = rhs.size();
+    const auto lhs_frame = lhs.frame();
+    const auto rhs_frame = rhs.frame();
+    const auto our_frame = lhs_frame | rhs_frame;
+    const auto algebra_dim = set_value_t(1) << our_frame.count();
+    auto result = multivector_t(
+      _GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
+    const auto lhs_end = lhs.end();
+    const auto rhs_end = rhs.end();
 
     if (lhs_size * rhs_size > double(Tune_P::products_size_threshold))
     {
-      const index_set_t lhs_frame = lhs.frame();
-      const index_set_t rhs_frame = rhs.frame();
-
-      const index_set_t our_frame = lhs_frame | rhs_frame;
-      const set_value_t algebra_dim = 1 << our_frame.count();
-      multivector_t result =
-        multivector_t(_GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
-      for (set_value_t
-          result_stv = 0;
+      for (auto
+          result_stv = set_value_t(0);
           result_stv != algebra_dim;
           ++result_stv)
       {
-        const index_set_t result_ist = index_set_t(result_stv, our_frame, true);
-        const index_set_t lhs_result_frame = lhs_frame & result_ist;
-        const set_value_t lhs_result_dim = 1 << lhs_result_frame.count();
+        const auto result_ist = index_set_t(result_stv, our_frame, true);
+        const auto lhs_result_frame = lhs_frame & result_ist;
+        const auto lhs_result_dim = set_value_t(1) << lhs_result_frame.count();
         auto result_crd = Scalar_T(0);
-        for (set_value_t
-            lhs_stv = 0;
+        for (auto
+            lhs_stv = set_value_t(0);
             lhs_stv != lhs_result_dim;
             ++lhs_stv)
         {
-          const index_set_t lhs_ist = index_set_t(lhs_stv, lhs_result_frame, true);
-          const index_set_t rhs_ist = result_ist ^ lhs_ist;
+          const auto lhs_ist = index_set_t(lhs_stv, lhs_result_frame, true);
+          const auto rhs_ist = result_ist ^ lhs_ist;
           if ((rhs_ist | rhs_frame) == rhs_frame)
           {
-            const const_iterator lhs_it = lhs.find(lhs_ist);
+            const auto lhs_it = lhs.find(lhs_ist);
             if (lhs_it != lhs_end)
             {
-              const const_iterator rhs_it = rhs.find(rhs_ist);
+              const auto rhs_it = rhs.find(rhs_ist);
               if (rhs_it != rhs_end)
                 result_crd += crd_of_mult(*lhs_it, *rhs_it);
             }
@@ -576,25 +524,10 @@ namespace glucat
     }
     else
     {
-      multivector_t result;
-      for (const_iterator
-          rhs_it = rhs_begin;
-          rhs_it != rhs_end;
-          ++rhs_it)
-      {
-        const term_t& rhs_term = *rhs_it;
-        const index_set_t rhs_ist = rhs_term.first;
-        for (const_iterator
-            lhs_it = lhs_begin;
-            lhs_it != lhs_end;
-            ++lhs_it)
-        {
-          const term_t& lhs_term = *lhs_it;
-          const index_set_t lhs_ist = lhs_term.first;
-          if ((lhs_ist & rhs_ist) == empty_set)
+      for (auto& lhs_term : lhs)
+        for (auto& rhs_term : rhs)
+          if ((lhs_term.first & rhs_term.first) == empty_set)
             result += lhs_term * rhs_term;
-        }
-      }
       return result;
     }
   }
@@ -620,45 +553,43 @@ namespace glucat
     using multivector_t = framed_multi<Scalar_T, LO, HI>;
     using index_set_t = typename multivector_t::index_set_t;
     using term_t = typename multivector_t::term_t;
-    using map_t = typename multivector_t::map_t;
-    using const_iterator = typename map_t::const_iterator;
 
-    const const_iterator lhs_end   = lhs.end();
-    const const_iterator rhs_end   = rhs.end();
+    const auto lhs_end = lhs.end();
+    const auto rhs_end = rhs.end();
     const double lhs_size = lhs.size();
     const double rhs_size = rhs.size();
 
+    const auto lhs_frame = lhs.frame();
+    const auto rhs_frame = rhs.frame();
+
+    const auto our_frame = lhs_frame | rhs_frame;
+    const auto algebra_dim = set_value_t(1) << our_frame.count();
+    auto result = multivector_t(
+      _GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
     if (lhs_size * rhs_size > double(Tune_P::products_size_threshold))
     {
-      const index_set_t lhs_frame = lhs.frame();
-      const index_set_t rhs_frame = rhs.frame();
-
-      const index_set_t our_frame = lhs_frame | rhs_frame;
-      const set_value_t algebra_dim = 1 << our_frame.count();
-      multivector_t result =
-        multivector_t(_GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
-      for (set_value_t
-          result_stv = 0;
+      for (auto
+          result_stv = set_value_t(0);
           result_stv != algebra_dim;
           ++result_stv)
       {
-        const index_set_t result_ist = index_set_t(result_stv, our_frame, true);
-        const index_set_t comp_frame = our_frame & ~result_ist;
-        const set_value_t comp_dim = 1 << comp_frame.count();
+        const auto result_ist = index_set_t(result_stv, our_frame, true);
+        const auto comp_frame = our_frame & ~result_ist;
+        const auto comp_dim = set_value_t(1) << comp_frame.count();
         auto result_crd = Scalar_T(0);
-        for (set_value_t
-            comp_stv = 1;
+        for (auto
+            comp_stv = set_value_t(1);
             comp_stv != comp_dim;
             ++comp_stv)
         {
-          const index_set_t comp_ist = index_set_t(comp_stv, comp_frame, true);
-          const index_set_t our_ist = result_ist ^ comp_ist;
+          const auto comp_ist = index_set_t(comp_stv, comp_frame, true);
+          const auto our_ist = result_ist ^ comp_ist;
           if ((our_ist | lhs_frame) == lhs_frame)
           {
-            const const_iterator lhs_it = lhs.find(our_ist);
+            const auto lhs_it = lhs.find(our_ist);
             if (lhs_it != lhs_end)
             {
-              const const_iterator rhs_it = rhs.find(comp_ist);
+              const auto rhs_it = rhs.find(comp_ist);
               if (rhs_it != rhs_end)
                 result_crd += crd_of_mult(*lhs_it, *rhs_it);
             }
@@ -667,10 +598,10 @@ namespace glucat
           {
             if ((our_ist | rhs_frame) == rhs_frame)
             {
-              const const_iterator rhs_it = rhs.find(our_ist);
+              const auto rhs_it = rhs.find(our_ist);
               if (rhs_it != rhs_end)
               {
-                const const_iterator lhs_it = lhs.find(comp_ist);
+                const auto lhs_it = lhs.find(comp_ist);
                 if (lhs_it != lhs_end)
                   result_crd += crd_of_mult(*lhs_it, *rhs_it);
               }
@@ -680,41 +611,27 @@ namespace glucat
         if (result_crd != Scalar_T(0))
           result.insert(term_t(result_ist, result_crd));
       }
-      return result;
     }
     else
     {
-      const index_set_t empty_set = index_set_t();
-
-      const const_iterator lhs_begin = lhs.begin();
-      const const_iterator rhs_begin = rhs.begin();
-
-      multivector_t result;
-      for (const_iterator
-          lhs_it = lhs_begin;
-          lhs_it != lhs_end;
-          ++lhs_it)
+      const auto empty_set = index_set_t();
+      for (auto& lhs_term : lhs)
       {
-        const term_t& lhs_term = *lhs_it;
-        const index_set_t lhs_ist = lhs_term.first;
+        const auto lhs_ist = lhs_term.first;
         if (lhs_ist != empty_set)
-          for (const_iterator
-              rhs_it = rhs_begin;
-              rhs_it != rhs_end;
-              ++rhs_it)
+          for (auto& rhs_term : rhs)
           {
-            const term_t& rhs_term = *rhs_it;
-            const index_set_t rhs_ist = rhs_term.first;
+            const auto rhs_ist = rhs_term.first;
             if (rhs_ist != empty_set)
             {
-              const index_set_t our_ist = lhs_ist | rhs_ist;
+              const auto our_ist = lhs_ist | rhs_ist;
               if ((lhs_ist == our_ist) || (rhs_ist == our_ist))
                 result += lhs_term * rhs_term;
             }
           }
       }
-      return result;
     }
+    return result;
   }
 
   /// Inner product
@@ -742,78 +659,76 @@ namespace glucat
     using index_set_t = typename multivector_t::index_set_t;
     using term_t = typename multivector_t::term_t;
     using map_t = typename multivector_t::map_t;
-    using const_iterator = typename map_t::const_iterator;
 
 #if defined(_GLUCAT_MAP_IS_ORDERED)
     // Both lhs and rhs are sorted by increasing grade, then lexicographically,
     // and a "larger" index set cannot be a subset of a "smaller" one.
 
-    const const_iterator lhs_begin = lhs.begin();
-
+    const auto lhs_begin = lhs.begin();
+    const auto rhs_rbegin = rhs.rbegin();
     typedef typename map_t::const_reverse_iterator const_reverse_iterator;
-    const const_reverse_iterator rhs_rbegin = rhs.rbegin();
-    const const_reverse_iterator rhs_rlower_bound =
+    const auto rhs_rlower_bound =
           static_cast<const_reverse_iterator>(rhs.lower_bound(lhs_begin->first));
 
     multivector_t result;
 
-    for (const_reverse_iterator
+    for (auto
         rhs_it = rhs_rbegin;
         rhs_it != rhs_rlower_bound;
         ++rhs_it)
     {
-      const term_t& rhs_term = *rhs_it;
-      const index_set_t rhs_ist = rhs_term.first;
-      const const_iterator lhs_upper_bound = lhs.upper_bound(rhs_ist);
-      for (const_iterator
+      const auto& rhs_term = *rhs_it;
+      const auto rhs_ist = rhs_term.first;
+      const auto lhs_upper_bound = lhs.upper_bound(rhs_ist);
+      for (auto
           lhs_it = lhs_begin;
           lhs_it != lhs_upper_bound;
           ++lhs_it)
       {
-        const term_t& lhs_term = *lhs_it;
-        const index_set_t lhs_ist = lhs_term.first;
+        const auto& lhs_term = *lhs_it;
+        const auto lhs_ist = lhs_term.first;
         if ((lhs_ist | rhs_ist) == rhs_ist)
           result += lhs_term * rhs_term;
       }
     }
     return result;
 #else
-    const const_iterator lhs_end   = lhs.end();
-    const const_iterator rhs_end   = rhs.end();
+    const auto lhs_end   = lhs.end();
+    const auto rhs_end   = rhs.end();
     const double lhs_size = lhs.size();
     const double rhs_size = rhs.size();
+    const auto lhs_frame = lhs.frame();
+    const auto rhs_frame = rhs.frame();
+
+    const auto our_frame = lhs_frame | rhs_frame;
+    const auto algebra_dim = set_value_t(1) << our_frame.count();
+    auto result = multivector_t(
+      _GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
 
     if (lhs_size * rhs_size > double(Tune_P::products_size_threshold))
     {
-      const index_set_t lhs_frame = lhs.frame();
-      const index_set_t rhs_frame = rhs.frame();
-
-      const index_set_t our_frame = lhs_frame | rhs_frame;
-      const set_value_t algebra_dim = 1 << our_frame.count();
-      multivector_t result =
-        multivector_t(_GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
-      for (set_value_t
-          result_stv = 0;
+      for (auto
+          result_stv = set_value_t(0);
           result_stv != algebra_dim;
           ++result_stv)
       {
-        const index_set_t result_ist = index_set_t(result_stv, our_frame, true);
-        const index_set_t comp_frame = lhs_frame & ~result_ist;
-        const set_value_t comp_dim = 1 << comp_frame.count();
+        const auto result_ist = index_set_t(result_stv, our_frame, true);
+        const auto comp_frame = lhs_frame & ~result_ist;
+        const auto comp_dim = set_value_t(1) << comp_frame.count();
         auto result_crd = Scalar_T(0);
-        for (set_value_t
-            comp_stv = 0;
+        for (auto
+            comp_stv = set_value_t(0);
             comp_stv != comp_dim;
             ++comp_stv)
         {
-          const index_set_t comp_ist = index_set_t(comp_stv, comp_frame, true);
-          const index_set_t rhs_ist = result_ist ^ comp_ist;
+          const auto comp_ist = index_set_t(comp_stv, comp_frame, true);
+          const auto rhs_ist = result_ist ^ comp_ist;
           if ((rhs_ist | rhs_frame) == rhs_frame)
           {
-            const const_iterator rhs_it = rhs.find(rhs_ist);
+            const auto rhs_it = rhs.find(rhs_ist);
             if (rhs_it != rhs_end)
             {
-              const const_iterator lhs_it = lhs.find(comp_ist);
+              const auto lhs_it = lhs.find(comp_ist);
               if (lhs_it != lhs_end)
                 result_crd += crd_of_mult(*lhs_it, *rhs_it);
             }
@@ -822,34 +737,21 @@ namespace glucat
         if (result_crd != Scalar_T(0))
           result.insert(term_t(result_ist, result_crd));
       }
-      return result;
     }
     else
     {
-      const const_iterator rhs_begin = rhs.begin();
-      const const_iterator lhs_begin = lhs.begin();
-
-      multivector_t result;
-      for (const_iterator
-          rhs_it = rhs_begin;
-          rhs_it != rhs_end;
-          ++rhs_it)
+      for (auto& rhs_term : rhs)
       {
-        const term_t& rhs_term = *rhs_it;
-        const index_set_t rhs_ist = rhs_term.first;
-        for (const_iterator
-            lhs_it = lhs_begin;
-            lhs_it != lhs_end;
-            ++lhs_it)
+        const auto rhs_ist = rhs_term.first;
+        for (auto& lhs_term : lhs)
         {
-          const term_t& lhs_term = *lhs_it;
           const index_set_t lhs_ist = lhs_term.first;
           if ((lhs_ist | rhs_ist) == rhs_ist)
             result += lhs_term * rhs_term;
         }
       }
-      return result;
     }
+    return result;
 #endif
   }
 
@@ -867,30 +769,24 @@ namespace glucat
   star(const framed_multi<Scalar_T,LO,HI>& lhs, const framed_multi<Scalar_T,LO,HI>& rhs) -> Scalar_T
   {
     using multivector_t = framed_multi<Scalar_T, LO, HI>;
-    using map_t = typename multivector_t::map_t;
-    using const_iterator = typename map_t::const_iterator;
-    using index_set_t = typename multivector_t::index_set_t;
 
     auto result = Scalar_T(0);
-    const bool small_star_large = lhs.size() < rhs.size();
-    const multivector_t* smallp =
+    const auto small_star_large = lhs.size() < rhs.size();
+    const auto* smallp =
       small_star_large
       ? &lhs
       : &rhs;
-    const multivector_t* largep =
+    const auto* largep =
       small_star_large
       ? &rhs
       : &lhs;
 
-    for (auto
-         small_it = smallp->begin();
-         small_it != smallp->end();
-         ++small_it)
+    for (auto& small_term : *smallp)
     {
-      const index_set_t small_ist = small_it->first;
-      const Scalar_T    large_crd = (*largep)[small_ist];
+      const auto small_ist = small_term.first;
+      const auto large_crd = (*largep)[small_ist];
       if (large_crd != Scalar_T(0))
-        result += small_ist.sign_of_square() * small_it->second * large_crd;
+        result += small_ist.sign_of_square() * small_term.second * large_crd;
     }
     return result;
   }
@@ -911,11 +807,8 @@ namespace glucat
       else
         this->clear();
     else
-      for (auto
-          this_it = this->begin();
-          this_it != this->end();
-          ++this_it)
-        this_it->second /= scr;
+      for (auto& this_term : *this)
+        this_term.second /= scr;
     return *this;
   }
 
@@ -933,7 +826,7 @@ namespace glucat
     if (rhs == Scalar_T(0))
       return traits_t::NaN();
 
-    const index_set_t our_frame = lhs.frame() | rhs.frame();
+    const auto our_frame = lhs.frame() | rhs.frame();
     return matrix_multi_t(lhs, our_frame, true) / matrix_multi_t(rhs, our_frame, true);
   }
 
@@ -972,7 +865,7 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   inv() const -> const multivector_t
   {
-    matrix_multi_t result = matrix_multi_t(Scalar_T(1), this->frame());
+    auto result = matrix_multi_t(Scalar_T(1), this->frame());
     return result /= matrix_multi_t(*this);
   }
 
@@ -991,8 +884,8 @@ namespace glucat
   {
     if (m < 0)
       throw error_t("outer_pow(int): negative exponent");
-    multivector_t result = Scalar_T(1);
-    multivector_t a = *this;
+    auto result = multivector_t(Scalar_T(1));
+    auto a = *this;
     for (;
         m != 0;
         m >>= 1, a = a ^ a)
@@ -1008,12 +901,9 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   frame() const -> const index_set_t
   {
-    index_set_t result;
-    for (auto
-        this_it = this->begin();
-        this_it != this->end();
-        ++this_it)
-      result |= this_it->first;
+    auto result = index_set_t();
+    for (auto& this_term : *this)
+      result |= this_term.first;
     return result;
   }
 
@@ -1024,12 +914,9 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   grade() const -> index_t
   {
-    index_t result = 0;
-    for (auto
-        this_it = this->begin();
-        this_it != this->end();
-        ++this_it)
-      result = std::max( result, this_it->first.count() );
+    auto result = index_t(0);
+    for (auto& this_term : *this)
+      result = std::max(result, this_term.first.count());
     return result;
   }
 
@@ -1040,7 +927,7 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   operator[] (const index_set_t ist) const -> Scalar_T
   {
-    const const_iterator& this_it = this->find(ist);
+    const auto& this_it = this->find(ist);
     if (this_it == this->end())
       return Scalar_T(0);
     else
@@ -1057,13 +944,10 @@ namespace glucat
       return Scalar_T(0);
     else
     {
-      multivector_t result;
-      for (auto
-          this_it = this->begin();
-          this_it != this->end();
-          ++this_it)
-        if (this_it->first.count() == grade)
-          result += *this_it;
+      auto result = multivector_t();
+      for (auto& this_term : *this)
+        if (this_term.first.count() == grade)
+          result += this_term;
       return result;
     }
   }
@@ -1090,13 +974,10 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   even() const -> const multivector_t
   { // even part of x, sum of the pure(count) with even count
-    multivector_t result;
-    for (auto
-        this_it = this->begin();
-        this_it != this->end();
-        ++this_it)
-      if ((this_it->first.count() % 2) == 0)
-        result.insert(*this_it);
+    auto result = multivector_t();
+    for (auto& this_term : *this)
+      if ((this_term.first.count() % 2) == 0)
+        result.insert(this_term);
     return result;
   }
 
@@ -1106,13 +987,10 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   odd() const -> const multivector_t
   { // even part of x, sum of the pure(count) with even count
-    multivector_t result;
-    for (auto
-        this_it = this->begin();
-        this_it != this->end();
-        ++this_it)
-      if ((this_it->first.count() % 2) == 1)
-        result.insert(*this_it);
+    auto result = multivector_t();
+    for (auto& this_term : *this)
+      if ((this_term.first.count() % 2) == 1)
+        result.insert(this_term);
     return result;
   }
 
@@ -1131,10 +1009,10 @@ namespace glucat
   {
     if (!prechecked && (this->frame() | frm) != frm)
       throw error_t("vector_part(frm): value is outside of requested frame");
-    vector_t result;
+    auto result = vector_t();
     result.reserve(frm.count());
-    const index_t frm_end = frm.max()+1;
-    for (index_t
+    const auto frm_end = frm.max()+1;
+    for (auto
         idx  = frm.min();
         idx != frm_end;
         ++idx)
@@ -1151,14 +1029,11 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   involute() const -> const multivector_t
   {
-    multivector_t result = *this;
-    for (auto
-        result_it = result.begin();
-        result_it != result.end();
-        ++result_it)
+    auto result = *this;
+    for (auto& result_term : result)
     { // for a k-vector u, involute(u) == (-1)^k * u
-      if ((result_it->first.count() % 2) == 1)
-        result_it->second *= Scalar_T(-1);
+      if ((result_term.first.count() % 2) == 1)
+        result_term.second *= Scalar_T(-1);
     }
     return result;
   }
@@ -1169,18 +1044,15 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   reverse() const -> const multivector_t
   {
-    multivector_t result = *this;
-    for (auto
-        result_it = result.begin();
-        result_it != result.end();
-        ++result_it)
+    auto result = *this;
+    for (auto& result_term : result)
       // For a k-vector u, reverse(u) = { -u, k == 2,3 (mod 4)
       //                                {  u, k == 0,1 (mod 4)
-      switch (result_it->first.count() % 4)
+      switch (result_term.first.count() % 4)
       {
       case 2:
       case 3:
-        result_it->second *= Scalar_T(-1);
+        result_term.second *= Scalar_T(-1);
         break;
       default:
         break;
@@ -1194,18 +1066,15 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   conj() const -> const multivector_t
   {
-    multivector_t result = *this;
-    for (auto
-        result_it = result.begin();
-        result_it != result.end();
-        ++result_it)
+    auto result = *this;
+    for (auto& result_term : result)
       // For a k-vector u, conj(u) = { -u, k == 1,2 (mod 4)
       //                             {  u, k == 0,3 (mod 4)
-      switch (result_it->first.count() % 4)
+      switch (result_term.first.count() % 4)
       {
       case 1:
       case 2:
-        result_it->second *= Scalar_T(-1);
+        result_term.second *= Scalar_T(-1);
         break;
       default:
         break;
@@ -1222,16 +1091,13 @@ namespace glucat
     // scalar(conj(x)*x) = 2*quad(even(x)) - quad(x)
     // ref: old clical: quadfunction(p:pter):pterm in file compmod.pas
     auto result = Scalar_T(0);
-    for (auto
-        this_it = this->begin();
-        this_it != this->end();
-        ++this_it)
+    for (auto& this_term : *this)
     {
-      const Scalar_T sign =
-        (this_it->first.count_neg() % 2)
+      const auto sign =
+        (this_term.first.count_neg() % 2)
         ? -Scalar_T(1)
         :  Scalar_T(1);
-      result += sign * (this_it->second) * (this_it->second);
+      result += sign * (this_term.second) * (this_term.second);
     }
     return result;
   }
@@ -1245,12 +1111,9 @@ namespace glucat
     using traits_t = numeric_traits<Scalar_T>;
 
     auto result = Scalar_T(0);
-    for (auto
-        this_it = this->begin();
-        this_it != this->end();
-        ++this_it)
+    for (auto& this_term : *this)
     {
-      const Scalar_T abs_crd = traits_t::abs(this_it->second);
+      const auto abs_crd = traits_t::abs(this_term.second);
       result +=  abs_crd * abs_crd;
     }
     return result;
@@ -1265,12 +1128,9 @@ namespace glucat
     using traits_t = numeric_traits<Scalar_T>;
 
     auto result = Scalar_T(0);
-    for (auto
-        this_it = this->begin();
-        this_it != this->end();
-        ++this_it)
+    for (auto& this_term : *this)
     {
-      const Scalar_T abs_crd = traits_t::abs(this_it->second);
+      const auto abs_crd = traits_t::abs(this_term.second);
       if (abs_crd > result)
         result = abs_crd;
     }
@@ -1288,7 +1148,7 @@ namespace glucat
     using term_t = typename multivector_t::term_t;
 
     using random_generator_t = random_generator<Scalar_T>;
-    random_generator_t& generator = random_generator_t::generator();
+    auto& generator = random_generator_t::generator();
 
     fill =
       (fill < Scalar_T(0))
@@ -1296,17 +1156,17 @@ namespace glucat
       : (fill > Scalar_T(1))
         ? Scalar_T(1)
         : fill;
-    const set_value_t algebra_dim = 1 << frm.count();
+    const auto algebra_dim = set_value_t(1) << frm.count();
     using traits_t = numeric_traits<Scalar_T>;
-    const Scalar_T mean_abs = traits_t::sqrt(Scalar_T(double(algebra_dim)));
-    multivector_t result;
-    for (set_value_t
-        stv = 0;
+    const auto mean_abs = traits_t::sqrt(Scalar_T(double(algebra_dim)));
+    auto result = multivector_t();
+    for (auto
+        stv = set_value_t(0);
         stv != algebra_dim;
         ++stv)
       if (generator.uniform() < fill)
       {
-        const Scalar_T& result_crd = generator.normal() / mean_abs;
+        const auto& result_crd = generator.normal() / mean_abs;
         result.insert(term_t(index_set_t(stv, frm, true), result_crd));
       }
     return result;
@@ -1343,11 +1203,8 @@ namespace glucat
 
     sorted_range (Sorted_Map_T &sorted_val, const Map_T& val)
     {
-      for (auto
-          val_it = val.begin();
-          val_it != val.end();
-          ++val_it)
-        sorted_val.insert(*val_it);
+      for (auto& val_term : val)
+        sorted_val.insert(val_term);
       sorted_begin = sorted_val.begin();
       sorted_end   = sorted_val.end();
     }
@@ -1414,7 +1271,7 @@ namespace glucat
         using map_t = typename multivector_t::map_t;
         using sorted_map_t = typename multivector_t::sorted_map_t;
         using sorted_iterator = typename sorted_map_t::const_iterator;
-        sorted_map_t sorted_val;
+        auto sorted_val = sorted_map_t();
         const auto sorted_val_range = sorted_range< map_t, sorted_map_t >(sorted_val, truncated_val);
         auto sorted_it = sorted_val_range.sorted_begin;
         os << *sorted_it;
@@ -1437,8 +1294,8 @@ namespace glucat
   auto
   operator<< (std::ostream& os, const std::pair< const index_set<LO,HI>, Scalar_T >& term) -> std::ostream&
   {
-    const double second_as_double = numeric_traits<Scalar_T>::to_double(term.second);
-    const bool use_double =
+    const auto second_as_double = numeric_traits<Scalar_T>::to_double(term.second);
+    const auto use_double =
       (os.precision() <= std::numeric_limits<double>::digits10) ||
       (term.second == Scalar_T(second_as_double));
     if (term.first.count() == 0)
@@ -1455,7 +1312,7 @@ namespace glucat
     {
       if (use_double)
       {
-        double tol = std::pow(10.0,-os.precision());
+        auto tol = std::pow(10.0,-os.precision());
         if ( std::fabs(second_as_double + 1.0) < tol )
           os << '-';
         else if ( std::fabs(second_as_double - 1.0) >= tol )
@@ -1477,11 +1334,11 @@ namespace glucat
   { // Input looks like 1.0-2.0{1,2}+3.2{3,4}.
     using multivector_t = framed_multi<Scalar_T, LO, HI>;
     // Parsing variables.
-    multivector_t local_val;
-    int c = 0;
+    auto local_val = multivector_t();
+    auto c = 0;
     // Parsing control variables.
-    bool negative = false;
-    bool expect_term = true;
+    auto negative = false;
+    auto expect_term = true;
     // The multivector may begin with '+' or '-'. Check for this.
     c = s.peek();
     if (s.good() && (c == int('+') || c == int('-')))
@@ -1495,9 +1352,9 @@ namespace glucat
       // A term consists of an optional scalar, followed by an optional index set.
       // At least one of the two must be present.
       // Default coordinate is Scalar_T(1).
-      auto  coordinate  = Scalar_T(1);
+      auto coordinate = Scalar_T(1);
       // Default index set is empty.
-      index_set<LO,HI> ist;
+      auto ist = index_set<LO,HI>();
       // First, check for an opening brace.
       c = s.peek();
       if (s.good())
@@ -1594,7 +1451,7 @@ namespace glucat
   { // Do not insert terms with 0 coordinate
     if (term.second != Scalar_T(0))
     {
-      const iterator& this_it = this->find(term.first);
+      const auto& this_it = this->find(term.first);
       if (this_it == this->end())
         this->insert(term);
       else if (this_it->second + term.second == Scalar_T(0))
@@ -1615,12 +1472,9 @@ namespace glucat
     using traits_t = numeric_traits<Scalar_T>;
 
     if (std::numeric_limits<Scalar_T>::has_infinity)
-      for (auto
-          this_it = this->begin();
-          this_it != this->end();
-          ++this_it)
-          if (traits_t::isInf(this_it->second))
-            return true;
+      for (auto& this_term : *this)
+        if (traits_t::isInf(this_term.second))
+          return true;
     return false;
   }
 
@@ -1633,12 +1487,9 @@ namespace glucat
     using traits_t = numeric_traits<Scalar_T>;
 
     if (std::numeric_limits<Scalar_T>::has_quiet_NaN)
-      for (auto
-          this_it = this->begin();
-          this_it != this->end();
-          ++this_it)
-          if (traits_t::isNaN(this_it->second))
-            return true;
+      for (auto& this_term : *this)
+        if (traits_t::isNaN(this_term.second))
+          return true;
     return false;
   }
 
@@ -1652,16 +1503,13 @@ namespace glucat
 
     if (this->isnan() || this->isinf())
       return *this;
-    const Scalar_T truncation = traits_t::abs(limit);
-    const Scalar_T top = max_abs();
-    multivector_t result;
+    const auto truncation = traits_t::abs(limit);
+    const auto top = max_abs();
+    auto result = multivector_t();
     if (top != Scalar_T(0))
-      for (auto
-          this_it = this->begin();
-          this_it != this->end();
-          ++this_it)
-        if (traits_t::abs(this_it->second) > top * truncation)
-          result.insert(*this_it);
+      for (auto& this_term : *this)
+        if (traits_t::abs(this_term.second) > top * truncation)
+          result.insert(this_term);
     return result;
   }
 
@@ -1675,12 +1523,9 @@ namespace glucat
       return *this;
     else
     {
-      multivector_t result;
-      for (auto
-          this_it = this->begin();
-          this_it != this->end();
-          ++this_it)
-        result.insert(term_t(this_it->first.fold(frm), this_it->second));
+      auto result = multivector_t();
+      for (auto& this_term : *this)
+        result.insert(term_t(this_term.first.fold(frm), this_term.second));
       return result;
     }
   }
@@ -1695,12 +1540,9 @@ namespace glucat
       return *this;
     else
     {
-      multivector_t result;
-      for (auto
-          this_it = this->begin();
-          this_it != this->end();
-          ++this_it)
-        result.insert(term_t(this_it->first.unfold(frm, true), this_it->second));
+      auto result = multivector_t();
+      for (auto& this_term : *this)
+        result.insert(term_t(this_term.first.unfold(frm), this_term.second));
       return result;
     }
   }
@@ -1718,31 +1560,28 @@ namespace glucat
     if (this->frame().max() > p-4)
     {
       using index_pair_t = typename index_set_t::index_pair_t;
-      const index_set_t pm3210(index_pair_t(p-3,p), true);
-      const index_set_t qm4321(index_pair_t(-q-4,-q-1), true);
-      const term_t& tqm4321 = term_t(qm4321, Scalar_T(1));
-      multivector_t result;
-      for (const_iterator
-          this_it = this->begin();
-          this_it != this->end();
-          ++this_it)
+      const auto pm3210 = index_set_t(index_pair_t(p-3,p), true);
+      const auto qm4321 = index_set_t(index_pair_t(-q-4,-q-1), true);
+      const auto& tqm4321 = term_t(qm4321, Scalar_T(1));
+      auto result = multivector_t();
+      for (auto& this_term : *this)
       {
-        index_set_t ist = this_it->first;
+        const auto ist = this_term.first;
         if (ist.max() > p-4)
         {
-          var_term_t term;
-          for (index_t
-              n = 0;
-              n != 4;
+          auto var_term = var_term_t();
+          for (auto
+              n = index_t(0);
+              n != index_t(4);
               ++n)
             if (ist[n+p-3])
-              term *= term_t(index_set_t(n-q-4), Scalar_T(1)) * tqm4321;
+              var_term *= term_t(index_set_t(n-q-4), Scalar_T(1)) * tqm4321;
           // Mask out {p-3}..{p}
-          result.insert(term_t(ist & ~pm3210, this_it->second) *
-                        term_t(term.first, term.second));
+          result.insert(term_t(ist & ~pm3210, this_term.second) *
+                        term_t(var_term.first, var_term.second));
         }
         else
-          result.insert(*this_it);
+          result.insert(this_term);
       }
       *this = result;
     }
@@ -1763,31 +1602,28 @@ namespace glucat
     if (this->frame().min() < -q+4)
     {
       using index_pair_t = typename index_set_t::index_pair_t;
-      const index_set_t qp0123(index_pair_t(-q,-q+3), true);
-      const index_set_t pp1234(index_pair_t(p+1,p+4), true);
-      const term_t& tpp1234 = term_t(pp1234, Scalar_T(1));
-      multivector_t result;
-      for (const_iterator
-          this_it = this->begin();
-          this_it != this->end();
-          ++this_it)
+      const auto qp0123 = index_set_t(index_pair_t(-q,-q+3), true);
+      const auto pp1234 = index_set_t(index_pair_t(p+1,p+4), true);
+      const auto& tpp1234 = term_t(pp1234, Scalar_T(1));
+      auto result = multivector_t();
+      for (auto& this_term : *this)
       {
-        index_set_t ist = this_it->first;
+        index_set_t ist = this_term.first;
         if (ist.min() < -q+4)
         {
-          var_term_t term;
-          for (index_t
-              n = 0;
-              n != 4;
+          auto var_term = var_term_t();
+          for (auto
+              n = index_t(0);
+              n != index_t(4);
               ++n)
             if (ist[n-q])
-              term *= term_t(index_set_t(n+p+1), Scalar_T(1)) * tpp1234;
+              var_term *= term_t(index_set_t(n+p+1), Scalar_T(1)) * tpp1234;
           // Mask out {-q}..{-q+3}
-          result.insert(term_t(term.first, term.second) *
-                        term_t(ist & ~qp0123, this_it->second));
+          result.insert(term_t(var_term.first, var_term.second) *
+                        term_t(ist & ~qp0123, this_term.second));
         }
         else
-          result.insert(*this_it);
+          result.insert(this_term);
       }
       *this = result;
     }
@@ -1806,25 +1642,22 @@ namespace glucat
       throw error_t("centre_qp1_pm1(p,q): HI is too low to represent this value");
     if (p-1 > -LO)
       throw error_t("centre_qp1_pm1(p,q): LO is too high to represent this value");
-    const index_set_t qp1 = index_set_t(q+1);
-    const term_t& tqp1 = term_t(qp1, Scalar_T(1));
-    multivector_t result;
-    for (const_iterator
-        this_it = this->begin();
-        this_it != this->end();
-        ++this_it)
+    const auto qp1 = index_set_t(q+1);
+    const auto& tqp1 = term_t(qp1, Scalar_T(1));
+    auto result = multivector_t();
+    for (auto& this_term : *this)
     {
-      const index_set_t ist = this_it->first;
-      var_term_t term = var_term_t(index_set_t(), this_it->second);
-      for (index_t
+      const auto ist = this_term.first;
+      auto var_term = var_term_t(index_set_t(), this_term.second);
+      for (auto
           n = -q;
           n != p;
           ++n)
         if (n != 0 && ist[n])
-          term *= term_t(index_set_t(-n) | qp1, Scalar_T(1));
+          var_term *= term_t(index_set_t(-n) | qp1, Scalar_T(1));
       if (p != 0 && ist[p])
-        term *= tqp1;
-      result.insert(term_t(term.first, term.second));
+        var_term *= tqp1;
+      result.insert(term_t(var_term.first, var_term.second));
     }
     index_t orig_p = p;
     p = q+1;
@@ -1838,16 +1671,13 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI>::
   divide(const index_set_t ist) const -> const framed_pair_t
   {
-    multivector_t quo;
-    multivector_t rem;
-    for (auto
-        this_it = this->begin();
-        this_it != this->end();
-        ++this_it)
-      if ((this_it->first | ist) == this_it->first)
-        quo.insert(term_t(this_it->first ^ ist, this_it->second));
+    auto quo = multivector_t();
+    auto rem = multivector_t();
+    for (auto& this_term : *this)
+      if ((this_term.first | ist) == this_term.first)
+        quo.insert(term_t(this_term.first ^ ist, this_term.second));
       else
-        rem.insert(*this_it);
+        rem.insert(this_term);
     return framed_pair_t(quo, rem);
   }
 
@@ -1861,8 +1691,8 @@ namespace glucat
     if (this->empty())
     {
       using matrix_index_t = typename matrix_multi_t::matrix_index_t;
-      const matrix_index_t dim = 1 << level;
-      matrix_t result(dim, dim);
+      const auto dim = matrix_index_t(1) << level;
+      auto result =matrix_t(dim, dim);
       result.clear();
       return result;
     }
@@ -1872,18 +1702,18 @@ namespace glucat
     using basis_matrix_t = typename matrix_multi_t::basis_matrix_t;
     using basis_scalar_t = typename basis_matrix_t::value_type;
 
-    const basis_matrix_t&  I = matrix::unit<basis_matrix_t>(2);
-    basis_matrix_t J(2,2,2);
+    const auto&  I = matrix::unit<basis_matrix_t>(2);
+    auto J = basis_matrix_t(2,2,2);
     J.clear();
     J(0,1)  = basis_scalar_t(-1);
     J(1,0)  = basis_scalar_t( 1);
-    basis_matrix_t K = J;
+    auto K = J;
     K(0,1)  = basis_scalar_t( 1);
-    basis_matrix_t JK = I;
+    auto JK = I;
     JK(0,0) = basis_scalar_t(-1);
 
-    const index_set_t ist_mn = index_set_t(-level);
-    const index_set_t ist_pn = index_set_t(level);
+    const auto ist_mn = index_set_t(-level);
+    const auto ist_pn = index_set_t(level);
     if (level == 1)
     {
       if (odd)
@@ -1893,15 +1723,15 @@ namespace glucat
     }
     else
     {
-      const framed_pair_t& pair_mn = this->divide(ist_mn);
-      const multivector_t& quo_mn = pair_mn.first;
-      const multivector_t& rem_mn = pair_mn.second;
-      const framed_pair_t& pair_quo_mnpn = quo_mn.divide(ist_pn);
-      const multivector_t& val_mnpn = pair_quo_mnpn.first;
-      const multivector_t& val_mn   = pair_quo_mnpn.second;
-      const framed_pair_t& pair_rem_mnpn = rem_mn.divide(ist_pn);
-      const multivector_t& val_pn   = pair_rem_mnpn.first;
-      const multivector_t& val_1    = pair_rem_mnpn.second;
+      const auto& pair_mn = this->divide(ist_mn);
+      const auto& quo_mn = pair_mn.first;
+      const auto& rem_mn = pair_mn.second;
+      const auto& pair_quo_mnpn = quo_mn.divide(ist_pn);
+      const auto& val_mnpn = pair_quo_mnpn.first;
+      const auto& val_mn   = pair_quo_mnpn.second;
+      const auto& pair_rem_mnpn = rem_mn.divide(ist_pn);
+      const auto& val_pn   = pair_rem_mnpn.first;
+      const auto& val_1    = pair_rem_mnpn.second;
       using matrix::kron;
       if (odd)
         return - kron(JK, val_1.fast   (level-1, 1))
@@ -1924,10 +1754,10 @@ namespace glucat
   fast_matrix_multi(const index_set_t frm) const -> const matrix_multi<Other_Scalar_T,LO,HI>
   {
     // Fold val
-    multivector_t val = this->fold(frm);
-    index_t p = frm.count_pos();
-    index_t q = frm.count_neg();
-    const index_t bott_offset = gen::offset_to_super[pos_mod(p - q, 8)];
+    auto val = this->fold(frm);
+    auto p = frm.count_pos();
+    auto q = frm.count_neg();
+    const auto bott_offset = gen::offset_to_super[pos_mod(p - q, 8)];
     p += std::max(bott_offset,index_t(0));
     q -= std::min(bott_offset,index_t(0));
     if (p > HI)
@@ -1944,10 +1774,10 @@ namespace glucat
     const index_t level = (p + q)/2;
 
     // Do the fast transform
-      const multivector_t& ev_val = val.even();
-      const multivector_t& od_val = val.odd();
-      return matrix_multi<Other_Scalar_T,LO,HI>(ev_val.fast(level, 0) + od_val.fast(level, 1), frm);
-    }
+    const auto& ev_val = val.even();
+    const auto& od_val = val.odd();
+    return matrix_multi<Other_Scalar_T,LO,HI>(ev_val.fast(level, 0) + od_val.fast(level, 1), frm);
+  }
 
   template< typename Scalar_T, const index_t LO, const index_t HI >
   inline
@@ -1987,7 +1817,7 @@ namespace glucat
 
     check_complex(val, i, prechecked);
 
-    const Scalar_T realval = val.scalar();
+    const auto realval = val.scalar();
     if (val == realval)
     {
       if (realval < Scalar_T(0))
@@ -2008,13 +1838,13 @@ namespace glucat
     if (val.isnan())
       return traits_t::NaN();
 
-    const Scalar_T s = scalar(val);
+    const auto s = scalar(val);
     if (val == s)
       return traits_t::exp(s);
 
     const double size = val.size();
-    const index_t frm_count = val.frame().count();
-    const set_value_t algebra_dim = 1 << frm_count;
+    const auto frm_count = val.frame().count();
+    const auto algebra_dim = set_value_t(1) << frm_count;
 
     if( (size * size <= double(algebra_dim)) || (frm_count < Tune_P::mult_matrix_threshold))
     {
@@ -2025,7 +1855,7 @@ namespace glucat
           using demoted_scalar_t = typename traits_t::demoted::type;
           using demoted_multivector_t = framed_multi<demoted_scalar_t, LO, HI>;
 
-          const demoted_multivector_t& demoted_val = demoted_multivector_t(val);
+          const auto& demoted_val = demoted_multivector_t(val);
           return clifford_exp(demoted_val);
         }
         break;
@@ -2034,7 +1864,7 @@ namespace glucat
           using promoted_scalar_t = typename traits_t::promoted::type;
           using promoted_multivector_t = framed_multi<promoted_scalar_t, LO, HI>;
 
-          const promoted_multivector_t& promoted_val = promoted_multivector_t(val);
+          const auto& promoted_val = promoted_multivector_t(val);
           return clifford_exp(promoted_val);
         }
         break;
@@ -2060,7 +1890,7 @@ namespace glucat
 
     check_complex(val, i, prechecked);
 
-    const Scalar_T realval = val.scalar();
+    const auto realval = val.scalar();
     if (val == realval)
     {
       if (realval < Scalar_T(0))

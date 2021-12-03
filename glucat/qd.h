@@ -109,11 +109,29 @@ namespace glucat
   numeric_traits<dd_real>::
   pow(const dd_real& val, int n) -> dd_real
   {
+    if (val == dd_real(0))
+    {
+      return
+        (n < 0)
+        ? NaN()
+        : (n == 0)
+          ? dd_real(1)
+          : dd_real(0);
+    }
     auto result = dd_real(1);
-    auto pow2 = (n < 0) ? dd_real(1)/val : val;
-    for (int k = n; k != 0; pow2 *= pow2, k /= 2)
+    auto power =
+      (n < 0)
+      ? dd_real(1)/val
+      : val;
+    for (auto
+        k = std::abs(n);
+        k != 0;
+        k /= 2)
+    {
       if (k % 2)
-        result *= pow2;
+        result *= power;
+      power *= power;
+    }
     return result;
   }
 
@@ -221,11 +239,29 @@ namespace glucat
   numeric_traits<qd_real>::
   pow(const qd_real& val, int n) -> qd_real
   {
+    if (val == qd_real(0))
+    {
+      return
+        (n < 0)
+        ? NaN()
+        : (n == 0)
+          ? qd_real(1)
+          : qd_real(0);
+    }
     auto result = qd_real(1);
-    auto pow2 = (n < 0) ? qd_real(1)/val : val;
-    for (int k = n; k != 0; pow2 *= pow2, k /= 2)
+    auto power =
+      (n < 0)
+      ? qd_real(1)/val
+      : val;
+    for (auto
+        k = std::abs(n);
+        k != 0;
+        k /= 2)
+    {
       if (k % 2)
-        result *= pow2;
+        result *= power;
+      power *= power;
+    }
     return result;
   }
 

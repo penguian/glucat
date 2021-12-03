@@ -112,14 +112,11 @@ namespace glucat
   : m_frame( val.m_frame ), m_matrix( val.m_matrix.size1(), val.m_matrix.size2() )
   {
     this->m_matrix.clear();
-    using other_matrix_t = typename matrix_multi<Other_Scalar_T, LO, HI>::matrix_t;
-    using other_const_iterator1 = typename other_matrix_t::const_iterator1;
-    using other_const_iterator2 = typename other_matrix_t::const_iterator2;
-    for (other_const_iterator1
+    for (auto
         val_it1 = val.m_matrix.begin1();
         val_it1 != val.m_matrix.end1();
         ++val_it1)
-      for (other_const_iterator2
+      for (auto
           val_it2 = val_it1.begin();
           val_it2 != val_it1.end();
           ++val_it2)
@@ -140,14 +137,11 @@ namespace glucat
       const matrix_index_t dim = folded_dim<matrix_index_t>(frm);
       this->m_matrix.resize(dim, dim, false);
       this->m_matrix.clear();
-      using other_matrix_t = typename matrix_multi<Other_Scalar_T, LO, HI>::matrix_t;
-      using other_const_iterator1 = typename other_matrix_t::const_iterator1;
-      using other_const_iterator2 = typename other_matrix_t::const_iterator2;
-      for (other_const_iterator1
+      for (auto
           val_it1 = val.m_matrix.begin1();
           val_it1 != val.m_matrix.end1();
           ++val_it1)
-        for (other_const_iterator2
+        for (auto
             val_it2 = val_it1.begin();
             val_it2 != val_it1.end();
             ++val_it2)
@@ -223,19 +217,17 @@ namespace glucat
     const auto dim = folded_dim<matrix_index_t>(frm);
     this->m_matrix.resize(dim, dim, false);
     this->m_matrix.clear();
-    auto vec_it = vec.begin();
-    const index_t begin_index = frm.min();
-    const index_t end_index = frm.max()+1;
-
-    for (index_t
-        idx = begin_index;
-        idx != end_index;
+    auto idx = frm.min();
+    const auto frm_end = frm.max()+1;
+    for (auto& crd : vec)
+    {
+      *this += term_t(index_set_t(idx), crd);
+      for (
+        ++idx;
+        idx != frm_end && !frm[idx];
         ++idx)
-      if (frm[idx])
-      {
-        *this += term_t(index_set_t(idx), *vec_it);
-        ++vec_it;
-      }
+        ;
+    }
   }
 
   /// Construct a multivector from a string: eg: "3+2{1,2}-6.1e-2{2,3}"
@@ -270,11 +262,8 @@ namespace glucat
     this->m_matrix.clear();
 
     using framed_multi_t = framed_multi<Other_Scalar_T, LO, HI>;
-    for (auto
-        val_it = val.begin();
-        val_it != val.end();
-        ++val_it)
-      *this += *val_it;
+    for (auto& val_term : val)
+      *this += val_term;
   }
 
   /// Construct a multivector, within a given frame, from a framed_multi_t
@@ -299,11 +288,8 @@ namespace glucat
     this->m_matrix.clear();
 
     using framed_multi_t = framed_multi<Other_Scalar_T, LO, HI>;
-    for (auto
-        val_it = val.begin();
-        val_it != val.end();
-        ++val_it)
-      *this += *val_it;
+    for (auto& val_term : val)
+      *this += val_term;
   }
 
   /// Construct a multivector within a given frame from a given matrix
@@ -315,13 +301,11 @@ namespace glucat
   {
     this->m_matrix.clear();
 
-    using const_iterator1 = typename Matrix_T::const_iterator1;
-    using const_iterator2 = typename Matrix_T::const_iterator2;
-    for (const_iterator1
+    for (auto
         mtx_it1 = mtx.begin1();
         mtx_it1 != mtx.end1();
         ++mtx_it1)
-      for (const_iterator2
+      for (auto
           mtx_it2 = mtx_it1.begin();
           mtx_it2 != mtx_it1.end();
           ++mtx_it2)
@@ -402,51 +386,46 @@ namespace glucat
 #if defined(_GLUCAT_USE_DENSE_MATRICES)
     return ublas::norm_inf(lhs_ref.m_matrix - rhs_ref.m_matrix) == 0;
 #else
-    typedef typename matrix_t::const_iterator1 const_iterator1;
-    typedef typename matrix_t::const_iterator2 const_iterator2;
     // If either matrix contains zero entries,
     // compare using subtraction and ublas::norm_inf
-    for (const_iterator1
+    for (auto
         it1 =  lhs_ref.m_matrix.begin1();
         it1 != lhs_ref.m_matrix.end1();
         ++it1)
-      for (const_iterator2
-          it2 =  it1.begin();
-          it2 != it1.end();
-          ++it2)
-        if (*it2 == 0)
+      for (auto& it1_term : it1)
+        if (it1_term == 0)
           return ublas::norm_inf(lhs_ref.m_matrix - rhs_ref.m_matrix) == 0;
-    for (const_iterator1
+    for (auto
         it1 =  rhs_ref.m_matrix.begin1();
         it1 != rhs_ref.m_matrix.end1();
         ++it1)
-      for (const_iterator2
-          it2 =  it1.begin();
-          it2 != it1.end();
-          ++it2)
-        if (*it2 == 0)
+      for (auto& it1_term : it1)
+        if (it1_term == 0)
           return ublas::norm_inf(lhs_ref.m_matrix - rhs_ref.m_matrix) == 0;
     // Neither matrix contains zero entries.
     // Compare by iterating over both matrices in lock step.
-    const_iterator1 this_it1 = lhs_ref.m_matrix.begin1();
-    const_iterator1 it1 =      rhs_ref.m_matrix.begin1();
+    auto lhs_it1 = lhs_ref.m_matrix.begin1();
+    auto rhs_it1 = rhs_ref.m_matrix.begin1();
     for (;
-        (this_it1 != lhs_ref.m_matrix.end1()) && (it1 != rhs_ref.m_matrix.end1());
-        ++this_it1, ++it1)
+        (lhs_it1 != lhs_ref.m_matrix.end1()) &&
+        (rhs_it1 != rhs_ref.m_matrix.end1());
+        ++lhs_it1, ++rhs_it1)
     {
-      if ( this_it1.index1() != it1.index1() )
+      if ( lhs_it1.index1() != rhs_it1.index1() )
         return false;
-      const_iterator2 this_it2 = this_it1.begin();
-      const_iterator2 it2 = it1.begin();
+      auto lhs_it2 = lhs_it1.begin();
+      auto rhs_it2 = rhs_it1.begin();
       for (;
-          (this_it2 != this_it1.end()) && (it2 != it1.end());
-          ++this_it2, ++it2)
-        if ( (this_it2.index2() != it2.index2()) || (*this_it2 != *it2) )
+          (lhs_it2 != lhs_it1.end()) &&
+          (rhs_it2 != rhs_it1.end());
+          ++lhs_it2, ++rhs_it2)
+        if ( (lhs_it2.index2() != rhs_it2.index2()) || (*lhs_it2 != *rhs_it2) )
           return false;
-      if ( (this_it2 != this_it1.end()) || (it2 != it1.end()) )
+      if ( (lhs_it2 != lhs_it1.end()) || (rhs_it2 != rhs_it1.end()) )
         return false;
     }
-    return (this_it1 == lhs_ref.m_matrix.end1()) && (it1 == rhs_ref.m_matrix.end1());
+    return (lhs_it1 == lhs_ref.m_matrix.end1()) &&
+           (rhs_it1 == rhs_ref.m_matrix.end1());
 #endif
   }
 
@@ -697,11 +676,11 @@ namespace glucat
     // Operate only within a common frame
     multivector_t lhs_reframed;
     multivector_t rhs_reframed;
-    const index_set_t our_frame = reframe(lhs, rhs, lhs_reframed, rhs_reframed);
-    const multivector_t& lhs_ref = (lhs.m_frame == our_frame)
+    const auto our_frame = reframe(lhs, rhs, lhs_reframed, rhs_reframed);
+    const auto& lhs_ref = (lhs.m_frame == our_frame)
       ? lhs
       : lhs_reframed;
-    const multivector_t& rhs_ref = (rhs.m_frame == our_frame)
+    const auto& rhs_ref = (rhs.m_frame == our_frame)
       ? rhs
       : rhs_reframed;
 
@@ -714,16 +693,16 @@ namespace glucat
     using matrix_t = typename multivector_t::matrix_t;
     using matrix_index_t = typename matrix_t::size_type;
 
-    const matrix_t& AT = ublas::trans(rhs_ref.m_matrix);
-    matrix_t LU = AT;
+    const auto& AT = matrix_t(ublas::trans(rhs_ref.m_matrix));
+    auto LU = AT;
 
     using permutation_t = ublas::permutation_matrix<matrix_index_t>;
 
-    permutation_t pvector(AT.size1());
+    auto pvector = permutation_t(AT.size1());
     if (! ublas::lu_factorize(LU, pvector))
     {
-      const matrix_t& BT = ublas::trans(lhs_ref.m_matrix);
-      matrix_t XT = BT;
+      const auto& BT = matrix_t(ublas::trans(lhs_ref.m_matrix));
+      auto XT = BT;
       ublas::lu_substitute(LU, pvector, XT);
 #if defined(_GLUCAT_CHECK_ISNAN)
       if (matrix::isnan(XT))
@@ -736,19 +715,19 @@ namespace glucat
       if (Tune_P::div_max_steps > 0)
       {
         // matrix_t R = ublas::prod(AT, XT) - BT;
-        matrix_t R = -BT;
+        auto R = matrix_t(-BT);
         ublas::axpy_prod(AT, XT, R, false);
 #if defined(_GLUCAT_CHECK_ISNAN)
         if (matrix::isnan(R))
           return traits_t::NaN();
 #endif
 
-        Scalar_T nr = ublas::norm_inf(R);
+        auto nr = Scalar_T(ublas::norm_inf(R));
         if ( nr != Scalar_T(0) && !traits_t::isNaN_or_isInf(nr) )
         {
-          matrix_t XTnew = XT;
-          Scalar_T nrold = nr + Scalar_T(1);
-          for (int
+          auto XTnew = XT;
+          auto nrold = nr + Scalar_T(1);
+          for (auto
               step = 0;
               step != Tune_P::div_max_steps &&
               nr < nrold &&
@@ -759,7 +738,7 @@ namespace glucat
             nrold = nr;
             if (step != 0)
               XT = XTnew;
-            matrix_t& D = R;
+            auto& D = R;
             ublas::lu_substitute(LU, pvector, D);
             XTnew -= D;
             // noalias(R) = ublas::prod(AT, XTnew) - BT;
@@ -925,9 +904,9 @@ namespace glucat
     if (this->frame() != frm)
       return framed_multi_t(*this).vector_part(frm, true);
 
-    const index_t begin_index = frm.min();
-    const index_t end_index = frm.max()+1;
-    for (index_t
+    const auto begin_index = frm.min();
+    const auto end_index = frm.max()+1;
+    for (auto
         idx = begin_index;
         idx != end_index;
         ++idx)
@@ -1261,43 +1240,42 @@ namespace glucat
   basis_element(const index_set_t& ist) const -> const basis_matrix_t
   {
     using index_set_pair_t = std::pair<const index_set_t, const index_set_t>;
-    const index_set_pair_t& unfolded_pair = index_set_pair_t(ist, this->m_frame);
+    const auto& unfolded_pair = index_set_pair_t(ist, this->m_frame);
 
     using basis_table_t = basis_table<Scalar_T, LO, HI, basis_matrix_t>;
-    using basis_const_iterator_t = typename basis_table_t::const_iterator;
-    basis_table_t& basis_cache = basis_table_t::basis();
+    auto& basis_cache = basis_table_t::basis();
 
-    const index_t frame_count = this->m_frame.count();
-    const bool use_cache = frame_count <= index_t(Tune_P::basis_max_count);
+    const auto frame_count = this->m_frame.count();
+    const auto use_cache = frame_count <= index_t(Tune_P::basis_max_count);
 
     if (use_cache)
     {
-      const basis_const_iterator_t basis_it = basis_cache.find(unfolded_pair);
+      const auto basis_it = basis_cache.find(unfolded_pair);
       if (basis_it != basis_cache.end())
         return *(basis_it->second);
     }
-    const index_set_t folded_set = ist.fold(this->m_frame);
-    const index_set_t folded_frame = this->m_frame.fold();
-    const index_set_pair_t& folded_pair = index_set_pair_t(folded_set, folded_frame);
+    const auto folded_set = ist.fold(this->m_frame);
+    const auto folded_frame = this->m_frame.fold();
+    const auto& folded_pair = index_set_pair_t(folded_set, folded_frame);
     using basis_pair_t = std::pair<const index_set_pair_t, basis_matrix_t *>;
     if (use_cache)
     {
-      const basis_const_iterator_t basis_it = basis_cache.find(folded_pair);
+      const auto basis_it = basis_cache.find(folded_pair);
       if (basis_it != basis_cache.end())
       {
-        basis_matrix_t* result_ptr = basis_it->second;
+        auto* result_ptr = basis_it->second;
         basis_cache.insert(basis_pair_t(unfolded_pair, result_ptr));
         return *result_ptr;
       }
     }
-    const index_t folded_max = folded_frame.max();
-    const index_t folded_min = folded_frame.min();
-    const index_t p = std::max(folded_max,           index_t(0));
-    const index_t q = std::max(index_t(-folded_min), index_t(0));
-    const basis_matrix_t* e = (gen::generator_table<basis_matrix_t>::generator())(p, q);
-    const matrix_index_t dim = 1 << offset_level(p, q);
-    basis_matrix_t result = matrix::unit<basis_matrix_t>(dim);
-    for (index_t
+    const auto folded_max = folded_frame.max();
+    const auto folded_min = folded_frame.min();
+    const auto p = std::max(folded_max,           index_t(0));
+    const auto q = std::max(index_t(-folded_min), index_t(0));
+    const auto* e = (gen::generator_table<basis_matrix_t>::generator())(p, q);
+    const auto dim = matrix_index_t(1) << offset_level(p, q);
+    auto result = matrix::unit<basis_matrix_t>(dim);
+    for (auto
         k = folded_min;
         k <= folded_max;
         ++k)
@@ -1333,42 +1311,42 @@ namespace glucat
       return traits_t::NaN();
 
     // Array size is assumed to be even
-    const size_t nbr_even_powers = Size/2 - 1;
+    const auto nbr_even_powers = Size/2 - 1;
 
     // Create an array of even powers
-    std::vector<multivector_t> XX(nbr_even_powers);
+    auto XX = std::vector<multivector_t>(nbr_even_powers);
     XX[0] = X * X;
     XX[1] = XX[0] * XX[0];
-    for (size_t
-      k = 2;
+    for (auto
+      k = size_t(2);
       k != nbr_even_powers;
       ++k)
       XX[k] = XX[k-2] * XX[1];
 
     // Calculate numerator N and denominator D
-    multivector_t N = numer[1];
-    for (size_t
-        k = 0;
+    auto N = multivector_t(numer[1]);
+    for (auto
+        k = size_t(0);
         k != nbr_even_powers;
         ++k)
       N += XX[k] * numer[2*k + 3];
     N *= X;
     N += numer[0];
-    for (size_t
-        k = 0;
+    for (auto
+        k = size_t(0);
         k != nbr_even_powers;
         ++k)
       N += XX[k] * numer[2*k + 2];
-    multivector_t D = denom[1];
-    for (size_t
-        k = 0;
+    auto D = multivector_t(denom[1]);
+    for (auto
+        k = size_t(0);
         k != nbr_even_powers;
         ++k)
       D += XX[k] * denom[2*k + 3];
     D *= X;
     D += denom[0];
-    for (size_t
-        k = 0;
+    for (auto
+        k = size_t(0);
         k != nbr_even_powers;
         ++k)
       D += XX[k] * denom[2*k + 2];
@@ -1383,8 +1361,7 @@ namespace glucat
   db_step(matrix_multi<Scalar_T,LO,HI>& M, matrix_multi<Scalar_T,LO,HI>& Y)
   {
     // Reference: [CHKL]
-    using multivector_t = matrix_multi<Scalar_T, LO, HI>;
-    const multivector_t& invM = inv(M);
+    const auto& invM = inv(M);
     M = ((M + invM)/Scalar_T(2) + Scalar_T(1)) / Scalar_T(2);
     Y *= (invM + Scalar_T(1)) / Scalar_T(2);
   }
@@ -1402,15 +1379,16 @@ namespace glucat
       return val;
 
     using limits_t = std::numeric_limits<Scalar_T>;
-    static const Scalar_T tol = std::pow(limits_t::epsilon(), 2);
-    static const Scalar_T tol2 = tol * tol;
-    static const int sqrt_max_steps = Tune_P::sqrt_max_steps;
-    multivector_t M = val;
-    multivector_t Y = val;
-    Scalar_T norm_M_1 = norm(M - Scalar_T(1));
+    static const auto tol = std::pow(limits_t::epsilon(), 2);
+    static const auto tol2 = tol * tol;
+    static const auto sqrt_max_steps = Tune_P::sqrt_max_steps;
+    auto M = val;
+    auto Y = val;
+    auto norm_M_1 = norm(M - Scalar_T(1));
     using traits_t = numeric_traits<Scalar_T>;
 
-    for (int step = 0;
+    for (auto
+        step = 0;
         step != sqrt_max_steps && norm_M_1 > tol2;
         ++step)
     {
@@ -1637,8 +1615,8 @@ namespace glucat
         using demoted_scalar_t = typename traits_t::demoted::type;
         using demoted_multivector_t = matrix_multi<demoted_scalar_t, LO, HI>;
 
-        const demoted_multivector_t& demoted_val = demoted_multivector_t(val);
-        const demoted_multivector_t& demoted_i = demoted_multivector_t(i);
+        const auto& demoted_val = demoted_multivector_t(val);
+        const auto& demoted_i = demoted_multivector_t(i);
 
         return matrix_sqrt(demoted_val, demoted_i);
       }
@@ -1648,8 +1626,8 @@ namespace glucat
         using promoted_scalar_t = typename traits_t::promoted::type;
         using promoted_multivector_t = matrix_multi<promoted_scalar_t, LO, HI>;
 
-        const promoted_multivector_t& promoted_val = promoted_multivector_t(val);
-        const promoted_multivector_t& promoted_i = promoted_multivector_t(i);
+        const auto& promoted_val = promoted_multivector_t(val);
+        const auto& promoted_i = promoted_multivector_t(i);
 
         return matrix_sqrt(promoted_val, promoted_i);
       }
@@ -1675,41 +1653,41 @@ namespace glucat
 
     using multivector_t = matrix_multi<Scalar_T, LO, HI>;
 
-    const Scalar_T realval = val.scalar();
-    if (val == realval)
+    const auto scr_val = val.scalar();
+    if (val == scr_val)
     {
-      if (realval < Scalar_T(0))
-        return i * traits_t::sqrt(-realval);
+      if (scr_val < Scalar_T(0))
+        return i * traits_t::sqrt(-scr_val);
       else
-        return traits_t::sqrt(realval);
+        return traits_t::sqrt(scr_val);
     }
 
-    static const Scalar_T sqrt_2 = traits_t::sqrt(Scalar_T(2));
+    static const auto sqrt_2 = traits_t::sqrt(Scalar_T(2));
 
 #if !defined(_GLUCAT_USE_EIGENVALUES)
-    const multivector_t val2 = val*val;
-    const Scalar_T real_val2 = val2.scalar();
-    if (val2 == real_val2 && real_val2 > Scalar_T(0))
+    const auto val2 = val*val;
+    const auto scr_val2 = val2.scalar();
+    if (val2 == scr_val2 && scr_val2 > Scalar_T(0))
       return matrix_sqrt(-i * val, i) * (i + Scalar_T(1)) / sqrt_2;
 #endif
 
     // Scale val towards abs(A) == 1 or towards A == 1 as appropriate
-    const Scalar_T scale =
-      (realval != Scalar_T(0) && norm(val/realval - Scalar_T(1)) < Scalar_T(1))
-      ? realval
-      : (realval < Scalar_T(0))
+    const auto scale =
+      (scr_val != Scalar_T(0) && norm(val/scr_val - Scalar_T(1)) < Scalar_T(1))
+      ? scr_val
+      : (scr_val < Scalar_T(0))
         ? -abs(val)
         :  abs(val);
-    const Scalar_T sqrt_scale = traits_t::sqrt(traits_t::abs(scale));
+    const auto sqrt_scale = traits_t::sqrt(traits_t::abs(scale));
     if (traits_t::isNaN_or_isInf(sqrt_scale))
       return traits_t::NaN();
 
     using multivector_t = matrix_multi<Scalar_T, LO, HI>;
-    multivector_t rescale = sqrt_scale;
+    auto rescale = multivector_t(sqrt_scale);
     if (scale < Scalar_T(0))
       rescale = i * sqrt_scale;
 
-    const multivector_t& unitval = val / scale;
+    const auto& unitval = val / scale;
     const auto max_norm = Scalar_T(1.0/4.0);
 
 #if defined(_GLUCAT_USE_EIGENVALUES)
@@ -1725,7 +1703,7 @@ namespace glucat
       break;
     case matrix::both_eig_case:
       {
-        const Scalar_T safe_arg = genus.m_safe_arg;
+        const auto safe_arg = genus.m_safe_arg;
         scaled_result = matrix_sqrt(exp(i*safe_arg) * unitval, i) * exp(-i*safe_arg/Scalar_T(2));
       }
       break;
@@ -1745,7 +1723,7 @@ namespace glucat
     else
       return scaled_result * rescale;
 #else
-    const multivector_t& scaled_result =
+    const auto& scaled_result =
       (norm(unitval - Scalar_T(1)) < max_norm)
         // Pade' approximation of square root
       ? pade_approx(pade::pade_sqrt_numer<Scalar_T>::numer,
@@ -1758,9 +1736,9 @@ namespace glucat
       if (inv(unitval).isnan())
         return traits_t::NaN();
 
-      const multivector_t& mi_unitval = -i * unitval;
+      const auto& mi_unitval = -i * unitval;
 
-      const multivector_t& scaled_mi_result =
+      const auto& scaled_mi_result =
         (norm(mi_unitval - Scalar_T(1)) < max_norm)
           // Pade' approximation of square root
         ? pade_approx(pade::pade_sqrt_numer<Scalar_T>::numer,
@@ -1998,15 +1976,15 @@ namespace glucat{
       return traits_t::NaN();
 
     using limits_t = std::numeric_limits<Scalar_T>;
-    static const Scalar_T epsilon = limits_t::epsilon();
-    static const Scalar_T max_inner_norm = traits_t::pow(epsilon, 2);
+    static const auto epsilon = limits_t::epsilon();
+    static const auto max_inner_norm = traits_t::pow(epsilon, 2);
     static const auto max_outer_norm = Scalar_T(6.0/limits_t::digits);
-    multivector_t Y = val;
-    multivector_t E = Scalar_T(0);
+    auto Y = val;
+    auto E = multivector_t(Scalar_T(0));
     Scalar_T norm_Y_1;
-    int outer_step;
     auto pow_2_outer_step = Scalar_T(1);
     auto pow_4_outer_step = Scalar_T(1);
+    int outer_step;
     for (outer_step = 0, norm_Y_1 = norm(Y - Scalar_T(1));
         outer_step != Tune_P::log_max_outer_steps && norm_Y_1 * pow_2_outer_step > max_outer_norm;
         ++outer_step,    norm_Y_1 = norm(Y - Scalar_T(1)))
@@ -2015,8 +1993,8 @@ namespace glucat{
         return traits_t::NaN();
 
       // Incomplete product form of Denman-Beavers square root iteration
-      multivector_t M = Y;
-      for (int
+      auto M = Y;
+      for (auto
           inner_step = 0;
           inner_step != Tune_P::log_max_inner_steps &&
             norm(M - Scalar_T(1)) * pow_4_outer_step > max_inner_norm;
@@ -2052,8 +2030,8 @@ namespace glucat{
         using demoted_scalar_t = typename traits_t::demoted::type;
         using demoted_multivector_t = matrix_multi<demoted_scalar_t, LO, HI>;
 
-        const demoted_multivector_t& demoted_val = demoted_multivector_t(val);
-        const demoted_multivector_t& demoted_i = demoted_multivector_t(i);
+        const auto& demoted_val = demoted_multivector_t(val);
+        const auto& demoted_i = demoted_multivector_t(i);
 
         return matrix_log(demoted_val, demoted_i);
       }
@@ -2063,8 +2041,8 @@ namespace glucat{
         using promoted_scalar_t = typename traits_t::promoted::type;
         using promoted_multivector_t = matrix_multi<promoted_scalar_t, LO, HI>;
 
-        const promoted_multivector_t& promoted_val = promoted_multivector_t(val);
-        const promoted_multivector_t& promoted_i = promoted_multivector_t(i);
+        const auto& promoted_val = promoted_multivector_t(val);
+        const auto& promoted_i = promoted_multivector_t(i);
 
         return matrix_log(promoted_val, promoted_i);
       }
@@ -2086,46 +2064,47 @@ namespace glucat{
     if (val == Scalar_T(0) || val.isnan())
       return traits_t::NaN();
 
-    static const Scalar_T pi = traits_t::pi();
-    const Scalar_T realval = val.scalar();
-    if (val == realval)
+    static const auto pi = traits_t::pi();
+    const auto scr_val = val.scalar();
+    if (val == scr_val)
     {
-      if (realval < Scalar_T(0))
-        return i * pi + traits_t::log(-realval);
+      if (scr_val < Scalar_T(0))
+        return i * pi + traits_t::log(-scr_val);
       else
-        return traits_t::log(realval);
+        return traits_t::log(scr_val);
     }
-    using multivector_t = matrix_multi<Scalar_T, LO, HI>;
 #if !defined(_GLUCAT_USE_EIGENVALUES)
-    const multivector_t val2 = val*val;
-    const Scalar_T real_val2 = val2.scalar();
-    if (val2 == real_val2 && real_val2 > 0)
+    const auto val2 = val*val;
+    const auto scr_val2 = val2.scalar();
+    if (val2 == scr_val2 && scr_val2 > 0)
       return matrix_log(-i * val, i) + i * pi/Scalar_T(2);
 #endif
     // Scale val towards abs(A) == 1 or towards A == 1 as appropriate
     const auto max_norm = Scalar_T(1.0/9.0);
-    const Scalar_T scale =
-      (realval != Scalar_T(0) && norm(val/realval - Scalar_T(1)) < max_norm)
-      ? realval
-      : (realval < Scalar_T(0))
+    const auto scale =
+      (scr_val != Scalar_T(0) && norm(val/scr_val - Scalar_T(1)) < max_norm)
+      ? scr_val
+      : (scr_val < Scalar_T(0))
         ? -abs(val)
         :  abs(val);
     if (scale == Scalar_T(0))
       return traits_t::NaN();
 
-    const Scalar_T log_scale = traits_t::log(traits_t::abs(scale));
-    multivector_t rescale = log_scale;
+    using multivector_t = matrix_multi<Scalar_T, LO, HI>;
+    const auto log_scale = traits_t::log(traits_t::abs(scale));
+    auto rescale = multivector_t(log_scale);
     if (scale < Scalar_T(0))
       rescale = i * pi + log_scale;
-    const multivector_t unitval = val/scale;
+    const auto unitval = val/scale;
     if (inv(unitval).isnan())
       return traits_t::NaN();
+
 #if defined(_GLUCAT_USE_EIGENVALUES)
-    multivector_t scaled_result;
+    auto scaled_result = multivector_t();
     using matrix_t = typename multivector_t::matrix_t;
 
     // What kind of eigenvalues does the matrix contain?
-    matrix::eig_genus<matrix_t> genus = matrix::classify_eigenvalues(unitval.m_matrix);
+    auto genus = matrix::classify_eigenvalues(unitval.m_matrix);
     switch (genus.m_eig_case)
     {
     case matrix::negative_eig_case:
@@ -2142,7 +2121,7 @@ namespace glucat{
       break;
     }
 #else
-    multivector_t scaled_result = cascade_log(unitval);
+    auto scaled_result = cascade_log(unitval);
 #endif
     if (scaled_result.isnan())
       return traits_t::NaN();
@@ -2159,9 +2138,9 @@ namespace glucat{
     if (val.isnan())
       return traits_t::NaN();
 
-    const Scalar_T s = scalar(val);
-    if (val == s)
-      return traits_t::exp(s);
+    const auto scr_val = val.scalar();
+    if (val == scr_val)
+      return traits_t::exp(scr_val);
 
     switch (Tune_P::function_precision)
     {
@@ -2170,7 +2149,7 @@ namespace glucat{
         using demoted_scalar_t = typename traits_t::demoted::type;
         using demoted_multivector_t = matrix_multi<demoted_scalar_t, LO, HI>;
 
-        const demoted_multivector_t& demoted_val = demoted_multivector_t(val);
+        const auto& demoted_val = demoted_multivector_t(val);
         return clifford_exp(demoted_val);
       }
       break;
@@ -2179,7 +2158,7 @@ namespace glucat{
         using promoted_scalar_t = typename traits_t::promoted::type;
         using promoted_multivector_t = matrix_multi<promoted_scalar_t, LO, HI>;
 
-        const promoted_multivector_t& promoted_val = promoted_multivector_t(val);
+        const auto& promoted_val = promoted_multivector_t(val);
         return clifford_exp(promoted_val);
       }
       break;

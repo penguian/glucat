@@ -461,14 +461,14 @@ namespace glucat
   index_set<LO,HI>::
   min() const -> index_t
   {
-    for (index_t
+    for (auto
         idx = LO;
         idx != 0;
         ++idx)
       if (this->test(idx))
         return idx;
-    for (index_t
-        idx = 1;
+    for (auto
+        idx = index_t(1);
         idx <= HI;
         ++idx)
       if (this->test(idx))
@@ -486,13 +486,13 @@ namespace glucat
   max() const -> index_t
   {
     // Reference: [JA], 1.6
-    unsigned long val = bitset_t::to_ulong();
+    auto val = bitset_t::to_ulong();
     if (val == 0)
       return 0;
     else
     {
-      index_t idx = 0;
-      const index_t nbits = HI - LO;
+      auto idx = index_t(0);
+      const auto nbits = HI - LO;
       if (nbits > 8)
       {
         if (val & 0xffffffff00000000ul)
@@ -520,13 +520,13 @@ namespace glucat
   max() const -> index_t
   {
     // Reference: [JA], 1.6
-    unsigned long val = bitset_t::to_ulong();
+    auto val = bitset_t::to_ulong();
     if (val == 0)
       return 0;
     else
     {
-      index_t idx = 0;
-      const index_t nbits = HI - LO;
+      auto idx = index_t(0);
+      const auto nbits = HI - LO;
       if (nbits > 8)
       {
         if (val & 0xffff0000ul)
@@ -550,14 +550,14 @@ namespace glucat
   index_set<LO,HI>::
   max() const -> index_t
   {
-    for (index_t
+    for (auto
         idx = HI;
         idx != 0;
         --idx)
       if (this->test(idx))
         return idx;
-    for (index_t
-        idx = -1;
+    for (auto
+        idx = index_t(-1);
         idx >= LO;
         --idx)
       if (this->test(idx))
@@ -597,8 +597,8 @@ namespace glucat
   index_set<LO,HI>::
   operator< (const index_set_t rhs) const -> bool
   {
-    const index_t this_grade = this->count();
-    const index_t rhs_grade  = rhs.count();
+    const auto this_grade = this->count();
+    const auto rhs_grade  = rhs.count();
     return (this_grade < rhs_grade)
            ? true
            : (this_grade > rhs_grade)
@@ -613,7 +613,7 @@ namespace glucat
   {
     index_t i;
     os << '{';
-    for (i= LO;
+    for (i = LO;
         (i <= HI) && !(ist[i]);
         ++i)
     { }
@@ -634,15 +634,15 @@ namespace glucat
   operator>> (std::istream& s, index_set<LO,HI>& ist) -> std::istream&
   {
     // Parsing variables.
-    int c = 0;
-    index_t i = 0;
-    index_set<LO,HI> local_ist;
+    auto i = index_t(0);
+    using index_set_t = index_set<LO,HI>;
+    auto local_ist = index_set_t();
     // Parsing control variables.
-    bool parse_index_list = true;
-    bool expect_closing_brace = false;
-    bool expect_index = false;
+    auto parse_index_list = true;
+    auto expect_closing_brace = false;
+    auto expect_index = false;
     // Parse an optional opening brace.
-    c = s.peek();
+    auto c = s.peek();
     // If there is a failure or end of file, this ends parsing.
     if (!s.good())
       parse_index_list = false;
@@ -732,8 +732,8 @@ namespace glucat
   index_set<LO,HI>::
   is_contiguous () const -> bool
   {
-    const index_t min_index = this->min();
-    const index_t max_index = this->max();
+    const auto min_index = this->min();
+    const auto max_index = this->max();
     return (min_index < 0 && max_index > 0)
          ?  max_index - min_index == this->count()
          : (min_index == 1 || max_index == -1) &&
@@ -758,12 +758,12 @@ namespace glucat
   {
     if (!prechecked && ((*this | frm) != frm))
       throw error_t("fold(frm): cannot fold from outside of frame");
-    const index_t frm_min = frm.min();
-    const index_t frm_max = frm.max();
-    index_set_t result;
-    index_t fold_idx = -1;
-    index_t unfold_idx;
-    for (unfold_idx = -1;
+    const auto frm_min = frm.min();
+    const auto frm_max = frm.max();
+    auto result = index_set_t();
+    auto fold_idx = index_t(-1);
+    for (auto
+        unfold_idx = fold_idx;
         unfold_idx >= frm_min;
         --unfold_idx)
       if (frm.test(unfold_idx))
@@ -773,8 +773,9 @@ namespace glucat
           result.set(fold_idx);
         --fold_idx;
       }
-    fold_idx = 1;
-    for (unfold_idx = 1;
+    fold_idx = index_t(1);
+    for (auto
+        unfold_idx = fold_idx;
         unfold_idx <= frm_max;
         ++unfold_idx)
       if (frm.test(unfold_idx))
@@ -795,12 +796,12 @@ namespace glucat
   {
     const char* msg =
       "unfold(frm): cannot unfold into a smaller frame";
-    const index_t frm_min = frm.min();
-    const index_t frm_max = frm.max();
-    index_set_t result;
-    index_t fold_idx = -1;
-    index_t unfold_idx;
-    for (unfold_idx = -1;
+    const auto frm_min = frm.min();
+    const auto frm_max = frm.max();
+    auto result = index_set_t();
+    auto fold_idx = index_t(-1);
+    for (auto
+        unfold_idx = fold_idx;
         unfold_idx >= frm_min;
         --unfold_idx)
       if (frm.test(unfold_idx))
@@ -808,8 +809,9 @@ namespace glucat
           result.set(unfold_idx);
     if (!prechecked && ((fold_idx+1) > this->min()))
       throw error_t(msg);
-    fold_idx = 1;
-    for (unfold_idx = 1;
+    fold_idx = index_t(1);
+    for (auto
+        unfold_idx = fold_idx;
         unfold_idx <= frm_max;
         ++unfold_idx)
       if (frm.test(unfold_idx))
@@ -827,13 +829,13 @@ namespace glucat
   index_set<LO,HI>::
   value_of_fold(const index_set_t frm) const -> set_value_t
   {
-    const index_t min_index = frm.fold().min();
+    const auto min_index = frm.fold().min();
     if (min_index == 0)
       return 0;
     else
     {
-      const index_set_t folded_set = this->fold(frm);
-      const index_t skip = min_index > 0 ? 1 : 0;
+      const auto folded_set = this->fold(frm);
+      const auto skip = min_index > 0 ? index_t(1) : index_t(0);
       return folded_set.bitset_t::to_ulong() >> (min_index-LO-skip);
     }
   }
@@ -881,35 +883,36 @@ namespace glucat
     // Implemented using Walsh functions and Gray codes.
     // Reference: [L] Chapter 21, 21.3
     // Reference: [JA]
-    const unsigned long uthis = this->bitset_t::to_ulong();
-    const unsigned long urhs  =   rhs.bitset_t::to_ulong();
-    const index_t nbits = HI - LO;
-    unsigned long negative = 0;
+    const auto uthis = this->bitset_t::to_ulong();
+    const auto urhs  =   rhs.bitset_t::to_ulong();
+    const auto nbits = HI - LO;
+    auto negative = 0UL;
     if (nbits > 8)
     {
       // Set h to be the inverse reversed Gray code of rhs.
       // This sets each bit of h to be the cumulative ^ of
       // the same and lower bits of rhs.
-      const unsigned long h = inverse_reversed_gray(urhs);
+      const auto h = inverse_reversed_gray(urhs);
       // Set k to be the inverse Gray code of *this & h.
       // This sets the low bit of k to be parity(*this & h).
-      const unsigned long k = inverse_gray(uthis & h);
+      const auto k = inverse_gray(uthis & h);
       // Set q to be the inverse Gray code of the positive part of *this & rhs.
-      const unsigned long q = inverse_gray((uthis & urhs) >> -LO);
+      const auto q = inverse_gray((uthis & urhs) >> -LO);
       negative = k ^ q;
     }
     else
     {
-      unsigned long h = 0;
-      index_t j;
-      for (j = 0;
+      auto h = 0UL;
+      for (auto
+          j = index_t(0);
           j < -LO;
           ++j)
       {
         h ^= urhs >> j;
         negative ^= h & (uthis >> j);
       }
-      for (j = -LO;
+      for (auto
+          j = index_t(-LO);
           j < nbits;
           ++j)
       {
@@ -927,7 +930,7 @@ namespace glucat
   index_set<LO,HI>::
   sign_of_square() const -> int
   {
-    int result = 1 - int((this->count_neg() % 2) << 1);
+    auto result = 1 - int((this->count_neg() % 2) << 1);
     switch (this->count() % 4)
     {
       case 2:
@@ -947,10 +950,10 @@ namespace glucat
   index_set<LO,HI>::
   hash_fn() const -> size_t
   {
-    static const unsigned long lo_mask = (1UL << -LO) - 1UL;
-    const unsigned long uthis = bitset_t::to_ulong();
-    const unsigned long neg_part = uthis & lo_mask;
-    const unsigned long pos_part = uthis >> -LO;
+    static const auto lo_mask = (1UL << -LO) - 1UL;
+    const auto uthis = bitset_t::to_ulong();
+    const auto neg_part = uthis & lo_mask;
+    const auto pos_part = uthis >> -LO;
     return size_t(neg_part ^ pos_part);
   }
 

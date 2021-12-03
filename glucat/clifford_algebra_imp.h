@@ -109,7 +109,7 @@ namespace glucat
   auto
   operator+ (const Multivector<Scalar_T,LO,HI>& lhs, const Scalar_T& scr) -> const Multivector<Scalar_T,LO,HI>
   {
-    Multivector<Scalar_T,LO,HI> result = lhs;
+    auto result = lhs;
     return result += scr;
   }
 
@@ -134,7 +134,7 @@ namespace glucat
   auto
   operator+ (const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs) -> const Multivector<Scalar_T,LO,HI>
   {
-    Multivector<Scalar_T,LO,HI> result = lhs;
+    auto result = lhs;
     return result += rhs;
   }
 
@@ -145,7 +145,7 @@ namespace glucat
   auto
   operator- (const Multivector<Scalar_T,LO,HI>& lhs, const Scalar_T& scr) -> const Multivector<Scalar_T,LO,HI>
   {
-    Multivector<Scalar_T,LO,HI> result = lhs;
+    auto result = lhs;
     return result -= scr;
   }
 
@@ -168,7 +168,7 @@ namespace glucat
   auto
   operator- (const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs) -> const Multivector<Scalar_T,LO,HI>
   {
-    Multivector<Scalar_T,LO,HI> result = lhs;
+    auto result = lhs;
     return result -= rhs;
   }
 
@@ -179,7 +179,7 @@ namespace glucat
   auto
   operator* (const Multivector<Scalar_T,LO,HI>& lhs, const Scalar_T& scr) -> const Multivector<Scalar_T,LO,HI>
   {
-    Multivector<Scalar_T,LO,HI> result = lhs;
+    auto result = lhs;
     return result *= scr;
   }
 
@@ -276,7 +276,7 @@ namespace glucat
   auto
   operator/ (const Multivector<Scalar_T,LO,HI>& lhs, const Scalar_T& scr) -> const Multivector<Scalar_T,LO,HI>
   {
-    Multivector<Scalar_T,LO,HI> result = lhs;
+    auto result = lhs;
     return result /= scr;
   }
 
@@ -336,24 +336,30 @@ namespace glucat
   pow(const Multivector<Scalar_T,LO,HI>& lhs, int rhs) -> const Multivector<Scalar_T,LO,HI>
   {
     using multivector_t = Multivector<Scalar_T, LO, HI>;
-    using traits_t = numeric_traits<Scalar_T>;
-
-    multivector_t a;
-    if (rhs < 0)
+    if (lhs == Scalar_T(0))
     {
-      if (lhs == Scalar_T(0))
-        return traits_t::NaN();
-      rhs = -rhs;
-      a = lhs.inv();
+      using traits_t = numeric_traits<Scalar_T>;
+      return
+        (rhs < 0)
+        ? traits_t::NaN()
+        : (rhs == 0)
+          ? Scalar_T(1)
+          : Scalar_T(0);
     }
-    else
-      a = lhs;
-    multivector_t result = Scalar_T(1);
-    for (;
-        rhs != 0;
-        rhs >>= 1, a *= a)
-      if (rhs & 1)
-        result *= a;
+    auto result = multivector_t(Scalar_T(1));
+    auto power =
+      (rhs < 0)
+      ? lhs.inv()
+      : lhs;
+    for (auto
+        k = std::abs(rhs);
+        k != 0;
+        k /= 2)
+    {
+      if (k % 2)
+        result *= power;
+      power *= power;
+    }
     return result;
   }
 
@@ -374,11 +380,12 @@ namespace glucat
     {
       const Scalar_T m = rhs.scalar();
       if (rhs == m)
-        return (m < 0)
-               ? traits_t::NaN()
-               : (m == 0)
-                 ? Scalar_T(1)
-                 : Scalar_T(0);
+        return
+          (m < 0)
+            ? traits_t::NaN()
+            : (m == 0)
+              ? Scalar_T(1)
+              : Scalar_T(0);
       else
         return Scalar_T(0);
     }
@@ -515,18 +522,18 @@ namespace glucat
   {
     using multivector_t = Multivector<Scalar_T, LO, HI>;
     using traits_t = numeric_traits<Scalar_T>;
-    using index_set_t = typename multivector_t::index_set_t;
 
-    index_set_t frm = val.frame();
-    std::array<index_t, 4> incp = {0, 2, 1, 0};
-    std::array<index_t, 4> incq = {1, 0, 0, 0};
-    index_t bott = pos_mod((frm.count_pos() - frm.count_neg()), 4);
-    for (index_t
-        k = 0;
+    auto frm = val.frame();
+    using array_t = std::array<index_t, 4>;
+    auto incp = array_t{0, 2, 1, 0};
+    auto incq = array_t{1, 0, 0, 0};
+    auto bott = pos_mod((frm.count_pos() - frm.count_neg()), 4);
+    for (auto
+        k = index_t(0);
         k != incp[bott];
         k++)
-      for (index_t
-          idx = 1;
+      for (auto
+          idx = index_t(1);
           idx != HI+1;
           ++idx)
         if (!frm[idx])
@@ -534,12 +541,12 @@ namespace glucat
           frm.set(idx);
           break;
         }
-    for (index_t
-        k = 0;
+    for (auto
+        k = index_t(0);
         k != incq[bott];
         k++)
-      for (index_t
-          idx = -1;
+      for (auto
+          idx = index_t(-1);
           idx != LO-1;
           --idx)
         if (!frm[idx])
@@ -547,7 +554,7 @@ namespace glucat
           frm.set(idx);
           break;
         }
-    index_t new_bott = pos_mod(frm.count_pos() - frm.count_neg(), 4);
+    auto new_bott = pos_mod(frm.count_pos() - frm.count_neg(), 4);
 
     if ((incp[new_bott] == 0) && (incq[new_bott] == 0))
       return multivector_t(frm, Scalar_T(1));
@@ -580,7 +587,7 @@ namespace glucat
       using index_set_t = typename multivector_t::index_set_t;
       using error_t = typename multivector_t::error_t;
 
-      const index_set_t i_frame = i.frame();
+      const auto i_frame = i.frame();
       // We need i to be a complexifier whose frame is large enough to represent val
       if (complexifier(i) != i ||
          (val.frame() | i_frame) != i_frame ||
@@ -617,25 +624,25 @@ namespace glucat
 
     using traits_t = numeric_traits<Scalar_T>;
 
-    const Scalar_T scalar_val = scalar(val);
-    const Scalar_T scalar_exp = traits_t::exp(scalar_val);
+    const auto scalar_val = val.scalar();
+    const auto scalar_exp = traits_t::exp(scalar_val);
     if (traits_t::isNaN_or_isInf(scalar_exp))
       return traits_t::NaN();
     if (val == scalar_val)
       return scalar_exp;
 
     using multivector_t = Multivector<Scalar_T, LO, HI>;
-    multivector_t A = val - scalar_val;
-    const Scalar_T pure_scale2 = A.norm();
+    auto A = val - scalar_val;
+    const auto pure_scale2 = A.norm();
 
     if (traits_t::isNaN_or_isInf(pure_scale2))
       return traits_t::NaN();
     if (pure_scale2 == Scalar_T(0))
       return scalar_exp;
 
-    const int ilog2_scale =
+    const auto ilog2_scale =
       std::max(0, traits_t::to_int(ceil((log2(pure_scale2) + Scalar_T(A.frame().count()))/Scalar_T(2))) - 3);
-    const Scalar_T i_scale = traits_t::pow(Scalar_T(2), ilog2_scale);
+    const auto i_scale = traits_t::pow(Scalar_T(2), ilog2_scale);
     if (traits_t::isNaN_or_isInf(i_scale))
       return traits_t::NaN();
 
@@ -643,16 +650,17 @@ namespace glucat
     multivector_t pure_exp;
     {
       using limits_t = std::numeric_limits<Scalar_T>;
-      const int nbr_even_powers = 2*(limits_t::digits / 32) + 4;
+      const auto nbr_even_powers = 2*(limits_t::digits / 32) + 4;
+      using nbr_t = decltype(nbr_even_powers);
 
       // Create an array of coefficients
-      const int max_power = 2*nbr_even_powers + 1;
+      const auto max_power = 2*nbr_even_powers + 1;
       static std::array<Scalar_T, max_power+1> c;
       if (c[0] != Scalar_T(1))
       {
         c[0] = Scalar_T(1);
-        for (int
-            k = 0;
+        for (auto
+            k = decltype(max_power)(0);
             k != max_power;
             ++k)
           c[k+1] = c[k]*(max_power-k) / ((2*max_power-k)*(k+1));
@@ -662,42 +670,42 @@ namespace glucat
       std::array<multivector_t, nbr_even_powers> AA;
       AA[0] = A * A;
       AA[1] = AA[0] * AA[0];
-      for (int
-        k = 2;
+      for (auto
+        k = nbr_t(2);
         k != nbr_even_powers;
         ++k)
         AA[k] = AA[k-2] * AA[1];
 
       // Use compensated summation to calculate U and AV
-      multivector_t residual = 0;
-      multivector_t U = c[0];
-      for (int
-          k = 0;
+      auto residual = multivector_t();
+      auto U = multivector_t(c[0]);
+      for (auto
+          k = nbr_t(0);
           k != nbr_even_powers;
           ++k)
       {
-        const multivector_t& term = AA[k]*c[2*k + 2] - residual;
-        const multivector_t& sum = U + term;
+        const auto& term = AA[k]*c[2*k + 2] - residual;
+        const auto& sum = U + term;
         residual = (sum - U) - term;
         U = sum;
       }
-      residual = 0;
-      multivector_t AV = c[1];
-      for (int
-          k = 0;
+      residual = multivector_t();
+      auto AV = multivector_t(c[1]);
+      for (auto
+          k = nbr_t(0);
           k != nbr_even_powers;
           ++k)
       {
-        const multivector_t& term = AA[k]*c[2*k + 3] - residual;
-        const multivector_t& sum = AV + term;
+        const auto& term = AA[k]*c[2*k + 3] - residual;
+        const auto& sum = AV + term;
         residual = (sum - AV) - term;
         AV = sum;
       }
       AV *= A;
       pure_exp = (U+AV) / (U-AV);
     }
-    for (int
-        k = 0;
+    for (auto
+        k = decltype(ilog2_scale)(0);
         k != ilog2_scale;
         ++k)
       pure_exp *= pure_exp;
@@ -731,7 +739,7 @@ namespace glucat
     if (val.isnan())
       return traits_t::NaN();
 
-    const Scalar_T& s = scalar(val);
+    const auto& s = val.scalar();
     if (val == s)
       return traits_t::cosh(s);
     return (exp(val)+exp(-val)) / Scalar_T(2);
@@ -750,8 +758,7 @@ namespace glucat
     if (val.isnan())
       return traits_t::NaN();
 
-    using multivector_t = Multivector<Scalar_T, LO, HI>;
-    const multivector_t radical = sqrt(val*val - Scalar_T(1), i, true);
+    const auto radical = sqrt(val*val - Scalar_T(1), i, true);
     return (norm(val + radical) >= norm(val))
            ?  log(val + radical, i, true)
            : -log(val - radical, i, true);
@@ -776,15 +783,14 @@ namespace glucat
     if (val.isnan())
       return traits_t::NaN();
 
-    const Scalar_T& s = scalar(val);
+    const auto& s = val.scalar();
     if (val == s)
       return traits_t::cos(s);
 
     check_complex(val, i, prechecked);
 
-    using multivector_t = Multivector<Scalar_T, LO, HI>;
-    static const Scalar_T& twopi = Scalar_T(2) * traits_t::pi();
-    const multivector_t& z = i *
+    static const auto& twopi = Scalar_T(2) * traits_t::pi();
+    const auto& z = i *
       (val - s + traits_t::fmod(s, twopi));
     return (exp(z)+exp(-z)) / Scalar_T(2);
   }
@@ -809,9 +815,9 @@ namespace glucat
     if (val.isnan())
       return traits_t::NaN();
 
-    const Scalar_T& realval = val.scalar();
-    if (val == realval && traits_t::abs(realval) <= Scalar_T(1))
-      return traits_t::acos(realval);
+    const auto& s = val.scalar();
+    if (val == s && traits_t::abs(s) <= Scalar_T(1))
+      return traits_t::acos(s);
 
     check_complex(val, i, prechecked);
     return i * acosh(val, i, true);
@@ -837,7 +843,7 @@ namespace glucat
     if (val.isnan())
       return traits_t::NaN();
 
-    const Scalar_T& s = scalar(val);
+    const auto& s = val.scalar();
     if (val == s)
       return traits_t::sinh(s);
 
@@ -857,8 +863,7 @@ namespace glucat
     if (val.isnan())
       return traits_t::NaN();
 
-    using multivector_t = Multivector<Scalar_T, LO, HI>;
-    const multivector_t radical = sqrt(val*val + Scalar_T(1), i, true);
+    const auto radical = sqrt(val*val + Scalar_T(1), i, true);
     return (norm(val + radical) >= norm(val))
            ?  log( val + radical, i, true)
            : -log(-val + radical, i, true);
@@ -883,15 +888,14 @@ namespace glucat
     if (val.isnan())
       return traits_t::NaN();
 
-    const Scalar_T& s = scalar(val);
+    const auto& s = val.scalar();
     if (val == s)
       return traits_t::sin(s);
 
     check_complex(val, i, prechecked);
 
-    using multivector_t = Multivector<Scalar_T, LO, HI>;
-    static const Scalar_T& twopi = Scalar_T(2) * traits_t::pi();
-    const multivector_t& z = i *
+    static const auto& twopi = Scalar_T(2) * traits_t::pi();
+    const auto& z = i *
       (val - s + traits_t::fmod(s, twopi));
     return i * (exp(-z)-exp(z)) / Scalar_T(2);
   }
@@ -916,9 +920,9 @@ namespace glucat
     if (val.isnan())
       return traits_t::NaN();
 
-    const Scalar_T& realval = val.scalar();
-    if (val == realval && traits_t::abs(realval) <= Scalar_T(1))
-      return traits_t::asin(realval);
+    const auto& s = val.scalar();
+    if (val == s && traits_t::abs(s) <= Scalar_T(1))
+      return traits_t::asin(s);
 
     check_complex(val, i, prechecked);
     return -i * asinh(i * val, i, true);
@@ -944,7 +948,7 @@ namespace glucat
     if (val.isnan())
       return traits_t::NaN();
 
-    const Scalar_T& s = scalar(val);
+    const auto& s = val.scalar();
     if (val == s)
       return traits_t::tanh(s);
 
@@ -988,7 +992,7 @@ namespace glucat
     if (val.isnan())
       return traits_t::NaN();
 
-    const Scalar_T& s = scalar(val);
+    const auto& s = val.scalar();
     if (val == s)
       return traits_t::tan(s);
 
@@ -1016,7 +1020,7 @@ namespace glucat
     if (val.isnan())
       return traits_t::NaN();
 
-    const Scalar_T& s = scalar(val);
+    const auto& s = val.scalar();
     if (val == s)
       return traits_t::atan(s);
 
