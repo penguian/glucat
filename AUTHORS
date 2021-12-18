@@ -1,4 +1,4 @@
-AUTHORS for GluCat 0.8.5 with PyClical
+AUTHORS for GluCat 0.9.0 with PyClical
 ======================================
 
 Paul C. Leopardi <leopardi@users.sourceforge.net>
@@ -121,6 +121,9 @@ John Calcote:
   install, used in configure.ac.in, Makefile.am.in and various Makefile.am files.
 Chris Miceli:
   Integrating Doxygen with Autotools.
+Clang-Tidy
+  https://clang.llvm.org/extra/clang-tidy/
+  C++ code modernization
 
 PyClical Python extension module
 --------------------------------
@@ -134,7 +137,7 @@ Robert Bradshaw, Mark Florisson, cython-users
   More advice on use of Cython with C++.
 Brian Quinlan
   Code in pyclical/setup_ext.py adapted from
-  https://github.com/SublimeCodeIntel/silvercity/blob/master/setup.py
+  https://github.com/SublimeCodeIntel/CodeIntel/blob/master/silvercity/setup.py
 
 PyClical Tutorials
 ------------------

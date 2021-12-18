@@ -1,4 +1,4 @@
-INSTALL for GluCat 0.8.5 with PyClical
+INSTALL for GluCat 0.9.0 with PyClical
 ========================================
 
 Prerequisites: Before You Begin
@@ -30,13 +30,13 @@ You can install GluCat in one of two ways:
 To install the first way, from (e.g.) GitHub, run the following commands on a
 Linux machine or equivalent Posix environment connected to the Internet:
 
-> git clone git@github.com:penguian/glucat.git glucat-0.8.5
-> cd glucat-0.8.5
+> git clone git@github.com:penguian/glucat.git glucat-0.9.0
+> cd glucat-0.9.0
 > make -f admin/Makefile.common cvs
 
-This results in a directory structure that includes glucat-0.8.5/configure,
+This results in a directory structure that includes glucat-0.9.0/configure,
 allowing you to make and install GluCat in the same way as if you had downloaded
-and unzipped the tarball glucat-0.8.5.tar.gz.
+and unzipped the tarball glucat-0.9.0.tar.gz.
 
 
 Directory Structure
@@ -44,11 +44,11 @@ Directory Structure
 
 Once you have downloaded, unzipped and untarred the source code, or followed
 the instructions above to install from Git clone, you should have a directory,
-glucat-0.8.5. Under this directory you should see a number
+glucat-0.9.0. Under this directory you should see a number
 of subdirectories, including ./admin, ./doc, ./glucat, ./gfft_test, ./products,
 ./pyclical, ./squaring, ./test, ./test_runtime, ./testxx, and ./transforms.
 
-The following instructions are meant to be used with glucat-0.8.5 as the
+The following instructions are meant to be used with glucat-0.9.0 as the
 current directory.
 
 
@@ -146,7 +146,7 @@ subdirectories.
 
 As briefly described above, the simplest way to install this package is:
 
- 1. "cd" to the glucat-0.8.5 directory containing the source code and type
+ 1. "cd" to the glucat-0.9.0 directory containing the source code and type
     "./configure" to configure GluCat with PyClical for your system.
     If you are using "csh" on an old version of System V, you might need to type
     "sh ./configure" instead to prevent "csh" from trying to execute
@@ -868,9 +868,9 @@ speeding up the entire testing process.
 
 Rather than running the regression tests in-place and copying the output
 directly into ./test_runtime, the script ./test/test-all-config-options.sh
-produces as many copies of the whole direcory glucat-0.8.5 as there are lines
-in ./test/config-options.txt, naming them glucat-0.8.5.1 to glucat-0.8.5.19,
-in the parent directory of glucat-0.8.5. This allows the effect of each set
+produces as many copies of the whole direcory glucat-0.9.0 as there are lines
+in ./test/config-options.txt, naming them glucat-0.9.0.1 to glucat-0.9.0.19,
+in the parent directory of glucat-0.9.0. This allows the effect of each set
 of configuration options to be directly compared, and also ensures that any
 side-effect of a configuration does not affect the test results of another
 configuration.
@@ -882,9 +882,9 @@ line 11 of ./test/config-options.txt
 map-map-gsl:                 --with-map=map --with-random=gsl
 
 causes ./test/diff-all-config-outputs.sh to use diff to compare
-glucat-0.8.5.11/test_runtime/test.configure.map-map-gsl.out to
-glucat-0.8.5/test_runtime/test.configure.map-map-gsl.out, and compare
-glucat-0.8.5.11/pyclical/test.out to glucat-0.8.5/pyclical/test.out.
+glucat-0.9.0.11/test_runtime/test.configure.map-map-gsl.out to
+glucat-0.9.0/test_runtime/test.configure.map-map-gsl.out, and compare
+glucat-0.9.0.11/pyclical/test.out to glucat-0.9.0/pyclical/test.out.
 
 Each comparison should only produce a line containing the line number of
 the configuration being compared: 1 to 19.
@@ -952,7 +952,7 @@ Once you have built PyClical, run the doctests. In python3 or ipython3, etc.:
 
  >>> import PyClical
  >>> PyClical._test()
- TestResults(failed=0, attempted=312)
+ TestResults(failed=0, attempted=629)
  >>> quit()
 
 Alternatively, in the directory pyclical, run the script test.py using:
@@ -994,30 +994,57 @@ to use sudo, login as root, or su to root before you run make install.
  List of Successful Builds
  =========================
 
- GluCat 0.8.5 with PyClical has so far been built and tested using:
+ GluCat 0.9.0 with PyClical has so far been built and tested using:
 
  1) Pensieri:
     4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
 
-    Linux 5.11.0-25-generic #27-Ubuntu SMP x86_64
-    Kubuntu 21.04
+    Linux 5.13.0-22-generic #22-Ubuntu SMP x86_64
+    Kubuntu 21.10
 
     The following compiler versions:
     1) gcc version 7.5.0 (Ubuntu 7.5.0-6ubuntu4)
-    2) gcc version 8.4.0 (Ubuntu 8.4.0-7ubuntu3)
-    3) gcc version 9.3.0 (Ubuntu 9.3.0-23ubuntu2) 
-    4) gcc version 10.3.0 (Ubuntu 10.3.0-1ubuntu1)
-    5) clang version 9.0.1 (9.0.1-16)
-    6) clang version 11.0.1 (11.0.1-2ubuntu4)
-    7) clang version 12.0.0 (12.0.0-3ubuntu1~21.04.2)
-    8) icpx version 2021.3.0 (2021.3.0.20210619)
+    2) gcc version 11.2.0 (Ubuntu 11.2.0-7ubuntu2)
+    3) clang version 9.0.1 (9.0.1-16.1ubuntu1)
+    4) clang version 13.0.0 (13.0.0-2)
+    5) icpx version 2021.4.0 (2021.4.0.20210924)
+    6) icpx version 2022.0.0 (2022.0.0.20211123)
 
     Boost 1.74.0
     Boost Numeric Bindings
     GSL 2.6
     QD 2.3.22
     Cython 0.29.21
-    Python 3.9.5
+    Python 3.9.7
+    Numpy 1.19.5
+    Matplotlib 3.3.4
+    Mayavi2 4.7.4
+    VTK 9.1.0
+    Doxygen 1.9.1
+    pdfTeX 3.14159265-2.6-1.40.21 (TeX Live 2020/Debian)
+
+    All 19 configuration commands corresponding to each of the 19
+    test.configure*.out files in ./test_runtime
+
+ 2) Pensieri:
+    4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
+
+    Linux 5.13.0-22-generic #22-Ubuntu SMP x86_64
+    Kubuntu 21.10
+
+    The following compiler versions:
+    1) gcc version 8.5.0 (Ubuntu 8.5.0-0ubuntu4)
+    2) gcc version 9.4.0 (Ubuntu 9.4.0-3ubuntu1)
+    3) gcc version 10.3.0 (Ubuntu 10.3.0-11ubuntu1)
+    4) clang version 11.0.1 (11.0.1-2ubuntu5)
+    5) clang version 12.0.1 (12.0.1-8build1)
+
+    Boost 1.74.0
+    Boost Numeric Bindings
+    GSL 2.6
+    QD 2.3.22
+    Cython 0.29.21
+    Python 3.9.7
     Numpy 1.19.5
     Matplotlib 3.3.4
     Mayavi2 4.7.1
@@ -1025,42 +1052,42 @@ to use sudo, login as root, or su to root before you run make install.
     Doxygen 1.9.1
     pdfTeX 3.14159265-2.6-1.40.21 (TeX Live 2020/Debian)
 
-    All 19 configuration commands corresponding to each of the 19
-    test.configure*.out files in ./test_runtime
+    ./configure --with-qd --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
 
-2)  Pensieri (VirtualBox): 
+ 3) Pensieri (VirtualBox):
     Virtual 1 core Intel(R) Core(TM) i7 CPU 870 @ 2.93GHz with
 
-    Linux 5.14.6-1-default #1 SMP
-    openSUSE Tumbleweed Release 20210929
+    Linux 5.15.5-1-default #1 SMP
+    openSUSE Tumbleweed Release 20211202
     gcc (SUSE Linux) 11.2.1 20210816
-    Boost 1.76.0
+    Boost 1.77.0
     Boost Numeric Bindings
     GSL 2.6-6.3
     QD 2.3.22-1.12
     Cython 0.29.24
     Python 3.8.12
-    Numpy 1.21.2-1.1
-    Matplotlib 3.4.2-3.2
-    Mayavi2 4.7.2-1.9
-    VTK 9.0.1-3.5
-    Doxygen 1.9.1-23
+    Numpy 1.21.2
+    Matplotlib 3.4.3
+    Mayavi2 4.7.4
+    VTK 9.1.0
+    Doxygen 1.9.2
     pdfTeX 3.141592653-2.6-1.40.22 (TeX Live 2021/TeX Live for SUSE Linux)
 
     ./configure --with-qd --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
 
- 3) Notturno:
+ 4) Notturno:
     2 core AMD E-350 Processor 931.6 MHz with
 
     Linux 5.4.0-81-generic #91-Ubuntu SMP x86_64
     Kubuntu 20.04.3 LTS
-    gcc version 9.3.0 (Ubuntu 9.3.0-17ubuntu1~20.04)
-    TBD
+    1) gcc version 9.3.0 (Ubuntu 9.3.0-17ubuntu1~20.04)
+    2) clang version 10.0.0 (10.0.0-4ubuntu1)
     Boost 1.71.0
     Boost Numeric Bindings
+    GSL 2.5
     QD 2.3.22
     Cython 0.29.14
-    Python 3.8.2
+    Python 3.8.10
     Numpy 1.17.4
     Matplotlib 3.1.2
     Mayavi2 4.7.1
@@ -1069,28 +1096,26 @@ to use sudo, login as root, or su to root before you run make install.
 
     ./configure --with-qd --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
     
- 4) NCI Gadi: 
+ 5) NCI Gadi:
     48 core Intel(R) Xeon(R) Platinum 8274 CPU @ 3.20GHz with
 
-    Linux 4.18.0-305.7.1.el8.nci.x86_64 SMP x86_64
-    CentOS Linux release 8.4.2105
-    1) gcc version 8.4.1
-    2) icpc version 2019.3.199
-    3) icpc version 2021.3.0
-    4) icpx version 2021.3.0
-    Boost 1.72.0
+    Linux  4.18.0-305.19.1.el8.nci.x86_64 SMP x86_64
+    Rocky Linux release 8.4 (Green Obsidian)
+    1) icpc version 2021.4.0
+    2) icpx version 2021.4.0
+    Boost 1.77.0
     Boost Numeric Bindings
     Cython 0.29.24
     Python 3.8.8
     Numpy 1.20.2
     
     ./configure --with-qd --with-eig=bindings \
-                --with-extra-includes="${PATHTO}/numeric_bindings" --with-tuning=promoted 
+                --with-extra-includes="${PATHTO}/numeric_bindings"
                    
- 5) CoCalc: 
+ 6) CoCalc:
     Virtual 8 core Intel(R) Xeon(R) CPU @ 2.80GHz with
 
-    Linux 5.8.0-1035-gcp #37~20.04.1-Ubuntu SMP x86_64
+    Linux 5.11.0-1020-gcp #22~20.04.1-Ubuntu SMP x86_64
     Ubuntu 18.04.5 LTS
     gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)
     Boost 1.65.1
@@ -1099,20 +1124,22 @@ to use sudo, login as root, or su to root before you run make install.
     Python 3.6.9
     Numpy 1.18.5
 
-    ./configure --with-eig=bindings --with-extra-includes=$HOME/usr/local/include
+    ../configure --with-qd --with-eig=bindings \
+                 --with-extra-includes=/home/user/usr/local/include
+                 --with-extra-libs=/home/user/usr/local/lib
 
-6)  AWS Graviton: 
+ 7) AWS Graviton:
     Virtual 4 core ARM Cortex-A72 Model 3 (AWS Graviton A1 image) with
 
-    Linux 5.4.0-1020-aws #20-Ubuntu SMP aarch64
+    Linux 5.11.0-1016-aws #17~20.04.1-Ubuntu SMP aarch64
     Ubuntu 20.04 LTS
-    gcc version 9.3.0 (Ubuntu 9.3.0-10ubuntu2)
+    gcc version 9.3.0 (Ubuntu 9.3.0-17ubuntu1~20.04)
     Boost 1.71.1
     Boost Numeric Bindings
-    No Cython # 0.29.20
+    Cython 0.29.14
     Python 3.8.2
 
-    ./configure --with-tuning=promoted --with-qd --with-eig=bindings \
+    ./configure --with-qd --with-eig=bindings \
                 --with-extra-includes=/home/ubuntu/usr/local/include
 
                 
@@ -1137,10 +1164,76 @@ Notes on software versions
     
     The PyClical plotting demos use Numpy and either Matplotlib or Mayavi2.
     The versions used need to be compatible with each other and with Python.
-    For Mayavi2 the versions of VTK and TVTK used also need to be compatible. 
+    For Mayavi2 the versions of VTK and TVTK used also need to be compatible.
+
+    The use of Mayavi2 4.7.4 on Kubuntu 21.10 requires the following packages:
+
+    Ubuntu packages
+    ---------------
+    python3-attr 20.3.0-1
+    python3-configobj 5.0.6-4
+    python3-idna 2.10-1
+    python3-importlib-metadata 4.0.1-1
+    python3-matplotlib 3.3.4-1
+    python3-numpy 1:1.19.5-1ubuntu2
+    python3-pygments 2.7.1
+    python3-setuptools 52.0.0-4
+
+    pip packages
+    ------------
+    aiohttp 3.8.1
+    aiosignal 1.2.0
+    apptools 5.1.0
+    async-timeout 4.0.1
+    charset-normalizer 2.0.9
+    envisage 6.0.1
+    frozenlist 1.2.0
+    importlib-resources 5.4.0
+    mayavi 4.7.4
+    multidict 5.2.0
+    pyface 7.3.0
+    traits 6.3.2
+    traitsui 7.2.1
+    typ4.0.1
+    vtk 9.1.0
+    wsl1.2.1
+    yarl 1.7.2
+    zipp 3.6.0
+
+    The use of Mayavi2 4.7.4 with Python 3.8 on openSUSE Tumbleweed
+    requires the following RPM packages:
+
+    mayavi 4.7.4-1.2
+    python3-vtk 9.1.0-1.3
+    python3-tvtk 4.7.4-1.2
+    python38-apptools 4.5.0-1.10
+    python38-configobj 5.0.6-3.12
+    python38-envisage 6.0.1-1.2
+    python38-importlib-metadata 4.8.1-1.1
+    python38-importlib-resources 5.4.0-1.1
+    python38-numpy 1.21.2-4.1
+    python38-pyface 7.3.0-3.4
+    python38-Pygments 2.9.0-2.1
+    python38-setuptools 57.4.0-1.2
+    python38-six 1.16.0-2.2
+    python38-traits 6.3.1-1.1
+    python38-traitsui 7.1.1-1.6
+    python38-zipp 3.6.0-1.1
+
+
     Version incompatibilities discovered in testing pyclical/demos:
-    
- 1. Using Mayavi2 4.7.1 with VTK 7.1.1 as per Kubuntu 21.04 yields two bugs
+
+ 1. Using Mayavi2 4.7.4 with VTK 9.1.0 on Kubuntu 21.10 results in the following
+    warning message when running pyclical/demos/plotting_demo_dialog.py and
+    pyclical/demos/plotting_demo_mayavi.py:
+
+    WARNING: Imported VTK version (9.1) does not match the one used
+             to build the TVTK classes (9.0). This may cause problems.
+             Please rebuild TVTK.
+
+    The plotting demos run normally.
+
+ 2. Using Mayavi2 4.7.1 with VTK 7.1.1 as per Kubuntu 21.04 yields two bugs
     likely caused by version mismatch:
     1. Running pyclical/demos/plotting_demo_mayavi.py results in:
     
@@ -1154,17 +1247,17 @@ Notes on software versions
        an incorrect z-order. A similar issue: 
        https://github.com/enthought/mayavi/issues/656
 
- 2. Using Mayavi2 4.7.2 with VTK 9.0.1 and Python 3.8 as per OpenSuse
+ 3. Using Mayavi2 4.7.2 with VTK 9.0.1 and Python 3.8 on openSUSE
     Tumbleweed results in the following warning message when running
     pyclical/demos/plotting_demo_mayavi.py 
     
     /usr/lib64/python3.8/site-packages/vtkmodules/numpy_interface/algorithms.py:
     209: SyntaxWarning: "is" with a literal. Did you mean "=="?
       if max_dims is 1:
-     
-        
+
+
     The following bugs and workarounds apply to earlier versions of GluCat,
-    and may still be applicable to GluCat 0.8.5, but have not been checked
+    and may still be applicable to GluCat 0.9.0, but have not been checked
     for this version.
 
  1. GluCat needs an include library which either defines the macro isnan or
