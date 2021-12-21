@@ -1,4 +1,4 @@
-README for GluCat 0.8.5 with PyClical
+README for GluCat 0.9.0 with PyClical
 =====================================
 
 GluCat is a library of C++ template classes for calculations with the universal
@@ -218,33 +218,26 @@ If you are running Linux or a Unix equivalent, the following should also work:
 % chmod +x $DEMO.py
 % ./$DEMO.py
 
-To run plotting_demo.py, run "ipython3 --pylab" and enter the following commands
+To run plotting_demo.py, run "ipython3 --pylab" and enter the following command
 at the IPython prompt:
 
 In [1]: %run plotting_demo
-
-In [2]: demo()
 
 This demo uses Matplotlib to produce a number of plots.
 
 To run plotting_demo_mayavi.py, first ensure that you have Mayavi2 and wxPython
 installed and working.
 (See http://code.enthought.com/projects/mayavi/ and http://www.wxpython.org/ )
-Then run "ipython3 --gui=wx" and enter the following commands at the ipython3 prompt:
+Then run "ipython3" and enter the following command at the ipython3 prompt:
 
 In [1]: %run plotting_demo_mayavi
-
-In [2]: demo()
 
 This demo uses Matplotlib to produce a number of plots. With Mayavi and wxPython,
 these plots are displayed in interactive windows, you can rotate, zoom and pan
 them. See (e.g.) http://mayavi.sourceforge.net/docs/guide/ch03s04.html
 
 You can also run the Mayavi plotting demo from a graphical user interface.
-To do this, run "./plotting_demo_dialog.py". For this to work properly, you will
-need to have Traits and TraitsUI installed. See (e.g.)
-http://code.enthought.com/projects/traits/
-http://code.enthought.com/projects/traits_ui/
+To do this, run "./plotting_demo_dialog.py".
 
 The tutorials and demos are also accompanied by a corresponding set of Jupyter
 notebooks. To build the notebooks, see INSTALL. To run the notebooks, assuming
@@ -305,6 +298,42 @@ see the Doxygen documentation in doc/api/GluCat-API-reference-manual.pdf (PDF)
 and doc/api/html/ (HTML). By default, this documentation is installed in
 the directories /usr/local/doc/glucat/api/html and /usr/local/doc/glucat/api/pdf.
 
+5.1 Truncation
+--------------
+
+Because the transform from framed_multi<> to matrix_multi<> may involve many
+multiplications and additions, rounding errors can accumulate and result in one
+or more non-zero matrix entries where exact arithmetic would have yielded zero.
+Similarly, the inverse transform from matrix_multi<> to framed_multi<> can
+result in small non-zero terms which would be zero in exact arithmetic.
+
+The clifford_algebra::truncated() member function sets relatively small terms
+of the multivector *this to zero. The function compares the absolute value of
+each term to the largest absolute value of any term, and sets to zero any term
+whose relative absolute value is smaller than the given limit. The default limit
+is std::numeric_limits<Scalar_T>::epsilon(). The truncated() matrix function
+operates similarly to set relatively small matrix entries to zero.
+
+5.1.1 Printing uses truncation
+------------------------------
+
+Printing using operator<<() uses truncation to suppress the printing of
+relatively small terms. Depending on the floating point format used, the
+truncation used is calculated using the floating point precision as follows.
+
+  scientific:
+    truncation = 10 ** -(precision+1)
+  fixed:
+    truncation = (10 ** -precision) / max_abs
+    This has the effect of deleting all terms whose absolute value is less than
+    10 ** -precision.
+  hexfloat:
+    truncation = default_truncation
+  default:
+    truncation = 10 ** -precision
+
+See (e.g.) https://www.cplusplus.com/reference/ios/ios_base/precision/
+and see ./test17 for examples.
 
 6. Compiling and running C++ programs that use GluCat classes
 -------------------------------------------------------------

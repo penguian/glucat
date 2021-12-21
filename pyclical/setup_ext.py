@@ -23,9 +23,9 @@
 from distutils.extension import Extension
 import os
 #
-cxxflags = os.environ['CXXFLAGS']
-am_cppflags = os.environ['AM_CPPFLAGS']
-ldflags  = os.environ['LDFLAGS']
+cxxflags = os.environ["CXXFLAGS"]
+am_cppflags = os.environ["AM_CPPFLAGS"]
+ldflags  = os.environ["LDFLAGS"]
 #
 def setup_ext(ext_name, source):
     ext = Extension(
@@ -43,8 +43,8 @@ from distutils.command.build_ext import build_ext
 class cxx_build_ext(build_ext):
     def build_extensions(self):
         # Allow a custom C++ compiler through the environment variables.
-        new_compiler = os.environ.get('CXX')
-        cxxversion = os.environ.get('CXXVERSION')
+        new_compiler = os.environ.get("CXX")
+        cxxversion = os.environ.get("CXXVERSION")
         cxxversion_split = cxxversion.split(".")
         try:
             cxxmajor = int(cxxversion_split[0])
@@ -55,14 +55,14 @@ class cxx_build_ext(build_ext):
             # See also https://docs.python.org/2/distutils/apiref.html
             ignore_flags = (
                 {
-                '-Wstrict-prototypes'
+                "-Wstrict-prototypes"
                 }
                 if new_compiler.startswith("g++") else
                 {
-                '-fstack-protector-strong',
-                '-Wdate-time',
-                '-Wno-unused-result',
-                '-Wstrict-prototypes'
+                "-fstack-protector-strong",
+                "-Wdate-time",
+                "-Wno-unused-result",
+                "-Wstrict-prototypes"
                 }
             )
             map_flag = "-ffile-prefix-map"
@@ -77,7 +77,9 @@ class cxx_build_ext(build_ext):
                 new_compiler_flags = [
                     word for word in new_compiler_flags
                     if not word.startswith(map_flag)]
-            new_compiler_flags.append('-fstack-protector')
+            new_compiler_flags.append("-fstack-protector")
+            if (new_compiler.startswith("icpx") and cxxmajor >= 2020):
+                new_compiler_flags.append("-Wno-unused-command-line-argument")
 
             new_linker_flags = [
                 word for word in ["-Wl,-z,notext"] + self.compiler.linker_so[1:]
@@ -90,7 +92,7 @@ class cxx_build_ext(build_ext):
             new_compiler_so = [new_compiler] + new_compiler_flags
             new_linker_so =   [new_compiler] + new_linker_flags
             args = {}
-            args['compiler_so'] = " ".join(new_compiler_so)
-            args['linker_so'] = " ".join(new_linker_so)
+            args["compiler_so"] = " ".join(new_compiler_so)
+            args["linker_so"] = " ".join(new_linker_so)
             self.compiler.set_executables(**args)
         build_ext.build_extensions(self)
