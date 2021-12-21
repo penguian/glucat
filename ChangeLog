@@ -1,3 +1,280 @@
+2021-12-21  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL, README, glucat.lsm: Update for version 0.9.0
+
+2021-12-18  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* AUTHORS, INSTALL, NEWS, README, configure.ac.in, glucat.lsm,
+	pyclical/test.out: Update for version 0.9.0
+
+2021-12-18  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* Doxyfile.in: Use a4 paper as a4wide is no longer recognized
+
+2021-12-18  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/setup_ext.py: For icpx use
+	-Wno-unused-command-line-argument. Use consistent quote characters.
+
+2021-12-18  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/gfft_test-11.out, test_runtime/products-8.out,
+	test_runtime/squaring-11.out, test_runtime/transforms-8.out: Update
+	timing test results
+
+2021-12-05  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* subdirs, test17/Makefile.am: Add correct missing Makefile
+	dependency. Remove generated file.
+
+2021-12-05  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* subdirs: Add missing Makefile dependency
+
+2021-12-04  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #35 from
+	penguian/issue-34-Use_range_based_for_loops Issue 34 use range based for loops
+
+2021-12-01  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi.h, glucat/framed_multi_imp.h: Modernize: Use
+	range-based for loops. Use auto.
+
+2021-11-28  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #33 from
+	penguian/issue-32-Use_truncation_in_transforms_and_printing Issue 32 use truncation in transforms and printing
+
+2021-11-28  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/clifford_demo.out: Add missing demo output
+
+2021-11-28  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/sqrt_log_demo.out: Update demo output
+
+2021-11-28  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/pyclical_notebook_utils.py: Fix an error in the
+	output of a print statement used in tutorials
+
+2021-11-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/qd.h: In pow, deal with negative integer exponents
+
+2021-11-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h: Truncate after matrix_multi ->
+	framed_multi. Print with truncation based on precision.
+
+2021-11-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_multi_imp.h: Truncate before framed_multi ->
+	matrix_multi
+
+2021-11-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* Makefile.am.in, test17/peg17.cpp, test17/peg17.h: Test truncation
+	and printing
+
+2021-11-21  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #31 from
+	penguian/issue-28-Make_default_truncation_depend_on_scalar_type Make default truncation depend on scalar type
+
+2021-11-21  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra.h, glucat/clifford_algebra_imp.h,
+	glucat/global.h: Make default_truncation depend on Scalar_T
+
+2021-11-20  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #30 from penguian/master Update branch to match updated master
+
+2021-11-20  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #27 from
+	penguian/issue-26-Add_multivector_isinf_to_match_isnan Add multivector isinf to match isnan
+
+2021-11-20  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h: Use multivector isinf in operator<<
+
+2021-11-20  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/PyClical.pyx, pyclical/glucat.pxd: Add missing
+	multivector isinf
+
+2021-11-20  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/test.configure.compressed-mat.out,
+	test_runtime/test.configure.debug-full.out,
+	test_runtime/test.configure.debug-yes.out,
+	test_runtime/test.configure.default.out,
+	test_runtime/test.configure.disable-check-isnan.out,
+	test_runtime/test.configure.disable-dependency.out,
+	test_runtime/test.configure.disable-pyclical.out,
+	test_runtime/test.configure.eig-bindings-fast.out,
+	test_runtime/test.configure.eig-bindings-naive.out,
+	test_runtime/test.configure.eig-bindings.out,
+	test_runtime/test.configure.map-map-gsl.out,
+	test_runtime/test.configure.map-map-pool-alloc.out,
+	test_runtime/test.configure.prefix-home-opt.out,
+	test_runtime/test.configure.qd-eig-bindings-demoted.out,
+	test_runtime/test.configure.qd-eig-bindings-gsl.out,
+	test_runtime/test.configure.qd-eig-bindings-map-map.out,
+	test_runtime/test.configure.qd-eig-bindings-promoted.out,
+	test_runtime/test.configure.qd-eig-bindings.out,
+	test_runtime/test.configure.stdlib-libcxx.out: Update test output
+
+2021-11-20  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test11/peg11.h: Test multivector isinf. Make output consistent
+
+2021-11-20  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra.h, glucat/framed_multi_imp.h,
+	glucat/matrix.h, glucat/matrix_imp.h, glucat/matrix_multi_imp.h: Add
+	missing multivector isinf and matrix isinf
+
+2021-11-19  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #25 from
+	penguian/issue-24-Fix_clang-tidy_bugprone_issues Fix clang-tidy bugprone issues
+
+2021-11-17  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/index_set.h: Add missing equality operator for index_set
+	reference
+
+2021-11-17  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h: Fix clang-tidy bugprone-branch-clone
+
+2021-11-17  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #23 from
+	penguian/issue-22-Make_promotion_monotonic Make promotion monotonic: add glucat/promotion.h
+
+2021-11-06  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #21 from
+	penguian/issue-20-Make_headers_more_self-contained Make headers more self-contained
+
+2021-11-01  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #19 from
+	penguian/issue-18-Modernize_C++_header_code Modernize C++ header code
+
+2021-10-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi.h, glucat/long_double.h,
+	glucat/matrix_multi.h, glucat/qd.h, glucat/scalar.h: Modernize: use
+	trailing return type: part 4
+
+2021-10-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in: Modernize: use C++11 by default
+
+2021-10-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra.h, glucat/framed_multi_imp.h,
+	glucat/index_set.h, glucat/index_set_imp.h,
+	glucat/matrix_multi_imp.h: Modernize: use trailing return type: part
+	3
+
+2021-10-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi.h: Consistently use
+	boost::fast_pool_allocator. Modernize: use trailing return type:
+	part 3
+
+2021-10-24  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra.h, glucat/clifford_algebra_imp.h,
+	glucat/errors.h, glucat/errors_imp.h, glucat/framed_multi.h,
+	glucat/framed_multi_imp.h, glucat/generation.h,
+	glucat/generation_imp.h, glucat/global.h, glucat/index_set.h,
+	glucat/index_set_imp.h, glucat/matrix.h, glucat/matrix_imp.h,
+	glucat/matrix_multi.h, glucat/matrix_multi_imp.h, glucat/random.h,
+	glucat/scalar.h, glucat/scalar_imp.h: Modernize: use trailing return
+	type: part 2
+
+2021-10-22  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra.h, glucat/framed_multi_imp.h,
+	glucat/matrix_multi_imp.h: Modernize: use trailing return type: part
+	1
+
+2021-10-18  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/errors.h, glucat/errors_imp.h: Modernize: use noexcept
+
+2021-10-18  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/scalar_imp.h: Modernize: return braced init list
+
+2021-10-18  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_imp.h: Modernize: use nullptr
+
+2021-10-17  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra_imp.h, glucat/generation.h,
+	glucat/matrix_multi_imp.h: Modernize: use std:array rather than C
+	arrays. Tidy up Pade approximation code.
+
+2021-10-17  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/PyClical.h: Modernize: use using
+
+2021-10-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra.h, glucat/clifford_algebra_imp.h,
+	glucat/framed_multi.h, glucat/framed_multi_imp.h,
+	glucat/generation.h, glucat/generation_imp.h, glucat/global.h,
+	glucat/index_set.h, glucat/index_set_imp.h, glucat/long_double.h,
+	glucat/matrix.h, glucat/matrix_imp.h, glucat/matrix_multi.h,
+	glucat/matrix_multi_imp.h, glucat/qd.h, glucat/scalar.h,
+	glucat/scalar_imp.h, test13/peg13.cpp, test14/peg14.cpp,
+	test15/peg15.cpp: Modernize: use using
+
+2021-10-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/generation.h, glucat/index_set.h,
+	glucat/matrix_multi_imp.h, glucat/random.h: Make deleted member
+	functions public
+
+2021-10-10  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/generation.h, glucat/index_set.h,
+	glucat/matrix_multi_imp.h, glucat/random.h, test/control.h: 
+	Modernize: use = delete
+
+2021-10-10  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra.h, glucat/errors.h,
+	glucat/framed_multi.h, glucat/generation.h, glucat/index_set.h,
+	glucat/matrix_multi.h, glucat/matrix_multi_imp.h, glucat/random.h,
+	test/control.h: Modernize: use = default
+
+2021-10-10  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h, glucat/index_set_imp.h,
+	glucat/matrix_imp.h, glucat/matrix_multi_imp.h, test09/peg09.h,
+	test11/peg11.h: Modernize: use auto
+
+2021-10-09  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra.h, glucat/errors.h,
+	glucat/framed_multi.h, glucat/matrix_multi.h: Modernize: use
+	override
+
+2021-10-06  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* ChangeLog: ChangeLog for version 0.8.5
+
 2021-10-06  Paul Leopardi <paul.leopardi@anu.edu.au>
 
 	* : Merge pull request #17 from
