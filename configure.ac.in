@@ -195,19 +195,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     [glucat_use_boost_pool_alloc="$withval"],
     [glucat_use_boost_pool_alloc="no"])
 
-  AC_ARG_WITH([tuning],     [[  --with-tuning[=ARG]     set of tuning parameters to use for testing (slow|naive|fast|promoted|demoted)]],
-    [
-      case "$withval" in
-        slow|naive|fast|promoted|demoted)
-          glucat_test_tuning="$withval"
-          ;;
-        *)
-          AC_MSG_ERROR([Unknown option for --with-tuning])
-          ;;
-      esac
-      ],
-    [glucat_test_tuning="default"])
-
   dnl Check for a C++ compiler
   AC_LANG([C]++)
 
@@ -522,16 +509,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   if [[[ "$glucat_check_isnan" != "no" ]]]; then
     CXXFLAGS="$CXXFLAGS -D_GLUCAT_CHECK_ISNAN"
   fi
-
-  dnl Handle $glucat_test_tuning: set of tuning parameters to use for testing
-  case "$glucat_test_tuning" in
-    default)
-      ;;
-    *)
-      glucat_test_tuning_suffix=GLUCAT_TOUPPER([$glucat_test_tuning]);
-      CXXFLAGS="$CXXFLAGS -D_GLUCAT_TEST_TUNING_$glucat_test_tuning_suffix";
-      ;;
-  esac
 
   dnl Handle $glucat_use_warnings: enable compilation with -Wall and similiar
   if [[[ "$glucat_use_warnings" == "yes" ]]]; then

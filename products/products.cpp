@@ -3,7 +3,7 @@
     products.cpp : Products timing test driver
                              -------------------
     begin                : Sat 2007-09-01
-    copyright            : (C) 2007-2012 by Paul C. Leopardi
+    copyright            : (C) 2007-2021 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -29,6 +29,7 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
+#include "test/driver.h"
 #include "products/products.h"
 
 int products(const int n)

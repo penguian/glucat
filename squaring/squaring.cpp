@@ -3,7 +3,7 @@
     squaring.cpp : Timing test driver
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2012 by Paul C. Leopardi
+    copyright            : (C) 2001-2021 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -29,6 +29,7 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
+#include "test/driver.h"
 #include "squaring/squaring.h"
 
 int squaring(const int n)

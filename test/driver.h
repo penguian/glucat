@@ -5,7 +5,7 @@
     driver.h : Header for example and timing test driver
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2016 by Paul C. Leopardi
+    copyright            : (C) 2001-2021 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -32,10 +32,10 @@
  ***************************************************************************/
 
 #include "glucat/glucat.h"
-#include "test/tuning.h"
 #include "glucat/glucat_imp.h"
 #include "test/try_catch.h"
 #include "test/control.h"
+#include "test/tuning.h"
 #include <cstdio>
 
 #endif // GLUCAT_TEST_DRIVER_H

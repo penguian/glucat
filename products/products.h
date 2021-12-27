@@ -5,7 +5,7 @@
     products.h : products speed test
                              -------------------
     begin                : Sun 2007-09-01
-    copyright            : (C) 2012-2016 by Paul C. Leopardi
+    copyright            : (C) 2012-2021 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -32,11 +32,7 @@
  ***************************************************************************/
 
 #define _GLUCAT_TEST_REPEAT
-#include "glucat/glucat.h"
-#include "test/tuning.h"
-#include "glucat/glucat_imp.h"
 #include "test/timing.h"
-#include "test/try_catch.h"
 #include <stdio.h>
 #include <iomanip>
 

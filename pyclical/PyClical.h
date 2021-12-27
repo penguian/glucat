@@ -33,21 +33,6 @@
 
 #include "glucat/glucat_config.h"
 #include "glucat/glucat.h"
-
-using Tune_P = glucat::tuning
-  <
-    glucat::DEFAULT_Mult_Matrix_Threshold,
-    glucat::DEFAULT_Div_Max_Steps,
-    glucat::DEFAULT_Sqrt_Max_Steps,
-    glucat::DEFAULT_Log_Max_Outer_Steps,
-    glucat::DEFAULT_Log_Max_Inner_Steps,
-    glucat::DEFAULT_Basis_Max_Count,
-    glucat::DEFAULT_Fast_Size_Threshold,
-    glucat::DEFAULT_Inv_Fast_Dim_Threshold,
-    glucat::DEFAULT_Products_Size_Threshold,
-    glucat::precision_promoted
-  >;
-
 #include "glucat/glucat_imp.h"
 #include <iostream>
 #include <sstream>
@@ -160,7 +145,7 @@ const index_t hi_ndx = DEFAULT_HI;
 using IndexSet = index_set<lo_ndx, hi_ndx>;
 
 using scalar_t = double;
-using Clifford = matrix_multi<scalar_t>;
+using Clifford = matrix_multi<scalar_t,lo_ndx, hi_ndx,tuning_promoted>;
 
 const scalar_t epsilon = std::numeric_limits<scalar_t>::epsilon();
 

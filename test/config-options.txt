@@ -5,15 +5,11 @@ debug-yes:                   --enable-debug=yes
 disable-check-isnan:         --disable-check-isnan
 disable-dependency:          --disable-dependency-tracking
 disable-pyclical:            --disable-pyclical
-stdlib-libcxx:                         --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings --disable-pyclical --with-stdlib=libcxx
-eig-bindings:                          --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
-eig-bindings-fast:                     --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings --with-tuning=fast
-eig-bindings-naive:                    --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings --with-tuning=naive
 map-map-gsl:                 --with-map=map --with-random=gsl
 map-map-pool-alloc:          --with-map=map --with-pool-alloc
 prefix-home-opt:             --prefix=$HOME/opt
-qd-eig-bindings:             --with-qd --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
-qd-eig-bindings-demoted:     --with-qd --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings --with-tuning=demoted
-qd-eig-bindings-gsl:         --with-qd --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings --with-random=gsl
-qd-eig-bindings-map-map:     --with-qd --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings --with-map=map
-qd-eig-bindings-promoted:    --with-qd --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings --with-tuning=promoted
+eig-bindings:                --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
+eig-bindings-libcxx:         --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings --disable-pyclical --with-stdlib=libcxx
+eig-bindings-qd:             --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings --with-qd
+eig-bindings-qd-gsl:         --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings --with-qd --with-random=gsl
+eig-bindings-qd-map-map:     --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings --with-qd --with-map=map

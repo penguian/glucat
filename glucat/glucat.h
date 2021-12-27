@@ -5,7 +5,7 @@
     glucat.h : Organize GluCat header files for applications
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2012 by Paul C. Leopardi
+    copyright            : (C) 2001-2021 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -58,6 +58,8 @@
 #include "glucat/random.h"
 
 #include "glucat/clifford_algebra.h"
+
+#include "glucat/tuning.h"
 
 #include "glucat/framed_multi.h"
 

@@ -5,7 +5,7 @@
     clifford_algebra.h : Declare the operations of a Clifford algebra
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2016 by Paul C. Leopardi
+    copyright            : (C) 2001-2021 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -187,627 +187,627 @@ namespace glucat
   /// Test for inequality of multivectors
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    template<typename, const index_t, const index_t> class RHS,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    template<typename, const index_t, const index_t, typename> class RHS,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  operator!= (const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs) -> bool;
+  operator!= (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> bool;
 
   /// Test for inequality of multivector and scalar
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  operator!= (const Multivector<Scalar_T,LO,HI>& lhs, const Scalar_T& scr) -> bool;
+  operator!= (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const Scalar_T& scr) -> bool;
 
   /// Test for inequality of scalar and multivector
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  operator!= (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI>& rhs) -> bool;
+  operator!= (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> bool;
 
   /// Geometric sum of multivector and scalar
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  operator+ (const Multivector<Scalar_T,LO,HI>& lhs, const Scalar_T& scr) -> const Multivector<Scalar_T,LO,HI>;
+  operator+ (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const Scalar_T& scr) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Geometric sum of scalar and multivector
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  operator+ (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI>& rhs) -> const Multivector<Scalar_T,LO,HI>;
+  operator+ (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Geometric sum
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    template<typename, const index_t, const index_t> class RHS,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    template<typename, const index_t, const index_t, typename> class RHS,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  operator+ (const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs) -> const Multivector<Scalar_T,LO,HI>;
+  operator+ (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Geometric difference of multivector and scalar
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  operator- (const Multivector<Scalar_T,LO,HI>& lhs, const Scalar_T& scr) -> const Multivector<Scalar_T,LO,HI>;
+  operator- (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const Scalar_T& scr) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Geometric difference of scalar and multivector
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  operator- (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI>& rhs) -> const Multivector<Scalar_T,LO,HI>;
+  operator- (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Geometric difference
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    template<typename, const index_t, const index_t> class RHS,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    template<typename, const index_t, const index_t, typename> class RHS,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  operator- (const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs) -> const Multivector<Scalar_T,LO,HI>;
+  operator- (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Product of multivector and scalar
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  operator* (const Multivector<Scalar_T,LO,HI>& lhs, const Scalar_T& scr) -> const Multivector<Scalar_T,LO,HI>;
+  operator* (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const Scalar_T& scr) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Product of scalar and multivector
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  operator* (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI>& rhs) -> const Multivector<Scalar_T,LO,HI>;
+  operator* (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Geometric product
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    template<typename, const index_t, const index_t> class RHS,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    template<typename, const index_t, const index_t, typename> class RHS,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  operator* (const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs) -> const Multivector<Scalar_T,LO,HI>;
+  operator* (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Outer product
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    template<typename, const index_t, const index_t> class RHS,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    template<typename, const index_t, const index_t, typename> class RHS,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  operator^ (const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs) -> const Multivector<Scalar_T,LO,HI>;
+  operator^ (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Inner product
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    template<typename, const index_t, const index_t> class RHS,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    template<typename, const index_t, const index_t, typename> class RHS,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  operator& (const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs) -> const Multivector<Scalar_T,LO,HI>;
+  operator& (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Left contraction
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    template<typename, const index_t, const index_t> class RHS,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    template<typename, const index_t, const index_t, typename> class RHS,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  operator% (const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs) -> const Multivector<Scalar_T,LO,HI>;
+  operator% (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Hestenes scalar product
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    template<typename, const index_t, const index_t> class RHS,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    template<typename, const index_t, const index_t, typename> class RHS,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  star (const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs) -> Scalar_T;
+  star (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> Scalar_T;
 
   /// Quotient of multivector and scalar
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  operator/ (const Multivector<Scalar_T,LO,HI>& lhs, const Scalar_T& scr) -> const Multivector<Scalar_T,LO,HI>;
+  operator/ (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const Scalar_T& scr) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Quotient of scalar and multivector
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  operator/ (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI>& rhs) -> const Multivector<Scalar_T,LO,HI>;
+  operator/ (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Geometric quotient
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    template<typename, const index_t, const index_t> class RHS,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    template<typename, const index_t, const index_t, typename> class RHS,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  operator/ (const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs) -> const Multivector<Scalar_T,LO,HI>;
+  operator/ (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Transformation via twisted adjoint action
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    template<typename, const index_t, const index_t> class RHS,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    template<typename, const index_t, const index_t, typename> class RHS,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  operator| (const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs) -> const Multivector<Scalar_T,LO,HI>;
+  operator| (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Geometric multiplicative inverse
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  inv(const Multivector<Scalar_T,LO,HI>& val) -> const Multivector<Scalar_T,LO,HI>;
+  inv(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Integer power of multivector
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  pow(const Multivector<Scalar_T,LO,HI>& lhs, int rhs) -> const Multivector<Scalar_T,LO,HI>;
+  pow(const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, int rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Multivector power of multivector
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    template<typename, const index_t, const index_t> class RHS,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    template<typename, const index_t, const index_t, typename> class RHS,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  pow(const Multivector<Scalar_T,LO,HI>& lhs, const RHS<Scalar_T,LO,HI>& rhs) -> const Multivector<Scalar_T,LO,HI>;
+  pow(const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Outer product power of multivector
-  template< template<typename, const index_t, const index_t> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI >
+  template< template<typename, const index_t, const index_t, typename> class Multivector,
+            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
-  outer_pow(const Multivector<Scalar_T,LO,HI>& lhs, int rhs) -> const Multivector<Scalar_T,LO,HI>;
+  outer_pow(const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, int rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Scalar part
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  scalar(const Multivector<Scalar_T,LO,HI>& val) -> Scalar_T;
+  scalar(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T;
 
   /// Real part: synonym for scalar part
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  real(const Multivector<Scalar_T,LO,HI>& val) -> Scalar_T;
+  real(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T;
 
   /// Imaginary part: deprecated (always 0)
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  imag(const Multivector<Scalar_T,LO,HI>& val) -> Scalar_T;
+  imag(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T;
 
   /// Pure part
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  pure(const Multivector<Scalar_T,LO,HI>& val) -> const Multivector<Scalar_T,LO,HI>;
+  pure(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Even part
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  even(const Multivector<Scalar_T,LO,HI>& val) -> const Multivector<Scalar_T,LO,HI>;
+  even(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Odd part
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  odd(const Multivector<Scalar_T,LO,HI>& val) -> const Multivector<Scalar_T,LO,HI>;
+  odd(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Vector part of multivector, as a vector_t with respect to frame()
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  vector_part(const Multivector<Scalar_T,LO,HI>& val) -> const std::vector<Scalar_T>;
+  vector_part(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const std::vector<Scalar_T>;
 
   /// Main involution, each {i} is replaced by -{i} in each term, eg. {1}*{2} -> (-{2})*(-{1})
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  involute(const Multivector<Scalar_T,LO,HI>& val) -> const Multivector<Scalar_T,LO,HI>;
+  involute(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Reversion, eg. {1}*{2} -> {2}*{1}
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  reverse(const Multivector<Scalar_T,LO,HI>& val) -> const Multivector<Scalar_T,LO,HI>;
+  reverse(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Conjugation, rev o invo == invo o rev
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  conj(const Multivector<Scalar_T,LO,HI>& val) -> const Multivector<Scalar_T,LO,HI>;
+  conj(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Scalar_T quadratic form == (rev(x)*x)(0)
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  quad(const Multivector<Scalar_T,LO,HI>& val) -> Scalar_T;
+  quad(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T;
 
   /// Scalar_T norm == sum of norm of coordinates
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  norm(const Multivector<Scalar_T,LO,HI>& val) -> Scalar_T;
+  norm(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T;
 
   /// Absolute value == sqrt(norm)
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  abs(const Multivector<Scalar_T,LO,HI>& val) -> Scalar_T;
+  abs(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T;
 
   /// Maximum of absolute values of components of multivector: multivector infinity norm
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  max_abs(const Multivector<Scalar_T,LO,HI>& val) -> Scalar_T;
+  max_abs(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T;
 
   /// Square root of -1 which commutes with all members of the frame of the given multivector
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  complexifier(const Multivector<Scalar_T,LO,HI>& val) -> const Multivector<Scalar_T,LO,HI>;
+  complexifier(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Square root of -1 which commutes with all members of the frame of the given multivector
   /// The name "elliptic" is now deprecated: use "complexifier" instead.
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  elliptic(const Multivector<Scalar_T,LO,HI>& val) -> const Multivector<Scalar_T,LO,HI>;
+  elliptic(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Square root of multivector with specified complexifier
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  sqrt(const Multivector<Scalar_T,LO,HI>& val,
-       const Multivector<Scalar_T,LO,HI>& i,
-       const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI>;
+  sqrt(const Multivector<Scalar_T,LO,HI,Tune_P>& val,
+       const Multivector<Scalar_T,LO,HI,Tune_P>& i,
+       const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Square root of multivector
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  sqrt(const Multivector<Scalar_T,LO,HI>& val) -> const Multivector<Scalar_T,LO,HI>;
+  sqrt(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   // Transcendental functions
 
   /// Exponential of multivector
   template
-  < template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+  < template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  clifford_exp(const Multivector<Scalar_T,LO,HI>& val) -> const Multivector<Scalar_T,LO,HI>;
+  clifford_exp(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Natural logarithm of multivector with specified complexifier
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  log(const Multivector<Scalar_T,LO,HI>& val,
-      const Multivector<Scalar_T,LO,HI>& i,
-      const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI>;
+  log(const Multivector<Scalar_T,LO,HI,Tune_P>& val,
+      const Multivector<Scalar_T,LO,HI,Tune_P>& i,
+      const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Natural logarithm of multivector
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  log(const Multivector<Scalar_T,LO,HI>& val) -> const Multivector<Scalar_T,LO,HI>;
+  log(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Cosine of multivector with specified complexifier
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  cos(const Multivector<Scalar_T,LO,HI>& val,
-      const Multivector<Scalar_T,LO,HI>& i,
-      const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI>;
+  cos(const Multivector<Scalar_T,LO,HI,Tune_P>& val,
+      const Multivector<Scalar_T,LO,HI,Tune_P>& i,
+      const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Cosine of multivector
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  cos(const Multivector<Scalar_T,LO,HI>& val) -> const Multivector<Scalar_T,LO,HI>;
+  cos(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Inverse cosine of multivector with specified complexifier
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  acos(const Multivector<Scalar_T,LO,HI>& val,
-       const Multivector<Scalar_T,LO,HI>& i,
-       const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI>;
+  acos(const Multivector<Scalar_T,LO,HI,Tune_P>& val,
+       const Multivector<Scalar_T,LO,HI,Tune_P>& i,
+       const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Inverse cosine of multivector
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  acos(const Multivector<Scalar_T,LO,HI>& val) -> const Multivector<Scalar_T,LO,HI>;
+  acos(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Hyperbolic cosine of multivector
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  cosh(const Multivector<Scalar_T,LO,HI>& val) -> const Multivector<Scalar_T,LO,HI>;
+  cosh(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Inverse hyperbolic cosine of multivector with specified complexifier
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  acosh(const Multivector<Scalar_T,LO,HI>& val,
-        const Multivector<Scalar_T,LO,HI>& i,
-        const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI>;
+  acosh(const Multivector<Scalar_T,LO,HI,Tune_P>& val,
+        const Multivector<Scalar_T,LO,HI,Tune_P>& i,
+        const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Inverse hyperbolic cosine of multivector
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  acosh(const Multivector<Scalar_T,LO,HI>& val) -> const Multivector<Scalar_T,LO,HI>;
+  acosh(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Sine of multivector with specified complexifier
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  sin(const Multivector<Scalar_T,LO,HI>& val,
-      const Multivector<Scalar_T,LO,HI>& i,
-      const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI>;
+  sin(const Multivector<Scalar_T,LO,HI,Tune_P>& val,
+      const Multivector<Scalar_T,LO,HI,Tune_P>& i,
+      const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Sine of multivector
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  sin(const Multivector<Scalar_T,LO,HI>& val) -> const Multivector<Scalar_T,LO,HI>;
+  sin(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Inverse sine of multivector with specified complexifier
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  asin(const Multivector<Scalar_T,LO,HI>& val,
-       const Multivector<Scalar_T,LO,HI>& i,
-       const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI>;
+  asin(const Multivector<Scalar_T,LO,HI,Tune_P>& val,
+       const Multivector<Scalar_T,LO,HI,Tune_P>& i,
+       const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Inverse sine of multivector
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  asin(const Multivector<Scalar_T,LO,HI>& val) -> const Multivector<Scalar_T,LO,HI>;
+  asin(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Hyperbolic sine of multivector
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  sinh(const Multivector<Scalar_T,LO,HI>& val) -> const Multivector<Scalar_T,LO,HI>;
+  sinh(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Inverse hyperbolic sine of multivector with specified complexifier
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  asinh(const Multivector<Scalar_T,LO,HI>& val,
-        const Multivector<Scalar_T,LO,HI>& i,
-        const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI>;
+  asinh(const Multivector<Scalar_T,LO,HI,Tune_P>& val,
+        const Multivector<Scalar_T,LO,HI,Tune_P>& i,
+        const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Inverse hyperbolic sine of multivector
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  asinh(const Multivector<Scalar_T,LO,HI>& val) -> const Multivector<Scalar_T,LO,HI>;
+  asinh(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Tangent of multivector with specified complexifier
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  tan(const Multivector<Scalar_T,LO,HI>& val,
-      const Multivector<Scalar_T,LO,HI>& i,
-      const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI>;
+  tan(const Multivector<Scalar_T,LO,HI,Tune_P>& val,
+      const Multivector<Scalar_T,LO,HI,Tune_P>& i,
+      const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Tangent of multivector
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  tan(const Multivector<Scalar_T,LO,HI>& val) -> const Multivector<Scalar_T,LO,HI>;
+  tan(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Inverse tangent of multivector with specified complexifier
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  atan(const Multivector<Scalar_T,LO,HI>& val,
-       const Multivector<Scalar_T,LO,HI>& i,
-       const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI>;
+  atan(const Multivector<Scalar_T,LO,HI,Tune_P>& val,
+       const Multivector<Scalar_T,LO,HI,Tune_P>& i,
+       const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Inverse tangent of multivector
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  atan(const Multivector<Scalar_T,LO,HI>& val) -> const Multivector<Scalar_T,LO,HI>;
+  atan(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Hyperbolic tangent of multivector
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  tanh(const Multivector<Scalar_T,LO,HI>& val) -> const Multivector<Scalar_T,LO,HI>;
+  tanh(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Inverse hyperbolic tangent of multivector with specified complexifier
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  atanh(const Multivector<Scalar_T,LO,HI>& val,
-        const Multivector<Scalar_T,LO,HI>& i,
-        const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI>;
+  atanh(const Multivector<Scalar_T,LO,HI,Tune_P>& val,
+        const Multivector<Scalar_T,LO,HI,Tune_P>& i,
+        const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
   /// Inverse hyperbolic tangent of multivector
   template
   <
-    template<typename, const index_t, const index_t> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  atanh(const Multivector<Scalar_T,LO,HI>& val) -> const Multivector<Scalar_T,LO,HI>;
+  atanh(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 }
 #endif  // _GLUCAT_CLIFFORD_ALGEBRA_H
