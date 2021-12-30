@@ -33,9 +33,9 @@
 
 #include "glucat/glucat.h"
 #include "glucat/glucat_imp.h"
+#include "test/tuning.h"
 #include "test/try_catch.h"
 #include "test/control.h"
-#include "test/tuning.h"
 #include <cstdio>
 
 #endif // GLUCAT_TEST_DRIVER_H
