@@ -105,7 +105,7 @@ namespace peg11
   transcendtest(const Multivector_T& A, const bool random=false)
   {
     typedef Multivector_T m_;
-    typedef typename m_::scalar_t scalar_t;
+    typedef typename Multivector_T::scalar_t scalar_t;
     const streamsize prec = cout.precision(numeric_limits<scalar_t>::digits10);
     if (random)
       cout << "Random A in " << A.frame() << endl;
@@ -142,8 +142,7 @@ namespace peg11
   void
   rand_transcendtest(int n)
   {
-    typedef Multivector_T m_;
-    typedef typename m_::index_set_t index_set_t;
+    typedef typename Multivector_T::index_set_t index_set_t;
     typedef typename index_set_t::index_pair_t index_pair_t;
 
     static const index_t v_lo = index_set_t::v_lo;
@@ -174,7 +173,7 @@ namespace peg11
             frm |= index_set_t(-q);
         }
         for (int k=0; k!=2; ++k)
-          transcendtest(m_::random(frm), true);
+          transcendtest(Multivector_T::random(frm), true);
       }
     }
   }
