@@ -47,6 +47,8 @@ namespace glucat
   public:
     using scalar_t = Scalar_T;
     using index_set_t = Index_Set_T;
+    static const index_t v_lo = index_set_t::v_lo;
+    static const index_t v_hi = index_set_t::v_hi;
     using multivector_t = Multivector_T;
     using pair_t = std::pair<const index_set_t, Scalar_T>;
     using vector_t = std::vector<Scalar_T>;
