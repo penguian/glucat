@@ -1,47 +1,110 @@
 
 Test 00:
 Programming example 0 : Geometric algebra identities
+Demoted:
 
 framed_multi<float,-3,4>
 All tests passed.
 
 matrix_multi<float,-3,4>
 All tests passed.
+Default:
+
+framed_multi<float,-3,4>
+All tests passed.
+
+matrix_multi<float,-3,4>
+All tests passed.
+Promoted:
+
+framed_multi<float,-3,4>
+All tests passed.
+
+matrix_multi<float,-3,4>
+All tests passed.
+Demoted:
 
 framed_multi<float,-4,4>
 All tests passed.
 
 matrix_multi<float,-4,4>
 All tests passed.
+Default:
+
+framed_multi<float,-4,4>
+All tests passed.
+
+matrix_multi<float,-4,4>
+All tests passed.
+Promoted:
+
+framed_multi<float,-4,4>
+All tests passed.
+
+matrix_multi<float,-4,4>
+All tests passed.
+Demoted:
 
 framed_multi<float,-5,6>
 All tests passed.
 
 matrix_multi<float,-5,6>
 All tests passed.
+Default:
 
-framed_multi<double>
+framed_multi<float,-5,6>
 All tests passed.
 
-matrix_multi<double>
+matrix_multi<float,-5,6>
+All tests passed.
+Promoted:
+
+framed_multi<float,-5,6>
 All tests passed.
 
-framed_multi<long double>
+matrix_multi<float,-5,6>
+All tests passed.
+Demoted:
+
+framed_multi<double,-32,32>
 All tests passed.
 
-matrix_multi<long double>
+matrix_multi<double,-32,32>
+All tests passed.
+Default:
+
+framed_multi<double,-32,32>
 All tests passed.
 
-framed_multi<dd_real>
+matrix_multi<double,-32,32>
+All tests passed.
+Promoted:
+
+framed_multi<double,-32,32>
 All tests passed.
 
-matrix_multi<dd_real>
+matrix_multi<double,-32,32>
+All tests passed.
+Demoted:
+
+framed_multi<long double,-32,32>
 All tests passed.
 
-framed_multi<qd_real>
+matrix_multi<long double,-32,32>
+All tests passed.
+Default:
+
+framed_multi<long double,-32,32>
 All tests passed.
 
-matrix_multi<qd_real>
+matrix_multi<long double,-32,32>
+All tests passed.
+Promoted:
+
+framed_multi<long double,-32,32>
+All tests passed.
+
+matrix_multi<long double,-32,32>
 All tests passed.
 
 Test 01:
@@ -552,7 +615,7 @@ involute(b)involute(a)=     8634343348 47829+52300{-3}-43530{-2}+41053{-1}+3830{
 Test 11:
 Programming example 11 : Square root and transcendental functions
 
-framed_multi<float>
+framed_multi<float,DEFAULT_LO,DEFAULT_HI,tuning_promoted>
 Epsilon ==1.19209e-07
 A
   0
@@ -704,7 +767,7 @@ Random A in {-3,-2,-1,1,2,3}
 
 Random A in {-3,-2,-1,1,2,3}
 
-matrix_multi<float>
+matrix_multi<float,DEFAULT_LO,DEFAULT_HI,tuning_promoted>
 Epsilon ==1.19209e-07
 A
   0
@@ -854,7 +917,7 @@ Random A in {-3,-2,-1,1,2,3}
 
 Random A in {-3,-2,-1,1,2,3}
 
-framed_multi<double>
+framed_multi<double,DEFAULT_LO,DEFAULT_HI,tuning_promoted>
 Epsilon ==2.22045e-16
 A
   0
@@ -988,7 +1051,7 @@ Random A in {-3,-2,-1,1,2,3}
 
 Random A in {-3,-2,-1,1,2,3}
 
-matrix_multi<double>
+matrix_multi<double,DEFAULT_LO,DEFAULT_HI,tuning_promoted>
 Epsilon ==2.22045e-16
 A
   0
@@ -1122,7 +1185,7 @@ Random A in {-3,-2,-1,1,2,3}
 
 Random A in {-3,-2,-1,1,2,3}
 
-framed_multi<long double>
+framed_multi<long double,DEFAULT_LO,DEFAULT_HI,tuning_promoted>
 Epsilon ==1.0842e-19
 A
   0
@@ -1181,9 +1244,13 @@ A
 
 A
   1.57079632679489662{-1}
+Test failed: cosh(A)*tanh(A) != sinh(A)
+lhs == nan
 
 A
   -1.57079632679489662{-1}
+Test failed: cosh(A)*tanh(A) != sinh(A)
+lhs == nan
 
 A
   314.159265358979324{-1}
@@ -1248,7 +1315,7 @@ Random A in {-3,-2,-1,1,2,3}
 
 Random A in {-3,-2,-1,1,2,3}
 
-matrix_multi<long double>
+matrix_multi<long double,DEFAULT_LO,DEFAULT_HI,tuning_promoted>
 Epsilon ==1.0842e-19
 A
   0
@@ -1307,9 +1374,13 @@ A
 
 A
   1.57079632679489662{-1}
+Test failed: cosh(A)*tanh(A) != sinh(A)
+lhs == nan
 
 A
   -1.57079632679489662{-1}
+Test failed: cosh(A)*tanh(A) != sinh(A)
+lhs == nan
 
 A
   314.159265358979324{-1}
@@ -1343,518 +1414,10 @@ Random A in {}
 Random A in {}
 
 Random A in {1}
-
-Random A in {1}
-
-Random A in {-1,1}
-
-Random A in {-1,1}
-
-Random A in {1,2}
-
-Random A in {1,2}
-
-Random A in {-1,1,2}
-
-Random A in {-1,1,2}
-
-Random A in {-2,-1,1,2}
-
-Random A in {-2,-1,1,2}
-
-Random A in {-1,1,2,3}
-
-Random A in {-1,1,2,3}
-
-Random A in {-2,-1,1,2,3}
-
-Random A in {-2,-1,1,2,3}
-
-Random A in {-3,-2,-1,1,2,3}
-
-Random A in {-3,-2,-1,1,2,3}
-
-framed_multi<dd_real>
-Epsilon ==4.93038e-32
-A
-  0
-
-A
-  1
-
-A
-  -1
-
-A
-  2
-
-A
-  -2
-
-A
-  0.5
-
-A
-  -0.5
-
-A
-  3.1415926535897932384626433832795e+00
-
-A
-  3.1415926535897932384626433832795e+00{1,2,3}
-
-A
-  -3.1415926535897932384626433832795e+00{1,2,3}
-
-A
-  3.1415926535897932384626433832795e+00{-1,1,2,3,4}
-
-A
-  -3.1415926535897932384626433832795e+00{-1,1,2,3,4}
-
-A
-  3.1415926535897932384626433832795e+00{-2,-1,1,2,3,4,5}
-
-A
-  -3.1415926535897932384626433832795e+00{-2,-1,1,2,3,4,5}
-
-A
-  3.1415926535897932384626433832795e+01{-2,-1,1,2,3,4,5}
-Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
-Relative norm of difference == 4.81518e-07
-lhs == 2.271099974748835848004091531038e-14
-rhs == 2.2711010683240938386792752390932e-14
-
-A
-  -3.1415926535897932384626433832795e+01{-2,-1,1,2,3,4,5}
-
-A
-  3.1415926535897932384626433832795e+00{1,2}
-
-A
-  1.5707963267948966192313216916398e+00{-1}
-
-A
-  -1.5707963267948966192313216916398e+00{-1}
-
-A
-  3.1415926535897932384626433832795e+02{-1}
-
-A
-  -3.1415926535897932384626433832795e+02{-1}
-
-A
-  {1}
-
-A
-  -{1}
-
-A
-  {-1,1}
-
-A
-  -{-1,1}
-
-A
-  {-2,-1,1,2}
-
-A
-  -{-2,-1,1,2}
-
-A
-  {-1}+{1}
-
-Random A in {}
-
-Random A in {}
-
-Random A in {1}
-
-Random A in {1}
-
-Random A in {-1,1}
-
-Random A in {-1,1}
-
-Random A in {1,2}
-
-Random A in {1,2}
-
-Random A in {-1,1,2}
-
-Random A in {-1,1,2}
-
-Random A in {-2,-1,1,2}
-
-Random A in {-2,-1,1,2}
-
-Random A in {-1,1,2,3}
-
-Random A in {-1,1,2,3}
-
-Random A in {-2,-1,1,2,3}
-
-Random A in {-2,-1,1,2,3}
-
-Random A in {-3,-2,-1,1,2,3}
-
-Random A in {-3,-2,-1,1,2,3}
-
-matrix_multi<dd_real>
-Epsilon ==4.93038e-32
-A
-  0
-
-A
-  1
-
-A
-  -1
-
-A
-  2
-
-A
-  -2
-
-A
-  0.5
-
-A
-  -0.5
-
-A
-  3.1415926535897932384626433832795e+00
-
-A
-  3.1415926535897932384626433832795e+00{1,2,3}
-
-A
-  -3.1415926535897932384626433832795e+00{1,2,3}
-
-A
-  3.1415926535897932384626433832795e+00{-1,1,2,3,4}
-
-A
-  -3.1415926535897932384626433832795e+00{-1,1,2,3,4}
-
-A
-  3.1415926535897932384626433832795e+00{-2,-1,1,2,3,4,5}
-
-A
-  -3.1415926535897932384626433832795e+00{-2,-1,1,2,3,4,5}
-
-A
-  3.1415926535897932384626433832795e+01{-2,-1,1,2,3,4,5}
-Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
-Relative norm of difference == 4.81518e-07
-lhs == 2.271099974748835848004091531038e-14
-rhs == 2.2711010683240938386792752390932e-14
-
-A
-  -3.1415926535897932384626433832795e+01{-2,-1,1,2,3,4,5}
-
-A
-  3.1415926535897932384626433832795e+00{1,2}
-
-A
-  1.5707963267948966192313216916398e+00{-1}
-
-A
-  -1.5707963267948966192313216916398e+00{-1}
-
-A
-  3.1415926535897932384626433832795e+02{-1}
-
-A
-  -3.1415926535897932384626433832795e+02{-1}
-
-A
-  {1}
-
-A
-  -{1}
-
-A
-  {-1,1}
-
-A
-  -{-1,1}
-
-A
-  {-2,-1,1,2}
-
-A
-  -{-2,-1,1,2}
-
-A
-  {-1}+{1}
-
-Random A in {}
-
-Random A in {}
-
-Random A in {1}
-
-Random A in {1}
-
-Random A in {-1,1}
-
-Random A in {-1,1}
-
-Random A in {1,2}
-
-Random A in {1,2}
-
-Random A in {-1,1,2}
-
-Random A in {-1,1,2}
-
-Random A in {-2,-1,1,2}
-
-Random A in {-2,-1,1,2}
-
-Random A in {-1,1,2,3}
-
-Random A in {-1,1,2,3}
-
-Random A in {-2,-1,1,2,3}
-
-Random A in {-2,-1,1,2,3}
-
-Random A in {-3,-2,-1,1,2,3}
-
-Random A in {-3,-2,-1,1,2,3}
-
-framed_multi<qd_real>
-Epsilon ==1.21543e-63
-A
-  0
-
-A
-  1
-
-A
-  -1
-
-A
-  2
-
-A
-  -2
-
-A
-  0.5
-
-A
-  -0.5
-
-A
-  3.14159265358979323846264338327950288419716939937510582097494459e+00
-
-A
-  3.14159265358979323846264338327950288419716939937510582097494459e+00{1,2,3}
-
-A
-  -3.14159265358979323846264338327950288419716939937510582097494459e+00{1,2,3}
-
-A
-  3.14159265358979323846264338327950288419716939937510582097494459e+00{-1,1,2,3,4}
-
-A
-  -3.14159265358979323846264338327950288419716939937510582097494459e+00{-1,1,2,3,4}
-
-A
-  3.14159265358979323846264338327950288419716939937510582097494459e+00{-2,-1,1,2,3,4,5}
-
-A
-  -3.14159265358979323846264338327950288419716939937510582097494459e+00{-2,-1,1,2,3,4,5}
-
-A
-  3.14159265358979323846264338327950288419716939937510582097494459e+01{-2,-1,1,2,3,4,5}
-Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
-Relative norm of difference == 8.03612e-39
-lhs == 2.27110106832409383867927523909354754447274572008972793969216094e-14
-rhs == 2.27110106832409383867927523909354754449099655455022911741121068e-14
-
-A
-  -3.14159265358979323846264338327950288419716939937510582097494459e+01{-2,-1,1,2,3,4,5}
-
-A
-  3.14159265358979323846264338327950288419716939937510582097494459e+00{1,2}
-
-A
-  1.57079632679489661923132169163975144209858469968755291048747230e+00{-1}
-Test failed: cosh(A)*tanh(A) != sinh(A)
-lhs == nan
-
-A
-  -1.57079632679489661923132169163975144209858469968755291048747230e+00{-1}
-Test failed: cosh(A)*tanh(A) != sinh(A)
-lhs == nan
-
-A
-  3.14159265358979323846264338327950288419716939937510582097494459e+02{-1}
-
-A
-  -3.14159265358979323846264338327950288419716939937510582097494459e+02{-1}
-
-A
-  {1}
-
-A
-  -{1}
-
-A
-  {-1,1}
-
-A
-  -{-1,1}
-
-A
-  {-2,-1,1,2}
-
-A
-  -{-2,-1,1,2}
-
-A
-  {-1}+{1}
-
-Random A in {}
-
-Random A in {}
-
-Random A in {1}
-
-Random A in {1}
-
-Random A in {-1,1}
-
-Random A in {-1,1}
-
-Random A in {1,2}
-
-Random A in {1,2}
-
-Random A in {-1,1,2}
-
-Random A in {-1,1,2}
-
-Random A in {-2,-1,1,2}
-
-Random A in {-2,-1,1,2}
-
-Random A in {-1,1,2,3}
-
-Random A in {-1,1,2,3}
-
-Random A in {-2,-1,1,2,3}
-
-Random A in {-2,-1,1,2,3}
-
-Random A in {-3,-2,-1,1,2,3}
-
-Random A in {-3,-2,-1,1,2,3}
-
-matrix_multi<qd_real>
-Epsilon ==1.21543e-63
-A
-  0
-
-A
-  1
-
-A
-  -1
-
-A
-  2
-
-A
-  -2
-
-A
-  0.5
-
-A
-  -0.5
-
-A
-  3.14159265358979323846264338327950288419716939937510582097494459e+00
-
-A
-  3.14159265358979323846264338327950288419716939937510582097494459e+00{1,2,3}
-
-A
-  -3.14159265358979323846264338327950288419716939937510582097494459e+00{1,2,3}
-
-A
-  3.14159265358979323846264338327950288419716939937510582097494459e+00{-1,1,2,3,4}
-
-A
-  -3.14159265358979323846264338327950288419716939937510582097494459e+00{-1,1,2,3,4}
-
-A
-  3.14159265358979323846264338327950288419716939937510582097494459e+00{-2,-1,1,2,3,4,5}
-
-A
-  -3.14159265358979323846264338327950288419716939937510582097494459e+00{-2,-1,1,2,3,4,5}
-
-A
-  3.14159265358979323846264338327950288419716939937510582097494459e+01{-2,-1,1,2,3,4,5}
-Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
-Relative norm of difference == 8.03612e-39
-lhs == 2.27110106832409383867927523909354754447274572008972793969216094e-14
-rhs == 2.27110106832409383867927523909354754449099655455022911741121068e-14
-
-A
-  -3.14159265358979323846264338327950288419716939937510582097494459e+01{-2,-1,1,2,3,4,5}
-
-A
-  3.14159265358979323846264338327950288419716939937510582097494459e+00{1,2}
-
-A
-  1.57079632679489661923132169163975144209858469968755291048747230e+00{-1}
-Test failed: cosh(A)*tanh(A) != sinh(A)
-lhs == nan
-
-A
-  -1.57079632679489661923132169163975144209858469968755291048747230e+00{-1}
-Test failed: cosh(A)*tanh(A) != sinh(A)
-lhs == nan
-
-A
-  3.14159265358979323846264338327950288419716939937510582097494459e+02{-1}
-
-A
-  -3.14159265358979323846264338327950288419716939937510582097494459e+02{-1}
-
-A
-  {1}
-
-A
-  -{1}
-
-A
-  {-1,1}
-
-A
-  -{-1,1}
-
-A
-  {-2,-1,1,2}
-
-A
-  -{-2,-1,1,2}
-
-A
-  {-1}+{1}
-
-Random A in {}
-
-Random A in {}
-
-Random A in {1}
+Test failed: sinh(asinh(A)) != A
+Relative norm of difference == 9.588e-17
+lhs == 0.574594650865310256+0.628749470561080753{1}
+rhs == 0.574594650865310313+0.628749470561080695{1}
 
 Random A in {1}
 
