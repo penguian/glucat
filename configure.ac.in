@@ -35,6 +35,8 @@ dnl Process this file with autoconf to produce a configure script.
 AC_INIT([glucat],[0.9.0])
 AC_CONFIG_MACRO_DIR([m4])
 m4_include([m4/m4_ax_cxx_compile_stdcxx.m4])
+m4_include([m4/m4_ax_blas.m4])
+m4_include([m4/m4_ax_lapack.m4])
 m4_include([m4/acinclude.m4])
 AC_CONFIG_SRCDIR([aclocal.m4]) dnl a source file from your sub dir
 
@@ -453,11 +455,11 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     bindings)
       glucat_have_lapack="yes"
       glucat_add_libs=""
-      GLUCAT_CHECK_LIB([blas],[main],
-      [glucat_add_libs="-lblas $glucat_add_libs"],
+      AX_BLAS(
+      [glucat_add_libs="$BLAS_LIBS $glucat_add_libs"],
       [glucat_have_lapack="no"])
-      GLUCAT_CHECK_LIB([lapack],[main],
-      [glucat_add_libs="-llapack $glucat_add_libs"],
+      AX_LAPACK(
+      [glucat_add_libs="$LAPACK_LIBS $glucat_add_libs"],
       [glucat_have_lapack="no"])
       if [[[ "$glucat_have_lapack" != "no" ]]]; then
         glucat_have_bindings="yes"
