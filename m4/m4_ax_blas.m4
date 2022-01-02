@@ -37,7 +37,6 @@
 #
 #   Copyright (c) 2008 Steven G. Johnson <stevenj@alum.mit.edu>
 #   Copyright (c) 2019 Geoffrey M. Oxberry <goxberry@gmail.com>
-#   Cpoyright (c) 2022 Paul Leopardi <paul.leopardi@anu.edu.au>
 #
 #   This program is free software: you can redistribute it and/or modify it
 #   under the terms of the GNU General Public License as published by the
@@ -143,14 +142,30 @@ fi
 if test $ax_blas_ok = no; then
 	# MKL for gfortran
 	if test x"$ac_cv_fc_compiler_gnu" = xyes; then
-		AC_CHECK_LIB(mkl_gf_lp64, $sgemm,
-		[ax_blas_ok=yes;BLAS_LIBS="-lmkl_rt -lgomp -lm"],,
-		[-lmkl_rt -lgomp -lm])
+		# 64 bit
+		if test $host_cpu = x86_64; then
+			AC_CHECK_LIB(mkl_gf_lp64, $sgemm,
+			[ax_blas_ok=yes;BLAS_LIBS="-lmkl_gf_lp64 -lmkl_sequential -lmkl_core -lpthread"],,
+			[-lmkl_gf_lp64 -lmkl_sequential -lmkl_core -lpthread])
+		# 32 bit
+		elif test $host_cpu = i686; then
+			AC_CHECK_LIB(mkl_gf, $sgemm,
+				[ax_blas_ok=yes;BLAS_LIBS="-lmkl_gf -lmkl_sequential -lmkl_core -lpthread"],,
+				[-lmkl_gf -lmkl_sequential -lmkl_core -lpthread])
+		fi
 	# MKL for other compilers (Intel, PGI, ...?)
 	else
-		AC_CHECK_LIB(mkl_intel, $sgemm,
-			[ax_blas_ok=yes;BLAS_LIBS="-lmkl_rt -liomp5 -lm"],,
-			[-lmkl_rt -liomp5 -lm])
+		# 64-bit
+		if test $host_cpu = x86_64; then
+			AC_CHECK_LIB(mkl_intel_lp64, $sgemm,
+				[ax_blas_ok=yes;BLAS_LIBS="-lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lpthread"],,
+				[-lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lpthread])
+		# 32-bit
+		elif test $host_cpu = i686; then
+			AC_CHECK_LIB(mkl_intel, $sgemm,
+				[ax_blas_ok=yes;BLAS_LIBS="-lmkl_intel -lmkl_sequential -lmkl_core -lpthread"],,
+				[-lmkl_intel -lmkl_sequential -lmkl_core -lpthread])
+		fi
 	fi
 fi
 # Old versions of MKL
