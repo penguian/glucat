@@ -20,7 +20,7 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
-from distutils.extension import Extension
+from setuptools.extension import Extension
 import os
 #
 cxxflags = os.environ["CXXFLAGS"]
@@ -33,13 +33,13 @@ def setup_ext(ext_name, source):
         sources=[source], # filename of our Cython source
         include_dirs=[".",".."],
         extra_compile_args=am_cppflags.split() + cxxflags.split(),
-        extra_link_args=ldflags.split(),
+        extra_link_args=[]
     )
     return ext
 
 # From https://github.com/SublimeCodeIntel/silvercity/blob/master/setup.py
 # as at 2015-08-31
-from distutils.command.build_ext import build_ext
+from setuptools.command.build_ext import build_ext
 class cxx_build_ext(build_ext):
     def build_extensions(self):
         # Allow a custom C++ compiler through the environment variables.
@@ -88,7 +88,31 @@ class cxx_build_ext(build_ext):
                 new_linker_flags = [
                     word for word in new_linker_flags
                     if not word.startswith(map_flag)]
-
+            mkl_flags = (
+                {
+                "-lmkl_core",
+                "-lmkl_gf",
+                "-lmkl_gf_lp64",
+                "-lmkl_intel",
+                "-lmkl_intel_lp64",
+                "-lmkl_sequential"
+                }
+            )
+            using_mkl = False
+            substituted = False
+            for word in mkl_flags:
+                try:
+                    word_index = new_linker_flags.index(word)
+                    using_mkl = True
+                    if not substituted:
+                        new_linker_flags[word_index] = "-lmkl_rt"
+                        substituted = True
+                except ValueError:
+                    pass
+            if using_mkl:
+                new_linker_flags = [
+                    word for word in new_linker_flags
+                    if not word in mkl_flags]
             new_compiler_so = [new_compiler] + new_compiler_flags
             new_linker_so =   [new_compiler] + new_linker_flags
             args = {}
