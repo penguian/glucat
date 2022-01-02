@@ -200,10 +200,10 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   dnl Check for a C++ compiler
   AC_LANG([C]++)
 
-  AC_REQUIRE([AC_PROG_CXX])
-  AC_PROG_CXX
-  basename_cxx=[$(basename $CXX)]
+  dnl Set the language standard
+  AX_CXX_COMPILE_STDCXX(11, noext, mandatory)
 
+  basename_cxx=[$(basename $(cut -d' ' -f1 <<<$CXX))]
   dnl Check the compiler version
   AC_MSG_CHECKING([for $CXX version])
   case "$basename_cxx" in
@@ -370,7 +370,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   dnl Handle $glucat_use_map: type of map to use
   case "$glucat_use_map" in
     stdunordered)
-      GLUCAT_CHECK_CXX11_HEADERS([unordered_map],
+      GLUCAT_CHECK_HEADERS([unordered_map],
       [CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_STD_UNORDERED_MAP"],
       [],
       [#include <map>])
@@ -441,7 +441,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       ;;
   esac
   if [[[ "$glucat_use_random" == "std" || "$glucat_have_gsl" == "no" ]]]; then
-    GLUCAT_CHECK_CXX11_HEADERS([random],
+    GLUCAT_CHECK_HEADERS([random],
     [glucat_have_std_random="yes"],
     [glucat_have_std_random="no"],
     [#include <map>])
@@ -536,9 +536,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     GLUCAT_CHECK_COMPILER_FLAG([Wno-unused-parameter],
           [CXXFLAGS="$CXXFLAGS -Wno-unused-parameter"])
   fi
-
-  dnl Set the language standard
-  AX_CXX_COMPILE_STDCXX(11, noext, mandatory)
 
   dnl Cater to compiler quirks
   case "$basename_cxx" in
