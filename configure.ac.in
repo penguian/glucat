@@ -421,7 +421,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       GLUCAT_CHECK_LIB([gslcblas],[cblas_dgemm],
       [glucat_add_libs="-lgslcblas $glucat_add_libs"],
       [glucat_have_gsl="no"])
-      GLUCAT_CHECK_LIBS([gsl],[gsl_blas_dgemm],
+      GLUCAT_CHECK_LIBS([gsl],[gsl_rng_set],
       [glucat_add_libs="-lgsl $glucat_add_libs"],
       [glucat_have_gsl="no"],[-lgslcblas])
 
