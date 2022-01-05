@@ -5,7 +5,7 @@
 #
 # setup_nocython.py: Use Distutils to build PyClical from C++ source..
 #
-#    copyright            : (C) 2008-2012 by Paul C. Leopardi
+#    copyright            : (C) 2008-2022 by Paul C. Leopardi
 #
 #    This library is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Lesser General Public License as published
@@ -20,7 +20,7 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
-from distutils.core import setup
+from setuptools import setup
 from setup_ext import setup_ext, cxx_build_ext
 import os
 ext_name = os.environ['ext_name']

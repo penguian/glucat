@@ -25,7 +25,8 @@ import os
 #
 cxxflags = os.environ["CXXFLAGS"]
 am_cppflags = os.environ["AM_CPPFLAGS"]
-ldflags  = os.environ["LDFLAGS"]
+libraries = os.environ["LIBRARIES"].replace("-l", "")
+libraries_split = libraries.split()
 #
 def setup_ext(ext_name, source):
     ext = Extension(
@@ -33,7 +34,7 @@ def setup_ext(ext_name, source):
         sources=[source], # filename of our Cython source
         include_dirs=[".",".."],
         extra_compile_args=am_cppflags.split() + cxxflags.split(),
-        extra_link_args=[]
+        libraries=libraries_split
     )
     return ext
 
@@ -42,6 +43,7 @@ def setup_ext(ext_name, source):
 from setuptools.command.build_ext import build_ext
 class cxx_build_ext(build_ext):
     def build_extensions(self):
+        global libraries_split
         # Allow a custom C++ compiler through the environment variables.
         new_compiler = os.environ.get("CXX")
         cxxversion = os.environ.get("CXXVERSION")
@@ -80,7 +82,6 @@ class cxx_build_ext(build_ext):
             new_compiler_flags.append("-fstack-protector")
             if (new_compiler.startswith("icpx") and cxxmajor >= 2020):
                 new_compiler_flags.append("-Wno-unused-command-line-argument")
-
             new_linker_flags = [
                 word for word in ["-Wl,-z,notext"] + self.compiler.linker_so[1:]
                 if not word in ignore_flags]
@@ -88,31 +89,33 @@ class cxx_build_ext(build_ext):
                 new_linker_flags = [
                     word for word in new_linker_flags
                     if not word.startswith(map_flag)]
-            mkl_flags = (
+            mkl_libraries = (
                 {
-                "-lmkl_core",
-                "-lmkl_gf",
-                "-lmkl_gf_lp64",
-                "-lmkl_intel",
-                "-lmkl_intel_lp64",
-                "-lmkl_sequential"
+                "mkl_core",
+                "mkl_gf",
+                "mkl_gf_lp64",
+                "mkl_intel",
+                "mkl_intel_lp64",
+                "mkl_sequential"
                 }
             )
             using_mkl = False
             substituted = False
-            for word in mkl_flags:
+            for word in mkl_libraries:
                 try:
-                    word_index = new_linker_flags.index(word)
+                    word_index = libraries.index(word)
                     using_mkl = True
                     if not substituted:
-                        new_linker_flags[word_index] = "-lmkl_rt"
+                        libraries[word_index] = "mkl_rt"
                         substituted = True
                 except ValueError:
                     pass
             if using_mkl:
-                new_linker_flags = [
-                    word for word in new_linker_flags
-                    if not word in mkl_flags]
+                libraries_split = [
+                    word for word in libraries_split
+                    if not word in mkl_libraries]
+            for lib in libraries_split:
+                self.compiler.add_library(lib)
             new_compiler_so = [new_compiler] + new_compiler_flags
             new_linker_so =   [new_compiler] + new_linker_flags
             args = {}
