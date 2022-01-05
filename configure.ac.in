@@ -204,6 +204,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   AX_CXX_COMPILE_STDCXX(11, noext, mandatory)
 
   basename_cxx=[$(basename $(cut -d' ' -f1 <<<$CXX))]
+
   dnl Check the compiler version
   AC_MSG_CHECKING([for $CXX version])
   case "$basename_cxx" in
@@ -455,6 +456,13 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     bindings)
       glucat_have_lapack="yes"
       glucat_add_libs=""
+      case "$basename_cxx" in
+        "g++"*)
+          ac_cv_fc_compiler_gnu="yes"
+          ;;
+        *)
+          ;;
+      esac
       AX_BLAS(
       [glucat_add_libs="$BLAS_LIBS $glucat_add_libs"],
       [glucat_have_lapack="no"])
