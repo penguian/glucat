@@ -14,16 +14,24 @@ TESTOUT = test00/test00.out test01/test01.out test02/test02.out test03/test03.ou
           test06/test06.out test07/test07.out test08/test08.out test09/test09.out test10/test10.out test11/test11.out \
           test12/test12.out test13/test13.out test14/test14.out test15/test15.out test16/test16.out test17/test17.out
 
+FAST_TESTOUT = test00/test00.out test10/test10.out test11/test11.out
+
 DOC = doc
 
 doc_DATA = AUTHORS COPYING ChangeLog DESIGN glucat.lsm INSTALL NEWS README TODO
 
 EXTRA_DIST = admin m4 test test_runtime $(EXAMPLES) subdirs configure.ac.in configure.ac configure Makefile.am $(doc_DATA) doc/Makefile.am doc/Makefile.in
 
+
 check: test-out $(PYCLICAL_CHECK_OUT)
+
+fast-check: fast-test-out $(PYCLICAL_CHECK_OUT)
 
 test-out: $(TESTOUT)
 	cat $(TESTOUT) > test_runtime/test.out
+
+fast-test-out: $(FAST_TESTOUT)
+	cat $(FAST_TESTOUT) > test_runtime/fast-test.out
 
 if make_pyclical
 $(PYCLICAL_CHECK_OUT):
@@ -36,7 +44,6 @@ $(DOC):
 endif
 
 $(TESTOUT):
-	rm -f test_runtime/test.out
 	$(MAKE) -C $(@D) check
 
 install-doc:
