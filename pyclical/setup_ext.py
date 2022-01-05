@@ -103,10 +103,10 @@ class cxx_build_ext(build_ext):
             substituted = False
             for word in mkl_libraries:
                 try:
-                    word_index = libraries.index(word)
+                    word_index = libraries_split.index(word)
                     using_mkl = True
                     if not substituted:
-                        libraries[word_index] = "mkl_rt"
+                        libraries_split[word_index] = "mkl_rt"
                         substituted = True
                 except ValueError:
                     pass
