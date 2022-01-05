@@ -358,26 +358,18 @@ namespace peg00
       std::cout << "All tests passed." << std::endl;
   }
 
-  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  template <typename Scalar_T, const index_t LO = DEFAULT_LO, const index_t HI = DEFAULT_HI, typename Tune_P = tuning<> >
   void
-  do_test00_tuned(const std::string scalar_typename, const index_t max_index)
+  do_test00_tuned(
+    const std::string tuning_name,
+    const std::string scalar_typename,
+    const index_t max_index)
   {
+    std::cout << tuning_name << std::endl;
     std::cout << std::endl << "framed_multi<" << scalar_typename << "," << LO << "," << HI << ">" << std::endl;
     do_test00< framed_multi<Scalar_T,LO,HI,Tune_P> >(max_index);
     std::cout << std::endl << "matrix_multi<" << scalar_typename << "," << LO << "," << HI << ">" << std::endl;
     do_test00< matrix_multi<Scalar_T,LO,HI,Tune_P> >(max_index);
-  }
-
-  template <typename Scalar_T, const index_t LO = DEFAULT_LO, const index_t HI = DEFAULT_HI>
-  void
-  do_test00_all_tunes(const std::string scalar_typename, const index_t max_index)
-  {
-    std::cout << "Demoted:" << std::endl;
-    do_test00_tuned<Scalar_T,LO,HI,tuning_demoted> (scalar_typename, max_index);
-    std::cout << "Default:" << std::endl;
-    do_test00_tuned<Scalar_T,LO,HI,tuning<> >      (scalar_typename, max_index);
-    std::cout << "Promoted:" << std::endl;
-    do_test00_tuned<Scalar_T,LO,HI,tuning_promoted>(scalar_typename, max_index);
   }
 }
 

@@ -222,6 +222,17 @@ namespace peg11
 
     rand_transcendtest<m_>(3);
   }
+
+  template <typename Scalar_T, const index_t LO = DEFAULT_LO, const index_t HI = DEFAULT_HI, typename Tune_P = tuning<> >
+  void
+  do_test11_tuned(const std::string tuning_name, const std::string scalar_typename)
+  {
+    std::cout << tuning_name << std::endl;
+    std::cout << std::endl << "framed_multi<" << scalar_typename << "," << LO << "," << HI << ">" << std::endl;
+    do_test11< framed_multi<Scalar_T,LO,HI,Tune_P> >();
+    std::cout << std::endl << "matrix_multi<" << scalar_typename << "," << LO << "," << HI << ">" << std::endl;
+    do_test11< matrix_multi<Scalar_T,LO,HI,Tune_P> >();
+  }
 }
 
 int test11();

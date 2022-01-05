@@ -37,16 +37,16 @@ int test00()
   using namespace peg00;
   std::cout << "Programming example 0 : Geometric algebra identities" << std::endl;
 
-  do_test00_all_tunes<float,-3,4>("float", 3);
-  do_test00_all_tunes<float,-4,4>("float", 4);
-  do_test00_all_tunes<float,-5,6>("float", 5);
-  do_test00_all_tunes<double>("double", 5);
-  do_test00_all_tunes<long double>("long double", 5);
+  do_test00_tuned<float,-3,4>("Default:", "float", 3);
+  do_test00_tuned<float,-4,4>("Default:", "float", 4);
+  do_test00_tuned<float,-5,6>("Default:", "float", 5);
+  do_test00_tuned<double>("Default:", "double", 5);
+  do_test00_tuned<long double>("Default:", "long double", 5);
 #ifdef _GLUCAT_USE_QD
   unsigned int old_fpu_control;
   fpu_fix_start(&old_fpu_control);
-  do_test00_all_tunes<dd_real>("dd_real", 5);
-  do_test00_all_tunes<qd_real>("qd_real", 5);
+  do_test00_tuned<dd_real>("Default:", "dd_real", 5);
+  do_test00_tuned<qd_real>("Default:", "qd_real", 5);
   fpu_fix_end(&old_fpu_control);
 #endif
   return 0;
