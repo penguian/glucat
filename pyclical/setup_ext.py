@@ -22,19 +22,19 @@
 
 from setuptools.extension import Extension
 import os
-#
+
 cxxflags = os.environ["CXXFLAGS"]
 am_cppflags = os.environ["AM_CPPFLAGS"]
 libraries = os.environ["LIBRARIES"].replace("-l", "")
-libraries_split = libraries.split()
-#
+
+
 def setup_ext(ext_name, source):
     ext = Extension(
         ext_name,         # name of extension
         sources=[source], # filename of our Cython source
         include_dirs=[".",".."],
         extra_compile_args=am_cppflags.split() + cxxflags.split(),
-        libraries=libraries_split
+        libraries=None
     )
     return ext
 
@@ -48,7 +48,6 @@ class cxx_build_ext(build_ext):
         def executable_args(self, compiler):
 
             args = {}
-
             ignore_flags = (
                 {
                 "-Wstrict-prototypes"
@@ -67,8 +66,8 @@ class cxx_build_ext(build_ext):
             # From stackoveflow user subdir 2012-03-16
             # See also https://docs.python.org/2/distutils/apiref.html
             compiler_flags = [
-                word for word in self.compiler.compiler_so[1:]
-                if not word in ignore_flags]
+                flag for flag in self.compiler.compiler_so[1:]
+                if not flag in ignore_flags]
 
             map_flag = "-ffile-prefix-map"
             ignore_map_flag = (
@@ -77,8 +76,8 @@ class cxx_build_ext(build_ext):
             )
             if ignore_map_flag:
                 compiler_flags = [
-                    word for word in compiler_flags
-                    if not word.startswith(map_flag)]
+                    flag for flag in compiler_flags
+                    if not flag.startswith(map_flag)]
 
             compiler_flags.append("-fstack-protector")
             if (compiler.startswith("icpx") and cxxmajor >= 2020):
@@ -89,12 +88,12 @@ class cxx_build_ext(build_ext):
             # Define linker_so
 
             linker_flags = [
-                word for word in ["-Wl,-z,notext"] + self.compiler.linker_so[1:]
-                if not word in ignore_flags]
+                flag for flag in ["-Wl,-z,notext"] + self.compiler.linker_so[1:]
+                if not flag in ignore_flags]
             if ignore_map_flag:
                 linker_flags = [
-                    word for word in linker_flags
-                    if not word.startswith(map_flag)]
+                    flag for flag in linker_flags
+                    if not flag.startswith(map_flag)]
             linker_so =   [compiler] + linker_flags
             args["linker_so"] = " ".join(linker_so)
 
@@ -103,31 +102,24 @@ class cxx_build_ext(build_ext):
 
         def add_libraries(self):
 
-            global libraries_split
-
+            libraries_split = libraries.split()
             mkl_libraries = [
                 "mkl_gf",
                 "mkl_gf_lp64",
                 "mkl_intel",
-                "mkl_intel_lp64",
-                "mkl_core"]
-            using_mkl = False
+                "mkl_intel_lp64"]
             substituted = False
-            for word in mkl_libraries:
+            for lib in mkl_libraries:
                 try:
-                    word_index = libraries_split.index(word)
-                    using_mkl = True
+                    lib_index = libraries_split.index(lib)
                     if not substituted:
-                        libraries_split[word_index] = "mkl_rt"
+                        libraries_split[lib_index] = "mkl_rt"
                         substituted = True
                 except ValueError:
                     pass
-            if using_mkl:
-                libraries_split = [
-                    word for word in libraries_split
-                    if not word in mkl_libraries]
             for lib in libraries_split:
-                self.compiler.add_library(lib)
+                if not lib in mkl_libraries:
+                    self.compiler.add_library(lib)
 
 
         # Allow a custom C++ compiler through the environment variables.
