@@ -53,7 +53,7 @@ endif
 check: $(CHECK_OUT)
 
 $(CHECK_OUT): all
-	$(PYTHON) -iq < test.py > check.out 2>&1
+	$(PYTHON) -iq < test.py > $(CHECK_OUT) 2>&1
 
 CLEAN_CYTHON = $(ext_name).cpp $(ext_name).html
 
@@ -63,5 +63,6 @@ clean-local:
 	rm -f *.pyc
 	rm -rf build
 	rm -rf __pycache__
+	rm -f $(CHECK_OUT)
 
 endif
