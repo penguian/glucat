@@ -37,7 +37,7 @@ all: $(pyexec_DATA)
 $(pyexec_DATA): $(SETUP_SOURCE_LIST) $(SETUP).py setup_ext.py
 	ext_name="$(ext_name)" $(SETUP_SOURCE_PARAM) \
 	CXX="$(CXX)" CXXVERSION="$(CXXVERSION)" CFLAGS="" CXXFLAGS="$(EXTCXXFLAGS)" AM_CPPFLAGS="$(EXTAM_CPPFLAGS)" \
-	LDFLAGS="$(USER_LDFLAGS)" LIBRARIES="$(LIBS)" all_libraries="" \
+	LDFLAGS="$(USER_LDFLAGS)" LIBRARIES="$(LIBS)" \
 	$(PYTHON) $(SETUP).py build_ext --inplace
 
 if use_cython
