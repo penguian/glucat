@@ -12,5 +12,4 @@ transforms_LDADD = $(LDADD)
 # set the include path found by configure
 AM_CPPFLAGS = $(all_includes)
 # the library search path.
-LDFLAGS = $(all_libraries)
-transforms_LDFLAGS = $(LDFLAGS)
+transforms_LDFLAGS = $(USER_LDFLAGS)

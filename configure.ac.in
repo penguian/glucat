@@ -631,7 +631,6 @@ AC_CONFIG_HEADERS([config.h])
 AX_PREFIX_CONFIG_H([glucat/glucat_config.h])
 
 GLUCAT_CHECK_EXTRA_LIBS
-all_libraries="$all_libraries $USER_LDFLAGS"
 all_includes="-I. -I.. $all_includes $USER_INCLUDES"
 
 dnl checks for programs.
@@ -652,9 +651,10 @@ AM_CONDITIONAL([HAVE_DOXYGEN],[test -n "$DOXYGEN"])
 AM_COND_IF([HAVE_DOXYGEN],[AC_CONFIG_FILES([Doxyfile])])
 
 AC_SUBST([all_includes])
-AC_SUBST([all_libraries])
 LIBS="$all_libraries"
 AC_SUBST([LIBS])
+all_libraries="$all_libraries $USER_LDFLAGS"
+AC_SUBST([all_libraries])
 AC_SUBST([AUTODIRS])
 
 AM_CONDITIONAL([make_pyclical],[test "$glucat_use_pyclical" == "yes"])

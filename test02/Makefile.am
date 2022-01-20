@@ -15,7 +15,6 @@ test02_LDADD = $(LDADD)
 # set the include path found by configure
 AM_CPPFLAGS = $(all_includes)
 # the library search path.
-LDFLAGS = $(all_libraries)
-test02_LDFLAGS = $(LDFLAGS)
+test02_LDFLAGS = $(USER_LDFLAGS)
 
 CLEANFILES = test02.out
