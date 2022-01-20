@@ -43,7 +43,7 @@ dnl checks originally from acinclude.m4 for KDE:
 AC_DEFUN([GLUCAT_CHECK_LIB],
 [
   glucat_saved_ldflags="$LDFLAGS"
-  LDFLAGS="$LDFLAGS $all_libraries"
+  LDFLAGS="$LDFLAGS $USER_LDFLAGS"
   AC_CHECK_LIB($1, $2, $3, $4)
   LDFLAGS="$glucat_saved_ldflags"
 ])
@@ -51,7 +51,7 @@ AC_DEFUN([GLUCAT_CHECK_LIB],
 AC_DEFUN([GLUCAT_CHECK_LIBS],
 [
   glucat_saved_ldflags="$LDFLAGS"
-  LDFLAGS="$LDFLAGS $all_libraries"
+  LDFLAGS="$LDFLAGS $USER_LDFLAGS"
   AC_CHECK_LIB($1, $2, $3, $4, $5)
   LDFLAGS="$glucat_saved_ldflags"
 ])
