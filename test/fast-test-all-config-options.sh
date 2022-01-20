@@ -16,6 +16,7 @@
 # set -x
 
 here=$(cd $(dirname ${0})/ && pwd)
+. ${here}/check-config-options.sh
 . ${here}/define-config-options.sh
 
 args=$*
@@ -25,3 +26,4 @@ do
   echo ${line}
   ${here}/fast-test-one-config-option.sh ${line} ${args}
 done
+echo '.'
