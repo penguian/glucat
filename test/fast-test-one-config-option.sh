@@ -41,6 +41,17 @@ pushd ${package_dir}/.. \
     make ${args} fast-check \
       > make.out
 
+    pushd pyclical \
+      > /dev/null
+
+      if [ -f check.out ]
+      then
+        mv check.out fast-test.check.out
+      fi
+
+    popd \
+      > /dev/null
+
     pushd test_runtime \
       > /dev/null
 

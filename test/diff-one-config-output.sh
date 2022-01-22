@@ -41,9 +41,9 @@ pushd ${package_dir}/.. \
       
     pushd pyclical \
       > /dev/null
-      if [ -f check.out ]
+      if [ -f test.check.out ]
       then
-        diff -ub ${package_dir}/pyclical/test.out check.out \
+        diff -ub ${package_dir}/pyclical/test.out test.check.out \
           > test.out.diff
 
         cat test.out.diff
