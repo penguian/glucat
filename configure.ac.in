@@ -54,6 +54,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   dnl As a side effect of testing introduced by autoconf, CXXFLAGS has been changed. Restore it.
   CXXFLAGS="$saved_CXXFLAGS"
 
+  dnl Use all_libraries as a local variable to track which libraries to add.
+  all_libraries=""
+
   dnl process the command line arguments
 
   AC_ARG_ENABLE([debug],      [[  --enable-debug[=ARG]    enable debug symbols (yes|no|full) [default=no]]],
@@ -193,7 +196,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     esac
   ],[glucat_use_eigenvalues="no"])
 
-  AC_ARG_WITH([pool-alloc], [[  --with-pool-alloc       use Boost Pool allocator [default=no]]],
+  AC_ARG_WITH([pool-alloc],   [[  --with-pool-alloc       use Boost Pool allocator [default=no]]],
     [glucat_use_boost_pool_alloc="$withval"],
     [glucat_use_boost_pool_alloc="no"])
 
@@ -391,7 +394,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       GLUCAT_CHECK_HEADERS([qd/qd_real.h],
       [
         CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_QD";
-        LIBS="$LIBS $glucat_add_libs"
+        all_libraries="$all_libraries $glucat_add_libs"
       ],[glucat_have_qd="no"],[])
     fi
     if [[[ "$glucat_have_qd" == "no" ]]]; then
@@ -430,7 +433,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
         GLUCAT_CHECK_HEADERS([gsl/gsl_rng.h],
         [
           CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_GSL_RANDOM";
-          LIBS="$LIBS $glucat_add_libs"
+          all_libraries="$all_libraries $glucat_add_libs"
         ],
         [glucat_have_gsl="no"],[])
       fi
@@ -474,7 +477,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
         GLUCAT_CHECK_HEADERS([boost/numeric/bindings/lapack/driver/gees.hpp],
         [
           CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BINDINGS"
-          LIBS="$LIBS $glucat_add_libs"
+          all_libraries="$all_libraries $glucat_add_libs"
         ],
         [glucat_have_bindings="no"],[])
       fi
@@ -504,7 +507,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       GLUCAT_CHECK_COMPILER_FLAG([Wno-unused-variable],
             [CXXFLAGS="$CXXFLAGS -Wno-unused-variable"])
       CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_BOOST_POOL_ALLOC";
-      LIBS="$LIBS $glucat_add_libs"
+      all_libraries="$all_libraries $glucat_add_libs"
     else
       AC_MSG_WARN([Cannot build using Boost pool allocator.])
     fi
@@ -560,7 +563,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       ;;
     icpc|icpx)
       GLUCAT_CHECK_LIB([imf],[cos],
-      [LIBS="$LIBS -limf"],
+      [all_libraries="$all_libraries -limf"],
       [],
       [glucat_have_gsl="no"])
       GLUCAT_CHECK_COMPILER_FLAG([fno-check-new],
@@ -593,6 +596,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   AC_PROG_CXXCPP
 
   ifdef([AM_DEPENDENCIES],AC_REQUIRE([GLUCAT_ADD_DEPENDENCIES]),[])
+
+  dnl Use LIBS as a result variable to determine which libraries to add.
+  LIBS="$all_libraries"
 ])
 
 AC_DEFUN([GLUCAT_ADD_DEPENDENCIES],
@@ -614,7 +620,7 @@ AC_ARG_PROGRAM
 dnl Automake doc recommends to do this only here. (Janos)
 AM_INIT_AUTOMAKE([gnu tar-pax])
 
-dnl almost the same like GLUCAT_SET_PREFIX but the path is /usr/local
+dnl almost the same as GLUCAT_SET_PREFIX but the path is /usr/local
 dnl
 unset CDPATH
 dnl make /usr/local the default for the installation
@@ -656,3 +662,4 @@ AC_SUBST([AUTODIRS])
 
 AM_CONDITIONAL([make_pyclical],[test "$glucat_use_pyclical" == "yes"])
 AM_CONDITIONAL([use_cython],[test "$glucat_use_cython" == "yes"])
+
