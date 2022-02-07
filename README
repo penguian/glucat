@@ -1,4 +1,4 @@
-README for GluCat 0.9.0 with PyClical
+README for GluCat 0.9.1 with PyClical
 =====================================
 
 GluCat is a library of C++ template classes for calculations with the universal
@@ -268,22 +268,20 @@ test/driver.h and test01/peg01.h.
 The key lines of code in test/driver.h are:
 
  #include "glucat/glucat.h"
- #include "test/tuning.h"
  #include "glucat/glucat_imp.h"
 
-The first line includes <glucat/glucat.h>, a convenience header that includes
+The first line includes "glucat/glucat.h", a convenience header that includes
 all the GluCat declarations.
 
-The second line includes "test/tuning.h", a convenience header that defines
-Tune_P, the tuning policy class. This class may be included as a template
-parameter in future versions of GluCat, but for now, in your own code, you will
-need to define it by using a typedef before including <glucat/glucat_imp.h>.
-The glucat::tuning<> template class is defined in <glucat/global.h>. See
-"test/tuning.h" for examples of values that you can use for the members of
-Tune_P.
+The second line includes "glucat/glucat_imp.h", a convenience header that
+includes all the GluCat definitions.
 
-The third line includes <glucat/glucat_imp.h>, a convenience header that includes
-all the GluCat definitions.
+The third line includes "test/tuning.h", a convenience header that defines
+specific instances of tuning<> for use as Tune_P, the tuning policy class.
+This class is used as a template parameter in in the template classes
+framed_multi<> and matrix_multi<>. The tuning<> template class is defined in
+"glucat/tuning.h". See this file and "test/tuning.h" for examples of values
+that you can use for the template parameters of tuning<> for use as Tune_P.
 
 The key line of code in test01/peg01.h is:
 

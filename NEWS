@@ -1,5 +1,26 @@
-NEWS for GluCat 0.9.0 with PyClical
+NEWS for GluCat 0.10.0 with PyClical
 ===================================
+
+2022-01-16: 0.10.0
+GluCat tuning is now done via a template parameter.
+
+GluCat 0.10.0 introduces a change in the way that the headers are to be used.
+Instead of
+#include "glucat/glucat.h"
+#include "my_tuning.h"
+#include "glucat/glucat_imp.h"
+with "my_tuning.h" containing a definition of Tune_P, the tuning policy class,
+you are expected to use
+#include "glucat/glucat.h"
+#include "glucat/glucat_imp.h"
+#include "my_tuning.h"
+with "my_tuning.h" containing a definition of the tuning policy class that
+you are using as a template parameter. See README for details.
+
+Also:
+o The ./configure script has been refactored.
+o The Python scripts used to build the PyClical extension module now use
+  setuptools rather than distutils.
 
 2021-12-20: 0.9.0
 GluCat has revised promotion, truncation and printing.
