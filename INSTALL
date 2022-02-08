@@ -503,7 +503,11 @@ The option "--with-eig=bindings" adds
 "-D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BINDINGS" to CXXFLAGS and adds the
 flags "-llapack -lblas" to the list of libraries, "LIBS" in the
 Makefiles, if the header file <boost/numeric/bindings/driver/lapack/gees.hpp>
-and the libraries liblapack and libblas are usable.
+and the libraries liblapack and libblas are usable. To accomplish this, the
+configure script uses the AX_LAPACK and AX_BLAS macros, as documented at
+at https://www.gnu.org/software/autoconf-archive/The-Macros.html
+This, in turn means that you will need to have a Fortran compiler installed,
+and preferably have the F77 environment variable set to refer to this compiler.
 
 
 The preprocessor symbol _GLUCAT_USE_EIGENVALUES controls whether the sqrt() and
@@ -520,10 +524,9 @@ to obtain the eigenvalues of a matrix. Which function is used depends on one of
 a number of preprocessor symbols:
 
 If _GLUCAT_USE_BINDINGS is defined, glucat/matrix_imp.h includes
-<boost/numeric/bindings/lapack/driver/gees.hpp> and uses the SVN sandbox version
-of the Boost Numeric Bindings library, as per
-http://svn.boost.org/svn/boost/sandbox/numeric_bindings/.
-
+<boost/numeric/bindings/lapack/driver/gees.hpp> and uses the Boost Numeric
+Bindings library. To use this library, you will need to download and install
+it yourself, preferably from https://github.com/uBLAS/numeric_bindings
 
 To compile your own programs using the GluCat library, to detect and correctly
 handle negative real eigenvalues in the sqrt() and log() functions, your
@@ -531,7 +534,7 @@ Makefile needs to pass the flag "-D_GLUCAT_USE_EIGENVALUES" to the C++ compiler,
 as well as one of the following choices of flags, and the corresponding header
 files and libraries must be usable.
 
- For Boost Numeric Bindings sandbox:
+ For Boost Numeric Bindings:
   "-D_GLUCAT_USE_BINDINGS -llapack -lblas"
   You will also need to ensure that the include path used by the compiler sees
   <boost/numeric/bindings/lapack/driver/gees.hpp> and the library path sees
@@ -1064,7 +1067,6 @@ to use sudo, login as root, or su to root before you run make install.
     Doxygen 1.9.2
     pdfTeX 3.141592653-2.6-1.40.22 (TeX Live 2021/TeX Live for SUSE Linux)
 
-
     ./test/fast-test-all-config-options.sh
     All 15 configuration commands corresponding to each of the 15
     fast-test.configure*.out files in ./test_runtime
@@ -1082,9 +1084,10 @@ to use sudo, login as root, or su to root before you run make install.
     Python 3.8.8
     Numpy 1.20.2
     
-    ./configure --with-qd --with-eig=bindings \
-                --with-extra-includes="${PATHTO}/numeric_bindings"
-                   
+    ./test/fast-test-all-config-options.sh
+    All 15 configuration commands corresponding to each of the 15
+    fast-test.configure*.out files in ./test_runtime
+
  5) CoCalc:
     Virtual 8 core Intel(R) Xeon(R) CPU @ 2.80GHz with
 
