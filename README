@@ -1,4 +1,4 @@
-README for GluCat 0.9.1 with PyClical
+README for GluCat 0.10.0 with PyClical
 =====================================
 
 GluCat is a library of C++ template classes for calculations with the universal
@@ -269,6 +269,7 @@ The key lines of code in test/driver.h are:
 
  #include "glucat/glucat.h"
  #include "glucat/glucat_imp.h"
+ #include "test/tuning.h"
 
 The first line includes "glucat/glucat.h", a convenience header that includes
 all the GluCat declarations.
