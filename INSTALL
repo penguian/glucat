@@ -1,4 +1,4 @@
-INSTALL for GluCat 0.9.0 with PyClical
+INSTALL for GluCat 0.10.0 with PyClical
 ========================================
 
 Prerequisites: Before You Begin
@@ -30,13 +30,13 @@ You can install GluCat in one of two ways:
 To install the first way, from (e.g.) GitHub, run the following commands on a
 Linux machine or equivalent Posix environment connected to the Internet:
 
-> git clone git@github.com:penguian/glucat.git glucat-0.9.0
-> cd glucat-0.9.0
+> git clone git@github.com:penguian/glucat.git glucat-0.10.0
+> cd glucat-0.10.0
 > make -f admin/Makefile.common cvs
 
-This results in a directory structure that includes glucat-0.9.0/configure,
+This results in a directory structure that includes glucat-0.10.0/configure,
 allowing you to make and install GluCat in the same way as if you had downloaded
-and unzipped the tarball glucat-0.9.0.tar.gz.
+and unzipped the tarball glucat-0.10.0.tar.gz.
 
 
 Directory Structure
@@ -44,11 +44,11 @@ Directory Structure
 
 Once you have downloaded, unzipped and untarred the source code, or followed
 the instructions above to install from Git clone, you should have a directory,
-glucat-0.9.0. Under this directory you should see a number
+glucat-0.10.0. Under this directory you should see a number
 of subdirectories, including ./admin, ./doc, ./glucat, ./gfft_test, ./products,
 ./pyclical, ./squaring, ./test, ./test_runtime, ./testxx, and ./transforms.
 
-The following instructions are meant to be used with glucat-0.9.0 as the
+The following instructions are meant to be used with glucat-0.10.0 as the
 current directory.
 
 
@@ -115,7 +115,7 @@ GluCat includes two types of test programs, timing (benchmark) tests, and
 functionality (regression) tests. The regression tests are also used as
 programming examples. The source code for the timing tests is in ./gfft_test,
 ./products, ./squaring and ./transforms. The source code for the regression
-tests is in the subdirectories ./test00 to ./test16. Compilation of these test
+tests is in the subdirectories ./test00 to ./test17. Compilation of these test
 programs uses C++ headers defined in ./test as well as ./glucat.
 
 Your own programs, written in C++
@@ -146,7 +146,7 @@ subdirectories.
 
 As briefly described above, the simplest way to install this package is:
 
- 1. "cd" to the glucat-0.9.0 directory containing the source code and type
+ 1. "cd" to the glucat-0.10.0 directory containing the source code and type
     "./configure" to configure GluCat with PyClical for your system.
     If you are using "csh" on an old version of System V, you might need to type
     "sh ./configure" instead to prevent "csh" from trying to execute
@@ -184,7 +184,7 @@ want to keep, you may remove or edit it.
 
 The file ./configure.ac is used to create ./configure via a program called
 "autoconf".  You only need ./configure.ac if you want to change or regenerate
- ./configure using a newer version of "autoconf".
+./configure using a newer version of "autoconf".
 
 
 Compilers and Options
@@ -285,9 +285,6 @@ using the "--with-extra-includes" option, if necessary. If your computer has
 Python installed, but not Cython, you can build PyClical from the provided
 PyClical.cpp file. See details in "To Build" below.
 
-Building PyClical also builds pyclical/demos. This results in the creation of
-Jupyter notebooks.
-
 
   --enable-check-isnan    check for NaN values at various places in the code [default=yes]
 
@@ -296,8 +293,8 @@ expensive isnan() member function to check for NaN values within the
 matrix_multi<> implementations of operator*() and operator/().
 
 The option --enable-check-isnan adds "-D_GLUCAT_CHECK_ISNAN" to CXXFLAGS in
-the Makefiles. This is the default. If you do not want to check for NaN values,
-you can use the option "--disable-check-isnan".
+the Makefiles. This is the default. If you do not want to check for NaN values
+in these two functions, you can use the option "--disable-check-isnan".
 
 If D_GLUCAT_CHECK_ISNAN is defined, the functions operator*() and operator/()
 in glucat/matrix_multi_imp.h use the member function isnan() to check for NaN
@@ -307,6 +304,10 @@ If D_GLUCAT_CHECK_ISNAN is not defined, then these chacks are not performed.
 If you are compiling your own programs using the GluCat library, to check for
 NaN values within operator*() and operator/(), your Makefile needs to pass
 the flag "-D_GLUCAT_CHECK_ISNAN" to the C++ compiler.
+
+Note that this option only affects these two functions, and that many other
+matrix_multi<> functions check for NaN regardless of whether D_GLUCAT_CHECK_ISNAN
+is defined.
 
 
 Optional Packages
@@ -361,8 +362,6 @@ glucat::framed_multi<> uses std::map<>.
 
 The option "--with-map=stdunordered" adds "-D_GLUCAT_USE_STD_UNORDERED_MAP" to
 CXXFLAGS in the Makefiles, if the header file <unordered_map> is usable.
-If the g++ compiler is being used, the compiler flag "-std=c++11" rather than
-"-ansi" is added to CXXFLAGS, to tell g++ to use the C++ 2011 standard.
 
 
 By default glucat/framed_multi.h defines glucat::framed_multi<> using
@@ -382,8 +381,6 @@ exist.
 
  For std::unordered_map<>:
   "-D_GLUCAT_USE_STD_UNORDERED_MAP"
-  If you are using g++, pass the compiler flag "-std=c++11" rather than "-ansi".
-  This tells g++ to use the 2011 C++ standard.
 
 
   --with-pool-alloc       use Boost Pool allocator
@@ -443,7 +440,7 @@ compiler.
 This option controls the use of the QD high precision floating point library.
 
 The option "--with-qd" adds "-D_GLUCAT_USE_QD" to CXXFLAGS and adds the flag
-"-lqd" to the list of libraries, "all_libraries" in the Makefiles, if the header
+"-lqd" to the list of libraries, "LIBS" in the Makefiles, if the header
 file <qd/qd_real.h> and the library libqd are usable.
 
 
@@ -467,12 +464,10 @@ defined in glucat/random.h. ARG can be "std" or "gsl". The default is
 "std".
 
 The option "--with-random=std" adds "D_GLUCAT_USE_STD_RANDOM" to CXXFLAGS in the
-Makefiles, if the header file <random> is usable. If the g++ compiler is being
-used, the compiler flag "-std=c++11" rather than "-ansi" is added to CXXFLAGS,
-to tell g++ to use the C++ 2011 standard.
+Makefiles, if the header file <random> is usable.
 
 The option "--with-random=gsl" adds "-D_GLUCAT_USE_GSL_RANDOM" to CXXFLAGS and
-adds the flags "-lgsl" and "-lgslcblas" to the list of libraries, "all_libraries"
+adds the flags "-lgsl" and "-lgslcblas" to the list of libraries, "LIBS"
 in the Makefiles, if the header file <gsl/gsl_rng.h> and the libraries libgsl
 and libgslcblas are usable.
 
@@ -490,8 +485,7 @@ Makefile needs to pass the following flags to the C++ compiler, and the
 corresponding header files and libraries must be usable.
 
  For C++ 2011 STD random number generators:
-  If you are using g++, pass the compiler flag "-std=c++11" rather than "-ansi".
-  This tells g++ to use the 2011 C++ standard.
+  This is the default.
 
  For GSL random number generators:
   "-D_GLUCAT_USE_GSL_RANDOM -lgsl -lgslcblas"
@@ -507,9 +501,13 @@ libraries to use. ARG can be "no" or "bindings". The default is "no".
 
 The option "--with-eig=bindings" adds
 "-D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BINDINGS" to CXXFLAGS and adds the
-flags "-llapack -lblas" to the list of libraries, "all_libraries" in the
+flags "-llapack -lblas" to the list of libraries, "LIBS" in the
 Makefiles, if the header file <boost/numeric/bindings/driver/lapack/gees.hpp>
-and the libraries liblapack and libblas are usable.
+and the libraries liblapack and libblas are usable. To accomplish this, the
+configure script uses the AX_LAPACK and AX_BLAS macros, as documented at
+at https://www.gnu.org/software/autoconf-archive/The-Macros.html
+This, in turn means that you will need to have a Fortran compiler installed,
+and preferably have the F77 environment variable set to refer to this compiler.
 
 
 The preprocessor symbol _GLUCAT_USE_EIGENVALUES controls whether the sqrt() and
@@ -526,10 +524,9 @@ to obtain the eigenvalues of a matrix. Which function is used depends on one of
 a number of preprocessor symbols:
 
 If _GLUCAT_USE_BINDINGS is defined, glucat/matrix_imp.h includes
-<boost/numeric/bindings/lapack/driver/gees.hpp> and uses the SVN sandbox version
-of the Boost Numeric Bindings library, as per
-http://svn.boost.org/svn/boost/sandbox/numeric_bindings/.
-
+<boost/numeric/bindings/lapack/driver/gees.hpp> and uses the Boost Numeric
+Bindings library. To use this library, you will need to download and install
+it yourself, preferably from https://github.com/uBLAS/numeric_bindings
 
 To compile your own programs using the GluCat library, to detect and correctly
 handle negative real eigenvalues in the sqrt() and log() functions, your
@@ -537,24 +534,12 @@ Makefile needs to pass the flag "-D_GLUCAT_USE_EIGENVALUES" to the C++ compiler,
 as well as one of the following choices of flags, and the corresponding header
 files and libraries must be usable.
 
- For Boost Numeric Bindings sandbox:
+ For Boost Numeric Bindings:
   "-D_GLUCAT_USE_BINDINGS -llapack -lblas"
   You will also need to ensure that the include path used by the compiler sees
   <boost/numeric/bindings/lapack/driver/gees.hpp> and the library path sees
  liblapack.* and libblas.*.
 
-
- --with-tuning[=ARG]     set of tuning parameters to use for testing
-                         (slow|naive|fast|promoted|demoted)
-
-The option "--with-tuning=arg" adds "-D_GLUCAT_TEST_TUNING_ARG" to CXXFLAGS,
-where "ARG" is "arg" converted to uppercase. This option is unusual in that no
-macro names of the form _GLUCAT_TEST_TUNING_ARG appear in the GluCat header
-files. Such names appear only in the test header files. In particular the
-header file test/tuning.h uses the macro names _GLUCAT_TEST_TUNING_SLOW,
-_GLUCAT_TEST_TUNING_NAIVE, _GLUCAT_TEST_TUNING_FAST,
-_GLUCAT_TEST_TUNING_PROMOTED and _GLUCAT_TEST_TUNING_DEMOTED to provide
-different options for the tuning policy Tune_P.
 
 
 Operation Controls
@@ -593,8 +578,8 @@ Building PyClical and the timing test programs
 ----------------------------------------------
 
 To build PyClical and the timing test programs, set the environment variable
-CXX to indicate your C++ compiler, eg. "g++" for GNU C++, "icpc" for Intel C++,
-then run "./configure" as above, and then run "make".
+CXX to indicate your C++ compiler, eg. "g++" for GNU C++, "icpc" or "icpx"
+for Intel C++, then run "./configure" as above, and then run "make".
 
 Make uses the headers in ./glucat and ./test and the source in ./pyclical,
 ./gfft_test, ./products, ./squaring and ./transforms to build PyClical and the
@@ -606,28 +591,31 @@ configuration option --disable-pyclical (equivalently, --enable-pyclical=no).
 
 If Cython is installed then make builds PyClical by running the command
 
- ext_name="$(ext_name)" source_pyx="$(ext_name).pyx" \
- CXXFLAGS="$(EXTCXXFLAGS)" INCLUDES="$(INCLUDES)" LDFLAGS="$(LDFLAGS)" \
- python3 setup.py build_ext --inplace
+  ext_name="PyClical" source_pyx="PyClical.pyx" \
+  CXX="$(CXX)" CXXVERSION="$(CXXVERSION)" CFLAGS="" \
+  CXXFLAGS="$(EXTCXXFLAGS)" AM_CPPFLAGS="$(EXTAM_CPPFLAGS)" \
+  LDFLAGS="$(USER_LDFLAGS)" LIBRARIES="$(LIBS)" \
+ $(PYTHON) setup.py build_ext --inplace
 
-with INCLUDES=$(all_includes), LDFLAGS=$(all_libraries) and the values of
-CXXFLAGS,  all_includes, all_libraries and ext_name set by ./configure.
-In particular, ext_name is set to "PyClical". You can run pyclical/setup.py
-yourself, but you must set the environment variables ext_name, source_pyx,
-CXXFLAGS, INCLUDES and LDFLAGS to appropriate values. See "To Configure" above
-to determine these values.
+with EXTCXXFLAGS = $(glucat_extra_cxxflags_pyclical) $(CXXFLAGS),
+EXTAM_CPPFLAGS=$(all_includes), and the values of the other environment variables
+set by ./configure.
+
+You can run pyclical/setup.py yourself, but you must set the environment variables
+to appropriate values. See "To Configure" above to determine these values.
 
 Alternatively, if you have Python installed but do not have Cython, then
 ./configure will recognize this, and make will build PyClical via the command
 
- ext_name="$(ext_name)" source_cpp="$(ext_name)_nocython.cpp" \
- CXXFLAGS="$(EXTCXXFLAGS)" INCLUDES="$(INCLUDES)" LDFLAGS="$(LDFLAGS)" \
- python3 setup_nocython.py build_ext --inplace
+  ext_name="PyClical" source_cpp="PyClical_nocython.cpp" \
+  CXX="$(CXX)" CXXVERSION="$(CXXVERSION)" CFLAGS="" \
+  CXXFLAGS="$(EXTCXXFLAGS)" AM_CPPFLAGS="$(EXTAM_CPPFLAGS)" \
+  LDFLAGS="$(USER_LDFLAGS)" LIBRARIES="$(LIBS)" \
+  $(PYTHON) setup_nocython.py build_ext --inplace
 
-with INCLUDES=$(all_includes), LDFLAGS=$(all_libraries) and the values of
-CXXFLAGS,  all_includes, all_libraries and ext_name set by ./configure.
-Again, you can run pyclical/setup_nocython.py yourself, but you must set all
-of the relevant environment variables to appropriate values.
+with all variables set as above. Again, you can run pyclical/setup_nocython.py
+yourself, but you must set all of the relevant environment variables to
+appropriate values.
 
 In the pyclical/demos directory, there is a Python script
 build_pyclical_notebooks.py. This script builds a set of Jupyter notebooks
@@ -639,10 +627,10 @@ Building and running the regression test programs
 -------------------------------------------------
 
 To build and run the regression test programs, set the environment variable CXX
-to indicate your C++ compiler, eg. "g++" for GNU C++, "icpc" for Intel C++,
-then run "./configure" as above, and then run "make check". This builds and
-runs the executable files ./test00/test00 to ./test16/test16. This produces
-the intermediate output files ./test00/test00.out to ./test16/test16.out, and the
+to indicate your C++ compiler, eg. "g++" for GNU C++, "icpc" or "icpx" for Intel
+C++, then run "./configure" as above, and then run "make check". This builds and
+runs the executable files ./test00/test00 to ./test17/test17. This produces
+the intermediate output files ./test00/test00.out to ./test17/test17.out, and the
 final test output file ./test_runtime/test.out. You can use a parallel make for
 "make check" , e.g. "make check -j 6". This is especially useful on modern
 multicore machines.
@@ -673,108 +661,92 @@ Re-running the regression tests
 The main regression test script is ./test/test.sh. Once you have built and run
 the regression tests via "make check", you can use this script to re-run the
 regression tests. The script ./test/test.sh reruns tests ./test00/test00 to
-./test16/test16, using relative pathnames, so it is best to leave test.sh
+./test17/test17, using relative pathnames, so it is best to leave test.sh
 where it is and invoke it using its full path name. This allows it to find
-test00 to test16.
+test00 to test17.
 
 The test script ./test/test.sh takes any number (including zero) of numeric
-parameters. Parameters in the range "00" to "16" correspond to coding examples
-./test00/test00 to ./test16/test16. These examples are run in numerical
-order. With zero parameters, all examples from 00 to 16 are run in order. Many
+parameters. Parameters in the range "00" to "17" correspond to coding examples
+./test00/test00 to ./test17/test17. These examples are run in numerical
+order. With zero parameters, all examples from 00 to 17 are run in order. Many
 of the examples are run twice - once with framed_multi<Scalar_T> and once with
 matrix_multi<Scalar_T>.
 
-The ./test_runtime directory contains 19 sample versions of the regression test
-results, corresponding to 19 different combinations of configuration parameters.
-The tests were all run on an Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz+ with
+The ./test_runtime directory contains 30 sample versions of the regression test
+results, corresponding to 15 different combinations of configuration parameters,
+for two different sets of tests, the complete set of 18 tests, and a subset of 3
+tests. The tests were all run on an Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz+ with
 
-    Linux 5.11.0-25-generic #27-Ubuntu SMP x86_64
-    Kubuntu 21.04
-    gcc version 10.3.0 (Ubuntu 10.3.0-1ubuntu1)
-    Boost 1.74 (1.74.0-8ubuntu2)
+    Linux 5.13.0-25-generic #26-Ubuntu SMP x86_64
+    Kubuntu 21.10
+    gcc version 11.2.0 (Ubuntu 11.2.0-7ubuntu2)
+    Boost 1.74.0
     Boost Numeric Bindings
-    GSL 2.6 (2.6+dfsg-2)
-    QD 2.3.22 (2.3.22+dfsg.1-3build1)
-    Cython version 0.29.21
-    Python 3.9.5
+    GSL 2.6
+    QD 2.3.22
+    Cython 0.29.21
+    Python 3.9.7
 
 The test output file names and corresponding configuration commands are defined
 in ./test/config-options.txt and are:
 
-test.configure.default.out:
+  1. test.configure.default.out:
 ./configure
 
-test.configure.compressed-mat:
+  2. test.configure.compressed-mat.out:
 ./configure --without-dense-mat
 
-test.configure.debug-full:
+  3. test.configure.debug-full.out:
 ./configure --enable-debug=full
 
-test.configure.debug-yes:
+  4. test.configure.debug-yes.out:
 ./configure --enable-debug=yes
 
-test.configure.disable-check-isnan:
+  5. test.configure.disable-check-isnan.out:
 ./configure --disable-check-isnan
 
-test.configure.disable-dependency:
+  6. test.configure.disable-dependency.out:
 ./configure --disable-dependency-tracking
 
-test.configure.disable-pyclical:
+  7. test.configure.disable-pyclical.out:
 ./configure --disable-pyclical
 
-test.configure.stdlib-libcxx:
-./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
---disable-pyclical --with-stdlib=libcxx
-
-test.configure.eig-bindings:
-./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
-
-test.configure.eig-bindings-fast:
-./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
---with-tuning=fast
-
-test.configure.eig-bindings-naive:
-./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
-            --with-tuning=naive
-
-test.configure.map-map-gsl:
+  8. test.configure.map-map-gsl.out:
 ./configure --with-map=map --with-random=gsl
 
-test.configure.map-map-pool-alloc:
+  9. test.configure.map-map-pool-alloc.out:
 ./configure --with-map=map --with-pool-alloc
 
-test.configure.prefix-home-opt:
+ 10. test.configure.prefix-home-opt.out:
 ./configure --prefix=$HOME/opt
 
-test.configure.qd-eig-bindings:
-./configure --with-qd \
-            --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
+ 11. test.configure.eig-bindings.out:
+./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
 
-test.configure.qd-eig-bindings-demoted:
-./configure --with-qd \
-            --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
-            --with-tuning=demoted
+ 12. test.configure.eig-bindings-libcxx.out:
+./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
+            --disable-pyclical --with-stdlib=libcxx
 
-test.configure.qd-eig-bindings-gsl:
-./configure --with-qd \
-            --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
-            --with-random=gsl
+ 13. test.configure.eig-bindings-qd.out:
+./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
+            --with-qd
 
-test.configure.qd-eig-bindings-map-map:
-./configure --with-qd \
-            --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
-            --with-map=map
+ 14. test.configure.eig-bindings-qd-gsl.out:
+./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
+            --with-qd --with-random=gsl
 
-test.configure.qd-eig-bindings-promoted:
-./configure --with-qd \
-            --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
-            --with-tuning=promoted
+ 15. test.configure.eig-bindings-qd-map-map.out:
+./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
+            --with-qd --with-map=map
+
+For each of the 15 test.configure.*.out files, there is a corresponding
+fast-test.configure.*.out file, making a total of 30 files.
 
 When you run your own test using ./test/test.sh, you should compare its output
 to the output file corresponding to the closest match to the configuration
 options you used to build your copy of the GluCat library.
 
-The reason why sample test results corresponding to 19 different combinations
+The reason why sample test results corresponding to 15 different combinations
 of configuration parameters are included in test_runtime is that the test output
 strongly depends on the configuration options chosen. In particular:
 
@@ -783,9 +755,9 @@ o If --with-qd is chosen, extra tests in ./test00/test00 and ./test11/test11 are
 
 o If --with-eig=X is chosen, with X set to bindings, the algorithms used for the
   square root, logarithm and inverse trig functions will become much more
-  accurate, and more tests in ./test11/test11 will succeed.
-  Even if one of these options are chosen, some tests in ./test11/test11 fail
-  due to insufficient accuracy. This is most likely caused by a combination of
+  accurate, and the tests in ./test11/test11 will succeed.
+  Even if this option is chosen, some tests in ./test11/test11 fail due to
+  insufficient accuracy. This is most likely caused by a combination of
   excessive round off and truncation error with respect to the condition numbers
   of the matrices used in calculating these functions.
 
@@ -796,24 +768,26 @@ generators, you should expect to have different floating point arithmetic
 results, but generally, still within acceptable error tolerances, except as
 noted for ./test11/test11 above.
 
-The regression tests ./test00/test00 to ./test16/test16 recognize the program
+The regression tests ./test00/test00 to ./test17/test17 recognize the program
 arguments "--help", "--no-catch", and "--verbose". The "--no-catch" argument
 disables the default exception catching behaviour of a regression test, to
 allow prgram crashes to be more easily debugged. For ./test00/test00 and
 ./test11/test11 the argument "--verbose" produces verbose output essentially by
 setting the error tolerance to zero. Verbose output can become quite large.
 
-The test script ./test/test_optional.sh runs all examples 00 to 16 in order,
+The test script ./test/test_optional.sh runs all examples 00 to 17 in order,
 with the given parameters as program arguments.
 
 
 Systematic regression testing
 -----------------------------
 
-The ./test directory contains the script ./test/test-all-config-options.sh.
-This script uses the configuration given by the file ./test/config-options.txt
-to build and run the regression tests and the PyClical doctests once for each
-set of configuration options specified in the file. The syntax of each line of
+The ./test directory contains the scripts ./test/test-all-config-options.sh,
+./test/fast-test-all-config-options.sh and
+./test/pyclical-test-all-config-options.sh. Each of these scripts use the
+configuration given by the file ./test/config-options.txt to build and run the
+regression tests and the PyClical doctests once for each set of configuration
+options specified in the file. The syntax of each line of
 the file  ./test/config-options.txt is simply
 
 abbreviation: options
@@ -823,9 +797,10 @@ configure command
 
 ./configure $options
 
-and copying the output to ./test_runtime/test.configure.$abbreviation.out
+then copying the output to ./test_runtime/test.configure.$abbreviation.out
+or ./test_runtime/fast-test.configure.$abbreviation.out respectively.
 
-For example:
+For example, for ./test/test-all-config-options.sh
 
 The line
 
@@ -854,9 +829,9 @@ and copying the output to ./test_runtime/test.configure.map-map-gsl.out
 
 If you want to test with options different from those in the file
 ./test/config-options.txt, you can write your own file using the same syntax,
-for example, som-other-file.txt, and invoke your tests with the command
+for example, some-other-file.txt, and invoke your tests with the command
 
-config_options_file=some-other-file ./test/test-all-config-options.sh
+config_options_file=some-other-file.txt ./test/test-all-config-options.sh
 
 You can also give parameters to ./test/test-all-config-options.sh and these
 are passed to the make command. In particular, invoking (e.g.)
@@ -868,26 +843,26 @@ speeding up the entire testing process.
 
 Rather than running the regression tests in-place and copying the output
 directly into ./test_runtime, the script ./test/test-all-config-options.sh
-produces as many copies of the whole direcory glucat-0.9.0 as there are lines
-in ./test/config-options.txt, naming them glucat-0.9.0.1 to glucat-0.9.0.19,
-in the parent directory of glucat-0.9.0. This allows the effect of each set
+produces as many copies of the whole direcory glucat-0.10.0 as there are lines
+in ./test/config-options.txt, naming them glucat-0.10.0.1 to glucat-0.10.0.15,
+in the parent directory of glucat-0.10.0. This allows the effect of each set
 of configuration options to be directly compared, and also ensures that any
 side-effect of a configuration does not affect the test results of another
 configuration.
 
 The script ./test/diff-all-config-outputs.sh compares each relevant test output
 file with the corresponding file in ./test_runtime or ./pyclical. For example,
-line 11 of ./test/config-options.txt
+line 8 of ./test/config-options.txt
 
 map-map-gsl:                 --with-map=map --with-random=gsl
 
 causes ./test/diff-all-config-outputs.sh to use diff to compare
-glucat-0.9.0.11/test_runtime/test.configure.map-map-gsl.out to
-glucat-0.9.0/test_runtime/test.configure.map-map-gsl.out, and compare
-glucat-0.9.0.11/pyclical/test.out to glucat-0.9.0/pyclical/test.out.
+glucat-0.10.0.8/test_runtime/test.configure.map-map-gsl.out to
+glucat-0.10.0/test_runtime/test.configure.map-map-gsl.out, and compare
+glucat-0.10.0.8/pyclical/test.out to glucat-0.10.0/pyclical/test.out.
 
 Each comparison should only produce a line containing the line number of
-the configuration being compared: 1 to 19.
+the configuration being compared: 1 to 15.
 
 The exceptional cases are:
 
@@ -901,6 +876,22 @@ The exceptional cases are:
 If the output of your systematic tests differs due to a difference in compilers
 or libraries, you may want to copy this output to ./test_runtime to ease future
 comparisons. To do so, run the script ./test/copy-all-config-outputs.sh.
+
+The difference between ./test/test-all-config-options.sh and
+./test/fast-test-all-config-options.sh is that the former runs all of the tests
+./test00 to ./test17, whereas the latter runs only ./test00, ./test10 and
+./test11. Both scripts build and check ./pyclical. More specifically, the
+./test/test-one-config-option.sh script runs "make check", and the
+./test/fast-test-one-config-option.sh script runs "make fast-check". For the
+definitions of these arguments to make, see the file ./Makefile.am.in. To
+compare or copy the output of ./test/fast-test-all-config-options.sh, use either
+./test/fast-diff-all-config-outputs.sh or ./test/fast-copy-all-config-outputs.sh
+respectively.
+
+The script ./test/pyclical-test-all-config-options.sh just builds and checks
+./pyclical without running any of the other regression tests. To examine the
+output of ./test/fast-test-all-config-options.sh just examine all of the
+pyclical/pyclicat-test.check.out files for errors.
 
 
 Running the timing (benchmark) tests
@@ -936,15 +927,17 @@ The default is:
 
 The sample timing test results in ./test_runtime are from programs
 built and run using the configure command:
-    ./configure --with-qd --with-eig=bindings  \
-                --with-extra-includes=$PATHTO/numeric_bindings
+./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
+            --with-qd
 on  Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz+ with
-    Linux 5.11.0-25-generic #27-Ubuntu SMP x86_64
-    Kubuntu 21.04
-    gcc version 10.3.0 (Ubuntu 10.3.0-1ubuntu1)
-    Boost 1.74 (1.74.0-8ubuntu2)
+    Linux 5.13.0-25-generic #26-Ubuntu SMP x86_64
+    Kubuntu 21.10
+    gcc version 11.2.0 (Ubuntu 11.2.0-7ubuntu2)
+    Boost 1.74.0
     Boost Numeric Bindings
-    QD 2.3.22 (2.3.22+dfsg.1-3build1)
+    GSL 2.6
+    QD 2.3.22
+
 
 Testing PyClical
 ----------------
@@ -994,21 +987,18 @@ to use sudo, login as root, or su to root before you run make install.
  List of Successful Builds
  =========================
 
- GluCat 0.9.0 with PyClical has so far been built and tested using:
+ GluCat 0.10.0 with PyClical has so far been built and tested using:
 
  1) Pensieri:
     4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
 
-    Linux 5.13.0-22-generic #22-Ubuntu SMP x86_64
+    Linux 5.13.0-25-generic #26-Ubuntu SMP x86_64
     Kubuntu 21.10
 
     The following compiler versions:
-    1) gcc version 7.5.0 (Ubuntu 7.5.0-6ubuntu4)
-    2) gcc version 11.2.0 (Ubuntu 11.2.0-7ubuntu2)
-    3) clang version 9.0.1 (9.0.1-16.1ubuntu1)
-    4) clang version 13.0.0 (13.0.0-2)
-    5) icpx version 2021.4.0 (2021.4.0.20210924)
-    6) icpx version 2022.0.0 (2022.0.0.20211123)
+    1) gcc version 11.2.0 (Ubuntu 11.2.0-7ubuntu2)
+    2) clang version 13.0.0 (13.0.0-2)
+    3) icpx version 2022.0.0 (2022.0.0.20211123)
 
     Boost 1.74.0
     Boost Numeric Bindings
@@ -1023,21 +1013,24 @@ to use sudo, login as root, or su to root before you run make install.
     Doxygen 1.9.1
     pdfTeX 3.14159265-2.6-1.40.21 (TeX Live 2020/Debian)
 
-    All 19 configuration commands corresponding to each of the 19
+    ./test/test-all-config-options.sh
+    All 15 configuration commands corresponding to each of the 15
     test.configure*.out files in ./test_runtime
 
  2) Pensieri:
     4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
 
-    Linux 5.13.0-22-generic #22-Ubuntu SMP x86_64
+    Linux 5.13.0-25-generic #26-Ubuntu SMP x86_64
     Kubuntu 21.10
 
     The following compiler versions:
-    1) gcc version 8.5.0 (Ubuntu 8.5.0-0ubuntu4)
-    2) gcc version 9.4.0 (Ubuntu 9.4.0-3ubuntu1)
-    3) gcc version 10.3.0 (Ubuntu 10.3.0-11ubuntu1)
-    4) clang version 11.0.1 (11.0.1-2ubuntu5)
-    5) clang version 12.0.1 (12.0.1-8build1)
+    1) gcc version 7.5.0 (Ubuntu 7.5.0-6ubuntu4)
+    2) gcc version 8.5.0 (Ubuntu 8.5.0-0ubuntu4)
+    3) gcc version 9.4.0 (Ubuntu 9.4.0-3ubuntu1)
+    4) gcc version 10.3.0 (Ubuntu 10.3.0-11ubuntu1)
+    5) clang version 9.0.1 (9.0.1-16.1ubuntu1)
+    6) clang version 11.0.1 (11.0.1-2ubuntu5)
+    7) clang version 12.0.1 (12.0.1-8build1)
 
     Boost 1.74.0
     Boost Numeric Bindings
@@ -1052,7 +1045,9 @@ to use sudo, login as root, or su to root before you run make install.
     Doxygen 1.9.1
     pdfTeX 3.14159265-2.6-1.40.21 (TeX Live 2020/Debian)
 
-    ./configure --with-qd --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
+    ./test/fast-test-all-config-options.sh
+    All 15 configuration commands corresponding to each of the 15
+    fast-test.configure*.out files in ./test_runtime
 
  3) Pensieri (VirtualBox):
     Virtual 1 core Intel(R) Core(TM) i7 CPU 870 @ 2.93GHz with
@@ -1072,30 +1067,11 @@ to use sudo, login as root, or su to root before you run make install.
     Doxygen 1.9.2
     pdfTeX 3.141592653-2.6-1.40.22 (TeX Live 2021/TeX Live for SUSE Linux)
 
-    ./configure --with-qd --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
+    ./test/fast-test-all-config-options.sh
+    All 15 configuration commands corresponding to each of the 15
+    fast-test.configure*.out files in ./test_runtime
 
- 4) Notturno:
-    2 core AMD E-350 Processor 931.6 MHz with
-
-    Linux 5.4.0-81-generic #91-Ubuntu SMP x86_64
-    Kubuntu 20.04.3 LTS
-    1) gcc version 9.3.0 (Ubuntu 9.3.0-17ubuntu1~20.04)
-    2) clang version 10.0.0 (10.0.0-4ubuntu1)
-    Boost 1.71.0
-    Boost Numeric Bindings
-    GSL 2.5
-    QD 2.3.22
-    Cython 0.29.14
-    Python 3.8.10
-    Numpy 1.17.4
-    Matplotlib 3.1.2
-    Mayavi2 4.7.1
-    Doxygen 1.8.17
-    pdfTeX 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian)
-
-    ./configure --with-qd --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
-    
- 5) NCI Gadi:
+ 4) NCI Gadi:
     48 core Intel(R) Xeon(R) Platinum 8274 CPU @ 3.20GHz with
 
     Linux  4.18.0-305.19.1.el8.nci.x86_64 SMP x86_64
@@ -1108,10 +1084,11 @@ to use sudo, login as root, or su to root before you run make install.
     Python 3.8.8
     Numpy 1.20.2
     
-    ./configure --with-qd --with-eig=bindings \
-                --with-extra-includes="${PATHTO}/numeric_bindings"
-                   
- 6) CoCalc:
+    ./test/fast-test-all-config-options.sh
+    All 15 configuration commands corresponding to each of the 15
+    fast-test.configure*.out files in ./test_runtime
+
+ 5) CoCalc:
     Virtual 8 core Intel(R) Xeon(R) CPU @ 2.80GHz with
 
     Linux 5.11.0-1020-gcp #22~20.04.1-Ubuntu SMP x86_64
@@ -1122,12 +1099,15 @@ to use sudo, login as root, or su to root before you run make install.
     Cython 0.29.21
     Python 3.6.9
     Numpy 1.18.5
+    CXXFLAGS="-I/home/user/usr/local/include"
+    USER_LDFLAGS="-L/home/user/usr/local/lib"
+    LD_LIBRARY_PATH="/home/user/usr/local/lib"
 
-    ../configure --with-qd --with-eig=bindings \
-                 --with-extra-includes=/home/user/usr/local/include
-                 --with-extra-libs=/home/user/usr/local/lib
+    ./test/fast-test-all-config-options.sh
+    All 15 configuration commands corresponding to each of the 15
+    fast-test.configure*.out files in ./test_runtime
 
- 7) AWS Graviton:
+ 6) AWS Graviton:
     Virtual 4 core ARM Cortex-A72 Model 3 (AWS Graviton A1 image) with
 
     Linux 5.11.0-1016-aws #17~20.04.1-Ubuntu SMP aarch64
@@ -1135,11 +1115,14 @@ to use sudo, login as root, or su to root before you run make install.
     gcc version 9.3.0 (Ubuntu 9.3.0-17ubuntu1~20.04)
     Boost 1.71.1
     Boost Numeric Bindings
+    GSL Version: 2.5+dfsg-6build1
+    QD Version: 2.3.22+dfsg.1-3build1
     Cython 0.29.14
-    Python 3.8.2
+    Python 3.8.10
 
-    ./configure --with-qd --with-eig=bindings \
-                --with-extra-includes=/home/ubuntu/usr/local/include
+    ./test/fast-test-all-config-options.sh
+    All 15 configuration commands corresponding to each of the 15
+    fast-test.configure*.out files in ./test_runtime
 
                 
 Notes on software versions
@@ -1292,7 +1275,7 @@ Notes on software versions
 
 
     The following bugs and workarounds apply to earlier versions of GluCat,
-    and may still be applicable to GluCat 0.9.0, but have not been checked
+    and may still be applicable to GluCat 0.10.0, but have not been checked
     for this version.
 
 

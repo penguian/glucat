@@ -3,7 +3,7 @@
     transforms.cpp : Example and timing test driver
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2007 by Paul C. Leopardi
+    copyright            : (C) 2001-2021 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -29,6 +29,7 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
+#include "test/driver.h"
 #include "transforms/transforms.h"
 
 int transforms(const int n)
@@ -40,8 +41,8 @@ int transforms(const int n)
     cout << "Maximum value allowed is " << max_n << "." << endl;
     return 1;
   }
-  cout << "framed_multi<double>" << endl;
-  fast_test< framed_multi<double> >(n, max_n);
+  cout << "framed_multi<double,DEFAULT_LO,DEFAULT_HI,tuning_naive>" << endl;
+  fast_test< framed_multi<double,DEFAULT_LO,DEFAULT_HI,tuning_naive> >(n, max_n);
   return 0;
 }
 

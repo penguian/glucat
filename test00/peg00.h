@@ -5,7 +5,7 @@
     peg00.cpp : programming example 00 : Geometric algebra identities
                              -------------------
     begin                : Sat 2007-09-01
-    copyright            : (C) 2007-2012 by Paul C. Leopardi
+    copyright            : (C) 2007-2021 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -356,6 +356,20 @@ namespace peg00
     }
     if (success)
       std::cout << "All tests passed." << std::endl;
+  }
+
+  template <typename Scalar_T, const index_t LO = DEFAULT_LO, const index_t HI = DEFAULT_HI, typename Tune_P = tuning<> >
+  void
+  do_test00_tuned(
+    const std::string tuning_name,
+    const std::string scalar_typename,
+    const index_t max_index)
+  {
+    std::cout << tuning_name << std::endl;
+    std::cout << std::endl << "framed_multi<" << scalar_typename << "," << LO << "," << HI << ">" << std::endl;
+    do_test00< framed_multi<Scalar_T,LO,HI,Tune_P> >(max_index);
+    std::cout << std::endl << "matrix_multi<" << scalar_typename << "," << LO << "," << HI << ">" << std::endl;
+    do_test00< matrix_multi<Scalar_T,LO,HI,Tune_P> >(max_index);
   }
 }
 

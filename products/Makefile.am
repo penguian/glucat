@@ -12,5 +12,4 @@ products_LDADD = $(LDADD)
 # set the include path found by configure
 AM_CPPFLAGS = $(all_includes)
 # the library search path.
-LDFLAGS = $(all_libraries)
-products_LDFLAGS = $(LDFLAGS)
+products_LDFLAGS = $(USER_LDFLAGS)

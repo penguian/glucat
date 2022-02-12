@@ -4,7 +4,7 @@
 #   test-all-config-options.sh : Test all defined configurations.
 #
 #   begin                : Sun 2016-04-03
-#   copyright            : (C) 2016 by Paul C. Leopardi
+#   copyright            : (C) 2016-2022 by Paul C. Leopardi
 #
 #   This library is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU Lesser General Public License as published
@@ -16,6 +16,7 @@
 # set -x
 
 here=$(cd $(dirname ${0})/ && pwd)
+. ${here}/check-config-options.sh
 . ${here}/define-config-options.sh
 
 args=$*
@@ -25,3 +26,4 @@ do
   echo ${line}
   ${here}/test-one-config-option.sh ${line} ${args}
 done
+echo '.'

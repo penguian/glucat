@@ -3,7 +3,7 @@
     peg11.cpp : Driver for test 11
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2012 by Paul C. Leopardi
+    copyright            : (C) 2001-2021 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -32,34 +32,27 @@
 #if !defined(NDEBUG)
 #define NDEBUG
 #endif
+#include "test/driver.h"
 #include "test11/peg11.h"
 
 int test11()
 {
   using namespace peg11;
-  cout << "Programming example 11 : Square root and transcendental functions" << endl;
+  cout <<   "Programming example 11 : Square root and transcendental functions" << endl;
   cout << endl;
-  cout << "framed_multi<float>" << endl;
-  do_test11< framed_multi<float> >();
-  cout << "matrix_multi<float>" << endl;
-  do_test11< matrix_multi<float> >();
-  cout << "framed_multi<double>" << endl;
-  do_test11< framed_multi<double> >();
-  cout << "matrix_multi<double>" << endl;
-  do_test11< matrix_multi<double> >();
-  cout << "framed_multi<long double>" << endl;
-  do_test11< framed_multi<long double> >();
-  cout << "matrix_multi<long double>" << endl;
-  do_test11< matrix_multi<long double> >();
-#if defined(_GLUCAT_USE_QD)
-  cout << "framed_multi<dd_real>" << endl;
-  do_test11< framed_multi<dd_real> >();
-  cout << "matrix_multi<dd_real>" << endl;
-  do_test11< matrix_multi<dd_real> >();
-  cout << "framed_multi<qd_real>" << endl;
-  do_test11< framed_multi<qd_real> >();
-  cout << "matrix_multi<qd_real>" << endl;
-  do_test11< matrix_multi<qd_real> >();
+#if defined(_GLUCAT_USE_EIGENVALUES)
+  cout <<   "framed_multi<float,DEFAULT_LO,DEFAULT_HI,tuning_promoted>" << endl;
+  do_test11_tuned<float,DEFAULT_LO,DEFAULT_HI,tuning_promoted>("Promoted:", "float");
+  do_test11_tuned<double,DEFAULT_LO,DEFAULT_HI,tuning_promoted>("Promoted:", "double");
+  do_test11_tuned<long double,DEFAULT_LO,DEFAULT_HI,tuning_promoted>("Promoted:", "long double");
+#  if defined(_GLUCAT_USE_QD)
+  do_test11_tuned<dd_real,DEFAULT_LO,DEFAULT_HI>("Default:", "dd_real");
+  do_test11_tuned<dd_real,DEFAULT_LO,DEFAULT_HI,tuning_promoted>("Promoted:", "dd_real");
+  do_test11_tuned<qd_real,DEFAULT_LO,DEFAULT_HI,tuning_promoted>("Promoted:", "qd_real");
+#  endif
+#else
+  cout <<   "Square root and transcendental functions give inaccurate results "
+       <<   "when _GLUCAT_USE_EIGENVALUES is not defined." << endl;
 #endif
   return 0;
 }

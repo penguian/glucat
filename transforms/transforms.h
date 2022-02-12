@@ -5,7 +5,7 @@
     transforms.h : Transforms
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2012 by Paul C. Leopardi
+    copyright            : (C) 2001-2021 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -32,13 +32,7 @@
  ***************************************************************************/
 
 #define _GLUCAT_TEST_REPEAT
-#include "glucat/glucat.h"
-#include "test/undefine.h"
-#define _GLUCAT_TEST_TUNING_NAIVE
-#include "test/tuning.h"
-#include "glucat/glucat_imp.h"
 #include "test/timing.h"
-#include "test/try_catch.h"
 #include <stdio.h>
 #include <iomanip>
 

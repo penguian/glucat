@@ -27,8 +27,6 @@ endif
 EXTCXXFLAGS = $(glucat_extra_cxxflags_pyclical) $(CXXFLAGS)
 # set the include path found by configure
 EXTAM_CPPFLAGS = $(all_includes)
-# the library search path.
-EXTLDFLAGS = $(all_libraries)
 
 pyexec_DATA = $(ext_name).*.so
 
@@ -38,7 +36,8 @@ all: $(pyexec_DATA)
 
 $(pyexec_DATA): $(SETUP_SOURCE_LIST) $(SETUP).py setup_ext.py
 	ext_name="$(ext_name)" $(SETUP_SOURCE_PARAM) \
-	CXX="$(CXX)" CXXVERSION="$(CXXVERSION)" CFLAGS="" CXXFLAGS="$(EXTCXXFLAGS)" AM_CPPFLAGS="$(EXTAM_CPPFLAGS)" LDFLAGS="$(EXTLDFLAGS)" \
+	CXX="$(CXX)" CXXVERSION="$(CXXVERSION)" CFLAGS="" CXXFLAGS="$(EXTCXXFLAGS)" AM_CPPFLAGS="$(EXTAM_CPPFLAGS)" \
+	LDFLAGS="$(USER_LDFLAGS)" LIBRARIES="$(LIBS)" \
 	$(PYTHON) $(SETUP).py build_ext --inplace
 
 if use_cython
@@ -53,7 +52,7 @@ endif
 check: $(CHECK_OUT)
 
 $(CHECK_OUT): all
-	$(PYTHON) -iq < test.py > check.out 2>&1
+	$(PYTHON) -iq < test.py > $(CHECK_OUT) 2>&1
 
 CLEAN_CYTHON = $(ext_name).cpp $(ext_name).html
 
@@ -63,5 +62,6 @@ clean-local:
 	rm -f *.pyc
 	rm -rf build
 	rm -rf __pycache__
+	rm -f $(CHECK_OUT)
 
 endif

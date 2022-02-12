@@ -3,7 +3,7 @@
     gfft_test.cpp : GFFT test driver
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2007 by Paul C. Leopardi
+    copyright            : (C) 2001-2021 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -29,6 +29,7 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
+#include "test/driver.h"
 #include "gfft_test/gfft_test.h"
 
 int gfft_test(const int n)
@@ -40,7 +41,7 @@ int gfft_test(const int n)
     cout << "Maximum value allowed is " << max_n << "." << endl;
     return 1;
   }
-  fast_test< framed_multi<double> >(n, max_n);
+  fast_test< framed_multi<double,DEFAULT_LO,DEFAULT_HI,tuning_naive> >(n, max_n);
   return 0;
 }
 

@@ -2,10 +2,10 @@
 #define GLUCAT_TEST_TUNING_H
 /***************************************************************************
     GluCat : Generic library of universal Clifford algebra templates
-    tuning.h : Use preprocessor macros to control test tuning
+    tuning.h : Class definitions to control test tuning
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2016 by Paul C. Leopardi
+    copyright            : (C) 2001-2021 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -31,100 +31,74 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
-// If radix of int is not 2, we can't easily set thresholds
-_GLUCAT_CTAssert(std::numeric_limits<unsigned int>::radix == 2, CannotSetThresholds)
-const unsigned int Test_Tuning_Int_Digits = std::numeric_limits<int>::digits;
-const unsigned int Test_Tuning_Max_Threshold = 1 << Test_Tuning_Int_Digits;
+namespace glucat
+{
+  const unsigned int Tuning_Int_Digits = std::numeric_limits<int>::digits;
+  const unsigned int Tuning_Max_Threshold = 1 << Tuning_Int_Digits;
 
-typedef glucat::precision_t precision_t;
+  // Specific tuning policy constants and tuning policies
 
-#define __TEST_TUNING_DEFAULT_CONSTANT(SUFFIX) \
-const unsigned int Test_Tuning_##SUFFIX                = glucat::DEFAULT_##SUFFIX
+  const unsigned int Tuning_Slow_Mult_Matrix_Threshold   = Tuning_Max_Threshold;
+  const unsigned int Tuning_Slow_Basis_Max_Count         =       0;
+  const unsigned int Tuning_Slow_Fast_Size_Threshold     = Tuning_Max_Threshold;
+  const unsigned int Tuning_Slow_Inv_Fast_Dim_Threshold  = Tuning_Max_Threshold;
+  const unsigned int Tuning_Slow_Products_Size_Threshold = Tuning_Max_Threshold;
 
-// Tuning policy constants
-#if defined ( _GLUCAT_TEST_TUNING_SLOW )
-const unsigned int Test_Tuning_Mult_Matrix_Threshold   = Test_Tuning_Max_Threshold;
-__TEST_TUNING_DEFAULT_CONSTANT(Div_Max_Steps);
-__TEST_TUNING_DEFAULT_CONSTANT(Sqrt_Max_Steps);
-__TEST_TUNING_DEFAULT_CONSTANT(Log_Max_Outer_Steps);
-__TEST_TUNING_DEFAULT_CONSTANT(Log_Max_Inner_Steps);
-const unsigned int Test_Tuning_Basis_Max_Count         =       0;
-const unsigned int Test_Tuning_Fast_Size_Threshold     = Test_Tuning_Max_Threshold;
-const unsigned int Test_Tuning_Inv_Fast_Dim_Threshold  = Test_Tuning_Max_Threshold;
-const unsigned int Test_Tuning_Products_Size_Threshold = Test_Tuning_Max_Threshold;
-const precision_t  Test_Tuning_Function_Precision      = glucat::DEFAULT_Function_Precision;
-#elif defined ( _GLUCAT_TEST_TUNING_NAIVE )
-const unsigned int Test_Tuning_Mult_Matrix_Threshold   =       0;
-__TEST_TUNING_DEFAULT_CONSTANT(Div_Max_Steps);
-__TEST_TUNING_DEFAULT_CONSTANT(Sqrt_Max_Steps);
-__TEST_TUNING_DEFAULT_CONSTANT(Log_Max_Outer_Steps);
-__TEST_TUNING_DEFAULT_CONSTANT(Log_Max_Inner_Steps);
-const unsigned int Test_Tuning_Basis_Max_Count         = Test_Tuning_Max_Threshold;
-const unsigned int Test_Tuning_Fast_Size_Threshold     = Test_Tuning_Max_Threshold;
-const unsigned int Test_Tuning_Inv_Fast_Dim_Threshold  = Test_Tuning_Max_Threshold;
-__TEST_TUNING_DEFAULT_CONSTANT(Products_Size_Threshold);
-const precision_t  Test_Tuning_Function_Precision      = glucat::DEFAULT_Function_Precision;
-#elif defined ( _GLUCAT_TEST_TUNING_FAST )
-const unsigned int Test_Tuning_Mult_Matrix_Threshold   =       0;
-const unsigned int Test_Tuning_Div_Max_Steps           =       0;
-const unsigned int Test_Tuning_Sqrt_Max_Steps          =      16;
-const unsigned int Test_Tuning_Log_Max_Outer_Steps     =      16;
-const unsigned int Test_Tuning_Log_Max_Inner_Steps     =       8;
-const unsigned int Test_Tuning_Basis_Max_Count         =       1;
-const unsigned int Test_Tuning_Fast_Size_Threshold     =       0;
-const unsigned int Test_Tuning_Inv_Fast_Dim_Threshold  =       0;
-const unsigned int Test_Tuning_Products_Size_Threshold =       0;
-const precision_t  Test_Tuning_Function_Precision      = glucat::DEFAULT_Function_Precision;
-#elif defined ( _GLUCAT_TEST_TUNING_PROMOTED )
-__TEST_TUNING_DEFAULT_CONSTANT(Mult_Matrix_Threshold);
-__TEST_TUNING_DEFAULT_CONSTANT(Div_Max_Steps);
-__TEST_TUNING_DEFAULT_CONSTANT(Sqrt_Max_Steps);
-__TEST_TUNING_DEFAULT_CONSTANT(Log_Max_Outer_Steps);
-__TEST_TUNING_DEFAULT_CONSTANT(Log_Max_Inner_Steps);
-__TEST_TUNING_DEFAULT_CONSTANT(Basis_Max_Count);
-__TEST_TUNING_DEFAULT_CONSTANT(Fast_Size_Threshold);
-__TEST_TUNING_DEFAULT_CONSTANT(Inv_Fast_Dim_Threshold);
-__TEST_TUNING_DEFAULT_CONSTANT(Products_Size_Threshold);
-const precision_t  Test_Tuning_Function_Precision      = glucat::precision_promoted;
-#elif defined ( _GLUCAT_TEST_TUNING_DEMOTED )
-__TEST_TUNING_DEFAULT_CONSTANT(Mult_Matrix_Threshold);
-__TEST_TUNING_DEFAULT_CONSTANT(Div_Max_Steps);
-__TEST_TUNING_DEFAULT_CONSTANT(Sqrt_Max_Steps);
-__TEST_TUNING_DEFAULT_CONSTANT(Log_Max_Outer_Steps);
-__TEST_TUNING_DEFAULT_CONSTANT(Log_Max_Inner_Steps);
-__TEST_TUNING_DEFAULT_CONSTANT(Basis_Max_Count);
-__TEST_TUNING_DEFAULT_CONSTANT(Fast_Size_Threshold);
-__TEST_TUNING_DEFAULT_CONSTANT(Inv_Fast_Dim_Threshold);
-__TEST_TUNING_DEFAULT_CONSTANT(Products_Size_Threshold);
-const precision_t  Test_Tuning_Function_Precision      = glucat::precision_demoted;
-#else
-__TEST_TUNING_DEFAULT_CONSTANT(Mult_Matrix_Threshold);
-__TEST_TUNING_DEFAULT_CONSTANT(Div_Max_Steps);
-__TEST_TUNING_DEFAULT_CONSTANT(Sqrt_Max_Steps);
-__TEST_TUNING_DEFAULT_CONSTANT(Log_Max_Outer_Steps);
-__TEST_TUNING_DEFAULT_CONSTANT(Log_Max_Inner_Steps);
-__TEST_TUNING_DEFAULT_CONSTANT(Basis_Max_Count);
-__TEST_TUNING_DEFAULT_CONSTANT(Fast_Size_Threshold);
-__TEST_TUNING_DEFAULT_CONSTANT(Inv_Fast_Dim_Threshold);
-__TEST_TUNING_DEFAULT_CONSTANT(Products_Size_Threshold);
-const precision_t  Test_Tuning_Function_Precision      = glucat::DEFAULT_Function_Precision;
-#endif
+  using tuning_slow = tuning
+    <
+      Tuning_Slow_Mult_Matrix_Threshold,
+      Tuning_Default_Div_Max_Steps,
+      Tuning_Default_Sqrt_Max_Steps,
+      Tuning_Default_Log_Max_Outer_Steps,
+      Tuning_Default_Log_Max_Inner_Steps,
+      Tuning_Slow_Basis_Max_Count,
+      Tuning_Slow_Fast_Size_Threshold,
+      Tuning_Slow_Inv_Fast_Dim_Threshold,
+      Tuning_Slow_Products_Size_Threshold,
+      Tuning_Default_Function_Precision
+    >;
 
-/// Tuning policy
-typedef glucat::tuning
-  <
-    Test_Tuning_Mult_Matrix_Threshold,
-    Test_Tuning_Div_Max_Steps,
-    Test_Tuning_Sqrt_Max_Steps,
-    Test_Tuning_Log_Max_Outer_Steps,
-    Test_Tuning_Log_Max_Inner_Steps,
-    Test_Tuning_Basis_Max_Count,
-    Test_Tuning_Fast_Size_Threshold,
-    Test_Tuning_Inv_Fast_Dim_Threshold,
-    Test_Tuning_Products_Size_Threshold,
-    Test_Tuning_Function_Precision
-  > Tune_P;
+  const unsigned int Tuning_Naive_Mult_Matrix_Threshold   =       0;
+  const unsigned int Tuning_Naive_Basis_Max_Count         = Tuning_Max_Threshold;
+  const unsigned int Tuning_Naive_Fast_Size_Threshold     = Tuning_Max_Threshold;
+  const unsigned int Tuning_Naive_Inv_Fast_Dim_Threshold  = Tuning_Max_Threshold;
 
-#undef __TEST_TUNING_DEFAULT_CONSTANT
+  using tuning_naive = tuning
+    <
+      Tuning_Naive_Mult_Matrix_Threshold,
+      Tuning_Default_Div_Max_Steps,
+      Tuning_Default_Sqrt_Max_Steps,
+      Tuning_Default_Log_Max_Outer_Steps,
+      Tuning_Default_Log_Max_Inner_Steps,
+      Tuning_Naive_Basis_Max_Count,
+      Tuning_Naive_Fast_Size_Threshold,
+      Tuning_Naive_Inv_Fast_Dim_Threshold,
+      Tuning_Default_Products_Size_Threshold,
+      Tuning_Default_Function_Precision
+    >;
 
+  const unsigned int Tuning_Fast_Mult_Matrix_Threshold   =       0;
+  const unsigned int Tuning_Fast_Div_Max_Steps           =       0;
+  const unsigned int Tuning_Fast_Sqrt_Max_Steps          =      16;
+  const unsigned int Tuning_Fast_Log_Max_Outer_Steps     =      16;
+  const unsigned int Tuning_Fast_Log_Max_Inner_Steps     =       8;
+  const unsigned int Tuning_Fast_Basis_Max_Count         =       1;
+  const unsigned int Tuning_Fast_Fast_Size_Threshold     =       0;
+  const unsigned int Tuning_Fast_Inv_Fast_Dim_Threshold  =       0;
+  const unsigned int Tuning_Fast_Products_Size_Threshold =       0;
+
+  using tuning_fast = tuning
+    <
+      Tuning_Fast_Mult_Matrix_Threshold,
+      Tuning_Fast_Div_Max_Steps,
+      Tuning_Fast_Sqrt_Max_Steps,
+      Tuning_Fast_Log_Max_Outer_Steps,
+      Tuning_Fast_Log_Max_Inner_Steps,
+      Tuning_Fast_Basis_Max_Count,
+      Tuning_Fast_Fast_Size_Threshold,
+      Tuning_Fast_Inv_Fast_Dim_Threshold,
+      Tuning_Fast_Products_Size_Threshold,
+      Tuning_Default_Function_Precision
+    >;
+}
 #endif // GLUCAT_TEST_TUNING_H

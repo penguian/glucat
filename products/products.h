@@ -5,7 +5,7 @@
     products.h : products speed test
                              -------------------
     begin                : Sun 2007-09-01
-    copyright            : (C) 2012-2016 by Paul C. Leopardi
+    copyright            : (C) 2012-2021 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -32,11 +32,7 @@
  ***************************************************************************/
 
 #define _GLUCAT_TEST_REPEAT
-#include "glucat/glucat.h"
-#include "test/tuning.h"
-#include "glucat/glucat_imp.h"
 #include "test/timing.h"
-#include "test/try_catch.h"
 #include <stdio.h>
 #include <iomanip>
 
@@ -190,10 +186,8 @@ namespace glucat_prod_test
   void
   prod_test(const index_t n, const index_t max_n)
   {
-    typedef Multivector_T multivector_t;
-    typedef typename multivector_t::index_set_t index_set_t;
-    static const index_t v_lo = index_set_t::v_lo;
-    static const index_t v_hi = index_set_t::v_hi;
+    static const index_t v_lo = Multivector_T::v_lo;
+    static const index_t v_hi = Multivector_T::v_hi;
     static const index_t index_lim = std::min(-v_lo, v_hi);
     if (n > index_lim)
     {
@@ -204,8 +198,8 @@ namespace glucat_prod_test
     cout << "Clifford algebra products test:" << endl;
     const index_t max_index = min(n, max_n);
 
-    prod_test_with_fill<multivector_t>(max_index, 0.5);
-    prod_test_with_fill<multivector_t>(max_index, 1.0);
+    prod_test_with_fill<Multivector_T>(max_index, 0.5);
+    prod_test_with_fill<Multivector_T>(max_index, 1.0);
   }
 }
 

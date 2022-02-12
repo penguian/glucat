@@ -32,9 +32,11 @@ dnl    Boston, MA 02111-1307, USA.
 
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([glucat],[0.9.0])
+AC_INIT([glucat],[0.10.0])
 AC_CONFIG_MACRO_DIR([m4])
 m4_include([m4/m4_ax_cxx_compile_stdcxx.m4])
+m4_include([m4/m4_ax_blas.m4])
+m4_include([m4/m4_ax_lapack.m4])
 m4_include([m4/acinclude.m4])
 AC_CONFIG_SRCDIR([aclocal.m4]) dnl a source file from your sub dir
 
@@ -51,6 +53,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
 [
   dnl As a side effect of testing introduced by autoconf, CXXFLAGS has been changed. Restore it.
   CXXFLAGS="$saved_CXXFLAGS"
+
+  dnl Use all_libraries as a local variable to track which libraries to add.
+  all_libraries=""
 
   dnl process the command line arguments
 
@@ -191,29 +196,17 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     esac
   ],[glucat_use_eigenvalues="no"])
 
-  AC_ARG_WITH([pool-alloc], [[  --with-pool-alloc       use Boost Pool allocator [default=no]]],
+  AC_ARG_WITH([pool-alloc],   [[  --with-pool-alloc       use Boost Pool allocator [default=no]]],
     [glucat_use_boost_pool_alloc="$withval"],
     [glucat_use_boost_pool_alloc="no"])
-
-  AC_ARG_WITH([tuning],     [[  --with-tuning[=ARG]     set of tuning parameters to use for testing (slow|naive|fast|promoted|demoted)]],
-    [
-      case "$withval" in
-        slow|naive|fast|promoted|demoted)
-          glucat_test_tuning="$withval"
-          ;;
-        *)
-          AC_MSG_ERROR([Unknown option for --with-tuning])
-          ;;
-      esac
-      ],
-    [glucat_test_tuning="default"])
 
   dnl Check for a C++ compiler
   AC_LANG([C]++)
 
-  AC_REQUIRE([AC_PROG_CXX])
-  AC_PROG_CXX
-  basename_cxx=[$(basename $CXX)]
+  dnl Set the language standard
+  AX_CXX_COMPILE_STDCXX(11, noext, mandatory)
+
+  basename_cxx=[$(basename $(cut -d' ' -f1 <<<$CXX))]
 
   dnl Check the compiler version
   AC_MSG_CHECKING([for $CXX version])
@@ -381,7 +374,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   dnl Handle $glucat_use_map: type of map to use
   case "$glucat_use_map" in
     stdunordered)
-      GLUCAT_CHECK_CXX11_HEADERS([unordered_map],
+      GLUCAT_CHECK_HEADERS([unordered_map],
       [CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_STD_UNORDERED_MAP"],
       [],
       [#include <map>])
@@ -432,7 +425,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       GLUCAT_CHECK_LIB([gslcblas],[cblas_dgemm],
       [glucat_add_libs="-lgslcblas $glucat_add_libs"],
       [glucat_have_gsl="no"])
-      GLUCAT_CHECK_LIBS([gsl],[gsl_blas_dgemm],
+      GLUCAT_CHECK_LIBS([gsl],[gsl_rng_set],
       [glucat_add_libs="-lgsl $glucat_add_libs"],
       [glucat_have_gsl="no"],[-lgslcblas])
 
@@ -452,7 +445,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       ;;
   esac
   if [[[ "$glucat_use_random" == "std" || "$glucat_have_gsl" == "no" ]]]; then
-    GLUCAT_CHECK_CXX11_HEADERS([random],
+    GLUCAT_CHECK_HEADERS([random],
     [glucat_have_std_random="yes"],
     [glucat_have_std_random="no"],
     [#include <map>])
@@ -466,11 +459,18 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     bindings)
       glucat_have_lapack="yes"
       glucat_add_libs=""
-      GLUCAT_CHECK_LIB([blas],[main],
-      [glucat_add_libs="-lblas $glucat_add_libs"],
+      case "$basename_cxx" in
+        "g++"*)
+          ac_cv_fc_compiler_gnu="yes"
+          ;;
+        *)
+          ;;
+      esac
+      AX_BLAS(
+      [glucat_add_libs="$BLAS_LIBS $glucat_add_libs"],
       [glucat_have_lapack="no"])
-      GLUCAT_CHECK_LIB([lapack],[main],
-      [glucat_add_libs="-llapack $glucat_add_libs"],
+      AX_LAPACK(
+      [glucat_add_libs="$LAPACK_LIBS $glucat_add_libs"],
       [glucat_have_lapack="no"])
       if [[[ "$glucat_have_lapack" != "no" ]]]; then
         glucat_have_bindings="yes"
@@ -523,16 +523,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     CXXFLAGS="$CXXFLAGS -D_GLUCAT_CHECK_ISNAN"
   fi
 
-  dnl Handle $glucat_test_tuning: set of tuning parameters to use for testing
-  case "$glucat_test_tuning" in
-    default)
-      ;;
-    *)
-      glucat_test_tuning_suffix=GLUCAT_TOUPPER([$glucat_test_tuning]);
-      CXXFLAGS="$CXXFLAGS -D_GLUCAT_TEST_TUNING_$glucat_test_tuning_suffix";
-      ;;
-  esac
-
   dnl Handle $glucat_use_warnings: enable compilation with -Wall and similiar
   if [[[ "$glucat_use_warnings" == "yes" ]]]; then
       CXXFLAGS="-Wall $CXXFLAGS"
@@ -557,9 +547,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     GLUCAT_CHECK_COMPILER_FLAG([Wno-unused-parameter],
           [CXXFLAGS="$CXXFLAGS -Wno-unused-parameter"])
   fi
-
-  dnl Set the language standard
-  AX_CXX_COMPILE_STDCXX(11, noext, mandatory)
 
   dnl Cater to compiler quirks
   case "$basename_cxx" in
@@ -609,6 +596,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   AC_PROG_CXXCPP
 
   ifdef([AM_DEPENDENCIES],AC_REQUIRE([GLUCAT_ADD_DEPENDENCIES]),[])
+
+  dnl Use LIBS as a result variable to determine which libraries to add.
+  LIBS="$all_libraries"
 ])
 
 AC_DEFUN([GLUCAT_ADD_DEPENDENCIES],
@@ -630,7 +620,7 @@ AC_ARG_PROGRAM
 dnl Automake doc recommends to do this only here. (Janos)
 AM_INIT_AUTOMAKE([gnu tar-pax])
 
-dnl almost the same like GLUCAT_SET_PREFIX but the path is /usr/local
+dnl almost the same as GLUCAT_SET_PREFIX but the path is /usr/local
 dnl
 unset CDPATH
 dnl make /usr/local the default for the installation
@@ -647,7 +637,6 @@ AC_CONFIG_HEADERS([config.h])
 AX_PREFIX_CONFIG_H([glucat/glucat_config.h])
 
 GLUCAT_CHECK_EXTRA_LIBS
-all_libraries="$all_libraries $USER_LDFLAGS"
 all_includes="-I. -I.. $all_includes $USER_INCLUDES"
 
 dnl checks for programs.
@@ -668,10 +657,9 @@ AM_CONDITIONAL([HAVE_DOXYGEN],[test -n "$DOXYGEN"])
 AM_COND_IF([HAVE_DOXYGEN],[AC_CONFIG_FILES([Doxyfile])])
 
 AC_SUBST([all_includes])
-AC_SUBST([all_libraries])
-LIBS="$all_libraries"
 AC_SUBST([LIBS])
 AC_SUBST([AUTODIRS])
 
 AM_CONDITIONAL([make_pyclical],[test "$glucat_use_pyclical" == "yes"])
 AM_CONDITIONAL([use_cython],[test "$glucat_use_cython" == "yes"])
+
