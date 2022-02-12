@@ -1,7 +1,7 @@
 NEWS for GluCat 0.10.0 with PyClical
 ===================================
 
-2022-01-16: 0.10.0
+2022-02-12: 0.10.0
 GluCat tuning is now done via a template parameter.
 
 GluCat 0.10.0 introduces a change in the way that the headers are to be used.
@@ -19,6 +19,8 @@ you are using as a template parameter. See README for details.
 
 Also:
 o The ./configure script has been refactored.
+o Successfully running ./configure --with-eig=bindings now requires a Fortran
+  compiler.
 o The Python scripts used to build the PyClical extension module now use
   setuptools rather than distutils.
 
