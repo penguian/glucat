@@ -1,3 +1,11 @@
+2022-02-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* NEWS: Mention when a Fortran compiler is needed
+
+2022-02-08  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* ChangeLog: Update to version 0.10.0
+
 2022-02-08  Paul Leopardi <paul.leopardi@anu.edu.au>
 
 	* INSTALL: Update installation instructions for --with-eig=bindings
