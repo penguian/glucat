@@ -1,4 +1,4 @@
-INSTALL for GluCat 0.10.0 with PyClical
+INSTALL for GluCat 0.10.1 with PyClical
 ========================================
 
 Prerequisites: Before You Begin
@@ -30,13 +30,13 @@ You can install GluCat in one of two ways:
 To install the first way, from (e.g.) GitHub, run the following commands on a
 Linux machine or equivalent Posix environment connected to the Internet:
 
-> git clone git@github.com:penguian/glucat.git glucat-0.10.0
-> cd glucat-0.10.0
+> git clone git@github.com:penguian/glucat.git glucat-0.10.1
+> cd glucat-0.10.1
 > make -f admin/Makefile.common cvs
 
-This results in a directory structure that includes glucat-0.10.0/configure,
+This results in a directory structure that includes glucat-0.10.1/configure,
 allowing you to make and install GluCat in the same way as if you had downloaded
-and unzipped the tarball glucat-0.10.0.tar.gz.
+and unzipped the tarball glucat-0.10.1.tar.gz.
 
 
 Directory Structure
@@ -44,11 +44,11 @@ Directory Structure
 
 Once you have downloaded, unzipped and untarred the source code, or followed
 the instructions above to install from Git clone, you should have a directory,
-glucat-0.10.0. Under this directory you should see a number
+glucat-0.10.1. Under this directory you should see a number
 of subdirectories, including ./admin, ./doc, ./glucat, ./gfft_test, ./products,
 ./pyclical, ./squaring, ./test, ./test_runtime, ./testxx, and ./transforms.
 
-The following instructions are meant to be used with glucat-0.10.0 as the
+The following instructions are meant to be used with glucat-0.10.1 as the
 current directory.
 
 
@@ -146,7 +146,7 @@ subdirectories.
 
 As briefly described above, the simplest way to install this package is:
 
- 1. "cd" to the glucat-0.10.0 directory containing the source code and type
+ 1. "cd" to the glucat-0.10.1 directory containing the source code and type
     "./configure" to configure GluCat with PyClical for your system.
     If you are using "csh" on an old version of System V, you might need to type
     "sh ./configure" instead to prevent "csh" from trying to execute
@@ -288,6 +288,11 @@ PyClical.cpp file. See details in "To Build" below.
 
   --enable-check-isnan    check for NaN values at various places in the code [default=yes]
 
+[DEPRECATED: In practice, this type of checking has not slowed execution speed
+by much. Also, the code now also checks for Inf in various places and it is
+not clear how this option should be changed to cope with check for Inf. In
+future releases the checks for Inf and NaN will always be performed.]
+
 This option determines whether the GluCat library code uses the potentially
 expensive isnan() member function to check for NaN values within the
 matrix_multi<> implementations of operator*() and operator/().
@@ -332,6 +337,13 @@ This option defines the installation directory for the PyClical demos.
                           (libcxx|libstdcxx)
                           [default=libstdcxx]
 
+[DEPRECATED: This option will be removed in future releases. This option is
+currently applied only to Clang++ and only when the option libcxx is chosen.
+The default for recent Clang++ versions is to use libc++ rather than libstdc++.
+In other words, contrary to the INSTALL documentation, this option has no
+effect. It is not clear at this stage what value would be added by allowing
+Clang++ to use libstdc++.]
+
 This option controls which C++ standard library is to be used. ARG can be
 "libcxx" or "libstdcxx". The default is "libstdcxx".
 
@@ -352,6 +364,11 @@ For further details, see http://libcxx.llvm.org/docs/
   --with-map[=ARG]        type of map to use
                           (map|stdunordered)
                           [default=stdunordered]
+
+[DEPRECATED: This option will be removed in future releases. In practice, the
+hash function used with framed_multi<> has worked reasonably well, and has been
+asymptotically faster than just using std::map. In future releases std::map<>
+will only be used in cases where ordering is needed, such as printing.]
 
 This option controls preprocessor symbols of the form _GLUCAT_USE_*_MAP that
 determine the type of map used by glucat::framed_multi<>. ARG can be "map"
@@ -386,6 +403,10 @@ exist.
   --with-pool-alloc       use Boost Pool allocator
                           [default=no]
 
+[DEPRECATED: This option will be removed in future releases. The use of the
+Boost pool allocator only affects std::map<>, and the code performs adequately
+without it. In future releases the Boost pool allocator will no longer be used.]
+
 This option determines whether the GluCat library code uses the Boost pool
 allocator with objects of type std::map<>.
 
@@ -414,6 +435,12 @@ https://svn.boost.org/trac/boost/ticket/7335
 
 
   --with-dense-mat        uses dense matrices [default=yes]
+
+[DEPRECATED: This option will be removed in future releases. While the code
+works with sparse matrices, in practice the uBLAS sparse implementation is too
+slow for general arithmetic operations, while multi-gigabyte memory spaces are
+now common. In future releases sparse matrices will only be used in cases where
+sparsity is helpful, such as the basis element cache.]
 
 This option controls the preprocessor symbol _GLUCAT_USE_DENSE_MATRICES that
 determines the type of matrix used by glucat::matrix_multi<>.
@@ -457,6 +484,10 @@ You will also need to ensure that the include path used by the compiler sees
 
   --with-random[=ARG]     type of random number generator to use
                           (std|gsl) [default=std]
+
+[DEPRECATED: This option will be removed in future releases. The C++11 standard
+random number generators essentially supercede the GSL random number generators.
+In future releases the standard random number generators will always be used.]
 
 This option controls preprocessor symbols of the form _GLUCAT_USE_*_MAP that
 determine which random number generators are used by glucat::random_generator<>
@@ -843,9 +874,9 @@ speeding up the entire testing process.
 
 Rather than running the regression tests in-place and copying the output
 directly into ./test_runtime, the script ./test/test-all-config-options.sh
-produces as many copies of the whole direcory glucat-0.10.0 as there are lines
-in ./test/config-options.txt, naming them glucat-0.10.0.1 to glucat-0.10.0.15,
-in the parent directory of glucat-0.10.0. This allows the effect of each set
+produces as many copies of the whole direcory glucat-0.10.1 as there are lines
+in ./test/config-options.txt, naming them glucat-0.10.1.1 to glucat-0.10.1.15,
+in the parent directory of glucat-0.10.1. This allows the effect of each set
 of configuration options to be directly compared, and also ensures that any
 side-effect of a configuration does not affect the test results of another
 configuration.
@@ -857,9 +888,9 @@ line 8 of ./test/config-options.txt
 map-map-gsl:                 --with-map=map --with-random=gsl
 
 causes ./test/diff-all-config-outputs.sh to use diff to compare
-glucat-0.10.0.8/test_runtime/test.configure.map-map-gsl.out to
-glucat-0.10.0/test_runtime/test.configure.map-map-gsl.out, and compare
-glucat-0.10.0.8/pyclical/test.out to glucat-0.10.0/pyclical/test.out.
+glucat-0.10.1.8/test_runtime/test.configure.map-map-gsl.out to
+glucat-0.10.1/test_runtime/test.configure.map-map-gsl.out, and compare
+glucat-0.10.1.8/pyclical/test.out to glucat-0.10.1/pyclical/test.out.
 
 Each comparison should only produce a line containing the line number of
 the configuration being compared: 1 to 15.
@@ -987,7 +1018,7 @@ to use sudo, login as root, or su to root before you run make install.
  List of Successful Builds
  =========================
 
- GluCat 0.10.0 with PyClical has so far been built and tested using:
+ GluCat 0.10.1 with PyClical has so far been built and tested using:
 
  1) Pensieri:
     4 core Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz with
@@ -1275,7 +1306,7 @@ Notes on software versions
 
 
     The following bugs and workarounds apply to earlier versions of GluCat,
-    and may still be applicable to GluCat 0.10.0, but have not been checked
+    and may still be applicable to GluCat 0.10.1, but have not been checked
     for this version.
 
 

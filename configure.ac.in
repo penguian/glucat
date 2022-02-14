@@ -32,7 +32,7 @@ dnl    Boston, MA 02111-1307, USA.
 
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([glucat],[0.10.0])
+AC_INIT([glucat],[0.10.1])
 AC_CONFIG_MACRO_DIR([m4])
 m4_include([m4/m4_ax_cxx_compile_stdcxx.m4])
 m4_include([m4/m4_ax_blas.m4])
@@ -44,9 +44,16 @@ AC_DEFUN([GLUCAT_TOUPPER],[$(echo $1 | tr ["[a-z]" "[A-Z]"])])
 
 dnl checks specific to GluCat
 
+glucat_deprecated_warning="is deprecated and will be removed in future releases. See INSTALL for details."
+
 AC_DEFUN([GLUCAT_MSG_WARN_DEPRECATED],
 [
-  AC_MSG_WARN([The option $1=$2 is deprecated and will be removed in future versions.])
+  AC_MSG_WARN([The option $1 $glucat_deprecated_warning])
+])
+
+AC_DEFUN([GLUCAT_MSG_WARN_DEPRECATED_VAL],
+[
+  AC_MSG_WARN([The option $1=$2 $glucat_deprecated_warning])
 ])
 
 AC_DEFUN([GLUCAT_CHECK_COMPILERS],
@@ -58,6 +65,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   all_libraries=""
 
   dnl process the command line arguments
+
 
   AC_ARG_ENABLE([debug],      [[  --enable-debug[=ARG]    enable debug symbols (yes|no|full) [default=no]]],
   [
@@ -118,9 +126,11 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     [glucat_use_pyclical="$enableval"],
     [glucat_use_pyclical="yes"])
 
-  AC_ARG_ENABLE([check-isnan],[[  --enable-check-isnan    check for NaN values at various places in the code [default=yes]]],
-    [glucat_check_isnan="$enableval"],
-    [glucat_check_isnan="yes"])
+  AC_ARG_ENABLE([check-isnan],[[  --enable-check-isnan    check for NaN values at various places in the code [DEPRECATED, default=yes]]],
+  [
+    GLUCAT_MSG_WARN_DEPRECATED([--enable-check-isnan])
+    glucat_check_isnan="$enableval"
+  ],[glucat_check_isnan="yes"])
 
   AC_ARG_WITH([demo-dir],
     AS_HELP_STRING([--with-demo-dir=DIR],                [define the installation directory for the PyClical demos [default=$DATAROOTDIR/pyclical/demos]]),,
@@ -128,8 +138,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   demodir="$with_demo_dir"
   AC_SUBST([demodir])
 
-  AC_ARG_WITH([stdlib],       [[  --with-stdlib[=ARG]     C++ standard library to use (libcxx|libstdcxx) [default=libstdcxx]]],
+  AC_ARG_WITH([stdlib],       [[  --with-stdlib[=ARG]     C++ standard library to use (libcxx|libstdcxx) [DEPRECATED, default=libstdcxx]]],
   [
+    GLUCAT_MSG_WARN_DEPRECATED_VAL([--with-stdlib],[$withval])
     case "$withval" in
       libcxx)
         glucat_use_stdlib="libcxx"
@@ -143,8 +154,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     esac
   ],[glucat_use_stdlib="libstdcxx"])
 
-  AC_ARG_WITH([map],          [[  --with-map[=ARG]        type of map to use (map|stdunordered) [default=stdunordered]]],
+  AC_ARG_WITH([map],          [[  --with-map[=ARG]        type of map to use (map|stdunordered) [DEPRECATED, default=stdunordered]]],
   [
+    GLUCAT_MSG_WARN_DEPRECATED_VAL([--with-map],[$withval])
     case "$withval" in
       map)
         glucat_use_map="map"
@@ -158,16 +170,19 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     esac
   ],[glucat_use_map="stdunordered"])
 
-  AC_ARG_WITH([dense-mat],    [[  --with-dense-mat        use dense matrices [default=yes]]],
-    [glucat_use_dense_mat="$withval"],
-    [glucat_use_dense_mat="yes"])
+  AC_ARG_WITH([dense-mat],    [[  --with-dense-mat        use dense matrices [DEPRECATED, default=yes]]],
+  [
+    GLUCAT_MSG_WARN_DEPRECATED([--with-dense-mat])
+    glucat_use_dense_mat="$withval"
+  ],[glucat_use_dense_mat="yes"])
 
   AC_ARG_WITH([qd],           [[  --with-qd               use dd_real and qd_real [default=no]]],
     [glucat_use_qd="$withval"],
     [glucat_use_qd="no"])
 
-  AC_ARG_WITH([random],       [[  --with-random[=ARG]     type of random number generator to use (std|gsl) [default=std]]],
+  AC_ARG_WITH([random],       [[  --with-random[=ARG]     type of random number generator to use (std|gsl) [DEPRECATED, default=std]]],
   [
+    GLUCAT_MSG_WARN_DEPRECATED_VAL([--with-random],[$withval])
     case "$withval" in
       std)
         glucat_use_random="std"
@@ -196,9 +211,11 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     esac
   ],[glucat_use_eigenvalues="no"])
 
-  AC_ARG_WITH([pool-alloc],   [[  --with-pool-alloc       use Boost Pool allocator [default=no]]],
-    [glucat_use_boost_pool_alloc="$withval"],
-    [glucat_use_boost_pool_alloc="no"])
+  AC_ARG_WITH([pool-alloc],   [[  --with-pool-alloc       use Boost Pool allocator [DEPRECATED, default=no]]],
+  [
+    GLUCAT_MSG_WARN_DEPRECATED([--with-pool-alloc])
+    glucat_use_boost_pool_alloc="$withval"
+  ],[glucat_use_boost_pool_alloc="no"])
 
   dnl Check for a C++ compiler
   AC_LANG([C]++)
