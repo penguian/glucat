@@ -1083,19 +1083,19 @@ to use sudo, login as root, or su to root before you run make install.
  3) Pensieri (VirtualBox):
     Virtual 1 core Intel(R) Core(TM) i7 CPU 870 @ 2.93GHz with
 
-    Linux 5.15.7-1-default #1 SMP (b92986a)
-    openSUSE Tumbleweed Snapshot 20211215
-    g++ (SUSE Linux) 11.2.1 20211124
-    Boost 1.77.0
+    Linux 5.16.8-1-default #1 SMP 2022
+    openSUSE Tumbleweed Snapshot TBD 20211215
+    g++ (SUSE Linux) 11.2.1 20220103
+    Boost 1.78.0
     Boost Numeric Bindings
-    GSL 2.6-6.3
-    QD 2.3.22-1.12
+    GSL 2.6-6.4
+    QD 2.3.22-1.13
     Python 3.8.12
     Numpy 1.21.4
-    Matplotlib 3.4.3
+    Matplotlib 3.5.1
     Mayavi2 4.7.4
-    VTK 9.1.0
-    Doxygen 1.9.2
+    VTK 9.1.0-1.8
+    Doxygen 1.9.2-1.2
     pdfTeX 3.141592653-2.6-1.40.22 (TeX Live 2021/TeX Live for SUSE Linux)
 
     ./test/fast-test-all-config-options.sh
@@ -1105,10 +1105,10 @@ to use sudo, login as root, or su to root before you run make install.
  4) NCI Gadi:
     48 core Intel(R) Xeon(R) Platinum 8274 CPU @ 3.20GHz with
 
-    Linux  4.18.0-305.19.1.el8.nci.x86_64 SMP x86_64
+    Linux  4.18.0-348.2.1.el8.nci.x86_64 SMP x86_64
     Rocky Linux release 8.4 (Green Obsidian)
-    1) icpc version 2021.4.0
-    2) icpx version 2021.4.0
+    1) icpc version 2021.5.0
+    2) icpx version 2021.5.0
     Boost 1.77.0
     Boost Numeric Bindings
     Cython 0.29.24
