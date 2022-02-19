@@ -1,5 +1,18 @@
-NEWS for GluCat 0.10.0 with PyClical
+NEWS for GluCat 0.10.1 with PyClical
 ===================================
+
+2022-02-19: 0.10.1
+Some GluCat configuration options have been deprecated.
+
+The following configuration options are deprecated as of GluCat 0.10.1
+and will be removed in future releases. See INSTALL for details.
+
+  --enable-check-isnan    check for NaN values at various places in the code
+  --with-stdlib[=ARG]     C++ standard library to use (libcxx|libstdcxx)
+  --with-map[=ARG]        type of map to use (map|stdunordered)
+  --with-dense-mat        use dense matrices
+  --with-random[=ARG]     type of random number generator to use (std|gsl)
+  --with-pool-alloc       use Boost Pool allocator
 
 2022-02-12: 0.10.0
 GluCat tuning is now done via a template parameter.
