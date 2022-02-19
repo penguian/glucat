@@ -1,3 +1,31 @@
+2022-02-19  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* NEWS: Update for version 0.10.1
+
+2022-02-19  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #41 from
+	penguian/issue-40-Deprecate_some_configuration_options Deprecate some configuration options
+
+2022-02-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* AUTHORS, README, glucat.lsm, pyclical/test.out: Update to version
+	0.10.1
+
+2022-02-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL, configure.ac.in: Deprecate some options. Update to
+	version 0.10.1
+
+2022-02-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* README: Update for version 0.10.0
+
+2022-02-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #39 from
+	penguian/issue-38-Make_Tune_P_into_a_policy_class Make Tune_P into a policy class
+
 2022-02-12  Paul Leopardi <paul.leopardi@anu.edu.au>
 
 	* NEWS: Mention when a Fortran compiler is needed
