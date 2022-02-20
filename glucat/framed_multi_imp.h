@@ -39,11 +39,6 @@
 #include "glucat/generation.h"
 #include "glucat/matrix.h"
 
-#if defined(_GLUCAT_USE_BOOST_POOL_ALLOC)
-// Use the Boost pool allocator
-#include <boost/pool/pool_alloc.hpp>
-#endif
-
 #include <sstream>
 #include <fstream>
 
@@ -56,13 +51,8 @@ namespace glucat
   classname() -> const std::string
   { return "framed_multi"; }
 
-#if defined(_GLUCAT_MAP_IS_ORDERED)
-# define _GLUCAT_HASH_N(x)
-# define _GLUCAT_HASH_SIZE_T(x)
-#else
-# define _GLUCAT_HASH_N(x) (x)
-# define _GLUCAT_HASH_SIZE_T(x) (typename multivector_t::hash_size_t)(x)
-#endif
+#define _GLUCAT_HASH_N(x) (x)
+#define _GLUCAT_HASH_SIZE_T(x) (typename multivector_t::hash_size_t)(x)
 
   /// Default constructor
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -268,17 +258,6 @@ namespace glucat
     if (this->size() != rhs.size())
       return false;
     const auto rhs_end = rhs.end();
-#if defined(_GLUCAT_MAP_IS_ORDERED)
-    const auto this_end = this->end();
-    auto this_it = this->begin();
-    auto rhs_it = rhs.begin();
-    for (;
-        (this_it != this_end) && (rhs_it != rhs_end);
-        this_it++, rhs_it++)
-      if (*this_it != *rhs_it)
-        return false;
-    return (this_it == this_end) && (rhs_it == rhs_end);
-#else
     for (auto& this_term : *this)
     {
       const const_iterator& rhs_it = rhs.find(this_term.first);
@@ -286,7 +265,6 @@ namespace glucat
         return false;
     }
     return true;
-#endif
   }
 
   /// Test for equality of multivector and scalar
@@ -406,11 +384,7 @@ namespace glucat
     const auto our_frame = lhs.frame() | rhs.frame();
     const auto frm_count = our_frame.count();
     const auto algebra_dim = set_value_t(1) << frm_count;
-    const auto direct_mult = lhs_size * rhs_size <= double(algebra_dim)
-#if !defined(_GLUCAT_MAP_IS_ORDERED)
-                           || frm_count < Tune_P::mult_matrix_threshold
-#endif
-                           ;
+    const auto direct_mult = lhs_size * rhs_size <= double(algebra_dim);
     if (direct_mult)
     { // If we have a sparse multiply, store the result directly
       auto result = multivector_t(
@@ -420,31 +394,6 @@ namespace glucat
           result += lhs_term * rhs_term;
       return result;
     }
-#if defined(_GLUCAT_MAP_IS_ORDERED)
-    else if (frm_count < Tune_P::mult_matrix_threshold)
-    { // Fastest dense algorithm in low dimensions stores result in array
-      using array_t = std::vector<Scalar_T>;
-      auto result_array = array_t(algebra_dim, Scalar_T(0));
-
-      for (auto& lhs_term : lhs)
-        for (auto& rhs_term : rhs)
-        {
-          const auto& result_term = lhs_term * rhs_term;
-          const auto stv = result_term.first.value_of_fold(our_frame);
-          result_array[stv] += result_term.second;
-        }
-      using term_t = typename multivector_t::term_t;
-      using index_set_t = typename multivector_t::index_set_t;
-      auto result = multivector_t();
-      for (auto
-          stv = set_value_t(0);
-          stv != algebra_dim;
-          ++stv)
-        if (result_array[stv] != Scalar_T(0))
-          result.insert(term_t(index_set_t(stv, our_frame, true), result_array[stv]));
-      return result;
-    }
-#endif
     else
     { // Past a certain threshold, the matrix algorithm is fastest
       using matrix_multi_t = typename multivector_t::matrix_multi_t;
@@ -660,39 +609,6 @@ namespace glucat
     using term_t = typename multivector_t::term_t;
     using map_t = typename multivector_t::map_t;
 
-#if defined(_GLUCAT_MAP_IS_ORDERED)
-    // Both lhs and rhs are sorted by increasing grade, then lexicographically,
-    // and a "larger" index set cannot be a subset of a "smaller" one.
-
-    const auto lhs_begin = lhs.begin();
-    const auto rhs_rbegin = rhs.rbegin();
-    typedef typename map_t::const_reverse_iterator const_reverse_iterator;
-    const auto rhs_rlower_bound =
-          static_cast<const_reverse_iterator>(rhs.lower_bound(lhs_begin->first));
-
-    multivector_t result;
-
-    for (auto
-        rhs_it = rhs_rbegin;
-        rhs_it != rhs_rlower_bound;
-        ++rhs_it)
-    {
-      const auto& rhs_term = *rhs_it;
-      const auto rhs_ist = rhs_term.first;
-      const auto lhs_upper_bound = lhs.upper_bound(rhs_ist);
-      for (auto
-          lhs_it = lhs_begin;
-          lhs_it != lhs_upper_bound;
-          ++lhs_it)
-      {
-        const auto& lhs_term = *lhs_it;
-        const auto lhs_ist = lhs_term.first;
-        if ((lhs_ist | rhs_ist) == rhs_ist)
-          result += lhs_term * rhs_term;
-      }
-    }
-    return result;
-#else
     const auto lhs_end   = lhs.end();
     const auto rhs_end   = rhs.end();
     const double lhs_size = lhs.size();
@@ -752,7 +668,6 @@ namespace glucat
       }
     }
     return result;
-#endif
   }
 
   /// Left contraction

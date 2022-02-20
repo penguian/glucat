@@ -32,7 +32,7 @@ dnl    Boston, MA 02111-1307, USA.
 
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([glucat],[0.10.1])
+AC_INIT([glucat],[0.11.0])
 AC_CONFIG_MACRO_DIR([m4])
 m4_include([m4/m4_ax_cxx_compile_stdcxx.m4])
 m4_include([m4/m4_ax_blas.m4])
@@ -138,38 +138,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   demodir="$with_demo_dir"
   AC_SUBST([demodir])
 
-  AC_ARG_WITH([stdlib],       [[  --with-stdlib[=ARG]     C++ standard library to use (libcxx|libstdcxx) [DEPRECATED, default=libstdcxx]]],
-  [
-    GLUCAT_MSG_WARN_DEPRECATED_VAL([--with-stdlib],[$withval])
-    case "$withval" in
-      libcxx)
-        glucat_use_stdlib="libcxx"
-        ;;
-      libstdcxx)
-        glucat_use_stdlib="libstdcxx"
-        ;;
-      *)
-      AC_MSG_ERROR([Unknown option for --with-stdlib])
-        ;;
-    esac
-  ],[glucat_use_stdlib="libstdcxx"])
-
-  AC_ARG_WITH([map],          [[  --with-map[=ARG]        type of map to use (map|stdunordered) [DEPRECATED, default=stdunordered]]],
-  [
-    GLUCAT_MSG_WARN_DEPRECATED_VAL([--with-map],[$withval])
-    case "$withval" in
-      map)
-        glucat_use_map="map"
-        ;;
-      stdunordered)
-        glucat_use_map="stdunordered"
-        ;;
-      *)
-      AC_MSG_ERROR([Unknown option for --with-map])
-        ;;
-    esac
-  ],[glucat_use_map="stdunordered"])
-
   AC_ARG_WITH([dense-mat],    [[  --with-dense-mat        use dense matrices [DEPRECATED, default=yes]]],
   [
     GLUCAT_MSG_WARN_DEPRECATED([--with-dense-mat])
@@ -211,12 +179,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     esac
   ],[glucat_use_eigenvalues="no"])
 
-  AC_ARG_WITH([pool-alloc],   [[  --with-pool-alloc       use Boost Pool allocator [DEPRECATED, default=no]]],
-  [
-    GLUCAT_MSG_WARN_DEPRECATED([--with-pool-alloc])
-    glucat_use_boost_pool_alloc="$withval"
-  ],[glucat_use_boost_pool_alloc="no"])
-
   dnl Check for a C++ compiler
   AC_LANG([C]++)
 
@@ -250,20 +212,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       ;;
   esac
   AC_SUBST([CXXVERSION])
-
-  dnl Process $glucat_use_stdlib options: which standard C++ library to use
-  case "$glucat_use_stdlib" in
-    "libcxx")
-      case "$basename_cxx" in
-        "clang++"*)
-          GLUCAT_CHECK_COMPILER_FLAG([stdlib=libc++],
-                          [CXXFLAGS="-stdlib=libc++ $CXXFLAGS"])
-          ;;
-        *)
-          ;;
-      esac
-      ;;
-  esac
 
   dnl Handle $glucat_use_debug_code: debug symbols and debug level
   GLUCAT_CXX_DEBUG_FLAG=""
@@ -388,18 +336,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   fi
   AC_SUBST([glucat_extra_cxxflags_pyclical])
 
-  dnl Handle $glucat_use_map: type of map to use
-  case "$glucat_use_map" in
-    stdunordered)
-      GLUCAT_CHECK_HEADERS([unordered_map],
-      [CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_STD_UNORDERED_MAP"],
-      [],
-      [#include <map>])
-      ;;
-    *)
-      ;;
-  esac
-
   dnl Handle $glucat_use_qd: use dd_real and qd_real
   if [[[ "$glucat_use_qd" != "no" ]]]; then
     glucat_have_qd="yes"
@@ -508,27 +444,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     *)
       ;;
   esac
-
-  dnl Handle glucat_use_boost_pool_alloc: glucat_use_boost_pool_alloc
-  if [[[ "$glucat_use_boost_pool_alloc" != "no" ]]]; then
-    glucat_have_boost_pool_alloc=yes
-    glucat_add_libs=""
-    GLUCAT_CHECK_LIB([boost_system],[main],
-    [glucat_add_libs="$glucat_add_libs -lboost_system"],
-    [glucat_have_boost_pool_alloc=no])
-    if [[[ "$glucat_have_boost_pool_alloc" != "no" ]]]; then
-      GLUCAT_CHECK_HEADERS([boost/pool/poolfwd.hpp],   [],[glucat_have_boost_pool_alloc="no"],[])
-      GLUCAT_CHECK_HEADERS([boost/pool/pool_alloc.hpp],[],[glucat_have_boost_pool_alloc="no"],[])
-    fi
-    if [[[ "$glucat_have_boost_pool_alloc" != "no" ]]]; then
-      GLUCAT_CHECK_COMPILER_FLAG([Wno-unused-variable],
-            [CXXFLAGS="$CXXFLAGS -Wno-unused-variable"])
-      CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_BOOST_POOL_ALLOC";
-      all_libraries="$all_libraries $glucat_add_libs"
-    else
-      AC_MSG_WARN([Cannot build using Boost pool allocator.])
-    fi
-  fi
 
   dnl Handle $glucat_use_dense_mat: use dense matrices
   if [[[ "$glucat_use_dense_mat" != "no" ]]]; then
