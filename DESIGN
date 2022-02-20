@@ -1,5 +1,5 @@
-GluCat design notes 2016-07-10
-==============================
+GluCat design notes 2016-07-10, updated 2022-02-20
+==================================================
 
 This document describes some of the decisions that underly the design of GluCat,
 concentrating mainly on the use of linear algebra.
@@ -100,12 +100,7 @@ contains:
     typedef ublas::row_major                           orientation_t;
     typedef ublas::compressed_matrix< int, orientation_t >
                                                        basis_matrix_t;
-#if defined(_GLUCAT_USE_DENSE_MATRICES)
     typedef ublas::matrix< Scalar_T, orientation_t >   matrix_t;
-#else
-    typedef ublas::compressed_matrix< Scalar_T, orientation_t >
-                                                       matrix_t;
-#endif
     typedef typename matrix_t::size_type               matrix_index_t;
 
 and in framed_multi.h, the definition of the template class framed_multi<>

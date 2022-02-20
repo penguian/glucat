@@ -304,34 +304,6 @@ This option adds non standard library paths.
 This option defines the installation directory for the PyClical demos.
 
 
-  --with-dense-mat        uses dense matrices [default=yes]
-
-[DEPRECATED: This option will be removed in future releases. While the code
-works with sparse matrices, in practice the uBLAS sparse implementation is too
-slow for general arithmetic operations, while multi-gigabyte memory spaces are
-now common. In future releases sparse matrices will only be used in cases where
-sparsity is helpful, such as the basis element cache.]
-
-This option controls the preprocessor symbol _GLUCAT_USE_DENSE_MATRICES that
-determines the type of matrix used by glucat::matrix_multi<>.
-
-The option "--with-dense-mat" adds "-D_GLUCAT_USE_DENSE_MATRICES" to CXXFLAGS in
-the Makefiles. This is the default. If you do not want dense matrices, you can
-use the option "--without-dense-mat".
-
-
-If _GLUCAT_USE_DENSE_MATRICES is defined, glucat/matrix_multi.h defines
-glucat::matrix_multi<> using ublas::matrix<>, which is a dense matrix.
-Otherwise matrix_multi.h defines glucat::matrix_multi<> using
-ublas::compressed_matrix<>, which a compressed matrix type. In either case,
-basis matrices always use ublas::compressed_matrix<>.
-
-
-To compile your own programs using the GluCat library with dense matrices,
-your Makefile needs to pass the flag "-D_GLUCAT_USE_DENSE_MATRICES" to the C++
-compiler.
-
-
   --with-qd               uses dd_real and qd_real [default=no]
 
 This option controls the use of the QD high precision floating point library.

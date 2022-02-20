@@ -383,50 +383,7 @@ namespace glucat
       ? rhs
       : rhs_reframed;
 
-#if defined(_GLUCAT_USE_DENSE_MATRICES)
     return ublas::norm_inf(lhs_ref.m_matrix - rhs_ref.m_matrix) == 0;
-#else
-    // If either matrix contains zero entries,
-    // compare using subtraction and ublas::norm_inf
-    for (auto
-        it1 =  lhs_ref.m_matrix.begin1();
-        it1 != lhs_ref.m_matrix.end1();
-        ++it1)
-      for (auto& it1_term : it1)
-        if (it1_term == 0)
-          return ublas::norm_inf(lhs_ref.m_matrix - rhs_ref.m_matrix) == 0;
-    for (auto
-        it1 =  rhs_ref.m_matrix.begin1();
-        it1 != rhs_ref.m_matrix.end1();
-        ++it1)
-      for (auto& it1_term : it1)
-        if (it1_term == 0)
-          return ublas::norm_inf(lhs_ref.m_matrix - rhs_ref.m_matrix) == 0;
-    // Neither matrix contains zero entries.
-    // Compare by iterating over both matrices in lock step.
-    auto lhs_it1 = lhs_ref.m_matrix.begin1();
-    auto rhs_it1 = rhs_ref.m_matrix.begin1();
-    for (;
-        (lhs_it1 != lhs_ref.m_matrix.end1()) &&
-        (rhs_it1 != rhs_ref.m_matrix.end1());
-        ++lhs_it1, ++rhs_it1)
-    {
-      if ( lhs_it1.index1() != rhs_it1.index1() )
-        return false;
-      auto lhs_it2 = lhs_it1.begin();
-      auto rhs_it2 = rhs_it1.begin();
-      for (;
-          (lhs_it2 != lhs_it1.end()) &&
-          (rhs_it2 != rhs_it1.end());
-          ++lhs_it2, ++rhs_it2)
-        if ( (lhs_it2.index2() != rhs_it2.index2()) || (*lhs_it2 != *rhs_it2) )
-          return false;
-      if ( (lhs_it2 != lhs_it1.end()) || (rhs_it2 != rhs_it1.end()) )
-        return false;
-    }
-    return (lhs_it1 == lhs_ref.m_matrix.end1()) &&
-           (rhs_it1 == rhs_ref.m_matrix.end1());
-#endif
   }
 
   // Test for equality of multivector and scalar
@@ -557,7 +514,6 @@ namespace glucat
       : rhs_reframed;
 
     using matrix_t = typename multivector_t::matrix_t;
-#if defined(_GLUCAT_USE_DENSE_MATRICES)
     using matrix_index_t = typename matrix_t::size_type;
 
     const matrix_index_t dim = lhs_ref.m_matrix.size1();
@@ -565,12 +521,6 @@ namespace glucat
     result.m_matrix.clear();
     ublas::axpy_prod(lhs_ref.m_matrix, rhs_ref.m_matrix, result.m_matrix, true);
     return result;
-#else
-    typedef typename matrix_t::expression_type expression_t;
-
-    return
-      multivector_t(ublas::sparse_prod<expression_t>(lhs_ref.m_matrix, rhs_ref.m_matrix), our_frame);
-#endif
   }
 
   /// Geometric product

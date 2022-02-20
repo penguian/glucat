@@ -132,12 +132,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   demodir="$with_demo_dir"
   AC_SUBST([demodir])
 
-  AC_ARG_WITH([dense-mat],    [[  --with-dense-mat        use dense matrices [DEPRECATED, default=yes]]],
-  [
-    GLUCAT_MSG_WARN_DEPRECATED([--with-dense-mat])
-    glucat_use_dense_mat="$withval"
-  ],[glucat_use_dense_mat="yes"])
-
   AC_ARG_WITH([qd],           [[  --with-qd               use dd_real and qd_real [default=no]]],
     [glucat_use_qd="$withval"],
     [glucat_use_qd="no"])
@@ -438,11 +432,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     *)
       ;;
   esac
-
-  dnl Handle $glucat_use_dense_mat: use dense matrices
-  if [[[ "$glucat_use_dense_mat" != "no" ]]]; then
-    CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_DENSE_MATRICES"
-  fi
 
   dnl Handle $glucat_use_warnings: enable compilation with -Wall and similiar
   if [[[ "$glucat_use_warnings" == "yes" ]]]; then

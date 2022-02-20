@@ -151,12 +151,7 @@ namespace glucat
   private:
     using orientation_t = ublas::row_major;
     using basis_matrix_t = ublas::compressed_matrix<int, orientation_t>;
-#if defined(_GLUCAT_USE_DENSE_MATRICES)
     using matrix_t = ublas::matrix<Scalar_T, orientation_t>;
-#else
-    typedef ublas::compressed_matrix< Scalar_T, orientation_t >
-                                                       matrix_t;
-#endif
     using matrix_index_t = typename matrix_t::size_type;
 
   public:
