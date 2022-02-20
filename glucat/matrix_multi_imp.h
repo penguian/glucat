@@ -542,10 +542,8 @@ namespace glucat
     using multivector_t = matrix_multi<Scalar_T,LO,HI,Tune_P>;
     using index_set_t = typename multivector_t::index_set_t;
 
-#if defined(_GLUCAT_CHECK_ISNAN)
     if (lhs.isnan() || rhs.isnan())
       return numeric_traits<Scalar_T>::NaN();
-#endif
 
     // Operate only within a common frame
     multivector_t lhs_reframed;
@@ -662,10 +660,8 @@ namespace glucat
   {
     using traits_t = numeric_traits<Scalar_T>;
 
-#if defined(_GLUCAT_CHECK_ISNAN)
     if (lhs.isnan() || rhs.isnan())
       return traits_t::NaN();
-#endif
 
     if (rhs == Scalar_T(0))
       return traits_t::NaN();
@@ -704,10 +700,8 @@ namespace glucat
       const auto& BT = matrix_t(ublas::trans(lhs_ref.m_matrix));
       auto XT = BT;
       ublas::lu_substitute(LU, pvector, XT);
-#if defined(_GLUCAT_CHECK_ISNAN)
       if (matrix::isnan(XT))
         return traits_t::NaN();
-#endif
 
       // Iterative refinement.
       // Reference: Nicholas J. Higham, "Accuracy and Stability of Numerical Algorithms",
@@ -717,10 +711,8 @@ namespace glucat
         // matrix_t R = ublas::prod(AT, XT) - BT;
         auto R = matrix_t(-BT);
         ublas::axpy_prod(AT, XT, R, false);
-#if defined(_GLUCAT_CHECK_ISNAN)
         if (matrix::isnan(R))
           return traits_t::NaN();
-#endif
 
         auto nr = Scalar_T(ublas::norm_inf(R));
         if ( nr != Scalar_T(0) && !traits_t::isNaN_or_isInf(nr) )

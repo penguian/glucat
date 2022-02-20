@@ -286,35 +286,6 @@ Python installed, but not Cython, you can build PyClical from the provided
 PyClical.cpp file. See details in "To Build" below.
 
 
-  --enable-check-isnan    check for NaN values at various places in the code [default=yes]
-
-[DEPRECATED: In practice, this type of checking has not slowed execution speed
-by much. Also, the code now also checks for Inf in various places and it is
-not clear how this option should be changed to cope with check for Inf. In
-future releases the checks for Inf and NaN will always be performed.]
-
-This option determines whether the GluCat library code uses the potentially
-expensive isnan() member function to check for NaN values within the
-matrix_multi<> implementations of operator*() and operator/().
-
-The option --enable-check-isnan adds "-D_GLUCAT_CHECK_ISNAN" to CXXFLAGS in
-the Makefiles. This is the default. If you do not want to check for NaN values
-in these two functions, you can use the option "--disable-check-isnan".
-
-If D_GLUCAT_CHECK_ISNAN is defined, the functions operator*() and operator/()
-in glucat/matrix_multi_imp.h use the member function isnan() to check for NaN
-values in the LHS and RHS operands, and if either is NaN, then the result is NaN.
-If D_GLUCAT_CHECK_ISNAN is not defined, then these chacks are not performed.
-
-If you are compiling your own programs using the GluCat library, to check for
-NaN values within operator*() and operator/(), your Makefile needs to pass
-the flag "-D_GLUCAT_CHECK_ISNAN" to the C++ compiler.
-
-Note that this option only affects these two functions, and that many other
-matrix_multi<> functions check for NaN regardless of whether D_GLUCAT_CHECK_ISNAN
-is defined.
-
-
 Optional Packages
 -----------------
 
