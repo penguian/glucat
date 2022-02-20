@@ -136,22 +136,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     [glucat_use_qd="$withval"],
     [glucat_use_qd="no"])
 
-  AC_ARG_WITH([random],       [[  --with-random[=ARG]     type of random number generator to use (std|gsl) [DEPRECATED, default=std]]],
-  [
-    GLUCAT_MSG_WARN_DEPRECATED_VAL([--with-random],[$withval])
-    case "$withval" in
-      std)
-        glucat_use_random="std"
-        ;;
-      gsl)
-        glucat_use_random="gsl"
-        ;;
-      *)
-        AC_MSG_ERROR([Unknown option for --with-random])
-        ;;
-    esac
-  ],[glucat_use_random="std"])
-
   AC_ARG_WITH([eig],          [[  --with-eig[=ARG]        library to use for eigenvalues (no|bindings) [default=no]]],
   [
     case "$withval" in
@@ -340,58 +324,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     fi
     if [[[ "$glucat_have_qd" == "no" ]]]; then
       AC_MSG_WARN([Cannot build using QD.])
-    fi
-  fi
-
-  dnl Handle $glucat_use_random: type of random number generator to use
-  case "$glucat_use_random" in
-    gsl)
-      glucat_have_gsl="yes"
-      glucat_add_libs=""
-      case "$basename_cxx" in
-        "clang++"*|"g++"*)
-          GLUCAT_CHECK_LIB([m],[cos],
-          [glucat_add_libs="-lm $glucat_add_libs"],
-          [glucat_have_gsl="no"])
-          ;;
-        icpc|icpx)
-          GLUCAT_CHECK_LIB([imf],[cos],
-          [],
-          [glucat_have_gsl="no"])
-          ;;
-        *)
-          ;;
-      esac
-
-      GLUCAT_CHECK_LIB([gslcblas],[cblas_dgemm],
-      [glucat_add_libs="-lgslcblas $glucat_add_libs"],
-      [glucat_have_gsl="no"])
-      GLUCAT_CHECK_LIBS([gsl],[gsl_rng_set],
-      [glucat_add_libs="-lgsl $glucat_add_libs"],
-      [glucat_have_gsl="no"],[-lgslcblas])
-
-      if [[[ "$glucat_have_gsl" != "no" ]]]; then
-        GLUCAT_CHECK_HEADERS([gsl/gsl_rng.h],
-        [
-          CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_GSL_RANDOM";
-          all_libraries="$all_libraries $glucat_add_libs"
-        ],
-        [glucat_have_gsl="no"],[])
-      fi
-      if [[[ "$glucat_have_gsl" == "no" ]]]; then
-        AC_MSG_WARN([Cannot build using GSL random number generators.])
-      fi
-      ;;
-    std)
-      ;;
-  esac
-  if [[[ "$glucat_use_random" == "std" || "$glucat_have_gsl" == "no" ]]]; then
-    GLUCAT_CHECK_HEADERS([random],
-    [glucat_have_std_random="yes"],
-    [glucat_have_std_random="no"],
-    [#include <map>])
-    if [[[ "glucat_have_std_random" == "no" ]]]; then
-      AC_MSG_WARN([Cannot build using STD random number generators.])
     fi
   fi
 

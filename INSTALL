@@ -324,48 +324,6 @@ You will also need to ensure that the include path used by the compiler sees
 <qd/qd_real.h> and the library path sees libqd.*.
 
 
-  --with-random[=ARG]     type of random number generator to use
-                          (std|gsl) [default=std]
-
-[DEPRECATED: This option will be removed in future releases. The C++11 standard
-random number generators essentially supercede the GSL random number generators.
-In future releases the standard random number generators will always be used.]
-
-This option controls preprocessor symbols of the form _GLUCAT_USE_*_MAP that
-determine which random number generators are used by glucat::random_generator<>
-defined in glucat/random.h. ARG can be "std" or "gsl". The default is
-"std".
-
-The option "--with-random=std" adds "D_GLUCAT_USE_STD_RANDOM" to CXXFLAGS in the
-Makefiles, if the header file <random> is usable.
-
-The option "--with-random=gsl" adds "-D_GLUCAT_USE_GSL_RANDOM" to CXXFLAGS and
-adds the flags "-lgsl" and "-lgslcblas" to the list of libraries, "LIBS"
-in the Makefiles, if the header file <gsl/gsl_rng.h> and the libraries libgsl
-and libgslcblas are usable.
-
-
-By default the the C++ 2011 STD random number generators are used:
-glucat/random.h includes <random>.
-
-If _GLUCAT_USE_GSL_RANDOM is defined, the GSL random number generators are used:
-glucat/random.h includes <gsl/gsl_rng.h> and <gsl/gsl_randist.h>.
-
-
-If you are compiling your own programs using the GluCat library, to choose the
-type of random number generators used by glucat::random_generator<>, your
-Makefile needs to pass the following flags to the C++ compiler, and the
-corresponding header files and libraries must be usable.
-
- For C++ 2011 STD random number generators:
-  This is the default.
-
- For GSL random number generators:
-  "-D_GLUCAT_USE_GSL_RANDOM -lgsl -lgslcblas"
-  You will also need to ensure that the include path used by the compiler sees
-  <gsl/gsl_rng.h> and the library path sees libgsl.* and libgslcblas.*.
-
-
   --with-eig[=ARG]        library to use for eigenvalues
                           (no|bindings) [default=no]
 
