@@ -1,5 +1,13 @@
-NEWS for GluCat 0.10.1 with PyClical
+NEWS for GluCat 0.11.0 with PyClical
 ===================================
+
+2022-03-27: 0.11.0
+Deprecated configuration options have been removed.
+
+The configuration options that are deprecated in GluCat 0.10.1 have been
+removed in GluCat 0.11.0. The comprehensive regression tests now test for
+10 different combinations of configuration options, rather than the 15
+different combinations tested previously.
 
 2022-02-19: 0.10.1
 Some GluCat configuration options have been deprecated.
@@ -139,7 +147,7 @@ and the configuration option --with-pool-alloc controls the use of the Boost
 pool allocator.
 
 The scripts test/test-all-config-options.sh, test/diff-all-config-outputs.sh
-and test/copy-all-config-outputs.sh enable comprehensive tesing of configuation
+and test/copy-all-config-outputs.sh enable comprehensive tesing of configuration
 options.
 
 The use of Autotools has again been improved, with enhancements to make,
@@ -162,7 +170,7 @@ is no longer needed, and is ignored, as <random> is now the default),
 
 2015-08-31: 0.7.5:
 The use of Autotools in configuring, building and installing GluCat and
-PyClical has been simplified and improved. Deprecated configuation options
+PyClical has been simplified and improved. Deprecated configuration options
 have been dropped. The default for --with-random is now std. The default
 for --with-map is now stdunordered.
 
