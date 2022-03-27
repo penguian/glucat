@@ -31,12 +31,7 @@
  See also Arvind Raja's original header comments and references in glucat.h
  ***************************************************************************/
 
-#if   defined(_GLUCAT_USE_GSL_RANDOM)
-# include <gsl/gsl_rng.h>
-# include <gsl/gsl_randist.h>
-#else
-# include <random>
-#endif
+#include <random>
 
 namespace glucat
 {
@@ -58,24 +53,6 @@ namespace glucat
     auto operator= (const random_generator&) -> random_generator& = delete;
   private:
     static const unsigned long seed = 19590921UL;
-#if defined(_GLUCAT_USE_GSL_RANDOM)
-
-    gsl_rng* gen;
-
-    random_generator() :
-    gen(gsl_rng_alloc(gsl_rng_mt19937))
-    { gsl_rng_set(this->gen, seed); }
-
-    ~random_generator()
-    { gsl_rng_free(this->gen); }
-
-  public:
-    Scalar_T uniform()
-    { return Scalar_T(gsl_ran_flat(this->gen, 0.0, 1.0)); }
-    Scalar_T normal()
-    { return Scalar_T(gsl_ran_gaussian(this->gen, 1.0)); }
-
-#else
 
     std::mt19937 uint_gen;
     std::uniform_real_distribution<double> uniform_dist;
@@ -92,8 +69,6 @@ namespace glucat
     { return Scalar_T(this->uniform_dist(this->uint_gen)); }
     auto normal() -> Scalar_T
     { return Scalar_T(this->normal_dist(this->uint_gen)); }
-
-#endif
   };
 }
 

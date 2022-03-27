@@ -1,3 +1,86 @@
+2022-03-27  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* ChangeLog: Update to version 0.11.0
+
+2022-03-27  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat.lsm: Update to version 0.11.0
+
+2022-03-27  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* AUTHORS.md, DESIGN.md, INSTALL.md, NEWS, README.md, TODO.md: 
+	Update to version 0.11.0
+
+2022-03-27  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/test.out: Update for version 0.11.0
+
+2022-03-27  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* AUTHORS => AUTHORS.md, DESIGN => DESIGN.md, INSTALL =>
+	INSTALL.md, README => README.md, TODO => TODO.md: Use Markdown
+
+2022-02-21  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/fast-test.configure.eig-bindings-debug-full.out,
+	test_runtime/fast-test.configure.eig-bindings-debug-yes.out,
+	test_runtime/test.configure.eig-bindings-debug-full.out,
+	test_runtime/test.configure.eig-bindings-debug-yes.out: Add tests
+	for some combinations of options
+
+2022-02-20  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test/config-options.txt: Remove deprecated configuraion options
+	from tests. Add two new tests
+
+2022-02-20  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/fast-test.configure.compressed-mat.out,
+	test_runtime/fast-test.configure.disable-check-isnan.out,
+	test_runtime/fast-test.configure.eig-bindings-libcxx.out,
+	test_runtime/fast-test.configure.eig-bindings-qd-gsl.out,
+	test_runtime/fast-test.configure.eig-bindings-qd-map-map.out,
+	test_runtime/fast-test.configure.map-map-gsl.out,
+	test_runtime/fast-test.configure.map-map-pool-alloc.out,
+	test_runtime/test.configure.compressed-mat.out,
+	test_runtime/test.configure.disable-check-isnan.out,
+	test_runtime/test.configure.eig-bindings-libcxx.out,
+	test_runtime/test.configure.eig-bindings-qd-gsl.out,
+	test_runtime/test.configure.eig-bindings-qd-map-map.out,
+	test_runtime/test.configure.map-map-gsl.out,
+	test_runtime/test.configure.map-map-pool-alloc.out: Remove
+	deprecated configuraion options from tests
+
+2022-02-20  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* Doxyfile.in: Remove deprecated config options from generated doc
+
+2022-02-20  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL, configure.ac.in, glucat/random.h: Remove the deprecated
+	option --with-random
+
+2022-02-20  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* DESIGN, INSTALL, configure.ac.in, glucat/matrix_imp.h,
+	glucat/matrix_multi.h, glucat/matrix_multi_imp.h: Remove the
+	deprecated option --with-dense-mat
+
+2022-02-20  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL, configure.ac.in, glucat/matrix_multi_imp.h: Remove the
+	deprecated option --enable-check-isnan
+
+2022-02-20  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL, configure.ac.in, glucat/framed_multi.h,
+	glucat/framed_multi_imp.h: Remove the deprecated options
+	--with-stdlib, --with-map, --with-pool-alloc
+
+2022-02-19  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* ChangeLog: Update for version 0.10.1
+
 2022-02-19  Paul Leopardi <paul.leopardi@anu.edu.au>
 
 	* NEWS: Update for version 0.10.1

@@ -45,15 +45,8 @@
 #include <string>
 #include <utility>
 #include <map>
+#include <unordered_map>
 #include <vector>
-
-// Use the appropriate type of map
-
-#if defined(_GLUCAT_USE_STD_UNORDERED_MAP)
-# include <unordered_map>
-#else
-# define _GLUCAT_MAP_IS_ORDERED
-#endif
 
 namespace glucat
 {
@@ -132,16 +125,7 @@ namespace glucat
   template< typename Scalar_T = double,  const index_t LO = DEFAULT_LO, const index_t HI = DEFAULT_HI, typename Tune_P = tuning<> >
   class framed_multi :
   public clifford_algebra< Scalar_T, index_set<LO,HI>, framed_multi<Scalar_T,LO,HI,Tune_P> >,
-#if defined(_GLUCAT_USE_STD_UNORDERED_MAP)
   private std::unordered_map< index_set<LO,HI>, Scalar_T, index_set_hash<LO,HI> >
-#else
-  private std::map< index_set<LO,HI>, Scalar_T,
-                    std::less< const index_set<LO,HI> >
-#if defined(_GLUCAT_USE_BOOST_POOL_ALLOC)
-                  , boost::fast_pool_allocator< std::pair<const index_set<LO,HI>, Scalar_T> >
-#endif
-                  >
-#endif
   {
   public:
     using multivector_t = framed_multi;
@@ -162,17 +146,8 @@ namespace glucat
     class var_term; // forward
     using var_term_t = class var_term;
     using matrix_t = typename matrix_multi_t::matrix_t;
-    using sorted_map_t = std::map< index_set_t, Scalar_T, std::less<const index_set_t>
-#if defined(_GLUCAT_USE_BOOST_POOL_ALLOC)
-                                 , boost::fast_pool_allocator<term_t> >;
-#else
-                                 >;
-#endif
-#if defined(_GLUCAT_USE_STD_UNORDERED_MAP)
+    using sorted_map_t = std::map< index_set_t, Scalar_T, std::less<const index_set_t> >;
     using map_t = std::unordered_map<index_set_t, Scalar_T, index_set_hash<LO, HI>>;
-#else
-    using map_t = sorted_map_t;
-#endif
 
     class hash_size_t
     {

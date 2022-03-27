@@ -354,15 +354,10 @@ namespace glucat { namespace matrix
   prod(const ublas::matrix_expression<LHS_T>& lhs,
        const ublas::matrix_expression<RHS_T>& rhs) -> const typename RHS_T::expression_type
   {
-#if defined(_GLUCAT_USE_DENSE_MATRICES)
     const auto dim = lhs().size1();
     RHS_T result(dim, dim);
     ublas::axpy_prod(lhs, rhs, result, true);
     return result;
-#else
-    typedef typename RHS_T::expression_type expression_t;
-    return ublas::sparse_prod<expression_t>(lhs(), rhs());
-#endif
   }
 
   /// Inner product: sum(lhs(i,j)*rhs(i,j))/lhs.nrows()
