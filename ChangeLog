@@ -1,5 +1,14 @@
 2022-03-27  Paul Leopardi <paul.leopardi@anu.edu.au>
 
+	* Makefile.am.in: Use Markdown
+
+2022-03-27  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #43 from
+	penguian/issue-42-Remove_deprecated_configuration_options Remove deprecated configuration options
+
+2022-03-27  Paul Leopardi <paul.leopardi@anu.edu.au>
+
 	* ChangeLog: Update to version 0.11.0
 
 2022-03-27  Paul Leopardi <paul.leopardi@anu.edu.au>
