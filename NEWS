@@ -1,5 +1,14 @@
-NEWS for GluCat 0.11.0 with PyClical
-===================================
+NEWS for GluCat 0.11.1 with PyClical
+====================================
+
+2022-04-09: 0.11.1
+GluCat can now use Blaze to find eigenvalues.
+
+GluCat 0.11.1 now has the configuration option
+./configure --with-eig=blaze
+This uses the Blaze C++ mathematics library to find eigenvalues, to make the
+square root, logarithm and related inverse trigonometric functions more
+accurate.
 
 2022-03-27: 0.11.0
 Deprecated configuration options have been removed.
