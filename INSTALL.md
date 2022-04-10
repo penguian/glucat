@@ -390,6 +390,8 @@ files and libraries must be usable.
   `-D_GLUCAT_USE_BLAZE -llapack -lblas`
   You will also need to ensure that the include path used by the compiler sees
   `<blaze/Math.h>` etc. and the library path sees `liblapack.*` and `libblas.*`.
+  Blaze also requires C++14, so your Makefile needs to use `-std=c++14` or the
+  equivalent for your C++ compiler.
 
 
 Operation Controls
