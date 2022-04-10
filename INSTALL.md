@@ -1,4 +1,4 @@
-INSTALL for GluCat 0.11.0 with PyClical
+INSTALL for GluCat 0.11.1 with PyClical
 ========================================
 
 Prerequisites: Before You Begin
@@ -30,13 +30,13 @@ You can install GluCat in one of two ways:
 To install the first way, from (e.g.) GitHub, run the following commands on a
 Linux machine or equivalent Posix environment connected to the Internet:
 ```
-> git clone git@github.com:penguian/glucat.git glucat-0.11.0
-> cd glucat-0.11.0
+> git clone git@github.com:penguian/glucat.git glucat-0.11.1
+> cd glucat-0.11.1
 > make -f admin/Makefile.common cvs
 ```
-This results in a directory structure that includes glucat-0.11.0/configure,
+This results in a directory structure that includes glucat-0.11.1/configure,
 allowing you to make and install GluCat in the same way as if you had downloaded
-and unzipped the tarball glucat-0.11.0.tar.gz.
+and unzipped the tarball glucat-0.11.1.tar.gz.
 
 
 Directory Structure
@@ -44,12 +44,12 @@ Directory Structure
 
 Once you have downloaded, unzipped and untarred the source code, or followed
 the instructions above to install from Git clone, you should have a directory,
-glucat-0.11.0. Under this directory you should see a number of subdirectories,
+glucat-0.11.1. Under this directory you should see a number of subdirectories,
 including `./admin`, `./doc`, `./glucat`, `./gfft_test`, `./products`,
 `./pyclical`, `./squaring`, `./test`, `./test_runtime`, `./testxx`, and
 `./transforms`.
 
-The following instructions are meant to be used with `glucat-0.11.0` as the
+The following instructions are meant to be used with `glucat-0.11.1` as the
 current directory.
 
 
@@ -147,7 +147,7 @@ subdirectories.
 
 As briefly described above, the simplest way to install this package is:
 
- 1. `cd` to the `glucat-0.11.0` directory containing the source code and type
+ 1. `cd` to the `glucat-0.11.1` directory containing the source code and type
     `./configure` to configure GluCat with PyClical for your system.
     If you are using `csh` on an old version of System V, you might need to type
     `sh ./configure` instead to prevent `csh` from trying to execute
@@ -331,13 +331,13 @@ You will also need to ensure that the include path used by the compiler sees
 
 ```
   --with-eig[=ARG]        library to use for eigenvalues
-                          (no|bindings) [default=no]
+                          (no|bindings|blaze) [default=no]
 ```
 This option is used to control `_GLUCAT_USE_EIGENVALUES` and determine which
 libraries to use. ARG can be `no` or `bindings`. The default is `no`.
 
 The option `--with-eig=bindings` adds
-`-D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BINDINGS` to CXXFLAGS and adds the
+`-D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BINDINGS` to `CXXFLAGS` and adds the
 flags `-llapack -lblas` to the list of libraries, `LIBS` in the
 Makefiles, if the header file `<boost/numeric/bindings/driver/lapack/gees.hpp>`
 and the libraries `liblapack` and `libblas` are usable. To accomplish this, the
@@ -346,6 +346,11 @@ at https://www.gnu.org/software/autoconf-archive/The-Macros.html
 This, in turn means that you will need to have a Fortran compiler installed,
 and preferably have the F77 environment variable set to refer to this compiler.
 
+The option `--with-eig=blaze` adds `-D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BLAZE`
+to `CXXFLAGS` and adds the flags `-llapack -lblas` to the list of libraries,
+`LIBS` in the Makefiles, if the header file `<blaze/Math.h>` and the libraries
+`liblapack` and `libblas` are usable. To accomplish this, the configure script
+uses the `AX_LAPACK` and `AX_BLAS macros`, as mentioned above.
 
 The preprocessor symbol `_GLUCAT_USE_EIGENVALUES` controls whether the `sqrt()`
 and `log()` functions in `glucat/matrix_multi_imp.h`  detect and handle negative
@@ -365,18 +370,28 @@ If `_GLUCAT_USE_BINDINGS` is defined, `glucat/matrix_imp.h` includes
 Bindings library. To use this library, you will need to download and install
 it yourself, preferably from https://github.com/uBLAS/numeric_bindings
 
+If `_GLUCAT_USE_BLAZE` is defined, `glucat/matrix_imp.h` includes
+`<blaze/Math.h>` and related Blaze include files, as per the Blaze template
+library. To use this library, you will need to install it yourself, preferably
+from https://bitbucket.org/blaze-lib/blaze/src/master/
+
 To compile your own programs using the GluCat library, to detect and correctly
 handle negative real eigenvalues in the `sqrt()` and `log()` functions, your
 Makefile needs to pass the flag `-D_GLUCAT_USE_EIGENVALUES` to the C++ compiler,
 as well as one of the following choices of flags, and the corresponding header
 files and libraries must be usable.
 
- For Boost Numeric Bindings:
+* For Boost Numeric Bindings:
   `-D_GLUCAT_USE_BINDINGS -llapack -lblas`
   You will also need to ensure that the include path used by the compiler sees
   `<boost/numeric/bindings/lapack/driver/gees.hpp>` and the library path sees
- `liblapack.*` and `libblas.*`.
-
+  `liblapack.*` and `libblas.*`.
+* For Blaze:
+  `-D_GLUCAT_USE_BLAZE -llapack -lblas`
+  You will also need to ensure that the include path used by the compiler sees
+  `<blaze/Math.h>` etc. and the library path sees `liblapack.*` and `libblas.*`.
+  Blaze also requires C++14, so your Makefile needs to use `-std=c++14` or the
+  equivalent for your C++ compiler.
 
 
 Operation Controls
@@ -555,42 +570,48 @@ in `./test/config-options.txt` and are:
 ```
 ./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
 ```
-  8. `test.configure.eig-bindings-debug-full.out`:
-```
-./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
-            --enable-debug=full
-```
-  9. `test.configure.eig-bindings-debug-yes.out`:
-```
-./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
-            --enable-debug=yes
-```
- 10. `test.configure.eig-bindings-qd.out`:
+  8. `test.configure.eig-bindings-qd.out`:
 ```
 ./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
             --with-qd
 ```
-For each of the 10 `test.configure.*.out` files, there is a corresponding
-`fast-test.configure.*.out` file, making a total of 20 files.
+  9. `test.configure.eig-blaze.out`:
+```
+./configure --with-eig=blaze
+```
+ 10. `test.configure.eig-blaze-debug-full.out`:
+```
+./configure --with-eig=blaze --enable-debug=full
+```
+ 11. `test.configure.eig-blaze-debug-yes.out`:
+```
+./configure --with-eig=blaze --enable-debug=yes
+```
+ 12. `test.configure.eig-blaze-qd.out`:
+```
+./configure --with-eig=blaze --with-qd
+```
+For each of the 12 `test.configure.*.out` files, there is a corresponding
+`fast-test.configure.*.out` file, making a total of 24 files.
 
 When you run your own test using `./test/test.sh`, you should compare its output
 to the output file corresponding to the closest match to the configuration
 options you used to build your copy of the GluCat library.
 
-The reason why sample test results corresponding to 10 different combinations
+The reason why sample test results corresponding to 12 different combinations
 of configuration parameters are included in `test_runtime` is that the test output
 strongly depends on the configuration options chosen. In particular:
 
 * If `--with-qd` is chosen, extra tests in `./test00/test00` and `./test11/test11`
   are done using the `dd_real` and `qd_real` scalar types.
 
-* If `--with-eig=bindings` is chosen the algorithms used for the square root,
-  logarithm and inverse trig functions will become much more accurate, and
-  most tests in `./test11/test11` will succeed. Even if this option is chosen,
-  some tests in `./test11/test11` fail due to insufficient accuracy. This is
-  most likely caused by a combination of excessive round off and truncation error
-  with respect to the condition numbers of the matrices used in calculating these
-  functions.
+* If either `--with-eig=bindings` or `--with-eig=blaze` is chosen the algorithms
+  used for the square root, logarithm and inverse trig functions will become much
+  more accurate, and most tests in `./test11/test11` will succeed. Even if this
+  option is chosen, some tests in `./test11/test11` fail due to insufficient
+  accuracy. This is most likely caused by a combination of excessive round off
+  and truncation error with respect to the condition numbers of the matrices used
+  in calculating these functions.
 
 The tests typically use floating point arithmetic, and `./test00/test00` and
 `./test11/test11` in particular also use random number generators. Therefore if
@@ -674,9 +695,9 @@ speeding up the entire testing process.
 
 Rather than running the regression tests in-place and copying the output
 directly into `./test_runtime`, the script `./test/test-all-config-options.sh`
-produces as many copies of the whole direcory `glucat-0.11.0` as there are lines
-in `./test/config-options.txt`, naming them `glucat-0.11.0.1` to `glucat-0.11.0.10`,
-in the parent directory of `glucat-0.11.0`. This allows the effect of each set
+produces as many copies of the whole direcory `glucat-0.11.1` as there are lines
+in `./test/config-options.txt`, naming them `glucat-0.11.1.1` to `glucat-0.11.1.12`,
+in the parent directory of `glucat-0.11.1`. This allows the effect of each set
 of configuration options to be directly compared, and also ensures that any
 side-effect of a configuration does not affect the test results of another
 configuration.
@@ -688,12 +709,12 @@ line 4 of `./test/config-options.txt`
 disable-dependency:          --disable-dependency-tracking
 ```
 causes `./test/diff-all-config-outputs.sh` to use diff to compare
-`glucat-0.11.0.4/test_runtime/test.configure.disable-dependency.out` to
-`glucat-0.11.0/test_runtime/test.configure.disable-dependency.out`, and compare
-`glucat-0.11.0.8/pyclical/test.out` to `glucat-0.11.0/pyclical/test.out`.
+`glucat-0.11.1.4/test_runtime/test.configure.disable-dependency.out` to
+`glucat-0.11.1/test_runtime/test.configure.disable-dependency.out`, and compare
+`glucat-0.11.1.4/pyclical/test.out` to `glucat-0.11.1/pyclical/test.out`.
 
 Each comparison should only produce a line containing the line number of
-the configuration being compared: 1 to 10.
+the configuration being compared: 1 to 12.
 
 The exceptional cases are:
 
@@ -824,7 +845,7 @@ to use `sudo`, login as `root`, or `su` to `root` before you run `make install`.
 List of Successful Builds
 =========================
 
-GluCat 0.11.0 with PyClical has so far been built and tested using:
+GluCat 0.11.1 with PyClical has so far been built and tested using:
 
  1) Pensieri:
     4 core `Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz` with
@@ -851,7 +872,7 @@ GluCat 0.11.0 with PyClical has so far been built and tested using:
     pdfTeX 3.14159265-2.6-1.40.21 (TeX Live 2020/Debian)
     ```
     `./test/test-all-config-options.sh`
-    All 10 configuration commands corresponding to each of the 10
+    All 12 configuration commands corresponding to each of the 12
     `test.configure*.out` files in `./test_runtime`
 
  2) Pensieri:
@@ -883,7 +904,7 @@ GluCat 0.11.0 with PyClical has so far been built and tested using:
     pdfTeX 3.14159265-2.6-1.40.21 (TeX Live 2020/Debian)
     ```
     `./test/fast-test-all-config-options.sh`
-    All 10 configuration commands corresponding to each of the 10
+    All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`
 
  3) Pensieri (VirtualBox):
@@ -905,7 +926,7 @@ GluCat 0.11.0 with PyClical has so far been built and tested using:
     pdfTeX 3.141592653-2.6-1.40.22 (TeX Live 2021/TeX Live for SUSE Linux)
     ```
     `./test/fast-test-all-config-options.sh`
-    All 10 configuration commands corresponding to each of the 10
+    All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`
 
  4) NCI Gadi:
@@ -924,7 +945,7 @@ GluCat 0.11.0 with PyClical has so far been built and tested using:
     Numpy 1.20.2
     ```
     `./test/fast-test-all-config-options.sh`
-    All 10 configuration commands corresponding to each of the 10
+    All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`
 
  5) CoCalc:
@@ -943,7 +964,7 @@ GluCat 0.11.0 with PyClical has so far been built and tested using:
     LD_LIBRARY_PATH=`/home/user/usr/local/lib`
     ```
     `./test/fast-test-all-config-options.sh`
-    All 10 configuration commands corresponding to each of the 10
+    All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`
 
  6) AWS Graviton:
@@ -960,7 +981,7 @@ GluCat 0.11.0 with PyClical has so far been built and tested using:
     Python 3.8.10
     ```
     `./test/fast-test-all-config-options.sh`
-    All 10 configuration commands corresponding to each of the 10
+    All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`
 
                 
@@ -1120,7 +1141,7 @@ Did you mean one of: `extra_template_paths, template_name, template_paths`?
 
 
 The following bugs and workarounds apply to earlier versions of GluCat,
-and may still be applicable to GluCat 0.11.0, but have not been checked
+and may still be applicable to GluCat 0.11.1, but have not been checked
 for this version.
 
 

@@ -1,3 +1,59 @@
+2022-04-10  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md: Mention that Blaze needs C++14
+
+2022-04-09  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* AUTHORS.md, README.md, TODO.md, glucat.lsm: Update to version
+	0.11.1
+
+2022-04-09  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* NEWS: NEWS for version 0.11.1
+
+2022-04-09  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md: Update descriptions of configuration options and tests
+	for version 0.11.1
+
+2022-04-09  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/test.out: Update test results for version 0.11.1
+
+2022-04-09  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/fast-test.configure.eig-blaze-debug-full.out,
+	test_runtime/fast-test.configure.eig-blaze-debug-yes.out,
+	test_runtime/fast-test.configure.eig-blaze-qd.out,
+	test_runtime/fast-test.configure.eig-blaze.out,
+	test_runtime/test.configure.eig-blaze-debug-full.out,
+	test_runtime/test.configure.eig-blaze-debug-yes.out,
+	test_runtime/test.configure.eig-blaze-qd.out,
+	test_runtime/test.configure.eig-blaze.out: Test results for
+	configuration options that use Blaze
+
+2022-04-09  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/fast-test.configure.eig-bindings-debug-full.out,
+	test_runtime/fast-test.configure.eig-bindings-debug-yes.out,
+	test_runtime/test.configure.eig-bindings-debug-full.out,
+	test_runtime/test.configure.eig-bindings-debug-yes.out: Remove
+	obsolete test results for configuration options that use Boost
+	Bindings
+
+2022-04-09  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test/config-options.txt: Test configuration options that use Blaze
+
+2022-04-03  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in, glucat/matrix_imp.h: Add Blaze as an option for
+	finding eigenvalues
+
+2022-03-27  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* ChangeLog: Update to version 0.11.0
+
 2022-03-27  Paul Leopardi <paul.leopardi@anu.edu.au>
 
 	* Makefile.am.in: Use Markdown

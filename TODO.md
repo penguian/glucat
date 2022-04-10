@@ -1,5 +1,5 @@
-TODO for GluCat 0.11.0 with PyClical
-===================================
+TODO for GluCat 0.11.1 with PyClical
+====================================
 
 Documentation:
 * Write a programmer's guide with descriptions of usage via use cases.
@@ -44,7 +44,7 @@ Experimental:
   to determine if `matrix_t` is `compressed`, `dense`, etc.
 * Try removing the template parameters `LO` and `HI` from `framed_multi` and
   `matrix_multi`, and using `DEFAULT_LO` and `DEFAULT_HI` where these are needed in
-  `framed_multi.h`, `matrx_multi.h`, etc.
+  `framed_multi.h`, `matrix_multi.h`, etc.
 * Add convenience constructors to `index_set<>`: `index_set<>(int, int)`,
   `index_set<>(int, int, int)`, ... etc.
 * Try replacing multiplication by +/-1 within inner products by addition and
