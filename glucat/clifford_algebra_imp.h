@@ -102,7 +102,7 @@ namespace glucat
   operator!= (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> bool
   { return !(rhs == scr); }
 
-  /// Quadratic norm tolerance
+  /// Quadratic norm tolerance relative to a specific multivector
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -122,7 +122,7 @@ namespace glucat
     return abs_tol * abs_tol * std::max(Scalar_T(nbr_terms), Scalar_T(1));
   }
 
-  /// Quadratic norm of difference of multivectors
+  /// Relative or absolute quadratic norm of difference of multivectors
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
