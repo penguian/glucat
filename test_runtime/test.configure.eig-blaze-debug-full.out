@@ -576,30 +576,18 @@ A
 
 A
   3.14159{1,2,3}
-Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
-Relative norm of difference == 2.0431e-05
-lhs == 0.0432148
-rhs == 0.0432139
 
 A
   -3.14159{1,2,3}
 
 A
   3.14159{-1,1,2,3,4}
-Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
-Relative norm of difference == 2.0431e-05
-lhs == 0.0432148
-rhs == 0.0432139
 
 A
   -3.14159{-1,1,2,3,4}
 
 A
   3.14159{-2,-1,1,2,3,4,5}
-Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
-Relative norm of difference == 2.0431e-05
-lhs == 0.0432148
-rhs == 0.0432139
 
 A
   -3.14159{-2,-1,1,2,3,4,5}
@@ -625,23 +613,15 @@ Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 lhs == nan
 Test failed: cos(A)*tan(A) != sin(A)
 lhs == nan
-Test failed: tan(atan(A)) != A
-Relative norm of difference == 1.488e-05
-lhs == -0.00431419+314.161{-1}
-rhs == 314.159{-1}
 
 A
   -314.159{-1}
+Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
+Relative norm of difference == nan
+lhs == inf
+rhs == inf
 Test failed: cos(A)*tan(A) != sin(A)
 lhs == nan
-Test failed: tan(atan(A)) != A
-Relative norm of difference == 1.8854e-05
-lhs == 0.00431403-314.155{-1}
-rhs == -314.159{-1}
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1.1657e-05
-lhs == -314.163{-1}
-rhs == -314.159{-1}
 
 A
   {1}
@@ -656,6 +636,28 @@ A
   -{-1,1}
 
 A
+  1+{-1,1}
+
+A
+  1-{-1,1}
+
+A
+  {-1}+{1,2}
+
+A
+  {-1}-{1,2}
+
+A
+  {1}+{1,2}
+Test failed: sqrt(A)*sqrt(A) != A
+lhs == nan
+
+A
+  {1}-{1,2}
+Test failed: sqrt(A)*sqrt(A) != A
+lhs == nan
+
+A
   {-2,-1,1,2}
 
 A
@@ -663,6 +665,8 @@ A
 
 A
   {-1}+{1}
+Test failed: sqrt(A)*sqrt(A) != A
+lhs == nan
 
 Random A in {}
 
@@ -729,30 +733,18 @@ A
 
 A
   3.14159{1,2,3}
-Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
-Relative norm of difference == 2.0431e-05
-lhs == 0.0432148
-rhs == 0.0432139
 
 A
   -3.14159{1,2,3}
 
 A
   3.14159{-1,1,2,3,4}
-Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
-Relative norm of difference == 2.0431e-05
-lhs == 0.0432148
-rhs == 0.0432139
 
 A
   -3.14159{-1,1,2,3,4}
 
 A
   3.14159{-2,-1,1,2,3,4,5}
-Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
-Relative norm of difference == 2.0431e-05
-lhs == 0.0432148
-rhs == 0.0432139
 
 A
   -3.14159{-2,-1,1,2,3,4,5}
@@ -776,23 +768,19 @@ A
   314.159{-1}
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 lhs == nan
-Test failed: tan(atan(A)) != A
-Relative norm of difference == 1.488e-05
-lhs == -0.00431415+314.161{-1}
-rhs == 314.159{-1}
+Test failed: cos(A)*tan(A) != sin(A)
+Absolute norm of difference == nan
+lhs == nan
+rhs == nan
 
 A
   -314.159{-1}
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 lhs == nan
-Test failed: tan(atan(A)) != A
-Relative norm of difference == 1.8854e-05
-lhs == 0.00431399-314.155{-1}
-rhs == -314.159{-1}
-Test failed: tanh(atanh(A)) != A
-Relative norm of difference == 1.1657e-05
-lhs == -314.163{-1}
-rhs == -314.159{-1}
+Test failed: cos(A)*tan(A) != sin(A)
+Absolute norm of difference == nan
+lhs == nan
+rhs == nan
 
 A
   {1}
@@ -807,6 +795,28 @@ A
   -{-1,1}
 
 A
+  1+{-1,1}
+
+A
+  1-{-1,1}
+
+A
+  {-1}+{1,2}
+
+A
+  {-1}-{1,2}
+
+A
+  {1}+{1,2}
+Test failed: sqrt(A)*sqrt(A) != A
+lhs == nan
+
+A
+  {1}-{1,2}
+Test failed: sqrt(A)*sqrt(A) != A
+lhs == nan
+
+A
   {-2,-1,1,2}
 
 A
@@ -814,6 +824,8 @@ A
 
 A
   {-1}+{1}
+Test failed: sqrt(A)*sqrt(A) != A
+lhs == nan
 
 Random A in {}
 
@@ -832,8 +844,12 @@ Random A in {1,2}
 Random A in {1,2}
 
 Random A in {-1,1,2}
+Test failed: sin(asin(A)) != A
+lhs == nan
 
 Random A in {-1,1,2}
+Test failed: sin(asin(A)) != A
+lhs == nan
 
 Random A in {-2,-1,1,2}
 
@@ -844,8 +860,20 @@ Random A in {-1,1,2,3}
 Random A in {-1,1,2,3}
 
 Random A in {-2,-1,1,2,3}
+Test failed: cos(acos(A)) != A
+lhs == nan
+Test failed: cosh(acosh(A)) != A
+lhs == nan
+Test failed: sin(asin(A)) != A
+lhs == nan
 
 Random A in {-2,-1,1,2,3}
+Test failed: cos(acos(A)) != A
+lhs == nan
+Test failed: cosh(acosh(A)) != A
+lhs == nan
+Test failed: sin(asin(A)) != A
+lhs == nan
 
 Random A in {-3,-2,-1,1,2,3}
 
@@ -881,30 +909,18 @@ A
 
 A
   3.14159265358979{1,2,3}
-Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
-Relative norm of difference == 4.0143e-14
-lhs == 0.0432139182637705
-rhs == 0.0432139182637723
 
 A
   -3.14159265358979{1,2,3}
 
 A
   3.14159265358979{-1,1,2,3,4}
-Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
-Relative norm of difference == 4.0143e-14
-lhs == 0.0432139182637705
-rhs == 0.0432139182637723
 
 A
   -3.14159265358979{-1,1,2,3,4}
 
 A
   3.14159265358979{-2,-1,1,2,3,4,5}
-Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
-Relative norm of difference == 4.0143e-14
-lhs == 0.0432139182637705
-rhs == 0.0432139182637723
 
 A
   -3.14159265358979{-2,-1,1,2,3,4,5}
@@ -943,6 +959,28 @@ A
   -{-1,1}
 
 A
+  1+{-1,1}
+
+A
+  1-{-1,1}
+
+A
+  {-1}+{1,2}
+
+A
+  {-1}-{1,2}
+
+A
+  {1}+{1,2}
+Test failed: sqrt(A)*sqrt(A) != A
+lhs == nan
+
+A
+  {1}-{1,2}
+Test failed: sqrt(A)*sqrt(A) != A
+lhs == nan
+
+A
   {-2,-1,1,2}
 
 A
@@ -950,6 +988,8 @@ A
 
 A
   {-1}+{1}
+Test failed: sqrt(A)*sqrt(A) != A
+lhs == nan
 
 Random A in {}
 
@@ -1016,30 +1056,18 @@ A
 
 A
   3.14159265358979{1,2,3}
-Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
-Relative norm of difference == 4.0143e-14
-lhs == 0.0432139182637705
-rhs == 0.0432139182637723
 
 A
   -3.14159265358979{1,2,3}
 
 A
   3.14159265358979{-1,1,2,3,4}
-Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
-Relative norm of difference == 4.0143e-14
-lhs == 0.0432139182637705
-rhs == 0.0432139182637723
 
 A
   -3.14159265358979{-1,1,2,3,4}
 
 A
   3.14159265358979{-2,-1,1,2,3,4,5}
-Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
-Relative norm of difference == 4.0143e-14
-lhs == 0.0432139182637705
-rhs == 0.0432139182637723
 
 A
   -3.14159265358979{-2,-1,1,2,3,4,5}
@@ -1078,6 +1106,28 @@ A
   -{-1,1}
 
 A
+  1+{-1,1}
+
+A
+  1-{-1,1}
+
+A
+  {-1}+{1,2}
+
+A
+  {-1}-{1,2}
+
+A
+  {1}+{1,2}
+Test failed: sqrt(A)*sqrt(A) != A
+lhs == nan
+
+A
+  {1}-{1,2}
+Test failed: sqrt(A)*sqrt(A) != A
+lhs == nan
+
+A
   {-2,-1,1,2}
 
 A
@@ -1085,6 +1135,8 @@ A
 
 A
   {-1}+{1}
+Test failed: sqrt(A)*sqrt(A) != A
+lhs == nan
 
 Random A in {}
 
@@ -1210,6 +1262,28 @@ A
   -{-1,1}
 
 A
+  1+{-1,1}
+
+A
+  1-{-1,1}
+
+A
+  {-1}+{1,2}
+
+A
+  {-1}-{1,2}
+
+A
+  {1}+{1,2}
+Test failed: sqrt(A)*sqrt(A) != A
+lhs == nan
+
+A
+  {1}-{1,2}
+Test failed: sqrt(A)*sqrt(A) != A
+lhs == nan
+
+A
   {-2,-1,1,2}
 
 A
@@ -1217,6 +1291,8 @@ A
 
 A
   {-1}+{1}
+Test failed: sqrt(A)*sqrt(A) != A
+lhs == nan
 
 Random A in {}
 
@@ -1341,6 +1417,28 @@ A
   -{-1,1}
 
 A
+  1+{-1,1}
+
+A
+  1-{-1,1}
+
+A
+  {-1}+{1,2}
+
+A
+  {-1}-{1,2}
+
+A
+  {1}+{1,2}
+Test failed: sqrt(A)*sqrt(A) != A
+lhs == nan
+
+A
+  {1}-{1,2}
+Test failed: sqrt(A)*sqrt(A) != A
+lhs == nan
+
+A
   {-2,-1,1,2}
 
 A
@@ -1348,16 +1446,14 @@ A
 
 A
   {-1}+{1}
+Test failed: sqrt(A)*sqrt(A) != A
+lhs == nan
 
 Random A in {}
 
 Random A in {}
 
 Random A in {1}
-Test failed: sinh(asinh(A)) != A
-Relative norm of difference == 9.588e-17
-lhs == 0.574594650865310256+0.628749470561080753{1}
-rhs == 0.574594650865310313+0.628749470561080695{1}
 
 Random A in {1}
 
