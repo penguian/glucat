@@ -44,11 +44,11 @@ namespace peg11
   void
   check(const Multivector_T& lhs, const Multivector_T& rhs, const string& msg, const bool need_inv = false)
   {
-    const bool lhs_isinf = lhs.isinf();
-    const bool lhs_isnan = lhs.isnan();
-    const bool rhs_isinf = rhs.isinf();
-    const bool rhs_isnan = rhs.isnan();
-    const bool exceptional =
+    const auto lhs_isinf = lhs.isinf();
+    const auto lhs_isnan = lhs.isnan();
+    const auto rhs_isinf = rhs.isinf();
+    const auto rhs_isnan = rhs.isnan();
+    const auto exceptional =
       (rhs_isinf && !lhs_isinf) ||
       (rhs_isnan && !lhs_isnan) ||
       (!rhs_isinf && !need_inv && lhs_isinf) ||
@@ -64,26 +64,16 @@ namespace peg11
     }
     else
     {
-      typedef typename Multivector_T::scalar_t scalar_t;
-
-      static const scalar_t scalar_eps  = numeric_limits<scalar_t>::epsilon();
-      scalar_t tol2;
-      if (control_t::verbose())
-        tol2 = 0.0;
-      else
+      const auto different = control_t::verbose()
+        ? (lhs != rhs)
+        : !approx_equal(lhs, rhs);
+      if (different)
       {
-       typedef typename Multivector_T::framed_multi_t framed_multi_t;
-        const double nbr_terms = framed_multi_t(rhs).truncated(scalar_eps).nbr_terms();
-        scalar_t tol = scalar_eps *
-                       numeric_traits<scalar_t>::pow(scalar_t(2), numeric_limits<scalar_t>::digits / 16 + 4);
-        tol2 = tol * tol * scalar_t(std::max(nbr_terms, 1.0));
-      }
-      const bool relative = (norm(rhs) > tol2) && (norm(lhs) > tol2);
-      const scalar_t abs_norm_diff = norm(rhs-lhs);
-      const scalar_t norm_diff = (relative) ? abs_norm_diff/norm(rhs) : abs_norm_diff;
-      if (norm_diff > tol2)
-      {
-        const streamsize prec = cout.precision(5);
+        using scalar_t = typename Multivector_T::scalar_t;
+        const auto norm_diff = norm_of_diff(rhs, lhs);
+        const auto rhs_tol = norm_tol(rhs);
+        const auto relative = (norm(rhs) > rhs_tol) && (norm(lhs) > rhs_tol);
+        const auto prec = cout.precision(5);
         cout << "Test failed: " << msg << endl;
         cout << ((relative) ? "Relative" : "Absolute");
         cout << " norm of difference == "
@@ -104,9 +94,9 @@ namespace peg11
   void
   transcendtest(const Multivector_T& A, const bool random=false)
   {
-    typedef Multivector_T m_;
-    typedef typename Multivector_T::scalar_t scalar_t;
-    const streamsize prec = cout.precision(numeric_limits<scalar_t>::digits10);
+    using m_ = Multivector_T;
+    using scalar_t = typename Multivector_T::scalar_t;
+    const auto prec = cout.precision(numeric_limits<scalar_t>::digits10);
     if (random)
       cout << "Random A in " << A.frame() << endl;
     else
@@ -122,8 +112,8 @@ namespace peg11
     check(cos(A)*tan(A), sin(A),    "cos(A)*tan(A) != sin(A)");
     check(cosh(A)*tanh(A), sinh(A), "cosh(A)*tanh(A) != sinh(A)");
 
-    if ((A == scalar(A)) || !((inv(A)).isnan()))
-      check(sqrt(A)*sqrt(A), A,     "sqrt(A)*sqrt(A) != A");
+    // if ((A == scalar(A)) || !((inv(A)).isnan()))
+    check(sqrt(A)*sqrt(A), A,       "sqrt(A)*sqrt(A) != A");
     if (!((inv(A)).isnan()))
       check(exp(log(A)), A,         "exp(log(A)) != A", true);
     check(cos(acos(A)), A,          "cos(acos(A)) != A", true);
@@ -142,12 +132,12 @@ namespace peg11
   void
   rand_transcendtest(int n)
   {
-    typedef typename Multivector_T::index_set_t index_set_t;
-    typedef typename index_set_t::index_pair_t index_pair_t;
+    using index_set_t = typename Multivector_T::index_set_t;
+    using index_pair_t = typename index_set_t::index_pair_t;
 
-    static const index_t v_lo = index_set_t::v_lo;
-    static const index_t v_hi = index_set_t::v_hi;
-    static const index_t max_n = min(-v_lo, v_hi);
+    static const auto v_lo = index_set_t::v_lo;
+    static const auto v_hi = index_set_t::v_hi;
+    static const auto max_n = min(-v_lo, v_hi);
     const auto max_index = index_t(n);
     if (max_index > max_n)
     {
@@ -155,7 +145,7 @@ namespace peg11
       cout << "Maximum value possible is " << max_n << "." << endl;
       return;
     }
-    index_set_t frm;
+    auto frm = index_set_t();
 
     for (index_t p = 0; p != max_index+1; ++p)
     {
@@ -183,13 +173,13 @@ namespace peg11
   void
   do_test11()
   {
-    typedef Multivector_T m_;
-    typedef typename m_::scalar_t scalar_t;
+    using m_ = Multivector_T;
+    using scalar_t = typename Multivector_T::scalar_t;
 
     cout << "Epsilon ==" << numeric_limits<scalar_t>::epsilon() << endl;
 
-    const scalar_t pi = numeric_traits<scalar_t>::pi();
-    const m_ i("{-1}");
+    const auto pi = numeric_traits<scalar_t>::pi();
+    const auto i = m_("{-1}");
     transcendtest(m_(0));
     transcendtest(m_(1));
     transcendtest(-m_(1));
@@ -216,6 +206,12 @@ namespace peg11
     transcendtest(-m_("{1}"));
     transcendtest(m_("{-1,1}"));
     transcendtest(-m_("{-1,1}"));
+    transcendtest(m_("1+{-1,1}"));
+    transcendtest(m_("1-{-1,1}"));
+    transcendtest(m_("{-1}+{1,2}"));
+    transcendtest(m_("{-1}-{1,2}"));
+    transcendtest(m_("{1}+{1,2}"));
+    transcendtest(m_("{1}-{1,2}"));
     transcendtest(m_("{-2,-1,1,2}"));
     transcendtest(-m_("{-2,-1,1,2}"));
     transcendtest(m_("{-1}+{1}"));
