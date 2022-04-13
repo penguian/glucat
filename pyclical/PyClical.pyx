@@ -1334,6 +1334,41 @@ def clifford_hidden_doctests():
     """
     return
 
+cpdef inline norm_tol(obj):
+    """
+    Quadratic norm tolerance relative to a specific multivector.
+
+    >>> print(norm_tol(clifford("{1}")) * 3.0 - norm_tol(clifford("1{1}-2{2}+3{3}")))
+    0.0
+    """
+    return glucat.norm_tol(toClifford(obj))
+
+cpdef inline norm_of_diff(lhs, rhs):
+    """
+    Relative or absolute quadratic norm of difference of multivectors.
+
+    >>> print(norm_of_diff(clifford("{1}"), clifford("1{1}")))
+    0.0
+    >>> print(norm_of_diff(clifford("1{1}-3{2}+4{3}"), clifford("{1}")))
+    25.0
+    """
+    return glucat.norm_of_diff(toClifford(lhs), toClifford(rhs))
+
+cpdef inline approx_equal(lhs, rhs):
+    """
+    Test for approximate equality of multivectors.
+
+    >>> print(approx_equal(clifford("{1}"), clifford("1{1}")))
+    True
+    >>> print(approx_equal(clifford("1{1}-3{2}+4{3}"), clifford("{1}")))
+    False
+    >>> print(approx_equal(clifford("1{1}-3{2}+4{3}+0.001"), clifford("1{1}-3{2}+4{3}")))
+    False
+    >>> print(approx_equal(clifford("1{1}-3{2}+4{3}+1.0e-30"), clifford("1{1}-3{2}+4{3}")))
+    True
+    """
+    return glucat.approx_equal(toClifford(lhs), toClifford(rhs))
+
 cpdef inline inv(obj):
     """
     Geometric multiplicative inverse.
