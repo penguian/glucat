@@ -129,17 +129,22 @@ namespace glucat
     eigenvalues(const Matrix_T& val) -> ublas::vector< std::complex<double> >;
 
     /// Classification of eigenvalues of a matrix
-    using eig_case_t = enum {safe_eig_case, negative_eig_case, both_eig_case};
+    using eig_case_t = enum {
+      safe_eigs,
+      neg_real_eigs,
+      both_eigs};
 
     ///  Structure containing classification of eigenvalues
     template< typename Matrix_T >
     struct eig_genus
     {
       using Scalar_T = typename Matrix_T::value_type;
+      /// Is the matrix singular?
+      bool m_is_singular = false;
       /// What kind of eigenvalues does the matrix contain?
-      eig_case_t m_eig_case;
+      eig_case_t m_eig_case = safe_eigs;
       /// Argument such that exp(pi-m_safe_arg) lies between arguments of eigenvalues
-      Scalar_T   m_safe_arg;
+      Scalar_T   m_safe_arg = Scalar_T(0);
     };
 
     /// Classify the eigenvalues of a matrix
