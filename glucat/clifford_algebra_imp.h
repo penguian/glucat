@@ -102,6 +102,55 @@ namespace glucat
   operator!= (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> bool
   { return !(rhs == scr); }
 
+  /// Quadratic norm tolerance
+  template
+  <
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
+  >
+  auto
+  norm_tol(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T
+  {
+    using multivector_t = Multivector<Scalar_T,LO,HI,Tune_P>;
+    static const auto scalar_eps  = std::numeric_limits<Scalar_T>::epsilon();
+    static const auto nbr_different_bits =
+      std::numeric_limits<Scalar_T>::digits / Tune_P::denom_different_bits + Tune_P::extra_different_bits;
+    static const auto abs_tol = scalar_eps *
+      numeric_traits<Scalar_T>::pow(Scalar_T(2), nbr_different_bits);
+    using framed_multi_t = typename multivector_t::framed_multi_t;
+    const auto nbr_terms = double(framed_multi_t(val).truncated(scalar_eps).nbr_terms());
+    return abs_tol * abs_tol * std::max(Scalar_T(nbr_terms), Scalar_T(1));
+  }
+
+  /// Quadratic norm of difference of multivectors
+  template
+  <
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    template<typename, const index_t, const index_t, typename> class RHS,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
+  >
+  auto
+  norm_of_diff(const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> Scalar_T
+  {
+    const auto rhs_tol = norm_tol(rhs);
+    const auto relative = (norm(rhs) > rhs_tol) && (norm(lhs) > rhs_tol);
+    const auto abs_norm_diff = norm(rhs-lhs);
+    return (relative)
+      ? abs_norm_diff/norm(rhs)
+      : abs_norm_diff;
+  }
+
+  /// Test for approximate equality of multivectors
+  template
+  <
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    template<typename, const index_t, const index_t, typename> class RHS,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
+  >
+  auto
+  approx_equal(const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> bool
+  { return norm_of_diff(lhs, rhs) < norm_tol(rhs); }
+
   /// Geometric sum of multivector and scalar
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
