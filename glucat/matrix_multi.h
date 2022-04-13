@@ -116,7 +116,9 @@ namespace glucat
   /// Square root of multivector with specified complexifier
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
-  matrix_sqrt(const matrix_multi<Scalar_T,LO,HI,Tune_P>& val, const matrix_multi<Scalar_T,LO,HI,Tune_P>& i) -> const matrix_multi<Scalar_T,LO,HI,Tune_P>;
+  matrix_sqrt(const matrix_multi<Scalar_T,LO,HI,Tune_P>& val,
+              const matrix_multi<Scalar_T,LO,HI,Tune_P>& i,
+              const index_t level) -> const matrix_multi<Scalar_T,LO,HI,Tune_P>;
 
   /// Natural logarithm of multivector with specified complexifier
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -126,7 +128,9 @@ namespace glucat
   /// Natural logarithm of multivector with specified complexifier
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
-  matrix_log(const matrix_multi<Scalar_T,LO,HI,Tune_P>& val, const matrix_multi<Scalar_T,LO,HI,Tune_P>& i) -> const matrix_multi<Scalar_T,LO,HI,Tune_P>;
+  matrix_log( const matrix_multi<Scalar_T,LO,HI,Tune_P>& val,
+              const matrix_multi<Scalar_T,LO,HI,Tune_P>& i,
+              const index_t level) -> const matrix_multi<Scalar_T,LO,HI,Tune_P>;
 
   /// A matrix_multi<Scalar_T,LO,HI,Tune_P> is a matrix approximation to a multivector
   template< typename Scalar_T = double, const index_t LO = DEFAULT_LO, const index_t HI = DEFAULT_HI, typename Tune_P = tuning<> >
@@ -253,11 +257,15 @@ namespace glucat
                    matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>& lhs_reframed, matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>& rhs_reframed) -> const index_set<Other_LO,Other_HI>;
     template< typename Other_Scalar_T, const index_t Other_LO, const index_t Other_HI, typename Other_Tune_P >
     friend auto
-      matrix_sqrt(const matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>& val, const matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>& i)
+      matrix_sqrt(const matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>& val,
+                  const matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>& i,
+                  const index_t level)
                -> const matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>;
     template< typename Other_Scalar_T, const index_t Other_LO, const index_t Other_HI, typename Other_Tune_P >
     friend auto
-      matrix_log(const matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>& val, const matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>& i)
+      matrix_log(const matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>& val,
+                 const matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>& i,
+                 const index_t level)
               -> const matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>;
 
     /// Add a term, if non-zero
