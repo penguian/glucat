@@ -48,13 +48,16 @@ namespace glucat
     <
       Tuning_Slow_Mult_Matrix_Threshold,
       Tuning_Default_Div_Max_Steps,
-      Tuning_Default_Sqrt_Max_Steps,
+      Tuning_Default_CR_Sqrt_Max_Steps,
+      Tuning_Default_DB_Sqrt_Max_Steps,
       Tuning_Default_Log_Max_Outer_Steps,
       Tuning_Default_Log_Max_Inner_Steps,
       Tuning_Slow_Basis_Max_Count,
       Tuning_Slow_Fast_Size_Threshold,
       Tuning_Slow_Inv_Fast_Dim_Threshold,
       Tuning_Slow_Products_Size_Threshold,
+      Tuning_Default_Denom_Different_Bits,
+      Tuning_Default_Extra_Different_Bits,
       Tuning_Default_Function_Precision
     >;
 
@@ -67,19 +70,23 @@ namespace glucat
     <
       Tuning_Naive_Mult_Matrix_Threshold,
       Tuning_Default_Div_Max_Steps,
-      Tuning_Default_Sqrt_Max_Steps,
+      Tuning_Default_CR_Sqrt_Max_Steps,
+      Tuning_Default_DB_Sqrt_Max_Steps,
       Tuning_Default_Log_Max_Outer_Steps,
       Tuning_Default_Log_Max_Inner_Steps,
       Tuning_Naive_Basis_Max_Count,
       Tuning_Naive_Fast_Size_Threshold,
       Tuning_Naive_Inv_Fast_Dim_Threshold,
       Tuning_Default_Products_Size_Threshold,
+      Tuning_Default_Denom_Different_Bits,
+      Tuning_Default_Extra_Different_Bits,
       Tuning_Default_Function_Precision
     >;
 
   const unsigned int Tuning_Fast_Mult_Matrix_Threshold   =       0;
   const unsigned int Tuning_Fast_Div_Max_Steps           =       0;
-  const unsigned int Tuning_Fast_Sqrt_Max_Steps          =      16;
+  const unsigned int Tuning_Fast_CR_Sqrt_Max_Steps       =     256;
+  const unsigned int Tuning_Fast_DB_Sqrt_Max_Steps       =     256;
   const unsigned int Tuning_Fast_Log_Max_Outer_Steps     =      16;
   const unsigned int Tuning_Fast_Log_Max_Inner_Steps     =       8;
   const unsigned int Tuning_Fast_Basis_Max_Count         =       1;
@@ -91,13 +98,16 @@ namespace glucat
     <
       Tuning_Fast_Mult_Matrix_Threshold,
       Tuning_Fast_Div_Max_Steps,
-      Tuning_Fast_Sqrt_Max_Steps,
+      Tuning_Fast_CR_Sqrt_Max_Steps,
+      Tuning_Fast_DB_Sqrt_Max_Steps,
       Tuning_Fast_Log_Max_Outer_Steps,
       Tuning_Fast_Log_Max_Inner_Steps,
       Tuning_Fast_Basis_Max_Count,
       Tuning_Fast_Fast_Size_Threshold,
       Tuning_Fast_Inv_Fast_Dim_Threshold,
       Tuning_Fast_Products_Size_Threshold,
+      Tuning_Default_Denom_Different_Bits,
+      Tuning_Default_Extra_Different_Bits,
       Tuning_Default_Function_Precision
     >;
 }
