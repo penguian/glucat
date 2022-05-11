@@ -102,14 +102,14 @@ namespace glucat
   operator!= (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> bool
   { return !(rhs == scr); }
 
-  /// Quadratic norm tolerance relative to a specific multivector
+  /// Quadratic norm error tolerance relative to a specific multivector
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
     typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  norm_tol(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T
+  error_squared_tol(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T
   {
     using multivector_t = Multivector<Scalar_T,LO,HI,Tune_P>;
     static const auto scalar_eps  = std::numeric_limits<Scalar_T>::epsilon();
@@ -122,18 +122,20 @@ namespace glucat
     return abs_tol * abs_tol * std::max(Scalar_T(nbr_terms), Scalar_T(1));
   }
 
-  /// Relative or absolute quadratic norm of difference of multivectors
+  /// Relative or absolute error using the quadratic norm
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
     template<typename, const index_t, const index_t, typename> class RHS,
     typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
+  inline
   auto
-  norm_of_diff(const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> Scalar_T
+  error_squared(const Multivector<Scalar_T,LO,HI,Tune_P>& lhs,
+                const RHS<Scalar_T,LO,HI,Tune_P>& rhs,
+                const Scalar_T threshold) -> Scalar_T
   {
-    const auto rhs_tol = norm_tol(rhs);
-    const auto relative = (norm(rhs) > rhs_tol) && (norm(lhs) > rhs_tol);
+    const auto relative = norm(rhs) > threshold;
     const auto abs_norm_diff = norm(rhs-lhs);
     return (relative)
       ? abs_norm_diff/norm(rhs)
@@ -147,9 +149,29 @@ namespace glucat
     template<typename, const index_t, const index_t, typename> class RHS,
     typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
+  inline
   auto
-  approx_equal(const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> bool
-  { return norm_of_diff(lhs, rhs) < norm_tol(rhs); }
+  approx_equal(const Multivector<Scalar_T,LO,HI,Tune_P>& lhs,
+               const RHS<Scalar_T,LO,HI,Tune_P>& rhs,
+               const Scalar_T threshold,
+               const Scalar_T tolerance) -> bool
+  { return error_squared(lhs, rhs, threshold) < tolerance; }
+
+  /// Test for approximate equality of multivectors
+  template
+  <
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    template<typename, const index_t, const index_t, typename> class RHS,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
+  >
+  inline
+  auto
+  approx_equal(const Multivector<Scalar_T,LO,HI,Tune_P>& lhs,
+               const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> bool
+  {
+    const Scalar_T rhs_tol = error_squared_tol(rhs);
+    return approx_equal(lhs, rhs, rhs_tol, rhs_tol);
+  }
 
   /// Geometric sum of multivector and scalar
   template< template<typename, const index_t, const index_t, typename> class Multivector,

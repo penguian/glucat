@@ -1334,40 +1334,46 @@ def clifford_hidden_doctests():
     """
     return
 
-cpdef inline norm_tol(obj):
+cpdef inline error_squared_tol(obj):
     """
-    Quadratic norm tolerance relative to a specific multivector.
+    Quadratic norm error tolerance relative to a specific multivector.
 
-    >>> print(norm_tol(clifford("{1}")) * 3.0 - norm_tol(clifford("1{1}-2{2}+3{3}")))
+    >>> print(error_squared_tol(clifford("{1}")) * 3.0 - error_squared_tol(clifford("1{1}-2{2}+3{3}")))
     0.0
     """
-    return glucat.norm_tol(toClifford(obj))
+    return glucat.error_squared_tol(toClifford(obj))
 
-cpdef inline norm_of_diff(lhs, rhs):
+cpdef inline error_squared(lhs, rhs, threshold):
     """
-    Relative or absolute quadratic norm of difference of multivectors.
+    Relative or absolute error using the quadratic norm.
 
-    >>> print(norm_of_diff(clifford("{1}"), clifford("1{1}")))
+    >>> err2=scalar_epsilon*scalar_epsilon
+
+    >>> print(error_squared(clifford("{1}"), clifford("1{1}"), err2))
     0.0
-    >>> print(norm_of_diff(clifford("1{1}-3{2}+4{3}"), clifford("{1}")))
+    >>> print(error_squared(clifford("1{1}-3{2}+4{3}"), clifford("{1}"), err2))
     25.0
     """
-    return glucat.norm_of_diff(toClifford(lhs), toClifford(rhs))
+    return glucat.error_squared(toClifford(lhs), toClifford(rhs), <scalar_t>threshold)
 
-cpdef inline approx_equal(lhs, rhs):
+cpdef inline approx_equal(lhs, rhs, threshold=None, tol=None):
     """
     Test for approximate equality of multivectors.
+
+    >>> err2=scalar_epsilon*scalar_epsilon
 
     >>> print(approx_equal(clifford("{1}"), clifford("1{1}")))
     True
     >>> print(approx_equal(clifford("1{1}-3{2}+4{3}"), clifford("{1}")))
     False
-    >>> print(approx_equal(clifford("1{1}-3{2}+4{3}+0.001"), clifford("1{1}-3{2}+4{3}")))
+    >>> print(approx_equal(clifford("1{1}-3{2}+4{3}+0.001"), clifford("1{1}-3{2}+4{3}"), err2, err2))
     False
-    >>> print(approx_equal(clifford("1{1}-3{2}+4{3}+1.0e-30"), clifford("1{1}-3{2}+4{3}")))
+    >>> print(approx_equal(clifford("1{1}-3{2}+4{3}+1.0e-30"), clifford("1{1}-3{2}+4{3}"), err2, err2))
     True
     """
-    return glucat.approx_equal(toClifford(lhs), toClifford(rhs))
+    threshold = error_squared_tol(rhs) if threshold is None else threshold
+    tol       = error_squared_tol(rhs) if tol       is None else tol
+    return glucat.approx_equal(toClifford(lhs), toClifford(rhs), <scalar_t>threshold, <scalar_t>tol)
 
 cpdef inline inv(obj):
     """

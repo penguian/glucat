@@ -214,16 +214,16 @@ namespace glucat
   auto
   operator!= (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> bool;
 
-  /// Quadratic norm tolerance
+  /// Quadratic norm error tolerance relative to a specific multivector
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
     typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  norm_tol(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T;
+  error_squared_tol(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T;
 
-  /// Quadratic norm of difference of multivectors
+  /// Relative or absolute error using the quadratic norm
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -231,7 +231,9 @@ namespace glucat
     typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  norm_of_diff(const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> Scalar_T;
+  error_squared(const Multivector<Scalar_T,LO,HI,Tune_P>& lhs,
+                const RHS<Scalar_T,LO,HI,Tune_P>& rhs,
+                const Scalar_T threshold) -> Scalar_T;
 
   /// Test for approximate equality of multivectors
   template
@@ -241,7 +243,21 @@ namespace glucat
     typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
   >
   auto
-  approx_equal(const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> bool;
+  approx_equal(const Multivector<Scalar_T,LO,HI,Tune_P>& lhs,
+               const RHS<Scalar_T,LO,HI,Tune_P>& rhs,
+               const Scalar_T threshold,
+               const Scalar_T tolerance) -> bool;
+
+  /// Test for approximate equality of multivectors
+  template
+  <
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    template<typename, const index_t, const index_t, typename> class RHS,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
+  >
+  auto
+  approx_equal(const Multivector<Scalar_T,LO,HI,Tune_P>& lhs,
+               const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> bool;
 
   /// Geometric sum of multivector and scalar
   template

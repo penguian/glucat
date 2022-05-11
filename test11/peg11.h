@@ -70,14 +70,14 @@ namespace peg11
       if (different)
       {
         using scalar_t = typename Multivector_T::scalar_t;
-        const auto norm_diff = norm_of_diff(rhs, lhs);
-        const auto rhs_tol = norm_tol(rhs);
-        const auto relative = (norm(rhs) > rhs_tol) && (norm(lhs) > rhs_tol);
+        const auto threshold = error_squared_tol(rhs);
+        const auto relative = norm(rhs) > threshold;
+        const auto error_sq = error_squared(rhs, lhs, threshold);
         const auto prec = cout.precision(5);
         cout << "Test failed: " << msg << endl;
         cout << ((relative) ? "Relative" : "Absolute");
-        cout << " norm of difference == "
-             << numeric_traits<scalar_t>::sqrt(norm_diff) << endl;
+        cout << " error == "
+             << numeric_traits<scalar_t>::sqrt(error_sq) << endl;
         if (!control_t::verbose())
         {
           cout.precision(numeric_limits<scalar_t>::digits10);
