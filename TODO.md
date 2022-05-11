@@ -1,4 +1,4 @@
-TODO for GluCat 0.11.1 with PyClical
+TODO for GluCat 0.12.0 with PyClical
 ====================================
 
 Documentation:

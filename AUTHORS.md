@@ -1,4 +1,4 @@
-AUTHORS for GluCat 0.11.1 with PyClical
+AUTHORS for GluCat 0.12.0 with PyClical
 =======================================
 
 Paul C. Leopardi <leopardi@users.sourceforge.net>
