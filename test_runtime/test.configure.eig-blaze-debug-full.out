@@ -617,7 +617,7 @@ lhs == nan
 A
   -314.159{-1}
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
-Relative norm of difference == nan
+Relative error == nan
 lhs == inf
 rhs == inf
 Test failed: cos(A)*tan(A) != sin(A)
@@ -769,7 +769,7 @@ A
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 lhs == nan
 Test failed: cos(A)*tan(A) != sin(A)
-Absolute norm of difference == nan
+Absolute error == nan
 lhs == nan
 rhs == nan
 
@@ -778,7 +778,7 @@ A
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
 lhs == nan
 Test failed: cos(A)*tan(A) != sin(A)
-Absolute norm of difference == nan
+Absolute error == nan
 lhs == nan
 rhs == nan
 
@@ -1223,7 +1223,7 @@ A
 A
   31.4159265358979324{-2,-1,1,2,3,4,5}
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
-Absolute norm of difference == 2.2711e-14
+Relative error == 2.2711e-14
 lhs == 0
 rhs == 2.27110106832409384e-14
 
@@ -1378,7 +1378,7 @@ A
 A
   31.4159265358979324{-2,-1,1,2,3,4,5}
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
-Absolute norm of difference == 2.2711e-14
+Relative error == 2.2711e-14
 lhs == 0
 rhs == 2.27110106832409384e-14
 
