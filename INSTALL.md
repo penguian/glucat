@@ -1,4 +1,4 @@
-INSTALL for GluCat 0.11.1 with PyClical
+INSTALL for GluCat 0.12.0 with PyClical
 ========================================
 
 Prerequisites: Before You Begin
@@ -30,13 +30,13 @@ You can install GluCat in one of two ways:
 To install the first way, from (e.g.) GitHub, run the following commands on a
 Linux machine or equivalent Posix environment connected to the Internet:
 ```
-> git clone git@github.com:penguian/glucat.git glucat-0.11.1
-> cd glucat-0.11.1
+> git clone git@github.com:penguian/glucat.git glucat-0.12.0
+> cd glucat-0.12.0
 > make -f admin/Makefile.common cvs
 ```
-This results in a directory structure that includes glucat-0.11.1/configure,
+This results in a directory structure that includes glucat-0.12.0/configure,
 allowing you to make and install GluCat in the same way as if you had downloaded
-and unzipped the tarball glucat-0.11.1.tar.gz.
+and unzipped the tarball glucat-0.12.0.tar.gz.
 
 
 Directory Structure
@@ -44,12 +44,12 @@ Directory Structure
 
 Once you have downloaded, unzipped and untarred the source code, or followed
 the instructions above to install from Git clone, you should have a directory,
-glucat-0.11.1. Under this directory you should see a number of subdirectories,
+glucat-0.12.0. Under this directory you should see a number of subdirectories,
 including `./admin`, `./doc`, `./glucat`, `./gfft_test`, `./products`,
 `./pyclical`, `./squaring`, `./test`, `./test_runtime`, `./testxx`, and
 `./transforms`.
 
-The following instructions are meant to be used with `glucat-0.11.1` as the
+The following instructions are meant to be used with `glucat-0.12.0` as the
 current directory.
 
 
@@ -147,7 +147,7 @@ subdirectories.
 
 As briefly described above, the simplest way to install this package is:
 
- 1. `cd` to the `glucat-0.11.1` directory containing the source code and type
+ 1. `cd` to the `glucat-0.12.0` directory containing the source code and type
     `./configure` to configure GluCat with PyClical for your system.
     If you are using `csh` on an old version of System V, you might need to type
     `sh ./configure` instead to prevent `csh` from trying to execute
@@ -695,9 +695,9 @@ speeding up the entire testing process.
 
 Rather than running the regression tests in-place and copying the output
 directly into `./test_runtime`, the script `./test/test-all-config-options.sh`
-produces as many copies of the whole direcory `glucat-0.11.1` as there are lines
-in `./test/config-options.txt`, naming them `glucat-0.11.1.1` to `glucat-0.11.1.12`,
-in the parent directory of `glucat-0.11.1`. This allows the effect of each set
+produces as many copies of the whole direcory `glucat-0.12.0` as there are lines
+in `./test/config-options.txt`, naming them `glucat-0.12.0.1` to `glucat-0.12.0.12`,
+in the parent directory of `glucat-0.12.0`. This allows the effect of each set
 of configuration options to be directly compared, and also ensures that any
 side-effect of a configuration does not affect the test results of another
 configuration.
@@ -709,9 +709,9 @@ line 4 of `./test/config-options.txt`
 disable-dependency:          --disable-dependency-tracking
 ```
 causes `./test/diff-all-config-outputs.sh` to use diff to compare
-`glucat-0.11.1.4/test_runtime/test.configure.disable-dependency.out` to
-`glucat-0.11.1/test_runtime/test.configure.disable-dependency.out`, and compare
-`glucat-0.11.1.4/pyclical/test.out` to `glucat-0.11.1/pyclical/test.out`.
+`glucat-0.12.0.4/test_runtime/test.configure.disable-dependency.out` to
+`glucat-0.12.0/test_runtime/test.configure.disable-dependency.out`, and compare
+`glucat-0.12.0.4/pyclical/test.out` to `glucat-0.12.0/pyclical/test.out`.
 
 Each comparison should only produce a line containing the line number of
 the configuration being compared: 1 to 12.
@@ -788,13 +788,12 @@ built and run using the configure command:
 ```
 on `Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz+` with
 ```
-    Linux 5.13.0-25-generic #26-Ubuntu SMP x86_64
-    Kubuntu 21.10
-    gcc version 11.2.0 (Ubuntu 11.2.0-7ubuntu2)
+    Linux 5.15.0-27-generic #28-Ubuntu SMP x86_64
+    Kubuntu 22.04 LTS
+    gcc version 11.2.0 (Ubuntu 11.2.0-19ubuntu1)
     Boost 1.74.0
-    Boost Numeric Bindings
-    GSL 2.6
-    QD 2.3.22
+    GSL 2.7.1
+    QD 2.3.23
 ```
 
 Testing PyClical
@@ -803,7 +802,7 @@ Once you have built PyClical, run the doctests. In `python3` or `ipython3`, etc.
 ```
  >>> import PyClical
  >>> PyClical._test()
- TestResults(failed=0, attempted=629)
+ TestResults(failed=0, attempted=647)
  >>> quit()
 ```
 Alternatively, in the directory `pyclical`, run the script `test.py` using:
@@ -845,69 +844,48 @@ to use `sudo`, login as `root`, or `su` to `root` before you run `make install`.
 List of Successful Builds
 =========================
 
-GluCat 0.11.1 with PyClical has so far been built and tested using:
+GluCat 0.12.0 with PyClical has so far been built and tested using:
 
  1) Pensieri:
     4 core `Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz` with
     ```
-    Linux 5.13.0-25-generic #26-Ubuntu SMP x86_64
-    Kubuntu 21.10
-    ```
-    The following compiler versions:
-    1) `gcc version 11.2.0 (Ubuntu 11.2.0-7ubuntu2)`
-    2) `clang version 13.0.0 (13.0.0-2)`
-    3) `icpx version 2022.0.0 (2022.0.0.20211123)`
-    ```
+    Linux 5.15.0-27-generic #28-Ubuntu SMP x86_64
+    Kubuntu 22.04 LTS
     Boost 1.74.0
     Boost Numeric Bindings
-    GSL 2.6
-    QD 2.3.22
-    Cython 0.29.21
-    Python 3.9.7
-    Numpy 1.19.5
-    Matplotlib 3.3.4
-    Mayavi2 4.7.4
+    GSL 2.7.1
+    QD 2.3.23
+    Cython 0.29.28
+    Python 3.10.4
+    Numpy 1.21.5
+    Matplotlib 3.5.1
+@   Mayavi2 4.7.4
     VTK 9.1.0
     Doxygen 1.9.1
-    pdfTeX 3.14159265-2.6-1.40.21 (TeX Live 2020/Debian)
+    pdfTeX 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian)
     ```
-    `./test/test-all-config-options.sh`
+
+    `./test/test-all-config-options.sh`:
     All 12 configuration commands corresponding to each of the 12
     `test.configure*.out` files in `./test_runtime`
+    tested with the following compiler versions:
+    1) `gcc version 11.2.0 (Ubuntu 11.2.0-19ubuntu1)`
+    2) `clang version 14.0.0 (14.0.0-1ubuntu1)`
+@   3) `icpx version 2022.0.0 (2022.0.0.20211123)`
 
- 2) Pensieri:
-    4 core `Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz` with
-    ```
-    Linux 5.13.0-25-generic #26-Ubuntu SMP x86_64
-    Kubuntu 21.10
-    ```
-    The following compiler versions:
-    1) `gcc version 7.5.0 (Ubuntu 7.5.0-6ubuntu4)`
-    2) `gcc version 8.5.0 (Ubuntu 8.5.0-0ubuntu4)`
-    3) `gcc version 9.4.0 (Ubuntu 9.4.0-3ubuntu1)`
-    4) `gcc version 10.3.0 (Ubuntu 10.3.0-11ubuntu1)`
-    5) `clang version 9.0.1 (9.0.1-16.1ubuntu1)`
-    6) `clang version 11.0.1 (11.0.1-2ubuntu5)`
-    7) `clang version 12.0.1 (12.0.1-8build1)`
-    ```
-    Boost 1.74.0
-    Boost Numeric Bindings
-    GSL 2.6
-    QD 2.3.22
-    Cython 0.29.21
-    Python 3.9.7
-    Numpy 1.19.5
-    Matplotlib 3.3.4
-    Mayavi2 4.7.1
-    VTK 7.1.1
-    Doxygen 1.9.1
-    pdfTeX 3.14159265-2.6-1.40.21 (TeX Live 2020/Debian)
-    ```
-    `./test/fast-test-all-config-options.sh`
+    `./test/fast-test-all-config-options.sh`:
     All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`
+    tested with the following compiler versions:
+@   1) `gcc version 7.5.0 (Ubuntu 7.5.0-6ubuntu4)`
+@   2) `gcc version 8.5.0 (Ubuntu 8.5.0-0ubuntu4)`
+@   3) `gcc version 9.4.0 (Ubuntu 9.4.0-3ubuntu1)`
+@   4) `gcc version 10.3.0 (Ubuntu 10.3.0-11ubuntu1)`
+    5) `clang version 9.0.1 (9.0.1-16.1ubuntu1)`
+@   6) `clang version 11.0.1 (11.0.1-2ubuntu5)`
+@   7) `clang version 12.0.1 (12.0.1-8build1)`
 
- 3) Pensieri (VirtualBox):
+ 2) Pensieri (VirtualBox):
     Virtual 1 core `Intel(R) Core(TM) i7 CPU 870 @ 2.93GHz` with
     ```
     Linux 5.16.8-1-default #1 SMP 2022
@@ -929,7 +907,7 @@ GluCat 0.11.1 with PyClical has so far been built and tested using:
     All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`
 
- 4) NCI Gadi:
+ 3) NCI Gadi:
     48 core `Intel(R) Xeon(R) Platinum 8274 CPU @ 3.20GHz` with
     ```
     Linux  4.18.0-348.2.1.el8.nci.x86_64 SMP x86_64
@@ -948,7 +926,7 @@ GluCat 0.11.1 with PyClical has so far been built and tested using:
     All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`
 
- 5) CoCalc:
+ 4) CoCalc:
     Virtual 8 core `Intel(R) Xeon(R) CPU @ 2.80GHz` with
     ```
     Linux 5.11.0-1020-gcp #22~20.04.1-Ubuntu SMP x86_64
@@ -967,7 +945,7 @@ GluCat 0.11.1 with PyClical has so far been built and tested using:
     All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`
 
- 6) AWS Graviton:
+ 5) AWS Graviton:
     Virtual 4 core `ARM Cortex-A72 Model 3 (AWS Graviton A1 image)` with
     ```
     Linux 5.13.0-1019-aws #21~20.04.1-Ubuntu SMP aarch64
@@ -1009,19 +987,21 @@ The versions used need to be compatible with each other and with Python.
 For Mayavi2 the versions of VTK and TVTK used also need to be compatible.
 
 
-The use of Mayavi2 4.7.4 on Kubuntu 21.10 requires the following packages:
+The use of Mayavi2 4.7.4 on Kubuntu 22.04 depends on the following packages:
 
 Ubuntu packages
 ---------------
 ```
-python3-attr 20.3.0-1
-python3-configobj 5.0.6-4
-python3-idna 2.10-1
-python3-importlib-metadata 4.0.1-1
-python3-matplotlib 3.3.4-1
-python3-numpy 1:1.19.5-1ubuntu2
-python3-pygments 2.7.1
-python3-setuptools 52.0.0-4
+envisage 6.0.1
+python3-attr 21.2.0-1
+python3-configobj 5.0.6-5
+python3-idna 3.3-1
+python3-importlib-metadata 4.6.4-1
+python3-matplotlib 3.5.1-2
+python3-numpy 1.21.5-1build2
+python3-pygments 2.11.2
+python3-setuptools 59.6.0-1.2
+python3-zipp 1.0.0-3
 ```
 pip packages
 ------------
@@ -1029,22 +1009,34 @@ pip packages
 aiohttp 3.8.1
 aiosignal 1.2.0
 apptools 5.1.0
-async-timeout 4.0.1
-charset-normalizer 2.0.9
-envisage 6.0.1
-frozenlist 1.2.0
-importlib-resources 5.4.0
-mayavi 4.7.4
-multidict 5.2.0
-pyface 7.3.0
+async-timeout 4.0.2
+charset-normalizer 2.0.12
+frozenlist 1.3.0
+multidict 6.0.2
+pyface 7.4.1
 traits 6.3.2
-traitsui 7.2.1
-typ4.0.1
-vtk 9.1.0
-wsl1.2.1
+traitsui 7.3.1
+wslink 1.6.4
 yarl 1.7.2
-zipp 3.6.0
 ```
+
+As of May 2022, installation of `vtk 9.1.0` as a pip package on Kubuntu 22.04 does not work
+because a Python 3.10 compatible wheel is not available.
+The `vtk 9.1.0` package can instead be installed using
+```
+pip install --find-links https://wheels.pyvista.org/ pyvista
+```
+as per [Pyvista instructions](https://github.com/pyvista/pyvista/discussions/2064).
+
+After installing `vtk 9.1.0`, the `mayavi 4.7.4` package can be installed from source
+using the following instructions
+```
+git clone https://github.com/enthought/mayavi.git
+cd mayavi
+python setup.py install --prefix=~/.local
+```
+See also https://pypi.org/project/mayavi/
+
 
 The use of Mayavi2 4.7.4 with Python 3.8.12 on openSUSE Tumbleweed
 requires the following RPM packages:
@@ -1066,7 +1058,7 @@ python38-traits 6.3.1-1.1
 python38-traitsui 7.1.1-1.6
 python38-zipp 3.6.0-1.1
 ```
-The use of `jupyter-notebook-6.2.0` on Kubuntu 21.10 requires the following
+The use of `jupyter-notebook-6.2.0` on Kubuntu 21.10 depends on the following
 packages:
 
 Ubuntu packages
@@ -1141,7 +1133,7 @@ Did you mean one of: `extra_template_paths, template_name, template_paths`?
 
 
 The following bugs and workarounds apply to earlier versions of GluCat,
-and may still be applicable to GluCat 0.11.1, but have not been checked
+and may still be applicable to GluCat 0.12.0, but have not been checked
 for this version.
 
 
