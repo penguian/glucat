@@ -68,6 +68,7 @@
 # endif
 
 #include <set>
+#include <vector>
 
 namespace glucat { namespace matrix
 {
@@ -467,12 +468,12 @@ namespace glucat { namespace matrix
   template< typename Matrix_T >
   static
   auto
-  to_blaze(const Matrix_T& val) -> blaze::DynamicMatrix<double,blaze::columnMajor>
+  to_blaze(const Matrix_T& val) -> blaze::DynamicMatrix<double,blaze::rowMajor>
   {
     const auto s1 = val.size1();
     const auto s2 = val.size2();
 
-    using blaze_matrix_t = typename blaze::DynamicMatrix<double,blaze::columnMajor>;
+    using blaze_matrix_t = typename blaze::DynamicMatrix<double,blaze::rowMajor>;
     auto result = blaze_matrix_t(s1, s2);
 
     using Scalar_T = typename Matrix_T::value_type;
@@ -496,14 +497,13 @@ namespace glucat { namespace matrix
   /// Eigenvalues of a matrix
   template< typename Matrix_T >
   auto
-  eigenvalues(const Matrix_T& val) -> ublas::vector< std::complex<double> >
+  eigenvalues(const Matrix_T& val) -> std::vector< std::complex<double> >
   {
     using complex_t = std::complex<double>;
-    using complex_vector_t = typename ublas::vector<complex_t>;
+    using complex_vector_t = typename std::vector<complex_t>;
 
     const auto dim = val.size1();
     auto lambda = complex_vector_t(dim);
-    lambda.clear();
 
 #if defined(_GLUCAT_USE_BINDINGS)
     namespace lapack = boost::numeric::bindings::lapack;
@@ -516,7 +516,7 @@ namespace glucat { namespace matrix
     auto imag_lambda = vector_t(dim);
     fortran_int_t sdim = 0;
 
-    lapack::gees ('N', 'N', nullptr, T, sdim, real_lambda, imag_lambda, V );
+    lapack::gees('N', 'N', nullptr, T, sdim, real_lambda, imag_lambda, V);
 
     for (auto
         k = decltype(dim)(0);
@@ -525,13 +525,13 @@ namespace glucat { namespace matrix
       lambda[k] = complex_t(real_lambda[k], imag_lambda[k]);
 #endif
 #if defined(_GLUCAT_USE_BLAZE)
-    using blaze_matrix_t = typename blaze::DynamicMatrix<double,blaze::columnMajor>;
+    using blaze_matrix_t = typename blaze::DynamicMatrix<double, blaze::rowMajor>;
     using complex_t = std::complex<double>;
-    using blaze_complex_vector_t = blaze::DynamicVector<complex_t,blaze::rowVector>;
+    using blaze_complex_vector_t = blaze::DynamicVector<complex_t, blaze::columnVector>;
 
-    auto T = to_blaze(val);
+    auto blaze_val = to_blaze(val);
     auto blaze_lambda = blaze_complex_vector_t(dim);
-    blaze::geev( T, blaze_lambda );
+    blaze::geev(blaze_val, blaze_lambda);
 
     for (auto
         k = decltype(dim)(0);
@@ -551,7 +551,7 @@ namespace glucat { namespace matrix
     eig_genus<Matrix_T> result;
 
     using complex_t = std::complex<double>;
-    using complex_vector_t = typename ublas::vector<complex_t>;
+    using complex_vector_t = typename std::vector<complex_t>;
     auto lambda = eigenvalues(val);
 
     std::set<double> arg_set;

@@ -35,6 +35,7 @@
 #include <boost/numeric/ublas/fwd.hpp>
 
 #include <complex>
+#include <vector>
 
 namespace glucat
 {
@@ -126,7 +127,7 @@ namespace glucat
     /// Eigenvalues of a matrix
     template< typename Matrix_T >
     auto
-    eigenvalues(const Matrix_T& val) -> ublas::vector< std::complex<double> >;
+    eigenvalues(const Matrix_T& val) -> std::vector< std::complex<double> >;
 
     /// Classification of eigenvalues of a matrix
     using eig_case_t = enum {
