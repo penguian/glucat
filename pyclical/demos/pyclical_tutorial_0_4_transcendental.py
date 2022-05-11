@@ -130,7 +130,6 @@ def run(ctx):
 
     print_exec("print(exp(j * pi/2))")
     print_exec("print((log(j) / pi))")
-    print_exec("print((log(j,'{1,2}') / pi))")
     print_exec("print((log(j,'{1,2,3}') / pi))")
 
     pause()
