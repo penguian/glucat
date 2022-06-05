@@ -849,8 +849,9 @@ GluCat 0.12.0 with PyClical has so far been built and tested using:
  1) Pensieri:
     4 core `Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz` with
     ```
-    Linux 5.15.0-27-generic #28-Ubuntu SMP x86_64
+    Linux 5.15.0-33-generic #34-Ubuntu SMP x86_64
     Kubuntu 22.04 LTS
+    Blaze 3.9.0
     Boost 1.74.0
     Boost Numeric Bindings
     GSL 2.7.1
@@ -859,7 +860,7 @@ GluCat 0.12.0 with PyClical has so far been built and tested using:
     Python 3.10.4
     Numpy 1.21.5
     Matplotlib 3.5.1
-@   Mayavi2 4.7.4
+    Mayavi2 4.7.1-3ubuntu1)
     VTK 9.1.0
     Doxygen 1.9.1
     pdfTeX 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian)
@@ -869,33 +870,30 @@ GluCat 0.12.0 with PyClical has so far been built and tested using:
     All 12 configuration commands corresponding to each of the 12
     `test.configure*.out` files in `./test_runtime`
     tested with the following compiler versions:
-    1) `gcc version 11.2.0 (Ubuntu 11.2.0-19ubuntu1)`
+    1) `gcc version 12.1.0 (Ubuntu 12.1.0-2ubuntu1~22.04)`
     2) `clang version 14.0.0 (14.0.0-1ubuntu1)`
-@   3) `icpx version 2022.0.0 (2022.0.0.20211123)`
+    3) `icpx version 2022.1.0 (2022.1.0.20220316)`
 
     `./test/fast-test-all-config-options.sh`:
     All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`
     tested with the following compiler versions:
-@   1) `gcc version 7.5.0 (Ubuntu 7.5.0-6ubuntu4)`
-@   2) `gcc version 8.5.0 (Ubuntu 8.5.0-0ubuntu4)`
-@   3) `gcc version 9.4.0 (Ubuntu 9.4.0-3ubuntu1)`
-@   4) `gcc version 10.3.0 (Ubuntu 10.3.0-11ubuntu1)`
-    5) `clang version 9.0.1 (9.0.1-16.1ubuntu1)`
-@   6) `clang version 11.0.1 (11.0.1-2ubuntu5)`
-@   7) `clang version 12.0.1 (12.0.1-8build1)`
+    1) `gcc version 7.5.0 (Ubuntu 7.5.0-6ubuntu4)`
+    2) `clang version 9.0.1 (9.0.1-16.1ubuntu1)`
 
  2) Pensieri (VirtualBox):
     Virtual 1 core `Intel(R) Core(TM) i7 CPU 870 @ 2.93GHz` with
     ```
-    Linux 5.16.8-1-default #1 SMP 2022
-    openSUSE Tumbleweed Snapshot TBD 20211215
+    Linux 5.17.5-1-default #1 SMP 2022
+    openSUSE Tumbleweed Release 20220215
     g++ (SUSE Linux) 11.2.1 20220103
-    Boost 1.78.0
+    Blaze 3.9.0
+    Boost 1.79.0
     Boost Numeric Bindings
+    Cython version 0.29.28
     GSL 2.6-6.4
     QD 2.3.22-1.13
-    Python 3.8.12
+    Python 3.8.13
     Numpy 1.21.4
     Matplotlib 3.5.1
     Mayavi2 4.7.4
@@ -907,31 +905,13 @@ GluCat 0.12.0 with PyClical has so far been built and tested using:
     All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`
 
- 3) NCI Gadi:
-    48 core `Intel(R) Xeon(R) Platinum 8274 CPU @ 3.20GHz` with
+ 3) CoCalc:
+    Virtual 2 core `Intel(R) Xeon(R) CPU @ 2.80GHz` with
     ```
-    Linux  4.18.0-348.2.1.el8.nci.x86_64 SMP x86_64
-    Rocky Linux release 8.4 (Green Obsidian)
-    ```
-    1) `icpc version 2021.5.0`
-    2) `icpx version 2021.5.0`
-    ```
-    Boost 1.77.0
-    Boost Numeric Bindings
-    Cython 0.29.24
-    Python 3.8.8
-    Numpy 1.20.2
-    ```
-    `./test/fast-test-all-config-options.sh`
-    All 12 configuration commands corresponding to each of the 12
-    `fast-test.configure*.out` files in `./test_runtime`
-
- 4) CoCalc:
-    Virtual 8 core `Intel(R) Xeon(R) CPU @ 2.80GHz` with
-    ```
-    Linux 5.11.0-1020-gcp #22~20.04.1-Ubuntu SMP x86_64
+    Linux 5.13.0-1023-gcp #28~20.04.1-Ubuntu SMP x86_64
     Ubuntu 18.04.5 LTS
     gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)
+    Blaze 3.9.0
     Boost 1.65.1
     Boost Numeric Bindings
     Cython 0.29.21
@@ -945,12 +925,13 @@ GluCat 0.12.0 with PyClical has so far been built and tested using:
     All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`
 
- 5) AWS Graviton:
+ 4) AWS Graviton:
     Virtual 4 core `ARM Cortex-A72 Model 3 (AWS Graviton A1 image)` with
     ```
     Linux 5.13.0-1019-aws #21~20.04.1-Ubuntu SMP aarch64
     Ubuntu 20.04.4 LTS
-    g++ (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0
+    gcc (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0
+    Blaze 3.9.0
     Boost 1.71.1
     Boost Numeric Bindings
     GSL Version: 2.5+dfsg-6build1
@@ -1038,25 +1019,25 @@ python setup.py install --prefix=~/.local
 See also https://pypi.org/project/mayavi/
 
 
-The use of Mayavi2 4.7.4 with Python 3.8.12 on openSUSE Tumbleweed
+The use of Mayavi2 4.7.4 with Python 3.8.13 on openSUSE Tumbleweed
 requires the following RPM packages:
 ```
-mayavi 4.7.4-1.2
-python3-tvtk 4.7.4-1.2
-python3-vtk 9.1.0-1.3
-python38-apptools 4.5.0-1.10
-python38-configobj 5.0.6-3.12
-python38-envisage 6.0.1-1.2
-python38-importlib-metadata-4.8.2-1.1
-python38-importlib-resources 5.4.0-1.1
-python38-numpy 1.21.2-4.1
-python38-pyface 7.3.0-3.4
-python38-Pygments 2.9.0-2.1
-python38-setuptools 57.4.0-1.2
-python38-six 1.16.0-2.2
-python38-traits 6.3.1-1.1
-python38-traitsui 7.1.1-1.6
-python38-zipp 3.6.0-1.1
+mayavi 4.7.4-1.5
+python3-tvtk 4.7.4-1.5
+python3-vtk 9.1.0-1.8
+python38-apptools 4.5.0-2.1
+python38-configobj 5.0.6-3.14
+python38-envisage 6.0.1-2.1
+python38-importlib-metadata-4.8.2-1.3
+python38-importlib-resources 5.4.0-1.3
+python38-numpy 1.21.4-2.3
+python38-pyface 7.3.0-4.1
+python38-Pygments 2.11.2-1.1
+python38-setuptools 58.3.0-2.1
+python38-six 1.16.0-2.4
+python38-traits 6.3.1-1.3
+python38-traitsui 7.2.1-1.1
+python38-zipp 3.7.0-1.1
 ```
 The use of `jupyter-notebook-6.2.0` on Kubuntu 21.10 depends on the following
 packages:
@@ -1083,16 +1064,16 @@ jupyterlab-widgets 1.0.2
 widgetsnbextension 3.5.2
 ```
 
-The use of `jupyter-notebook-6.4.6` with Python 3.8.12 on openSUSE Tumbleweed
+The use of `jupyter-notebook-6.4.6-1.6` with Python 3.8.12 on openSUSE Tumbleweed
 requires the following packages:
 
 RPM packages:
 -------------
 ```
-jupyter-widgetsnbextension-3.5.2-1.1.noarch
-python38-ipywidgets-7.6.5-1.1.noarch
-python38-jupyterlab-widgets-1.0.2-1.1.noarch
-python38-widgetsnbextension-3.5.2-1.1.noarch
+jupyter-widgetsnbextension-3.5.2-1.3.noarch
+python38-ipywidgets-7.6.5-2.1.noarch
+python38-jupyterlab-widgets-1.0.2-2.2.noarch
+python38-widgetsnbextension-3.5.2-1.3.noarch
 ```
 pip packages
 ------------
@@ -1101,7 +1082,11 @@ jupyter-nbextensions-configurator-0.4.1
 nbconvert-5.6.1
 send2trash 1.8.0
 ```
-Version incompatibilities discovered in testing `pyclical/demos`:
+
+
+The following bugs and workarounds apply to earlier versions of GluCat,
+and may still be applicable to GluCat 0.12.0, but have not been checked
+for this version.
 
  1. Using Mayavi2 4.7.4 with VTK 9.1.0 on Kubuntu 21.10 results in the following
     warning message when running `pyclical/demos/plotting_demo_dialog.py` and
@@ -1131,13 +1116,7 @@ Did you mean one of: `extra_template_paths, template_name, template_paths`?
 ```
     The warning can be ignored. The notebooks work normally.
 
-
-The following bugs and workarounds apply to earlier versions of GluCat,
-and may still be applicable to GluCat 0.12.0, but have not been checked
-for this version.
-
-
- 1. Using Mayavi2 4.7.1 with VTK 7.1.1 as per Kubuntu 21.04 yields two bugs
+ 4. Using Mayavi2 4.7.1 with VTK 7.1.1 as per Kubuntu 21.04 yields two bugs
     likely caused by version mismatch:
     1. Running `pyclical/demos/plotting_demo_mayavi.py` results in:
 ```
@@ -1151,7 +1130,7 @@ which has 0 connections.
        an incorrect z-order. A similar issue:
        https://github.com/enthought/mayavi/issues/656
 
- 2. Using Mayavi2 4.7.2 with VTK 9.0.1 and Python 3.8 on openSUSE
+ 5. Using Mayavi2 4.7.2 with VTK 9.0.1 and Python 3.8 on openSUSE
     Tumbleweed results in the following warning message when running
     `pyclical/demos/plotting_demo_mayavi.py`
 ```
@@ -1159,15 +1138,15 @@ which has 0 connections.
 209: SyntaxWarning: `is` with a literal. Did you mean `==`?
   if max_dims is 1:
 ```
- 3. GluCat needs an include library which either defines the macro `isnan` or
+ 6. GluCat needs an include library which either defines the macro `isnan` or
     defines `std::isnan`. The C++ standard library included with `gcc` 4.5.2 and
     above defines `std::isnan`.
 
- 4. Cython versions earlier than 0.15 do not build PyClical correctly,
+ 7. Cython versions earlier than 0.15 do not build PyClical correctly,
     because PyClical uses generators, which were only implemented with
     Cython 0.15.
 
- 5. Cython versions to and including 0.16 do not build PyClical correctly
+ 8. Cython versions to and including 0.16 do not build PyClical correctly
     for C++11. If you try to use `g++` with `-std=c++11` you will see
     an error message like:
 ```
@@ -1179,18 +1158,18 @@ error: unable to find string literal operator ‘operator PY_FORMAT_SIZE_T’
     The workaround is to edit `PyClical.cpp` and put a space before and after each
     occurrence of `PY_FORMAT_SIZE_T`. This was fixed some time after Cython 0.16.
 
- 6. GluCat will not work with QD versions earlier than 2.3.10, because older
+ 9. GluCat will not work with QD versions earlier than 2.3.10, because older
     versions of QD do not zero-initialize `dd_real` and `qd_real` as required by
     `ublas::clear()`.
 
- 7. With clang++ 3.2, building PyClical results in the warning
+10. With clang++ 3.2, building PyClical results in the warning
 ```
 clang: warning: argument unused during compilation: '--param ssp-buffer-size=4'
 ```
     This is harmless, and was fixed after Clang version 3.2.
     See http://llvm.org/bugs/show_bug.cgi?id=15327
 
- 8. The following version incompatibility was observed during testing with
+11. The following version incompatibility was observed during testing with
     GluCat 0.8.2:
 
     With `g++` 5.3.1 and Boost 1.53.0 or Boost 1.55.0, the header file
