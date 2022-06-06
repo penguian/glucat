@@ -524,17 +524,18 @@ order. With zero parameters, all examples from `00` to `17` are run in order.
 Many of the examples are run twice - once with `framed_multi<Scalar_T>` and once
 with `matrix_multi<Scalar_T>`.
 
-The `./test_runtime` directory contains 20 sample versions of the regression test
-results, corresponding to 10 different combinations of configuration parameters,
+The `./test_runtime` directory contains 24 sample versions of the regression test
+results, corresponding to 14 different combinations of configuration parameters,
 for two different sets of tests, the complete set of 18 tests, and a subset of 3
 tests. The tests were all run on an Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz+ with
 ```
-    Linux 5.13.0-25-generic #26-Ubuntu SMP x86_64
-    Kubuntu 21.10
-    gcc version 11.2.0 (Ubuntu 11.2.0-7ubuntu2)
+    Linux 5.15.0-33-generic #34-Ubuntu SMP x86_64
+    Kubuntu 22.04 LTS
+    gcc version 12.1.0 (Ubuntu 12.1.0-2ubuntu1~22.04)
+    Blaze 3.9.0
     Boost 1.74.0
     Boost Numeric Bindings
-    GSL 2.6
+    GSL 2.7.1
     QD 2.3.22
     Cython 0.29.21
     Python 3.9.7
@@ -783,15 +784,16 @@ The default is:
 The sample timing test results in `./test_runtime` are from programs
 built and run using the configure command:
 ```
-./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
-            --with-qd
+./configure --with-eig=blaze --with-qd
 ```
 on `Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz+` with
 ```
-    Linux 5.15.0-27-generic #28-Ubuntu SMP x86_64
+    Linux 5.15.0-33-generic #34-Ubuntu SMP x86_64
     Kubuntu 22.04 LTS
-    gcc version 11.2.0 (Ubuntu 11.2.0-19ubuntu1)
+    gcc version 12.1.0 (Ubuntu 12.1.0-2ubuntu1~22.04)
+    Blaze 3.9.0
     Boost 1.74.0
+    Boost Numeric Bindings
     GSL 2.7.1
     QD 2.3.23
 ```
