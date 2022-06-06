@@ -1,3 +1,18 @@
+2022-06-06  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md: Update versions of tested software. Fix test
+	descriptions.
+
+2022-06-06  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/gfft_test-11.out, test_runtime/products-8.out,
+	test_runtime/squaring-11.out, test_runtime/transforms-8.out: Update
+	timing test results
+
+2022-06-05  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* ChangeLog: Update to version 0.12.0
+
 2022-06-05  Paul Leopardi <paul.leopardi@anu.edu.au>
 
 	* INSTALL.md: Update versions of tested software
