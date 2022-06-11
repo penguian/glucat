@@ -1,3 +1,11 @@
+2022-06-11  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* Makefile.am.in: Re-add AUTHORS, etc. to allow make dist to succeed
+
+2022-06-06  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* ChangeLog: Bring git log up to date
+
 2022-06-06  Paul Leopardi <paul.leopardi@anu.edu.au>
 
 	* INSTALL.md: Update versions of tested software. Fix test
