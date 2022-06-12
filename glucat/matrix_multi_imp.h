@@ -52,6 +52,7 @@
 #include <boost/numeric/ublas/operation_sparse.hpp>
 #include <boost/numeric/ublas/triangular.hpp>
 #include <boost/numeric/ublas/lu.hpp>
+#include <boost/numeric/ublas/io.hpp>
 # if defined(_GLUCAT_GCC_IGNORE_UNUSED_LOCAL_TYPEDEFS)
 #  pragma GCC diagnostic pop
 # endif
@@ -59,13 +60,17 @@
 #include <fstream>
 #include <iomanip>
 #include <array>
+#include <iostream>
 
 namespace glucat
 {
   // References for algorithms:
-  // [M]: Scott Meyers, "Effective C++" Second Edition, Addison-Wesley, 1998.
-  // [P]: Ian R. Porteous, "Clifford algebras and the classical groups", Cambridge UP, 1995.
+  // [CHKL]:
   // [L]: Pertti Lounesto, "Clifford algebras and spinors", Cambridge UP, 1997.
+  // [MB]: Beatrice Meini, "The Matrix Square Root From a New Functional Perspective:
+  // Theoretical Results and Computational Issues", SIAM Journal on
+  // Matrix Analysis and Applications 26(2):362-376, 2004.
+  // [P]: Ian R. Porteous, "Clifford algebras and the classical groups", Cambridge UP, 1995.
 
   /// Class name used in messages
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -1312,7 +1317,8 @@ namespace glucat
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   static
   auto
-  db_sqrt(const matrix_multi<Scalar_T,LO,HI,Tune_P>& val) -> const matrix_multi<Scalar_T,LO,HI,Tune_P>
+  db_sqrt(const matrix_multi<Scalar_T,LO,HI,Tune_P>& val,
+          Scalar_T norm_tol=std::pow(std::numeric_limits<Scalar_T>::epsilon(), 4)) -> const matrix_multi<Scalar_T,LO,HI,Tune_P>
   {
     // Reference: [CHKL]
     using multivector_t = matrix_multi<Scalar_T,LO,HI,Tune_P>;
@@ -1320,29 +1326,54 @@ namespace glucat
     if (val == Scalar_T(0))
       return val;
 
-    using limits_t = std::numeric_limits<Scalar_T>;
-    static const auto tol = std::pow(limits_t::epsilon(), 2);
-    static const auto tol2 = tol * tol;
-    static const auto sqrt_max_steps = Tune_P::sqrt_max_steps;
+    static const auto sqrt_max_steps = Tune_P::db_sqrt_max_steps;
     auto M = val;
     auto Y = val;
-    auto norm_M_1 = norm(M - Scalar_T(1));
-    using traits_t = numeric_traits<Scalar_T>;
 
     for (auto
         step = 0;
-        step != sqrt_max_steps && norm_M_1 > tol2;
+        step != sqrt_max_steps && norm(M - Scalar_T(1)) > norm_tol;
         ++step)
     {
       if (Y.isnan())
-        return traits_t::NaN();
+        return numeric_traits<Scalar_T>::NaN();
       db_step(M, Y);
-      norm_M_1 = norm(M - Scalar_T(1));
     }
-    if (norm_M_1 > tol2)
-      return traits_t::NaN();
-    else
-      return Y;
+    return Y;
+  }
+
+  /// Cyclic reduction square root iteration
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  static
+  auto
+  cr_sqrt(const matrix_multi<Scalar_T,LO,HI,Tune_P>& val,
+          Scalar_T norm_Y_tol=std::pow(std::numeric_limits<Scalar_T>::epsilon(), 1)) -> const matrix_multi<Scalar_T,LO,HI,Tune_P>
+  {
+    // Reference: [MB]
+    using multivector_t = matrix_multi<Scalar_T,LO,HI,Tune_P>;
+
+    if (val == Scalar_T(0))
+      return val;
+
+    static const auto sqrt_max_steps = Tune_P::cr_sqrt_max_steps;
+    auto Z = Scalar_T(2) * (Scalar_T(1) + val);
+    auto Y = Scalar_T(1) - val;
+    using traits_t = numeric_traits<Scalar_T>;
+    auto norm_Y = norm(Y);
+    for (auto
+        step = 0;
+        step != sqrt_max_steps && norm_Y > norm_Y_tol;
+        ++step)
+    {
+      const auto old_norm_Y = norm_Y;
+      Y = (-Y / Z) * Y;
+      norm_Y = norm(Y);
+      if (Y.isnan() || (norm_Y > old_norm_Y * Scalar_T(2)))
+        return numeric_traits<Scalar_T>::NaN();
+
+      Z += Y * Scalar_T(2);
+    }
+    return Z / Scalar_T(4);
   }
 }
 
@@ -1537,6 +1568,102 @@ namespace glucat
   /// Square root of multivector with specified complexifier
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
+  matrix_sqrt(const matrix_multi<Scalar_T,LO,HI,Tune_P>& val,
+              const matrix_multi<Scalar_T,LO,HI,Tune_P>& i,
+              const index_t level) -> const matrix_multi<Scalar_T,LO,HI,Tune_P>
+  {
+    // Reference: [GW], Section 4.3, pp318-322
+    // Reference: [GL], Section 11.3, p572-576
+    // Reference: [Z], Pade1
+
+    using traits_t = numeric_traits<Scalar_T>;
+
+    if (val.isnan())
+      return traits_t::NaN();
+
+    const auto scr_val = val.scalar();
+    if (val == scr_val)
+    {
+      if (scr_val < Scalar_T(0))
+        return i * traits_t::sqrt(-scr_val);
+      else
+        return traits_t::sqrt(scr_val);
+    }
+
+    // Scale val towards abs(A) == 1 or towards A == 1 as appropriate
+    const auto scale =
+      (scr_val != Scalar_T(0) && norm(val/scr_val - Scalar_T(1)) < Scalar_T(1))
+      ? scr_val
+      : (scr_val < Scalar_T(0))
+        ? -abs(val)
+        :  abs(val);
+    const auto sqrt_scale = traits_t::sqrt(traits_t::abs(scale));
+    if (traits_t::isNaN_or_isInf(sqrt_scale))
+      return traits_t::NaN();
+
+    using multivector_t = matrix_multi<Scalar_T,LO,HI,Tune_P>;
+    auto rescale = multivector_t(sqrt_scale);
+    if (scale < Scalar_T(0))
+      rescale = i * sqrt_scale;
+
+    const auto& unitval = val / scale;
+    static const auto max_norm = Scalar_T(1.0/4.0);
+    auto use_approx_sqrt = true;
+    auto use_cr_sqrt = false;
+    auto scaled_result = multivector_t();
+#if defined(_GLUCAT_USE_EIGENVALUES)
+    static const auto sqrt_2 = traits_t::sqrt(Scalar_T(2));
+    if (level == 0)
+    {
+      using matrix_t = typename multivector_t::matrix_t;
+
+      // What kind of eigenvalues does the matrix contain?
+      const auto genus = matrix::classify_eigenvalues(unitval.m_matrix);
+      const index_t next_level =
+        (genus.m_is_singular)
+        ? level
+        : level + 1;
+      switch (genus.m_eig_case)
+      {
+      case matrix::neg_real_eigs:
+        scaled_result = matrix_sqrt(-i * unitval, i, next_level) * (i + Scalar_T(1)) / sqrt_2;
+        use_approx_sqrt = false;
+        break;
+      case matrix::both_eigs:
+        {
+          const auto safe_arg = genus.m_safe_arg;
+          scaled_result = matrix_sqrt(exp(i*safe_arg) * unitval, i, next_level) * exp(-i*safe_arg / Scalar_T(2));
+        }
+        use_approx_sqrt = false;
+        break;
+      default:
+        break;
+      }
+      use_cr_sqrt = genus.m_is_singular;
+    }
+#endif
+    if (use_approx_sqrt)
+    {
+      scaled_result =
+        (norm(unitval - Scalar_T(1)) < max_norm)
+          // Pade' approximation of square root
+        ? pade_approx(pade::pade_sqrt_numer<Scalar_T>::numer,
+                      pade::pade_sqrt_denom<Scalar_T>::denom,
+                      unitval - Scalar_T(1))
+          // Product form of Denman-Beavers square root iteration
+        : (use_cr_sqrt)
+          ? cr_sqrt(unitval)
+          : db_sqrt(unitval);
+    }
+    return (scaled_result.isnan() ||
+        !approx_equal(pow(scaled_result, 2), unitval))
+      ? traits_t::NaN()
+      : scaled_result * rescale;
+  }
+
+  /// Square root of multivector with specified complexifier
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  auto
   sqrt(const matrix_multi<Scalar_T,LO,HI,Tune_P>& val, const matrix_multi<Scalar_T,LO,HI,Tune_P>& i, bool prechecked) -> const matrix_multi<Scalar_T,LO,HI,Tune_P>
   {
     // Reference: [GW], Section 4.3, pp318-322
@@ -1560,7 +1687,7 @@ namespace glucat
         const auto& demoted_val = demoted_multivector_t(val);
         const auto& demoted_i = demoted_multivector_t(i);
 
-        return matrix_sqrt(demoted_val, demoted_i);
+        return matrix_sqrt(demoted_val, demoted_i, 0);
       }
       break;
     case precision_promoted:
@@ -1571,131 +1698,12 @@ namespace glucat
         const auto& promoted_val = promoted_multivector_t(val);
         const auto& promoted_i = promoted_multivector_t(i);
 
-        return matrix_sqrt(promoted_val, promoted_i);
+        return matrix_sqrt(promoted_val, promoted_i, 0);
       }
       break;
     default:
-      return matrix_sqrt(val, i);
+      return matrix_sqrt(val, i, 0);
     }
-  }
-
-  /// Square root of multivector with specified complexifier
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  matrix_sqrt(const matrix_multi<Scalar_T,LO,HI,Tune_P>& val, const matrix_multi<Scalar_T,LO,HI,Tune_P>& i) -> const matrix_multi<Scalar_T,LO,HI,Tune_P>
-  {
-    // Reference: [GW], Section 4.3, pp318-322
-    // Reference: [GL], Section 11.3, p572-576
-    // Reference: [Z], Pade1
-
-    using traits_t = numeric_traits<Scalar_T>;
-
-    if (val.isnan())
-      return traits_t::NaN();
-
-    using multivector_t = matrix_multi<Scalar_T,LO,HI,Tune_P>;
-
-    const auto scr_val = val.scalar();
-    if (val == scr_val)
-    {
-      if (scr_val < Scalar_T(0))
-        return i * traits_t::sqrt(-scr_val);
-      else
-        return traits_t::sqrt(scr_val);
-    }
-
-    static const auto sqrt_2 = traits_t::sqrt(Scalar_T(2));
-
-#if !defined(_GLUCAT_USE_EIGENVALUES)
-    const auto val2 = val*val;
-    const auto scr_val2 = val2.scalar();
-    if (val2 == scr_val2 && scr_val2 > Scalar_T(0))
-      return matrix_sqrt(-i * val, i) * (i + Scalar_T(1)) / sqrt_2;
-#endif
-
-    // Scale val towards abs(A) == 1 or towards A == 1 as appropriate
-    const auto scale =
-      (scr_val != Scalar_T(0) && norm(val/scr_val - Scalar_T(1)) < Scalar_T(1))
-      ? scr_val
-      : (scr_val < Scalar_T(0))
-        ? -abs(val)
-        :  abs(val);
-    const auto sqrt_scale = traits_t::sqrt(traits_t::abs(scale));
-    if (traits_t::isNaN_or_isInf(sqrt_scale))
-      return traits_t::NaN();
-
-    using multivector_t = matrix_multi<Scalar_T,LO,HI,Tune_P>;
-    auto rescale = multivector_t(sqrt_scale);
-    if (scale < Scalar_T(0))
-      rescale = i * sqrt_scale;
-
-    const auto& unitval = val / scale;
-    const auto max_norm = Scalar_T(1.0/4.0);
-
-#if defined(_GLUCAT_USE_EIGENVALUES)
-    multivector_t scaled_result;
-    using matrix_t = typename multivector_t::matrix_t;
-
-    // What kind of eigenvalues does the matrix contain?
-    matrix::eig_genus<matrix_t> genus = matrix::classify_eigenvalues(unitval.m_matrix);
-    switch (genus.m_eig_case)
-    {
-    case matrix::negative_eig_case:
-      scaled_result = matrix_sqrt(-i * unitval, i) * (i + Scalar_T(1)) / sqrt_2;
-      break;
-    case matrix::both_eig_case:
-      {
-        const auto safe_arg = genus.m_safe_arg;
-        scaled_result = matrix_sqrt(exp(i*safe_arg) * unitval, i) * exp(-i*safe_arg/Scalar_T(2));
-      }
-      break;
-    default:
-      scaled_result =
-        (norm(unitval - Scalar_T(1)) < max_norm)
-          // Pade' approximation of square root
-        ? pade_approx(pade::pade_sqrt_numer<Scalar_T>::numer,
-                      pade::pade_sqrt_denom<Scalar_T>::denom,
-                      unitval - Scalar_T(1))
-          // Product form of Denman-Beavers square root iteration
-        : db_sqrt(unitval);
-      break;
-    }
-    if (scaled_result.isnan())
-      return traits_t::NaN();
-    else
-      return scaled_result * rescale;
-#else
-    const auto& scaled_result =
-      (norm(unitval - Scalar_T(1)) < max_norm)
-        // Pade' approximation of square root
-      ? pade_approx(pade::pade_sqrt_numer<Scalar_T>::numer,
-                    pade::pade_sqrt_denom<Scalar_T>::denom,
-                    unitval - Scalar_T(1))
-        // Product form of Denman-Beavers square root iteration
-      : db_sqrt(unitval);
-    if (scaled_result.isnan())
-    {
-      if (inv(unitval).isnan())
-        return traits_t::NaN();
-
-      const auto& mi_unitval = -i * unitval;
-
-      const auto& scaled_mi_result =
-        (norm(mi_unitval - Scalar_T(1)) < max_norm)
-          // Pade' approximation of square root
-        ? pade_approx(pade::pade_sqrt_numer<Scalar_T>::numer,
-                      pade::pade_sqrt_denom<Scalar_T>::denom,
-                      mi_unitval - Scalar_T(1))
-          // Product form of Denman-Beavers square root iteration
-        : db_sqrt(mi_unitval);
-      if (scaled_mi_result.isnan())
-        return traits_t::NaN();
-      else
-        return scaled_mi_result * rescale * (i + Scalar_T(1)) / sqrt_2;
-    }
-    else
-      return scaled_result * rescale;
-#endif
   }
 }
 
@@ -1956,48 +1964,9 @@ namespace glucat{
   /// Natural logarithm of multivector with specified complexifier
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
-  log(const matrix_multi<Scalar_T,LO,HI,Tune_P>& val, const matrix_multi<Scalar_T,LO,HI,Tune_P>& i, bool prechecked) -> const matrix_multi<Scalar_T,LO,HI,Tune_P>
-  {
-    using traits_t = numeric_traits<Scalar_T>;
-
-    if (val == Scalar_T(0) || val.isnan())
-      return traits_t::NaN();
-
-    check_complex(val, i, prechecked);
-
-    switch (Tune_P::function_precision)
-    {
-    case precision_demoted:
-      {
-        using demoted_scalar_t = typename traits_t::demoted::type;
-        using demoted_multivector_t = matrix_multi<demoted_scalar_t,LO,HI,Tune_P>;
-
-        const auto& demoted_val = demoted_multivector_t(val);
-        const auto& demoted_i = demoted_multivector_t(i);
-
-        return matrix_log(demoted_val, demoted_i);
-      }
-      break;
-    case precision_promoted:
-      {
-        using promoted_scalar_t = typename traits_t::promoted::type;
-        using promoted_multivector_t = matrix_multi<promoted_scalar_t,LO,HI,Tune_P>;
-
-        const auto& promoted_val = promoted_multivector_t(val);
-        const auto& promoted_i = promoted_multivector_t(i);
-
-        return matrix_log(promoted_val, promoted_i);
-      }
-      break;
-    default:
-      return matrix_log(val, i);
-    }
-  }
-
-  /// Natural logarithm of multivector with specified complexifier
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  matrix_log(const matrix_multi<Scalar_T,LO,HI,Tune_P>& val, const matrix_multi<Scalar_T,LO,HI,Tune_P>& i) -> const matrix_multi<Scalar_T,LO,HI,Tune_P>
+  matrix_log( const matrix_multi<Scalar_T,LO,HI,Tune_P>& val,
+              const matrix_multi<Scalar_T,LO,HI,Tune_P>& i,
+              const index_t level) -> const matrix_multi<Scalar_T,LO,HI,Tune_P>
   {
     // Scaled incomplete square root cascade and scaled Pade' approximation of log
     // Reference: [CHKL]
@@ -2015,12 +1984,7 @@ namespace glucat{
       else
         return traits_t::log(scr_val);
     }
-#if !defined(_GLUCAT_USE_EIGENVALUES)
-    const auto val2 = val*val;
-    const auto scr_val2 = val2.scalar();
-    if (val2 == scr_val2 && scr_val2 > 0)
-      return matrix_log(-i * val, i) + i * pi/Scalar_T(2);
-#endif
+
     // Scale val towards abs(A) == 1 or towards A == 1 as appropriate
     const auto max_norm = Scalar_T(1.0/9.0);
     const auto scale =
@@ -2043,32 +2007,77 @@ namespace glucat{
 
 #if defined(_GLUCAT_USE_EIGENVALUES)
     auto scaled_result = multivector_t();
-    using matrix_t = typename multivector_t::matrix_t;
-
-    // What kind of eigenvalues does the matrix contain?
-    auto genus = matrix::classify_eigenvalues(unitval.m_matrix);
-    switch (genus.m_eig_case)
+    if (level == 0)
     {
-    case matrix::negative_eig_case:
-      scaled_result = matrix_log(-i * unitval, i) + i * pi/Scalar_T(2);
-      break;
-    case matrix::both_eig_case:
+      using matrix_t = typename multivector_t::matrix_t;
+
+      // What kind of eigenvalues does the matrix contain?
+      auto genus = matrix::classify_eigenvalues(unitval.m_matrix);
+      switch (genus.m_eig_case)
       {
-        const Scalar_T safe_arg = genus.m_safe_arg;
-        scaled_result = matrix_log(exp(i*safe_arg) * unitval, i) - i * safe_arg;
+      case matrix::neg_real_eigs:
+        scaled_result = matrix_log(-i * unitval, i, level + 1) + i * pi/Scalar_T(2);
+        break;
+      case matrix::both_eigs:
+        {
+          const Scalar_T safe_arg = genus.m_safe_arg;
+          scaled_result = matrix_log(exp(i*safe_arg) * unitval, i, level + 1) - i * safe_arg;
+        }
+        break;
+      default:
+        scaled_result = cascade_log(unitval);
+        break;
       }
-      break;
-    default:
-      scaled_result = cascade_log(unitval);
-      break;
     }
+    else
+      scaled_result = cascade_log(unitval);
 #else
     auto scaled_result = cascade_log(unitval);
 #endif
-    if (scaled_result.isnan())
+    return (scaled_result.isnan())
+      ? traits_t::NaN()
+      : scaled_result + rescale;
+  }
+
+  /// Natural logarithm of multivector with specified complexifier
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  auto
+  log(const matrix_multi<Scalar_T,LO,HI,Tune_P>& val, const matrix_multi<Scalar_T,LO,HI,Tune_P>& i, bool prechecked) -> const matrix_multi<Scalar_T,LO,HI,Tune_P>
+  {
+    using traits_t = numeric_traits<Scalar_T>;
+
+    if (val == Scalar_T(0) || val.isnan())
       return traits_t::NaN();
-    else
-      return scaled_result + rescale;
+
+    check_complex(val, i, prechecked);
+
+    switch (Tune_P::function_precision)
+    {
+    case precision_demoted:
+      {
+        using demoted_scalar_t = typename traits_t::demoted::type;
+        using demoted_multivector_t = matrix_multi<demoted_scalar_t,LO,HI,Tune_P>;
+
+        const auto& demoted_val = demoted_multivector_t(val);
+        const auto& demoted_i = demoted_multivector_t(i);
+
+        return matrix_log(demoted_val, demoted_i, 0);
+      }
+      break;
+    case precision_promoted:
+      {
+        using promoted_scalar_t = typename traits_t::promoted::type;
+        using promoted_multivector_t = matrix_multi<promoted_scalar_t,LO,HI,Tune_P>;
+
+        const auto& promoted_val = promoted_multivector_t(val);
+        const auto& promoted_i = promoted_multivector_t(i);
+
+        return matrix_log(promoted_val, promoted_i, 0);
+      }
+      break;
+    default:
+      return matrix_log(val, i, 0);
+    }
   }
 
   /// Exponential of multivector

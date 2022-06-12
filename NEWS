@@ -1,12 +1,22 @@
-NEWS for GluCat 0.11.1 with PyClical
+NEWS for GluCat 0.12.0 with PyClical
 ====================================
+
+2022-04-19: 0.12.0
+GluCat has an improved sqrt function.
+
+GluCat 0.12.0 has an improved sqrt() function that can deal with some cases
+where the matrix representation of multivector is a singular matrix.
+Additionally, the absolute and relative error estimation and approximate
+equality functions used in test11 have been streamlined and added to
+glucat/clifford_algebra.h and glucat/clifford_algebra_imp.h as the functions
+error_squared_tol(), error_squared() and approx_equal().
 
 2022-04-09: 0.11.1
 GluCat can now use Blaze to find eigenvalues.
 
 GluCat 0.11.1 now has the configuration option
 ./configure --with-eig=blaze
-This uses the Blaze C++ mathematics library to find eigenvalues, to make the
+This uses the Blaze C++ mathematics library to find eigenvalues, making the
 square root, logarithm and related inverse trigonometric functions more
 accurate.
 

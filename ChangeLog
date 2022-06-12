@@ -1,3 +1,139 @@
+2022-06-11  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* Makefile.am.in: Re-add AUTHORS, etc. to allow make dist to succeed
+
+2022-06-06  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* ChangeLog: Bring git log up to date
+
+2022-06-06  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md: Update versions of tested software. Fix test
+	descriptions.
+
+2022-06-06  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/gfft_test-11.out, test_runtime/products-8.out,
+	test_runtime/squaring-11.out, test_runtime/transforms-8.out: Update
+	timing test results
+
+2022-06-05  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* ChangeLog: Update to version 0.12.0
+
+2022-06-05  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md: Update versions of tested software
+
+2022-06-04  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* Makefile.am.in: Ensure that automake sees the GNU documentation
+
+2022-05-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/pyclical_tutorial_0_4_transcendental.py: Remove one
+	example
+
+2022-05-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md: Update for version 0.12.0
+
+2022-05-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* NEWS: NEWS for version 0.12.0
+
+2022-05-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* AUTHORS.md, README.md, TODO.md, configure.ac.in, glucat.lsm,
+	pyclical/test.out: Update to version 0.12.0
+
+2022-05-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/fast-test.configure.eig-bindings-qd.out,
+	test_runtime/fast-test.configure.eig-bindings.out,
+	test_runtime/fast-test.configure.eig-blaze-debug-full.out,
+	test_runtime/fast-test.configure.eig-blaze-debug-yes.out,
+	test_runtime/fast-test.configure.eig-blaze-qd.out,
+	test_runtime/fast-test.configure.eig-blaze.out,
+	test_runtime/test.configure.eig-bindings-qd.out,
+	test_runtime/test.configure.eig-bindings.out,
+	test_runtime/test.configure.eig-blaze-debug-full.out,
+	test_runtime/test.configure.eig-blaze-debug-yes.out,
+	test_runtime/test.configure.eig-blaze-qd.out,
+	test_runtime/test.configure.eig-blaze.out: Use the terms 'Absolute
+	error', 'Relative error'
+
+2022-05-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra.h, glucat/clifford_algebra_imp.h,
+	pyclical/PyClical.pyx, pyclical/glucat.pxd, test11/peg11.h: Rename
+	error functions to error_squared_tol(), error_squared(). Add
+	threshold and tolerance as parameters to approx_equal()
+
+2022-05-11  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix.h, glucat/matrix_imp.h: Use std::vector<>
+
+2022-05-11  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* admin/cvs.sh: Allow later versions of GNU Autotools etc.
+
+2022-04-13  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/PyClical.pyx, pyclical/glucat.pxd: Add norm_tol(),
+	norm_of_diff(), and approx_equal() functions and doctests
+
+2022-04-13  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra_imp.h: Clarify the comments describing
+	norm_tol() and norm_of_diff()
+
+2022-04-13  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/fast-test.configure.eig-bindings-qd.out,
+	test_runtime/fast-test.configure.eig-bindings.out,
+	test_runtime/fast-test.configure.eig-blaze-debug-full.out,
+	test_runtime/fast-test.configure.eig-blaze-debug-yes.out,
+	test_runtime/fast-test.configure.eig-blaze-qd.out,
+	test_runtime/fast-test.configure.eig-blaze.out,
+	test_runtime/test.configure.eig-bindings-qd.out,
+	test_runtime/test.configure.eig-bindings.out,
+	test_runtime/test.configure.eig-blaze-debug-full.out,
+	test_runtime/test.configure.eig-blaze-debug-yes.out,
+	test_runtime/test.configure.eig-blaze-qd.out,
+	test_runtime/test.configure.eig-blaze.out: Update test results
+
+2022-04-13  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test11/peg11.h: Modernize. Use approx_equal(), norm_tol() and
+	norm_of_diff(). Add tests for singular cases. Allow sqrt test in
+	singular cases.
+
+2022-04-13  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/tuning.h, test/tuning.h: Add new tuning parameters
+
+2022-04-13  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_multi.h, glucat/matrix_multi_imp.h: Use overhauled
+	eigenvalue classification. Add cr_sqrt() function. Overhaul
+	matrx_sqrt() and matrix_log().
+
+2022-04-13  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix.h, glucat/matrix_imp.h: Overhaul eigenvalue
+	classification
+
+2022-04-13  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra.h, glucat/clifford_algebra_imp.h: Add
+	norm_tol(), norm_of_diff(), approx_equal() functions
+
+2022-04-10  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #47 from
+	penguian/issue-45-Add_Blaze_as_an_option_for_finding_eigenvalues Add blaze as an option for finding eigenvalues
+
 2022-04-10  Paul Leopardi <paul.leopardi@anu.edu.au>
 
 	* INSTALL.md: Mention that Blaze needs C++14

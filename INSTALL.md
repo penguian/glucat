@@ -1,4 +1,4 @@
-INSTALL for GluCat 0.11.1 with PyClical
+INSTALL for GluCat 0.12.0 with PyClical
 ========================================
 
 Prerequisites: Before You Begin
@@ -30,13 +30,13 @@ You can install GluCat in one of two ways:
 To install the first way, from (e.g.) GitHub, run the following commands on a
 Linux machine or equivalent Posix environment connected to the Internet:
 ```
-> git clone git@github.com:penguian/glucat.git glucat-0.11.1
-> cd glucat-0.11.1
+> git clone git@github.com:penguian/glucat.git glucat-0.12.0
+> cd glucat-0.12.0
 > make -f admin/Makefile.common cvs
 ```
-This results in a directory structure that includes glucat-0.11.1/configure,
+This results in a directory structure that includes glucat-0.12.0/configure,
 allowing you to make and install GluCat in the same way as if you had downloaded
-and unzipped the tarball glucat-0.11.1.tar.gz.
+and unzipped the tarball glucat-0.12.0.tar.gz.
 
 
 Directory Structure
@@ -44,12 +44,12 @@ Directory Structure
 
 Once you have downloaded, unzipped and untarred the source code, or followed
 the instructions above to install from Git clone, you should have a directory,
-glucat-0.11.1. Under this directory you should see a number of subdirectories,
+glucat-0.12.0. Under this directory you should see a number of subdirectories,
 including `./admin`, `./doc`, `./glucat`, `./gfft_test`, `./products`,
 `./pyclical`, `./squaring`, `./test`, `./test_runtime`, `./testxx`, and
 `./transforms`.
 
-The following instructions are meant to be used with `glucat-0.11.1` as the
+The following instructions are meant to be used with `glucat-0.12.0` as the
 current directory.
 
 
@@ -147,7 +147,7 @@ subdirectories.
 
 As briefly described above, the simplest way to install this package is:
 
- 1. `cd` to the `glucat-0.11.1` directory containing the source code and type
+ 1. `cd` to the `glucat-0.12.0` directory containing the source code and type
     `./configure` to configure GluCat with PyClical for your system.
     If you are using `csh` on an old version of System V, you might need to type
     `sh ./configure` instead to prevent `csh` from trying to execute
@@ -524,17 +524,18 @@ order. With zero parameters, all examples from `00` to `17` are run in order.
 Many of the examples are run twice - once with `framed_multi<Scalar_T>` and once
 with `matrix_multi<Scalar_T>`.
 
-The `./test_runtime` directory contains 20 sample versions of the regression test
-results, corresponding to 10 different combinations of configuration parameters,
+The `./test_runtime` directory contains 24 sample versions of the regression test
+results, corresponding to 14 different combinations of configuration parameters,
 for two different sets of tests, the complete set of 18 tests, and a subset of 3
 tests. The tests were all run on an Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz+ with
 ```
-    Linux 5.13.0-25-generic #26-Ubuntu SMP x86_64
-    Kubuntu 21.10
-    gcc version 11.2.0 (Ubuntu 11.2.0-7ubuntu2)
+    Linux 5.15.0-33-generic #34-Ubuntu SMP x86_64
+    Kubuntu 22.04 LTS
+    gcc version 12.1.0 (Ubuntu 12.1.0-2ubuntu1~22.04)
+    Blaze 3.9.0
     Boost 1.74.0
     Boost Numeric Bindings
-    GSL 2.6
+    GSL 2.7.1
     QD 2.3.22
     Cython 0.29.21
     Python 3.9.7
@@ -695,9 +696,9 @@ speeding up the entire testing process.
 
 Rather than running the regression tests in-place and copying the output
 directly into `./test_runtime`, the script `./test/test-all-config-options.sh`
-produces as many copies of the whole direcory `glucat-0.11.1` as there are lines
-in `./test/config-options.txt`, naming them `glucat-0.11.1.1` to `glucat-0.11.1.12`,
-in the parent directory of `glucat-0.11.1`. This allows the effect of each set
+produces as many copies of the whole direcory `glucat-0.12.0` as there are lines
+in `./test/config-options.txt`, naming them `glucat-0.12.0.1` to `glucat-0.12.0.12`,
+in the parent directory of `glucat-0.12.0`. This allows the effect of each set
 of configuration options to be directly compared, and also ensures that any
 side-effect of a configuration does not affect the test results of another
 configuration.
@@ -709,9 +710,9 @@ line 4 of `./test/config-options.txt`
 disable-dependency:          --disable-dependency-tracking
 ```
 causes `./test/diff-all-config-outputs.sh` to use diff to compare
-`glucat-0.11.1.4/test_runtime/test.configure.disable-dependency.out` to
-`glucat-0.11.1/test_runtime/test.configure.disable-dependency.out`, and compare
-`glucat-0.11.1.4/pyclical/test.out` to `glucat-0.11.1/pyclical/test.out`.
+`glucat-0.12.0.4/test_runtime/test.configure.disable-dependency.out` to
+`glucat-0.12.0/test_runtime/test.configure.disable-dependency.out`, and compare
+`glucat-0.12.0.4/pyclical/test.out` to `glucat-0.12.0/pyclical/test.out`.
 
 Each comparison should only produce a line containing the line number of
 the configuration being compared: 1 to 12.
@@ -783,18 +784,18 @@ The default is:
 The sample timing test results in `./test_runtime` are from programs
 built and run using the configure command:
 ```
-./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
-            --with-qd
+./configure --with-eig=blaze --with-qd
 ```
 on `Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz+` with
 ```
-    Linux 5.13.0-25-generic #26-Ubuntu SMP x86_64
-    Kubuntu 21.10
-    gcc version 11.2.0 (Ubuntu 11.2.0-7ubuntu2)
+    Linux 5.15.0-33-generic #34-Ubuntu SMP x86_64
+    Kubuntu 22.04 LTS
+    gcc version 12.1.0 (Ubuntu 12.1.0-2ubuntu1~22.04)
+    Blaze 3.9.0
     Boost 1.74.0
     Boost Numeric Bindings
-    GSL 2.6
-    QD 2.3.22
+    GSL 2.7.1
+    QD 2.3.23
 ```
 
 Testing PyClical
@@ -803,7 +804,7 @@ Once you have built PyClical, run the doctests. In `python3` or `ipython3`, etc.
 ```
  >>> import PyClical
  >>> PyClical._test()
- TestResults(failed=0, attempted=629)
+ TestResults(failed=0, attempted=647)
  >>> quit()
 ```
 Alternatively, in the directory `pyclical`, run the script `test.py` using:
@@ -845,79 +846,56 @@ to use `sudo`, login as `root`, or `su` to `root` before you run `make install`.
 List of Successful Builds
 =========================
 
-GluCat 0.11.1 with PyClical has so far been built and tested using:
+GluCat 0.12.0 with PyClical has so far been built and tested using:
 
  1) Pensieri:
     4 core `Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz` with
     ```
-    Linux 5.13.0-25-generic #26-Ubuntu SMP x86_64
-    Kubuntu 21.10
-    ```
-    The following compiler versions:
-    1) `gcc version 11.2.0 (Ubuntu 11.2.0-7ubuntu2)`
-    2) `clang version 13.0.0 (13.0.0-2)`
-    3) `icpx version 2022.0.0 (2022.0.0.20211123)`
-    ```
+    Linux 5.15.0-33-generic #34-Ubuntu SMP x86_64
+    Kubuntu 22.04 LTS
+    Blaze 3.9.0
     Boost 1.74.0
     Boost Numeric Bindings
-    GSL 2.6
-    QD 2.3.22
-    Cython 0.29.21
-    Python 3.9.7
-    Numpy 1.19.5
-    Matplotlib 3.3.4
-    Mayavi2 4.7.4
+    GSL 2.7.1
+    QD 2.3.23
+    Cython 0.29.28
+    Python 3.10.4
+    Numpy 1.21.5
+    Matplotlib 3.5.1
+    Mayavi2 4.7.1-3ubuntu1)
     VTK 9.1.0
     Doxygen 1.9.1
-    pdfTeX 3.14159265-2.6-1.40.21 (TeX Live 2020/Debian)
+    pdfTeX 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian)
     ```
-    `./test/test-all-config-options.sh`
+
+    `./test/test-all-config-options.sh`:
     All 12 configuration commands corresponding to each of the 12
     `test.configure*.out` files in `./test_runtime`
+    tested with the following compiler versions:
+    1) `gcc version 12.1.0 (Ubuntu 12.1.0-2ubuntu1~22.04)`
+    2) `clang version 14.0.0 (14.0.0-1ubuntu1)`
+    3) `icpx version 2022.1.0 (2022.1.0.20220316)`
 
- 2) Pensieri:
-    4 core `Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz` with
-    ```
-    Linux 5.13.0-25-generic #26-Ubuntu SMP x86_64
-    Kubuntu 21.10
-    ```
-    The following compiler versions:
-    1) `gcc version 7.5.0 (Ubuntu 7.5.0-6ubuntu4)`
-    2) `gcc version 8.5.0 (Ubuntu 8.5.0-0ubuntu4)`
-    3) `gcc version 9.4.0 (Ubuntu 9.4.0-3ubuntu1)`
-    4) `gcc version 10.3.0 (Ubuntu 10.3.0-11ubuntu1)`
-    5) `clang version 9.0.1 (9.0.1-16.1ubuntu1)`
-    6) `clang version 11.0.1 (11.0.1-2ubuntu5)`
-    7) `clang version 12.0.1 (12.0.1-8build1)`
-    ```
-    Boost 1.74.0
-    Boost Numeric Bindings
-    GSL 2.6
-    QD 2.3.22
-    Cython 0.29.21
-    Python 3.9.7
-    Numpy 1.19.5
-    Matplotlib 3.3.4
-    Mayavi2 4.7.1
-    VTK 7.1.1
-    Doxygen 1.9.1
-    pdfTeX 3.14159265-2.6-1.40.21 (TeX Live 2020/Debian)
-    ```
-    `./test/fast-test-all-config-options.sh`
+    `./test/fast-test-all-config-options.sh`:
     All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`
+    tested with the following compiler versions:
+    1) `gcc version 7.5.0 (Ubuntu 7.5.0-6ubuntu4)`
+    2) `clang version 9.0.1 (9.0.1-16.1ubuntu1)`
 
- 3) Pensieri (VirtualBox):
+ 2) Pensieri (VirtualBox):
     Virtual 1 core `Intel(R) Core(TM) i7 CPU 870 @ 2.93GHz` with
     ```
-    Linux 5.16.8-1-default #1 SMP 2022
-    openSUSE Tumbleweed Snapshot TBD 20211215
+    Linux 5.17.5-1-default #1 SMP 2022
+    openSUSE Tumbleweed Release 20220215
     g++ (SUSE Linux) 11.2.1 20220103
-    Boost 1.78.0
+    Blaze 3.9.0
+    Boost 1.79.0
     Boost Numeric Bindings
+    Cython version 0.29.28
     GSL 2.6-6.4
     QD 2.3.22-1.13
-    Python 3.8.12
+    Python 3.8.13
     Numpy 1.21.4
     Matplotlib 3.5.1
     Mayavi2 4.7.4
@@ -929,31 +907,13 @@ GluCat 0.11.1 with PyClical has so far been built and tested using:
     All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`
 
- 4) NCI Gadi:
-    48 core `Intel(R) Xeon(R) Platinum 8274 CPU @ 3.20GHz` with
+ 3) CoCalc:
+    Virtual 2 core `Intel(R) Xeon(R) CPU @ 2.80GHz` with
     ```
-    Linux  4.18.0-348.2.1.el8.nci.x86_64 SMP x86_64
-    Rocky Linux release 8.4 (Green Obsidian)
-    ```
-    1) `icpc version 2021.5.0`
-    2) `icpx version 2021.5.0`
-    ```
-    Boost 1.77.0
-    Boost Numeric Bindings
-    Cython 0.29.24
-    Python 3.8.8
-    Numpy 1.20.2
-    ```
-    `./test/fast-test-all-config-options.sh`
-    All 12 configuration commands corresponding to each of the 12
-    `fast-test.configure*.out` files in `./test_runtime`
-
- 5) CoCalc:
-    Virtual 8 core `Intel(R) Xeon(R) CPU @ 2.80GHz` with
-    ```
-    Linux 5.11.0-1020-gcp #22~20.04.1-Ubuntu SMP x86_64
+    Linux 5.13.0-1023-gcp #28~20.04.1-Ubuntu SMP x86_64
     Ubuntu 18.04.5 LTS
     gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)
+    Blaze 3.9.0
     Boost 1.65.1
     Boost Numeric Bindings
     Cython 0.29.21
@@ -967,12 +927,13 @@ GluCat 0.11.1 with PyClical has so far been built and tested using:
     All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`
 
- 6) AWS Graviton:
+ 4) AWS Graviton:
     Virtual 4 core `ARM Cortex-A72 Model 3 (AWS Graviton A1 image)` with
     ```
     Linux 5.13.0-1019-aws #21~20.04.1-Ubuntu SMP aarch64
     Ubuntu 20.04.4 LTS
-    g++ (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0
+    gcc (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0
+    Blaze 3.9.0
     Boost 1.71.1
     Boost Numeric Bindings
     GSL Version: 2.5+dfsg-6build1
@@ -1009,19 +970,21 @@ The versions used need to be compatible with each other and with Python.
 For Mayavi2 the versions of VTK and TVTK used also need to be compatible.
 
 
-The use of Mayavi2 4.7.4 on Kubuntu 21.10 requires the following packages:
+The use of Mayavi2 4.7.4 on Kubuntu 22.04 depends on the following packages:
 
 Ubuntu packages
 ---------------
 ```
-python3-attr 20.3.0-1
-python3-configobj 5.0.6-4
-python3-idna 2.10-1
-python3-importlib-metadata 4.0.1-1
-python3-matplotlib 3.3.4-1
-python3-numpy 1:1.19.5-1ubuntu2
-python3-pygments 2.7.1
-python3-setuptools 52.0.0-4
+envisage 6.0.1
+python3-attr 21.2.0-1
+python3-configobj 5.0.6-5
+python3-idna 3.3-1
+python3-importlib-metadata 4.6.4-1
+python3-matplotlib 3.5.1-2
+python3-numpy 1.21.5-1build2
+python3-pygments 2.11.2
+python3-setuptools 59.6.0-1.2
+python3-zipp 1.0.0-3
 ```
 pip packages
 ------------
@@ -1029,44 +992,56 @@ pip packages
 aiohttp 3.8.1
 aiosignal 1.2.0
 apptools 5.1.0
-async-timeout 4.0.1
-charset-normalizer 2.0.9
-envisage 6.0.1
-frozenlist 1.2.0
-importlib-resources 5.4.0
-mayavi 4.7.4
-multidict 5.2.0
-pyface 7.3.0
+async-timeout 4.0.2
+charset-normalizer 2.0.12
+frozenlist 1.3.0
+multidict 6.0.2
+pyface 7.4.1
 traits 6.3.2
-traitsui 7.2.1
-typ4.0.1
-vtk 9.1.0
-wsl1.2.1
+traitsui 7.3.1
+wslink 1.6.4
 yarl 1.7.2
-zipp 3.6.0
 ```
 
-The use of Mayavi2 4.7.4 with Python 3.8.12 on openSUSE Tumbleweed
+As of May 2022, installation of `vtk 9.1.0` as a pip package on Kubuntu 22.04 does not work
+because a Python 3.10 compatible wheel is not available.
+The `vtk 9.1.0` package can instead be installed using
+```
+pip install --find-links https://wheels.pyvista.org/ pyvista
+```
+as per [Pyvista instructions](https://github.com/pyvista/pyvista/discussions/2064).
+
+After installing `vtk 9.1.0`, the `mayavi 4.7.4` package can be installed from source
+using the following instructions
+```
+git clone https://github.com/enthought/mayavi.git
+cd mayavi
+python setup.py install --prefix=~/.local
+```
+See also https://pypi.org/project/mayavi/
+
+
+The use of Mayavi2 4.7.4 with Python 3.8.13 on openSUSE Tumbleweed
 requires the following RPM packages:
 ```
-mayavi 4.7.4-1.2
-python3-tvtk 4.7.4-1.2
-python3-vtk 9.1.0-1.3
-python38-apptools 4.5.0-1.10
-python38-configobj 5.0.6-3.12
-python38-envisage 6.0.1-1.2
-python38-importlib-metadata-4.8.2-1.1
-python38-importlib-resources 5.4.0-1.1
-python38-numpy 1.21.2-4.1
-python38-pyface 7.3.0-3.4
-python38-Pygments 2.9.0-2.1
-python38-setuptools 57.4.0-1.2
-python38-six 1.16.0-2.2
-python38-traits 6.3.1-1.1
-python38-traitsui 7.1.1-1.6
-python38-zipp 3.6.0-1.1
+mayavi 4.7.4-1.5
+python3-tvtk 4.7.4-1.5
+python3-vtk 9.1.0-1.8
+python38-apptools 4.5.0-2.1
+python38-configobj 5.0.6-3.14
+python38-envisage 6.0.1-2.1
+python38-importlib-metadata-4.8.2-1.3
+python38-importlib-resources 5.4.0-1.3
+python38-numpy 1.21.4-2.3
+python38-pyface 7.3.0-4.1
+python38-Pygments 2.11.2-1.1
+python38-setuptools 58.3.0-2.1
+python38-six 1.16.0-2.4
+python38-traits 6.3.1-1.3
+python38-traitsui 7.2.1-1.1
+python38-zipp 3.7.0-1.1
 ```
-The use of `jupyter-notebook-6.2.0` on Kubuntu 21.10 requires the following
+The use of `jupyter-notebook-6.2.0` on Kubuntu 21.10 depends on the following
 packages:
 
 Ubuntu packages
@@ -1091,16 +1066,16 @@ jupyterlab-widgets 1.0.2
 widgetsnbextension 3.5.2
 ```
 
-The use of `jupyter-notebook-6.4.6` with Python 3.8.12 on openSUSE Tumbleweed
+The use of `jupyter-notebook-6.4.6-1.6` with Python 3.8.12 on openSUSE Tumbleweed
 requires the following packages:
 
 RPM packages:
 -------------
 ```
-jupyter-widgetsnbextension-3.5.2-1.1.noarch
-python38-ipywidgets-7.6.5-1.1.noarch
-python38-jupyterlab-widgets-1.0.2-1.1.noarch
-python38-widgetsnbextension-3.5.2-1.1.noarch
+jupyter-widgetsnbextension-3.5.2-1.3.noarch
+python38-ipywidgets-7.6.5-2.1.noarch
+python38-jupyterlab-widgets-1.0.2-2.2.noarch
+python38-widgetsnbextension-3.5.2-1.3.noarch
 ```
 pip packages
 ------------
@@ -1109,7 +1084,11 @@ jupyter-nbextensions-configurator-0.4.1
 nbconvert-5.6.1
 send2trash 1.8.0
 ```
-Version incompatibilities discovered in testing `pyclical/demos`:
+
+
+The following bugs and workarounds apply to earlier versions of GluCat,
+and may still be applicable to GluCat 0.12.0, but have not been checked
+for this version.
 
  1. Using Mayavi2 4.7.4 with VTK 9.1.0 on Kubuntu 21.10 results in the following
     warning message when running `pyclical/demos/plotting_demo_dialog.py` and
@@ -1139,13 +1118,7 @@ Did you mean one of: `extra_template_paths, template_name, template_paths`?
 ```
     The warning can be ignored. The notebooks work normally.
 
-
-The following bugs and workarounds apply to earlier versions of GluCat,
-and may still be applicable to GluCat 0.11.1, but have not been checked
-for this version.
-
-
- 1. Using Mayavi2 4.7.1 with VTK 7.1.1 as per Kubuntu 21.04 yields two bugs
+ 4. Using Mayavi2 4.7.1 with VTK 7.1.1 as per Kubuntu 21.04 yields two bugs
     likely caused by version mismatch:
     1. Running `pyclical/demos/plotting_demo_mayavi.py` results in:
 ```
@@ -1159,7 +1132,7 @@ which has 0 connections.
        an incorrect z-order. A similar issue:
        https://github.com/enthought/mayavi/issues/656
 
- 2. Using Mayavi2 4.7.2 with VTK 9.0.1 and Python 3.8 on openSUSE
+ 5. Using Mayavi2 4.7.2 with VTK 9.0.1 and Python 3.8 on openSUSE
     Tumbleweed results in the following warning message when running
     `pyclical/demos/plotting_demo_mayavi.py`
 ```
@@ -1167,15 +1140,15 @@ which has 0 connections.
 209: SyntaxWarning: `is` with a literal. Did you mean `==`?
   if max_dims is 1:
 ```
- 3. GluCat needs an include library which either defines the macro `isnan` or
+ 6. GluCat needs an include library which either defines the macro `isnan` or
     defines `std::isnan`. The C++ standard library included with `gcc` 4.5.2 and
     above defines `std::isnan`.
 
- 4. Cython versions earlier than 0.15 do not build PyClical correctly,
+ 7. Cython versions earlier than 0.15 do not build PyClical correctly,
     because PyClical uses generators, which were only implemented with
     Cython 0.15.
 
- 5. Cython versions to and including 0.16 do not build PyClical correctly
+ 8. Cython versions to and including 0.16 do not build PyClical correctly
     for C++11. If you try to use `g++` with `-std=c++11` you will see
     an error message like:
 ```
@@ -1187,18 +1160,18 @@ error: unable to find string literal operator ‘operator PY_FORMAT_SIZE_T’
     The workaround is to edit `PyClical.cpp` and put a space before and after each
     occurrence of `PY_FORMAT_SIZE_T`. This was fixed some time after Cython 0.16.
 
- 6. GluCat will not work with QD versions earlier than 2.3.10, because older
+ 9. GluCat will not work with QD versions earlier than 2.3.10, because older
     versions of QD do not zero-initialize `dd_real` and `qd_real` as required by
     `ublas::clear()`.
 
- 7. With clang++ 3.2, building PyClical results in the warning
+10. With clang++ 3.2, building PyClical results in the warning
 ```
 clang: warning: argument unused during compilation: '--param ssp-buffer-size=4'
 ```
     This is harmless, and was fixed after Clang version 3.2.
     See http://llvm.org/bugs/show_bug.cgi?id=15327
 
- 8. The following version incompatibility was observed during testing with
+11. The following version incompatibility was observed during testing with
     GluCat 0.8.2:
 
     With `g++` 5.3.1 and Boost 1.53.0 or Boost 1.55.0, the header file

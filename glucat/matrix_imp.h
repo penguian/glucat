@@ -68,6 +68,7 @@
 # endif
 
 #include <set>
+#include <vector>
 
 namespace glucat { namespace matrix
 {
@@ -467,12 +468,12 @@ namespace glucat { namespace matrix
   template< typename Matrix_T >
   static
   auto
-  to_blaze(const Matrix_T& val) -> blaze::DynamicMatrix<double,blaze::columnMajor>
+  to_blaze(const Matrix_T& val) -> blaze::DynamicMatrix<double,blaze::rowMajor>
   {
     const auto s1 = val.size1();
     const auto s2 = val.size2();
 
-    using blaze_matrix_t = typename blaze::DynamicMatrix<double,blaze::columnMajor>;
+    using blaze_matrix_t = typename blaze::DynamicMatrix<double,blaze::rowMajor>;
     auto result = blaze_matrix_t(s1, s2);
 
     using Scalar_T = typename Matrix_T::value_type;
@@ -496,14 +497,13 @@ namespace glucat { namespace matrix
   /// Eigenvalues of a matrix
   template< typename Matrix_T >
   auto
-  eigenvalues(const Matrix_T& val) -> ublas::vector< std::complex<double> >
+  eigenvalues(const Matrix_T& val) -> std::vector< std::complex<double> >
   {
     using complex_t = std::complex<double>;
-    using complex_vector_t = typename ublas::vector<complex_t>;
+    using complex_vector_t = typename std::vector<complex_t>;
 
     const auto dim = val.size1();
     auto lambda = complex_vector_t(dim);
-    lambda.clear();
 
 #if defined(_GLUCAT_USE_BINDINGS)
     namespace lapack = boost::numeric::bindings::lapack;
@@ -516,7 +516,7 @@ namespace glucat { namespace matrix
     auto imag_lambda = vector_t(dim);
     fortran_int_t sdim = 0;
 
-    lapack::gees ('N', 'N', nullptr, T, sdim, real_lambda, imag_lambda, V );
+    lapack::gees('N', 'N', nullptr, T, sdim, real_lambda, imag_lambda, V);
 
     for (auto
         k = decltype(dim)(0);
@@ -525,13 +525,13 @@ namespace glucat { namespace matrix
       lambda[k] = complex_t(real_lambda[k], imag_lambda[k]);
 #endif
 #if defined(_GLUCAT_USE_BLAZE)
-    using blaze_matrix_t = typename blaze::DynamicMatrix<double,blaze::columnMajor>;
+    using blaze_matrix_t = typename blaze::DynamicMatrix<double, blaze::rowMajor>;
     using complex_t = std::complex<double>;
-    using blaze_complex_vector_t = blaze::DynamicVector<complex_t,blaze::rowVector>;
+    using blaze_complex_vector_t = blaze::DynamicVector<complex_t, blaze::columnVector>;
 
-    auto T = to_blaze(val);
+    auto blaze_val = to_blaze(val);
     auto blaze_lambda = blaze_complex_vector_t(dim);
-    blaze::geev( T, blaze_lambda );
+    blaze::geev(blaze_val, blaze_lambda);
 
     for (auto
         k = decltype(dim)(0);
@@ -549,11 +549,9 @@ namespace glucat { namespace matrix
   {
     using Scalar_T = typename Matrix_T::value_type;
     eig_genus<Matrix_T> result;
-    result.m_eig_case = safe_eig_case;
-    result.m_safe_arg = Scalar_T(0);
 
     using complex_t = std::complex<double>;
-    using complex_vector_t = typename ublas::vector<complex_t>;
+    using complex_vector_t = typename std::vector<complex_t>;
     auto lambda = eigenvalues(val);
 
     std::set<double> arg_set;
@@ -563,9 +561,12 @@ namespace glucat { namespace matrix
     static const auto epsilon =
       std::max(std::numeric_limits<double>::epsilon(),
                numeric_traits<Scalar_T>::to_double(std::numeric_limits<Scalar_T>::epsilon()));
+    static const auto zero_eig_tol = 4096.0*epsilon;
 
-    bool negative_eig_found = false;
-    bool imaginary_eig_found = false;
+    bool neg_real_eig_found = false;
+    bool imag_eig_found = false;
+    bool zero_eig_found = false;
+
     for (auto
         k = decltype(dim)(0);
         k != dim;
@@ -578,36 +579,42 @@ namespace glucat { namespace matrix
       const auto imag_lambda_k = std::imag(lambda_k);
       const auto norm_tol = 4096.0*epsilon*std::norm(lambda_k);
 
-      if (!negative_eig_found &&
+      if (!neg_real_eig_found &&
           real_lambda_k < -epsilon &&
          (imag_lambda_k == 0.0 ||
           imag_lambda_k * imag_lambda_k < norm_tol))
-        negative_eig_found = true;
-      if (!imaginary_eig_found &&
-          std::abs(imag_lambda_k) > epsilon &&
+        neg_real_eig_found = true;
+      if (!imag_eig_found &&
+          imag_lambda_k > epsilon &&
          (real_lambda_k == 0.0 ||
           real_lambda_k * real_lambda_k < norm_tol))
-        imaginary_eig_found = true;
+        imag_eig_found = true;
+      if (!zero_eig_found &&
+        std::norm(lambda_k) < zero_eig_tol)
+        zero_eig_found = true;
     }
 
+    if (zero_eig_found)
+        result.m_is_singular = true;
+
     static const auto pi = numeric_traits<double>::pi();
-    if (negative_eig_found)
+    if (neg_real_eig_found)
     {
-      if (imaginary_eig_found)
-        result.m_eig_case = both_eig_case;
+      if (imag_eig_found)
+        result.m_eig_case = both_eigs;
       else
       {
-        result.m_eig_case = negative_eig_case;
-        result.m_safe_arg = -pi/2.0;
+        result.m_eig_case = neg_real_eigs;
+        result.m_safe_arg = Scalar_T(-pi / 2.0);
       }
     }
 
-    if (result.m_eig_case == both_eig_case)
+    if (result.m_eig_case == both_eigs)
     {
       auto arg_it = arg_set.begin();
       auto first_arg = *arg_it;
       auto best_arg = first_arg;
-      auto best_diff = double(0.0);
+      auto best_diff = 0.0;
       auto previous_arg = first_arg;
       for (++arg_it;
           arg_it != arg_set.end();
@@ -627,7 +634,7 @@ namespace glucat { namespace matrix
         best_diff = arg_diff;
         best_arg = previous_arg;
       }
-      result.m_safe_arg = pi - (best_arg + best_diff / 2.0);
+      result.m_safe_arg = Scalar_T(pi - (best_arg + best_diff / 2.0));
     }
     return result;
   }

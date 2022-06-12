@@ -18,10 +18,21 @@ FAST_TESTOUT = test00/test00.out test10/test10.out test11/test11.out
 
 DOC = doc
 
-doc_DATA = AUTHORS.md COPYING ChangeLog DESIGN.md glucat.lsm INSTALL.md NEWS README.md TODO.md
+doc_DATA = AUTHORS AUTHORS.md COPYING ChangeLog DESIGN.md glucat.lsm INSTALL INSTALL.md NEWS README README.md TODO TODO.md
 
 EXTRA_DIST = admin m4 test test_runtime $(EXAMPLES) subdirs configure.ac.in configure.ac configure Makefile.am $(doc_DATA) doc/Makefile.am doc/Makefile.in
 
+AUTHORS: AUTHORS.md
+	ln -s AUTHORS.md AUTHORS
+
+INSTALL: INSTALL.md
+	ln -s INSTALL.md INSTALL
+
+README: README.md
+	ln -s README.md README
+
+TODO: TODO.md
+	ln -s TODO.md TODO
 
 check: test-out $(PYCLICAL_CHECK_OUT)
 

@@ -1,4 +1,4 @@
-README for GluCat 0.11.1 with PyClical
+README for GluCat 0.12.0 with PyClical
 ======================================
 
 GluCat is a library of C++ template classes for calculations with the universal
@@ -34,7 +34,7 @@ Before you go any further
 
 To make the best use of the GluCat template library and the PyClical extension
 module, you will need to become familiar with Geometric Algebra and Clifford
-algebras in general. The AUTHORS file includes lists of recommended web pages,
+algebras in general. The AUTHORS.md file includes lists of recommended web pages,
 books, and software that can help you to learn about Clifford algebras. Here is
 a short list to get you started.
 
