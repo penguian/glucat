@@ -358,6 +358,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   esac
   case "$glucat_use_eigenvalues" in
     bindings)
+      GLUCAT_MSG_WARN_DEPRECATED_VAL([--with-eig], [bindings])
       if [[[ "$glucat_have_lapack" != "no" ]]]; then
         glucat_have_bindings="yes"
         GLUCAT_CHECK_HEADERS([boost/numeric/bindings/lapack/driver/gees.hpp],
