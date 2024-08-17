@@ -1,10 +1,20 @@
 2024-08-17  Paul Leopardi <paul.leopardi@anu.edu.au>
 
+        * test_runtime/gfft_test-11.out, test_runtime/products-8.out,
+        test_runtime/squaring-11.out, test_runtime/transforms-8.out: Timing
+        test results for GluCat 0.12.1
+
+2024-08-17  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+        * ChangeLog: Update for GluCat 0.12.1
+
+2024-08-17  Paul Leopardi <paul.leopardi@anu.edu.au>
+
         * INSTALL.md: Update for GluCat 0.12.1
 
 2024-08-17  Paul Leopardi <paul.leopardi@anu.edu.au>
 
-        * Doxyfile.in: Fix EXCLUDE path
+	* Doxyfile.in: Fix EXCLUDE path
 
 2024-08-17  Paul Leopardi <paul.leopardi@anu.edu.au>
 
