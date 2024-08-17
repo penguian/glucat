@@ -1,5 +1,15 @@
-NEWS for GluCat 0.12.0 with PyClical
+NEWS for GluCat 0.12.1 with PyClical
 ====================================
+
+2024-08-17: 0.12.1
+GluCat works with current toolchains.
+
+GluCat 0.12.1 works with current compilers such as g++ 13.2.0, clang++ 18.1.3,
+and icpx 2024.2.1, as well as Python 3.12.3 and Cython 3.0.8.
+
+The configuration option
+./configure --with-eig=bindings
+has been deprecated and will be removed in future versions.
 
 2022-04-19: 0.12.0
 GluCat has an improved sqrt function.
