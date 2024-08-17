@@ -441,8 +441,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       [all_libraries="$all_libraries -limf"],
       [],
       [glucat_have_gsl="no"])
-      GLUCAT_CHECK_COMPILER_FLAG([fno-check-new],
-            [CXXFLAGS="$CXXFLAGS -fno-check-new"])
       GLUCAT_CHECK_COMPILER_FLAG([fp-model source], 
                       [CXXFLAGS="-fp-model source $CXXFLAGS"])
       GLUCAT_CHECK_COMPILER_FLAG([fp-model precise],
