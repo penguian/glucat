@@ -1,3 +1,55 @@
+2024-08-17  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+        * INSTALL.md: Update for GluCat 0.12.1
+
+2024-08-17  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+        * Doxyfile.in: Fix EXCLUDE path
+
+2024-08-17  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+        * : Update to GluCat 0.12.1
+
+2024-08-17  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in: Remove a compiler flag that is not recognized by
+	icpx
+
+2024-08-17  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/test.out: Update PyClical test results to 0.12.1
+
+2024-08-11  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #50 from penguian/add-codespaces Add .devcontainer for GitHub Codespaces
+
+2024-08-08  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in: Bump version to 0.12.1. Add more optimization
+	flags
+
+2024-08-06  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md: Tidy the Markdown code blocks
+
+2024-08-06  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in: Deprecate configure --with-eig=bindings
+
+2024-08-06  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/PyClical.pyx: Add right-hand operator methods
+
+2024-01-11  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .devcontainer/Dockerfile, .devcontainer/devcontainer.json: Add
+	.devcontainer for GitHub Codespaces
+
+2022-06-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #48 from
+	penguian/issue-46-Overhaul_sqrt_and_log_functions Overhaul sqrt and log functions
+
 2022-06-11  Paul Leopardi <paul.leopardi@anu.edu.au>
 
 	* Makefile.am.in: Re-add AUTHORS, etc. to allow make dist to succeed
@@ -6890,7 +6942,7 @@
 
 2002-01-12  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-	* Add glucat to cvs
+        * Add glucat to cvs
 
 2002-01-12 leopardi
 
