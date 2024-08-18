@@ -368,7 +368,7 @@ You can use the `Makefile` for `./test01` as the starting point for your own
 To request features, file bug reports or submit source code patches:
 
 The fastest way to ask for help with GluCat or to submit patches is to send an
-email to the project manager ( Paul Leopardi <leopardi@users.sourceforge.net> ).
+email to the project manager ( Paul Leopardi < paul.leopardi@gmail.com > ).
 
 The SourceForge page http://sourceforge.net/projects/glucat/support also
 provides project forums, project mailing lists and project trackers.
