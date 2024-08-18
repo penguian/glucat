@@ -32,7 +32,7 @@ dnl    Boston, MA 02111-1307, USA.
 
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([glucat],[0.12.0])
+AC_INIT([glucat],[0.12.1])
 AC_CONFIG_MACRO_DIR([m4])
 m4_include([m4/m4_ax_cxx_compile_stdcxx.m4])
 m4_include([m4/m4_ax_blas.m4])
@@ -238,6 +238,10 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
                 [CXXFLAGS="$CXXFLAGS -funroll-loops"])
           GLUCAT_CHECK_COMPILER_FLAG([fvariable-expansion-in-unroller],
                 [CXXFLAGS="$CXXFLAGS -fvariable-expansion-in-unroller"])
+          GLUCAT_CHECK_COMPILER_FLAG([flto=auto],
+                [CXXFLAGS="$CXXFLAGS -flto=auto"])
+          GLUCAT_CHECK_COMPILER_FLAG([fuse-linker-plugin],
+                [CXXFLAGS="$CXXFLAGS -fuse-linker-plugin"])
           GLUCAT_CXX_DEBUG_FLAG="-g"
           ;;
         *)
@@ -358,6 +362,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   esac
   case "$glucat_use_eigenvalues" in
     bindings)
+      GLUCAT_MSG_WARN_DEPRECATED_VAL([--with-eig], [bindings])
       if [[[ "$glucat_have_lapack" != "no" ]]]; then
         glucat_have_bindings="yes"
         GLUCAT_CHECK_HEADERS([boost/numeric/bindings/lapack/driver/gees.hpp],
@@ -436,8 +441,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       [all_libraries="$all_libraries -limf"],
       [],
       [glucat_have_gsl="no"])
-      GLUCAT_CHECK_COMPILER_FLAG([fno-check-new],
-            [CXXFLAGS="$CXXFLAGS -fno-check-new"])
       GLUCAT_CHECK_COMPILER_FLAG([fp-model source], 
                       [CXXFLAGS="-fp-model source $CXXFLAGS"])
       GLUCAT_CHECK_COMPILER_FLAG([fp-model precise],

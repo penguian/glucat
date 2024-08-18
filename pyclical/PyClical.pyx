@@ -748,6 +748,15 @@ cdef class clifford:
         """
         return clifford().wrap( toClifford(lhs) + toClifford(rhs) )
 
+    def __radd__(rhs, lhs):
+        """
+        Geometric sum.
+
+        >>> print(1 + clifford("{2}"))
+        1+{2}
+        """
+        return clifford().wrap( toClifford(lhs) + toClifford(rhs) )
+
     def __iadd__(self, rhs):
         """
         Geometric sum.
@@ -765,6 +774,15 @@ cdef class clifford:
         1-{2}
         >>> print(clifford("{1}") - clifford("{2}"))
         {1}-{2}
+        """
+        return clifford().wrap( toClifford(lhs) - toClifford(rhs) )
+
+    def __rsub__(rhs, lhs):
+        """
+        Geometric difference.
+
+        >>> print(1 - clifford("{2}"))
+        1-{2}
         """
         return clifford().wrap( toClifford(lhs) - toClifford(rhs) )
 
@@ -787,6 +805,15 @@ cdef class clifford:
         2{2}
         >>> print(clifford("{1}") * clifford("{1,2}"))
         {2}
+        """
+        return clifford().wrap( toClifford(lhs) * toClifford(rhs) )
+
+    def __rmul__(rhs, lhs):
+        """
+        Geometric product.
+
+        >>> print(2 * clifford("{2}"))
+        2{2}
         """
         return clifford().wrap( toClifford(lhs) * toClifford(rhs) )
 
@@ -815,6 +842,15 @@ cdef class clifford:
         1
         >>> print(clifford("{1}") % clifford("{1,2}"))
         {2}
+        """
+        return clifford().wrap( toClifford(lhs) % toClifford(rhs) )
+
+    def __rmod__(rhs, lhs):
+        """
+        Contraction.
+
+        >>> print(2 % clifford("{2}"))
+        2{2}
         """
         return clifford().wrap( toClifford(lhs) % toClifford(rhs) )
 
@@ -848,6 +884,15 @@ cdef class clifford:
         """
         return clifford().wrap( toClifford(lhs) & toClifford(rhs) )
 
+    def __rand__(rhs, lhs):
+        """
+        Inner product.
+
+        >>> print(2 & clifford("{2}"))
+        0
+        """
+        return clifford().wrap( toClifford(lhs) & toClifford(rhs) )
+
     def __iand__(self, rhs):
         """
         Inner product.
@@ -878,6 +923,15 @@ cdef class clifford:
         """
         return clifford().wrap( toClifford(lhs) ^ toClifford(rhs) )
 
+    def __rxor__(rhs, lhs):
+        """
+        Outer product.
+
+        >>> print(2 ^ clifford("{2}"))
+        2{2}
+        """
+        return clifford().wrap( toClifford(lhs) ^ toClifford(rhs) )
+
     def __ixor__(self, rhs):
         """
         Outer product.
@@ -905,6 +959,15 @@ cdef class clifford:
         1
         >>> print(clifford("{1}") / clifford("{1,2}"))
         -{2}
+        """
+        return clifford().wrap( toClifford(lhs) / toClifford(rhs) )
+
+    def __rtruediv__(rhs, lhs):
+        """
+        Geometric quotient.
+
+        >>> print(2 / clifford("{2}"))
+        2{2}
         """
         return clifford().wrap( toClifford(lhs) / toClifford(rhs) )
 

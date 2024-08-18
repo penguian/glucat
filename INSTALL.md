@@ -1,4 +1,4 @@
-INSTALL for GluCat 0.12.0 with PyClical
+INSTALL for GluCat 0.12.1 with PyClical
 ========================================
 
 Prerequisites: Before You Begin
@@ -29,14 +29,15 @@ You can install GluCat in one of two ways:
 
 To install the first way, from (e.g.) GitHub, run the following commands on a
 Linux machine or equivalent Posix environment connected to the Internet:
+
 ```
-> git clone git@github.com:penguian/glucat.git glucat-0.12.0
-> cd glucat-0.12.0
+> git clone git@github.com:penguian/glucat.git glucat-0.12.1
+> cd glucat-0.12.1
 > make -f admin/Makefile.common cvs
 ```
-This results in a directory structure that includes glucat-0.12.0/configure,
+This results in a directory structure that includes glucat-0.12.1/configure,
 allowing you to make and install GluCat in the same way as if you had downloaded
-and unzipped the tarball glucat-0.12.0.tar.gz.
+and unzipped the tarball glucat-0.12.1.tar.gz.
 
 
 Directory Structure
@@ -44,12 +45,12 @@ Directory Structure
 
 Once you have downloaded, unzipped and untarred the source code, or followed
 the instructions above to install from Git clone, you should have a directory,
-glucat-0.12.0. Under this directory you should see a number of subdirectories,
+glucat-0.12.1. Under this directory you should see a number of subdirectories,
 including `./admin`, `./doc`, `./glucat`, `./gfft_test`, `./products`,
 `./pyclical`, `./squaring`, `./test`, `./test_runtime`, `./testxx`, and
 `./transforms`.
 
-The following instructions are meant to be used with `glucat-0.12.0` as the
+The following instructions are meant to be used with `glucat-0.12.1` as the
 current directory.
 
 
@@ -74,6 +75,7 @@ There are four different things to install. These are:
 
 The simplest way to install GluCat with PyClical is to run the following
 commands, in order:
+
 ```
  ./configure
  make
@@ -81,10 +83,11 @@ commands, in order:
  make clean
 ```
 This makes and installs the PyClical Python extension module and also
-installs the GluCat header files, as well as the basic doumentation.
+installs the GluCat header files, as well as the basic documentation.
 
 You can also make and install the GluCat API documentation, after running
 `./configure`, by running the following commands, in order:
+
 ```
  make doc
  sudo make install-doc
@@ -147,7 +150,7 @@ subdirectories.
 
 As briefly described above, the simplest way to install this package is:
 
- 1. `cd` to the `glucat-0.12.0` directory containing the source code and type
+ 1. `cd` to the `glucat-0.12.1` directory containing the source code and type
     `./configure` to configure GluCat with PyClical for your system.
     If you are using `csh` on an old version of System V, you might need to type
     `sh ./configure` instead to prevent `csh` from trying to execute
@@ -195,10 +198,12 @@ Some systems require unusual options for compilation or linking that the
 `./configure` script does not know about.  You can give `./configure` initial
 values for variables by setting them in the environment.  Using a
 Bourne-compatible shell, you can do that on the command line like this:
+
 ```
     CC=c89 CFLAGS=-O2 LIBS=-lposix ./configure
 ```
 Or on systems that have the `env` program, you can do it like this:
+
 ```
     env CPPFLAGS=-I/usr/local/include LDFLAGS=-s ./configure
 ```
@@ -336,7 +341,7 @@ You will also need to ensure that the include path used by the compiler sees
 This option is used to control `_GLUCAT_USE_EIGENVALUES` and determine which
 libraries to use. ARG can be `no` or `bindings`. The default is `no`.
 
-The option `--with-eig=bindings` adds
+The option `--with-eig=bindings` (DEPRECATED) adds
 `-D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BINDINGS` to `CXXFLAGS` and adds the
 flags `-llapack -lblas` to the list of libraries, `LIBS` in the
 Makefiles, if the header file `<boost/numeric/bindings/driver/lapack/gees.hpp>`
@@ -345,6 +350,7 @@ configure script uses the `AX_LAPACK` and `AX_BLAS macros`, as documented at
 at https://www.gnu.org/software/autoconf-archive/The-Macros.html
 This, in turn means that you will need to have a Fortran compiler installed,
 and preferably have the F77 environment variable set to refer to this compiler.
+Note that this option has been deprecated and will be removed in future versions.
 
 The option `--with-eig=blaze` adds `-D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BLAZE`
 to `CXXFLAGS` and adds the flags `-llapack -lblas` to the list of libraries,
@@ -369,6 +375,7 @@ If `_GLUCAT_USE_BINDINGS` is defined, `glucat/matrix_imp.h` includes
 `<boost/numeric/bindings/lapack/driver/gees.hpp>` and uses the Boost Numeric
 Bindings library. To use this library, you will need to download and install
 it yourself, preferably from https://github.com/uBLAS/numeric_bindings
+Note that this symbol has been deprecated and will be removed in future versions.
 
 If `_GLUCAT_USE_BLAZE` is defined, `glucat/matrix_imp.h` includes
 `<blaze/Math.h>` and related Blaze include files, as per the Blaze template
@@ -398,6 +405,7 @@ Operation Controls
 ------------------
 
  `./configure` recognizes the following options to control how it operates.
+
 ```
  --cache-file=FILE
       Use and save the results of the tests in FILE instead of
@@ -442,6 +450,7 @@ The following build steps will be performed if you have not selected the
 configuration option `--disable-pyclical` (equivalently, `--enable-pyclical=no`).
 
 If Cython is installed then `make` builds PyClical by running the command
+
 ```
   ext_name=`PyClical` source_pyx=`PyClical.pyx` \
   CXX=`$(CXX)` CXXVERSION=`$(CXXVERSION)` CFLAGS=`` \
@@ -458,6 +467,7 @@ to appropriate values. See `To Configure` above to determine these values.
 
 Alternatively, if you have Python installed but do not have Cython, then
 `./configure` will recognize this, and make will build PyClical via the command
+
 ```
   ext_name=`PyClical` source_cpp=`PyClical_nocython.cpp` \
   CXX=`$(CXX)` CXXVERSION=`$(CXXVERSION)` CFLAGS=`` \
@@ -483,7 +493,7 @@ to indicate your C++ compiler, eg. `g++` for GNU C++, `icpc` or `icpx` for Intel
 C++, then run `./configure` as above, and then run `make check`. This builds and
 runs the executable files `./test00/test00` to `./test17/test17`. This produces
 the intermediate output files `./test00/test00.out` to `./test17/test17.out`,
-and the final test output file ./test_runtime/test.out. You can use a parallel
+and the final test output file `./test_runtime/test.out`. You can use a parallel
 make for `make check` , e.g. `make check -j 6`. This is especially useful on
 modern multicore machines.
 
@@ -528,67 +538,79 @@ The `./test_runtime` directory contains 24 sample versions of the regression tes
 results, corresponding to 14 different combinations of configuration parameters,
 for two different sets of tests, the complete set of 18 tests, and a subset of 3
 tests. The tests were all run on an Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz+ with
+
 ```
-    Linux 5.15.0-33-generic #34-Ubuntu SMP x86_64
-    Kubuntu 22.04 LTS
-    gcc version 12.1.0 (Ubuntu 12.1.0-2ubuntu1~22.04)
+    Linux 6.8.0-40-generic #40-Ubuntu SMP UTC
+    Kubuntu 24.04 LTS
+    g++ 13.2.0 (Ubuntu 13.2.0-23ubuntu4)
     Blaze 3.9.0
-    Boost 1.74.0
-    Boost Numeric Bindings
+    Boost 1.83.0
     GSL 2.7.1
-    QD 2.3.22
-    Cython 0.29.21
-    Python 3.9.7
+    QD 2.3.23
+    Cython 3.0.8
+    Python 3.12.3
 ```
 The test output file names and corresponding configuration commands are defined
 in `./test/config-options.txt` and are:
 
   1. `test.configure.default.out`:
+
 ```
 ./configure
 ```
   2. `test.configure.debug-full.out`:
+
 ```
 ./configure --enable-debug=full
 ```
   3. `test.configure.debug-yes.out`:
+
 ```
 ./configure --enable-debug=yes
 ```
   4. `test.configure.disable-dependency.out`:
+
 ```
 ./configure --disable-dependency-tracking
 ```
   5. `test.configure.disable-pyclical.out`:
+
 ```
 ./configure --disable-pyclical
 ```
   6. `test.configure.prefix-home-opt.out`:
+
 ```
 ./configure --prefix=$HOME/opt
 ```
   7. `test.configure.eig-bindings.out`:
+
 ```
 ./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
 ```
   8. `test.configure.eig-bindings-qd.out`:
+
 ```
 ./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
             --with-qd
 ```
   9. `test.configure.eig-blaze.out`:
+
 ```
 ./configure --with-eig=blaze
 ```
  10. `test.configure.eig-blaze-debug-full.out`:
+
 ```
 ./configure --with-eig=blaze --enable-debug=full
 ```
  11. `test.configure.eig-blaze-debug-yes.out`:
+
 ```
 ./configure --with-eig=blaze --enable-debug=yes
 ```
  12. `test.configure.eig-blaze-qd.out`:
+
 ```
 ./configure --with-eig=blaze --with-qd
 ```
@@ -624,7 +646,7 @@ noted for `./test11/test11` above.
 The regression tests `./test00/test00` to `./test17/test17` recognize the program
 arguments `--help`, `--no-catch`, and `--verbose`. The `--no-catch` argument
 disables the default exception catching behaviour of a regression test, to
-allow prgram crashes to be more easily debugged. For `./test00/test00` and
+allow program crashes to be more easily debugged. For `./test00/test00` and
 `./test11/test11` the argument `--verbose` produces verbose output essentially by
 setting the error tolerance to zero. Verbose output can become quite large.
 
@@ -663,6 +685,7 @@ specifies the abbreviation `default` and the options `""`, i.e. no options.
 
 This corresponds to running the regression tests and doctests using the
 configure command
+
 ```
 ./configure
 ```
@@ -675,6 +698,7 @@ disable-dependency:          --disable-dependency-tracking
 specifies the abbreviation `disable-dependency` and the option
 `--disable-dependency-tracking`. This corresponds to running the
 regression tests and doctests using the configure command
+
 ```
 ./configure --disable-dependency-tracking
 ```
@@ -683,11 +707,13 @@ and copying the output to `./test_runtime/test.configure.disable-dependency.out`
 If you want to test with options different from those in the file
 `./test/config-options.txt`, you can write your own file using the same syntax,
 for example, `some-other-file.txt`, and invoke your tests with the command
+
 ```
 config_options_file=some-other-file.txt ./test/test-all-config-options.sh
 ```
 You can also give parameters to `./test/test-all-config-options.sh` and these
 are passed to the make command. In particular, invoking (e.g.)
+
 ```
 ./test/test-all-config-options.sh -j 6
 ```
@@ -696,9 +722,9 @@ speeding up the entire testing process.
 
 Rather than running the regression tests in-place and copying the output
 directly into `./test_runtime`, the script `./test/test-all-config-options.sh`
-produces as many copies of the whole direcory `glucat-0.12.0` as there are lines
-in `./test/config-options.txt`, naming them `glucat-0.12.0.1` to `glucat-0.12.0.12`,
-in the parent directory of `glucat-0.12.0`. This allows the effect of each set
+produces as many copies of the whole directory `glucat-0.12.1` as there are lines
+in `./test/config-options.txt`, naming them `glucat-0.12.1.1` to `glucat-0.12.1.12`,
+in the parent directory of `glucat-0.12.1`. This allows the effect of each set
 of configuration options to be directly compared, and also ensures that any
 side-effect of a configuration does not affect the test results of another
 configuration.
@@ -706,13 +732,14 @@ configuration.
 The script `./test/diff-all-config-outputs.sh` compares each relevant test output
 file with the corresponding file in `./test_runtime` or `./pyclical`. For example,
 line 4 of `./test/config-options.txt`
+
 ```
 disable-dependency:          --disable-dependency-tracking
 ```
 causes `./test/diff-all-config-outputs.sh` to use diff to compare
-`glucat-0.12.0.4/test_runtime/test.configure.disable-dependency.out` to
-`glucat-0.12.0/test_runtime/test.configure.disable-dependency.out`, and compare
-`glucat-0.12.0.4/pyclical/test.out` to `glucat-0.12.0/pyclical/test.out`.
+`glucat-0.12.1.4/test_runtime/test.configure.disable-dependency.out` to
+`glucat-0.12.1/test_runtime/test.configure.disable-dependency.out`, and compare
+`glucat-0.12.1.4/pyclical/test.out` to `glucat-0.12.1/pyclical/test.out`.
 
 Each comparison should only produce a line containing the line number of
 the configuration being compared: 1 to 12.
@@ -733,7 +760,7 @@ comparisons. To do so, run the script `./test/copy-all-config-outputs.sh`.
 The difference between `./test/test-all-config-options.sh` and
 `./test/fast-test-all-config-options.sh` is that the former runs all of the tests
 `./test00` to `./test17`, whereas the latter runs only `./test00`, `./test10` and
-./test11. Both scripts build and check `./pyclical`. More specifically, the
+`./test11`. Both scripts build and check `./pyclical`. More specifically, the
 `./test/test-one-config-option.sh` script runs `make check`, and the
 `./test/fast-test-one-config-option.sh` script runs `make fast-check`. For the
 definitions of these arguments to `make`, see the file `./Makefile.am.in`. To
@@ -744,7 +771,7 @@ respectively.
 The script `./test/pyclical-test-all-config-options.sh` just builds and checks
 `./pyclical` without running any of the other regression tests. To examine the
 output of `./test/python-test-all-config-options.sh` just examine all of the
-`pyclical/pyclicat-test.check.out` files for errors.
+`pyclical/pyclical-test.check.out` files for errors.
 
 
 Running the timing (benchmark) tests
@@ -755,7 +782,7 @@ larger and larger multivectors within the subalgebra defined by the frame of
 the index set `{-n, ..., -1, 1, ..., n}`.
 
 The test program `./products/products` takes a parameter `n`, and runs a timing
-test which uses the products `*`, `^`, `%` and `&` to multply larger and larger
+test which uses the products `*`, `^`, `%` and `&` to multiply larger and larger
 multivectors within subalgebras defined by frames limited by the value of `n`.
 
 The test program `./squaring/squaring` takes a parameter `n`, and runs a timing
@@ -768,6 +795,7 @@ limited by the value of `n`.
 
 The test script `./test/timing_tests.sh` takes up to 4 numeric parameters.
 The command `./test/timing_tests.sh $a $b $c $d` runs
+
 ```
  ./products/products $a
  ./squaring/squaring $b
@@ -775,6 +803,7 @@ The command `./test/timing_tests.sh $a $b $c $d` runs
  ./transforms/transforms $d
 ```
 The default is:
+
 ```
  ./products/products 8
  ./squaring/squaring 11
@@ -783,17 +812,18 @@ The default is:
 ```
 The sample timing test results in `./test_runtime` are from programs
 built and run using the configure command:
+
 ```
 ./configure --with-eig=blaze --with-qd
 ```
 on `Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz+` with
+
 ```
-    Linux 5.15.0-33-generic #34-Ubuntu SMP x86_64
-    Kubuntu 22.04 LTS
-    gcc version 12.1.0 (Ubuntu 12.1.0-2ubuntu1~22.04)
+    Linux 6.8.0-40-generic #40-Ubuntu SMP UTC
+    Kubuntu 24.04 LTS
+    g++ 13.2.0 (Ubuntu 13.2.0-23ubuntu4)
     Blaze 3.9.0
-    Boost 1.74.0
-    Boost Numeric Bindings
+    Boost 1.83.0
     GSL 2.7.1
     QD 2.3.23
 ```
@@ -801,6 +831,7 @@ on `Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz+` with
 Testing PyClical
 ----------------
 Once you have built PyClical, run the doctests. In `python3` or `ipython3`, etc.:
+
 ```
  >>> import PyClical
  >>> PyClical._test()
@@ -808,6 +839,7 @@ Once you have built PyClical, run the doctests. In `python3` or `ipython3`, etc.
  >>> quit()
 ```
 Alternatively, in the directory `pyclical`, run the script `test.py` using:
+
 ```
 ipython3 --classic --no-banner < test.py
 ```
@@ -846,45 +878,42 @@ to use `sudo`, login as `root`, or `su` to `root` before you run `make install`.
 List of Successful Builds
 =========================
 
-GluCat 0.12.0 with PyClical has so far been built and tested using:
+GluCat 0.12.1 with PyClical has so far been built and tested using:
 
  1) Pensieri:
     4 core `Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz` with
+
     ```
-    Linux 5.15.0-33-generic #34-Ubuntu SMP x86_64
-    Kubuntu 22.04 LTS
+    Linux 6.8.0-40-generic #40-Ubuntu SMP UTC
+    Kubuntu 24.04 LTS
     Blaze 3.9.0
-    Boost 1.74.0
+    Boost 1.83.0
     Boost Numeric Bindings
     GSL 2.7.1
     QD 2.3.23
-    Cython 0.29.28
-    Python 3.10.4
+    Cython 3.0.8
+    Python 3.12.3
+
     Numpy 1.21.5
     Matplotlib 3.5.1
-    Mayavi2 4.7.1-3ubuntu1)
+    Mayavi2 4.8.1
     VTK 9.1.0
-    Doxygen 1.9.1
-    pdfTeX 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian)
+    Doxygen 1.9.8
+    pdfTeX 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian)
     ```
 
     `./test/test-all-config-options.sh`:
     All 12 configuration commands corresponding to each of the 12
     `test.configure*.out` files in `./test_runtime`
     tested with the following compiler versions:
-    1) `gcc version 12.1.0 (Ubuntu 12.1.0-2ubuntu1~22.04)`
-    2) `clang version 14.0.0 (14.0.0-1ubuntu1)`
-    3) `icpx version 2022.1.0 (2022.1.0.20220316)`
 
-    `./test/fast-test-all-config-options.sh`:
-    All 12 configuration commands corresponding to each of the 12
-    `fast-test.configure*.out` files in `./test_runtime`
-    tested with the following compiler versions:
-    1) `gcc version 7.5.0 (Ubuntu 7.5.0-6ubuntu4)`
-    2) `clang version 9.0.1 (9.0.1-16.1ubuntu1)`
+    1) `g++ 13.2.0 (Ubuntu 13.2.0-23ubuntu4)`
+    2) `Ubuntu clang version 18.1.3 (1ubuntu1)`
+    3) `Intel(R) oneAPI DPC++/C++ Compiler 2024.2.1 (2024.2.1.20240711)`
 
  2) Pensieri (VirtualBox):
     Virtual 1 core `Intel(R) Core(TM) i7 CPU 870 @ 2.93GHz` with
+
     ```
     Linux 5.17.5-1-default #1 SMP 2022
     openSUSE Tumbleweed Release 20220215
@@ -903,22 +932,23 @@ GluCat 0.12.0 with PyClical has so far been built and tested using:
     Doxygen 1.9.2-1.2
     pdfTeX 3.141592653-2.6-1.40.22 (TeX Live 2021/TeX Live for SUSE Linux)
     ```
-    `./test/fast-test-all-config-options.sh`
+    `./test/test-all-config-options.sh`
     All 12 configuration commands corresponding to each of the 12
-    `fast-test.configure*.out` files in `./test_runtime`
+    `test.configure*.out` files in `./test_runtime`
 
  3) CoCalc:
     Virtual 2 core `Intel(R) Xeon(R) CPU @ 2.80GHz` with
+
     ```
-    Linux 5.13.0-1023-gcp #28~20.04.1-Ubuntu SMP x86_64
-    Ubuntu 18.04.5 LTS
-    gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)
+    Linux 5.15.0-1046-gcp #54~20.04.1-Ubuntu SMP x86 64
+    Ubuntu 22.04.4 LTS
+    g++ (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
     Blaze 3.9.0
-    Boost 1.65.1
+    Boost 1.74.0
     Boost Numeric Bindings
-    Cython 0.29.21
-    Python 3.6.9
-    Numpy 1.18.5
+    Cython 0.29.30
+    Python 3.10.12
+    Numpy 1.23.5
     CXXFLAGS=`-I/home/user/usr/local/include`
     USER_LDFLAGS=`-L/home/user/usr/local/lib`
     LD_LIBRARY_PATH=`/home/user/usr/local/lib`
@@ -929,6 +959,7 @@ GluCat 0.12.0 with PyClical has so far been built and tested using:
 
  4) AWS Graviton:
     Virtual 4 core `ARM Cortex-A72 Model 3 (AWS Graviton A1 image)` with
+
     ```
     Linux 5.13.0-1019-aws #21~20.04.1-Ubuntu SMP aarch64
     Ubuntu 20.04.4 LTS
@@ -945,7 +976,7 @@ GluCat 0.12.0 with PyClical has so far been built and tested using:
     All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`
 
-                
+
 Notes on software versions
 ==========================
 
@@ -974,6 +1005,7 @@ The use of Mayavi2 4.7.4 on Kubuntu 22.04 depends on the following packages:
 
 Ubuntu packages
 ---------------
+
 ```
 envisage 6.0.1
 python3-attr 21.2.0-1
@@ -988,6 +1020,7 @@ python3-zipp 1.0.0-3
 ```
 pip packages
 ------------
+
 ```
 aiohttp 3.8.1
 aiosignal 1.2.0
@@ -1006,6 +1039,7 @@ yarl 1.7.2
 As of May 2022, installation of `vtk 9.1.0` as a pip package on Kubuntu 22.04 does not work
 because a Python 3.10 compatible wheel is not available.
 The `vtk 9.1.0` package can instead be installed using
+
 ```
 pip install --find-links https://wheels.pyvista.org/ pyvista
 ```
@@ -1023,6 +1057,7 @@ See also https://pypi.org/project/mayavi/
 
 The use of Mayavi2 4.7.4 with Python 3.8.13 on openSUSE Tumbleweed
 requires the following RPM packages:
+
 ```
 mayavi 4.7.4-1.5
 python3-tvtk 4.7.4-1.5
@@ -1046,6 +1081,7 @@ packages:
 
 Ubuntu packages
 ---------------
+
 ```
 ipython3 7.20.0-1
 jupyter-nbformat 5.1.2-1
@@ -1060,6 +1096,7 @@ python3-traitlets 5.0.5-1
 ```
 pip packages
 ------------
+
 ```
 ipywidgets 7.6.5
 jupyterlab-widgets 1.0.2
@@ -1071,6 +1108,7 @@ requires the following packages:
 
 RPM packages:
 -------------
+
 ```
 jupyter-widgetsnbextension-3.5.2-1.3.noarch
 python38-ipywidgets-7.6.5-2.1.noarch
@@ -1079,6 +1117,7 @@ python38-widgetsnbextension-3.5.2-1.3.noarch
 ```
 pip packages
 ------------
+
 ```
 jupyter-nbextensions-configurator-0.4.1
 nbconvert-5.6.1
@@ -1087,12 +1126,13 @@ send2trash 1.8.0
 
 
 The following bugs and workarounds apply to earlier versions of GluCat,
-and may still be applicable to GluCat 0.12.0, but have not been checked
+and may still be applicable to GluCat 0.12.1, but have not been checked
 for this version.
 
  1. Using Mayavi2 4.7.4 with VTK 9.1.0 on Kubuntu 21.10 results in the following
     warning message when running `pyclical/demos/plotting_demo_dialog.py` and
     `pyclical/demos/plotting_demo_mayavi.py`:
+
 ```
 WARNING: Imported VTK version (9.1) does not match the one used
          to build the TVTK classes (9.0). This may cause problems.
@@ -1102,6 +1142,7 @@ WARNING: Imported VTK version (9.1) does not match the one used
 
  2. Using `jupyter-notebook-6.4.6` with Python 3.8.12 on openSUSE Tumbleweed
     with `nbconvert-6.0.7` results in warning messages such as the following:
+
 ```
 Config option `template_path` not recognized by `LenvsHTMLExporter`.
 Did you mean one of: `extra_template_paths, template_name, template_paths`?
@@ -1113,6 +1154,7 @@ Did you mean one of: `extra_template_paths, template_name, template_paths`?
 
  3. Using `jupyter-notebook-6.4.6` with Python 3.8.12 on openSUSE Tumbleweed
     results in the following warning message:
+
 ```
 404 GET /notebooks/biblio.bib (127.0.0.1): No such file or directory: biblio.bib
 ```
@@ -1121,6 +1163,7 @@ Did you mean one of: `extra_template_paths, template_name, template_paths`?
  4. Using Mayavi2 4.7.1 with VTK 7.1.1 as per Kubuntu 21.04 yields two bugs
     likely caused by version mismatch:
     1. Running `pyclical/demos/plotting_demo_mayavi.py` results in:
+
 ```
 Warning: In ./Common/ExecutionModel/vtkAlgorithm.cxx, line 1419
 vtkGlyph3D (): Attempt to get connection index 0 for input port 0,
@@ -1135,6 +1178,7 @@ which has 0 connections.
  5. Using Mayavi2 4.7.2 with VTK 9.0.1 and Python 3.8 on openSUSE
     Tumbleweed results in the following warning message when running
     `pyclical/demos/plotting_demo_mayavi.py`
+
 ```
 /usr/lib64/python3.8/site-packages/vtkmodules/numpy_interface/algorithms.py:
 209: SyntaxWarning: `is` with a literal. Did you mean `==`?
@@ -1151,6 +1195,7 @@ which has 0 connections.
  8. Cython versions to and including 0.16 do not build PyClical correctly
     for C++11. If you try to use `g++` with `-std=c++11` you will see
     an error message like:
+
 ```
 In function `void __Pyx_RaiseArgtupleInvalid(...)`:
 error: unable to find string literal operator ‘operator PY_FORMAT_SIZE_T’
@@ -1165,6 +1210,7 @@ error: unable to find string literal operator ‘operator PY_FORMAT_SIZE_T’
     `ublas::clear()`.
 
 10. With clang++ 3.2, building PyClical results in the warning
+
 ```
 clang: warning: argument unused during compilation: '--param ssp-buffer-size=4'
 ```
@@ -1176,6 +1222,7 @@ clang: warning: argument unused during compilation: '--param ssp-buffer-size=4'
 
     With `g++` 5.3.1 and Boost 1.53.0 or Boost 1.55.0, the header file
     `<boost/smart_ptr/shared_ptr.hpp>` generates multiple warnings of the form:
+
 ```
 warning: ‘template<class> class std::auto_ptr’ is deprecated [-Wdeprecated-declarations]
 ```
