@@ -29,9 +29,11 @@ libraries = os.environ["LIBRARIES"].replace("-l", "")
 
 
 def setup_ext(ext_name, source):
+    all_includes_list = os.environ["all_includes"].replace("-I", "").split()
     ext = Extension(
-        ext_name,        # name of extension
-        sources=[source] # filename of our Cython source
+        ext_name,         # name of extension
+        sources=[source], # filename of our Cython source
+        include_dirs=all_includes_list
     )
     return ext
 
