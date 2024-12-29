@@ -2152,7 +2152,7 @@ INCLUDE_FILE_PATTERNS  =
 
 PREDEFINED             = _GLUCAT_USE_QD \
                          _GLUCAT_USE_EIGENVALUES \
-                         _GLUCAT_USE_BINDINGS
+                         _GLUCAT_USE_BLAZE
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then this
 # tag can be used to specify a list of macro names that should be expanded. The

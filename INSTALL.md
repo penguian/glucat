@@ -336,21 +336,10 @@ You will also need to ensure that the include path used by the compiler sees
 
 ```
   --with-eig[=ARG]        library to use for eigenvalues
-                          (no|bindings|blaze) [default=no]
+                          (no|blaze) [default=no]
 ```
 This option is used to control `_GLUCAT_USE_EIGENVALUES` and determine which
-libraries to use. ARG can be `no` or `bindings`. The default is `no`.
-
-The option `--with-eig=bindings` (DEPRECATED) adds
-`-D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BINDINGS` to `CXXFLAGS` and adds the
-flags `-llapack -lblas` to the list of libraries, `LIBS` in the
-Makefiles, if the header file `<boost/numeric/bindings/driver/lapack/gees.hpp>`
-and the libraries `liblapack` and `libblas` are usable. To accomplish this, the
-configure script uses the `AX_LAPACK` and `AX_BLAS macros`, as documented at
-at https://www.gnu.org/software/autoconf-archive/The-Macros.html
-This, in turn means that you will need to have a Fortran compiler installed,
-and preferably have the F77 environment variable set to refer to this compiler.
-Note that this option has been deprecated and will be removed in future versions.
+libraries to use. ARG can be `no` or `blaze`. The default is `no`.
 
 The option `--with-eig=blaze` adds `-D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BLAZE`
 to `CXXFLAGS` and adds the flags `-llapack -lblas` to the list of libraries,
@@ -371,12 +360,6 @@ The function `eigenvalues()` in `glucat/matrix_imp.h` calls an external function
 to obtain the eigenvalues of a matrix. Which function is used depends on one of
 a number of preprocessor symbols:
 
-If `_GLUCAT_USE_BINDINGS` is defined, `glucat/matrix_imp.h` includes
-`<boost/numeric/bindings/lapack/driver/gees.hpp>` and uses the Boost Numeric
-Bindings library. To use this library, you will need to download and install
-it yourself, preferably from https://github.com/uBLAS/numeric_bindings
-Note that this symbol has been deprecated and will be removed in future versions.
-
 If `_GLUCAT_USE_BLAZE` is defined, `glucat/matrix_imp.h` includes
 `<blaze/Math.h>` and related Blaze include files, as per the Blaze template
 library. To use this library, you will need to install it yourself, preferably
@@ -388,11 +371,6 @@ Makefile needs to pass the flag `-D_GLUCAT_USE_EIGENVALUES` to the C++ compiler,
 as well as one of the following choices of flags, and the corresponding header
 files and libraries must be usable.
 
-* For Boost Numeric Bindings:
-  `-D_GLUCAT_USE_BINDINGS -llapack -lblas`
-  You will also need to ensure that the include path used by the compiler sees
-  `<boost/numeric/bindings/lapack/driver/gees.hpp>` and the library path sees
-  `liblapack.*` and `libblas.*`.
 * For Blaze:
   `-D_GLUCAT_USE_BLAZE -llapack -lblas`
   You will also need to ensure that the include path used by the compiler sees
@@ -583,58 +561,47 @@ in `./test/config-options.txt` and are:
 ```
 ./configure --prefix=$HOME/opt
 ```
-  7. `test.configure.eig-bindings.out`:
-
-```
-./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
-```
-  8. `test.configure.eig-bindings-qd.out`:
-
-```
-./configure --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings \
-            --with-qd
-```
-  9. `test.configure.eig-blaze.out`:
+  7. `test.configure.eig-blaze.out`:
 
 ```
 ./configure --with-eig=blaze
 ```
- 10. `test.configure.eig-blaze-debug-full.out`:
+  8. `test.configure.eig-blaze-debug-full.out`:
 
 ```
 ./configure --with-eig=blaze --enable-debug=full
 ```
- 11. `test.configure.eig-blaze-debug-yes.out`:
+  9. `test.configure.eig-blaze-debug-yes.out`:
 
 ```
 ./configure --with-eig=blaze --enable-debug=yes
 ```
- 12. `test.configure.eig-blaze-qd.out`:
+ 10. `test.configure.eig-blaze-qd.out`:
 
 ```
 ./configure --with-eig=blaze --with-qd
 ```
-For each of the 12 `test.configure.*.out` files, there is a corresponding
-`fast-test.configure.*.out` file, making a total of 24 files.
+For each of the 10 `test.configure.*.out` files, there is a corresponding
+`fast-test.configure.*.out` file, making a total of 20 files.
 
 When you run your own test using `./test/test.sh`, you should compare its output
 to the output file corresponding to the closest match to the configuration
 options you used to build your copy of the GluCat library.
 
-The reason why sample test results corresponding to 12 different combinations
+The reason why sample test results corresponding to 10 different combinations
 of configuration parameters are included in `test_runtime` is that the test output
 strongly depends on the configuration options chosen. In particular:
 
 * If `--with-qd` is chosen, extra tests in `./test00/test00` and `./test11/test11`
   are done using the `dd_real` and `qd_real` scalar types.
 
-* If either `--with-eig=bindings` or `--with-eig=blaze` is chosen the algorithms
-  used for the square root, logarithm and inverse trig functions will become much
-  more accurate, and most tests in `./test11/test11` will succeed. Even if this
-  option is chosen, some tests in `./test11/test11` fail due to insufficient
-  accuracy. This is most likely caused by a combination of excessive round off
-  and truncation error with respect to the condition numbers of the matrices used
-  in calculating these functions.
+* If `--with-eig=blaze` is chosen the algorithms used for the square root,
+  logarithm and inverse trig functions will become much more accurate, and most
+  tests in `./test11/test11` will succeed. Even if this option is chosen, some
+  tests in `./test11/test11` fail due to insufficient accuracy. This is most
+  likely caused by a combination of excessive round off and truncation error
+  with respect to the condition numbers of the matrices used in calculating
+  these functions.
 
 The tests typically use floating point arithmetic, and `./test00/test00` and
 `./test11/test11` in particular also use random number generators. Therefore if
@@ -723,7 +690,7 @@ speeding up the entire testing process.
 Rather than running the regression tests in-place and copying the output
 directly into `./test_runtime`, the script `./test/test-all-config-options.sh`
 produces as many copies of the whole directory `glucat-0.12.1` as there are lines
-in `./test/config-options.txt`, naming them `glucat-0.12.1.1` to `glucat-0.12.1.12`,
+in `./test/config-options.txt`, naming them `glucat-0.12.1.1` to `glucat-0.12.1.10`,
 in the parent directory of `glucat-0.12.1`. This allows the effect of each set
 of configuration options to be directly compared, and also ensures that any
 side-effect of a configuration does not affect the test results of another
@@ -742,7 +709,7 @@ causes `./test/diff-all-config-outputs.sh` to use diff to compare
 `glucat-0.12.1.4/pyclical/test.out` to `glucat-0.12.1/pyclical/test.out`.
 
 Each comparison should only produce a line containing the line number of
-the configuration being compared: 1 to 12.
+the configuration being compared: 1 to 10.
 
 The exceptional cases are:
 
@@ -770,7 +737,7 @@ respectively.
 
 The script `./test/pyclical-test-all-config-options.sh` just builds and checks
 `./pyclical` without running any of the other regression tests. To examine the
-output of `./test/python-test-all-config-options.sh` just examine all of the
+output of `./test/pyclical-test-all-config-options.sh` just examine all of the
 `pyclical/pyclical-test.check.out` files for errors.
 
 
@@ -888,7 +855,6 @@ GluCat 0.12.1 with PyClical has so far been built and tested using:
     Kubuntu 24.04 LTS
     Blaze 3.9.0
     Boost 1.83.0
-    Boost Numeric Bindings
     GSL 2.7.1
     QD 2.3.23
     Cython 3.0.8
@@ -903,7 +869,7 @@ GluCat 0.12.1 with PyClical has so far been built and tested using:
     ```
 
     `./test/test-all-config-options.sh`:
-    All 12 configuration commands corresponding to each of the 12
+    All 10 configuration commands corresponding to each of the 10
     `test.configure*.out` files in `./test_runtime`
     tested with the following compiler versions:
 
@@ -920,7 +886,6 @@ GluCat 0.12.1 with PyClical has so far been built and tested using:
     g++ (SUSE Linux) 11.2.1 20220103
     Blaze 3.9.0
     Boost 1.79.0
-    Boost Numeric Bindings
     Cython version 0.29.28
     GSL 2.6-6.4
     QD 2.3.22-1.13
@@ -933,7 +898,7 @@ GluCat 0.12.1 with PyClical has so far been built and tested using:
     pdfTeX 3.141592653-2.6-1.40.22 (TeX Live 2021/TeX Live for SUSE Linux)
     ```
     `./test/test-all-config-options.sh`
-    All 12 configuration commands corresponding to each of the 12
+    All 10 configuration commands corresponding to each of the 10
     `test.configure*.out` files in `./test_runtime`
 
  3) CoCalc:
@@ -945,7 +910,6 @@ GluCat 0.12.1 with PyClical has so far been built and tested using:
     g++ (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
     Blaze 3.9.0
     Boost 1.74.0
-    Boost Numeric Bindings
     Cython 0.29.30
     Python 3.10.12
     Numpy 1.23.5
@@ -954,7 +918,7 @@ GluCat 0.12.1 with PyClical has so far been built and tested using:
     LD_LIBRARY_PATH=`/home/user/usr/local/lib`
     ```
     `./test/fast-test-all-config-options.sh`
-    All 12 configuration commands corresponding to each of the 12
+    All 10 configuration commands corresponding to each of the 10
     `fast-test.configure*.out` files in `./test_runtime`
 
  4) AWS Graviton:
@@ -966,14 +930,13 @@ GluCat 0.12.1 with PyClical has so far been built and tested using:
     gcc (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0
     Blaze 3.9.0
     Boost 1.71.1
-    Boost Numeric Bindings
     GSL Version: 2.5+dfsg-6build1
     QD Version: 2.3.22+dfsg.1-3build1
     Cython 0.29.14
     Python 3.8.10
     ```
     `./test/fast-test-all-config-options.sh`
-    All 12 configuration commands corresponding to each of the 12
+    All 10 configuration commands corresponding to each of the 10
     `fast-test.configure*.out` files in `./test_runtime`
 
 

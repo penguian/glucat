@@ -52,11 +52,6 @@
 #include <boost/numeric/ublas/operation.hpp>
 #include <boost/numeric/ublas/operation_sparse.hpp>
 
-#if defined(_GLUCAT_USE_BINDINGS)
-# include <boost/numeric/bindings/lapack/driver/gees.hpp>
-# include <boost/numeric/bindings/ublas.hpp>
-#endif
-
 #if defined(_GLUCAT_USE_BLAZE)
 #include <blaze/Math.h>
 #include <blaze/math/DynamicMatrix.h>
@@ -432,37 +427,6 @@ namespace glucat { namespace matrix
     return result;
   }
 
-#if defined(_GLUCAT_USE_BINDINGS)
-  /// Convert matrix to LAPACK format
-  template< typename Matrix_T >
-  static
-  auto
-  to_lapack(const Matrix_T& val) -> ublas::matrix<double, ublas::column_major>
-  {
-    const auto s1 = val.size1();
-    const auto s2 = val.size2();
-
-    using lapack_matrix_t = typename ublas::matrix<double, ublas::column_major>;
-    auto result = lapack_matrix_t(s1, s2);
-    result.clear();
-
-    using Scalar_T = typename Matrix_T::value_type;
-    using traits_t = numeric_traits<Scalar_T>;
-
-    for (auto
-        val_it1 = val.begin1();
-        val_it1 != val.end1();
-        ++val_it1)
-      for (auto
-          val_it2 = val_it1.begin();
-          val_it2 != val_it1.end();
-          ++val_it2)
-        result(val_it2.index1(), val_it2.index2()) = traits_t::to_double(*val_it2);
-
-    return result;
-  }
-#endif
-
 #if defined(_GLUCAT_USE_BLAZE)
   /// Convert matrix to Blaze format
   template< typename Matrix_T >
@@ -505,25 +469,6 @@ namespace glucat { namespace matrix
     const auto dim = val.size1();
     auto lambda = complex_vector_t(dim);
 
-#if defined(_GLUCAT_USE_BINDINGS)
-    namespace lapack = boost::numeric::bindings::lapack;
-    using lapack_matrix_t = typename ublas::matrix<double, ublas::column_major>;
-
-    auto T = to_lapack(val);
-    auto V = T;
-    using vector_t = typename ublas::vector<double>;
-    auto real_lambda = vector_t(dim);
-    auto imag_lambda = vector_t(dim);
-    fortran_int_t sdim = 0;
-
-    lapack::gees('N', 'N', nullptr, T, sdim, real_lambda, imag_lambda, V);
-
-    for (auto
-        k = decltype(dim)(0);
-        k != dim;
-        ++k)
-      lambda[k] = complex_t(real_lambda[k], imag_lambda[k]);
-#endif
 #if defined(_GLUCAT_USE_BLAZE)
     using blaze_matrix_t = typename blaze::DynamicMatrix<double, blaze::rowMajor>;
     using complex_t = std::complex<double>;

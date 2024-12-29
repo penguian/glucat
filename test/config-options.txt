@@ -4,8 +4,6 @@ debug-yes:                   --enable-debug=yes
 disable-dependency:          --disable-dependency-tracking
 disable-pyclical:            --disable-pyclical
 prefix-home-opt:             --prefix=$HOME/opt
-eig-bindings:                --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings
-eig-bindings-qd:             --with-eig=bindings --with-extra-includes=$PATHTO/numeric_bindings --with-qd
 eig-blaze:                   --with-eig=blaze
 eig-blaze-debug-full:        --with-eig=blaze --enable-debug=full
 eig-blaze-debug-yes:         --with-eig=blaze --enable-debug=yes

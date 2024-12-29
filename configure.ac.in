@@ -32,7 +32,7 @@ dnl    Boston, MA 02111-1307, USA.
 
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([glucat],[0.12.1])
+AC_INIT([glucat],[0.12.2])
 AC_CONFIG_MACRO_DIR([m4])
 m4_include([m4/m4_ax_cxx_compile_stdcxx.m4])
 m4_include([m4/m4_ax_blas.m4])
@@ -136,14 +136,11 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     [glucat_use_qd="$withval"],
     [glucat_use_qd="no"])
 
-  AC_ARG_WITH([eig],          [[  --with-eig[=ARG]        library to use for eigenvalues (no|bindings|blaze) [default=no]]],
+  AC_ARG_WITH([eig],          [[  --with-eig[=ARG]        library to use for eigenvalues (no|blaze) [default=no]]],
   [
     case "$withval" in
       no)
         glucat_use_eigenvalues="no"
-        ;;
-      bindings)
-        glucat_use_eigenvalues="bindings"
         ;;
       blaze)
         glucat_use_eigenvalues="blaze"
@@ -337,7 +334,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
 
   dnl Handle $glucat_use_eigenvalues: library to use for eigenvalues
   case "$glucat_use_eigenvalues" in
-    bindings|blaze)
+    blaze)
       glucat_have_lapack="yes"
       glucat_add_libs=""
       case "$basename_cxx" in
@@ -361,21 +358,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       ;;
   esac
   case "$glucat_use_eigenvalues" in
-    bindings)
-      GLUCAT_MSG_WARN_DEPRECATED_VAL([--with-eig], [bindings])
-      if [[[ "$glucat_have_lapack" != "no" ]]]; then
-        glucat_have_bindings="yes"
-        GLUCAT_CHECK_HEADERS([boost/numeric/bindings/lapack/driver/gees.hpp],
-        [
-          CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BINDINGS"
-          all_libraries="$all_libraries $glucat_add_libs"
-        ],
-        [glucat_have_bindings="no"],[])
-      fi
-      if [[[ "$glucat_have_bindings" == "no" ]]]; then
-        AC_MSG_WARN([Cannot build using Boost bindings.])
-      fi
-      ;;
     blaze)
       if [[[ "$glucat_have_lapack" != "no" ]]]; then
         glucat_have_blaze="yes"
