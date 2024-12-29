@@ -1,16 +1,30 @@
+2024-12-22  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+        * : Merge pull request #53 from
+        penguian/issue-52-PyClical_build_fails_to_find_headers Add include_dirs to ext creation
+
+2024-08-18  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+        * README.md: Update email address in README.md
+
+2024-08-18  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+        * : Merge pull request #51 from penguian/issue-49-Bring_up_to_date Bring the repository up to date with respect to toolchains, Cython,
+        Python
+
 2024-08-17  Paul Leopardi <paul.leopardi@anu.edu.au>
 
         * test_runtime/gfft_test-11.out, test_runtime/products-8.out,
-        test_runtime/squaring-11.out, test_runtime/transforms-8.out: Timing
-        test results for GluCat 0.12.1
+	test_runtime/squaring-11.out, test_runtime/transforms-8.out: Timing
+	test results for GluCat 0.12.1
 
 2024-08-17  Paul Leopardi <paul.leopardi@anu.edu.au>
 
-        * ChangeLog: Update for GluCat 0.12.1
+	* ChangeLog: Update for GluCat 0.12.1
 
 2024-08-17  Paul Leopardi <paul.leopardi@anu.edu.au>
 
-        * INSTALL.md: Update for GluCat 0.12.1
+	* INSTALL.md: Update for GluCat 0.12.1
 
 2024-08-17  Paul Leopardi <paul.leopardi@anu.edu.au>
 
