@@ -301,8 +301,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     if [[[ "$glucat_use_cython" == "no" ]]]; then
       AC_MSG_WARN([Cannot build using Cython.])
       AC_CHECK_FILE([pyclical/PyClical_nocython.cpp],
-      [],
-      [glucat_use_pyclical="no"])
+      [
+        AC_MSG_WARN([The ability to build PyClical without Cython $glucat_deprecated_warning])
+      ],[glucat_use_pyclical="no"])
     fi
     if [[[ "$glucat_use_pyclical" == "no" ]]]; then
       AC_MSG_WARN([Cannot build PyClical.])
