@@ -386,8 +386,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       CXXFLAGS="-Wall $CXXFLAGS"
       case "$basename_cxx" in
         "clang++"*|"g++"*|icpx)
-          GLUCAT_CHECK_COMPILER_FLAG([Wno-unused-local-typedefs],
-                [CXXFLAGS="$CXXFLAGS -Wno-unused-local-typedefs"])
           GLUCAT_CHECK_COMPILER_FLAG([Wno-deprecated-register],
                 [CXXFLAGS="$CXXFLAGS -Wno-deprecated-register"])
           ;;

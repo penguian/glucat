@@ -470,7 +470,6 @@ namespace glucat { namespace matrix
     auto lambda = complex_vector_t(dim);
 
 #if defined(_GLUCAT_USE_BLAZE)
-    using blaze_matrix_t = typename blaze::DynamicMatrix<double, blaze::rowMajor>;
     using complex_t = std::complex<double>;
     using blaze_complex_vector_t = blaze::DynamicVector<complex_t, blaze::columnVector>;
 
@@ -495,13 +494,10 @@ namespace glucat { namespace matrix
     using Scalar_T = typename Matrix_T::value_type;
     eig_genus<Matrix_T> result;
 
-    using complex_t = std::complex<double>;
-    using complex_vector_t = typename std::vector<complex_t>;
     auto lambda = eigenvalues(val);
 
     std::set<double> arg_set;
 
-    using vector_index_t = typename complex_vector_t::size_type;
     const auto dim = lambda.size();
     static const auto epsilon =
       std::max(std::numeric_limits<double>::epsilon(),

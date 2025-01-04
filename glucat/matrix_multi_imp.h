@@ -266,7 +266,6 @@ namespace glucat
     this->m_matrix.resize(dim, dim, false);
     this->m_matrix.clear();
 
-    using framed_multi_t = framed_multi<Other_Scalar_T,LO,HI,Tune_P>;
     for (auto& val_term : val)
       *this += val_term;
   }
@@ -292,7 +291,6 @@ namespace glucat
     this->m_matrix.resize(dim, dim, false);
     this->m_matrix.clear();
 
-    using framed_multi_t = framed_multi<Other_Scalar_T,LO,HI,Tune_P>;
     for (auto& val_term : val)
       *this += val_term;
   }
@@ -622,7 +620,6 @@ namespace glucat
       return traits_t::NaN();
 
     using multivector_t = matrix_multi<Scalar_T,LO,HI,Tune_P>;
-    using index_set_t = typename multivector_t::index_set_t;
 
     // Operate only within a common frame
     multivector_t lhs_reframed;
@@ -1321,8 +1318,6 @@ namespace glucat
           Scalar_T norm_tol=std::pow(std::numeric_limits<Scalar_T>::epsilon(), 4)) -> const matrix_multi<Scalar_T,LO,HI,Tune_P>
   {
     // Reference: [CHKL]
-    using multivector_t = matrix_multi<Scalar_T,LO,HI,Tune_P>;
-
     if (val == Scalar_T(0))
       return val;
 
@@ -1350,15 +1345,12 @@ namespace glucat
           Scalar_T norm_Y_tol=std::pow(std::numeric_limits<Scalar_T>::epsilon(), 1)) -> const matrix_multi<Scalar_T,LO,HI,Tune_P>
   {
     // Reference: [MB]
-    using multivector_t = matrix_multi<Scalar_T,LO,HI,Tune_P>;
-
     if (val == Scalar_T(0))
       return val;
 
     static const auto sqrt_max_steps = Tune_P::cr_sqrt_max_steps;
     auto Z = Scalar_T(2) * (Scalar_T(1) + val);
     auto Y = Scalar_T(1) - val;
-    using traits_t = numeric_traits<Scalar_T>;
     auto norm_Y = norm(Y);
     for (auto
         step = 0;
@@ -1615,8 +1607,6 @@ namespace glucat
     static const auto sqrt_2 = traits_t::sqrt(Scalar_T(2));
     if (level == 0)
     {
-      using matrix_t = typename multivector_t::matrix_t;
-
       // What kind of eigenvalues does the matrix contain?
       const auto genus = matrix::classify_eigenvalues(unitval.m_matrix);
       const index_t next_level =
@@ -2009,8 +1999,6 @@ namespace glucat{
     auto scaled_result = multivector_t();
     if (level == 0)
     {
-      using matrix_t = typename multivector_t::matrix_t;
-
       // What kind of eigenvalues does the matrix contain?
       auto genus = matrix::classify_eigenvalues(unitval.m_matrix);
       switch (genus.m_eig_case)

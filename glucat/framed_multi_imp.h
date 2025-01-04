@@ -607,7 +607,6 @@ namespace glucat
     using multivector_t = framed_multi<Scalar_T,LO,HI,Tune_P>;
     using index_set_t = typename multivector_t::index_set_t;
     using term_t = typename multivector_t::term_t;
-    using map_t = typename multivector_t::map_t;
 
     const auto lhs_end   = lhs.end();
     const auto rhs_end   = rhs.end();
@@ -683,8 +682,6 @@ namespace glucat
   auto
   star(const framed_multi<Scalar_T,LO,HI,Tune_P>& lhs, const framed_multi<Scalar_T,LO,HI,Tune_P>& rhs) -> Scalar_T
   {
-    using multivector_t = framed_multi<Scalar_T,LO,HI,Tune_P>;
-
     auto result = Scalar_T(0);
     const auto small_star_large = lhs.size() < rhs.size();
     const auto* smallp =
@@ -735,7 +732,6 @@ namespace glucat
   {
     using multivector_t = framed_multi<Scalar_T,LO,HI,Tune_P>;
     using traits_t = numeric_traits<Scalar_T>;
-    using index_set_t = typename multivector_t::index_set_t;
     using matrix_multi_t = typename multivector_t::matrix_multi_t;
 
     if (rhs == Scalar_T(0))
@@ -1185,7 +1181,6 @@ namespace glucat
       {
         using map_t = typename multivector_t::map_t;
         using sorted_map_t = typename multivector_t::sorted_map_t;
-        using sorted_iterator = typename sorted_map_t::const_iterator;
         auto sorted_val = sorted_map_t();
         const auto sorted_val_range = sorted_range< map_t, sorted_map_t >(sorted_val, truncated_val);
         auto sorted_it = sorted_val_range.sorted_begin;
