@@ -167,7 +167,7 @@ def draw_orbit(r, s,
     #
     # Construct an animation that rotates the plot about a vertical axis.
     #
-    rotate = FuncAnimation(fig, update, interval=1)
+    rotate = FuncAnimation(fig, update, interval=1, save_count=4)
     plt.show()
 
 #
