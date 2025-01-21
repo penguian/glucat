@@ -905,17 +905,14 @@ GluCat 0.12.1 with PyClical has so far been built and tested using:
     Virtual 2 core `Intel(R) Xeon(R) CPU @ 2.80GHz` with
 
     ```
-    Linux 5.15.0-1046-gcp #54~20.04.1-Ubuntu SMP x86 64
-    Ubuntu 22.04.4 LTS
-    g++ (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+    Linux 5.15.0-1074-gcp #83~20.04.1-Ubuntu SMP x86 64
+    Ubuntu 24.04.1 LTS
+    g++ (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
     Blaze 3.9.0
-    Boost 1.74.0
-    Cython 0.29.30
-    Python 3.10.12
-    Numpy 1.23.5
-    CXXFLAGS=`-I/home/user/usr/local/include`
-    USER_LDFLAGS=`-L/home/user/usr/local/lib`
-    LD_LIBRARY_PATH=`/home/user/usr/local/lib`
+    Boost 1.83.0
+    Cython 3.0.11
+    Python 3.12
+    Numpy 2.0.2
     ```
     `./test/fast-test-all-config-options.sh`
     All 10 configuration commands corresponding to each of the 10
