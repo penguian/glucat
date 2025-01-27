@@ -413,8 +413,11 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
             [CXXFLAGS="$CXXFLAGS -fno-check-new"])
       dnl For compatibility with Cygwin gcc
       GLUCAT_CHECK_HEADERS([bits/wordsize.h],[CXXFLAGS="$CXXFLAGS -DHAVE_BITS_WORDSIZE_H"],[],[])
-      if [[[ "$CXXVERSION" > "4.8" && "$CXXVERSION" < "5" ]]]; then
-        CXXFLAGS="$CXXFLAGS -D_GLUCAT_GCC_IGNORE_UNUSED_LOCAL_TYPEDEFS"
+      if [[[ "$glucat_have_qd" == "yes" ]]]; then
+        dnl Avoid wrong code with AVX512 by using FMA consistently.
+        dnl https://gcc.gnu.org/bugzilla/show_bug.cgi?id=106902
+        GLUCAT_CHECK_COMPILER_FLAG([ffp-contract=on],
+              [CXXFLAGS="$CXXFLAGS -ffp-contract=on"])
       fi
       ;;
     icpc|icpx)
