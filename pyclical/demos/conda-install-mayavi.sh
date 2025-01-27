@@ -1,4 +1,3 @@
-# Run using source
 # Use conda and pip to install PyQt5 and Mayavi
 
 # Run from bash using source
