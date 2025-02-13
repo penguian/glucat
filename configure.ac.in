@@ -32,7 +32,7 @@ dnl    Boston, MA 02111-1307, USA.
 
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([glucat],[0.12.2])
+AC_INIT([glucat],[0.13.0])
 AC_CONFIG_MACRO_DIR([m4])
 m4_include([m4/m4_ax_cxx_compile_stdcxx.m4])
 m4_include([m4/m4_ax_blas.m4])
@@ -315,20 +315,22 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   AC_SUBST([glucat_extra_cxxflags_pyclical])
 
   dnl Handle $glucat_use_qd: use dd_real and qd_real
-  if [[[ "$glucat_use_qd" != "no" ]]]; then
-    glucat_have_qd="yes"
+  glucat_build_using_qd="no"
+  if [[[ "$glucat_use_qd" == "yes" ]]]; then
+    glucat_have_libqd="no"
     glucat_add_libs=""
     GLUCAT_CHECK_LIB([qd],[main],
-    [glucat_add_libs="-lqd $glucat_add_libs"],
-    [glucat_have_qd="no"])
-    if [[[ "$glucat_have_qd" != "no" ]]]; then
+    [glucat_have_libqd="yes"],
+    [])
+    if [[[ "$glucat_have_libqd" == "yes" ]]]; then
       GLUCAT_CHECK_HEADERS([qd/qd_real.h],
       [
+        glucat_build_using_qd="yes"
         CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_QD";
-        all_libraries="$all_libraries $glucat_add_libs"
-      ],[glucat_have_qd="no"],[])
+        all_libraries="$all_libraries -lqd"
+      ],[],[])
     fi
-    if [[[ "$glucat_have_qd" == "no" ]]]; then
+    if [[[ "$glucat_build_using_qd" == "no" ]]]; then
       AC_MSG_WARN([Cannot build using QD.])
     fi
   fi
@@ -413,8 +415,8 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
             [CXXFLAGS="$CXXFLAGS -fno-check-new"])
       dnl For compatibility with Cygwin gcc
       GLUCAT_CHECK_HEADERS([bits/wordsize.h],[CXXFLAGS="$CXXFLAGS -DHAVE_BITS_WORDSIZE_H"],[],[])
-      if [[[ "$glucat_have_qd" == "yes" ]]]; then
-        dnl Avoid wrong code with AVX512 by using FMA consistently.
+      if [[[ "$glucat_build_using_qd" == "yes" ]]]; then
+        dnl Avoid wrong code with QD and AVX512 by using FMA consistently
         dnl https://gcc.gnu.org/bugzilla/show_bug.cgi?id=106902
         GLUCAT_CHECK_COMPILER_FLAG([ffp-contract=on],
               [CXXFLAGS="$CXXFLAGS -ffp-contract=on"])
