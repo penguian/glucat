@@ -4,6 +4,7 @@ debug-yes:                   --enable-debug=yes
 disable-dependency:          --disable-dependency-tracking
 disable-pyclical:            --disable-pyclical
 prefix-home-opt:             --prefix=$HOME/opt
+qd:                          --with-qd
 eig-blaze:                   --with-eig=blaze
 eig-blaze-debug-full:        --with-eig=blaze --enable-debug=full
 eig-blaze-debug-yes:         --with-eig=blaze --enable-debug=yes
