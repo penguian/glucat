@@ -1,5 +1,5 @@
 import PyClical; print(PyClical.__version__)
-PyClical._test()
+print(PyClical._test())
 quit()
 # PyClical: Python interface to GluCat:
 #           Generic library of universal Clifford algebra templates
