@@ -13,3 +13,4 @@ conda install mayavi -y -c conda-forge
 conda uninstall mesalib -y
 conda install cython -y -c conda-forge
 conda install matplotlib -y -c conda-forge
+conda install qd -y -c conda-forge
