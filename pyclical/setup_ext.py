@@ -28,10 +28,12 @@ def filtered_libraries():
     libraries_list = os.environ["LIBRARIES"].replace("-l", "").split()
     filtered_libraries_list = []
     mkl_libraries = [
+        "mkl_core",
         "mkl_gf",
         "mkl_gf_lp64",
         "mkl_intel",
-        "mkl_intel_lp64"]
+        "mkl_intel_lp64",
+        "mkl_sequential"]
     substituted = False
     for lib in mkl_libraries:
         try:
