@@ -8,9 +8,12 @@ fi
 conda create -y -n mayavi
 conda activate mayavi
 conda install 'python=3.9' -y -c conda-forge
+pip uninstall PyQt5
 pip install PyQt5
 conda install mayavi -y -c conda-forge
 conda uninstall mesalib -y
 conda install cython -y -c conda-forge
 conda install matplotlib -y -c conda-forge
 conda install qd -y -c conda-forge
+conda uninstall mayavi -y
+conda install mayavi -y -c conda-forge
