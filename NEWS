@@ -17,12 +17,12 @@ o The pyclical/setup_ext.py and pyclical/setup_nocython.py scripts have been
   refactored.
 o The Python demo code has been brought up to date.
 
-o The installation script pyclical/demo/kubuntu-24-conda-install-mayavi.sh and
-  the environment script pyclical/demo/kubuntu-24-mayavi-env.sh have been added
+o The installation script pyclical/demos/kubuntu-24-conda-install-mayavi.sh and
+  the environment script pyclical/demos/kubuntu-24-mayavi-env.sh have been added
   to simplify the installation and running of the Mayavi-based plotting demos
   on Kubuntu 24.10.
 
-For details of changes, see either the Changelog file or the git log in
+For details of changes, see either the ChangeLog file or the git log in
 https://github.com/penguian/glucat and its clones.
 
 2024-08-17: 0.12.1
