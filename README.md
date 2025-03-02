@@ -1,4 +1,4 @@
-README for GluCat 0.12.1 with PyClical
+README for GluCat 0.13.0 with PyClical
 ======================================
 
 GluCat is a library of C++ template classes for calculations with the universal
