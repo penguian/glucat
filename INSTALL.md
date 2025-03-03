@@ -565,9 +565,9 @@ in `./test/config-options.txt` and are:
 ```
   7. `test.configure.qd.out`:
 
-'''
+```
 ./configure --with-qd
-'''
+```
   8. `test.configure.eig-blaze.out`:
 
 ```
@@ -716,7 +716,7 @@ causes `./test/diff-all-config-outputs.sh` to use diff to compare
 `glucat-0.13.0.4/pyclical/test.out` to `glucat-0.13.0/pyclical/test.out`.
 
 Each comparison should only produce a line containing the line number of
-the configuration being compared: 1 to 10.
+the configuration being compared: 1 to 11.
 
 The exceptional cases are:
 
