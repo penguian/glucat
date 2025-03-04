@@ -1042,11 +1042,11 @@ the following procedure:
 
 3. Run ./configure with your preferred options.
 
-4. Change directory to pyclical.
+4. Run make clean.
 
 5. Run make.
 
-6. Change directory to demos.
+6. Change directory to pyclical/demos.
 
 7. Run ./kubuntu-24-mayavi-env.sh before running either
    ./plotting_demo_dialog.py or ./plotting_demo_mayavi.py.
