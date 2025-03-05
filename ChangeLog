@@ -1,3 +1,18 @@
+2025-03-05  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #59 from
+	penguian/55-remove-deprecated-bindings-option: Update to version
+	0.13.0 Update to version 0.13.0
+
+2025-03-05  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/kubuntu-24-conda-install-mayavi.sh: Improve the
+	Mayavi2 installation script
+
+2025-03-03  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* ChangeLog: Update for version 0.13.0
+
 2025-03-03  Paul Leopardi <paul.leopardi@anu.edu.au>
 
 	* INSTALL.md: Fix typos
