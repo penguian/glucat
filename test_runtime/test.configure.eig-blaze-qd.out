@@ -631,7 +631,7 @@ lhs == nan
 A
   -314.159{-1}
 Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
-Relative error == -nan
+Relative error == nan
 lhs == inf
 rhs == inf
 Test failed: cos(A)*tan(A) != sin(A)

@@ -655,7 +655,6 @@ namespace glucat
     if (!prechecked)
     {
       using multivector_t = Multivector<Scalar_T,LO,HI,Tune_P>;
-      using index_set_t = typename multivector_t::index_set_t;
       using error_t = typename multivector_t::error_t;
 
       const auto i_frame = i.frame();

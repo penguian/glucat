@@ -1,20 +1,162 @@
+2025-03-03  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md: Fix typos
+
+2025-03-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* ChangeLog: Update for version 0.13.0
+
+2025-03-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* NEWS: Update for version 0.13.0
+
+2025-03-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* AUTHORS.md, INSTALL.md, NEWS, README.md, TODO.md, glucat.lsm: 
+	Update for version 0.13.0
+
+2025-03-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* Doxyfile.in: Exclude pyclical/PyClical_nocython.cpp code.
+
+2025-03-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/{conda-install-mayavi.sh =>
+	kubuntu-24-conda-install-mayavi.sh}, pyclical/demos/{mayavi-env.sh
+	=> kubuntu-24-mayavi-env.sh}: Rename the Mayavi demo helper scripts
+
+2025-02-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/conda-install-mayavi.sh: Improve the Conda
+	installation of Mayavi
+
+2025-02-18  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/test.out,
+	test_runtime/fast-test.configure.eig-bindings-qd.out,
+	test_runtime/fast-test.configure.eig-blaze-qd.out,
+	test_runtime/{fast-test.configure.eig-bindings.out =>
+	fast-test.configure.qd.out}, test_runtime/gfft_test-11.out,
+	test_runtime/products-8.out, test_runtime/squaring-11.out,
+	test_runtime/test.configure.eig-bindings-qd.out,
+	test_runtime/test.configure.eig-blaze-qd.out,
+	test_runtime/{test.configure.eig-bindings.out =>
+	test.configure.qd.out}, test_runtime/transforms-8.out: Test results
+	for version 0.13.0.
+
+2025-02-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test/timing_tests.sh: Use tee so that test output is displayed
+	sooner
+
+2025-02-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test/config-options.txt: Add a test for --with-qd
+
+2025-02-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/test.py: Ensure that the doctests always produce output
+	even if python is used instead of ipython
+
+2025-02-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/conda-install-mayavi.sh: Conda install the qd
+	library for demos
+
+2025-02-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/setup_ext.py: Consolidate more mkl libraries
+
+2025-02-13  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in: Rearrange configuration of libqd. Bump version to
+	0.13.0
+
+2025-01-29  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md: Save documentation work in progress
+
+2025-01-27  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : commit 76b6b20b59eba4ceeb4db0c3e531220bce25c433 Author: Paul
+	Leopardi <paul.leopardi@anu.edu.au> Date:   Mon Jan 27 21:02:55 2025
+	+1100
+
+2025-01-27  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/clifford_demo.out: Bring the Python demo output up
+	to date
+
+2025-01-27  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/conda-install-mayavi.sh,
+	pyclical/demos/mayavi-env.sh: Improve Bash scripts to set up a Mayvi
+	environment for the plotting demos
+
+2025-01-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/conda-install-mayavi.sh,
+	pyclical/demos/mayavi-env.sh: Improve the Mayavi setup scripts
+
+2025-01-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/conda-install-mayavi.sh,
+	pyclical/demos/mayavi-env.sh: Add Bash scripts to set up a Mayvi
+	environment for the plotting demos
+
+2025-01-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/clifford_demo.py, pyclical/demos/plotting_demo.py,
+	pyclical/demos/plotting_demo_dialog.py: Bring the Python demo code
+	up to date
+
+2025-01-04  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in, glucat/clifford_algebra_imp.h,
+	glucat/framed_multi_imp.h, glucat/matrix_imp.h,
+	glucat/matrix_multi_imp.h: Remove unused local typedefs
+
+2025-01-01  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in: Deprecate the ability to build PyClical without
+	Cython
+
+2025-01-01  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/setup_nocython.py: Update pyclical/setup_nocython.py to
+	match refactored pyclical/setup_ext.py
+
+2024-12-31  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/setup.py, pyclical/setup_ext.py: Refactor and simplify
+	pyclical/setup_ext.py
+
+2024-12-29  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* Doxyfile.in, INSTALL.md, configure.ac.in, glucat/matrix_imp.h,
+	test/config-options.txt: Remove deprecated bindings option
+
+2024-12-29  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* ChangeLog: Update for pull request #53
+
 2024-12-22  Paul Leopardi <paul.leopardi@anu.edu.au>
 
-        * : Merge pull request #53 from
-        penguian/issue-52-PyClical_build_fails_to_find_headers Add include_dirs to ext creation
+	* : Merge pull request #53 from
+	penguian/issue-52-PyClical_build_fails_to_find_headers Add include_dirs to ext creation
 
 2024-08-18  Paul Leopardi <paul.leopardi@anu.edu.au>
 
-        * README.md: Update email address in README.md
+	* README.md: Update email address in README.md
 
 2024-08-18  Paul Leopardi <paul.leopardi@anu.edu.au>
 
-        * : Merge pull request #51 from penguian/issue-49-Bring_up_to_date Bring the repository up to date with respect to toolchains, Cython,
-        Python
+	* : Merge pull request #51 from penguian/issue-49-Bring_up_to_date Bring the repository up to date with respect to toolchains, Cython,
+	Python
 
 2024-08-17  Paul Leopardi <paul.leopardi@anu.edu.au>
 
-        * test_runtime/gfft_test-11.out, test_runtime/products-8.out,
+	* test_runtime/gfft_test-11.out, test_runtime/products-8.out,
 	test_runtime/squaring-11.out, test_runtime/transforms-8.out: Timing
 	test results for GluCat 0.12.1
 
@@ -32,7 +174,9 @@
 
 2024-08-17  Paul Leopardi <paul.leopardi@anu.edu.au>
 
-        * : Update to GluCat 0.12.1
+	* : commit a1e7ec0afecf86d8960f48cb0d879232930b2c9a Author: Paul
+	Leopardi <paul.leopardi@anu.edu.au> Date:   Sat Aug 17 18:42:07 2024
+	+1000
 
 2024-08-17  Paul Leopardi <paul.leopardi@anu.edu.au>
 
@@ -6966,7 +7110,7 @@
 
 2002-01-12  Paul C. Leopardi <leopardi@users.sourceforge.net>
 
-        * Add glucat to cvs
+	* Add glucat to cvs
 
 2002-01-12 leopardi
 

@@ -13,20 +13,16 @@ else
 fi
 
 echo "products "${sp}":"
-${dir}/../products/products ${sp} > products-${sp}.out
-cat products-${sp}.out
+${dir}/../products/products ${sp} | tee products-${sp}.out
 shift
 echo
 echo "squaring "${ss}":"
-${dir}/../squaring/squaring ${ss} > squaring-${ss}.out
-cat squaring-${ss}.out
+${dir}/../squaring/squaring ${ss} | tee squaring-${ss}.out
 shift
 echo
 echo "gfft_test "${sg}":"
-${dir}/../gfft_test/gfft_test ${sg} > gfft_test-${sg}.out
-cat gfft_test-${sg}.out
+${dir}/../gfft_test/gfft_test ${sg} | tee gfft_test-${sg}.out
 shift
 echo
 echo "transforms "${st}":"
-${dir}/../transforms/transforms ${st} > transforms-${st}.out
-cat transforms-${st}.out
+${dir}/../transforms/transforms ${st} | tee transforms-${st}.out

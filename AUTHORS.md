@@ -1,4 +1,4 @@
-AUTHORS for GluCat 0.12.1 with PyClical
+AUTHORS for GluCat 0.13.0 with PyClical
 =======================================
 
 Paul C. Leopardi <paul.leopardi@gmail.com>
@@ -282,18 +282,18 @@ University Press, 1995.
 
 * [Rafal Ablamowitz - archived
   ](https://web.archive.org/web/20210211165810/https://math.tntech.edu/rafal/)
-* [William Baylis
-  ](http://cronus.uwindsor.ca/baylis-research)
+* [William Baylis - archived
+  ](https://web.archive.org/web/20170804022849/http://cronus.uwindsor.ca/baylis-research)
 * [The Clifford Research Group at Ghent University - archived
   ](https://web.archive.org/web/20190917051859/http://cage.ugent.be/crg/)
 * [Leo Dorst
   ](https://staff.fnwi.uva.nl/l.dorst/clifford/index.html)
 * [The Geometric Algebra Research Group at Cambridge
   ](http://geometry.mrao.cam.ac.uk/)
-* [David Hestenes
-  ](http://geocalc.clas.asu.edu/)
+* [David Hestenes - archived
+  ](https://web.archive.org/web/20230104061045/http://geocalc.clas.asu.edu/)
 * [Soeren Krausshar
-  ](https://www.uni-erfurt.de/erziehungswissenschaftliche-fakultaet/fakultaet/profil/fachgebiete-und-professuren/mathematik-und-mathematikdidaktik/team/soeren-krausshar)
+  ](https://www.uni-erfurt.de/erziehungswissenschaftliche-fakultaet/fakultaet/profil/fachgebiete-und-professuren/mathematik-und-mathematikdidaktik/fachwissenschaft-mathematik/team/soeren-krausshar)
 * [Pertti Lounesto - archived
   ](https://users.aalto.fi/~ppuska/mirror/Lounesto/)
 * [Alan Macdonald
@@ -318,13 +318,13 @@ Other Clifford algebra software
 ### Historical
  * [CLICAL, a Clifford algebra calculator - archived
    ](https://users.aalto.fi/~ppuska/mirror/Lounesto/CLICAL.htm)
- * [CLIFFORD 2017 for Maple 2017
+ * [CLIFFORD 2017 for Maple 2017 - archived
    ](https://web.archive.org/web/20171004075723/http://math.tntech.edu/rafal/cliff2017/index.html)
  * [CLUCalc, 3D calculation and visualization software
    ](https://github.com/foobarz/CLUCalcSource-4.3.3)
- * [GA Package for Maple
-   ](http://www.mrao.cam.ac.uk/~maja1/software/GA/)
+ * [GA Package for Maple - archived
+   ](https://web.archive.org/web/20230429190800/https://www.mrao.cam.ac.uk/~maja1/software/GA/)
 
 ### swMATH
- * https://www.swmath.org/?term=clifford+algebras
+ * https://zbmath.org/software/?q=clifford+algebras
  

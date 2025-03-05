@@ -1,5 +1,29 @@
-NEWS for GluCat 0.12.1 with PyClical
+NEWS for GluCat 0.13.0 with PyClical
 ====================================
+
+2025-03-02: 0.13.0
+GluCat 0.13.0 has improved configuration and testing.
+
+o Unused local typedefs have been removed from the C++ code.
+o The deprecated configuration option ./configure --with-eig=bindings
+  has been removed.
+o The ability to build PyClical without Cython has been deprecated and will be
+  removed in future versions.
+o The configuration option  ./configure --with-qd has improved configuration
+  tests.
+o The ./configure script adds g++ compiler options to ensure that FMA is used
+  consistently on hardware that implements AVX512 instructions.
+o The pyclical/setup_ext.py and pyclical/setup_nocython.py scripts have been
+  refactored.
+o The Python demo code has been brought up to date.
+
+o The installation script pyclical/demos/kubuntu-24-conda-install-mayavi.sh and
+  the environment script pyclical/demos/kubuntu-24-mayavi-env.sh have been added
+  to simplify the installation and running of the Mayavi-based plotting demos
+  on Kubuntu 24.10.
+
+For details of changes, see either the ChangeLog file or the git log in
+https://github.com/penguian/glucat and its clones.
 
 2024-08-17: 0.12.1
 GluCat works with current toolchains.

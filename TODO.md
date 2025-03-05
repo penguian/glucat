@@ -1,4 +1,4 @@
-TODO for GluCat 0.12.1 with PyClical
+TODO for GluCat 0.13.0 with PyClical
 ====================================
 
 Documentation:
@@ -17,12 +17,11 @@ Portability:
 Interfaces:
 
 *  Downwards:
-   * Remove the Boost bindings interface.
    * Try using Blaze, Eigen or Armadillo as a replacement for uBLAS.
 
 *  Upwards:
    * Expand the Cython-based Python extension module PyClical into a Sage interface.
-   * Try defining Boost concepts and more numeric traits so that GluCat can
+   * Try defining concepts and more numeric traits so that GluCat can
      eventually become a Boost library.
 
 Transcendental functions:

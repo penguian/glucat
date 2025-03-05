@@ -5,7 +5,7 @@
 #
 # setup.py: Use Cython and Distutils to build PyClical.
 #
-#    copyright            : (C) 2008-2012 by Paul C. Leopardi
+#    copyright            : (C) 2008-2024 by Paul C. Leopardi
 #
 #    This library is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Lesser General Public License as published
@@ -21,18 +21,16 @@
 #    along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 from setuptools import setup
-from setup_ext import setup_ext, cxx_build_ext
+from setup_ext import setup_ext
 from Cython.Build import cythonize
 import Cython.Compiler.Options
-Cython.Compiler.Options.annotate=True
 import os
 
+Cython.Compiler.Options.annotate=True
 ext_name = os.environ['ext_name']
 source   = os.environ['source_pyx']
 ext = setup_ext(ext_name, source)
-
 setup(
     name = ext_name,
-    cmdclass = {'build_ext': cxx_build_ext},
     ext_modules = cythonize([ext])
 )

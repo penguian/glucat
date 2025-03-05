@@ -903,7 +903,9 @@ RECURSIVE              = YES
 # Note that relative paths are relative to the directory from which doxygen is
 # run.
 
-EXCLUDE                = @doxydir@/pyclical/PyClical.cpp
+EXCLUDE                = @doxydir@/pyclical/PyClical.cpp \
+                         @doxydir@/pyclical/PyClical_nocython.cpp
+
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded
@@ -2152,7 +2154,7 @@ INCLUDE_FILE_PATTERNS  =
 
 PREDEFINED             = _GLUCAT_USE_QD \
                          _GLUCAT_USE_EIGENVALUES \
-                         _GLUCAT_USE_BINDINGS
+                         _GLUCAT_USE_BLAZE
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then this
 # tag can be used to specify a list of macro names that should be expanded. The

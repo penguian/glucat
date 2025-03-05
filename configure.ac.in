@@ -32,7 +32,7 @@ dnl    Boston, MA 02111-1307, USA.
 
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([glucat],[0.12.1])
+AC_INIT([glucat],[0.13.0])
 AC_CONFIG_MACRO_DIR([m4])
 m4_include([m4/m4_ax_cxx_compile_stdcxx.m4])
 m4_include([m4/m4_ax_blas.m4])
@@ -136,14 +136,11 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     [glucat_use_qd="$withval"],
     [glucat_use_qd="no"])
 
-  AC_ARG_WITH([eig],          [[  --with-eig[=ARG]        library to use for eigenvalues (no|bindings|blaze) [default=no]]],
+  AC_ARG_WITH([eig],          [[  --with-eig[=ARG]        library to use for eigenvalues (no|blaze) [default=no]]],
   [
     case "$withval" in
       no)
         glucat_use_eigenvalues="no"
-        ;;
-      bindings)
-        glucat_use_eigenvalues="bindings"
         ;;
       blaze)
         glucat_use_eigenvalues="blaze"
@@ -304,8 +301,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     if [[[ "$glucat_use_cython" == "no" ]]]; then
       AC_MSG_WARN([Cannot build using Cython.])
       AC_CHECK_FILE([pyclical/PyClical_nocython.cpp],
-      [],
-      [glucat_use_pyclical="no"])
+      [
+        AC_MSG_WARN([The ability to build PyClical without Cython $glucat_deprecated_warning])
+      ],[glucat_use_pyclical="no"])
     fi
     if [[[ "$glucat_use_pyclical" == "no" ]]]; then
       AC_MSG_WARN([Cannot build PyClical.])
@@ -317,27 +315,29 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   AC_SUBST([glucat_extra_cxxflags_pyclical])
 
   dnl Handle $glucat_use_qd: use dd_real and qd_real
-  if [[[ "$glucat_use_qd" != "no" ]]]; then
-    glucat_have_qd="yes"
+  glucat_build_using_qd="no"
+  if [[[ "$glucat_use_qd" == "yes" ]]]; then
+    glucat_have_libqd="no"
     glucat_add_libs=""
     GLUCAT_CHECK_LIB([qd],[main],
-    [glucat_add_libs="-lqd $glucat_add_libs"],
-    [glucat_have_qd="no"])
-    if [[[ "$glucat_have_qd" != "no" ]]]; then
+    [glucat_have_libqd="yes"],
+    [])
+    if [[[ "$glucat_have_libqd" == "yes" ]]]; then
       GLUCAT_CHECK_HEADERS([qd/qd_real.h],
       [
+        glucat_build_using_qd="yes"
         CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_QD";
-        all_libraries="$all_libraries $glucat_add_libs"
-      ],[glucat_have_qd="no"],[])
+        all_libraries="$all_libraries -lqd"
+      ],[],[])
     fi
-    if [[[ "$glucat_have_qd" == "no" ]]]; then
+    if [[[ "$glucat_build_using_qd" == "no" ]]]; then
       AC_MSG_WARN([Cannot build using QD.])
     fi
   fi
 
   dnl Handle $glucat_use_eigenvalues: library to use for eigenvalues
   case "$glucat_use_eigenvalues" in
-    bindings|blaze)
+    blaze)
       glucat_have_lapack="yes"
       glucat_add_libs=""
       case "$basename_cxx" in
@@ -361,21 +361,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       ;;
   esac
   case "$glucat_use_eigenvalues" in
-    bindings)
-      GLUCAT_MSG_WARN_DEPRECATED_VAL([--with-eig], [bindings])
-      if [[[ "$glucat_have_lapack" != "no" ]]]; then
-        glucat_have_bindings="yes"
-        GLUCAT_CHECK_HEADERS([boost/numeric/bindings/lapack/driver/gees.hpp],
-        [
-          CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BINDINGS"
-          all_libraries="$all_libraries $glucat_add_libs"
-        ],
-        [glucat_have_bindings="no"],[])
-      fi
-      if [[[ "$glucat_have_bindings" == "no" ]]]; then
-        AC_MSG_WARN([Cannot build using Boost bindings.])
-      fi
-      ;;
     blaze)
       if [[[ "$glucat_have_lapack" != "no" ]]]; then
         glucat_have_blaze="yes"
@@ -403,8 +388,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       CXXFLAGS="-Wall $CXXFLAGS"
       case "$basename_cxx" in
         "clang++"*|"g++"*|icpx)
-          GLUCAT_CHECK_COMPILER_FLAG([Wno-unused-local-typedefs],
-                [CXXFLAGS="$CXXFLAGS -Wno-unused-local-typedefs"])
           GLUCAT_CHECK_COMPILER_FLAG([Wno-deprecated-register],
                 [CXXFLAGS="$CXXFLAGS -Wno-deprecated-register"])
           ;;
@@ -432,8 +415,11 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
             [CXXFLAGS="$CXXFLAGS -fno-check-new"])
       dnl For compatibility with Cygwin gcc
       GLUCAT_CHECK_HEADERS([bits/wordsize.h],[CXXFLAGS="$CXXFLAGS -DHAVE_BITS_WORDSIZE_H"],[],[])
-      if [[[ "$CXXVERSION" > "4.8" && "$CXXVERSION" < "5" ]]]; then
-        CXXFLAGS="$CXXFLAGS -D_GLUCAT_GCC_IGNORE_UNUSED_LOCAL_TYPEDEFS"
+      if [[[ "$glucat_build_using_qd" == "yes" ]]]; then
+        dnl Avoid wrong code with QD and AVX512 by using FMA consistently
+        dnl https://gcc.gnu.org/bugzilla/show_bug.cgi?id=106902
+        GLUCAT_CHECK_COMPILER_FLAG([ffp-contract=on],
+              [CXXFLAGS="$CXXFLAGS -ffp-contract=on"])
       fi
       ;;
     icpc|icpx)

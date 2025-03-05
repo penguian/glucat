@@ -92,7 +92,7 @@ def run(ctx):
     print_fill(r"Given a basis $\{v_1, v_2, \ldots, v_n\} \subset \mathbb{R}^n$,"
               +r" the *Grassmann algebra* of $\mathbb{R}^n$ is the $2^n$-dimensional space of"
               +r" *multivectors* of the form")
-    print_fill(r"$x_{\\emptyset} + x_{\{1\}} v_1 + \ldots$"
+    print_fill(r"$x_{\emptyset} + x_{\{1\}} v_1 + \ldots$"
               +r"$+ x_{\{n\}} v_n + x_{\{1,2\}} v_1 \wedge v_2 + \ldots + x_{\{n-1,n\}} v_{n-1} \wedge v_n + \ldots$"
               +r"$+ x_{\{1,\ldots,n\}} v_1 \wedge \ldots \wedge v_n$.")
     print_line()
@@ -128,7 +128,7 @@ def run(ctx):
     print_fill(r"$e_1 e_2 = e_1 \wedge e_2, \ldots, e_1 e_2 \ldots e_n = e_1 \wedge e_2 \wedge \ldots \wedge e_n$")
     print_exec("print(e(1)*e(2)); print(e(1) ^ e(2))")
     print_fill(r"... so that every multivector $x$ in the $2^n$-dimensional Grassmann algebra on $\mathbb{R}^n$ can be expressed as")
-    print_fill(r"$x_{\\emptyset} + x_{\{1\}} e_1 + \ldots$"
+    print_fill(r"$x_{\emptyset} + x_{\{1\}} e_1 + \ldots$"
               +r"$+ x_{\{n\}} e_n + x_{\{1,2\}} e_1 e_2 + \ldots + x_{\{n-1,n\}} e_{n-1} e_n + \ldots$"
               +r"$+ x_{\{1,\ldots,n\}} e_1 e_2 \ldots e_n$.")
     print_fill(r"This $2^n$-dimensional vector space with the Clifford product is called"

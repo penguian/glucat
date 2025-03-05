@@ -9,7 +9,7 @@ An example of how to modify the data visualized  via an interactive dialog.
 from traits.api import Bool, Button, HasTraits, Instance, Range, on_trait_change
 from traitsui.api import Group, View
 
-from mayavi.core.api import PipelineBase
+from mayavi.core.api import Source
 from mayavi.core.ui.api import MlabSceneModel
 
 from plotting_demo_mayavi import demo,  \
@@ -51,7 +51,7 @@ class TorusDemoDialog(HasTraits):
 
     scene = Instance(MlabSceneModel, ())
 
-    plot = Instance(PipelineBase)
+    plot = Instance(Source)
 
 
     # When the scene is activated, or when the parameters are changed, we
@@ -73,16 +73,14 @@ class TorusDemoDialog(HasTraits):
 
     # The layout of the dialog created
     view = View(Group(
-                    '_',
                     'number_of_orbits',
                     'resolution',
                     'use_reciprocal',
-                    '_',
+                    ' ',
                     'plot_button',
                     label='Plotting controls',
                     ),
                 Group(
-                    '_',
                     'number_of_points',
                     'segment_length',
                     'scaling',
