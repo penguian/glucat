@@ -1,12 +1,13 @@
 if make_pyclical
-  PYCLICAL = pyclical
-  PYCLICAL_DEMOS = pyclical/demos
+  PYCLICALdir = pyclical
   PYCLICAL_CHECK_OUT = pyclical/check.out
+  PYCLICAL_DEMOSdir = pyclical/demos
+  PYCLICAL_DEMOS_SCRIPTS = pyclical/demos/kubuntu-24-conda-install-mayavi.sh  pyclical/demos/kubuntu-24-mayavi-env.sh
 endif
 
 TIMING = gfft_test products squaring transforms
 
-TOPSUBDIRS = glucat $(PYCLICAL) $(PYCLICAL_DEMOS) $(TIMING)
+TOPSUBDIRS = glucat $(PYCLICALdir) $(PYCLICAL_DEMOSdir) $(TIMING)
 
 EXAMPLES = test00 test01 test02 test03 test04 test05 test06 test07 test08 test09 test10 test11 test12 test13 test14 test15 test16 test17
 
@@ -20,7 +21,8 @@ DOC = doc
 
 doc_DATA = AUTHORS AUTHORS.md COPYING ChangeLog DESIGN.md glucat.lsm INSTALL INSTALL.md NEWS README README.md TODO TODO.md
 
-EXTRA_DIST = admin m4 test test_runtime $(EXAMPLES) subdirs configure.ac.in configure.ac configure Makefile.am $(doc_DATA) doc/Makefile.am doc/Makefile.in
+EXTRA_DIST = admin m4 test test_runtime $(EXAMPLES) subdirs configure.ac.in configure.ac configure Makefile.am \
+             $(doc_DATA) doc/Makefile.am doc/Makefile.in $(PYCLICAL_DEMOS_SCRIPTS)
 
 AUTHORS: AUTHORS.md
 	ln -s AUTHORS.md AUTHORS
@@ -46,7 +48,7 @@ fast-test-out: $(FAST_TESTOUT)
 
 if make_pyclical
 $(PYCLICAL_CHECK_OUT):
-	$(MAKE) -C $(PYCLICAL) check
+	$(MAKE) -C $(PYCLICALdir) check
 endif
 
 if HAVE_DOXYGEN
@@ -76,12 +78,12 @@ cvs:
 	$(MAKE) -f admin/Makefile.common cvs
 
 clean-local:
-	-for d in $(DOC) $(PYCLICAL) $(PYCLICAL_DEMOS) $(EXAMPLES); do \
+	-for d in $(DOC) $(PYCLICALdir) $(PYCLICAL_DEMOSdir) $(EXAMPLES); do \
 	  $(MAKE) -C $$d clean; \
 	done
 
 distclean-local:
-	-for d in $(DOC) $(PYCLICAL) $(PYCLICAL_DEMOS) $(EXAMPLES); do \
+	-for d in $(DOC) $(PYCLICALdir) $(PYCLICAL_DEMOSdir) $(EXAMPLES); do \
 	  $(MAKE) -C $$d distclean; \
 	done
 
