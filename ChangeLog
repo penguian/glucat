@@ -1,3 +1,11 @@
+2025-03-09  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #61 from penguian/60-update-the-dist-tarball Add Mayavi Kubuntu installation scripts to the dist tarball
+
+2025-03-05  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* ChangeLog: Update for version 0.3.0
+
 2025-03-05  Paul Leopardi <paul.leopardi@anu.edu.au>
 
 	* : Merge pull request #59 from
