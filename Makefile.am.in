@@ -2,7 +2,7 @@ if make_pyclical
   PYCLICALdir = pyclical
   PYCLICAL_CHECK_OUT = pyclical/check.out
   PYCLICAL_DEMOSdir = pyclical/demos
-  PYCLICAL_DEMOS_SCRIPTS = pyclical/demos/kubuntu-24-conda-install-mayavi.sh  pyclical/demos/kubuntu-24-mayavi-env.sh
+  PYCLICAL_DEMOS_SCRIPTS = pyclical/demos/kubuntu-24-conda-install-mayavi.sh  pyclical/demos/kubuntu-mayavi-env.sh
 endif
 
 TIMING = gfft_test products squaring transforms
