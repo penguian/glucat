@@ -2,7 +2,6 @@ if make_pyclical
   PYCLICALdir = pyclical
   PYCLICAL_CHECK_OUT = pyclical/check.out
   PYCLICAL_DEMOSdir = pyclical/demos
-  PYCLICAL_DEMOS_SCRIPTS = pyclical/demos/kubuntu-24-conda-install-mayavi.sh  pyclical/demos/kubuntu-mayavi-env.sh
 endif
 
 TIMING = gfft_test products squaring transforms
@@ -22,7 +21,7 @@ DOC = doc
 doc_DATA = AUTHORS AUTHORS.md COPYING ChangeLog DESIGN.md glucat.lsm INSTALL INSTALL.md NEWS README README.md TODO TODO.md
 
 EXTRA_DIST = admin m4 test test_runtime $(EXAMPLES) subdirs configure.ac.in configure.ac configure Makefile.am \
-             $(doc_DATA) doc/Makefile.am doc/Makefile.in $(PYCLICAL_DEMOS_SCRIPTS)
+             $(doc_DATA) doc/Makefile.am doc/Makefile.in
 
 AUTHORS: AUTHORS.md
 	ln -s AUTHORS.md AUTHORS
