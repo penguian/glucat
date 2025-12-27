@@ -32,12 +32,12 @@ case $AUTOCONF_VERSION in
   [Aa]utoconf*2.[6-7]* ) : ;;
   "" )
     echo "*** AUTOCONF NOT FOUND!."
-    echo "*** GluCat requires autoconf 2.6+"
+    echo "*** GluCat requires autoconf 2.60+"
     exit 1
     ;;
   * )
     echo "*** YOU'RE USING $AUTOCONF_VERSION."
-    echo "*** GluCat requires autoconf 2.6+"
+    echo "*** GluCat requires autoconf 2.60+"
     exit 1
     ;;
 esac
@@ -47,19 +47,19 @@ case $AUTOHEADER_VERSION in
   [Aa]utoheader*2.[6-7]* ) : ;;
   "" )
     echo "*** AUTOHEADER NOT FOUND!."
-    echo "*** GluCat requires autoheader 2.6+ (part of autoconf)"
+    echo "*** GluCat requires autoheader 2.60+ (part of autoconf)"
     exit 1
     ;;
   * )
     echo "*** YOU'RE USING $AUTOHEADER_VERSION."
-    echo "*** GluCat requires autoheader 2.6+ (part of autoconf)"
+    echo "*** GluCat requires autoheader 2.60+ (part of autoconf)"
     exit 1
     ;;
 esac
 
 AUTOMAKE_STRING=`$AUTOMAKE --version | head -1`
 case $AUTOMAKE_STRING in
-  automake*1.1[4-7]* ) : ;;
+  automake*1.1[4-9]* ) : ;;
   unsermake* ) :
     echo "*** YOU'RE USING UNSERMAKE."
     echo "*** GOOD LUCK!! :)"
