@@ -101,6 +101,14 @@ namespace glucat
     /// Constructor from string
     index_set    (const std::string& str);
 
+    // Default copy constructor and assignment
+    index_set    (const index_set&) = default;
+    auto operator= (const index_set&) -> index_set& = default;
+
+    // Default move constructor and assignment
+    index_set    (index_set&&) = default;
+    auto operator= (index_set&&) -> index_set& = default;
+
     /// Equality
     auto operator==  (const index_set_t rhs) const -> bool;
     /// Inequality

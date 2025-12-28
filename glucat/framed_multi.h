@@ -174,6 +174,14 @@ namespace glucat
     /// Default constructor
     framed_multi();
 
+    // Default copy constructor and assignment
+    framed_multi(const framed_multi&) = default;
+    auto operator=(const framed_multi&) -> framed_multi& = default;
+
+    // Default move constructor and assignment
+    framed_multi(framed_multi&&) = default;
+    auto operator=(framed_multi&&) -> framed_multi& = default;
+
   private:
     /// Private constructor using hash_size
     framed_multi(const hash_size_t& hash_size);

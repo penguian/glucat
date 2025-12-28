@@ -165,6 +165,13 @@ namespace glucat
     ~matrix_multi() override = default;
     /// Default constructor
     matrix_multi();
+
+    // Default copy constructor
+    matrix_multi(const matrix_multi&) = default;
+
+    // Default move constructor and assignment
+    matrix_multi(matrix_multi&&) = default;
+    auto operator=(matrix_multi&&) -> matrix_multi& = default;
     /// Construct a multivector from a multivector with a different scalar type
     template< typename Other_Scalar_T >
     matrix_multi(const matrix_multi<Other_Scalar_T,LO,HI,Tune_P>& val);
