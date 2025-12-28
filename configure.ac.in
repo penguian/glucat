@@ -155,8 +155,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   AC_LANG([C]++)
 
   dnl Set the language standard
-  saved_CXX=$CXX
-  AX_CXX_COMPILE_STDCXX(11, noext, mandatory)
+  AX_CXX_COMPILE_STDCXX(23, noext, mandatory)
 
   basename_cxx=[$(basename $(cut -d' ' -f1 <<<$CXX))]
 
@@ -364,8 +363,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     blaze)
       if [[[ "$glucat_have_lapack" != "no" ]]]; then
         glucat_have_blaze="yes"
-        CXX=$saved_CXX
-        AX_CXX_COMPILE_STDCXX(14, noext, mandatory)
         GLUCAT_CHECK_HEADERS([blaze/Math.h],
         [
           CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BLAZE"
@@ -375,8 +372,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       fi
       if [[[ "$glucat_have_blaze" == "no" ]]]; then
         AC_MSG_WARN([Cannot build using Blaze library.])
-        CXX=$saved_CXX
-        AX_CXX_COMPILE_STDCXX(11, noext, mandatory)
       fi
       ;;
     *)
