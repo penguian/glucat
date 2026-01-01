@@ -226,10 +226,11 @@ In [1]: %run plotting_demo
 ```
 This demo uses Matplotlib to produce a number of plots.
 
-To run `plotting_demo_mayavi.py`, first ensure that you have Mayavi2 and wxPython
-installed and working.
-(See http://code.enthought.com/projects/mayavi/ and http://www.wxpython.org/ )
-Then run `ipython3` and enter the following command at the `ipython3` prompt:
+To run `plotting_demo_mayavi.py`, first ensure that you have Mayavi2 installed
+and working. (See http://code.enthought.com/projects/mayavi/)
+Additional installation and setup steps may depend on your operating system.
+For details, see `INSTALL.md`. Then run `ipython3` and enter the following
+command at the `ipython3` prompt:
 ```
 In [1]: %run plotting_demo_mayavi
 ```
