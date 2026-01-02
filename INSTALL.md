@@ -922,17 +922,17 @@ GluCat 0.13.0 with PyClical has so far been built and tested using:
     Linux 6.12.6-1-default #1 SMP 2024
     openSUSE Tumbleweed Release 20241224
     g++ (SUSE Linux) 14.2.1 20241007
-    Blaze 3.8.2
+    Blaze 3.8.2 (blaze-devel cblas-devel libcblas3)
     Boost 1.86.0
-    Cython version 3.0.12
+    Cython version 3.0.12 (python313-Cython)
     GSL 2.8
-    QD 2.3.24
+    QD 2.3.24 (qd-devel libqd0)
     Python 3.11.11
     Numpy 2.1.3
     Matplotlib 3.10.0
     Mayavi2 4.8.2
     VTK 9.4.1
-    Doxygen 1.12.0
+    Doxygen 1.12.0 (doxygen)
     pdfTeX 3.141592653-2.6-1.40.26 (TeX Live 2024/TeX Live for SUSE Linux)
     ```
     `./test/fast-test-all-config-options.sh`
@@ -1032,27 +1032,31 @@ The PyClical plotting demos use Numpy and either Matplotlib or Mayavi2.
 The versions used need to be compatible with each other and with Python.
 For Mayavi2 the versions of VTK and TVTK used also need to be compatible.
 
-The use of Mayavi2-based plotting demos on Kubuntu 24.10 is achieved via
-the following procedure:
+The use of Mayavi2-based plotting demos on Kubuntu 24.10 is achieved via the
+following procedure:
 
 1. Install Conda from the Anaconda distribution.
    https://www.anaconda.com/download
 
-2. Run pyclical/demos/kubuntu-24-conda-install-mayavi.sh
+2. Run `pyclical/demos/kubuntu-24-conda-install-mayavi.sh`
 
-3. Run ./configure with your preferred options.
+3. Run `./configure` with your preferred options.
 
 4. Run make clean.
 
 5. Run make.
 
-6. Change directory to pyclical/demos.
+6. Change directory to `pyclical/demos`.
 
-7. Run ./kubuntu-24-mayavi-env.sh before running either
-   ./plotting_demo_dialog.py or ./plotting_demo_mayavi.py.
+7. Run `./kubuntu-mayavi-env.sh` before running either
+   `./plotting_demo_dialog.py` or `./plotting_demo_mayavi.py`.
 
-The use of Mayavi2 4.8.2 with Python 3.11.11 on openSUSE Tumbleweed
-involves the installation following and other related RPM packages:
+For Kubuntu 25.10, Conda is not needed, but you still need to run
+`./kubuntu-mayavi-env.sh` before running either
+`./plotting_demo_dialog.py` or `./plotting_demo_mayavi.py`.
+
+The use of Mayavi2 4.8.2 with Python 3.11.11 on openSUSE Tumbleweed involves
+the installation following and other related RPM packages:
 
     ```
     mayavi 4.8.2
@@ -1071,3 +1075,4 @@ involves the installation following and other related RPM packages:
     python311-traitsui 8.0.0
     python311-zipp 3.21.0
     ```
+The exact versions needed will change as openSUSE Tumbleweed is updated.
