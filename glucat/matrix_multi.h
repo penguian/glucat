@@ -165,6 +165,10 @@ namespace glucat
     ~matrix_multi() override = default;
     /// Default constructor
     matrix_multi();
+    /// Move constructor
+    matrix_multi(matrix_multi&& other) noexcept;
+    /// Default copy constructor
+    matrix_multi(const matrix_multi&) = default;
     /// Construct a multivector from a multivector with a different scalar type
     template< typename Other_Scalar_T >
     matrix_multi(const matrix_multi<Other_Scalar_T,LO,HI,Tune_P>& val);
@@ -224,8 +228,11 @@ namespace glucat
   public:
     _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
 
-    /// Assignment operator
-    auto     operator= (const multivector_t& rhs) -> multivector_t&;
+
+    /// Move assignment
+    auto     operator= (matrix_multi&& other) noexcept -> matrix_multi&;
+    /// Default copy assignment
+    auto     operator= (const matrix_multi&) -> matrix_multi& = default;
 
     /// Random multivector within a frame
     static auto random(const index_set_t frm, Scalar_T fill = Scalar_T(1)) -> const matrix_multi_t;

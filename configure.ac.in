@@ -384,7 +384,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   if [[[ "$glucat_use_warnings" == "yes" ]]]; then
       CXXFLAGS="-Wall $CXXFLAGS"
       case "$basename_cxx" in
-        "clang++"*|"g++"*|icpx)
+        "clang++"*|icpx)
           GLUCAT_CHECK_COMPILER_FLAG([Wno-deprecated-register],
                 [CXXFLAGS="$CXXFLAGS -Wno-deprecated-register"])
           ;;

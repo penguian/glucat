@@ -109,6 +109,14 @@ namespace glucat
     m_matrix( matrix_t( 1, 1 ) )
   { this->m_matrix.clear(); }
 
+  /// Move constructor
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  matrix_multi<Scalar_T,LO,HI,Tune_P>::
+  matrix_multi(matrix_multi&& other) noexcept
+  : m_frame(std::move(other.m_frame)),
+    m_matrix(std::move(other.m_matrix))
+  { }
+
   /// Construct a multivector from a multivector with a different scalar type
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   template< typename Other_Scalar_T >
@@ -322,19 +330,7 @@ namespace glucat
   : m_frame( frm ), m_matrix( mtx )
   { }
 
-  /// Assignment operator
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  matrix_multi<Scalar_T,LO,HI,Tune_P>::
-  operator= (const multivector_t& rhs) -> multivector_t&
-  {
-    // Check for assignment to self
-    if (this == &rhs)
-      return *this;
-    this->m_frame = rhs.m_frame;
-    this->m_matrix = rhs.m_matrix;
-    return *this;
-  }
+
 
   /// Find a common frame for operands of a binary operator
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -737,6 +733,19 @@ namespace glucat
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
   pow(int m) const -> const multivector_t
   { return glucat::pow(*this, m); }
+
+
+  /// Move assignment
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  inline
+  auto
+  matrix_multi<Scalar_T,LO,HI,Tune_P>::
+  operator= (matrix_multi&& other) noexcept -> multivector_t&
+  {
+    this->m_frame = std::move(other.m_frame);
+    this->m_matrix = std::move(other.m_matrix);
+    return *this;
+  }
 
   /// Outer product power of multivector
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
