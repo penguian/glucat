@@ -61,6 +61,13 @@ namespace glucat
   : map_t(_GLUCAT_HASH_N(0))
   { }
 
+  /// Move constructor
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  framed_multi<Scalar_T,LO,HI,Tune_P>::
+  framed_multi(framed_multi&& other) noexcept
+  : map_t(std::move(other))
+  { }
+
   /// Private constructor using hash_size
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   framed_multi<Scalar_T,LO,HI,Tune_P>::
@@ -778,6 +785,17 @@ namespace glucat
   {
     auto result = matrix_multi_t(Scalar_T(1), this->frame());
     return result /= matrix_multi_t(*this);
+  }
+
+  /// Move assignment
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  inline
+  auto
+  framed_multi<Scalar_T,LO,HI,Tune_P>::
+  operator= (framed_multi&& other) noexcept -> multivector_t&
+  {
+    map_t::operator=(std::move(other));
+    return *this;
   }
 
   /// Integer power of multivector: *this to the m

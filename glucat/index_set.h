@@ -92,6 +92,10 @@ namespace glucat
     index_set    () = default;
     /// Constructor from bitset_t
     index_set    (const bitset_t bst);
+    /// Default move constructor
+    index_set    (index_set&&) = default;
+    /// Default copy constructor
+    index_set    (const index_set&) = default;
     /// Constructor from index
     index_set    (const index_t idx);
     /// Constructor from set value of an index set folded within the given frame
@@ -100,6 +104,11 @@ namespace glucat
     index_set    (const index_pair_t& range, const bool prechecked = false);
     /// Constructor from string
     index_set    (const std::string& str);
+
+    /// Default move assignment
+    auto operator= (index_set&&) -> index_set& = default;
+    /// Default copy assignment
+    auto operator= (const index_set&) -> index_set& = default;
 
     /// Equality
     auto operator==  (const index_set_t rhs) const -> bool;

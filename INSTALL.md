@@ -47,8 +47,8 @@ Once you have downloaded, unzipped and untarred the source code, or followed
 the instructions above to install from Git clone, you should have a directory,
 glucat-0.13.0. Under this directory you should see a number of subdirectories,
 including `./admin`, `./doc`, `./glucat`, `./gfft_test`, `./products`,
-`./pyclical`, `./squaring`, `./test`, `./test_runtime`, `./testxx`, and
-`./transforms`.
+`./pyclical`, `./squaring`, `./test`, `./test_move`, `./test_runtime`,
+`./testxx`, and `./transforms`.
 
 The following instructions are meant to be used with `glucat-0.13.0` as the
 current directory.
@@ -472,8 +472,9 @@ Building and running the regression test programs
 To build and run the regression test programs, set the environment variable `CXX`
 to indicate your C++ compiler, eg. `g++` for GNU C++, `icpc` or `icpx` for Intel
 C++, then run `./configure` as above, and then run `make check`. This builds and
-runs the executable files `./test00/test00` to `./test17/test17`. This produces
-the intermediate output files `./test00/test00.out` to `./test17/test17.out`,
+runs the executable files `./test_move/test_move` and `./test00/test00` to
+`./test17/test17`. This produces the intermediate output files
+`./test_move/test_move.out` and `./test00/test00.out` to `./test17/test17.out`,
 and the final test output file `./test_runtime/test.out`. You can use a parallel
 make for `make check` , e.g. `make check -j 4`. This is especially useful on
 modern multicore machines.
@@ -491,7 +492,7 @@ The test_runtime directory
 The test runtime directory `./test_runtime` contains sample test output files.
 
 The sample test output files include `eg3.res`, `gfft_test-11.out`, `products-8.out`,
-`squaring-11.out` and `transforms-8.out`. There are also 20 versions of the output
+`squaring-11.out` and `transforms-8.out`. There are also 22 versions of the output
 of the regression tests. These are described below.
 
 `./test_runtime` also contains the test input file `eg8.txt`. This file is needed
@@ -518,7 +519,8 @@ with `matrix_multi<Scalar_T>`.
 The `./test_runtime` directory contains 22 sample versions of the regression test
 results, corresponding to 11 different combinations of configuration parameters,
 for two different sets of tests: the complete set of 18 tests, and a subset of 3
-tests. The tests were all run on an 8 core `AMD Ryzen 7 8840HS w/ Radeon 780M Graphics` @ 3.3 GHz with
+tests. The tests were all run on an 8 core 
+`AMD Ryzen 7 8840HS w/ Radeon 780M Graphics` @ 3.3 GHz with
 ```
     Linux 6.11.0-14-generic #15-Ubuntu SMP 2025
     Kubuntu 24.10

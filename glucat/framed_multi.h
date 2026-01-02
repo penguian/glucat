@@ -173,6 +173,10 @@ namespace glucat
     ~framed_multi() override = default;
     /// Default constructor
     framed_multi();
+    /// Move constructor
+    framed_multi(framed_multi&& other) noexcept;
+    /// Default copy constructor
+    framed_multi(const framed_multi&) = default;
 
   private:
     /// Private constructor using hash_size
@@ -225,6 +229,10 @@ namespace glucat
 
     /// Number of terms
     auto nbr_terms() const -> unsigned long;
+    /// Move assignment
+    auto     operator= (framed_multi&& other) noexcept -> framed_multi&;
+    /// Default copy assignment
+    auto     operator= (const framed_multi&) -> framed_multi& = default;
 
     /// Random multivector within a frame
     static auto random(const index_set_t frm, Scalar_T fill = Scalar_T(1)) -> const multivector_t;
