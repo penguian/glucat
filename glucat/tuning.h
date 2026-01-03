@@ -46,6 +46,7 @@ namespace glucat
     precision_same,
     precision_promoted
   };
+  const precision_t  Tuning_Default_Function_Precision      = precision_same;
 
   // Tuning policy default constants
   const unsigned int Tuning_Default_Mult_Matrix_Threshold   =       8;
@@ -60,112 +61,117 @@ namespace glucat
   const unsigned int Tuning_Default_Products_Size_Threshold = 1 << 22;
   const unsigned int Tuning_Default_Denom_Different_Bits    =       8;
   const unsigned int Tuning_Default_Extra_Different_Bits    =       8;
-  const precision_t  Tuning_Default_Function_Precision      = precision_same;
 
-  /// Tuning policy
+  /// Tuning policy values
   template
   <
-    unsigned int Mult_Matrix_Threshold   = Tuning_Default_Mult_Matrix_Threshold,
-    unsigned int Div_Max_Steps           = Tuning_Default_Div_Max_Steps,
-    unsigned int CR_Sqrt_Max_Steps       = Tuning_Default_CR_Sqrt_Max_Steps,
-    unsigned int DB_Sqrt_Max_Steps       = Tuning_Default_DB_Sqrt_Max_Steps,
-    unsigned int Log_Max_Outer_Steps     = Tuning_Default_Log_Max_Outer_Steps,
-    unsigned int Log_Max_Inner_Steps     = Tuning_Default_Log_Max_Inner_Steps,
-    unsigned int Basis_Max_Count         = Tuning_Default_Basis_Max_Count,
-    unsigned int Fast_Size_Threshold     = Tuning_Default_Fast_Size_Threshold,
-    unsigned int Inv_Fast_Dim_Threshold  = Tuning_Default_Inv_Fast_Dim_Threshold,
-    unsigned int Products_Size_Threshold = Tuning_Default_Products_Size_Threshold,
-    unsigned int Denom_Different_Bits    = Tuning_Default_Denom_Different_Bits,
-    unsigned int Extra_Different_Bits    = Tuning_Default_Extra_Different_Bits,
-    precision_t  Function_Precision      = Tuning_Default_Function_Precision
+  unsigned int Mult_Matrix_Threshold   = Tuning_Default_Mult_Matrix_Threshold,
+  unsigned int Div_Max_Steps           = Tuning_Default_Div_Max_Steps,
+  unsigned int CR_Sqrt_Max_Steps       = Tuning_Default_CR_Sqrt_Max_Steps,
+  unsigned int DB_Sqrt_Max_Steps       = Tuning_Default_DB_Sqrt_Max_Steps,
+  unsigned int Log_Max_Outer_Steps     = Tuning_Default_Log_Max_Outer_Steps,
+  unsigned int Log_Max_Inner_Steps     = Tuning_Default_Log_Max_Inner_Steps,
+  unsigned int Basis_Max_Count         = Tuning_Default_Basis_Max_Count,
+  unsigned int Fast_Size_Threshold     = Tuning_Default_Fast_Size_Threshold,
+  unsigned int Inv_Fast_Dim_Threshold  = Tuning_Default_Inv_Fast_Dim_Threshold,
+  unsigned int Products_Size_Threshold = Tuning_Default_Products_Size_Threshold,
+  unsigned int Denom_Different_Bits    = Tuning_Default_Denom_Different_Bits,
+  unsigned int Extra_Different_Bits    = Tuning_Default_Extra_Different_Bits
+  >
+  struct tuning_values : policy
+  {
+    using tuning_values_p = tuning_values
+    <
+    Mult_Matrix_Threshold,
+    Div_Max_Steps,
+    CR_Sqrt_Max_Steps,
+    DB_Sqrt_Max_Steps,
+    Log_Max_Outer_Steps,
+    Log_Max_Inner_Steps,
+    Basis_Max_Count,
+    Fast_Size_Threshold,
+    Inv_Fast_Dim_Threshold,
+    Products_Size_Threshold,
+    Denom_Different_Bits,
+    Extra_Different_Bits
+    >;
+    // Tuning for multiplication
+    /// Minimum index count needed to invoke matrix multiplication algorithm
+    enum { mult_matrix_threshold = Mult_Matrix_Threshold };
+    // Tuning for division
+    /// Maximum steps of iterative refinement in division algorithm
+    enum { div_max_steps = Div_Max_Steps };
+    // Tuning for sqrt
+    /// Maximum number of steps in cyclic reduction square root iteration
+    enum { cr_sqrt_max_steps = CR_Sqrt_Max_Steps };
+    /// Maximum number of steps in Denman-Beavers square root iteration
+    enum { db_sqrt_max_steps = DB_Sqrt_Max_Steps };
+    // Tuning for log
+    /// Maximum number of incomplete square roots in cascade log algorithm
+    enum { log_max_outer_steps = Log_Max_Outer_Steps };
+    /// Maximum number of steps in incomplete square root within cascade log algorithm
+    enum { log_max_inner_steps = Log_Max_Inner_Steps };
+    // Tuning for basis cache
+    /// Maximum index count of folded frames in basis cache
+    enum { basis_max_count = Basis_Max_Count };
+    // Tuning for FFT
+    /// Minimum map size needed to invoke generalized FFT
+    enum { fast_size_threshold = Fast_Size_Threshold };
+    /// Minimum matrix dimension needed to invoke inverse generalized FFT
+    enum { inv_fast_dim_threshold = Inv_Fast_Dim_Threshold };
+    // Tuning for products (other than geometric product)
+    /// Minimum size needed for to invoke faster products algorithms
+    enum { products_size_threshold = Products_Size_Threshold };
+    // Tuning for precision of exp, log and sqrt functions
+    /// Denominator of proportion of different bits allowed in approximate equality
+    enum { denom_different_bits = Denom_Different_Bits };
+    /// Extra number of different bits allowed in approximate equality
+    enum { extra_different_bits = Extra_Different_Bits };
+  };
+
+  using default_tuning_values_p = tuning_values<>;
+
+  /// Tuning policy constants
+  template
+  <
+    typename Tuning_Values_P = default_tuning_values_p,
+    precision_t  Function_Precision = Tuning_Default_Function_Precision
   >
   struct tuning : policy
   {
     using tune_p = tuning
     <
-      Mult_Matrix_Threshold,
-      Div_Max_Steps,
-      CR_Sqrt_Max_Steps,
-      DB_Sqrt_Max_Steps,
-      Log_Max_Outer_Steps,
-      Log_Max_Inner_Steps,
-      Basis_Max_Count,
-      Fast_Size_Threshold,
-      Inv_Fast_Dim_Threshold,
-      Products_Size_Threshold,
-      Denom_Different_Bits,
-      Extra_Different_Bits,
+      Tuning_Values_P,
       Function_Precision
     >;
-  // Tuning for multiplication
-    /// Minimum index count needed to invoke matrix multiplication algorithm
-    enum { mult_matrix_threshold = Mult_Matrix_Threshold };
-  // Tuning for division
-    /// Maximum steps of iterative refinement in division algorithm
-    enum { div_max_steps = Div_Max_Steps };
-  // Tuning for sqrt
-    /// Maximum number of steps in cyclic reduction square root iteration
-    enum { cr_sqrt_max_steps = CR_Sqrt_Max_Steps };
-    /// Maximum number of steps in Denman-Beavers square root iteration
-    enum { db_sqrt_max_steps = DB_Sqrt_Max_Steps };
-  // Tuning for log
-    /// Maximum number of incomplete square roots in cascade log algorithm
-    enum { log_max_outer_steps = Log_Max_Outer_Steps };
-    /// Maximum number of steps in incomplete square root within cascade log algorithm
-    enum { log_max_inner_steps = Log_Max_Inner_Steps };
-  // Tuning for basis cache
-    /// Maximum index count of folded frames in basis cache
-    enum { basis_max_count = Basis_Max_Count };
-  // Tuning for FFT
-    /// Minimum map size needed to invoke generalized FFT
-    enum { fast_size_threshold = Fast_Size_Threshold };
-    /// Minimum matrix dimension needed to invoke inverse generalized FFT
-    enum { inv_fast_dim_threshold = Inv_Fast_Dim_Threshold };
-  // Tuning for products (other than geometric product)
-    /// Minimum size needed for to invoke faster products algorithms
-    enum { products_size_threshold = Products_Size_Threshold };
-  // Tuning for precision of exp, log and sqrt functions
-    /// Denominator of proportion of different bits allowed in approximate equality
-    enum { denom_different_bits = Denom_Different_Bits };
-    /// Extra number of different bits allowed in approximate equality
-    enum { extra_different_bits = Extra_Different_Bits };
+    using tuning_values_p = Tuning_Values_P;
     /// Precision used for exp, log and sqrt functions
     static const precision_t function_precision = Function_Precision;
+    /// Tuning used for return values of exp, log and sqrt functions
+    using tuning_same_p = tuning
+    <
+      Tuning_Values_P,
+      precision_same
+    >;
   };
 
-  using tuning_demoted = tuning
-    <
-      Tuning_Default_Mult_Matrix_Threshold,
-      Tuning_Default_Div_Max_Steps,
-      Tuning_Default_CR_Sqrt_Max_Steps,
-      Tuning_Default_DB_Sqrt_Max_Steps,
-      Tuning_Default_Log_Max_Outer_Steps,
-      Tuning_Default_Log_Max_Inner_Steps,
-      Tuning_Default_Basis_Max_Count,
-      Tuning_Default_Fast_Size_Threshold,
-      Tuning_Default_Inv_Fast_Dim_Threshold,
-      Tuning_Default_Products_Size_Threshold,
-      Tuning_Default_Denom_Different_Bits,
-      Tuning_Default_Extra_Different_Bits,
-      precision_demoted
-    >;
+  using default_tuning_demoted_p = tuning
+  <
+    default_tuning_values_p,
+    precision_demoted
+  >;
 
-  using tuning_promoted = tuning
-    <
-      Tuning_Default_Mult_Matrix_Threshold,
-      Tuning_Default_Div_Max_Steps,
-      Tuning_Default_CR_Sqrt_Max_Steps,
-      Tuning_Default_DB_Sqrt_Max_Steps,
-      Tuning_Default_Log_Max_Outer_Steps,
-      Tuning_Default_Log_Max_Inner_Steps,
-      Tuning_Default_Basis_Max_Count,
-      Tuning_Default_Fast_Size_Threshold,
-      Tuning_Default_Inv_Fast_Dim_Threshold,
-      Tuning_Default_Products_Size_Threshold,
-      Tuning_Default_Denom_Different_Bits,
-      Tuning_Default_Extra_Different_Bits,
-      precision_promoted
-    >;
+  using default_tuning_same_p = tuning
+  <
+    default_tuning_values_p,
+    precision_same
+  >;
+
+  using default_tuning_promoted_p = tuning
+  <
+    default_tuning_values_p,
+    precision_promoted
+  >;
 }
 
 #endif // GLUCAT_TUNING_H

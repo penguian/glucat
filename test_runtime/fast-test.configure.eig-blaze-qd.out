@@ -1,3 +1,20 @@
+Move semantics test:
+
+Checking index_set<DEFAULT_LO,DEFAULT_HI>:
+  is_move_constructible: 1
+  is_move_assignable:    1
+  [PASS] Move semantics enabled.
+----------------------------------------
+Checking framed_multi<double>:
+  is_move_constructible: 1
+  is_move_assignable:    1
+  [PASS] Move semantics enabled.
+----------------------------------------
+Checking matrix_multi<double>:
+  is_move_constructible: 1
+  is_move_assignable:    1
+  [PASS] Move semantics enabled.
+----------------------------------------
 
 Test 00:
 Programming example 0 : Geometric algebra identities
@@ -144,7 +161,6 @@ involute(b)involute(a)=     8634343348 47829+52300{-3}-43530{-2}+41053{-1}+3830{
 Test 11:
 Programming example 11 : Square root and transcendental functions
 
-framed_multi<float,DEFAULT_LO,DEFAULT_HI,tuning_promoted>
 Promoted:
 
 framed_multi<float,-32,32>

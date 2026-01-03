@@ -1,3 +1,20 @@
+Move semantics test:
+
+Checking index_set<DEFAULT_LO,DEFAULT_HI>:
+  is_move_constructible: 1
+  is_move_assignable:    1
+  [PASS] Move semantics enabled.
+----------------------------------------
+Checking framed_multi<double>:
+  is_move_constructible: 1
+  is_move_assignable:    1
+  [PASS] Move semantics enabled.
+----------------------------------------
+Checking matrix_multi<double>:
+  is_move_constructible: 1
+  is_move_assignable:    1
+  [PASS] Move semantics enabled.
+----------------------------------------
 
 Test 00:
 Programming example 0 : Geometric algebra identities

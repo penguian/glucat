@@ -170,11 +170,11 @@ namespace glucat
     /// Default copy constructor
     matrix_multi(const matrix_multi&) = default;
     /// Construct a multivector from a multivector with a different scalar type
-    template< typename Other_Scalar_T >
-    matrix_multi(const matrix_multi<Other_Scalar_T,LO,HI,Tune_P>& val);
+    template< typename Other_Scalar_T, typename Other_Tune_P >
+    matrix_multi(const matrix_multi<Other_Scalar_T,LO,HI,Other_Tune_P>& val);
     /// Construct a multivector, within a given frame, from a given multivector
-    template< typename Other_Scalar_T >
-    matrix_multi(const matrix_multi<Other_Scalar_T,LO,HI,Tune_P>& val,
+    template< typename Other_Scalar_T, typename Other_Tune_P >
+    matrix_multi(const matrix_multi<Other_Scalar_T,LO,HI,Other_Tune_P>& val,
                  const index_set_t frm, const bool prechecked = false);
     /// Construct a multivector, within a given frame, from a given multivector
     matrix_multi(const multivector_t& val,
@@ -204,17 +204,17 @@ namespace glucat
                  const index_set_t frm, const bool prechecked = false)
     { *this = matrix_multi(std::string(str), frm, prechecked); };
     /// Construct a multivector from a framed_multi_t
-    template< typename Other_Scalar_T >
-    matrix_multi(const framed_multi<Other_Scalar_T,LO,HI,Tune_P>& val);
+    template< typename Other_Scalar_T, typename Other_Tune_P >
+    matrix_multi(const framed_multi<Other_Scalar_T,LO,HI,Other_Tune_P>& val);
     /// Construct a multivector, within a given frame, from a framed_multi_t
-    template< typename Other_Scalar_T >
-    matrix_multi(const framed_multi<Other_Scalar_T,LO,HI,Tune_P>& val,
+    template< typename Other_Scalar_T, typename Other_Tune_P >
+    matrix_multi(const framed_multi<Other_Scalar_T,LO,HI,Other_Tune_P>& val,
                  const index_set_t frm, const bool prechecked = false);
     /// Use generalized FFT to construct a matrix_multi_t
     auto fast_matrix_multi(const index_set_t frm) const -> const matrix_multi_t;
     /// Use inverse generalized FFT to construct a framed_multi_t
-    template< typename Other_Scalar_T >
-    auto fast_framed_multi() const -> const framed_multi<Other_Scalar_T,LO,HI,Tune_P>;
+    template< typename Other_Scalar_T, typename Other_Tune_P >
+    auto fast_framed_multi() const -> const framed_multi<Other_Scalar_T,LO,HI,Other_Tune_P>;
 
   private:
     /// Construct a multivector within a given frame from a given matrix

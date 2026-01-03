@@ -77,9 +77,9 @@ namespace glucat
 
   /// Construct a multivector from a multivector with a different scalar type
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  template< typename Other_Scalar_T >
+  template< typename Other_Scalar_T, typename Other_Tune_P >
   framed_multi<Scalar_T,LO,HI,Tune_P>::
-  framed_multi(const framed_multi<Other_Scalar_T,LO,HI,Tune_P>& val)
+  framed_multi(const framed_multi<Other_Scalar_T,LO,HI,Other_Tune_P>& val)
   : map_t(_GLUCAT_HASH_N(val.size()))
   {
     for (auto& val_term : val)
@@ -88,9 +88,9 @@ namespace glucat
 
   /// Construct a multivector, within a given frame, from a given multivector
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  template< typename Other_Scalar_T >
+  template< typename Other_Scalar_T, typename Other_Tune_P >
   framed_multi<Scalar_T,LO,HI,Tune_P>::
-  framed_multi(const framed_multi<Other_Scalar_T,LO,HI,Tune_P>& val,
+  framed_multi(const framed_multi<Other_Scalar_T,LO,HI,Other_Tune_P>& val,
                const index_set_t frm, const bool prechecked)
   : map_t(_GLUCAT_HASH_N(val.size()))
   {
@@ -208,9 +208,9 @@ namespace glucat
 
   /// Construct a multivector from a matrix_multi_t
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  template< typename Other_Scalar_T >
+  template< typename Other_Scalar_T, typename Other_Tune_P >
   framed_multi<Scalar_T,LO,HI,Tune_P>::
-  framed_multi(const matrix_multi<Other_Scalar_T,LO,HI,Tune_P>& val)
+  framed_multi(const matrix_multi<Other_Scalar_T,LO,HI,Other_Tune_P>& val)
   : map_t(_GLUCAT_HASH_N(1))
   {
     if (val == Other_Scalar_T(0))
@@ -223,10 +223,11 @@ namespace glucat
       this->insert(term_t(index_set_t(), traits_t::to_scalar_t(val.m_matrix(0, 0))));
       return;
     }
-    if (dim >= Tune_P::inv_fast_dim_threshold)
+    using Tuning_Values_P = typename Tune_P::tuning_values_p;
+    if (dim >= Tuning_Values_P::inv_fast_dim_threshold)
       try
       {
-        *this = (val.template fast_framed_multi<Scalar_T>()).truncated();
+        *this = (val.template fast_framed_multi<Scalar_T,Tune_P>()).truncated();
         return;
       }
       catch (const glucat_error& e)
@@ -444,7 +445,8 @@ namespace glucat
     const auto lhs_end = lhs.end();
     const auto rhs_end = rhs.end();
 
-    if (lhs_size * rhs_size > double(Tune_P::products_size_threshold))
+    using Tuning_Values_P = typename Tune_P::tuning_values_p;
+    if (lhs_size * rhs_size > double(Tuning_Values_P::products_size_threshold))
     {
       for (auto
           result_stv = set_value_t(0);
@@ -522,7 +524,8 @@ namespace glucat
     const auto algebra_dim = set_value_t(1) << our_frame.count();
     auto result = multivector_t(
       _GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
-    if (lhs_size * rhs_size > double(Tune_P::products_size_threshold))
+    using Tuning_Values_P = typename Tune_P::tuning_values_p;
+    if (lhs_size * rhs_size > double(Tuning_Values_P::products_size_threshold))
     {
       for (auto
           result_stv = set_value_t(0);
@@ -627,7 +630,8 @@ namespace glucat
     auto result = multivector_t(
       _GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
 
-    if (lhs_size * rhs_size > double(Tune_P::products_size_threshold))
+    using Tuning_Values_P = typename Tune_P::tuning_values_p;
+    if (lhs_size * rhs_size > double(Tuning_Values_P::products_size_threshold))
     {
       for (auto
           result_stv = set_value_t(0);
@@ -1620,7 +1624,7 @@ namespace glucat
     {
       using matrix_index_t = typename matrix_multi_t::matrix_index_t;
       const auto dim = matrix_index_t(1) << level;
-      auto result =matrix_t(dim, dim);
+      auto result = matrix_t(dim, dim);
       result.clear();
       return result;
     }
@@ -1676,10 +1680,10 @@ namespace glucat
 
   /// Use generalized FFT to construct a matrix_multi_t
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  template< typename Other_Scalar_T >
+  template< typename Other_Scalar_T, typename Other_Tune_P >
   auto
   framed_multi<Scalar_T,LO,HI,Tune_P>::
-  fast_matrix_multi(const index_set_t frm) const -> const matrix_multi<Other_Scalar_T,LO,HI,Tune_P>
+  fast_matrix_multi(const index_set_t frm) const -> const matrix_multi<Other_Scalar_T,LO,HI,Other_Tune_P>
   {
     // Fold val
     auto val = this->fold(frm);
@@ -1704,7 +1708,7 @@ namespace glucat
     // Do the fast transform
     const auto& ev_val = val.even();
     const auto& od_val = val.odd();
-    return matrix_multi<Other_Scalar_T,LO,HI,Tune_P>(ev_val.fast(level, 0) + od_val.fast(level, 1), frm);
+    return matrix_multi<Other_Scalar_T,LO,HI,Other_Tune_P>(ev_val.fast(level, 0) + od_val.fast(level, 1), frm);
   }
 
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -1770,35 +1774,35 @@ namespace glucat
     if (val == s)
       return traits_t::exp(s);
 
+    using Tuning_Values_P = typename Tune_P::tuning_values_p;
     const double size = val.size();
     const auto frm_count = val.frame().count();
     const auto algebra_dim = set_value_t(1) << frm_count;
 
-    if( (size * size <= double(algebra_dim)) || (frm_count < Tune_P::mult_matrix_threshold))
+    if( (size * size <= double(algebra_dim)) || (frm_count < Tuning_Values_P::mult_matrix_threshold))
     {
-      switch (Tune_P::function_precision)
+      using multivector_t = framed_multi<Scalar_T,LO,HI,Tune_P>;
+      using tune_same_p = typename Tune_P::tuning_same_p;
+      const precision_t function_precision = Tune_P::function_precision;
+
+      if constexpr (function_precision == precision_demoted)
       {
-      case precision_demoted:
-        {
-          using demoted_scalar_t = typename traits_t::demoted::type;
-          using demoted_multivector_t = framed_multi<demoted_scalar_t,LO,HI,Tune_P>;
+        using demoted_scalar_t = typename traits_t::demoted::type;
+        using demoted_multivector_t = framed_multi<demoted_scalar_t,LO,HI,tune_same_p>;
 
-          const auto& demoted_val = demoted_multivector_t(val);
-          return clifford_exp(demoted_val);
-        }
-        break;
-      case precision_promoted:
-        {
-          using promoted_scalar_t = typename traits_t::promoted::type;
-          using promoted_multivector_t = framed_multi<promoted_scalar_t,LO,HI,Tune_P>;
-
-          const auto& promoted_val = promoted_multivector_t(val);
-          return clifford_exp(promoted_val);
-        }
-        break;
-      default:
-        return clifford_exp(val);
+        const auto& demoted_val = demoted_multivector_t(val);
+        return multivector_t(clifford_exp(demoted_val));
       }
+      else if constexpr (function_precision == precision_promoted)
+      {
+        using promoted_scalar_t = typename traits_t::promoted::type;
+        using promoted_multivector_t = framed_multi<promoted_scalar_t,LO,HI,tune_same_p>;
+
+        const auto& promoted_val = promoted_multivector_t(val);
+        return multivector_t(clifford_exp(promoted_val));
+      }
+      else
+        return clifford_exp(val);
     }
     else
     {

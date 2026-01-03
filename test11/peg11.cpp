@@ -41,14 +41,13 @@ int test11()
   cout <<   "Programming example 11 : Square root and transcendental functions" << endl;
   cout << endl;
 #if defined(_GLUCAT_USE_EIGENVALUES)
-  cout <<   "framed_multi<float,DEFAULT_LO,DEFAULT_HI,tuning_promoted>" << endl;
-  do_test11_tuned<float,DEFAULT_LO,DEFAULT_HI,tuning_promoted>("Promoted:", "float");
-  do_test11_tuned<double,DEFAULT_LO,DEFAULT_HI,tuning_promoted>("Promoted:", "double");
-  do_test11_tuned<long double,DEFAULT_LO,DEFAULT_HI,tuning_promoted>("Promoted:", "long double");
+  do_test11_tuned<float,DEFAULT_LO,DEFAULT_HI,default_tuning_promoted_p>("Promoted:", "float");
+  do_test11_tuned<double,DEFAULT_LO,DEFAULT_HI,default_tuning_promoted_p>("Promoted:", "double");
+  do_test11_tuned<long double,DEFAULT_LO,DEFAULT_HI,default_tuning_promoted_p>("Promoted:", "long double");
 #  if defined(_GLUCAT_USE_QD)
   do_test11_tuned<dd_real,DEFAULT_LO,DEFAULT_HI>("Default:", "dd_real");
-  do_test11_tuned<dd_real,DEFAULT_LO,DEFAULT_HI,tuning_promoted>("Promoted:", "dd_real");
-  do_test11_tuned<qd_real,DEFAULT_LO,DEFAULT_HI,tuning_promoted>("Promoted:", "qd_real");
+  do_test11_tuned<dd_real,DEFAULT_LO,DEFAULT_HI,default_tuning_promoted_p>("Promoted:", "dd_real");
+  do_test11_tuned<qd_real,DEFAULT_LO,DEFAULT_HI,default_tuning_promoted_p>("Promoted:", "qd_real");
 #  endif
 #else
   cout <<   "Square root and transcendental functions give inaccurate results "
