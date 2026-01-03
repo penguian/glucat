@@ -41,7 +41,7 @@ int gfft_test(const int n)
     cout << "Maximum value allowed is " << max_n << "." << endl;
     return 1;
   }
-  fast_test< framed_multi<double,DEFAULT_LO,DEFAULT_HI,tuning_naive> >(n, max_n);
+  fast_test< framed_multi<double,DEFAULT_LO,DEFAULT_HI,tuning_naive_p> >(n, max_n);
   return 0;
 }
 

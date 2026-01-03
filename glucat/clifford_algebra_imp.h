@@ -112,9 +112,10 @@ namespace glucat
   error_squared_tol(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T
   {
     using multivector_t = Multivector<Scalar_T,LO,HI,Tune_P>;
+    using Tuning_Values_P = typename Tune_P::tuning_values_p;
     static const auto scalar_eps  = std::numeric_limits<Scalar_T>::epsilon();
     static const auto nbr_different_bits =
-      std::numeric_limits<Scalar_T>::digits / Tune_P::denom_different_bits + Tune_P::extra_different_bits;
+       std::numeric_limits<Scalar_T>::digits / Tuning_Values_P::denom_different_bits + Tuning_Values_P::extra_different_bits;
     static const auto abs_tol = scalar_eps *
       numeric_traits<Scalar_T>::pow(Scalar_T(2), nbr_different_bits);
     using framed_multi_t = typename multivector_t::framed_multi_t;
