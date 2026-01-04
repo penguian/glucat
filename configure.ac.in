@@ -151,6 +151,45 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     esac
   ],[glucat_use_eigenvalues="no"])
 
+  AC_ARG_WITH([armadillo],    [[  --with-armadillo        use Armadillo library [default=no]]],
+    [glucat_use_armadillo="$withval"],
+    [glucat_use_armadillo="no"])
+
+  if [[[ "$glucat_use_armadillo" == "yes" ]]]; then
+    glucat_have_libarmadillo="no"
+    GLUCAT_CHECK_LIB([armadillo],[main],
+    [glucat_have_libarmadillo="yes"],
+    [])
+    if [[[ "$glucat_have_libarmadillo" == "yes" ]]]; then
+      GLUCAT_CHECK_HEADERS([armadillo],
+      [
+        CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_ARMADILLO"
+        all_libraries="$all_libraries -larmadillo"
+      ],[],[])
+    fi
+     if [[[ "$glucat_have_libarmadillo" == "no" ]]]; then
+       AC_MSG_WARN([Cannot build using Armadillo.])
+    fi
+  fi
+
+  dnl Check for Eigen
+  GLUCAT_CHECK_HEADERS([Eigen/Dense], [],
+  [
+     dnl Try adding -I/usr/include/eigen3
+     saved_CPPFLAGS="$CPPFLAGS"
+     CPPFLAGS="$CPPFLAGS -I/usr/include/eigen3"
+     unset ac_cv_header_Eigen_Dense
+     GLUCAT_CHECK_HEADERS([Eigen/Dense],
+     [
+        all_includes="$all_includes -I/usr/include/eigen3"
+        AC_MSG_NOTICE([Found Eigen/Dense in /usr/include/eigen3. Added to all_includes.])
+     ],
+     [
+        AC_MSG_WARN([Eigen/Dense not found. PyClical might fail to build.])
+     ], [])
+     CPPFLAGS="$saved_CPPFLAGS"
+  ], [])
+
   dnl Check for a C++ compiler
   AC_LANG([C]++)
 

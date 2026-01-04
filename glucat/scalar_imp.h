@@ -34,7 +34,7 @@
 #include "glucat/scalar.h"
 #include "glucat/qd.h"
 
-#include <boost/numeric/ublas/traits.hpp>
+
 
 #include <cmath>
 #include <limits>

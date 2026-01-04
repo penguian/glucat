@@ -30,7 +30,7 @@
  ***************************************************************************/
 
 #include "test/driver.h"
-#include <boost/numeric/ublas/io.hpp>
+#include "glucat/matrix.h"
 #include "test16/peg16.h"
 
 int test16()

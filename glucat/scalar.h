@@ -34,7 +34,7 @@
 #include "glucat/portability.h"
 #include "glucat/global.h"
 
-#include <boost/numeric/ublas/traits.hpp>
+
 
 #include <cmath>
 #include <limits>
@@ -180,7 +180,7 @@ namespace glucat
     static
     auto
     abs(const Scalar_T& val) -> Scalar_T
-    { return boost::numeric::ublas::type_traits<Scalar_T>::UBLAS_ABS(val); }
+    { return std::abs(val); }
 
     /// Pi
     inline
@@ -208,7 +208,7 @@ namespace glucat
     static
     auto
     sqrt(const Scalar_T& val) -> Scalar_T
-    { return boost::numeric::ublas::type_traits<Scalar_T>::UBLAS_SQRT(val); }
+    { return std::sqrt(val); }
 
     /// Exponential
     inline

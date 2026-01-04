@@ -33,7 +33,7 @@
 
 #include "glucat/global.h"
 
-#include <boost/numeric/ublas/fwd.hpp>
+
 
 #include <utility>
 #include <array>
@@ -42,7 +42,7 @@
 
 namespace glucat { namespace gen
 {
-  namespace ublas = boost::numeric::ublas;
+
   
   /// A signature is a pair of indices, p, q, with p == frame.max(), q == -frame.min()
   using signature_t = std::pair<index_t, index_t>;

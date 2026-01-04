@@ -38,7 +38,7 @@
 #include "glucat/tuning.h"
 #include "glucat/framed_multi.h"
 
-#include <boost/numeric/ublas/fwd.hpp>
+#include "glucat/matrix.h"
 
 #include <fstream>
 #include <string>
@@ -47,7 +47,7 @@
 
 namespace glucat
 {
-  namespace ublas = boost::numeric::ublas;
+
 
   // Forward declarations for friends
 
@@ -153,9 +153,8 @@ namespace glucat
     friend class matrix_multi;
 
   private:
-    using orientation_t = ublas::row_major;
-    using basis_matrix_t = ublas::compressed_matrix<int, orientation_t>;
-    using matrix_t = ublas::matrix<Scalar_T, orientation_t>;
+    using basis_matrix_t = glucat::sparse_matrix_t<int>;
+    using matrix_t = glucat::matrix_t<Scalar_T>;
     using matrix_index_t = typename matrix_t::size_type;
 
   public:
