@@ -34,57 +34,10 @@
 
 int test14()
 {
-  using namespace glucat;
   using namespace std;
-  cout << "Programming example 14 : framed_multi <-> matrix_multi" << endl;
-  using cm = matrix_multi<long double>;
-  using cf = framed_multi<long double>;
-  cf a("{-3}+{-2}+{-1}");
-  cf b("1.e4{-1}+1.e-4{-2}");
-  cf c;
-  cm::index_set_t sub = a.frame() | b.frame();
-  cm A( a, sub );
-  cm B( b, sub );
-  cm C;
-  a.write("a =");
-  A.write("A =");
-  b.write("b =");
-  B.write("B =");
-  B.truncated().write("B.truncated()");
-  (B - b).write("B - b =");
-  (b - B).write("b - B =");
-  c = (a * b) / b;
-  c.write("c = (a * b) / b =");
-  C = c;
-  C.write("C = c =");
-  (C - c).write("C - c =");
-  (c - C).write("c - C =");
-
-  cout << "star(a, b)    = " << star(a, b)    << endl;
-  cout << "scalar(a * b) = " << scalar(a * b) << endl;
-  cout << "star(b, a)    = " << star(b, a)    << endl;
-  cout << "scalar(b * a) = " << scalar(b * a) << endl;
-  cout << "star(A, B)    = " << star(A, B)    << endl;;
-  cout << "scalar(A * B) = " << scalar(A * B) << endl;
-  cout << "star(B, A)    = " << star(B, A)    << endl;;
-  cout << "scalar(B * A) = " << scalar(B * A) << endl;
-
-  framed_multi<double> d( 2.0, sub );
-  cout << "d " << ((d == 2.0) ? "==" : "!=") << " 2.0; ";
-  cout << "d " << ((d != 2.0) ? "!=" : "==") << " 2.0; ";
-  cout << "2.0 " << ((2.0 != d) ? "!=" : "==") << " d" << endl;
-  cout << "d " << ((d == 4.0) ? "==" : "!=") << " 4.0; ";
-  cout << "d " << ((d != 4.0) ? "!=" : "==") << " 4.0; ";
-  cout << "4.0 " << ((4.0 != d) ? "!=" : "==") << " d" << endl;
-
-  matrix_multi<double> D( 2.0, sub );
-  cout << "D " << ((D == 2.0) ? "==" : "!=") << " 2.0; ";
-  cout << "D " << ((D != 2.0) ? "!=" : "==") << " 2.0; ";
-  cout << "2.0 " << ((2.0 != D) ? "!=" : "==") << " D" << endl;
-  cout << "D " << ((D == 4.0) ? "==" : "!=") << " 4.0; ";
-  cout << "D " << ((D != 4.0) ? "!=" : "==") << " 4.0; ";
-  cout << "4.0 " << ((4.0 != D) ? "!=" : "==") << " D" << endl;
-
+  cout << "Programming example 14 : framed_multi <-> matrix_multi" << endl;  do_test14<float>("float");
+  do_test14<double>("double");
+  do_test14<long double>("long double");
   return 0;
 }
 
