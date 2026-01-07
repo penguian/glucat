@@ -11,6 +11,8 @@
 #include <type_traits>
 #include <cstdio>
 #include <unsupported/Eigen/KroneckerProduct>
+#include <iostream>
+#include <algorithm>
 
 namespace glucat {
 
@@ -33,6 +35,7 @@ namespace glucat {
   public:
     using MatrixType = arma::Mat<Scalar_T>;
     using elem_type = Scalar_T;
+    using value_type = Scalar_T;
     using uword = arma::uword;
     using size_type = arma::uword;
 
@@ -205,6 +208,7 @@ namespace glucat {
   public:
     using MatrixType = Eigen::Matrix<Scalar_T, Eigen::Dynamic, Eigen::Dynamic>;
     using elem_type = Scalar_T;
+    using value_type = Scalar_T;
     using uword = std::size_t;
     using size_type = std::size_t; // Compatibility with old size_type
 
@@ -623,10 +627,39 @@ namespace glucat {
   bool solve(eigen_matrix_wrapper<T>& X, const eigen_matrix_wrapper<T>& A, const eigen_matrix_wrapper<T>& B, int opts = 0) {
       // Solve A*X = B => X = A.colPivHouseholderQr().solve(B)
       // Note: Arma solve(A, B) solves A*X = B.
-      X.m_mat = A.m_mat.colPivHouseholderQr().solve(B.m_mat);
-      X.update_attributes();
-      // Simple check for success ?
-      return true; // TODO: Check validity
+      auto qr = A.m_mat.colPivHouseholderQr();
+      
+      // Strict rank check using R diagonal
+      // Equivalent to Armadillo's default tolerance: max(size) * max_diag * eps
+      using RealScalar = typename Eigen::NumTraits<T>::Real;
+      const auto& R = qr.matrixR();
+      const auto diagonal = R.diagonal();
+      const int rank = qr.rank(); // Basic rank from Eigen
+
+      if (rank < A.m_mat.cols()) {
+          // Check if Eigen's rank was permissive but our strict check fails
+           // Actually, colPivHouseholderQr.isInvertible() is usually permissive.
+           // Let's implement strict check manually if isInvertible() passed but we want stricter.
+           // But qr.rank() uses a threshold.
+           // To ensure match with Armadillo, we should use the same logic.
+      }
+      
+      // Let's use strict manual check
+      RealScalar max_diag = 0;
+      if (diagonal.size() > 0) max_diag = std::abs(diagonal(0));
+      RealScalar tol = std::max(A.n_rows, A.n_cols) * max_diag * Eigen::NumTraits<RealScalar>::epsilon();
+      
+      bool singular = false;
+      for(int i=0; i<diagonal.size(); ++i) {
+          if (std::abs(diagonal(i)) <= tol) { singular = true; break; }
+      }
+
+      if (!singular) {
+           X.m_mat = qr.solve(B.m_mat);
+           X.update_attributes();
+           return true; 
+      }
+      return false;
   }
   
   template<typename T>
@@ -907,14 +940,17 @@ namespace glucat {
 
     template<typename Matrix_T>
     auto classify_eigenvalues(const Matrix_T& A) -> eig_genus<Matrix_T> {
+        using Scalar_T = typename Matrix_T::value_type;
         eig_genus<Matrix_T> genus;
         // Basic check for singularity and eigenvalue types.
         std::vector<std::complex<double>> ev = matrix::eigenvalues(A);
+        std::set<double> arg_set;
         
         bool has_neg_real = false;
         bool has_complex = false; // Non-real
         
         for(const auto& z : ev) {
+            arg_set.insert(std::arg(z));
             double abs_z = std::abs(z);
             if (abs_z < 1e-12) { // Arbitrary small tolerance
                 genus.m_is_singular = true;
@@ -928,15 +964,45 @@ namespace glucat {
             }
         }
         
+        static const auto pi = numeric_traits<double>::pi();
+
         if (has_neg_real) {
             if (has_complex) { 
                 genus.m_eig_case = both_eigs;
-                // Heuristic: just needed to define it to satisfy linker.
             } else {
                 genus.m_eig_case = neg_real_eigs;
+                genus.m_safe_arg = Scalar_T(-pi / 2.0);
             }
         } else {
             genus.m_eig_case = safe_eigs;
+        }
+        
+        if (genus.m_eig_case == both_eigs)
+        {
+          auto arg_it = arg_set.begin();
+          auto first_arg = *arg_it;
+          auto best_arg = first_arg;
+          auto best_diff = 0.0;
+          auto previous_arg = first_arg;
+          for (++arg_it;
+              arg_it != arg_set.end();
+              ++arg_it)
+          {
+            const auto arg_diff = *arg_it - previous_arg;
+            if (arg_diff > best_diff)
+            {
+              best_diff = arg_diff;
+              best_arg = previous_arg;
+            }
+            previous_arg = *arg_it;
+          }
+          const auto arg_diff = first_arg + 2.0*pi - previous_arg;
+          if (arg_diff > best_diff)
+          {
+            best_diff = arg_diff;
+            best_arg = previous_arg;
+          }
+          genus.m_safe_arg = Scalar_T(pi - (best_arg + best_diff / 2.0));
         }
         
         return genus;

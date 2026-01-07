@@ -136,9 +136,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     [glucat_use_qd="$withval"],
     [glucat_use_qd="no"])
 
-  dnl Removed redundant --with-eig option and blaze support
-
-
   AC_ARG_WITH([armadillo],    [[  --with-armadillo        use Armadillo library [default=no]]],
     [glucat_use_armadillo="$withval"],
     [glucat_use_armadillo="no"])
@@ -204,16 +201,17 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
      [
         have_eigen=yes
         all_includes="$all_includes -I/usr/include/eigen3"
-        if test "$glucat_use_qd" = "yes"; then
-           CXXFLAGS="$CXXFLAGS -DEIGEN_DEFAULT_DENSE_INDEX_TYPE=int"
-           AC_MSG_NOTICE([Defining EIGEN_DEFAULT_DENSE_INDEX_TYPE=int for QD compatibility.])
-        fi
         AC_MSG_NOTICE([Found Eigen/Dense in /usr/include/eigen3. Added to all_includes.])
      ], [])
      CPPFLAGS="$saved_CPPFLAGS"
   fi
 
-  if test "$have_eigen" = "no"; then
+  if test "$have_eigen" = "yes"; then
+    if test "$glucat_use_qd" = "yes"; then
+       CXXFLAGS="$CXXFLAGS -DEIGEN_DEFAULT_DENSE_INDEX_TYPE=int"
+       AC_MSG_NOTICE([Defining EIGEN_DEFAULT_DENSE_INDEX_TYPE=int for QD compatibility.])
+    fi
+   else
      AC_MSG_WARN([Eigen/Dense not found. PyClical might fail to build.])
   fi
 
