@@ -36,7 +36,7 @@
 
 // Check if Armadillo should be used
 #if defined(_GLUCAT_USE_ARMADILLO)
-  #define ARMA_WARN_LEVEL 1
+
   #include <armadillo>
 #endif
 

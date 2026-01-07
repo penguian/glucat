@@ -152,7 +152,7 @@ namespace glucat
     static
     auto
     fmod(const Scalar_T& lhs, const Scalar_T& rhs) -> Scalar_T
-    { return std::fmod(lhs, rhs); }
+    { using std::fmod; return fmod(lhs, rhs); }
 
     /// Complex conjugate of scalar
     inline
@@ -180,7 +180,7 @@ namespace glucat
     static
     auto
     abs(const Scalar_T& val) -> Scalar_T
-    { return std::abs(val); }
+    { using std::abs; return abs(val); }
 
     /// Pi
     inline
@@ -201,28 +201,28 @@ namespace glucat
     static
     auto
     pow(const Scalar_T& val, int n) -> Scalar_T
-    { return std::pow(val, n); }
+    { using std::pow; return pow(val, n); }
 
     /// Square root of scalar
     inline
     static
     auto
     sqrt(const Scalar_T& val) -> Scalar_T
-    { return std::sqrt(val); }
+    { using std::sqrt; return sqrt(val); }
 
     /// Exponential
     inline
     static
     auto
     exp(const Scalar_T& val) -> Scalar_T
-    { return std::exp(val); }
+    { using std::exp; return exp(val); }
 
     /// Logarithm of scalar
     inline
     static
     auto
     log(const Scalar_T& val) -> Scalar_T
-    { return std::log(val); }
+    { using std::log; return log(val); }
 
     /// Log base 2
     inline
@@ -236,63 +236,63 @@ namespace glucat
     static
     auto
     cos(const Scalar_T& val) -> Scalar_T
-    { return std::cos(val); }
+    { using std::cos; return cos(val); }
 
     /// Inverse cosine of scalar
     inline
     static
     auto
     acos(const Scalar_T& val) -> Scalar_T
-    { return std::acos(val); }
+    { using std::acos; return acos(val); }
 
     /// Hyperbolic cosine of scalar
     inline
     static
     auto
     cosh(const Scalar_T& val) -> Scalar_T
-    { return std::cosh(val); }
+    { using std::cosh; return cosh(val); }
 
     /// Sine of scalar
     inline
     static
     auto
     sin(const Scalar_T& val) -> Scalar_T
-    { return std::sin(val); }
+    { using std::sin; return sin(val); }
 
     /// Inverse sine of scalar
     inline
     static
     auto
     asin(const Scalar_T& val) -> Scalar_T
-    { return std::asin(val); }
+    { using std::asin; return asin(val); }
 
     /// Hyperbolic sine of scalar
     inline
     static
     auto
     sinh(const Scalar_T& val) -> Scalar_T
-    { return std::sinh(val); }
+    { using std::sinh; return sinh(val); }
 
     /// Tangent of scalar
     inline
     static
     auto
     tan(const Scalar_T& val) -> Scalar_T
-    { return std::tan(val); }
+    { using std::tan; return tan(val); }
 
     /// Inverse tangent of scalar
     inline
     static
     auto
     atan(const Scalar_T& val) -> Scalar_T
-    { return std::atan(val); }
+    { using std::atan; return atan(val); }
 
     /// Hyperbolic tangent of scalar
     inline
     static
     auto
     tanh(const Scalar_T& val) -> Scalar_T
-    { return std::tanh(val); }
+    { using std::tanh; return tanh(val); }
 
   };
 

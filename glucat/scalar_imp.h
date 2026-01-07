@@ -118,6 +118,17 @@ namespace glucat
   { return {val.x[0],val.x[1],0.0,0.0}; }
 #endif
 
+#if defined(_GLUCAT_USE_QD) && defined(EIGEN_MAJOR_VERSION)
+  // disambiguate for Eigen::Index (typically long or ptrdiff_t)
+  // qd_real has constructors for int, double, but not long/long long, causing ambiguity.
+  // We can inject a cast or a conversion helper if this file is included before the error site.
+  // However, the error is inside Eigen code calling qd_real(Index).
+  // The only way to fix that without editing Eigen or QD is if *we* control the trait that Eigen uses
+  // OR if we can add a constructor to qd_real (we can't easily, library code).
+  // Actually, Eigen uses RealScalar(index) cast.
+  // If we specialize Eigen::NumTraits<qd_real>, we might control this.
+#endif
+
   /// Cast to promote
   template< typename Scalar_T >
   inline

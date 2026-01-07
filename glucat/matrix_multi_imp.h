@@ -1573,7 +1573,6 @@ namespace glucat
     auto use_approx_sqrt = true;
     auto use_cr_sqrt = false;
     auto scaled_result = multivector_t();
-#if defined(_GLUCAT_USE_EIGENVALUES)
     static const auto sqrt_2 = traits_t::sqrt(Scalar_T(2));
     if (level == 0)
     {
@@ -1601,7 +1600,6 @@ namespace glucat
       }
       use_cr_sqrt = genus.m_is_singular;
     }
-#endif
     if (use_approx_sqrt)
     {
       scaled_result =
@@ -1965,7 +1963,6 @@ namespace glucat{
     if (inv(unitval).isnan())
       return traits_t::NaN();
 
-#if defined(_GLUCAT_USE_EIGENVALUES)
     auto scaled_result = multivector_t();
     if (level == 0)
     {
@@ -1989,9 +1986,6 @@ namespace glucat{
     }
     else
       scaled_result = cascade_log(unitval);
-#else
-    auto scaled_result = cascade_log(unitval);
-#endif
     return (scaled_result.isnan())
       ? traits_t::NaN()
       : scaled_result + rescale;

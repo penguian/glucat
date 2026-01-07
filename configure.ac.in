@@ -32,7 +32,7 @@ dnl    Boston, MA 02111-1307, USA.
 
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([glucat],[0.13.0])
+AC_INIT([glucat],[1.0.0])
 AC_CONFIG_MACRO_DIR([m4])
 m4_include([m4/m4_ax_cxx_compile_stdcxx.m4])
 m4_include([m4/m4_ax_blas.m4])
@@ -136,20 +136,8 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     [glucat_use_qd="$withval"],
     [glucat_use_qd="no"])
 
-  AC_ARG_WITH([eig],          [[  --with-eig[=ARG]        library to use for eigenvalues (no|blaze) [default=no]]],
-  [
-    case "$withval" in
-      no)
-        glucat_use_eigenvalues="no"
-        ;;
-      blaze)
-        glucat_use_eigenvalues="blaze"
-        ;;
-      *)
-        AC_MSG_ERROR([Unknown option for --with-eig])
-        ;;
-    esac
-  ],[glucat_use_eigenvalues="no"])
+  dnl Removed redundant --with-eig option and blaze support
+
 
   AC_ARG_WITH([armadillo],    [[  --with-armadillo        use Armadillo library [default=no]]],
     [glucat_use_armadillo="$withval"],
@@ -163,7 +151,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     if [[[ "$glucat_have_libarmadillo" == "yes" ]]]; then
       GLUCAT_CHECK_HEADERS([armadillo],
       [
-        CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_ARMADILLO"
+        CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_ARMADILLO -DARMA_WARN_LEVEL=1"
         all_libraries="$all_libraries -larmadillo"
       ],[],[])
     fi
@@ -172,23 +160,62 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     fi
   fi
 
+  AC_ARG_WITH([openmp],       [[  --with-openmp           use OpenMP (requires Armadillo) [default=no]]],
+    [glucat_use_openmp="$withval"],
+    [glucat_use_openmp="no"])
+
+  if [[[ "$glucat_use_openmp" == "yes" ]]]; then
+     if [[[ "$glucat_use_armadillo" == "yes" ]]]; then
+        dnl Check for -fopenmp
+        glucat_have_fopenmp="no"
+        GLUCAT_CHECK_COMPILER_FLAG([fopenmp],
+           [glucat_have_fopenmp="yes"],
+           [])
+
+        dnl Check for -lopenblas
+        glucat_have_openblas="no"
+        GLUCAT_CHECK_LIB([openblas],[cblas_dgemm],
+           [glucat_have_openblas="yes"],
+           [])
+
+        if [[[ "$glucat_have_fopenmp" == "yes" ]]] && [[[ "$glucat_have_openblas" == "yes" ]]]; then
+           CXXFLAGS="$CXXFLAGS -fopenmp -DARMA_USE_OPENMP"
+           all_libraries="$all_libraries -lopenblas"
+           AC_MSG_NOTICE([OpenMP support enabled with -fopenmp and -lopenblas])
+        else
+           AC_MSG_WARN([OpenMP support requested but prerequisites (-fopenmp and -lopenblas) were not found.])
+        fi
+
+     else
+        AC_MSG_WARN([--with-openmp ignored because --with-armadillo is not enabled.])
+     fi
+  fi
+
   dnl Check for Eigen
-  GLUCAT_CHECK_HEADERS([Eigen/Dense], [],
-  [
+  have_eigen=no
+  GLUCAT_CHECK_HEADERS([Eigen/Dense], [have_eigen=yes], [])
+
+  if test "$have_eigen" = "no"; then
      dnl Try adding -I/usr/include/eigen3
      saved_CPPFLAGS="$CPPFLAGS"
      CPPFLAGS="$CPPFLAGS -I/usr/include/eigen3"
      unset ac_cv_header_Eigen_Dense
      GLUCAT_CHECK_HEADERS([Eigen/Dense],
      [
+        have_eigen=yes
         all_includes="$all_includes -I/usr/include/eigen3"
+        if test "$glucat_use_qd" = "yes"; then
+           CXXFLAGS="$CXXFLAGS -DEIGEN_DEFAULT_DENSE_INDEX_TYPE=int"
+           AC_MSG_NOTICE([Defining EIGEN_DEFAULT_DENSE_INDEX_TYPE=int for QD compatibility.])
+        fi
         AC_MSG_NOTICE([Found Eigen/Dense in /usr/include/eigen3. Added to all_includes.])
-     ],
-     [
-        AC_MSG_WARN([Eigen/Dense not found. PyClical might fail to build.])
      ], [])
      CPPFLAGS="$saved_CPPFLAGS"
-  ], [])
+  fi
+
+  if test "$have_eigen" = "no"; then
+     AC_MSG_WARN([Eigen/Dense not found. PyClical might fail to build.])
+  fi
 
   dnl Check for a C++ compiler
   AC_LANG([C]++)
@@ -373,52 +400,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     fi
   fi
 
-  dnl Handle $glucat_use_eigenvalues: library to use for eigenvalues
-  case "$glucat_use_eigenvalues" in
-    blaze)
-      glucat_have_lapack="yes"
-      glucat_add_libs=""
-      case "$basename_cxx" in
-        "g++"*)
-          ac_cv_fc_compiler_gnu="yes"
-          ;;
-        *)
-          ;;
-      esac
-      AX_BLAS(
-      [glucat_add_libs="$BLAS_LIBS $glucat_add_libs"],
-      [glucat_have_lapack="no"])
-      AX_LAPACK(
-      [glucat_add_libs="$LAPACK_LIBS $glucat_add_libs"],
-      [glucat_have_lapack="no"])
-      if [[[ "$glucat_have_lapack" == "no" ]]]; then
-        AC_MSG_WARN([Cannot build using LAPACK.])
-      fi
-      ;;
-    *)
-      ;;
-  esac
-  case "$glucat_use_eigenvalues" in
-    blaze)
-      if [[[ "$glucat_have_lapack" != "no" ]]]; then
-        glucat_have_blaze="yes"
-
-        GLUCAT_CHECK_HEADERS([blaze/Math.h],
-        [
-          CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BLAZE"
-          all_libraries="$all_libraries $glucat_add_libs"
-        ],
-        [glucat_have_blaze="no"],[])
-      fi
-      if [[[ "$glucat_have_blaze" == "no" ]]]; then
-        AC_MSG_WARN([Cannot build using Blaze library.])
-
-      fi
-      ;;
-    *)
-      ;;
-  esac
-
   dnl Handle $glucat_use_warnings: enable compilation with -Wall and similiar
   if [[[ "$glucat_use_warnings" == "yes" ]]]; then
       CXXFLAGS="-Wall $CXXFLAGS"
@@ -532,7 +513,7 @@ AC_CONFIG_HEADERS([config.h])
 AX_PREFIX_CONFIG_H([glucat/glucat_config.h])
 
 GLUCAT_CHECK_EXTRA_LIBS
-all_includes="-I. -I.. $all_includes $USER_INCLUDES"
+all_includes="$all_includes $USER_INCLUDES"
 
 dnl checks for programs.
 dnl first check for C++ compilers

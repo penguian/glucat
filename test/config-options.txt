@@ -5,7 +5,7 @@ disable-dependency:          --disable-dependency-tracking
 disable-pyclical:            --disable-pyclical
 prefix-home-opt:             --prefix=$HOME/opt
 qd:                          --with-qd
-eig-blaze:                   --with-eig=blaze
-eig-blaze-debug-full:        --with-eig=blaze --enable-debug=full
-eig-blaze-debug-yes:         --with-eig=blaze --enable-debug=yes
-eig-blaze-qd:                --with-eig=blaze --with-qd
+armadillo:                   --with-armadillo
+armadillo-debug-full:        --with-armadillo --enable-debug=full
+armadillo-debug-yes:         --with-armadillo --enable-debug=yes
+armadillo-qd:                --with-armadillo --with-qd

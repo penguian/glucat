@@ -33,6 +33,7 @@
 
 #include "glucat/global.h"
 #include "glucat/scalar.h"
+#include <type_traits>
 
 #if defined(_GLUCAT_USE_QD)
 # include <qd/qd_real.h>
@@ -93,6 +94,25 @@ namespace glucat
   numeric_traits<dd_real>::
   to_double(const dd_real& val) -> double
   { return ::to_double(val); }
+
+  /// to_scalar_t for dd_real
+  template<>
+  template<typename Other_Scalar_T>
+  inline
+  auto
+  numeric_traits<dd_real>::
+  to_scalar_t(const Other_Scalar_T& val) -> dd_real
+  {
+    if constexpr (std::is_same_v<Other_Scalar_T, dd_real>) {
+      return val;
+    } else if constexpr (std::is_same_v<Other_Scalar_T, qd_real>) {
+      return ::to_dd_real(val);
+    } else if constexpr (std::is_integral_v<Other_Scalar_T>) {
+      return dd_real(static_cast<double>(val));
+    } else {
+      return static_cast<dd_real>(val);
+    }
+  }
 
   /// Modulo function for dd_real
   template<>
@@ -223,6 +243,23 @@ namespace glucat
   numeric_traits<qd_real>::
   to_double(const qd_real& val) -> double
   { return ::to_double(val); }
+
+  /// to_scalar_t for qd_real
+  template<>
+  template<typename Other_Scalar_T>
+  inline
+  auto
+  numeric_traits<qd_real>::
+  to_scalar_t(const Other_Scalar_T& val) -> qd_real
+  {
+    if constexpr (std::is_same_v<Other_Scalar_T, qd_real>) {
+      return val;
+    } else if constexpr (std::is_integral_v<Other_Scalar_T>) {
+      return qd_real(static_cast<double>(val));
+    } else {
+      return static_cast<qd_real>(val);
+    }
+  }
 
   /// Modulo function for qd_real
   template<>

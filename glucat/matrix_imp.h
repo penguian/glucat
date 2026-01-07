@@ -145,6 +145,10 @@ namespace glucat {
     
     arma_matrix_wrapper t() const { return arma_matrix_wrapper(MatrixType(m_mat.t())); }
 
+    friend std::ostream& operator<<(std::ostream& os, const arma_matrix_wrapper& m) {
+        return os << m.m_mat;
+    }
+
   private:
     // Helper to construct from raw arma mat
     arma_matrix_wrapper(const MatrixType& m) : m_mat(m) { 
@@ -384,6 +388,10 @@ namespace glucat {
     eigen_matrix_wrapper t() const {
         return eigen_matrix_wrapper(m_mat.transpose());
     }
+
+    friend std::ostream& operator<<(std::ostream& os, const eigen_matrix_wrapper& m) {
+        return os << m.m_mat;
+    }
   };
   
   // Mixed op
@@ -462,6 +470,86 @@ namespace glucat {
       n_nonzero = m_mat.nonZeros();
     }
 
+    // Iterator support to match Armadillo/uBLAS usage pattern
+    // Flattened iterator over non-zeros.
+    class const_iterator {
+    public:
+        // Use Eigen InnerIterator to iterate.
+        // We need to store: reference to matrix, current outer index, current inner iterator.
+        
+        using InnerIterator = typename MatrixType::InnerIterator;
+        
+        const MatrixType* mp_mat;
+        int m_outer;
+        InnerIterator m_inner; // Inner iterator for current outer column/row
+        
+        // Constructor for begin()
+        const_iterator(const MatrixType* mat, bool start = true) 
+        : mp_mat(mat), m_outer(0), m_inner(*mat, 0)
+        {
+            if (start) {
+                // Find first non-empty outer vector
+                if (mp_mat->outerSize() == 0) {
+                     m_outer = 0; 
+                     return; 
+                }
+                // Initialize inner for 0.
+                m_inner = InnerIterator(*mp_mat, 0);
+                
+                // If invalid (empty column/row), advance to next valid
+                if (!m_inner) advance(); 
+            } else {
+                // End state: m_outer = outerSize
+                m_outer = mp_mat->outerSize();
+            }
+        }
+
+        void advance() {
+            // If current inner valid, ++
+            if (m_inner) {
+                ++m_inner;
+            }
+            
+            // If now invalid (end of column/row), move to next outer
+            while (!m_inner && m_outer < mp_mat->outerSize()) {
+                 m_outer++;
+                 if (m_outer < mp_mat->outerSize()) {
+                     m_inner = InnerIterator(*mp_mat, m_outer);
+                 }
+            }
+        }
+        
+        bool is_end() const {
+            return m_outer >= mp_mat->outerSize();
+        }
+
+        const_iterator& operator++() {
+            advance();
+            return *this;
+        }
+
+        bool operator!=(const const_iterator& other) const {
+            if (m_outer != other.m_outer) return true;
+             // If both at end
+            if (m_outer >= mp_mat->outerSize()) return false; 
+            
+            // Should compare inner?
+            // If m_outer matches and valid, compare specific element?
+            // For simple loops != end(), comparing outer is sufficient if end has outer=size.
+            return true; 
+        }
+        
+        // Accessors matching Armadillo iterator somewhat, or uBLAS
+        uword row() const { return m_inner.row(); }
+        uword col() const { return m_inner.col(); }
+        Scalar_T operator*() const { return m_inner.value(); }
+    };
+    
+    const_iterator begin() const { return const_iterator(&m_mat, true); }
+    const_iterator end() const { return const_iterator(&m_mat, false); }
+
+
+
     uword size1() const { return n_rows; }
     uword size2() const { return n_cols; }
 
@@ -492,6 +580,10 @@ namespace glucat {
          m_mat *= val;
          return *this;
      }
+
+     friend std::ostream& operator<<(std::ostream& os, const eigen_sparse_wrapper& m) {
+         return os << m.m_mat;
+     }
   };
 
 
@@ -521,8 +613,8 @@ namespace glucat {
   double norm(const eigen_matrix_wrapper<T>& A, const char* type) {
       // Assuming type == "frob" or "inf"
       std::string t(type);
-      if (t == "frob") return A.m_mat.norm();
-      if (t == "inf") return A.m_mat.template lpNorm<Eigen::Infinity>();
+      if (t == "frob") return numeric_traits<T>::to_double(A.m_mat.norm());
+      if (t == "inf") return numeric_traits<T>::to_double(A.m_mat.template lpNorm<Eigen::Infinity>());
       return 0.0;
   }
   
@@ -660,7 +752,7 @@ namespace glucat {
           Eigen::MatrixXcd dmat(A.n_rows, A.n_cols);
           for(std::size_t i=0; i<A.n_rows; ++i)
              for(std::size_t j=0; j<A.n_cols; ++j)
-                 dmat(i,j) = std::complex<double>((double)std::real(A(i,j)), (double)std::imag(A(i,j))); // Cast
+                 dmat(i,j) = std::complex<double>(numeric_traits<T>::to_double(A(i,j)), 0.0); // Cast strict real scalar to double
           
            Eigen::ComplexEigenSolver<Eigen::MatrixXcd> es(dmat);
            const auto& E = es.eigenvalues();
@@ -670,6 +762,7 @@ namespace glucat {
       }
   }
 
+#if defined(_GLUCAT_USE_ARMADILLO)
   // Overload for Armadillo
   template<typename T>
   std::vector<std::complex<double>> eigenvalues(const arma::Mat<T>& A) {
@@ -679,28 +772,37 @@ namespace glucat {
       for(size_t i=0; i<eigval.n_elem; ++i) res[i] = std::complex<double>(eigval[i].real(), eigval[i].imag());
       return res;
   }
+#endif
 
   // Wrappers for arma_matrix_wrapper
+#if defined(_GLUCAT_USE_ARMADILLO)
   template<typename T>
   auto trace(const arma_matrix_wrapper<T>& A) {
       return arma::trace(A.m_mat);
   }
+#endif
 
+#if defined(_GLUCAT_USE_ARMADILLO)
   template<typename T>
   auto eigenvalues(const arma_matrix_wrapper<T>& A) {
       return eigenvalues(A.m_mat);
   }
+#endif
 
   // isnan / isinf implementations
+#if defined(_GLUCAT_USE_ARMADILLO)
   template<typename T>
   bool isnan(const arma_matrix_wrapper<T>& A) {
       return A.m_mat.has_nan();
   }
+#endif
   
+#if defined(_GLUCAT_USE_ARMADILLO)
   template<typename T>
   bool isinf(const arma_matrix_wrapper<T>& A) {
       return A.m_mat.has_inf();
   }
+#endif
   
   template<typename T>
   bool isnan(const eigen_matrix_wrapper<T>& A) {
@@ -750,7 +852,9 @@ namespace glucat {
     auto trace(const Matrix_T& A) -> typename Matrix_T::elem_type {
         if constexpr (requires { A.m_mat; }) {
              // Wrappers
+#if defined(_GLUCAT_USE_ARMADILLO)
              if constexpr (requires { arma::trace(A.m_mat); }) return arma::trace(A.m_mat);
+#endif
              if constexpr (requires { A.m_mat.trace(); }) return A.m_mat.trace();
              // Sparse wrapper?
              if constexpr (requires { A.trace(); }) return A.trace();
@@ -761,7 +865,9 @@ namespace glucat {
         } else {
              // Raw types
              if constexpr (requires { A.trace(); }) return A.trace();
+#if defined(_GLUCAT_USE_ARMADILLO)
              if constexpr (requires { arma::trace(A); }) return arma::trace(A);
+#endif
              if constexpr (requires { glucat::trace(A); }) return glucat::trace(A);
         }
         return 0; 
@@ -771,6 +877,7 @@ namespace glucat {
     auto eigenvalues(const Matrix_T& A) -> std::vector< std::complex<double> > {
         if constexpr (requires { A.m_mat; }) {
             // Wrapper types: dispatch to specific implementation logic
+#if defined(_GLUCAT_USE_ARMADILLO)
             if constexpr (requires { arma::eig_gen(A.m_mat); }) {
                  // Arma logic (inline or call helper if defined in unnamed namespace)
                  arma::cx_vec eigval;
@@ -779,16 +886,60 @@ namespace glucat {
                  for(size_t i=0; i<eigval.n_elem; ++i) res[i] = std::complex<double>(eigval[i].real(), eigval[i].imag());
                  return res;
             }
+#endif
             if constexpr (requires { A.m_mat.eigenvalues(); }) {
                  // Eigen logic
                  auto ev = A.m_mat.eigenvalues();
                  std::vector<std::complex<double>> res(ev.size());
-                 for(long i=0; i<ev.size(); ++i) res[i] = ev[i];
+                 for(long i=0; i<ev.size(); ++i) {
+                     using scalar_type = typename Matrix_T::elem_type;
+                     res[i] = std::complex<double>(
+                         numeric_traits<scalar_type>::to_double(ev[i].real()), 
+                         numeric_traits<scalar_type>::to_double(ev[i].imag())
+                     );
+                 }
                  return res;
             }
         }
         // Fallback to glucat::eigenvalues for pure types
-        return glucat::eigenvalues(A);
+    return glucat::eigenvalues(A);
+    }
+
+    template<typename Matrix_T>
+    auto classify_eigenvalues(const Matrix_T& A) -> eig_genus<Matrix_T> {
+        eig_genus<Matrix_T> genus;
+        // Basic check for singularity and eigenvalue types.
+        std::vector<std::complex<double>> ev = matrix::eigenvalues(A);
+        
+        bool has_neg_real = false;
+        bool has_complex = false; // Non-real
+        
+        for(const auto& z : ev) {
+            double abs_z = std::abs(z);
+            if (abs_z < 1e-12) { // Arbitrary small tolerance
+                genus.m_is_singular = true;
+            }
+            // Check for negative real: real < -tol, |imag| < tol
+            if (z.real() < -1e-12 && std::abs(z.imag()) < 1e-12) {
+                has_neg_real = true;
+            }
+            if (std::abs(z.imag()) > 1e-12) {
+                has_complex = true;
+            }
+        }
+        
+        if (has_neg_real) {
+            if (has_complex) { 
+                genus.m_eig_case = both_eigs;
+                // Heuristic: just needed to define it to satisfy linker.
+            } else {
+                genus.m_eig_case = neg_real_eigs;
+            }
+        } else {
+            genus.m_eig_case = safe_eigs;
+        }
+        
+        return genus;
     }    template<typename Matrix_T>
     auto norm(const Matrix_T& A, const char* method = "inf") {
         return glucat::norm(A, method);
@@ -796,6 +947,21 @@ namespace glucat {
 
     template<typename Matrix_T>
     auto norm_frob2(const Matrix_T& A) -> typename Matrix_T::elem_type {
+        // Optimization: if sparse iterator available, sum squares of non-zeros
+        if constexpr (requires { A.begin(); A.end(); }) {
+            typename Matrix_T::elem_type sum_sq = 0;
+            for(auto it = A.begin(); it != A.end(); ++it) {
+                auto val = *it;
+                sum_sq += val * val;
+            }
+            // Logic check: if NaN present?
+            // The original norm_frob2 checked for NaN.
+            // But usually we assume valid.
+            // If strict:
+            if (glucat::isnan(A)) return numeric_traits<typename Matrix_T::elem_type>::NaN();
+            return sum_sq;
+        }
+        
         auto n = glucat::norm(A, "frob");
         return n*n;
     }
@@ -804,13 +970,19 @@ namespace glucat {
     template<typename Matrix_T>
     auto isnan(const Matrix_T& A) -> bool {
         if constexpr (requires { A.m_mat; }) { 
-             // Wrapper types
+             // Wrapper types could delegate to internal
              if constexpr (requires { A.m_mat.has_nan(); }) return A.m_mat.has_nan(); // Arma
              if constexpr (requires { A.m_mat.hasNaN(); }) return A.m_mat.hasNaN(); // Eigen
-             // Sparse wrapper?
-             return false; // Valid assumption for sparse unless explicit NaN support needed
+        }
+        
+        // Generic iterator check (works for sparse wrapper too)
+        if constexpr (requires { A.begin(); A.end(); }) {
+            for(auto it = A.begin(); it != A.end(); ++it) {
+                if (numeric_traits<typename Matrix_T::elem_type>::isNaN(*it)) return true;
+            }
+            return false;
         } else {
-             // Raw types
+             // Fallback
              if constexpr (requires { A.has_nan(); }) return A.has_nan();
              if constexpr (requires { A.hasNaN(); }) return A.hasNaN();
              return false;
@@ -821,8 +993,14 @@ namespace glucat {
     auto isinf(const Matrix_T& A) -> bool {
         if constexpr (requires { A.m_mat; }) { 
              if constexpr (requires { A.m_mat.has_inf(); }) return A.m_mat.has_inf(); // Arma
-             if constexpr (requires { A.m_mat.allFinite(); }) return !A.m_mat.allFinite() && !isnan(A); // Eigen
-             return false;
+        }
+        
+        // Generic iterator check
+        if constexpr (requires { A.begin(); A.end(); }) {
+            for(auto it = A.begin(); it != A.end(); ++it) {
+                 if (numeric_traits<typename Matrix_T::elem_type>::isInf(*it)) return true;
+            }
+            return false;
         } else {
              if constexpr (requires { A.has_inf(); }) return A.has_inf();
              if constexpr (requires { A.allFinite(); }) return !A.allFinite() && !isnan(A);
@@ -832,16 +1010,27 @@ namespace glucat {
     
     template<typename Matrix_T>
     auto nnz(const Matrix_T& A) -> typename Matrix_T::size_type {
-        if constexpr (requires { A.n_nonzero; }) return A.n_nonzero; // Arma wrapper has n_nonzero? No, use n_elem or .n_nonzero usage?
-        // Arma has .n_nonzero (variable in sparse) or n_elem?
-        // Wrapper doesn't expose n_nonzero member directly?
-        // Let's check wrapper.
-        // It exposes size1, size2.
-        // If sparse wrapper, it has .nonZeros().
+        if constexpr (requires { A.n_nonzero; }) return A.n_nonzero;
         if constexpr (requires { A.nonZeros(); }) return A.nonZeros();
-        if constexpr (requires { A.m_mat.n_nonzero; }) return A.m_mat.n_nonzero; // Arma sparse?
-        if constexpr (requires { A.n_elem; }) return A.n_elem; // Dense total elements?
-        // matrix.h declares it.
+#if defined(_GLUCAT_USE_ARMADILLO)
+        if constexpr (requires { A.m_mat.n_nonzero; }) return A.m_mat.n_nonzero; 
+#endif
+        if constexpr (requires { A.begin(); A.end(); }) {
+             typename Matrix_T::size_type count = 0;
+             for(auto it = A.begin(); it != A.end(); ++it) {
+                 if (*it != 0) count++;
+             }
+             return count;
+        }
+        if constexpr (requires { A.n_elem; }) {
+             // Dense fallback
+             // Iterate all?
+             size_t count = 0;
+             for(size_t i=0; i<A.n_rows; ++i)
+                 for(size_t j=0; j<A.n_cols; ++j)
+                     if (A(i,j) != 0) count++;
+             return count;
+        }
         return 0;
     }
     
@@ -851,8 +1040,12 @@ namespace glucat {
         // Set to identity
         if constexpr (requires { res.eye(dim, dim); }) res.eye(dim, dim);
         else if constexpr (requires { res.setIdentity(); }) res.setIdentity();
+#if defined(_GLUCAT_USE_ARMADILLO)
         else if constexpr (requires { res.m_mat.eye(); }) res.m_mat.eye();
         else if constexpr (requires { res.m_mat.setIdentity(); }) res.m_mat.setIdentity();
+#else
+        else if constexpr (requires { res.m_mat.setIdentity(); }) res.m_mat.setIdentity();
+#endif
         else {
              // Manual identity (may be slow for sparse if insertion not optimized)
              for(size_t i=0; i<dim; ++i) res(i,i) = static_cast<typename Matrix_T::elem_type>(1);
@@ -862,42 +1055,66 @@ namespace glucat {
     // nork / signed_perm_nork implementation
     template<typename LHS_T, typename RHS_T>
     auto signed_perm_nork(const LHS_T& lhs, const RHS_T& rhs) -> const RHS_T { 
-         // Logic: Find first non-zero of lhs.
-         size_t r = 0, c = 0;
-         typename LHS_T::elem_type val = 0;
-         bool found = false;
-         for(r=0; r<lhs.n_rows; ++r) {
-             for(c=0; c<lhs.n_cols; ++c) {
-                 if (lhs(r,c) != 0) {
-                     val = lhs(r,c);
-                     found = true;
-                     break; 
+         size_t blk_rows = rhs.n_rows / (std::max)(size_t(1), size_t(lhs.n_rows));
+         size_t blk_cols = rhs.n_cols / (std::max)(size_t(1), size_t(lhs.n_cols));
+         
+         if (lhs.n_rows == 0 || lhs.n_cols == 0) {
+              if constexpr (requires { RHS_T(blk_rows, blk_cols); }) return RHS_T(blk_rows, blk_cols);
+              RHS_T res; res.set_size(blk_rows, blk_cols); return res;
+         }
+
+         RHS_T res(blk_rows, blk_cols); 
+         res.zeros();
+
+         // Iterate over non-zero elements of LHS using iterator if available, or fallback
+         if constexpr (requires { lhs.begin(); lhs.end(); }) {
+             // Sparse iterator optimization
+             for(auto it = lhs.begin(); it != lhs.end(); ++it) {
+                 auto val = *it; // Value
+                 if (val != 0) {
+                     size_t r = it.row();
+                     size_t c = it.col();
+                     
+                     size_t start_row = r * blk_rows;
+                     size_t start_col = c * blk_cols;
+                     for(size_t i=0; i<blk_rows; ++i) {
+                         for(size_t j=0; j<blk_cols; ++j) {
+                             res(i,j) += static_cast<typename RHS_T::elem_type>(val) * static_cast<typename RHS_T::elem_type>(rhs(start_row+i, start_col+j));
+                         }
+                     }
                  }
              }
-             if(found) break;
-         }
-         
-         if (!found) {
-             // Avoid div by zero. Return zero matrix.
-             size_t rows = rhs.n_rows / (std::max)(size_t(1), size_t(lhs.n_rows));
-             size_t cols = rhs.n_cols / (std::max)(size_t(1), size_t(lhs.n_cols));
-             if constexpr (requires { RHS_T(rows, cols); }) return RHS_T(rows, cols);
-             RHS_T res; res.set_size(rows, cols); return res; // Fallback
-         }
-         
-         size_t blk_rows = rhs.n_rows / lhs.n_rows;
-         size_t blk_cols = rhs.n_cols / lhs.n_cols;
-         size_t start_row = r * blk_rows;
-         size_t start_col = c * blk_cols;
-         
-         RHS_T res(blk_rows, blk_cols); 
-         
-         for(size_t i=0; i<blk_rows; ++i) {
-             for(size_t j=0; j<blk_cols; ++j) {
-                 res(i,j) = static_cast<typename RHS_T::elem_type>(rhs(start_row+i, start_col+j)) / static_cast<typename RHS_T::elem_type>(val);
+         } else {
+             // Fallback for types without sparse iterators (e.g. dense)
+             for(size_t r=0; r<lhs.n_rows; ++r) {
+                 for(size_t c=0; c<lhs.n_cols; ++c) {
+                     auto val = lhs(r,c);
+                     if (val != 0) {
+                         size_t start_row = r * blk_rows;
+                         size_t start_col = c * blk_cols;
+                         for(size_t i=0; i<blk_rows; ++i) {
+                             for(size_t j=0; j<blk_cols; ++j) {
+                                 res(i,j) += static_cast<typename RHS_T::elem_type>(val) * static_cast<typename RHS_T::elem_type>(rhs(start_row+i, start_col+j));
+                             }
+                         }
+                     }
+                 }
              }
          }
-         return res;
+         
+         // Normalize by dividing by Frobenius norm squared of LHS.
+         // For a signed permutation matrix of size N, norm_frob2 is N (assuming entries are +/- 1).
+         // This matches legacy implementation which used lhs.size1().
+         // Use to_scalar_t to safely convert n_rows (size_t/long) to Scalar (potentially qd_real)
+        auto norm_sq = numeric_traits<typename RHS_T::elem_type>::to_scalar_t(lhs.n_rows);
+        if (norm_sq != numeric_traits<typename RHS_T::elem_type>::to_scalar_t(1)) {
+             // If not 1, we must scale result
+             if constexpr (requires { res(0,0); }) {
+                 for(size_t i=0; i<res.n_rows; ++i)
+                     for(size_t j=0; j<res.n_cols; ++j)
+                     res(i,j) /= norm_sq;
+             }
+        } return res;
     }
 
     template<typename LHS_T, typename RHS_T>
@@ -942,16 +1159,28 @@ namespace glucat {
         // Note: For sparse LHS, this iteration is inefficient (O(N^2) instead of O(NNZ))
         // but it is correct and works for all wrappers. 
         // Optimization TODO: Use iterators if LHS is sparse.
-        for(size_t i=0; i<lhs.n_rows; ++i) {
-            for(size_t j=0; j<lhs.n_cols; ++j) {
-                // Check for zero check optimization if explicit sparse wrapper?
-                // For now, trust the compiler or wrapper to handle it reasonably.
-                // Casting to Scalar_T to ensure correct arithmetic
-                sum += static_cast<Scalar_T>(lhs(i,j)) * static_cast<Scalar_T>(rhs(i,j));
+        if constexpr (requires { lhs.begin(); lhs.end(); }) {
+            // Sparse iterator optimization
+            for(auto it = lhs.begin(); it != lhs.end(); ++it) {
+                size_t r = it.row();
+                size_t c = it.col();
+                auto val = *it;
+                
+                // For inner product: sum( lhs(i,j) * rhs(i,j) )
+                // We only need to visit non-zeros of LHS.
+                // Assuming RHS has efficient random access or is dense.
+                sum += static_cast<Scalar_T>(val) * static_cast<Scalar_T>(rhs(r,c));
+            }
+        } else {
+            // Fallback
+            for(size_t i=0; i<lhs.n_rows; ++i) {
+                for(size_t j=0; j<lhs.n_cols; ++j) {
+                    sum += static_cast<Scalar_T>(lhs(i,j)) * static_cast<Scalar_T>(rhs(i,j));
+                }
             }
         }
         if (lhs.n_rows == 0) return Scalar_T(0);
-        return sum / Scalar_T(lhs.n_rows);
+        return sum / Scalar_T(double(lhs.n_rows));
     }
 
     // ========================================================================
@@ -1009,10 +1238,12 @@ namespace glucat {
   }
   */
   
+#if defined(_GLUCAT_USE_ARMADILLO)
   template<typename T>
   auto trace(const arma::Mat<T>& A) {
       return arma::trace(A);
   }
+#endif
 }
 
 #endif // _GLUCAT_MATRIX_IMP_H

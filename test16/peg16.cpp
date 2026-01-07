@@ -29,6 +29,10 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
+// Workaround for Eigen ASM error with some GCC versions/optimizations
+// "error: read-only variable ‘A1’ used as ‘asm’ output"
+#define EIGEN_DONT_VECTORIZE
+
 #include "test/driver.h"
 #include "glucat/matrix.h"
 #include "test16/peg16.h"
