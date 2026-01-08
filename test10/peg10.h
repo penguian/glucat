@@ -41,7 +41,7 @@ namespace peg10
 
   template< class Multivector_T >
   static
-  void 
+  void
   test_norms_and_involutions(const Multivector_T& a, const Multivector_T& b)
   {
     typedef Multivector_T number;

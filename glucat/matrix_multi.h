@@ -102,7 +102,7 @@ namespace glucat
   auto
   operator<< (std::ostream& os, const matrix_multi<Scalar_T,LO,HI,Tune_P>& val) -> std::ostream&;
 
-  /// Find a common frame for operands of a binary operator 
+  /// Find a common frame for operands of a binary operator
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
   reframe (const matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs,    const matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs,

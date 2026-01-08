@@ -38,7 +38,7 @@ namespace peg05
 
   template< class Multivector_T >
   static
-  Multivector_T 
+  Multivector_T
   operator|| (const Multivector_T& lhs, const Multivector_T& rhs)
   {
     typedef Multivector_T number;
@@ -50,7 +50,7 @@ namespace peg05
 
   template< class Multivector_T >
   static
-  void 
+  void
   do_test5()
   {
     typedef Multivector_T number;

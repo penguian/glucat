@@ -40,7 +40,7 @@ namespace peg08
 
   template< class Multivector_T >
   static
-  void 
+  void
   do_test8()
   {
     typedef Multivector_T number;

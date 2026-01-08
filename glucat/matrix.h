@@ -71,7 +71,7 @@ namespace glucat {
     template<> struct is_arma_supported<double> : std::true_type {};
     template<> struct is_arma_supported<std::complex<float>> : std::true_type {};
     template<> struct is_arma_supported<std::complex<double>> : std::true_type {};
-    
+
     // Explicitly NOTE: long double, dd_real, qd_real will use the default false_type
     // and thus be dispatched to the Eigen wrapper.
   #endif
@@ -112,17 +112,17 @@ namespace glucat {
   {
     // ... existing function declarations can remain or be updated if signatures change ...
     // For now, we are focusing on the backend type definition.
-    // The previous implementation used uBLAS matrix expressions. 
+    // The previous implementation used uBLAS matrix expressions.
     // The new design moves towards an Armadillo-like interface.
     // We should keep the namespaces and general structure.
-    
+
     // NOTE: The previous matrix.h contained declarations for functions like kron, etc.
     // We will keep them but they might need template parameter adjustments if they assume uBLAS.
     // However, the task specifically asked for "matrix.h" interface updates.
     // The bulk of the logic is likely moving to free functions compatible with the new matrix_t.
-    
+
     // We will re-declare the essential functions consistent with the new types.
-    
+
     /// Kronecker tensor product of matrices - as per Matlab kron
     template< typename LHS_T, typename RHS_T >
     auto

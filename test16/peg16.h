@@ -38,7 +38,7 @@ namespace peg16
 
   template< class Multivector_T >
   static
-  void 
+  void
   do_test16()
   {
     typedef Multivector_T number;

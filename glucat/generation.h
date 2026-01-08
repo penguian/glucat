@@ -43,7 +43,7 @@
 namespace glucat { namespace gen
 {
 
-  
+
   /// A signature is a pair of indices, p, q, with p == frame.max(), q == -frame.min()
   using signature_t = std::pair<index_t, index_t>;
 

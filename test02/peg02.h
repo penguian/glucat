@@ -38,7 +38,7 @@ namespace peg02
 
   template< class Multivector_T >
   static
-  void 
+  void
   do_test2()
   {
     typedef Multivector_T number;
