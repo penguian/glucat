@@ -6,6 +6,6 @@ disable-pyclical:            --disable-pyclical
 prefix-home-opt:             --prefix=$HOME/opt
 qd:                          --with-qd
 armadillo:                   --with-armadillo
-armadillo-debug-full:        --with-armadillo --enable-debug=full
 armadillo-debug-yes:         --with-armadillo --enable-debug=yes
+armadillo-openmp:            --with-armadillo --with-openmp
 armadillo-qd:                --with-armadillo --with-qd
