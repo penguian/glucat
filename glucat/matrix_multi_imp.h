@@ -299,7 +299,7 @@ namespace glucat
          std::size_t r = 0, c = 0;
          if constexpr(requires { mtx.n_rows; }) { r = mtx.n_rows; c = mtx.n_cols; }
          else { r = mtx.rows(); c = mtx.cols(); }
-         
+
          this->m_matrix.resize(r, c, false);
          // this->m_matrix.clear(); // resize might not clear if preserve=false, but we overwrite
          for (std::size_t i = 0; i < r; ++i)
@@ -313,7 +313,7 @@ namespace glucat
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
   matrix_multi(const matrix_t& mtx, const index_set_t frm)
   : m_frame( frm ), m_matrix( mtx )
-  { 
+  {
     if (m_matrix.size1() == 0) {
          // std::fprintf(stderr, "DEBUG: matrix_multi(mtx) created 0x0 matrix! Frame size: %d\n", (int)frm.count());
          // This is called by operator* via multivector_t(matrix, frame).
@@ -638,13 +638,13 @@ namespace glucat
     matrix_t XT(AT.n_rows, AT.n_cols);
 
     // Solve AT * XT = BT
-    if (glucat::solve(XT, AT, BT)) 
+    if (glucat::solve(XT, AT, BT))
     {
        // Basic solve succeeded.
        // Refinement step omitted for brevity/compatibility unless strictly needed.
-       // Armadillo/Eigen solvers are usually robust. 
+       // Armadillo/Eigen solvers are usually robust.
        // If iterative refinement is CRITICAL, it can be re-added using backend norms.
-       
+
        return multivector_t(XT.t(), our_frame);
     }
     else
@@ -1968,6 +1968,9 @@ namespace glucat{
     {
       // What kind of eigenvalues does the matrix contain?
       auto genus = matrix::classify_eigenvalues(unitval.m_matrix);
+      if (genus.m_is_singular)
+        return traits_t::NaN();
+
       switch (genus.m_eig_case)
       {
       case matrix::neg_real_eigs:
