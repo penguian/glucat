@@ -632,6 +632,7 @@ namespace glucat {
       // Strict rank check using R diagonal
       // Equivalent to Armadillo's default tolerance: max(size) * max_diag * eps
       using RealScalar = typename Eigen::NumTraits<T>::Real;
+      using traits_t = numeric_traits<RealScalar>;
       const auto& R = qr.matrixR();
       const auto diagonal = R.diagonal();
       const int rank = qr.rank(); // Basic rank from Eigen
@@ -646,12 +647,12 @@ namespace glucat {
 
       // Let's use strict manual check
       RealScalar max_diag = 0;
-      if (diagonal.size() > 0) max_diag = std::abs(diagonal(0));
+      if (diagonal.size() > 0) max_diag = traits_t::abs(diagonal(0));
       RealScalar tol = std::max(A.n_rows, A.n_cols) * max_diag * Eigen::NumTraits<RealScalar>::epsilon();
 
       bool singular = false;
       for(int i=0; i<diagonal.size(); ++i) {
-          if (std::abs(diagonal(i)) <= tol) { singular = true; break; }
+          if (traits_t::abs(diagonal(i)) <= tol) { singular = true; break; }
       }
 
       if (!singular) {
