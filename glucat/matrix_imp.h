@@ -27,11 +27,24 @@ namespace glucat {
   template<typename Scalar_T> class arma_matrix_wrapper; // Forward
 
   // =========================================================================
+  // matrix_impl_base (CRTP Pattern)
+  //Base class providing member functions that delegate to the derived implementation
+  // =========================================================================
+  template<typename Derived>
+  class matrix_impl_base {
+  public:
+      const Derived& derived() const { return static_cast<const Derived&>(*this); }
+      Derived& derived() { return static_cast<Derived&>(*this); }
+
+      // Member functions will be added here in Phase 2
+  };
+
+  // =========================================================================
   // arma_matrix_wrapper
   // =========================================================================
 #if defined(_GLUCAT_USE_ARMADILLO)
   template<typename Scalar_T>
-  class arma_matrix_wrapper {
+  class arma_matrix_wrapper : public matrix_impl_base<arma_matrix_wrapper<Scalar_T>> {
   public:
     using MatrixType = arma::Mat<Scalar_T>;
     using elem_type = Scalar_T;
@@ -195,8 +208,91 @@ namespace glucat {
       return kron(A_dense, B);
   }
 
+  // =========================================================================
+  // arma_sparse_wrapper
+  // =========================================================================
+  template<typename Scalar_T>
+  class arma_sparse_wrapper : public matrix_impl_base<arma_sparse_wrapper<Scalar_T>> {
+  public:
+    using MatrixType = arma::SpMat<Scalar_T>;
+    using elem_type = Scalar_T;
+    using value_type = Scalar_T;
+    using uword = arma::uword;
+    using size_type = arma::uword;
+
+    MatrixType m_mat;
+    uword n_rows = 0;
+    uword n_cols = 0;
+    uword n_nonzero = 0;
+
+    arma_sparse_wrapper() = default;
+
+    arma_sparse_wrapper(uword rows, uword cols) {
+        set_size(rows, cols);
+    }
+
+    // Copy
+    arma_sparse_wrapper(const arma_sparse_wrapper& other) : m_mat(other.m_mat) { update_attributes(); }
+    // Move
+    arma_sparse_wrapper(arma_sparse_wrapper&& other) noexcept : m_mat(std::move(other.m_mat)) { update_attributes(); other.n_rows=0; }
+
+    arma_sparse_wrapper& operator=(const arma_sparse_wrapper& other) {
+        if(this!=&other) { m_mat = other.m_mat; update_attributes(); }
+        return *this;
+    }
+    arma_sparse_wrapper& operator=(arma_sparse_wrapper&& other) noexcept {
+        if(this!=&other) { m_mat = std::move(other.m_mat); update_attributes(); }
+        return *this;
+    }
+
+    void set_size(uword rows, uword cols) {
+        m_mat.set_size(rows, cols);
+        update_attributes();
+    }
+
+    // Make writable
+    void resize(uword rows, uword cols, bool preserve = false) {
+        m_mat.resize(rows, cols); // Arma resize typically preserves
+        update_attributes();
+    }
+
+    void clear() { m_mat.zeros(); update_attributes(); }
+    void zeros(uword rows, uword cols) { set_size(rows, cols); m_mat.zeros(); }
+    void zeros() { m_mat.zeros(); update_attributes(); }
+
+    void update_attributes() {
+        n_rows = m_mat.n_rows;
+        n_cols = m_mat.n_cols;
+        n_nonzero = m_mat.n_nonzero;
+    }
+
+    // Iterator support: Armadillo iterators already have row(), col()
+    using const_iterator = typename MatrixType::const_iterator;
+
+    const_iterator begin() const { return m_mat.begin(); }
+    const_iterator end() const { return m_mat.end(); }
+
+    uword size1() const { return n_rows; }
+    uword size2() const { return n_cols; }
+
+    Scalar_T operator()(uword i, uword j) const { return m_mat(i, j); }
+    Scalar_T& operator()(uword i, uword j) { return m_mat(i, j); }
+
+    arma_sparse_wrapper& operator+=(const arma_sparse_wrapper& other) {
+        m_mat += other.m_mat; update_attributes(); return *this;
+    }
+    arma_sparse_wrapper operator*(const arma_sparse_wrapper& other) const {
+        arma_sparse_wrapper res; res.m_mat = m_mat * other.m_mat; res.update_attributes(); return res;
+    }
+    arma_sparse_wrapper& operator*=(const Scalar_T& val) {
+        m_mat *= val; return *this;
+    }
+    friend std::ostream& operator<<(std::ostream& os, const arma_sparse_wrapper& m) { return os << m.m_mat; }
+  };
+
   // Traits
   template<typename T> struct is_eigen_dense<arma_matrix_wrapper<T>> : std::true_type {};
+  template<typename T> struct is_eigen_sparse<arma_sparse_wrapper<T>> : std::true_type {};
 
 #endif
 
@@ -204,7 +300,7 @@ namespace glucat {
   // eigen_matrix_wrapper
   // =========================================================================
   template<typename Scalar_T>
-  class eigen_matrix_wrapper {
+  class eigen_matrix_wrapper : public matrix_impl_base<eigen_matrix_wrapper<Scalar_T>> {
   public:
     using MatrixType = Eigen::Matrix<Scalar_T, Eigen::Dynamic, Eigen::Dynamic>;
     using elem_type = Scalar_T;
@@ -413,7 +509,7 @@ namespace glucat {
   // eigen_sparse_wrapper
   // =========================================================================
   template<typename Scalar_T>
-  class eigen_sparse_wrapper {
+  class eigen_sparse_wrapper : public matrix_impl_base<eigen_sparse_wrapper<Scalar_T>> {
   public:
     using MatrixType = Eigen::SparseMatrix<Scalar_T>;
     using elem_type = Scalar_T;
