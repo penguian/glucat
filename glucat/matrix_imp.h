@@ -710,13 +710,16 @@ namespace glucat {
 
   // Norm (frob)
   template<typename T>
-  double norm(const eigen_matrix_wrapper<T>& A, const char* type) {
+  auto norm(const eigen_matrix_wrapper<T>& A, const char* type) {
       // Assuming type == "frob" or "inf"
       std::string t(type);
-      if (t == "frob") return numeric_traits<T>::to_double(A.m_mat.norm());
-      if (t == "inf") return numeric_traits<T>::to_double(A.m_mat.template lpNorm<Eigen::Infinity>());
-      return 0.0;
+      using RealScalar = typename Eigen::NumTraits<T>::Real;
+      if (t == "frob") return A.m_mat.norm();
+      if (t == "inf") return A.m_mat.template lpNorm<Eigen::Infinity>();
+      return RealScalar(0);
   }
+
+
 
   // Solve
   template<typename T>
@@ -769,9 +772,12 @@ namespace glucat {
 #if defined(_GLUCAT_USE_ARMADILLO)
   // Norm for arma_matrix_wrapper
   template<typename T>
-  double norm(const arma_matrix_wrapper<T>& A, const char* type) {
+  auto norm(const arma_matrix_wrapper<T>& A, const char* type) {
        return arma::norm(A.m_mat, type);
   }
+
+
+
 
   // Solve for arma_matrix_wrapper
   template<typename T>
@@ -1038,75 +1044,110 @@ namespace glucat {
     template<typename Matrix_T>
     auto classify_eigenvalues(const Matrix_T& A) -> eig_genus<Matrix_T> {
         using Scalar_T = typename Matrix_T::value_type;
-        eig_genus<Matrix_T> genus;
-        // Basic check for singularity and eigenvalue types.
-        std::vector<std::complex<double>> ev = matrix::eigenvalues(A);
+        eig_genus<Matrix_T> result;
+
+        auto lambda = eigenvalues(A);
+
         std::set<double> arg_set;
 
-        bool has_neg_real = false;
-        bool has_complex = false; // Non-real
+        const auto dim = lambda.size();
+        static const auto epsilon =
+        std::max(std::numeric_limits<double>::epsilon(),
+                 numeric_traits<Scalar_T>::to_double(std::numeric_limits<Scalar_T>::epsilon()));
+        static const auto zero_eig_tol = 4096.0*epsilon;
 
-        for(const auto& z : ev) {
-            arg_set.insert(std::arg(z));
-            double abs_z = std::abs(z);
-            if (abs_z < 1e-12) { // Arbitrary small tolerance
-                genus.m_is_singular = true;
-            }
-            // Check for negative real: real < -tol, |imag| < tol
-            if (z.real() < -1e-12 && std::abs(z.imag()) < 1e-12) {
-                has_neg_real = true;
-            }
-            if (std::abs(z.imag()) > 1e-12) {
-                has_complex = true;
-            }
+        bool neg_real_eig_found = false;
+        bool imag_eig_found = false;
+        bool zero_eig_found = false;
+
+        for (auto
+            k = decltype(dim)(0);
+        k != dim;
+        ++k)
+        {
+            const auto lambda_k = lambda[k];
+            arg_set.insert(std::arg(lambda_k));
+
+            const auto real_lambda_k = std::real(lambda_k);
+            const auto imag_lambda_k = std::imag(lambda_k);
+            const auto norm_tol = 4096.0*epsilon*std::norm(lambda_k);
+
+            if (!neg_real_eig_found &&
+                real_lambda_k < -epsilon &&
+                (imag_lambda_k == 0.0 ||
+                imag_lambda_k * imag_lambda_k < norm_tol))
+                neg_real_eig_found = true;
+            if (!imag_eig_found &&
+                imag_lambda_k > epsilon &&
+                (real_lambda_k == 0.0 ||
+                real_lambda_k * real_lambda_k < norm_tol))
+                imag_eig_found = true;
+            if (!zero_eig_found &&
+                std::norm(lambda_k) < zero_eig_tol)
+                zero_eig_found = true;
         }
+
+        if (zero_eig_found)
+            result.m_is_singular = true;
 
         static const auto pi = numeric_traits<double>::pi();
-
-        if (has_neg_real) {
-            if (has_complex) {
-                genus.m_eig_case = both_eigs;
-            } else {
-                genus.m_eig_case = neg_real_eigs;
-                genus.m_safe_arg = Scalar_T(-pi / 2.0);
-            }
-        } else {
-            genus.m_eig_case = safe_eigs;
-        }
-
-        if (genus.m_eig_case == both_eigs)
+        if (neg_real_eig_found)
         {
-          auto arg_it = arg_set.begin();
-          auto first_arg = *arg_it;
-          auto best_arg = first_arg;
-          auto best_diff = 0.0;
-          auto previous_arg = first_arg;
-          for (++arg_it;
-              arg_it != arg_set.end();
-              ++arg_it)
-          {
-            const auto arg_diff = *arg_it - previous_arg;
-            if (arg_diff > best_diff)
+            if (imag_eig_found)
+                result.m_eig_case = both_eigs;
+            else
             {
-              best_diff = arg_diff;
-              best_arg = previous_arg;
+                result.m_eig_case = neg_real_eigs;
+                result.m_safe_arg = Scalar_T(-pi / 2.0);
             }
-            previous_arg = *arg_it;
-          }
-          const auto arg_diff = first_arg + 2.0*pi - previous_arg;
-          if (arg_diff > best_diff)
-          {
-            best_diff = arg_diff;
-            best_arg = previous_arg;
-          }
-          genus.m_safe_arg = Scalar_T(pi - (best_arg + best_diff / 2.0));
         }
 
-        return genus;
-    }    template<typename Matrix_T>
+        if (result.m_eig_case == both_eigs)
+        {
+            auto arg_it = arg_set.begin();
+            auto first_arg = *arg_it;
+            auto best_arg = first_arg;
+            auto best_diff = 0.0;
+            auto previous_arg = first_arg;
+            for (++arg_it;
+                 arg_it != arg_set.end();
+                 ++arg_it)
+                 {
+                     const auto arg_diff = *arg_it - previous_arg;
+                     if (arg_diff > best_diff)
+                     {
+                         best_diff = arg_diff;
+                         best_arg = previous_arg;
+                     }
+                     previous_arg = *arg_it;
+                 }
+                 const auto arg_diff = first_arg + 2.0*pi - previous_arg;
+                 if (arg_diff > best_diff)
+                 {
+                     best_diff = arg_diff;
+                     best_arg = previous_arg;
+                 }
+                 result.m_safe_arg = Scalar_T(pi - (best_arg + best_diff / 2.0));
+        }
+        return result;
+    }
+
+    template<typename Matrix_T>
     auto norm(const Matrix_T& A, const char* method = "inf") {
         return glucat::norm(A, method);
     }
+
+    template<typename T>
+    auto norm_frob2(const eigen_matrix_wrapper<T>& A) {
+        return A.m_mat.squaredNorm();
+    }
+
+#if defined(_GLUCAT_USE_ARMADILLO)
+    template<typename T>
+    auto norm_frob2(const arma_matrix_wrapper<T>& A) {
+         return arma::accu(arma::square(A.m_mat));
+    }
+#endif
 
     template<typename Matrix_T>
     auto norm_frob2(const Matrix_T& A) -> typename Matrix_T::elem_type {

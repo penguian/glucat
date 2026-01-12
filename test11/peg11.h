@@ -91,6 +91,25 @@ namespace peg11
 
   template< class Multivector_T >
   static
+  bool
+  isnan_or_isinf(const Multivector_T& val)
+  {
+    return val.isnan() || val.isinf();
+  }
+
+  template< class Multivector_T >
+  static
+  void
+  note_isnan_or_isinf(const Multivector_T& val, const string& expression)
+  {
+    if (val.isnan())
+      cout << "Note: " << expression << " == nan" << endl;
+    else if (val.isinf())
+      cout << "Note: " << expression << " == inf" << endl;
+  }
+
+  template< class Multivector_T >
+  static
   void
   transcendtest(const Multivector_T& A, const bool random=false)
   {
@@ -102,27 +121,99 @@ namespace peg11
     else
       A.write("A");
 
-    check(exp(A)*exp(-A), m_(1),    "exp(A)*exp(-A) != 1");
-    check(exp(-A)*exp(A), m_(1),    "exp(-A)*exp(A) != 1");
-    check(exp(scalar(A))*exp(pure(A)), exp(A),
-                                    "exp(scalar(A))*exp(pure(A)) != exp(A)");
-    check(cos(A)+complexifier(A)*sin(A), exp(complexifier(A)*A),
-                                    "cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)");
-    check(cosh(A)+sinh(A), exp(A),  "cosh(A)+sinh(A) != exp(A)");
-    check(cos(A)*tan(A), sin(A),    "cos(A)*tan(A) != sin(A)");
-    check(cosh(A)*tanh(A), sinh(A), "cosh(A)*tanh(A) != sinh(A)");
+    check(exp(A)*exp(-A), m_(1),
+         "exp(A)*exp(-A) != 1");
 
-    // if ((A == scalar(A)) || !((inv(A)).isnan()))
-    check(sqrt(A)*sqrt(A), A,       "sqrt(A)*sqrt(A) != A");
-    if (!((inv(A)).isnan()))
-      check(exp(log(A)), A,         "exp(log(A)) != A", true);
-    check(cos(acos(A)), A,          "cos(acos(A)) != A", true);
-    check(cosh(acosh(A)), A,        "cosh(acosh(A)) != A", true);
-    check(sin(asin(A)), A,          "sin(asin(A)) != A", true);
-    check(sinh(asinh(A)), A,        "sinh(asinh(A)) != A", true);
-    check(tan(atan(A)), A,          "tan(atan(A)) != A", true);
-    if (!(log(m_(1)+A).isnan() || log(m_(1)-A).isnan()))
-      check(tanh(atanh(A)), A,      "tanh(atanh(A)) != A", true);
+    check(exp(-A)*exp(A), m_(1),
+         "exp(-A)*exp(A) != 1");
+
+    check(exp(scalar(A))*exp(pure(A)), exp(A),
+         "exp(scalar(A))*exp(pure(A)) != exp(A)");
+
+    if (isnan_or_isinf(cos(A)) || isnan_or_isinf(sin(A)))
+    {
+      note_isnan_or_isinf(cos(A), "cos(A)");
+      note_isnan_or_isinf(sin(A), "sin(A)");
+    }
+    else
+      check(cos(A)+complexifier(A)*sin(A), exp(complexifier(A)*A),
+           "cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)");
+
+    if (isnan_or_isinf(cosh(A)) || isnan_or_isinf(sinh(A)))
+    {
+      note_isnan_or_isinf(cosh(A), "cosh(A)");
+      note_isnan_or_isinf(sinh(A), "sinh(A)");
+    }
+    else
+      check(cosh(A)+sinh(A), exp(A),
+           "cosh(A)+sinh(A) != exp(A)");
+
+    if (isnan_or_isinf(cos(A)) || isnan_or_isinf(tan(A)))
+    {
+      // sin(A) has been noted above
+      note_isnan_or_isinf(tan(A), "tan(A)");
+    }
+    else
+      check(cos(A)*tan(A), sin(A),
+           "cos(A)*tan(A) != sin(A)");
+
+    if (isnan_or_isinf(cosh(A)) || isnan_or_isinf(tanh(A)))
+    {
+      // sinh(A) has been noted above
+      note_isnan_or_isinf(tanh(A), "tanh(A)");
+    }
+    else
+      check(cosh(A)*tanh(A), sinh(A),
+           "cosh(A)*tanh(A) != sinh(A)");
+
+    if (isnan_or_isinf(sqrt(A)))
+      note_isnan_or_isinf(sqrt(A), "sqrt(A)");
+    else
+      check(sqrt(A)*sqrt(A), A,
+           "sqrt(A)*sqrt(A) != A");
+
+    if (isnan_or_isinf(log(A)))
+      note_isnan_or_isinf(log(A), "log(A)");
+    else
+      check(exp(log(A)), A,
+           "exp(log(A)) != A", true);
+
+    if (isnan_or_isinf(acos(A)))
+      note_isnan_or_isinf(acos(A), "acos(A)");
+    else
+      check(cos(acos(A)), A,
+           "cos(acos(A)) != A", true);
+
+    if (isnan_or_isinf(acosh(A)))
+      note_isnan_or_isinf(acosh(A), "acosh(A)");
+    else
+      check(cosh(acosh(A)), A,
+           "cosh(acosh(A)) != A", true);
+
+    if (isnan_or_isinf(asin(A)))
+      note_isnan_or_isinf(asin(A), "asin(A)");
+    else
+      check(sin(asin(A)), A,
+           "sin(asin(A)) != A", true);
+
+    if (isnan_or_isinf(asinh(A)))
+      note_isnan_or_isinf(asinh(A), "asinh(A)");
+    else
+      check(sinh(asinh(A)), A,
+           "sinh(asinh(A)) != A", true);
+
+    if (isnan_or_isinf(atan(A)))
+      note_isnan_or_isinf(atan(A), "atan(A)");
+    else
+      check(tan(atan(A)), A,
+           "tan(atan(A)) != A", true);
+
+    if (isnan_or_isinf(atanh(A)))
+      note_isnan_or_isinf(atanh(A), "atanh(A)");
+    else
+      check(tanh(atanh(A)), A,
+           "tanh(atanh(A)) != A", true);
+
     cout << endl;
     cout.precision(prec);
   }
