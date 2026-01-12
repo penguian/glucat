@@ -42,7 +42,7 @@ int test00()
   do_test00_tuned<float,-5,6>("Default:", "float", 5);
   do_test00_tuned<double>("Default:", "double", 5);
   do_test00_tuned<long double>("Default:", "long double", 5);
-#ifdef _GLUCAT_USE_QD
+#if defined( _GLUCAT_USE_QD)
   unsigned int old_fpu_control;
   fpu_fix_start(&old_fpu_control);
   do_test00_tuned<dd_real>("Default:", "dd_real", 5);
