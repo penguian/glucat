@@ -26,9 +26,10 @@ namespace glucat {
 
   template<typename Scalar_T> class arma_matrix_wrapper; // Forward
 
+
   // =========================================================================
   // matrix_impl_base (CRTP Pattern)
-  //Base class providing member functions that delegate to the derived implementation
+  // Base class providing member functions that delegate to the derived implementation
   // =========================================================================
   template<typename Derived>
   class matrix_impl_base {
@@ -36,12 +37,20 @@ namespace glucat {
       const Derived& derived() const { return static_cast<const Derived&>(*this); }
       Derived& derived() { return static_cast<Derived&>(*this); }
 
-      // Member functions will be added here in Phase 2
+      // Member functions delegating to namespace matrix implementation
+      // Defined at end of file to resolve circular dependency
+      auto trace() const;
+      auto eigenvalues() const;
+      auto classify_eigenvalues() const;
+      auto norm(const char* type = "inf") const;
+      auto norm_frob2() const;
+      auto isnan() const;
+      auto isinf() const;
+      auto nnz() const;
+      
+      template<typename Scalar_T, typename Other>
+      auto inner(const Other& other) const;
   };
-
-  // =========================================================================
-  // arma_matrix_wrapper
-  // =========================================================================
 #if defined(_GLUCAT_USE_ARMADILLO)
   template<typename Scalar_T>
   class arma_matrix_wrapper : public matrix_impl_base<arma_matrix_wrapper<Scalar_T>> {
@@ -976,6 +985,58 @@ namespace glucat {
 
 } // namespace glucat
 
+
+namespace glucat {
+ // =========================================================================
+ // matrix_impl_base Member Definitions
+ // =========================================================================
+  template<typename Derived>
+  auto matrix_impl_base<Derived>::trace() const {
+      return matrix::trace(derived());
+  }
+
+  template<typename Derived>
+  auto matrix_impl_base<Derived>::eigenvalues() const {
+      return matrix::eigenvalues(derived());
+  }
+
+  template<typename Derived>
+  auto matrix_impl_base<Derived>::classify_eigenvalues() const {
+      return matrix::classify_eigenvalues(derived());
+  }
+
+  template<typename Derived>
+  auto matrix_impl_base<Derived>::norm(const char* type) const {
+      return matrix::norm(derived(), type);
+  }
+
+  template<typename Derived>
+  auto matrix_impl_base<Derived>::norm_frob2() const {
+      return matrix::norm_frob2(derived());
+  }
+
+  template<typename Derived>
+  auto matrix_impl_base<Derived>::isnan() const {
+      return matrix::isnan(derived());
+  }
+
+  template<typename Derived>
+  auto matrix_impl_base<Derived>::isinf() const {
+      return matrix::isinf(derived());
+  }
+
+  template<typename Derived>
+  auto matrix_impl_base<Derived>::nnz() const {
+       return matrix::nnz(derived());
+  }
+
+  template<typename Derived>
+  template<typename Scalar_T, typename Other>
+  auto matrix_impl_base<Derived>::inner(const Other& other) const {
+      return matrix::inner<Scalar_T>(derived(), other);
+  }
+} // namespace glucat
+
 namespace glucat {
   // Specializations for traits (must be in glucat namespace)
   template<typename T> struct is_eigen_sparse<glucat::eigen_sparse_wrapper<T>> : std::true_type {};
@@ -1133,8 +1194,36 @@ namespace glucat {
     }
 
     template<typename Matrix_T>
-    auto norm(const Matrix_T& A, const char* method = "inf") {
-        return glucat::norm(A, method);
+    auto norm(const Matrix_T& A, const char* method) -> typename Matrix_T::elem_type {
+        using std::sqrt;
+        if (std::string(method) == "frob") {
+            return sqrt(norm_frob2(A));
+        }
+        // Assume infinity norm by default or specific check
+        // Delegate to underlying matrix if possible
+        if constexpr (requires { A.m_mat.template lpNorm<Eigen::Infinity>(); }) {
+            return A.m_mat.template lpNorm<Eigen::Infinity>();
+#if defined(_GLUCAT_USE_ARMADILLO)
+        } else if constexpr (requires { arma::norm(A.m_mat, method); }) {
+            return arma::norm(A.m_mat, method);
+#endif
+        } else {
+             // Fallback for infinity norm (max row sum? or max absolute element?)
+             // "inf" usually means max absolute row sum for matrices, or max abs element for vectors?
+             // Glucat convention: "inf" often max abs component.
+             // Let's assume max abs element for now given usage in multivector (coeff check).
+             // Actually, multivector `is_zero` checks `norm(..., "inf") == 0`.
+             if constexpr (requires { A.begin(); }) {
+                 using scalar_t = typename Matrix_T::elem_type;
+                 using traits = numeric_traits<scalar_t>;
+                 scalar_t max_val = 0;
+                 for(auto x : A) {
+                     if (traits::abs(x) > max_val) max_val = traits::abs(x);
+                 }
+                 return max_val;
+             }
+             return 0; 
+        }
     }
 
     template<typename T>

@@ -108,6 +108,47 @@ namespace glucat {
   template<typename Scalar_T>
   using sparse_matrix_t = typename sparse_matrix_type_selector<Scalar_T>::type;
 
+  // =========================================================================
+  // Matrix Template Classes (Facade)
+  // Named dense_matrix to avoid collision with namespace matrix (legacy)
+  // =========================================================================
+
+  template<typename Scalar_T>
+  class dense_matrix : public matrix_type_selector<Scalar_T>::type
+  {
+  public:
+      using Base = typename matrix_type_selector<Scalar_T>::type;
+      using Base::Base; // Inherit constructors
+      using Base::operator=;
+
+      dense_matrix() = default;
+      dense_matrix(const dense_matrix&) = default;
+      dense_matrix(dense_matrix&&) = default;
+      dense_matrix& operator=(const dense_matrix&) = default;
+      dense_matrix& operator=(dense_matrix&&) = default;
+
+      template<typename T>
+      dense_matrix(const T& other) : Base(other) {}
+  };
+
+  template<typename Scalar_T>
+  class sparse_matrix : public sparse_matrix_type_selector<Scalar_T>::type
+  {
+  public:
+      using Base = typename sparse_matrix_type_selector<Scalar_T>::type;
+      using Base::Base; // Inherit constructors
+      using Base::operator=;
+
+      sparse_matrix() = default;
+      sparse_matrix(const sparse_matrix&) = default;
+      sparse_matrix(sparse_matrix&&) = default;
+      sparse_matrix& operator=(const sparse_matrix&) = default;
+      sparse_matrix& operator=(sparse_matrix&&) = default;
+
+      template<typename T>
+      sparse_matrix(const T& other) : Base(other) {}
+  };
+
   namespace matrix
   {
     // ... existing function declarations can remain or be updated if signatures change ...
@@ -192,6 +233,12 @@ namespace glucat {
     auto
     inner(const LHS_T& lhs, const RHS_T& rhs) -> Scalar_T;
 
+
+    /// Matrix norm (inf, fro, etc.)
+    template< typename Matrix_T >
+    auto
+    norm(const Matrix_T& val, const char* type = "inf") -> typename Matrix_T::elem_type;
+
     /// Square of Frobenius norm
     template< typename Matrix_T >
     auto
@@ -232,7 +279,5 @@ namespace glucat {
     classify_eigenvalues(const Matrix_T& val) -> eig_genus<Matrix_T>;
   }
 }
-
-#include "glucat/matrix_imp.h" // For wrapper implementation and function definitions
 
 #endif  // _GLUCAT_MATRIX_H

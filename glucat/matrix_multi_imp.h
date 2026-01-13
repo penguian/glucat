@@ -374,7 +374,7 @@ namespace glucat
       ? rhs
       : rhs_reframed;
 
-    return matrix::norm(lhs_ref.m_matrix - rhs_ref.m_matrix, "inf") == 0;
+    return (lhs_ref.m_matrix - rhs_ref.m_matrix).norm("inf") == 0;
   }
 
   // Test for equality of multivector and scalar
@@ -386,7 +386,7 @@ namespace glucat
   {
     if (scr != Scalar_T(0))
       return *this == multivector_t(framed_multi_t(scr), this->m_frame, true);
-    else if (matrix::norm(this->m_matrix, "inf") != 0)
+    else if (this->m_matrix.norm("inf") != 0)
       return false;
     else
     {
@@ -741,7 +741,7 @@ namespace glucat
   {
     // Use matrix inner product only if ist is in frame
     if ( (ist | this->m_frame) == this->m_frame)
-      return matrix::inner<Scalar_T>(this->basis_element(ist), this->m_matrix);
+      return (this->basis_element(ist)).template inner<Scalar_T>(this->m_matrix);
     else
       return Scalar_T(0);
   }
@@ -767,7 +767,7 @@ namespace glucat
   scalar() const -> Scalar_T
   {
     const matrix_index_t dim = this->m_matrix.size1();
-    return matrix::trace(this->m_matrix) / Scalar_T( double(dim) );
+    return this->m_matrix.trace() / Scalar_T( double(dim) );
   }
 
   /// Pure part
@@ -824,8 +824,7 @@ namespace glucat
         // Frame may contain indices which do not correspond to a grade 1 term but
         // frame cannot omit any index corresponding to a grade 1 term
         result.push_back(
-          matrix::inner<Scalar_T>(this->basis_element(index_set_t(idx)),
-          this->m_matrix));
+          (this->basis_element(index_set_t(idx))).template inner<Scalar_T>(this->m_matrix));
     return result;
   }
 
@@ -872,7 +871,7 @@ namespace glucat
   norm() const -> Scalar_T
   {
     const matrix_index_t dim = this->m_matrix.size1();
-    return matrix::norm_frob2(this->m_matrix) / Scalar_T( double(dim) );
+    return this->m_matrix.norm_frob2() / Scalar_T( double(dim) );
   }
 
   /// Maximum of absolute values of components of multivector: multivector infinity norm
@@ -945,7 +944,7 @@ namespace glucat
   isinf() const -> bool
   {
     if (std::numeric_limits<Scalar_T>::has_infinity)
-      return matrix::isinf(this->m_matrix);
+      return this->m_matrix.isinf();
     else
       return false;
   }
@@ -958,7 +957,7 @@ namespace glucat
   isnan() const -> bool
   {
     if (std::numeric_limits<Scalar_T>::has_quiet_NaN)
-      return matrix::isnan(this->m_matrix);
+      return this->m_matrix.isnan();
     else
       return false;
   }
@@ -1001,7 +1000,7 @@ namespace glucat
     if (level == 0)
       return framed_multi_t(traits_t::to_scalar_t(X(0,0)));
 
-    if (matrix::norm(X, "inf") == 0)
+    if (X.norm("inf") == 0)
       return Scalar_T(0);
 
     const basis_matrix_t&  I = matrix::unit<basis_matrix_t>(2);
@@ -1576,7 +1575,7 @@ namespace glucat
     if (level == 0)
     {
       // What kind of eigenvalues does the matrix contain?
-      const auto genus = matrix::classify_eigenvalues(unitval.m_matrix);
+      const auto genus = unitval.m_matrix.classify_eigenvalues();
       const index_t next_level =
         (genus.m_is_singular)
         ? level
@@ -1969,7 +1968,7 @@ namespace glucat{
     if (level == 0)
     {
       // What kind of eigenvalues does the matrix contain?
-      auto genus = matrix::classify_eigenvalues(unitval.m_matrix);
+      auto genus = unitval.m_matrix.classify_eigenvalues();
       if (genus.m_is_singular)
         return traits_t::NaN();
 

@@ -242,7 +242,7 @@ namespace glucat
     const auto frm = val.frame();
     const auto algebra_dim = set_value_t(1) << frm.count();
     auto result = multivector_t(
-      _GLUCAT_HASH_SIZE_T(std::min<size_t>(algebra_dim, matrix::nnz(val.m_matrix))));
+      _GLUCAT_HASH_SIZE_T(std::min<size_t>(algebra_dim, val.m_matrix.nnz())));
     for (auto
         stv = set_value_t(0);
         stv != algebra_dim;
@@ -250,7 +250,7 @@ namespace glucat
     {
       const auto ist = index_set_t(stv, frm, true);
       const auto crd =
-        traits_t::to_scalar_t(matrix::inner<Other_Scalar_T>(val.basis_element(ist), val.m_matrix));
+        traits_t::to_scalar_t(val.basis_element(ist).template inner<Other_Scalar_T>(val.m_matrix));
       if (crd != Scalar_T(0))
         result.insert(term_t(ist, crd));
     }
