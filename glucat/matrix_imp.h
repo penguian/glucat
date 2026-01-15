@@ -16,685 +16,18 @@
 
 namespace glucat {
 
-  // Helper trait for complex check
-  template<typename T> struct is_complex_t : std::false_type {};
-  template<typename T> struct is_complex_t<std::complex<T>> : std::true_type {};
-
-  // Type traits to detect wrappers (Primary Templates)
-  template<typename T> struct is_eigen_sparse : std::false_type {};
-  template<typename T> struct is_eigen_dense : std::false_type {};
-
-  template<typename Scalar_T> class arma_matrix_wrapper; // Forward
+// Definitions moved to matrix.h
 
 
   // =========================================================================
-  // matrix_impl_base (CRTP Pattern)
-  // Base class providing member functions that delegate to the derived implementation
+  // matrix_impl_base Member Definitions
   // =========================================================================
+
   template<typename Derived>
-  class matrix_impl_base {
-  public:
-      const Derived& derived() const { return static_cast<const Derived&>(*this); }
-      Derived& derived() { return static_cast<Derived&>(*this); }
+  const Derived& matrix_impl_base<Derived>::derived() const { return static_cast<const Derived&>(*this); }
 
-      // Member functions delegating to namespace matrix implementation
-      // Defined at end of file to resolve circular dependency
-      auto trace() const;
-      auto eigenvalues() const;
-      auto classify_eigenvalues() const;
-      auto norm(const char* type = "inf") const;
-      auto norm_frob2() const;
-      auto isnan() const;
-      auto isinf() const;
-      auto nnz() const;
-      
-      template<typename Scalar_T, typename Other>
-      auto inner(const Other& other) const;
-  };
-#if defined(_GLUCAT_USE_ARMADILLO)
-  template<typename Scalar_T>
-  class arma_matrix_wrapper : public matrix_impl_base<arma_matrix_wrapper<Scalar_T>> {
-  public:
-    using MatrixType = arma::Mat<Scalar_T>;
-    using elem_type = Scalar_T;
-    using value_type = Scalar_T;
-    using uword = arma::uword;
-    using size_type = arma::uword;
-
-    MatrixType m_mat;
-
-    // Attributes
-    uword n_rows = 0;
-    uword n_cols = 0;
-    uword n_elem = 0;
-
-    // Constructors
-    arma_matrix_wrapper() = default;
-
-    arma_matrix_wrapper(uword rows, uword cols) {
-        set_size(rows, cols);
-        m_mat.zeros();
-    }
-
-    template<typename Other_Matrix_T>
-    explicit arma_matrix_wrapper(const Other_Matrix_T& other) {
-         if constexpr (requires { other.n_rows; }) { // Wrapper or Arma
-             set_size(other.n_rows, other.n_cols);
-             for(uword i=0; i<n_rows; ++i)
-                 for(uword j=0; j<n_cols; ++j)
-                     (*this)(i,j) = static_cast<Scalar_T>(other(i,j));
-         } else {
-             // Assume compatible assignment (e.g. Eigen expression if compatible, or error)
-             // m_mat = other; // Arma might not like Eigen expression directly
-             // Fallback to manual copy if possible, or error.
-             // For now assume other has rows/cols or we can't construct.
-         }
-         update_attributes();
-    }
-
-    // Copy/Move
-    arma_matrix_wrapper(const arma_matrix_wrapper& other) : m_mat(other.m_mat) {
-        update_attributes();
-        if (n_rows == 0 && other.n_rows != 0) // Only warn if source was NOT zero but dest IS zero (which shouldn't happen with correct copy)
-             std::fprintf(stderr, "DEBUG: arma_matrix_wrapper COPY: Source %lux%lu -> Dest %lux%lu\n", (unsigned long)other.n_rows, (unsigned long)other.n_cols, (unsigned long)n_rows, (unsigned long)n_cols);
-        else if (n_rows == 0) // Warn on any 0x0 copy?
-             std::fprintf(stderr, "DEBUG: arma_matrix_wrapper COPY: Copying 0x0 matrix.\n");
-    }
-    arma_matrix_wrapper(arma_matrix_wrapper&& other) noexcept : m_mat(std::move(other.m_mat)) { update_attributes(); other.n_rows=0; }
-
-    arma_matrix_wrapper& operator=(const arma_matrix_wrapper& other) {
-        if(this!=&other) { m_mat = other.m_mat; update_attributes(); }
-        return *this;
-    }
-    arma_matrix_wrapper& operator=(arma_matrix_wrapper&& other) noexcept {
-        if(this!=&other) {
-             m_mat = std::move(other.m_mat);
-             update_attributes();
-             other.n_rows=0; other.n_cols=0; other.n_elem=0; // Ensure source is marked empty
-        }
-        return *this;
-    }
-
-    // Conversion to Arma Mat (implicit or explicit)
-    operator const MatrixType&() const { return m_mat; }
-    operator MatrixType&() { return m_mat; }
-
-    void update_attributes() {
-      n_rows = m_mat.n_rows;
-      n_cols = m_mat.n_cols;
-      n_elem = m_mat.n_elem;
-    }
-
-    void set_size(uword rows, uword cols) {
-      m_mat.set_size(rows, cols);
-      update_attributes();
-    }
-
-    void resize(uword rows, uword cols, bool preserve = false) {
-        if (preserve) {
-             m_mat.resize(rows, cols); // Arma resize preserves data
-        } else {
-             m_mat.set_size(rows, cols); // set_size does not preserve (faster)
-        }
-        update_attributes();
-    }
-
-    uword size1() const { return m_mat.n_rows; }
-    uword size2() const { return m_mat.n_cols; }
-    uword rows() const { return m_mat.n_rows; }
-    uword cols() const { return m_mat.n_cols; }
-
-    void clear() { m_mat.zeros(); update_attributes(); }
-    void zeros(uword rows, uword cols) { set_size(rows, cols); m_mat.zeros(); }
-    void zeros() { m_mat.zeros(); }
-    void eye(uword rows, uword cols) { set_size(rows, cols); m_mat.eye(); }
-
-    // Element access
-    Scalar_T& operator()(uword i, uword j) { return m_mat(i, j); }
-    const Scalar_T& operator()(uword i, uword j) const { return m_mat(i, j); }
-
-    // Operators
-    arma_matrix_wrapper& operator+=(const arma_matrix_wrapper& other) { m_mat += other.m_mat; return *this; }
-    arma_matrix_wrapper& operator-=(const arma_matrix_wrapper& other) { m_mat -= other.m_mat; return *this; }
-    arma_matrix_wrapper& operator*=(const Scalar_T& val) { m_mat *= val; return *this; }
-    arma_matrix_wrapper& operator/=(const Scalar_T& val) { m_mat /= val; return *this; }
-
-    arma_matrix_wrapper operator+(const arma_matrix_wrapper& other) const { return arma_matrix_wrapper(MatrixType(m_mat + other.m_mat)); }
-    arma_matrix_wrapper operator-(const arma_matrix_wrapper& other) const { return arma_matrix_wrapper(MatrixType(m_mat - other.m_mat)); }
-    arma_matrix_wrapper operator*(const arma_matrix_wrapper& other) const {
-        // Force evaluation to MatrixType (arma::Mat) to avoid resolving to generic template constructor with Glue
-        MatrixType res_arma = m_mat * other.m_mat;
-        return arma_matrix_wrapper(std::move(res_arma));
-    }
-    arma_matrix_wrapper operator-() const { return arma_matrix_wrapper(MatrixType(-m_mat)); }
-
-    arma_matrix_wrapper t() const { return arma_matrix_wrapper(MatrixType(m_mat.t())); }
-
-    friend std::ostream& operator<<(std::ostream& os, const arma_matrix_wrapper& m) {
-        return os << m.m_mat;
-    }
-
-  private:
-    // Helper to construct from raw arma mat
-    arma_matrix_wrapper(const MatrixType& m) : m_mat(m) {
-        update_attributes();
-        if (n_rows == 0) {
-             std::fprintf(stderr, "DEBUG: arma_matrix_wrapper(MatrixType) constructed 0x0! Input rows: %d. Element 0: %s\n", (int)m.n_rows, (m.n_elem > 0 ? "exists" : "none"));
-        }
-    }
-    arma_matrix_wrapper(MatrixType&& m) : m_mat(std::move(m)) { update_attributes(); }
-  };
-
-  // Mixed op
-  template<typename Scalar_T>
-  arma_matrix_wrapper<Scalar_T> operator*(Scalar_T s, const arma_matrix_wrapper<Scalar_T>& m) {
-      arma_matrix_wrapper<Scalar_T> res;
-      res.m_mat = s * m.m_mat;
-      res.update_attributes();
-      return res;
-  }
-  template<typename Scalar_T>
-  arma_matrix_wrapper<Scalar_T> operator*(const arma_matrix_wrapper<Scalar_T>& m, Scalar_T s) {
-      return s * m;
-  }
-
-  // Kron for arma_matrix_wrapper
-  template<typename T>
-  arma_matrix_wrapper<T> kron(const arma_matrix_wrapper<T>& A, const arma_matrix_wrapper<T>& B) {
-      arma_matrix_wrapper<T> res;
-      res.m_mat = arma::kron(A.m_mat, B.m_mat);
-      res.update_attributes();
-      return res;
-  }
-
-  // Mixed kron: Sparse x ArmaWrapper -> ArmaWrapper
-  template<typename T1, typename T2>
-  arma_matrix_wrapper<T2> kron(const eigen_sparse_wrapper<T1>& A, const arma_matrix_wrapper<T2>& B) {
-      arma_matrix_wrapper<T2> A_dense(A.n_rows, A.n_cols);
-      for(typename arma_matrix_wrapper<T2>::uword i=0; i<A.n_rows; ++i)
-         for(typename arma_matrix_wrapper<T2>::uword j=0; j<A.n_cols; ++j)
-             A_dense(i,j) = static_cast<T2>(A(i,j));
-      return kron(A_dense, B);
-  }
-
-  // =========================================================================
-  // arma_sparse_wrapper
-  // =========================================================================
-  template<typename Scalar_T>
-  class arma_sparse_wrapper : public matrix_impl_base<arma_sparse_wrapper<Scalar_T>> {
-  public:
-    using MatrixType = arma::SpMat<Scalar_T>;
-    using elem_type = Scalar_T;
-    using value_type = Scalar_T;
-    using uword = arma::uword;
-    using size_type = arma::uword;
-
-    MatrixType m_mat;
-    uword n_rows = 0;
-    uword n_cols = 0;
-    uword n_nonzero = 0;
-
-    arma_sparse_wrapper() = default;
-
-    arma_sparse_wrapper(uword rows, uword cols) {
-        set_size(rows, cols);
-    }
-
-    // Copy
-    arma_sparse_wrapper(const arma_sparse_wrapper& other) : m_mat(other.m_mat) { update_attributes(); }
-    // Move
-    arma_sparse_wrapper(arma_sparse_wrapper&& other) noexcept : m_mat(std::move(other.m_mat)) { update_attributes(); other.n_rows=0; }
-
-    arma_sparse_wrapper& operator=(const arma_sparse_wrapper& other) {
-        if(this!=&other) { m_mat = other.m_mat; update_attributes(); }
-        return *this;
-    }
-    arma_sparse_wrapper& operator=(arma_sparse_wrapper&& other) noexcept {
-        if(this!=&other) { m_mat = std::move(other.m_mat); update_attributes(); }
-        return *this;
-    }
-
-    void set_size(uword rows, uword cols) {
-        m_mat.set_size(rows, cols);
-        update_attributes();
-    }
-
-    // Make writable
-    void resize(uword rows, uword cols, bool preserve = false) {
-        m_mat.resize(rows, cols); // Arma resize typically preserves
-        update_attributes();
-    }
-
-    void clear() { m_mat.zeros(); update_attributes(); }
-    void zeros(uword rows, uword cols) { set_size(rows, cols); m_mat.zeros(); }
-    void zeros() { m_mat.zeros(); update_attributes(); }
-
-    void update_attributes() {
-        n_rows = m_mat.n_rows;
-        n_cols = m_mat.n_cols;
-        n_nonzero = m_mat.n_nonzero;
-    }
-
-    // Iterator support: Armadillo iterators already have row(), col()
-    using const_iterator = typename MatrixType::const_iterator;
-
-    const_iterator begin() const { return m_mat.begin(); }
-    const_iterator end() const { return m_mat.end(); }
-
-    uword size1() const { return n_rows; }
-    uword size2() const { return n_cols; }
-
-    Scalar_T operator()(uword i, uword j) const { return m_mat(i, j); }
-    Scalar_T& operator()(uword i, uword j) { return m_mat(i, j); }
-
-    arma_sparse_wrapper& operator+=(const arma_sparse_wrapper& other) {
-        m_mat += other.m_mat; update_attributes(); return *this;
-    }
-    arma_sparse_wrapper operator*(const arma_sparse_wrapper& other) const {
-        arma_sparse_wrapper res; res.m_mat = m_mat * other.m_mat; res.update_attributes(); return res;
-    }
-    arma_sparse_wrapper& operator*=(const Scalar_T& val) {
-        m_mat *= val; return *this;
-    }
-    friend std::ostream& operator<<(std::ostream& os, const arma_sparse_wrapper& m) { return os << m.m_mat; }
-  };
-
-  // Traits
-  template<typename T> struct is_eigen_dense<arma_matrix_wrapper<T>> : std::true_type {};
-  template<typename T> struct is_eigen_sparse<arma_sparse_wrapper<T>> : std::true_type {};
-
-#endif
-
-  // =========================================================================
-  // eigen_matrix_wrapper
-  // =========================================================================
-  template<typename Scalar_T>
-  class eigen_matrix_wrapper : public matrix_impl_base<eigen_matrix_wrapper<Scalar_T>> {
-  public:
-    using MatrixType = Eigen::Matrix<Scalar_T, Eigen::Dynamic, Eigen::Dynamic>;
-    using elem_type = Scalar_T;
-    using value_type = Scalar_T;
-    using uword = std::size_t;
-    using size_type = std::size_t; // Compatibility with old size_type
-
-    MatrixType m_mat;
-
-    // Attributes to match Armadillo
-    uword n_rows = 0;
-    uword n_cols = 0;
-    uword n_elem = 0;
-
-    // Constructors
-    eigen_matrix_wrapper() = default;
-
-    // Armadillo constructor (rows, cols)
-    eigen_matrix_wrapper(uword rows, uword cols) {
-        set_size(rows, cols);
-        m_mat.setZero();
-    }
-
-    // Constructor from Eigen expressions (e.g. m * s)
-    template<typename Derived>
-    eigen_matrix_wrapper(const Eigen::MatrixBase<Derived>& other) {
-        m_mat = other;
-        update_attributes();
-    }
-
-    // Generic Interop Constructor (e.g. from Armadillo matrix)
-    template<typename Other_Matrix_T>
-    explicit eigen_matrix_wrapper(const Other_Matrix_T& other) {
-         if constexpr (requires { other.n_rows; }) {
-             set_size(other.n_rows, other.n_cols);
-             for(uword i=0; i<n_rows; ++i)
-                 for(uword j=0; j<n_cols; ++j)
-                     (*this)(i,j) = static_cast<Scalar_T>(other(i,j));
-         } else {
-             // Assume Eigen-compatible (has rows() or can be assigned to m_mat)
-             m_mat = other;
-             update_attributes();
-         }
-    }
-
-    // Copy constructor
-    eigen_matrix_wrapper(const eigen_matrix_wrapper& other)
-    : m_mat(other.m_mat), n_rows(other.n_rows), n_cols(other.n_cols), n_elem(other.n_elem)
-    {}
-
-    // Move constructor
-    eigen_matrix_wrapper(eigen_matrix_wrapper&& other) noexcept
-    : m_mat(std::move(other.m_mat)), n_rows(other.n_rows), n_cols(other.n_cols), n_elem(other.n_elem)
-    {
-        other.n_rows = 0; other.n_cols = 0; other.n_elem = 0;
-    }
-
-    // Assignment
-    eigen_matrix_wrapper& operator=(const eigen_matrix_wrapper& other) {
-        if (this != &other) {
-            m_mat = other.m_mat;
-            update_attributes();
-        }
-        return *this;
-    }
-
-    eigen_matrix_wrapper& operator=(eigen_matrix_wrapper&& other) noexcept {
-        if (this != &other) {
-            m_mat = std::move(other.m_mat);
-            update_attributes();
-            other.n_rows = 0; other.n_cols = 0; other.n_elem = 0;
-        }
-        return *this;
-    }
-
-    // Generic Interop Assignment
-    template<typename Other_Matrix_T>
-    eigen_matrix_wrapper& operator=(const Other_Matrix_T& other) {
-         set_size(other.n_rows, other.n_cols);
-         for(uword i=0; i<n_rows; ++i)
-             for(uword j=0; j<n_cols; ++j)
-                 (*this)(i,j) = static_cast<Scalar_T>(other(i,j));
-         return *this;
-    }
-
-    // Conversion to Armadillo (if enabled)
-    #if defined(_GLUCAT_USE_ARMADILLO)
-    operator arma::Mat<Scalar_T>() const {
-        arma::Mat<Scalar_T> out(n_rows, n_cols);
-        for(uword i=0; i<n_rows; ++i)
-             for(uword j=0; j<n_cols; ++j)
-                 out(i,j) = (*this)(i,j);
-        return out;
-    }
-    #endif
-
-    // Constructor from Eigen
-    eigen_matrix_wrapper(const MatrixType& m) : m_mat(m) { update_attributes(); }
-    eigen_matrix_wrapper(MatrixType&& m) : m_mat(std::move(m)) { update_attributes(); }
-
-
-    // Sync attributes after resize
-    void update_attributes() {
-      n_rows = m_mat.rows();
-      n_cols = m_mat.cols();
-      n_elem = m_mat.size();
-    }
-
-    void set_size(uword rows, uword cols) {
-      m_mat.resize(rows, cols);
-      update_attributes();
-    }
-
-    void resize(uword rows, uword cols, bool preserve = false) {
-        if (preserve) {
-             m_mat.conservativeResize(rows, cols);
-        } else {
-             m_mat.resize(rows, cols);
-        }
-        update_attributes();
-    }
-
-    // Helpers
-    uword size1() const { return n_rows; } // ublas compat
-    uword size2() const { return n_cols; } // ublas compat
-
-    void clear() {
-        m_mat.setZero();
-    }
-
-    void zeros() { m_mat.setZero(); }
-    void zeros(uword rows, uword cols) {
-      set_size(rows, cols);
-      m_mat.setZero();
-    }
-
-    void eye(uword rows, uword cols) {
-      set_size(rows, cols);
-      m_mat.setIdentity();
-    }
-
-    bool is_finite() const { return m_mat.allFinite(); }
-    bool has_nan() const { return m_mat.hasNaN(); }
-
-    // Element access
-    Scalar_T& operator()(uword i, uword j) { return m_mat(i, j); }
-    const Scalar_T& operator()(uword i, uword j) const { return m_mat(i, j); }
-
-    // Operators
-    eigen_matrix_wrapper& operator+=(const eigen_matrix_wrapper& other) {
-      m_mat += other.m_mat;
-      return *this;
-    }
-    eigen_matrix_wrapper& operator-=(const eigen_matrix_wrapper& other) {
-      m_mat -= other.m_mat;
-      return *this;
-    }
-    eigen_matrix_wrapper& operator*=(const Scalar_T& val) {
-      m_mat *= val;
-      return *this;
-    }
-    eigen_matrix_wrapper& operator/=(const Scalar_T& val) {
-        m_mat /= val;
-        return *this;
-    }
-
-    eigen_matrix_wrapper operator+(const eigen_matrix_wrapper& other) const {
-        return eigen_matrix_wrapper(m_mat + other.m_mat);
-    }
-    eigen_matrix_wrapper operator-(const eigen_matrix_wrapper& other) const {
-        return eigen_matrix_wrapper(m_mat - other.m_mat);
-    }
-
-    // Matrix Multiplication
-    eigen_matrix_wrapper operator*(const eigen_matrix_wrapper& other) const {
-        return eigen_matrix_wrapper(m_mat * other.m_mat);
-    }
-
-    // Unary -
-    eigen_matrix_wrapper operator-() const {
-        return eigen_matrix_wrapper(-m_mat);
-    }
-
-    // Transpose
-    eigen_matrix_wrapper t() const {
-        return eigen_matrix_wrapper(m_mat.transpose());
-    }
-
-    friend std::ostream& operator<<(std::ostream& os, const eigen_matrix_wrapper& m) {
-        return os << m.m_mat;
-    }
-  };
-
-  // Mixed op
-  template<typename Scalar_T>
-  eigen_matrix_wrapper<Scalar_T> operator*(Scalar_T s, const eigen_matrix_wrapper<Scalar_T>& m) {
-      return eigen_matrix_wrapper<Scalar_T>(s * m.m_mat);
-  }
-  template<typename Scalar_T>
-  eigen_matrix_wrapper<Scalar_T> operator*(const eigen_matrix_wrapper<Scalar_T>& m, Scalar_T s) {
-      return eigen_matrix_wrapper<Scalar_T>(m.m_mat * s);
-  }
-
-
-  // =========================================================================
-  // eigen_sparse_wrapper
-  // =========================================================================
-  template<typename Scalar_T>
-  class eigen_sparse_wrapper : public matrix_impl_base<eigen_sparse_wrapper<Scalar_T>> {
-  public:
-    using MatrixType = Eigen::SparseMatrix<Scalar_T>;
-    using elem_type = Scalar_T;
-    using value_type = Scalar_T;
-    using uword = std::size_t;
-    using size_type = std::size_t;
-
-    MatrixType m_mat;
-
-    uword n_rows = 0;
-    uword n_cols = 0;
-    uword n_nonzero = 0;
-
-    eigen_sparse_wrapper() = default;
-
-    // Armadillo/uBLAS/Generator style constructor support
-    eigen_sparse_wrapper(uword rows, uword cols, uword estimated_nnz = 0) {
-      set_size(rows, cols);
-      if (estimated_nnz > 0) m_mat.reserve(estimated_nnz);
-    }
-
-    // Copy/Move similar to dense
-    eigen_sparse_wrapper(const eigen_sparse_wrapper& other)
-    : m_mat(other.m_mat) { update_attributes(); }
-
-    eigen_sparse_wrapper(eigen_sparse_wrapper&& other) noexcept
-    : m_mat(std::move(other.m_mat)) { update_attributes(); other.n_rows=0; }
-
-    eigen_sparse_wrapper& operator=(const eigen_sparse_wrapper& other) {
-        if(this!=&other) { m_mat=other.m_mat; update_attributes(); }
-        return *this;
-    }
-
-     eigen_sparse_wrapper& operator=(eigen_sparse_wrapper&& other) noexcept {
-        if(this!=&other) { m_mat=std::move(other.m_mat); update_attributes(); }
-        return *this;
-    }
-
-    void set_size(uword rows, uword cols) {
-      m_mat.resize(rows, cols);
-      update_attributes();
-    }
-
-    // Make writable - dangerous in loop but needed for generator
-    void resize(uword rows, uword cols, bool preserve = false) {
-        m_mat.resize(rows, cols); // preserve not directly supported in simple resize
-        update_attributes();
-    }
-
-    void clear() { m_mat.setZero(); update_attributes(); }
-
-    void zeros() { m_mat.setZero(); update_attributes(); }
-    void zeros(uword rows, uword cols) { set_size(rows, cols); m_mat.setZero(); }
-
-    void update_attributes() {
-      n_rows = m_mat.rows();
-      n_cols = m_mat.cols();
-      n_nonzero = m_mat.nonZeros();
-    }
-
-    // Iterator support to match Armadillo/uBLAS usage pattern
-    // Flattened iterator over non-zeros.
-    class const_iterator {
-    public:
-        // Use Eigen InnerIterator to iterate.
-        // We need to store: reference to matrix, current outer index, current inner iterator.
-
-        using InnerIterator = typename MatrixType::InnerIterator;
-
-        const MatrixType* mp_mat;
-        int m_outer;
-        InnerIterator m_inner; // Inner iterator for current outer column/row
-
-        // Constructor for begin()
-        const_iterator(const MatrixType* mat, bool start = true)
-        : mp_mat(mat), m_outer(0), m_inner(*mat, 0)
-        {
-            if (start) {
-                // Find first non-empty outer vector
-                if (mp_mat->outerSize() == 0) {
-                     m_outer = 0;
-                     return;
-                }
-                // Initialize inner for 0.
-                m_inner = InnerIterator(*mp_mat, 0);
-
-                // If invalid (empty column/row), advance to next valid
-                if (!m_inner) advance();
-            } else {
-                // End state: m_outer = outerSize
-                m_outer = mp_mat->outerSize();
-            }
-        }
-
-        void advance() {
-            // If current inner valid, ++
-            if (m_inner) {
-                ++m_inner;
-            }
-
-            // If now invalid (end of column/row), move to next outer
-            while (!m_inner && m_outer < mp_mat->outerSize()) {
-                 m_outer++;
-                 if (m_outer < mp_mat->outerSize()) {
-                     m_inner = InnerIterator(*mp_mat, m_outer);
-                 }
-            }
-        }
-
-        bool is_end() const {
-            return m_outer >= mp_mat->outerSize();
-        }
-
-        const_iterator& operator++() {
-            advance();
-            return *this;
-        }
-
-        bool operator!=(const const_iterator& other) const {
-            if (m_outer != other.m_outer) return true;
-             // If both at end
-            if (m_outer >= mp_mat->outerSize()) return false;
-
-            // Should compare inner?
-            // If m_outer matches and valid, compare specific element?
-            // For simple loops != end(), comparing outer is sufficient if end has outer=size.
-            return true;
-        }
-
-        // Accessors matching Armadillo iterator somewhat, or uBLAS
-        uword row() const { return m_inner.row(); }
-        uword col() const { return m_inner.col(); }
-        Scalar_T operator*() const { return m_inner.value(); }
-    };
-
-    const_iterator begin() const { return const_iterator(&m_mat, true); }
-    const_iterator end() const { return const_iterator(&m_mat, false); }
-
-
-
-    uword size1() const { return n_rows; }
-    uword size2() const { return n_cols; }
-
-    // Element access (read-only for efficiency)
-    Scalar_T operator()(uword i, uword j) const { return m_mat.coeff(i, j); }
-
-    // Proxy for write. Important: This inserts if not present!
-    Scalar_T& operator()(uword i, uword j) {
-       return m_mat.coeffRef(i, j);
-    }
-
-    // Operators
-    eigen_sparse_wrapper& operator+=(const eigen_sparse_wrapper& other) {
-        m_mat += other.m_mat;
-        update_attributes();
-        return *this;
-    }
-
-     eigen_sparse_wrapper operator*(const eigen_sparse_wrapper& other) const {
-         eigen_sparse_wrapper res;
-         res.m_mat = m_mat * other.m_mat;
-         res.update_attributes();
-         return res;
-     }
-
-     // Support multiplication with scalar
-     eigen_sparse_wrapper& operator*=(const Scalar_T& val) {
-         m_mat *= val;
-         return *this;
-     }
-
-     friend std::ostream& operator<<(std::ostream& os, const eigen_sparse_wrapper& m) {
-         return os << m.m_mat;
-     }
-  };
-
+  template<typename Derived>
+  Derived& matrix_impl_base<Derived>::derived() { return static_cast<Derived&>(*this); }
 
   // =========================================================================
   // Functions for Wrappers (to mimic Arma)
@@ -717,15 +50,10 @@ namespace glucat {
       return A.m_mat.trace();
   }
 
-  // Norm (frob)
+  // Norm (inf)
   template<typename T>
-  auto norm(const eigen_matrix_wrapper<T>& A, const char* type) {
-      // Assuming type == "frob" or "inf"
-      std::string t(type);
-      using RealScalar = typename Eigen::NumTraits<T>::Real;
-      if (t == "frob") return A.m_mat.norm();
-      if (t == "inf") return A.m_mat.template lpNorm<Eigen::Infinity>();
-      return RealScalar(0);
+  auto norm_inf(const eigen_matrix_wrapper<T>& A) {
+      return A.m_mat.cwiseAbs().rowwise().sum().maxCoeff();
   }
 
 
@@ -779,15 +107,13 @@ namespace glucat {
   }
 
 #if defined(_GLUCAT_USE_ARMADILLO)
+/*
   // Norm for arma_matrix_wrapper
   template<typename T>
-  auto norm(const arma_matrix_wrapper<T>& A, const char* type) {
-       return arma::norm(A.m_mat, type);
+  auto norm_inf(const arma_matrix_wrapper<T>& A) {
+       return arma::norm(A.m_mat, "inf");
   }
-
-
-
-
+*/
   // Solve for arma_matrix_wrapper
   template<typename T>
   bool solve(arma_matrix_wrapper<T>& X, const arma_matrix_wrapper<T>& A, const arma_matrix_wrapper<T>& B, int opts = 0) {
@@ -859,6 +185,20 @@ namespace glucat {
 
       return arma::kron(A_dense, B);
   }
+
+  // Mixed kron: Sparse (wrapper) x Dense (Armadillo Wrapper) -> Dense (Armadillo Wrapper)
+  template<typename T1, typename T2>
+  arma_matrix_wrapper<T2> kron(const eigen_sparse_wrapper<T1>& A, const arma_matrix_wrapper<T2>& B) {
+      // Convert A to compatible type (Dense Armadillo Wrapper)
+      arma_matrix_wrapper<T2> A_dense(A.n_rows, A.n_cols);
+      A_dense.zeros();
+      if (A.n_nonzero > 0) {
+           for(auto it = A.begin(); it != A.end(); ++it) {
+                A_dense(it.row(), it.col()) = static_cast<T2>(*it);
+           }
+      }
+      return kron(A_dense, B);
+  }
 #endif
 
   // =========================================================================
@@ -870,13 +210,24 @@ namespace glucat {
       // Need to convert to standard types if T is exotic?
       // For now assume T is compatible or convert to compatible dense
       // (eigenvalues usually computed on dense double/complex).
-
+#if defined(_GLUCAT_MATRIX_DEBUG)
+      std::cout << "eigenvalues(eigen_matrix_wrapper): ";
+#endif
       // If T is real
       if constexpr (std::is_arithmetic_v<T> || std::is_same_v<T, double> || std::is_same_v<T, float> || std::is_same_v<T, long double>) {
            Eigen::EigenSolver<typename eigen_matrix_wrapper<T>::MatrixType> es(A.m_mat);
            const auto& E = es.eigenvalues();
            std::vector<std::complex<double>> res(E.size());
-           for(int i=0; i<E.size(); ++i) res[i] = std::complex<double>(E[i].real(), E[i].imag());
+           for(int i=0; i<E.size(); ++i)
+           {
+               res[i] = std::complex<double>(E[i].real(), E[i].imag());
+#if defined(_GLUCAT_MATRIX_DEBUG)
+               std::cout << res[i] << " ";
+#endif
+           }
+#if defined(_GLUCAT_MATRIX_DEBUG)
+           std::cout << std::endl;
+#endif
            return res;
       }
       // If T is complex
@@ -887,7 +238,13 @@ namespace glucat {
            for(int i=0; i<E.size(); ++i) {
                // complex cast to double
                res[i] = std::complex<double>(std::real(E[i]), std::imag(E[i]));
+#if defined(_GLUCAT_MATRIX_DEBUG)
+               std::cout << res[i] << " ";
+#endif
            }
+#if defined(_GLUCAT_MATRIX_DEBUG)
+           std::cout << std::endl;
+#endif
            return res;
       }
       else {
@@ -902,7 +259,16 @@ namespace glucat {
            Eigen::ComplexEigenSolver<Eigen::MatrixXcd> es(dmat);
            const auto& E = es.eigenvalues();
            std::vector<std::complex<double>> res(E.size());
-           for(int i=0; i<E.size(); ++i) res[i] = E[i];
+           for(int i=0; i<E.size(); ++i)
+           {
+               res[i] = E[i];
+#if defined(_GLUCAT_MATRIX_DEBUG)
+               std::cout << res[i] << " ";
+#endif
+           }
+#if defined(_GLUCAT_MATRIX_DEBUG)
+           std::cout << std::endl;
+#endif
            return res;
       }
   }
@@ -911,10 +277,22 @@ namespace glucat {
   // Overload for Armadillo
   template<typename T>
   std::vector<std::complex<double>> eigenvalues(const arma::Mat<T>& A) {
+  #if defined(_GLUCAT_MATRIX_DEBUG)
+      std::cout << "eigenvalues(arma::mat): ";
+  #endif
       arma::cx_vec eigval;
       arma::eig_gen(eigval, A);
       std::vector<std::complex<double>> res(eigval.n_elem);
-      for(size_t i=0; i<eigval.n_elem; ++i) res[i] = std::complex<double>(eigval[i].real(), eigval[i].imag());
+      for(size_t i=0; i<eigval.n_elem; ++i)
+      {
+          res[i] = std::complex<double>(eigval[i].real(), eigval[i].imag());
+  #if defined(_GLUCAT_MATRIX_DEBUG)
+               std::cout << res[i] << " ";
+  #endif
+      }
+  #if defined(_GLUCAT_MATRIX_DEBUG)
+           std::cout << std::endl;
+  #endif
       return res;
   }
 #endif
@@ -925,24 +303,21 @@ namespace glucat {
   auto trace(const arma_matrix_wrapper<T>& A) {
       return arma::trace(A.m_mat);
   }
-#endif
 
-#if defined(_GLUCAT_USE_ARMADILLO)
   template<typename T>
   auto eigenvalues(const arma_matrix_wrapper<T>& A) {
+  #if defined(_GLUCAT_MATRIX_DEBUG)
+      std::cout << "eigenvalues(arma_matrix_wrapper): " << std::endl;
+  #endif
       return eigenvalues(A.m_mat);
   }
-#endif
 
   // isnan / isinf implementations
-#if defined(_GLUCAT_USE_ARMADILLO)
   template<typename T>
   bool isnan(const arma_matrix_wrapper<T>& A) {
       return A.m_mat.has_nan();
   }
-#endif
 
-#if defined(_GLUCAT_USE_ARMADILLO)
   template<typename T>
   bool isinf(const arma_matrix_wrapper<T>& A) {
       return A.m_mat.has_inf();
@@ -983,6 +358,91 @@ namespace glucat {
       return false;
   }
 
+#if defined(_GLUCAT_USE_ARMADILLO)
+  // =========================================================================
+  // arma_sparse_wrapper Member Definitions
+  // =========================================================================
+
+  template<typename Scalar_T>
+  auto
+  arma_sparse_wrapper<Scalar_T>::rows() const
+  { return m_mat.n_rows; }
+
+  template<typename Scalar_T>
+  auto
+  arma_sparse_wrapper<Scalar_T>::cols() const
+  { return m_mat.n_cols; }
+
+  template<typename Scalar_T>
+  arma_sparse_wrapper<Scalar_T>::arma_sparse_wrapper(uword rows, uword cols) {
+      set_size(rows, cols);
+  }
+
+  template<typename Scalar_T>
+  void arma_sparse_wrapper<Scalar_T>::set_size(uword rows, uword cols) {
+      m_mat.set_size(rows, cols);
+      update_attributes();
+  }
+
+  template<typename Scalar_T>
+  void arma_sparse_wrapper<Scalar_T>::resize(uword rows, uword cols, bool preserve) {
+      m_mat.resize(rows, cols);
+      update_attributes();
+  }
+
+  template<typename Scalar_T>
+  void arma_sparse_wrapper<Scalar_T>::clear() { m_mat.zeros(); update_attributes(); }
+
+  template<typename Scalar_T>
+  void arma_sparse_wrapper<Scalar_T>::zeros(uword rows, uword cols) { set_size(rows, cols); m_mat.zeros(); }
+
+  template<typename Scalar_T>
+  void arma_sparse_wrapper<Scalar_T>::zeros() { m_mat.zeros(); update_attributes(); }
+
+  template<typename Scalar_T>
+  void arma_sparse_wrapper<Scalar_T>::update_attributes() {
+      n_rows = m_mat.n_rows;
+      n_cols = m_mat.n_cols;
+      n_nonzero = m_mat.n_nonzero;
+  }
+
+  template<typename Scalar_T>
+  auto arma_sparse_wrapper<Scalar_T>::begin() const -> const_iterator { return m_mat.begin(); }
+
+  template<typename Scalar_T>
+  auto arma_sparse_wrapper<Scalar_T>::end() const -> const_iterator { return m_mat.end(); }
+
+  template<typename Scalar_T>
+  auto arma_sparse_wrapper<Scalar_T>::size1() const -> uword { return n_rows; }
+
+  template<typename Scalar_T>
+  auto arma_sparse_wrapper<Scalar_T>::size2() const -> uword { return n_cols; }
+
+  template<typename Scalar_T>
+  Scalar_T arma_sparse_wrapper<Scalar_T>::operator()(uword i, uword j) const { return m_mat(i, j); }
+
+  template<typename Scalar_T>
+  Scalar_T& arma_sparse_wrapper<Scalar_T>::operator()(uword i, uword j) { return m_mat(i, j); }
+
+  template<typename Scalar_T>
+  auto arma_sparse_wrapper<Scalar_T>::operator+=(const arma_sparse_wrapper<Scalar_T>& other) -> arma_sparse_wrapper<Scalar_T>& {
+      m_mat += other.m_mat; update_attributes(); return *this;
+  }
+
+  template<typename Scalar_T>
+  auto arma_sparse_wrapper<Scalar_T>::operator*(const arma_sparse_wrapper<Scalar_T>& other) const -> arma_sparse_wrapper<Scalar_T> {
+      arma_sparse_wrapper res; res.m_mat = m_mat * other.m_mat; res.update_attributes(); return res;
+  }
+
+  template<typename Scalar_T>
+  auto arma_sparse_wrapper<Scalar_T>::operator*=(const Scalar_T& val) -> arma_sparse_wrapper<Scalar_T>& {
+      m_mat *= val; return *this;
+  }
+
+  template<typename Scalar_T>
+  std::ostream& operator<<(std::ostream& os, const arma_sparse_wrapper<Scalar_T>& m) { return os << m.m_mat; }
+#endif
+
 } // namespace glucat
 
 
@@ -1006,8 +466,8 @@ namespace glucat {
   }
 
   template<typename Derived>
-  auto matrix_impl_base<Derived>::norm(const char* type) const {
-      return matrix::norm(derived(), type);
+  auto matrix_impl_base<Derived>::norm_inf() const {
+      return matrix::norm_inf(derived());
   }
 
   template<typename Derived>
@@ -1035,12 +495,567 @@ namespace glucat {
   auto matrix_impl_base<Derived>::inner(const Other& other) const {
       return matrix::inner<Scalar_T>(derived(), other);
   }
+
+  // =========================================================================
+  // eigen_matrix_wrapper Member Definitions
+  // =========================================================================
+
+  template<typename Scalar_T>
+  auto
+  eigen_matrix_wrapper<Scalar_T>::rows() const
+  { return m_mat.rows(); }
+
+  template<typename Scalar_T>
+  auto
+  eigen_matrix_wrapper<Scalar_T>::cols() const
+  { return m_mat.cols(); }
+
+  template<typename Scalar_T>
+  eigen_matrix_wrapper<Scalar_T>::eigen_matrix_wrapper(uword rows, uword cols) {
+      set_size(rows, cols);
+      m_mat.setZero();
+  }
+
+  template<typename Scalar_T>
+  template<typename Derived>
+  eigen_matrix_wrapper<Scalar_T>::eigen_matrix_wrapper(const Eigen::MatrixBase<Derived>& other) {
+      m_mat = other;
+      update_attributes();
+  }
+
+  template<typename Scalar_T>
+  template<typename Other_Matrix_T>
+  eigen_matrix_wrapper<Scalar_T>::eigen_matrix_wrapper(const Other_Matrix_T& other) {
+       if constexpr (requires { other.n_rows; }) {
+           set_size(other.n_rows, other.n_cols);
+           for(uword i=0; i<n_rows; ++i)
+               for(uword j=0; j<n_cols; ++j)
+                   (*this)(i,j) = static_cast<Scalar_T>(other(i,j));
+       } else {
+           // Assume Eigen-compatible
+           m_mat = other;
+           update_attributes();
+       }
+  }
+
+  template<typename Scalar_T>
+  eigen_matrix_wrapper<Scalar_T>::eigen_matrix_wrapper(const eigen_matrix_wrapper<Scalar_T>& other)
+  : m_mat(other.m_mat), n_rows(other.n_rows), n_cols(other.n_cols), n_elem(other.n_elem)
+  {}
+
+  template<typename Scalar_T>
+  eigen_matrix_wrapper<Scalar_T>::eigen_matrix_wrapper(eigen_matrix_wrapper<Scalar_T>&& other) noexcept
+  : m_mat(std::move(other.m_mat)), n_rows(other.n_rows), n_cols(other.n_cols), n_elem(other.n_elem)
+  {
+      other.n_rows = 0; other.n_cols = 0; other.n_elem = 0;
+  }
+
+  template<typename Scalar_T>
+  auto eigen_matrix_wrapper<Scalar_T>::operator=(const eigen_matrix_wrapper<Scalar_T>& other) -> eigen_matrix_wrapper<Scalar_T>& {
+      if (this != &other) {
+          m_mat = other.m_mat;
+          update_attributes();
+      }
+      return *this;
+  }
+
+  template<typename Scalar_T>
+  auto eigen_matrix_wrapper<Scalar_T>::operator=(eigen_matrix_wrapper<Scalar_T>&& other) noexcept -> eigen_matrix_wrapper<Scalar_T>& {
+      if (this != &other) {
+          m_mat = std::move(other.m_mat);
+          update_attributes();
+          other.n_rows = 0; other.n_cols = 0; other.n_elem = 0;
+      }
+      return *this;
+  }
+
+  template<typename Scalar_T>
+  template<typename Other_Matrix_T>
+  auto eigen_matrix_wrapper<Scalar_T>::operator=(const Other_Matrix_T& other) -> eigen_matrix_wrapper<Scalar_T>& {
+       set_size(other.n_rows, other.n_cols);
+       for(uword i=0; i<n_rows; ++i)
+           for(uword j=0; j<n_cols; ++j)
+               (*this)(i,j) = static_cast<Scalar_T>(other(i,j));
+       return *this;
+  }
+
+#if defined(_GLUCAT_USE_ARMADILLO)
+  template<typename Scalar_T>
+  eigen_matrix_wrapper<Scalar_T>::operator arma::Mat<Scalar_T>() const {
+      arma::Mat<Scalar_T> out(n_rows, n_cols);
+      for(uword i=0; i<n_rows; ++i)
+           for(uword j=0; j<n_cols; ++j)
+               out(i,j) = (*this)(i,j);
+      return out;
+  }
+#endif
+
+  template<typename Scalar_T>
+  eigen_matrix_wrapper<Scalar_T>::eigen_matrix_wrapper(const MatrixType& m) : m_mat(m) { update_attributes(); }
+
+  template<typename Scalar_T>
+  eigen_matrix_wrapper<Scalar_T>::eigen_matrix_wrapper(MatrixType&& m) : m_mat(std::move(m)) { update_attributes(); }
+
+  template<typename Scalar_T>
+  void eigen_matrix_wrapper<Scalar_T>::update_attributes() {
+    n_rows = m_mat.rows();
+    n_cols = m_mat.cols();
+    n_elem = m_mat.size();
+  }
+
+  template<typename Scalar_T>
+  void eigen_matrix_wrapper<Scalar_T>::set_size(uword rows, uword cols) {
+    m_mat.resize(rows, cols);
+    update_attributes();
+  }
+
+  template<typename Scalar_T>
+  void eigen_matrix_wrapper<Scalar_T>::resize(uword rows, uword cols, bool preserve) {
+      if (preserve) {
+           m_mat.conservativeResize(rows, cols);
+      } else {
+           m_mat.resize(rows, cols);
+      }
+      update_attributes();
+  }
+
+  template<typename Scalar_T>
+  auto eigen_matrix_wrapper<Scalar_T>::size1() const -> uword { return n_rows; }
+
+  template<typename Scalar_T>
+  auto eigen_matrix_wrapper<Scalar_T>::size2() const -> uword { return n_cols; }
+
+  template<typename Scalar_T>
+  void eigen_matrix_wrapper<Scalar_T>::clear() {
+      m_mat.setZero();
+  }
+
+  template<typename Scalar_T>
+  void eigen_matrix_wrapper<Scalar_T>::zeros() { m_mat.setZero(); }
+
+  template<typename Scalar_T>
+  void eigen_matrix_wrapper<Scalar_T>::zeros(uword rows, uword cols) {
+    set_size(rows, cols);
+    m_mat.setZero();
+  }
+
+  template<typename Scalar_T>
+  void eigen_matrix_wrapper<Scalar_T>::eye(uword rows, uword cols) {
+    set_size(rows, cols);
+    m_mat.setIdentity();
+  }
+
+  template<typename Scalar_T>
+  bool eigen_matrix_wrapper<Scalar_T>::is_finite() const { return m_mat.allFinite(); }
+
+  template<typename Scalar_T>
+  bool eigen_matrix_wrapper<Scalar_T>::has_nan() const { return m_mat.hasNaN(); }
+
+  template<typename Scalar_T>
+  Scalar_T& eigen_matrix_wrapper<Scalar_T>::operator()(uword i, uword j) { return m_mat(i, j); }
+
+  template<typename Scalar_T>
+  const Scalar_T& eigen_matrix_wrapper<Scalar_T>::operator()(uword i, uword j) const { return m_mat(i, j); }
+
+  template<typename Scalar_T>
+  auto eigen_matrix_wrapper<Scalar_T>::operator+=(const eigen_matrix_wrapper<Scalar_T>& other) -> eigen_matrix_wrapper<Scalar_T>& {
+    m_mat += other.m_mat;
+    return *this;
+  }
+
+  template<typename Scalar_T>
+  auto eigen_matrix_wrapper<Scalar_T>::operator-=(const eigen_matrix_wrapper<Scalar_T>& other) -> eigen_matrix_wrapper<Scalar_T>& {
+    m_mat -= other.m_mat;
+    return *this;
+  }
+
+  template<typename Scalar_T>
+  auto eigen_matrix_wrapper<Scalar_T>::operator*=(const Scalar_T& val) -> eigen_matrix_wrapper<Scalar_T>& {
+    m_mat *= val;
+    return *this;
+  }
+
+  template<typename Scalar_T>
+  auto eigen_matrix_wrapper<Scalar_T>::operator/=(const Scalar_T& val) -> eigen_matrix_wrapper<Scalar_T>& {
+      m_mat /= val;
+      return *this;
+  }
+
+  template<typename Scalar_T>
+  auto eigen_matrix_wrapper<Scalar_T>::operator+(const eigen_matrix_wrapper<Scalar_T>& other) const -> eigen_matrix_wrapper<Scalar_T> {
+      return eigen_matrix_wrapper<Scalar_T>(m_mat + other.m_mat);
+  }
+
+  template<typename Scalar_T>
+  auto eigen_matrix_wrapper<Scalar_T>::operator-(const eigen_matrix_wrapper<Scalar_T>& other) const -> eigen_matrix_wrapper<Scalar_T> {
+      return eigen_matrix_wrapper<Scalar_T>(m_mat - other.m_mat);
+  }
+
+  template<typename Scalar_T>
+  auto eigen_matrix_wrapper<Scalar_T>::operator*(const eigen_matrix_wrapper<Scalar_T>& other) const -> eigen_matrix_wrapper<Scalar_T> {
+      return eigen_matrix_wrapper<Scalar_T>(m_mat * other.m_mat);
+  }
+
+  template<typename Scalar_T>
+  auto eigen_matrix_wrapper<Scalar_T>::operator-() const -> eigen_matrix_wrapper<Scalar_T> {
+      return eigen_matrix_wrapper<Scalar_T>(-m_mat);
+  }
+
+  template<typename Scalar_T>
+  auto eigen_matrix_wrapper<Scalar_T>::t() const -> eigen_matrix_wrapper<Scalar_T> {
+      return eigen_matrix_wrapper<Scalar_T>(m_mat.transpose());
+  }
+
+  template<typename Scalar_T>
+  std::ostream& operator<<(std::ostream& os, const eigen_matrix_wrapper<Scalar_T>& m) {
+      return os << m.m_mat;
+  }
+
+
+#if defined(_GLUCAT_USE_ARMADILLO)
+  // =========================================================================
+  // arma_matrix_wrapper Member Definitions
+  // =========================================================================
+
+  template<typename Scalar_T>
+  auto
+  arma_matrix_wrapper<Scalar_T>::rows() const
+  { return m_mat.n_rows; }
+
+  template<typename Scalar_T>
+  auto
+  arma_matrix_wrapper<Scalar_T>::cols() const
+  { return m_mat.n_cols; }
+
+  template<typename Scalar_T>
+  arma_matrix_wrapper<Scalar_T>::arma_matrix_wrapper(uword rows, uword cols) {
+      set_size(rows, cols);
+      m_mat.zeros();
+  }
+
+  template<typename Scalar_T>
+  template<typename Other_Matrix_T>
+  arma_matrix_wrapper<Scalar_T>::arma_matrix_wrapper(const Other_Matrix_T& other) {
+       if constexpr (requires { other.n_rows; }) { // Wrapper or Arma
+           set_size(other.n_rows, other.n_cols);
+           for(uword i=0; i<n_rows; ++i)
+               for(uword j=0; j<n_cols; ++j)
+                   (*this)(i,j) = static_cast<Scalar_T>(other(i,j));
+       } else {
+           // Assume compatible assignment
+       }
+       update_attributes();
+  }
+
+  template<typename Scalar_T>
+  arma_matrix_wrapper<Scalar_T>::arma_matrix_wrapper(const arma_matrix_wrapper<Scalar_T>& other) : m_mat(other.m_mat) {
+      update_attributes();
+      if (n_rows == 0 && other.n_rows != 0) // Only warn if source was NOT zero but dest IS zero
+           std::fprintf(stderr, "DEBUG: arma_matrix_wrapper COPY: Source %lux%lu -> Dest %lux%lu\n", (unsigned long)other.n_rows, (unsigned long)other.n_cols, (unsigned long)n_rows, (unsigned long)n_cols);
+      else if (n_rows == 0) // Warn on any 0x0 copy?
+           std::fprintf(stderr, "DEBUG: arma_matrix_wrapper COPY: Copying 0x0 matrix.\n");
+  }
+
+  template<typename Scalar_T>
+  arma_matrix_wrapper<Scalar_T>::arma_matrix_wrapper(arma_matrix_wrapper<Scalar_T>&& other) noexcept : m_mat(std::move(other.m_mat)) { update_attributes(); other.n_rows=0; }
+
+  template<typename Scalar_T>
+  auto arma_matrix_wrapper<Scalar_T>::operator=(const arma_matrix_wrapper<Scalar_T>& other) -> arma_matrix_wrapper<Scalar_T>& {
+      if(this!=&other) { m_mat = other.m_mat; update_attributes(); }
+      return *this;
+  }
+
+  template<typename Scalar_T>
+  auto arma_matrix_wrapper<Scalar_T>::operator=(arma_matrix_wrapper<Scalar_T>&& other) noexcept -> arma_matrix_wrapper<Scalar_T>& {
+      if(this!=&other) {
+           m_mat = std::move(other.m_mat);
+           update_attributes();
+           other.n_rows=0; other.n_cols=0; other.n_elem=0; // Ensure source is marked empty
+      }
+      return *this;
+  }
+
+  template<typename Scalar_T>
+  arma_matrix_wrapper<Scalar_T>::operator const MatrixType&() const { return m_mat; }
+
+  template<typename Scalar_T>
+  arma_matrix_wrapper<Scalar_T>::operator MatrixType&() { return m_mat; }
+
+  template<typename Scalar_T>
+  void arma_matrix_wrapper<Scalar_T>::update_attributes() {
+    n_rows = m_mat.n_rows;
+    n_cols = m_mat.n_cols;
+    n_elem = m_mat.n_elem;
+  }
+
+  template<typename Scalar_T>
+  void arma_matrix_wrapper<Scalar_T>::set_size(uword rows, uword cols) {
+    m_mat.set_size(rows, cols);
+    update_attributes();
+  }
+
+  template<typename Scalar_T>
+  void arma_matrix_wrapper<Scalar_T>::resize(uword rows, uword cols, bool preserve) {
+      if (preserve) {
+           m_mat.resize(rows, cols); // Arma resize preserves data
+      } else {
+           m_mat.set_size(rows, cols); // set_size does not preserve (faster)
+      }
+      update_attributes();
+  }
+
+  template<typename Scalar_T>
+  auto arma_matrix_wrapper<Scalar_T>::size1() const -> uword { return m_mat.n_rows; }
+
+  template<typename Scalar_T>
+  auto arma_matrix_wrapper<Scalar_T>::size2() const -> uword { return m_mat.n_cols; }
+
+  template<typename Scalar_T>
+  void arma_matrix_wrapper<Scalar_T>::clear() { m_mat.zeros(); update_attributes(); }
+
+  template<typename Scalar_T>
+  void arma_matrix_wrapper<Scalar_T>::zeros(uword rows, uword cols) { set_size(rows, cols); m_mat.zeros(); }
+
+  template<typename Scalar_T>
+  void arma_matrix_wrapper<Scalar_T>::zeros() { m_mat.zeros(); }
+
+  template<typename Scalar_T>
+  void arma_matrix_wrapper<Scalar_T>::eye(uword rows, uword cols) { set_size(rows, cols); m_mat.eye(); }
+
+  template<typename Scalar_T>
+  Scalar_T& arma_matrix_wrapper<Scalar_T>::operator()(uword i, uword j) { return m_mat(i, j); }
+
+  template<typename Scalar_T>
+  const Scalar_T& arma_matrix_wrapper<Scalar_T>::operator()(uword i, uword j) const { return m_mat(i, j); }
+
+  template<typename Scalar_T>
+  auto arma_matrix_wrapper<Scalar_T>::operator+=(const arma_matrix_wrapper<Scalar_T>& other) -> arma_matrix_wrapper<Scalar_T>& { m_mat += other.m_mat; return *this; }
+
+  template<typename Scalar_T>
+  auto arma_matrix_wrapper<Scalar_T>::operator-=(const arma_matrix_wrapper<Scalar_T>& other) -> arma_matrix_wrapper<Scalar_T>& { m_mat -= other.m_mat; return *this; }
+
+  template<typename Scalar_T>
+  auto arma_matrix_wrapper<Scalar_T>::operator*=(const Scalar_T& val) -> arma_matrix_wrapper<Scalar_T>& { m_mat *= val; return *this; }
+
+  template<typename Scalar_T>
+  auto arma_matrix_wrapper<Scalar_T>::operator/=(const Scalar_T& val) -> arma_matrix_wrapper<Scalar_T>& { m_mat /= val; return *this; }
+
+  template<typename Scalar_T>
+  auto arma_matrix_wrapper<Scalar_T>::operator+(const arma_matrix_wrapper<Scalar_T>& other) const -> arma_matrix_wrapper<Scalar_T> { return arma_matrix_wrapper(MatrixType(m_mat + other.m_mat)); }
+
+  template<typename Scalar_T>
+  auto arma_matrix_wrapper<Scalar_T>::operator-(const arma_matrix_wrapper<Scalar_T>& other) const -> arma_matrix_wrapper<Scalar_T> { return arma_matrix_wrapper(MatrixType(m_mat - other.m_mat)); }
+
+  template<typename Scalar_T>
+  auto arma_matrix_wrapper<Scalar_T>::operator*(const arma_matrix_wrapper<Scalar_T>& other) const -> arma_matrix_wrapper<Scalar_T> {
+      // Force evaluation to MatrixType (arma::Mat) to avoid resolving to generic template constructor with Glue
+      MatrixType res_arma = m_mat * other.m_mat;
+      return arma_matrix_wrapper(std::move(res_arma));
+  }
+
+  template<typename Scalar_T>
+  auto arma_matrix_wrapper<Scalar_T>::operator-() const -> arma_matrix_wrapper<Scalar_T> { return arma_matrix_wrapper(MatrixType(-m_mat)); }
+
+  template<typename Scalar_T>
+  auto arma_matrix_wrapper<Scalar_T>::t() const -> arma_matrix_wrapper<Scalar_T> { return arma_matrix_wrapper(MatrixType(m_mat.t())); }
+
+  template<typename Scalar_T>
+  std::ostream& operator<<(std::ostream& os, const arma_matrix_wrapper<Scalar_T>& m) {
+      return os << m.m_mat;
+  }
+
+  template<typename Scalar_T>
+  arma_matrix_wrapper<Scalar_T>::arma_matrix_wrapper(const MatrixType& m) : m_mat(m) {
+      update_attributes();
+      if (n_rows == 0) {
+           std::fprintf(stderr, "DEBUG: arma_matrix_wrapper(MatrixType) constructed 0x0! Input rows: %d. Element 0: %s\n", (int)m.n_rows, (m.n_elem > 0 ? "exists" : "none"));
+      }
+  }
+
+  template<typename Scalar_T>
+  arma_matrix_wrapper<Scalar_T>::arma_matrix_wrapper(MatrixType&& m) : m_mat(std::move(m)) { update_attributes(); }
+#endif
+
+
+  // =========================================================================
+  // eigen_sparse_wrapper Member Definitions
+  // =========================================================================
+
+  template<typename Scalar_T>
+  auto
+  eigen_sparse_wrapper<Scalar_T>::rows() const
+  { return m_mat.rows(); }
+
+  template<typename Scalar_T>
+  auto
+  eigen_sparse_wrapper<Scalar_T>::cols() const
+  { return m_mat.cols(); }
+
+  template<typename Scalar_T>
+  eigen_sparse_wrapper<Scalar_T>::eigen_sparse_wrapper(uword rows, uword cols, uword estimated_nnz) {
+    set_size(rows, cols);
+    if (estimated_nnz > 0) m_mat.reserve(estimated_nnz);
+  }
+
+  template<typename Scalar_T>
+  eigen_sparse_wrapper<Scalar_T>::eigen_sparse_wrapper(const eigen_sparse_wrapper<Scalar_T>& other)
+  : m_mat(other.m_mat) { update_attributes(); }
+
+  template<typename Scalar_T>
+  eigen_sparse_wrapper<Scalar_T>::eigen_sparse_wrapper(eigen_sparse_wrapper<Scalar_T>&& other) noexcept
+  : m_mat(std::move(other.m_mat)) { update_attributes(); other.n_rows=0; }
+
+  template<typename Scalar_T>
+  auto eigen_sparse_wrapper<Scalar_T>::operator=(const eigen_sparse_wrapper<Scalar_T>& other) -> eigen_sparse_wrapper<Scalar_T>& {
+      if(this!=&other) { m_mat=other.m_mat; update_attributes(); }
+      return *this;
+  }
+
+  template<typename Scalar_T>
+  auto eigen_sparse_wrapper<Scalar_T>::operator=(eigen_sparse_wrapper<Scalar_T>&& other) noexcept -> eigen_sparse_wrapper<Scalar_T>& {
+      if(this!=&other) { m_mat=std::move(other.m_mat); update_attributes(); }
+      return *this;
+  }
+
+  template<typename Scalar_T>
+  void eigen_sparse_wrapper<Scalar_T>::set_size(uword rows, uword cols) {
+    m_mat.resize(rows, cols);
+    update_attributes();
+  }
+
+  template<typename Scalar_T>
+  void eigen_sparse_wrapper<Scalar_T>::resize(uword rows, uword cols, bool preserve) {
+      m_mat.resize(rows, cols); // preserve not directly supported in simple resize
+      update_attributes();
+  }
+
+  template<typename Scalar_T>
+  void eigen_sparse_wrapper<Scalar_T>::clear() { m_mat.setZero(); update_attributes(); }
+
+  template<typename Scalar_T>
+  void eigen_sparse_wrapper<Scalar_T>::zeros() { m_mat.setZero(); update_attributes(); }
+
+  template<typename Scalar_T>
+  void eigen_sparse_wrapper<Scalar_T>::zeros(uword rows, uword cols) { set_size(rows, cols); m_mat.setZero(); }
+
+  template<typename Scalar_T>
+  void eigen_sparse_wrapper<Scalar_T>::update_attributes() {
+    n_rows = m_mat.rows();
+    n_cols = m_mat.cols();
+    n_nonzero = m_mat.nonZeros();
+  }
+
+  template<typename Scalar_T>
+  auto eigen_sparse_wrapper<Scalar_T>::begin() const -> const_iterator { return const_iterator(&m_mat, true); }
+
+  template<typename Scalar_T>
+  auto eigen_sparse_wrapper<Scalar_T>::end() const -> const_iterator { return const_iterator(&m_mat, false); }
+
+  template<typename Scalar_T>
+  auto eigen_sparse_wrapper<Scalar_T>::size1() const -> uword { return n_rows; }
+
+  template<typename Scalar_T>
+  auto eigen_sparse_wrapper<Scalar_T>::size2() const -> uword { return n_cols; }
+
+  template<typename Scalar_T>
+  Scalar_T eigen_sparse_wrapper<Scalar_T>::operator()(uword i, uword j) const { return m_mat.coeff(i, j); }
+
+  template<typename Scalar_T>
+  Scalar_T& eigen_sparse_wrapper<Scalar_T>::operator()(uword i, uword j) {
+     return m_mat.coeffRef(i, j);
+  }
+
+  template<typename Scalar_T>
+  auto eigen_sparse_wrapper<Scalar_T>::operator+=(const eigen_sparse_wrapper<Scalar_T>& other) -> eigen_sparse_wrapper<Scalar_T>& {
+      m_mat += other.m_mat;
+      update_attributes();
+      return *this;
+  }
+
+  template<typename Scalar_T>
+  auto eigen_sparse_wrapper<Scalar_T>::operator*(const eigen_sparse_wrapper<Scalar_T>& other) const -> eigen_sparse_wrapper<Scalar_T> {
+       eigen_sparse_wrapper res;
+       res.m_mat = m_mat * other.m_mat;
+       res.update_attributes();
+       return res;
+  }
+
+  template<typename Scalar_T>
+  auto eigen_sparse_wrapper<Scalar_T>::operator*=(const Scalar_T& val) -> eigen_sparse_wrapper<Scalar_T>& {
+       m_mat *= val;
+       return *this;
+  }
+
+  template<typename Scalar_T>
+  std::ostream& operator<<(std::ostream& os, const eigen_sparse_wrapper<Scalar_T>& m) {
+       return os << m.m_mat;
+  }
+
+  // const_iterator implementation
+  template<typename Scalar_T>
+  eigen_sparse_wrapper<Scalar_T>::const_iterator::const_iterator(const MatrixType* mat, bool start)
+  : mp_mat(mat), m_outer(0), m_inner(*mat, 0)
+  {
+      if (start) {
+          if (mp_mat->outerSize() == 0) {
+               m_outer = 0;
+               return;
+          }
+          m_inner = InnerIterator(*mp_mat, 0);
+          if (!m_inner) advance();
+      } else {
+          m_outer = mp_mat->outerSize();
+      }
+  }
+
+  template<typename Scalar_T>
+  void eigen_sparse_wrapper<Scalar_T>::const_iterator::advance() {
+      if (m_inner) {
+          ++m_inner;
+      }
+      while (!m_inner && m_outer < mp_mat->outerSize()) {
+           m_outer++;
+           if (m_outer < mp_mat->outerSize()) {
+               m_inner = InnerIterator(*mp_mat, m_outer);
+           }
+      }
+  }
+
+  template<typename Scalar_T>
+  bool eigen_sparse_wrapper<Scalar_T>::const_iterator::is_end() const {
+      return m_outer >= mp_mat->outerSize();
+  }
+
+  template<typename Scalar_T>
+  auto eigen_sparse_wrapper<Scalar_T>::const_iterator::operator++() -> const_iterator& {
+      advance();
+      return *this;
+  }
+
+  template<typename Scalar_T>
+  bool eigen_sparse_wrapper<Scalar_T>::const_iterator::operator!=(const const_iterator& other) const {
+      if (m_outer != other.m_outer) return true;
+      if (m_outer >= mp_mat->outerSize()) return false;
+      return true;
+  }
+
+  template<typename Scalar_T>
+  auto eigen_sparse_wrapper<Scalar_T>::const_iterator::row() const -> uword { return m_inner.row(); }
+
+  template<typename Scalar_T>
+  auto eigen_sparse_wrapper<Scalar_T>::const_iterator::col() const -> uword { return m_inner.col(); }
+
+  template<typename Scalar_T>
+  auto eigen_sparse_wrapper<Scalar_T>::const_iterator::operator*() const -> Scalar_T { return m_inner.value(); }
+
 } // namespace glucat
+
+
+
 
 namespace glucat {
   // Specializations for traits (must be in glucat namespace)
-  template<typename T> struct is_eigen_sparse<glucat::eigen_sparse_wrapper<T>> : std::true_type {};
-  template<typename T> struct is_eigen_dense<glucat::eigen_matrix_wrapper<T>> : std::true_type {};
+  // Moved to matrix.h
 
   namespace matrix
   {
@@ -1071,38 +1086,6 @@ namespace glucat {
     }
 
     template<typename Matrix_T>
-    auto eigenvalues(const Matrix_T& A) -> std::vector< std::complex<double> > {
-        if constexpr (requires { A.m_mat; }) {
-            // Wrapper types: dispatch to specific implementation logic
-#if defined(_GLUCAT_USE_ARMADILLO)
-            if constexpr (requires { arma::eig_gen(A.m_mat); }) {
-                 // Arma logic (inline or call helper if defined in unnamed namespace)
-                 arma::cx_vec eigval;
-                 arma::eig_gen(eigval, A.m_mat);
-                 std::vector<std::complex<double>> res(eigval.n_elem);
-                 for(size_t i=0; i<eigval.n_elem; ++i) res[i] = std::complex<double>(eigval[i].real(), eigval[i].imag());
-                 return res;
-            }
-#endif
-            if constexpr (requires { A.m_mat.eigenvalues(); }) {
-                 // Eigen logic
-                 auto ev = A.m_mat.eigenvalues();
-                 std::vector<std::complex<double>> res(ev.size());
-                 for(long i=0; i<ev.size(); ++i) {
-                     using scalar_type = typename Matrix_T::elem_type;
-                     res[i] = std::complex<double>(
-                         numeric_traits<scalar_type>::to_double(ev[i].real()),
-                         numeric_traits<scalar_type>::to_double(ev[i].imag())
-                     );
-                 }
-                 return res;
-            }
-        }
-        // Fallback to glucat::eigenvalues for pure types
-    return glucat::eigenvalues(A);
-    }
-
-    template<typename Matrix_T>
     auto classify_eigenvalues(const Matrix_T& A) -> eig_genus<Matrix_T> {
         using Scalar_T = typename Matrix_T::value_type;
         eig_genus<Matrix_T> result;
@@ -1123,8 +1106,8 @@ namespace glucat {
 
         for (auto
             k = decltype(dim)(0);
-        k != dim;
-        ++k)
+            k != dim;
+            ++k)
         {
             const auto lambda_k = lambda[k];
             arg_set.insert(std::arg(lambda_k));
@@ -1193,55 +1176,91 @@ namespace glucat {
         return result;
     }
 
+    // Generic norm_inf
     template<typename Matrix_T>
-    auto norm(const Matrix_T& A, const char* method) -> typename Matrix_T::elem_type {
-        using std::sqrt;
-        if (std::string(method) == "frob") {
-            return sqrt(norm_frob2(A));
-        }
-        // Assume infinity norm by default or specific check
+    auto norm_inf(const Matrix_T& A) -> typename Matrix_T::elem_type {
+        using element_t = typename Matrix_T::elem_type;
+        using traits_t = numeric_traits<element_t>;
         // Delegate to underlying matrix if possible
-        if constexpr (requires { A.m_mat.template lpNorm<Eigen::Infinity>(); }) {
-            return A.m_mat.template lpNorm<Eigen::Infinity>();
-#if defined(_GLUCAT_USE_ARMADILLO)
-        } else if constexpr (requires { arma::norm(A.m_mat, method); }) {
-            return arma::norm(A.m_mat, method);
+
+        if constexpr (requires { A.m_mat.cwiseAbs().rowwise().sum().maxCoeff(); }) {
+            const auto result = A.m_mat.cwiseAbs().rowwise().sum().maxCoeff();
+#if defined(_GLUCAT_MATRIX_DEBUG_NORM_INF)
+            std::cout << "In norm_inf, result == " << result << std::endl;
 #endif
-        } else {
-             // Fallback for infinity norm (max row sum? or max absolute element?)
-             // "inf" usually means max absolute row sum for matrices, or max abs element for vectors?
-             // Glucat convention: "inf" often max abs component.
-             // Let's assume max abs element for now given usage in multivector (coeff check).
-             // Actually, multivector `is_zero` checks `norm(..., "inf") == 0`.
-             if constexpr (requires { A.begin(); }) {
-                 using scalar_t = typename Matrix_T::elem_type;
-                 using traits = numeric_traits<scalar_t>;
-                 scalar_t max_val = 0;
-                 for(auto x : A) {
-                     if (traits::abs(x) > max_val) max_val = traits::abs(x);
+            return result;        }
+#if defined(_GLUCAT_USE_ARMADILLO)
+        else if constexpr (requires { arma::norm(A.m_mat, "inf"); }) {
+            const auto result = arma::norm(A.m_mat, "inf");
+  #if defined(_GLUCAT_MATRIX_DEBUG_NORM_INF)
+            std::cout << "In norm_inf, result == " << result << std::endl;
+  #endif
+            return result;
+        }
+#endif
+        else {
+             // Fallback for infinity norm (max row sum)
+             // Iterate rows if possible
+             if constexpr (requires { A.rows(); A.cols(); }) {
+                 using real_t = typename traits_t::real_t;
+                 real_t max_row_sum = 0;
+                 const auto n_rows = A.rows();
+                 const auto n_cols = A.cols();
+                 for (auto i = decltype(n_rows)(0); i < n_rows; ++i) {
+                     real_t current_row_sum = 0;
+                     for (auto j = decltype(n_cols)(0); j < n_cols; ++j) {
+                         current_row_sum += traits_t::abs(A(i,j));
+                     }
+                     if (current_row_sum > max_row_sum)
+                         max_row_sum = current_row_sum;
                  }
-                 return max_val;
+#if defined(_GLUCAT_MATRIX_DEBUG_NORM_INF)
+                 std::cout << "In norm_inf, max_row_sum == " << max_row_sum << std::endl;
+#endif
+                 return element_t(max_row_sum);
              }
-             return 0; 
+             return traits_t::NaN();
         }
     }
 
     template<typename T>
     auto norm_frob2(const eigen_matrix_wrapper<T>& A) {
-        return A.m_mat.squaredNorm();
+#if defined(_GLUCAT_MATRIX_DEBUG)
+        std::cout << "In norm_frob2 of eigen_matrix_wrapper " << A << std::endl;
+#endif
+        const auto result = A.m_mat.squaredNorm();
+#if defined(_GLUCAT_MATRIX_DEBUG)
+        std::cout << "In norm_frob2, result == " << result << std::endl;
+#endif
+        return result;
     }
 
 #if defined(_GLUCAT_USE_ARMADILLO)
     template<typename T>
     auto norm_frob2(const arma_matrix_wrapper<T>& A) {
-         return arma::accu(arma::square(A.m_mat));
+  #if defined(_GLUCAT_MATRIX_DEBUG)
+        std::cout << "In norm_frob2 of arma_matrix_wrapper " << A << std::endl;
+  #endif
+        const auto result = arma::accu(arma::square(A.m_mat));
+  #if defined(_GLUCAT_MATRIX_DEBUG)
+        std::cout << "In norm_frob2, result == " << result << std::endl;
+  #endif
+        return result;
     }
 #endif
 
     template<typename Matrix_T>
     auto norm_frob2(const Matrix_T& A) -> typename Matrix_T::elem_type {
+#if defined(_GLUCAT_MATRIX_DEBUG)
+        std::cout << "In norm_frob2 of Matrix_T " << A << std::endl;
+#endif
+        using traits_t = numeric_traits<typename Matrix_T::elem_type>;
+        if (glucat::isnan(A)) return traits_t::NaN();
         // Optimization: if sparse iterator available, sum squares of non-zeros
         if constexpr (requires { A.begin(); A.end(); }) {
+#if defined(_GLUCAT_MATRIX_DEBUG)
+            std::cout << "  has begin and end" << std::endl;
+#endif
             typename Matrix_T::elem_type sum_sq = 0;
             for(auto it = A.begin(); it != A.end(); ++it) {
                 auto val = *it;
@@ -1251,12 +1270,36 @@ namespace glucat {
             // The original norm_frob2 checked for NaN.
             // But usually we assume valid.
             // If strict:
-            if (glucat::isnan(A)) return numeric_traits<typename Matrix_T::elem_type>::NaN();
+#if defined(_GLUCAT_MATRIX_DEBUG)
+            std::cout << "In norm_frob2, result == " << sum_sq << std::endl;
+#endif
             return sum_sq;
         }
 
-        auto n = glucat::norm(A, "frob");
-        return n*n;
+        // Helper to compute frob2 without calling norm
+        using scalar_t = typename Matrix_T::elem_type;
+        scalar_t sum_sq = 0;
+        if constexpr (requires { A.rows(); A.cols(); }) {
+#if defined(_GLUCAT_MATRIX_DEBUG)
+            std::cout << "  has rows and cols" << std::endl;
+#endif
+            const auto n_rows = A.rows();
+            const auto n_cols = A.cols();
+            for (auto i = decltype(n_rows)(0); i < n_rows; ++i) {
+                 for (auto j = decltype(n_cols)(0); j < n_cols; ++j) {
+                     auto val = A(i,j);
+                     sum_sq += val * val;
+                 }
+             }
+#if defined(_GLUCAT_MATRIX_DEBUG)
+            std::cout << "In norm_frob2, result == " << sum_sq << std::endl;
+#endif
+            return sum_sq;
+        }
+#if defined(_GLUCAT_MATRIX_DEBUG)
+        std::cout << "  default is NaN" << std::endl;
+#endif
+        return traits_t::NaN(); // Or throw?
     }
 
     // isnan/isinf/nnz implementation
@@ -1302,29 +1345,30 @@ namespace glucat {
     }
 
     template<typename Matrix_T>
-    auto nnz(const Matrix_T& A) -> typename Matrix_T::size_type {
+    auto nnz(const Matrix_T& A) {
+        using size_t = typename Matrix_T::size_type;
         if constexpr (requires { A.n_nonzero; }) return A.n_nonzero;
         if constexpr (requires { A.nonZeros(); }) return A.nonZeros();
 #if defined(_GLUCAT_USE_ARMADILLO)
         if constexpr (requires { A.m_mat.n_nonzero; }) return A.m_mat.n_nonzero;
 #endif
         if constexpr (requires { A.begin(); A.end(); }) {
-             typename Matrix_T::size_type count = 0;
+             size_t count = 0;
              for(auto it = A.begin(); it != A.end(); ++it) {
                  if (*it != 0) count++;
              }
              return count;
         }
-        if constexpr (requires { A.n_elem; }) {
+        if constexpr (requires { A.rows(); A.cols(); }) {
              // Dense fallback
              // Iterate all?
              size_t count = 0;
-             for(size_t i=0; i<A.n_rows; ++i)
-                 for(size_t j=0; j<A.n_cols; ++j)
+             for(size_t i=0; i<A.rows(); ++i)
+                 for(size_t j=0; j<A.cols(); ++j)
                      if (A(i,j) != 0) count++;
              return count;
         }
-        return 0;
+        return size_t(0);
     }
 
     template<typename Matrix_T>

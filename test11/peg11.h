@@ -44,6 +44,11 @@ namespace peg11
   void
   check(const Multivector_T& lhs, const Multivector_T& rhs, const string& msg, const bool need_inv = false)
   {
+#if defined(_GLUCAT_TEST_PEG11_DEBUG)
+    cout << "Checking " << msg << endl;
+    cout << "lhs == " << lhs << endl;
+    cout << "rhs == " << rhs << endl;
+#endif
     const auto lhs_isinf = lhs.isinf();
     const auto lhs_isnan = lhs.isnan();
     const auto rhs_isinf = rhs.isinf();

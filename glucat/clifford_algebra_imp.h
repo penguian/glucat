@@ -58,6 +58,7 @@
 #include "glucat/scalar.h"
 
 #include <array>
+#include <iostream>
 
 namespace glucat
 {
@@ -692,7 +693,9 @@ namespace glucat
     // Scaling and squaring Pade' approximation of matrix exponential
     // Reference: [GL], Section 11.3, p572-576
     // Reference: [H]
-
+#if defined(_GLUCAT_CLIFFORD_ALGEBRA_DEBUG)
+    std::cout << "In clifford_exp of " << val << std::endl;
+#endif
     using traits_t = numeric_traits<Scalar_T>;
 
     const auto scalar_val = val.scalar();
@@ -780,7 +783,11 @@ namespace glucat
         k != ilog2_scale;
         ++k)
       pure_exp *= pure_exp;
-    return pure_exp * scalar_exp;
+    const auto result = pure_exp * scalar_exp;
+#if defined(_GLUCAT_CLIFFORD_ALGEBRA_DEBUG)
+    std::cout << "In clifford_exp, result == " << result << std::endl;
+#endif
+    return result;
   }
 
   /// Natural logarithm of multivector with specified complexifier
@@ -789,7 +796,16 @@ namespace glucat
   inline
   auto
   log(const Multivector<Scalar_T,LO,HI,Tune_P>& val, const Multivector<Scalar_T,LO,HI,Tune_P>& i, bool prechecked) -> const Multivector<Scalar_T,LO,HI,Tune_P>
-  { return log(val, i, prechecked); }
+  {
+#if defined(_GLUCAT_CLIFFORD_ALGEBRA_DEBUG)
+    std::cout << "In log of " << val << " with " << i << std::endl;
+#endif
+    const auto result = log(val, i, prechecked);
+#if defined(_GLUCAT_CLIFFORD_ALGEBRA_DEBUG)
+    std::cout << "In log, result == " << result << std::endl;
+#endif
+    return result;
+  }
 
   /// Natural logarithm of multivector
   template< template<typename, const index_t, const index_t, typename> class Multivector,
@@ -806,6 +822,9 @@ namespace glucat
   auto
   cosh(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   {
+#if defined(_GLUCAT_CLIFFORD_ALGEBRA_DEBUG)
+    std::cout << "In cosh of " << val << std::endl;
+#endif
     using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
       return traits_t::NaN();
@@ -813,7 +832,11 @@ namespace glucat
     const auto& s = val.scalar();
     if (val == s)
       return traits_t::cosh(s);
-    return (exp(val)+exp(-val)) / Scalar_T(2);
+    const auto result = (exp(val)+exp(-val)) / Scalar_T(2);
+#if defined(_GLUCAT_CLIFFORD_ALGEBRA_DEBUG)
+    std::cout << "In cosh, result == " << result << std::endl;
+#endif
+    return result;
   }
 
   /// Inverse hyperbolic cosine of multivector with specified complexifier
@@ -824,15 +847,22 @@ namespace glucat
   auto
   acosh(const Multivector<Scalar_T,LO,HI,Tune_P>& val, const Multivector<Scalar_T,LO,HI,Tune_P>& i, bool prechecked) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   {
+#if defined(_GLUCAT_CLIFFORD_ALGEBRA_DEBUG)
+    std::cout << "In acosh of " << val << " with " << i << std::endl;
+#endif
     using traits_t = numeric_traits<Scalar_T>;
     check_complex(val, i, prechecked);
     if (val.isnan())
       return traits_t::NaN();
 
     const auto radical = sqrt(val*val - Scalar_T(1), i, true);
-    return (norm(val + radical) >= norm(val))
+    const auto result = (norm(val + radical) >= norm(val))
            ?  log(val + radical, i, true)
            : -log(val - radical, i, true);
+#if defined(_GLUCAT_CLIFFORD_ALGEBRA_DEBUG)
+    std::cout << "In acosh, result == " << result << std::endl;
+#endif
+    return result;
   }
 
   /// Inverse hyperbolic cosine of multivector
@@ -850,6 +880,9 @@ namespace glucat
   auto
   cos(const Multivector<Scalar_T,LO,HI,Tune_P>& val, const Multivector<Scalar_T,LO,HI,Tune_P>& i, bool prechecked) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   {
+#if defined(_GLUCAT_CLIFFORD_ALGEBRA_DEBUG)
+    std::cout << "In cos of " << val << " with " << i << std::endl;
+#endif
     using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
       return traits_t::NaN();
@@ -863,7 +896,11 @@ namespace glucat
     static const auto& twopi = Scalar_T(2) * traits_t::pi();
     const auto& z = i *
       (val - s + traits_t::fmod(s, twopi));
-    return (exp(z)+exp(-z)) / Scalar_T(2);
+    const auto result = (exp(z)+exp(-z)) / Scalar_T(2);
+#if defined(_GLUCAT_CLIFFORD_ALGEBRA_DEBUG)
+    std::cout << "In cos, result == " << result << std::endl;
+#endif
+    return result;
   }
 
   /// Cosine of multivector
@@ -882,6 +919,9 @@ namespace glucat
   auto
   acos(const Multivector<Scalar_T,LO,HI,Tune_P>& val, const Multivector<Scalar_T,LO,HI,Tune_P>& i, bool prechecked) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   {
+#if defined(_GLUCAT_CLIFFORD_ALGEBRA_DEBUG)
+    std::cout << "In acos of " << val << " with " << i << std::endl;
+#endif
     using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
       return traits_t::NaN();
@@ -891,7 +931,11 @@ namespace glucat
       return traits_t::acos(s);
 
     check_complex(val, i, prechecked);
-    return i * acosh(val, i, true);
+    const auto result = i * acosh(val, i, true);
+#if defined(_GLUCAT_CLIFFORD_ALGEBRA_DEBUG)
+    std::cout << "In acos, result == " << result << std::endl;
+#endif
+    return result;
   }
 
   /// Inverse cosine of multivector
@@ -910,6 +954,9 @@ namespace glucat
   auto
   sinh(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   {
+#if defined(_GLUCAT_CLIFFORD_ALGEBRA_DEBUG)
+    std::cout << "In sinh of " << val << std::endl;
+#endif
     using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
       return traits_t::NaN();
@@ -918,7 +965,11 @@ namespace glucat
     if (val == s)
       return traits_t::sinh(s);
 
-    return (exp(val)-exp(-val)) / Scalar_T(2);
+    const auto result = (exp(val)-exp(-val)) / Scalar_T(2);
+#if defined(_GLUCAT_CLIFFORD_ALGEBRA_DEBUG)
+    std::cout << "In sinh, result == " << result << std::endl;
+#endif
+    return result;
   }
 
   /// Inverse hyperbolic sine of multivector with specified complexifier
@@ -929,15 +980,22 @@ namespace glucat
   auto
   asinh(const Multivector<Scalar_T,LO,HI,Tune_P>& val, const Multivector<Scalar_T,LO,HI,Tune_P>& i, bool prechecked) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   {
+#if defined(_GLUCAT_CLIFFORD_ALGEBRA_DEBUG)
+    std::cout << "In asinh of " << val << " with " << i << std::endl;
+#endif
     using traits_t = numeric_traits<Scalar_T>;
     check_complex(val, i, prechecked);
     if (val.isnan())
       return traits_t::NaN();
 
     const auto radical = sqrt(val*val + Scalar_T(1), i, true);
-    return (norm(val + radical) >= norm(val))
+    const auto result = (norm(val + radical) >= norm(val))
            ?  log( val + radical, i, true)
            : -log(-val + radical, i, true);
+#if defined(_GLUCAT_CLIFFORD_ALGEBRA_DEBUG)
+    std::cout << "In asinh, result == " << result << std::endl;
+#endif
+    return result;
   }
 
   /// Inverse hyperbolic sine of multivector
@@ -955,6 +1013,9 @@ namespace glucat
   auto
   sin(const Multivector<Scalar_T,LO,HI,Tune_P>& val, const Multivector<Scalar_T,LO,HI,Tune_P>& i, bool prechecked) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   {
+#if defined(_GLUCAT_CLIFFORD_ALGEBRA_DEBUG)
+    std::cout << "In sin of " << val << " with " << i << std::endl;
+#endif
     using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
       return traits_t::NaN();
@@ -968,7 +1029,11 @@ namespace glucat
     static const auto& twopi = Scalar_T(2) * traits_t::pi();
     const auto& z = i *
       (val - s + traits_t::fmod(s, twopi));
-    return i * (exp(-z)-exp(z)) / Scalar_T(2);
+    const auto result = i * (exp(-z)-exp(z)) / Scalar_T(2);
+#if defined(_GLUCAT_CLIFFORD_ALGEBRA_DEBUG)
+    std::cout << "In sin, result == " << result << std::endl;
+#endif
+    return result;
   }
 
   /// Sine of multivector
@@ -987,6 +1052,9 @@ namespace glucat
   auto
   asin(const Multivector<Scalar_T,LO,HI,Tune_P>& val, const Multivector<Scalar_T,LO,HI,Tune_P>& i, bool prechecked) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   {
+#if defined(_GLUCAT_CLIFFORD_ALGEBRA_DEBUG)
+    std::cout << "In asin of " << val << " with " << i << std::endl;
+#endif
     using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
       return traits_t::NaN();
@@ -996,7 +1064,11 @@ namespace glucat
       return traits_t::asin(s);
 
     check_complex(val, i, prechecked);
-    return -i * asinh(i * val, i, true);
+    const auto result = -i * asinh(i * val, i, true);
+#if defined(_GLUCAT_CLIFFORD_ALGEBRA_DEBUG)
+    std::cout << "In asin, result == " << result << std::endl;
+#endif
+    return result;
   }
 
   /// Inverse sine of multivector
@@ -1015,6 +1087,9 @@ namespace glucat
   auto
   tanh(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   {
+#if defined(_GLUCAT_CLIFFORD_ALGEBRA_DEBUG)
+    std::cout << "In tanh of " << val << std::endl;
+#endif
     using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
       return traits_t::NaN();
@@ -1022,8 +1097,11 @@ namespace glucat
     const auto& s = val.scalar();
     if (val == s)
       return traits_t::tanh(s);
-
-    return sinh(val) / cosh(val);
+    const auto result = sinh(val) / cosh(val);
+#if defined(_GLUCAT_CLIFFORD_ALGEBRA_DEBUG)
+    std::cout << "In tanh, result == " << result << std::endl;
+#endif
+    return result;
   }
 
   /// Inverse hyperbolic tangent of multivector with specified complexifier
@@ -1034,13 +1112,20 @@ namespace glucat
   auto
   atanh(const Multivector<Scalar_T,LO,HI,Tune_P>& val, const Multivector<Scalar_T,LO,HI,Tune_P>& i, bool prechecked) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   {
+#if defined(_GLUCAT_CLIFFORD_ALGEBRA_DEBUG)
+    std::cout << "In atanh of " << val << " with " << i << std::endl;
+#endif
     using traits_t = numeric_traits<Scalar_T>;
     check_complex(val, i, prechecked);
-    return val.isnan()
+    const auto result = val.isnan()
         ? traits_t::NaN()
         : (norm(val + Scalar_T(1)) > norm(val - Scalar_T(1)))
           ? (log(val + Scalar_T(1), i, true) - log(-val + Scalar_T(1), i, true)) / Scalar_T(2)
           : log((val + Scalar_T(1)) / (-val + Scalar_T(1)), i, true) / Scalar_T(2);
+#if defined(_GLUCAT_CLIFFORD_ALGEBRA_DEBUG)
+    std::cout << "In atanh, result == " << result << std::endl;
+#endif
+    return result;
   }
 
   /// Inverse hyperbolic tangent of multivector
