@@ -1015,6 +1015,13 @@ namespace glucat {
   }
 
   template<typename Scalar_T>
+  auto eigen_sparse_wrapper<Scalar_T>::operator-=(const eigen_sparse_wrapper<Scalar_T>& other) -> eigen_sparse_wrapper<Scalar_T>& {
+      m_mat -= other.m_mat;
+      update_attributes();
+      return *this;
+  }
+
+  template<typename Scalar_T>
   auto eigen_sparse_wrapper<Scalar_T>::operator*(const eigen_sparse_wrapper<Scalar_T>& other) const -> eigen_sparse_wrapper<Scalar_T> {
        eigen_sparse_wrapper res;
        res.m_mat = m_mat * other.m_mat;
@@ -1078,7 +1085,7 @@ namespace glucat {
   bool eigen_sparse_wrapper<Scalar_T>::const_iterator::operator!=(const const_iterator& other) const {
       if (m_outer != other.m_outer) return true;
       if (m_outer >= mp_mat->outerSize()) return false;
-      return true;
+      return m_inner != other.m_inner;
   }
 
   template<typename Scalar_T>
@@ -1625,10 +1632,7 @@ namespace glucat {
          if constexpr (glucat::is_eigen_sparse<LHS_Pure>::value && glucat::is_eigen_dense<RHS_Pure>::value) {
              // Explicitly convert sparse LHS to dense RHS type
              // This bypasses overload resolution issues
-             RHS_T lhs_dense(nbr_rows(lhs), nbr_cols(lhs));
-             for(typename LHS_Pure::uword i=0; i<nbr_rows(lhs); ++i)
-                 for(typename LHS_Pure::uword j=0; j<nbr_cols(lhs); ++j)
-                     lhs_dense(i,j) = static_cast<typename RHS_Pure::elem_type>(lhs(i,j));
+             RHS_Pure lhs_dense(lhs);
 
              return glucat::kron(lhs_dense, rhs);
          } else {
@@ -1640,18 +1644,12 @@ namespace glucat {
 
   // Explicit overloads to force selection over generic arma::kron
   inline eigen_matrix_wrapper<long double> kron(const eigen_sparse_wrapper<int>& A, const eigen_matrix_wrapper<long double>& B) {
-      eigen_matrix_wrapper<long double> A_dense(A.nbr_rows(), A.nbr_cols());
-      for(size_t i=0; i<A.nbr_rows(); ++i)
-         for(size_t j=0; j<A.nbr_cols(); ++j)
-             A_dense(i,j) = static_cast<long double>(A(i,j));
+      eigen_matrix_wrapper<long double> A_dense(A);
       return kron(A_dense, B);
   }
 
   inline eigen_matrix_wrapper<double> kron(const eigen_sparse_wrapper<int>& A, const eigen_matrix_wrapper<double>& B) {
-      eigen_matrix_wrapper<double> A_dense(A.nbr_rows(), A.nbr_cols());
-      for(size_t i=0; i<A.nbr_rows(); ++i)
-         for(size_t j=0; j<A.nbr_cols(); ++j)
-             A_dense(i,j) = static_cast<double>(A(i,j));
+      eigen_matrix_wrapper<double> A_dense(A);
       return kron(A_dense, B);
   }
 

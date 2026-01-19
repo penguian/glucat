@@ -409,6 +409,7 @@ namespace glucat {
     Scalar_T& operator()(uword i, uword j);
 
     eigen_sparse_wrapper& operator+=(const eigen_sparse_wrapper& other);
+    eigen_sparse_wrapper& operator-=(const eigen_sparse_wrapper& other);
 
     eigen_sparse_wrapper operator*(const eigen_sparse_wrapper& other) const;
 
@@ -416,6 +417,32 @@ namespace glucat {
 
     friend std::ostream& operator<< <>(std::ostream& os, const eigen_sparse_wrapper& m);
   };
+
+  template<typename Scalar_T>
+  eigen_sparse_wrapper<Scalar_T> operator*(const eigen_sparse_wrapper<Scalar_T>& m, Scalar_T s) {
+      eigen_sparse_wrapper<Scalar_T> res(m);
+      res *= s;
+      return res;
+  }
+
+  template<typename Scalar_T>
+  eigen_sparse_wrapper<Scalar_T> operator*(Scalar_T s, const eigen_sparse_wrapper<Scalar_T>& m) {
+      return m * s;
+  }
+
+  template<typename Scalar_T>
+  eigen_sparse_wrapper<Scalar_T> operator+(const eigen_sparse_wrapper<Scalar_T>& lhs, const eigen_sparse_wrapper<Scalar_T>& rhs) {
+      eigen_sparse_wrapper<Scalar_T> res(lhs);
+      res += rhs;
+      return res;
+  }
+
+  template<typename Scalar_T>
+  eigen_sparse_wrapper<Scalar_T> operator-(const eigen_sparse_wrapper<Scalar_T>& lhs, const eigen_sparse_wrapper<Scalar_T>& rhs) {
+      eigen_sparse_wrapper<Scalar_T> res(lhs);
+      res -= rhs;
+      return res;
+  }
 
 #if defined(_GLUCAT_USE_ARMADILLO)
   // =========================================================================

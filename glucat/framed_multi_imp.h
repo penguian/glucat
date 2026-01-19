@@ -1636,7 +1636,7 @@ namespace glucat
       return matrix::unit<matrix_t>(1) * this->scalar();
 
     // Use dense matrices directly to assume robustness and avoid conversion issues
-    using basis_matrix_t = matrix_t;
+    using basis_matrix_t = glucat::sparse_matrix_t<Scalar_T>;
     using basis_scalar_t = Scalar_T;
 
     auto I = matrix::unit<basis_matrix_t>(2);
