@@ -61,8 +61,23 @@ namespace glucat {
   // Solve
   template<typename T>
   bool solve(eigen_matrix_wrapper<T>& X, const eigen_matrix_wrapper<T>& A, const eigen_matrix_wrapper<T>& B, int opts = 0) {
-      // Solve A*X = B => X = A.colPivHouseholderQr().solve(B)
-      // Note: Arma solve(A, B) solves A*X = B.
+      // Solve A*X = B
+      // For square matrices, use LU decomposition (FullPivLU) to match Armadillo/LAPACK behavior
+      // and provide isInvertible() check.
+      if (A.n_rows == A.n_cols) {
+          auto lu = A.m_mat.fullPivLu();
+          // Use standard invertibility check or strict check if needed
+          if (lu.isInvertible()) {
+               X.m_mat = lu.solve(B.m_mat);
+               X.update_attributes();
+               return true;
+          }
+          // If singular, we could return false immediately or fall through to QR which might handle it?
+          // Armadillo returns false for singular.
+          return false;
+      }
+
+      // For non-square, use QR
       auto qr = A.m_mat.colPivHouseholderQr();
 
       // Strict rank check using R diagonal
@@ -422,7 +437,7 @@ namespace glucat {
   Scalar_T arma_sparse_wrapper<Scalar_T>::operator()(uword i, uword j) const { return m_mat(i, j); }
 
   template<typename Scalar_T>
-  Scalar_T& arma_sparse_wrapper<Scalar_T>::operator()(uword i, uword j) { return m_mat(i, j); }
+  auto arma_sparse_wrapper<Scalar_T>::operator()(uword i, uword j) { return m_mat(i, j); }
 
   template<typename Scalar_T>
   auto arma_sparse_wrapper<Scalar_T>::operator+=(const arma_sparse_wrapper<Scalar_T>& other) -> arma_sparse_wrapper<Scalar_T>& {
@@ -868,7 +883,9 @@ namespace glucat {
   arma_matrix_wrapper<Scalar_T>::arma_matrix_wrapper(const MatrixType& m) : m_mat(m) {
       update_attributes();
       if (n_rows == 0) {
+           #if defined(_GLUCAT_MATRIX_DEBUG)
            std::fprintf(stderr, "DEBUG: arma_matrix_wrapper(MatrixType) constructed 0x0! Input rows: %d. Element 0: %s\n", (int)m.n_rows, (m.n_elem > 0 ? "exists" : "none"));
+           #endif
       }
   }
 
@@ -1183,26 +1200,27 @@ namespace glucat {
         using traits_t = numeric_traits<element_t>;
         // Delegate to underlying matrix if possible
 
-        if constexpr (requires { A.m_mat.cwiseAbs().rowwise().sum().maxCoeff(); }) {
+        if constexpr (is_eigen_dense<Matrix_T>::value) {
             const auto result = A.m_mat.cwiseAbs().rowwise().sum().maxCoeff();
 #if defined(_GLUCAT_MATRIX_DEBUG_NORM_INF)
             std::cout << "In norm_inf, result == " << result << std::endl;
 #endif
             return result;        }
 #if defined(_GLUCAT_USE_ARMADILLO)
-        else if constexpr (requires { arma::norm(A.m_mat, "inf"); }) {
-            const auto result = arma::norm(A.m_mat, "inf");
-  #if defined(_GLUCAT_MATRIX_DEBUG_NORM_INF)
-            std::cout << "In norm_inf, result == " << result << std::endl;
-  #endif
-            return result;
+        else if constexpr (is_arma_supported<element_t>::value && is_eigen_dense<Matrix_T>::value == false) {
+             // std::cout << "DEBUG: norm_inf using arma::norm" << std::endl;
+             const auto result = arma::norm(A.m_mat, "inf");
+   #if defined(_GLUCAT_MATRIX_DEBUG_NORM_INF)
+             std::cout << "In norm_inf, result == " << result << std::endl;
+   #endif
+             return result;
         }
 #endif
         else {
              // Fallback for infinity norm (max row sum)
              // Iterate rows if possible
              if constexpr (requires { A.rows(); A.cols(); }) {
-                 using real_t = typename traits_t::real_t;
+                 using real_t = element_t;
                  real_t max_row_sum = 0;
                  const auto n_rows = A.rows();
                  const auto n_cols = A.cols();
@@ -1214,6 +1232,7 @@ namespace glucat {
                      if (current_row_sum > max_row_sum)
                          max_row_sum = current_row_sum;
                  }
+                 std::cout << "DEBUG: norm_inf using generic fallback" << std::endl;
 #if defined(_GLUCAT_MATRIX_DEBUG_NORM_INF)
                  std::cout << "In norm_inf, max_row_sum == " << max_row_sum << std::endl;
 #endif
@@ -1241,7 +1260,7 @@ namespace glucat {
   #if defined(_GLUCAT_MATRIX_DEBUG)
         std::cout << "In norm_frob2 of arma_matrix_wrapper " << A << std::endl;
   #endif
-        const auto result = arma::accu(arma::square(A.m_mat));
+        const auto result = arma::accu(arma::square(arma::abs(A.m_mat)));
   #if defined(_GLUCAT_MATRIX_DEBUG)
         std::cout << "In norm_frob2, result == " << result << std::endl;
   #endif
@@ -1327,6 +1346,8 @@ namespace glucat {
 
     template<typename Matrix_T>
     auto isinf(const Matrix_T& A) -> bool {
+        if constexpr (requires { A.has_inf(); }) return A.has_inf();
+
         if constexpr (requires { A.m_mat; }) {
              if constexpr (requires { A.m_mat.has_inf(); }) return A.m_mat.has_inf(); // Arma
         }
@@ -1339,7 +1360,8 @@ namespace glucat {
             return false;
         } else {
              if constexpr (requires { A.has_inf(); }) return A.has_inf();
-             if constexpr (requires { A.allFinite(); }) return !A.allFinite() && !isnan(A);
+             if constexpr (requires { A.is_finite(); }) return !A.is_finite() && !isnan(A);
+             // if constexpr (requires { A.allFinite(); }) return !A.allFinite() && !isnan(A);
              return false;
         }
     }
@@ -1535,7 +1557,8 @@ namespace glucat {
          using LHS_Pure = std::decay_t<LHS_T>;
          using RHS_Pure = std::decay_t<RHS_T>;
 
-         if constexpr (is_eigen_sparse<LHS_Pure>::value && is_eigen_dense<RHS_Pure>::value) {
+
+         if constexpr (glucat::is_eigen_sparse<LHS_Pure>::value && glucat::is_eigen_dense<RHS_Pure>::value) {
              // Explicitly convert sparse LHS to dense RHS type
              // This bypasses overload resolution issues
              RHS_T lhs_dense(lhs.n_rows, lhs.n_cols);
@@ -1544,8 +1567,9 @@ namespace glucat {
                      lhs_dense(i,j) = static_cast<typename RHS_Pure::elem_type>(lhs(i,j));
 
              return glucat::kron(lhs_dense, rhs);
+         } else {
+             return glucat::kron(lhs, rhs);
          }
-         return glucat::kron(lhs, rhs);
       }
     }
   }

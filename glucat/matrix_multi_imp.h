@@ -244,14 +244,20 @@ namespace glucat
     if (val.size() >= Tuning_Values_P::fast_size_threshold)
       try
       {
-        *this = val.template fast_matrix_multi<Scalar_T,Tune_P>(this->m_frame);
+        auto tmp = val.template fast_matrix_multi<Scalar_T,Tune_P>(this->m_frame);
+        #if defined(_GLUCAT_MATRIX_DEBUG)
+        std::cout << "DEBUG: fast_matrix_multi result scalar: " << tmp.scalar() << " norm: " << tmp.norm() << std::endl;
+        #endif
+        *this = tmp;
         return;
       }
       catch (const glucat_error& e)
       { }
     const auto dim = folded_dim<matrix_index_t>(this->m_frame);
     if (dim == 0) {
+       #if defined(_GLUCAT_MATRIX_DEBUG)
        std::fprintf(stderr, "DEBUG: matrix_multi(framed_multi) calculated dim=0! Frame size: %d. Frame min: %d, max: %d\n", (int)this->m_frame.count(), (int)this->m_frame.min(), (int)this->m_frame.max());
+       #endif
     }
     this->m_matrix.resize(dim, dim, false);
     this->m_matrix.zeros();
@@ -319,7 +325,9 @@ namespace glucat
          // This is called by operator* via multivector_t(matrix, frame).
          // Don't modify header include here, assume it's available or use matrix_imp.h include?
          // matrix_multi_imp.h includes everything.
+         #if defined(_GLUCAT_MATRIX_DEBUG)
          std::fprintf(stderr, "DEBUG: matrix_multi(mtx) created 0x0 matrix! Frame count: %d\n", (int)frm.count());
+         #endif
     }
   }
 
@@ -514,7 +522,9 @@ namespace glucat
     result.m_matrix.zeros();
     result.m_matrix = lhs_ref.m_matrix * rhs_ref.m_matrix;
     if (result.m_matrix.size1() == 0) {
+         #if defined(_GLUCAT_MATRIX_DEBUG)
          std::fprintf(stderr, "DEBUG: operator* returning 0x0 matrix! lhs_ref size: %d, rhs_ref size: %d\n", (int)lhs_ref.m_matrix.size1(), (int)rhs_ref.m_matrix.size1());
+         #endif
     }
     return result;
   }
@@ -1014,6 +1024,7 @@ namespace glucat
 
     if (X.norm_inf() == 0)
       return Scalar_T(0);
+
 
     const basis_matrix_t&  I = matrix::unit<basis_matrix_t>(2);
     basis_matrix_t J(2,2,2);

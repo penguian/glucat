@@ -230,8 +230,9 @@ namespace glucat
         *this = (val.template fast_framed_multi<Scalar_T,Tune_P>()).truncated();
         return;
       }
-      catch (const glucat_error& e)
-      { }
+      catch (const std::exception& e)
+      { } // Fall back to the slow algorithm
+
 
     const auto val_norm = traits_t::to_scalar_t(val.norm());
     if (traits_t::isNaN_or_isInf(val_norm))
@@ -1620,6 +1621,9 @@ namespace glucat
   fast(const index_t level, const bool odd) const -> const matrix_t
   {
     // Assume val is already folded and centred
+    #if defined(_GLUCAT_MATRIX_DEBUG)
+    std::cout << "DEBUG: fast(level=" << level << ", odd=" << odd << ") this->size=" << this->size() << std::endl;
+    #endif
     if (this->empty())
     {
       using matrix_index_t = typename matrix_multi_t::matrix_index_t;
@@ -1631,12 +1635,13 @@ namespace glucat
     if (level == 0)
       return matrix::unit<matrix_t>(1) * this->scalar();
 
-    using basis_matrix_t = typename matrix_multi_t::basis_matrix_t;
-    using basis_scalar_t = typename basis_matrix_t::value_type;
+    // Use dense matrices directly to assume robustness and avoid conversion issues
+    using basis_matrix_t = matrix_t;
+    using basis_scalar_t = Scalar_T;
 
-    const auto&  I = matrix::unit<basis_matrix_t>(2);
-    auto J = basis_matrix_t(2,2,2);
-    J.clear();
+    auto I = matrix::unit<basis_matrix_t>(2);
+    auto J = basis_matrix_t(2,2);
+    J.zeros(); // Ensure zeroed
     J(0,1)  = basis_scalar_t(-1);
     J(1,0)  = basis_scalar_t( 1);
     auto K = J;
@@ -1644,14 +1649,59 @@ namespace glucat
     auto JK = I;
     JK(0,0) = basis_scalar_t(-1);
 
+
+    #if defined(_GLUCAT_MATRIX_DEBUG)
+    if (level == 1) {
+        matrix_t I_dense(I);
+        std::cout << "DEBUG: I_dense(1,1)=" << numeric_traits<Scalar_T>::to_scalar_t(I_dense(1,1)) << std::endl;
+    }
+    #endif
+
+    #if defined(_GLUCAT_MATRIX_DEBUG)
+    if (level == 1) { // Print only once/few times
+        std::cout << "DEBUG: I(0,0)=" << I(0,0) << " I(1,1)=" << I(1,1) << std::endl;
+        std::cout << "DEBUG: J(0,1)=" << J(0,1) << " J(1,0)=" << J(1,0) << std::endl;
+        std::cout << "DEBUG: K(0,1)=" << K(0,1) << " K(1,0)=" << K(1,0) << std::endl;
+        std::cout << "DEBUG: JK(0,0)=" << JK(0,0) << " JK(1,1)=" << JK(1,1) << std::endl;
+    }
+    #endif
+
     const auto ist_mn = index_set_t(-level);
     const auto ist_pn = index_set_t(level);
     if (level == 1)
     {
-      if (odd)
-        return matrix_t(J) * (*this)[ist_mn] + matrix_t(K)  * (*this)[ist_pn];
-      else
-        return matrix_t(I) * this->scalar()  + matrix_t(JK) * (*this)[ist_mn ^ ist_pn];
+      const auto& val_mn = (*this)[ist_mn];
+      const auto& val_pn = (*this)[ist_pn];
+      const auto& val_scalar = this->scalar();
+      const auto& val_mnpn = (*this)[ist_mn ^ ist_pn];
+
+      matrix_t res;
+      if (odd) {
+        auto part1 = J * val_mn;
+        auto part2 = K * val_pn;
+        res = part1 + part2;
+      }
+
+      else {
+        auto part1 = I * val_scalar;
+        auto part2 = JK * val_mnpn;
+
+        #if defined(_GLUCAT_MATRIX_DEBUG)
+        if (level == 1) {
+            std::cout << "DEBUG: part1(0,0)=" << numeric_traits<Scalar_T>::to_scalar_t(part1(0,0))
+                      << " part1(1,1)=" << numeric_traits<Scalar_T>::to_scalar_t(part1(1,1)) << std::endl;
+            std::cout << "DEBUG: part2(0,0)=" << numeric_traits<Scalar_T>::to_scalar_t(part2(0,0))
+                      << " part2(1,1)=" << numeric_traits<Scalar_T>::to_scalar_t(part2(1,1)) << std::endl;
+        }
+        #endif
+
+        res = part1 + part2;
+      }
+
+      #if defined(_GLUCAT_MATRIX_DEBUG)
+      std::cout << "DEBUG: fast(1, " << odd << ") result scalar: " << (res.n_cols > 0 ? numeric_traits<Scalar_T>::to_scalar_t(res(0,0)) : 0) << " norm: " << matrix::norm_frob2(res) << std::endl;
+      #endif
+      return res;
     }
     else
     {
@@ -1665,16 +1715,22 @@ namespace glucat
       const auto& val_pn   = pair_rem_mnpn.first;
       const auto& val_1    = pair_rem_mnpn.second;
       using matrix::kron;
+      matrix_t res;
       if (odd)
-        return - kron(JK, val_1.fast   (level-1, 1))
+        res = - kron(JK, val_1.fast   (level-1, 1))
                + kron(I,  val_mnpn.fast(level-1, 1))
                + kron(J,  val_mn.fast  (level-1, 0))
                + kron(K,  val_pn.fast  (level-1, 0));
       else
-        return   kron(I,  val_1.fast   (level-1, 0))
+        res =   kron(I,  val_1.fast   (level-1, 0))
                + kron(JK, val_mnpn.fast(level-1, 0))
                + kron(K,  val_mn.fast  (level-1, 1))
                - kron(J,  val_pn.fast  (level-1, 1));
+
+      #if defined(_GLUCAT_MATRIX_DEBUG)
+      std::cout << "DEBUG: fast(" << level << ", " << odd << ") result scalar: " << (res.n_cols > 0 ? numeric_traits<Scalar_T>::to_scalar_t(res(0,0)) : 0) << " norm: " << matrix::norm_frob2(res) << std::endl;
+      #endif
+      return res;
     }
   }
 
@@ -1708,7 +1764,19 @@ namespace glucat
     // Do the fast transform
     const auto& ev_val = val.even();
     const auto& od_val = val.odd();
-    return matrix_multi<Other_Scalar_T,LO,HI,Other_Tune_P>(ev_val.fast(level, 0) + od_val.fast(level, 1), frm);
+
+    auto ev_res = ev_val.fast(level, 0);
+    auto od_res = od_val.fast(level, 1);
+
+    #if defined(_GLUCAT_MATRIX_DEBUG)
+    std::cout << "DEBUG: fast_matrix_multi ev norm: " << matrix::norm_frob2(ev_res) << " scalar(0,0): " << (ev_res.n_cols > 0 ? numeric_traits<Scalar_T>::to_scalar_t(ev_res(0,0)) : 0) << std::endl;
+    std::cout << "DEBUG: fast_matrix_multi od norm: " << matrix::norm_frob2(od_res) << " scalar(0,0): " << (od_res.n_cols > 0 ? numeric_traits<Scalar_T>::to_scalar_t(od_res(0,0)) : 0) << std::endl;
+    auto sum_res = ev_res + od_res;
+    std::cout << "DEBUG: fast_matrix_multi sum norm: " << matrix::norm_frob2(sum_res) << " scalar(0,0): " << (sum_res.n_cols > 0 ? numeric_traits<Scalar_T>::to_scalar_t(sum_res(0,0)) : 0) << std::endl;
+    return matrix_multi<Other_Scalar_T,LO,HI,Other_Tune_P>(sum_res, frm);
+    #else
+    return matrix_multi<Other_Scalar_T,LO,HI,Other_Tune_P>(ev_res + od_res, frm);
+    #endif
   }
 
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >

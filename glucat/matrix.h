@@ -171,6 +171,17 @@ namespace glucat {
 
     arma_matrix_wrapper t() const;
 
+    // Iterator support
+    auto begin() { return m_mat.begin(); }
+    auto end() { return m_mat.end(); }
+    auto begin() const { return m_mat.begin(); }
+    auto end() const { return m_mat.end(); }
+
+    bool has_inf() const { return m_mat.has_inf(); }
+    bool has_nan() const { return m_mat.has_nan(); }
+    bool is_finite() const { return m_mat.is_finite(); }
+
+
     friend std::ostream& operator<< <>(std::ostream& os, const arma_matrix_wrapper& m);
 
   private:
@@ -464,7 +475,7 @@ namespace glucat {
     uword size2() const;
 
     Scalar_T operator()(uword i, uword j) const;
-    Scalar_T& operator()(uword i, uword j);
+    auto operator()(uword i, uword j);
 
     arma_sparse_wrapper& operator+=(const arma_sparse_wrapper& other);
     arma_sparse_wrapper operator*(const arma_sparse_wrapper& other) const;
@@ -478,7 +489,6 @@ namespace glucat {
   template<typename T> struct is_eigen_sparse<eigen_sparse_wrapper<T>> : std::true_type {};
 
   #if defined(_GLUCAT_USE_ARMADILLO)
-  template<typename T> struct is_eigen_dense<arma_matrix_wrapper<T>> : std::true_type {};
   template<typename T> struct is_eigen_sparse<arma_sparse_wrapper<T>> : std::true_type {};
   #endif
 
