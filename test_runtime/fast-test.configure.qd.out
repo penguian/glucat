@@ -395,11 +395,13 @@ Note: tanh(A) == nan
 
 A
   314.159{-1}
+Note: cos(A) == inf
 Note: sin(A) == nan
 Note: tan(A) == nan
 
 A
   -314.159{-1}
+Note: cos(A) == inf
 Note: sin(A) == nan
 Note: tan(A) == nan
 

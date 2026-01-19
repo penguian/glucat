@@ -796,11 +796,13 @@ Note: tanh(A) == nan
 
 A
   314.159{-1}
+Note: cos(A) == inf
 Note: sin(A) == nan
 Note: tan(A) == nan
 
 A
   -314.159{-1}
+Note: cos(A) == inf
 Note: sin(A) == nan
 Note: tan(A) == nan
 
@@ -1655,7 +1657,7 @@ inv(A):
 ((a*b)/(a*b)).truncated(): 
 1
 inv(a).truncated(): 
--0.333333373{-3}-0.333333343{-2}-0.333333343{-1}
+-0.333333313{-3}-0.333333313{-2}-0.333333313{-1}
 
 double:
 a: 
