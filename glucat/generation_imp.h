@@ -132,7 +132,7 @@ namespace glucat { namespace gen
     using result_t = std::vector<Matrix_T>;
     auto result = result_t(new_size);
 
-    const auto old_dim = old[0].size1();
+    const auto old_dim = old[0].nbr_rows();
     const auto& eye = matrix::unit<Matrix_T>(old_dim);
 
     auto neg = Matrix_T(2,2,2);

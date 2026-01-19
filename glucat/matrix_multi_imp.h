@@ -114,11 +114,11 @@ namespace glucat
   template< typename Other_Scalar_T, typename Other_Tune_P >
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
   matrix_multi(const matrix_multi<Other_Scalar_T,LO,HI,Other_Tune_P>& val)
-  : m_frame( val.m_frame ), m_matrix( val.m_matrix.size1(), val.m_matrix.size2() )
+  : m_frame( val.m_frame ), m_matrix( val.m_matrix.nbr_rows(), val.m_matrix.nbr_cols() )
   {
     this->m_matrix.zeros();
-    for (std::size_t i = 0; i < val.m_matrix.n_rows; ++i)
-      for (std::size_t j = 0; j < val.m_matrix.n_cols; ++j)
+    for (std::size_t i = 0; i < val.m_matrix.nbr_rows(); ++i)
+      for (std::size_t j = 0; j < val.m_matrix.nbr_cols(); ++j)
         this->m_matrix(i, j) = numeric_traits<Scalar_T>::to_scalar_t(val.m_matrix(i, j));
   }
 
@@ -135,8 +135,8 @@ namespace glucat
     {
       const matrix_index_t dim = folded_dim<matrix_index_t>(frm);
       this->m_matrix.zeros(dim, dim); // Resize and clear
-      for (std::size_t i = 0; i < val.m_matrix.n_rows; ++i)
-        for (std::size_t j = 0; j < val.m_matrix.n_cols; ++j)
+      for (std::size_t i = 0; i < val.m_matrix.nbr_rows(); ++i)
+        for (std::size_t j = 0; j < val.m_matrix.nbr_cols(); ++j)
           this->m_matrix(i, j) = numeric_traits<Scalar_T>::to_scalar_t(val.m_matrix(i, j));
     }
   }
@@ -303,8 +303,9 @@ namespace glucat
          this->m_matrix = mtx;
     } else {
          std::size_t r = 0, c = 0;
-         if constexpr(requires { mtx.n_rows; }) { r = mtx.n_rows; c = mtx.n_cols; }
-         else { r = mtx.rows(); c = mtx.cols(); }
+         if constexpr(requires { mtx.nbr_rows(); }) { r = mtx.nbr_rows(); c = mtx.nbr_cols(); }
+        else if constexpr(requires { mtx.n_rows; }) { r = mtx.n_rows; c = mtx.n_cols; }
+        else { r = mtx.rows(); c = mtx.cols(); }
 
          this->m_matrix.resize(r, c, false);
          // this->m_matrix.clear(); // resize might not clear if preserve=false, but we overwrite
@@ -320,7 +321,7 @@ namespace glucat
   matrix_multi(const matrix_t& mtx, const index_set_t frm)
   : m_frame( frm ), m_matrix( mtx )
   {
-    if (m_matrix.size1() == 0) {
+    if (m_matrix.nbr_rows() == 0) {
          // std::fprintf(stderr, "DEBUG: matrix_multi(mtx) created 0x0 matrix! Frame size: %d\n", (int)frm.count());
          // This is called by operator* via multivector_t(matrix, frame).
          // Don't modify header include here, assume it's available or use matrix_imp.h include?
@@ -399,7 +400,7 @@ namespace glucat
       return false;
     else
     {
-      const matrix_index_t dim = this->m_matrix.size1();
+      const matrix_index_t dim = this->m_matrix.nbr_rows();
       return !(dim == 1 && this->isnan());
     }
   }
@@ -516,14 +517,14 @@ namespace glucat
     using matrix_t = typename multivector_t::matrix_t;
     using matrix_index_t = typename matrix_t::size_type;
 
-    const matrix_index_t dim = lhs_ref.m_matrix.size1();
+    const matrix_index_t dim = lhs_ref.m_matrix.nbr_rows();
     multivector_t result = multivector_t(matrix_t(dim, dim), our_frame);
     // result.m_matrix.clear();
     result.m_matrix.zeros();
     result.m_matrix = lhs_ref.m_matrix * rhs_ref.m_matrix;
-    if (result.m_matrix.size1() == 0) {
+    if (result.m_matrix.nbr_rows() == 0) {
          #if defined(_GLUCAT_MATRIX_DEBUG)
-         std::fprintf(stderr, "DEBUG: operator* returning 0x0 matrix! lhs_ref size: %d, rhs_ref size: %d\n", (int)lhs_ref.m_matrix.size1(), (int)rhs_ref.m_matrix.size1());
+          std::fprintf(stderr, "DEBUG: operator* returning 0x0 matrix! lhs_ref size: %d, rhs_ref size: %d\n", (int)lhs_ref.m_matrix.nbr_rows(), (int)rhs_ref.m_matrix.nbr_rows());
          #endif
     }
     return result;
@@ -645,7 +646,7 @@ namespace glucat
 
     const auto& AT = matrix_t(rhs_ref.m_matrix.t());
     const auto& BT = matrix_t(lhs_ref.m_matrix.t());
-    matrix_t XT(AT.n_rows, AT.n_cols);
+    matrix_t XT(AT.nbr_rows(), AT.nbr_cols());
 
     // Solve AT * XT = BT
     if (glucat::solve(XT, AT, BT))
@@ -784,7 +785,7 @@ namespace glucat
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
   scalar() const -> Scalar_T
   {
-    const matrix_index_t dim = this->m_matrix.size1();
+    const matrix_index_t dim = this->m_matrix.nbr_rows();
     return this->m_matrix.trace() / Scalar_T( double(dim) );
   }
 
@@ -888,7 +889,7 @@ namespace glucat
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
   norm() const -> Scalar_T
   {
-    const matrix_index_t dim = this->m_matrix.size1();
+    const matrix_index_t dim = this->m_matrix.nbr_rows();
     const auto result = this->m_matrix.norm_frob2() / Scalar_T( double(dim) );
 #if defined(_GLUCAT_MATRIX_MULTI_DEBUG_NORM)
     std::cout << "In norm, result == " << result << std::endl;

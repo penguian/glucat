@@ -74,6 +74,10 @@ namespace glucat {
   template<typename T> struct is_eigen_dense : std::false_type {};
 
   template<typename Scalar_T> class arma_matrix_wrapper; // Forward
+  template<typename Scalar_T> class eigen_sparse_wrapper; // Forward
+#if defined(_GLUCAT_USE_ARMADILLO)
+  template<typename Scalar_T> class arma_sparse_wrapper; // Forward
+#endif
 
   // =========================================================================
   // matrix_impl_base (CRTP Pattern)
@@ -114,10 +118,7 @@ namespace glucat {
 
     MatrixType m_mat;
 
-    // Attributes
-    uword n_rows = 0;
-    uword n_cols = 0;
-    uword n_elem = 0;
+
 
     // Constructors
     arma_matrix_wrapper() = default;
@@ -126,6 +127,9 @@ namespace glucat {
 
     template<typename Other_Matrix_T>
     explicit arma_matrix_wrapper(const Other_Matrix_T& other);
+
+    template<typename Other_Scalar_T>
+    explicit arma_matrix_wrapper(const eigen_sparse_wrapper<Other_Scalar_T>& other);
 
     // Copy/Move
     arma_matrix_wrapper(const arma_matrix_wrapper& other);
@@ -144,10 +148,8 @@ namespace glucat {
 
     void resize(uword rows, uword cols, bool preserve = false);
 
-    auto rows() const;
-    auto cols() const;
-    uword size1() const;
-    uword size2() const;
+    auto nbr_rows() const;
+    auto nbr_cols() const;
 
     void clear();
     void zeros(uword rows, uword cols);
@@ -230,10 +232,7 @@ namespace glucat {
 
     MatrixType m_mat;
 
-    // Attributes to match Armadillo
-    uword n_rows = 0;
-    uword n_cols = 0;
-    uword n_elem = 0;
+
 
     // Constructors
     eigen_matrix_wrapper() = default;
@@ -248,6 +247,9 @@ namespace glucat {
     // Generic Interop Constructor (e.g. from Armadillo matrix)
     template<typename Other_Matrix_T>
     explicit eigen_matrix_wrapper(const Other_Matrix_T& other);
+
+    template<typename Other_Scalar_T>
+    explicit eigen_matrix_wrapper(const eigen_sparse_wrapper<Other_Scalar_T>& other);
 
     // Copy constructor
     eigen_matrix_wrapper(const eigen_matrix_wrapper& other);
@@ -280,10 +282,8 @@ namespace glucat {
     void resize(uword rows, uword cols, bool preserve = false);
 
     // Helpers
-    auto rows() const;
-    auto cols() const;
-    uword size1() const; // ublas compat
-    uword size2() const; // ublas compat
+    auto nbr_rows() const;
+    auto nbr_cols() const;
 
     void clear();
 
@@ -347,9 +347,7 @@ namespace glucat {
 
     MatrixType m_mat;
 
-    uword n_rows = 0;
-    uword n_cols = 0;
-    uword n_nonzero = 0;
+
 
     eigen_sparse_wrapper() = default;
 
@@ -404,10 +402,8 @@ namespace glucat {
     const_iterator begin() const;
     const_iterator end() const;
 
-    auto rows() const;
-    auto cols() const;
-    uword size1() const;
-    uword size2() const;
+    auto nbr_rows() const;
+    auto nbr_cols() const;
 
     Scalar_T operator()(uword i, uword j) const;
     Scalar_T& operator()(uword i, uword j);
@@ -438,9 +434,7 @@ namespace glucat {
     using size_type = arma::uword;
 
     MatrixType m_mat;
-    uword n_rows = 0;
-    uword n_cols = 0;
-    uword n_nonzero = 0;
+
 
     arma_sparse_wrapper() = default;
 
@@ -469,10 +463,8 @@ namespace glucat {
     const_iterator begin() const;
     const_iterator end() const;
 
-    auto rows() const;
-    auto cols() const;
-    uword size1() const;
-    uword size2() const;
+    auto nbr_rows() const;
+    auto nbr_cols() const;
 
     Scalar_T operator()(uword i, uword j) const;
     auto operator()(uword i, uword j);
@@ -533,7 +525,7 @@ namespace glucat {
   #if defined(_GLUCAT_USE_ARMADILLO)
     template<typename Scalar_T>
     struct sparse_matrix_type_selector<Scalar_T, true> {
-      using type = arma::SpMat<Scalar_T>;
+      using type = arma_sparse_wrapper<Scalar_T>;
     };
   #endif
 
@@ -634,6 +626,16 @@ namespace glucat {
     template< typename Matrix_T >
     auto
     isnan(const Matrix_T& m) -> bool;
+
+    /// Number of rows
+    template< typename Matrix_T >
+    auto
+    nbr_rows(const Matrix_T& m) -> std::size_t; 
+
+    /// Number of columns
+    template< typename Matrix_T >
+    auto
+    nbr_cols(const Matrix_T& m) -> std::size_t; 
 
     /// Unit matrix - as per Matlab eye
     template< typename Matrix_T >
