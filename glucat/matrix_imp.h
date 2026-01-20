@@ -1339,6 +1339,23 @@ namespace glucat {
             std::cout << "In norm_frob2, result == " << sum_sq << std::endl;
 #endif
             return sum_sq;
+        } else if constexpr (requires { A.nbr_rows(); A.nbr_cols(); }) {
+#if defined(_GLUCAT_MATRIX_DEBUG)
+            std::cout << "  has nbr_rows and nbr_cols" << std::endl;
+#endif
+            const auto n_rows = A.nbr_rows();
+            const auto n_cols = A.nbr_cols();
+             // Assuming operator() is available if nbr_rows implies wrapper
+            for (auto i = decltype(n_rows)(0); i < n_rows; ++i) {
+                 for (auto j = decltype(n_cols)(0); j < n_cols; ++j) {
+                     auto val = A(i,j);
+                     sum_sq += val * val;
+                 }
+             }
+#if defined(_GLUCAT_MATRIX_DEBUG)
+            std::cout << "In norm_frob2, result == " << sum_sq << std::endl;
+#endif
+            return sum_sq;
         }
 #if defined(_GLUCAT_MATRIX_DEBUG)
         std::cout << "  default is NaN" << std::endl;
