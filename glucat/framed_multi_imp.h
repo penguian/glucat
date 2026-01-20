@@ -1679,7 +1679,7 @@ namespace glucat
       if (odd) {
         auto part1 = J * val_mn;
         auto part2 = K * val_pn;
-        res = part1 + part2;
+        res = matrix_t(part1 + part2);
       }
 
       else {
@@ -1695,7 +1695,7 @@ namespace glucat
         }
         #endif
 
-        res = part1 + part2;
+        res = matrix_t(part1 + part2);
       }
 
       #if defined(_GLUCAT_MATRIX_DEBUG)

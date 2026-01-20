@@ -105,6 +105,7 @@ namespace glucat {
   };
 
 #if defined(_GLUCAT_USE_ARMADILLO)
+  template<typename Scalar_T> class arma_sparse_wrapper;
   template<typename Scalar_T> std::ostream& operator<<(std::ostream& os, const arma_matrix_wrapper<Scalar_T>& m);
 
   template<typename Scalar_T>
@@ -137,6 +138,7 @@ namespace glucat {
 
     arma_matrix_wrapper& operator=(const arma_matrix_wrapper& other);
     arma_matrix_wrapper& operator=(arma_matrix_wrapper&& other) noexcept;
+    arma_matrix_wrapper& operator=(const arma_sparse_wrapper<Scalar_T>& other);
 
     // Conversion to Arma Mat (implicit or explicit)
     operator const MatrixType&() const;
@@ -148,8 +150,8 @@ namespace glucat {
 
     void resize(uword rows, uword cols, bool preserve = false);
 
-    auto nbr_rows() const;
-    auto nbr_cols() const;
+    uword nbr_rows() const;
+    uword nbr_cols() const;
 
     void clear();
     void zeros(uword rows, uword cols);
@@ -213,6 +215,13 @@ namespace glucat {
       res.update_attributes();
       return res;
   }
+
+  // Mixed Kron
+  template<typename T1, typename T2>
+  arma_matrix_wrapper<T2> kron(const arma_sparse_wrapper<T1>& A, const arma_matrix_wrapper<T2>& B);
+
+  template<typename T1, typename T2>
+  arma_matrix_wrapper<T2> kron(const arma_matrix_wrapper<T1>& A, const arma_sparse_wrapper<T2>& B);
 #endif
 
   // =========================================================================
@@ -282,8 +291,8 @@ namespace glucat {
     void resize(uword rows, uword cols, bool preserve = false);
 
     // Helpers
-    auto nbr_rows() const;
-    auto nbr_cols() const;
+    uword nbr_rows() const;
+    uword nbr_cols() const;
 
     void clear();
 
@@ -402,8 +411,8 @@ namespace glucat {
     const_iterator begin() const;
     const_iterator end() const;
 
-    auto nbr_rows() const;
-    auto nbr_cols() const;
+    uword nbr_rows() const;
+    uword nbr_cols() const;
 
     Scalar_T operator()(uword i, uword j) const;
     Scalar_T& operator()(uword i, uword j);
@@ -490,8 +499,8 @@ namespace glucat {
     const_iterator begin() const;
     const_iterator end() const;
 
-    auto nbr_rows() const;
-    auto nbr_cols() const;
+    uword nbr_rows() const;
+    uword nbr_cols() const;
 
     Scalar_T operator()(uword i, uword j) const;
     auto operator()(uword i, uword j);
@@ -501,6 +510,34 @@ namespace glucat {
     arma_sparse_wrapper& operator*=(const Scalar_T& val);
     friend std::ostream& operator<< <>(std::ostream& os, const arma_sparse_wrapper& m);
   };
+
+
+  template<typename Scalar_T>
+  arma_sparse_wrapper<Scalar_T> operator*(Scalar_T s, const arma_sparse_wrapper<Scalar_T>& m) {
+      arma_sparse_wrapper<Scalar_T> res(m);
+      res *= s;
+      return res;
+  }
+
+  template<typename Scalar_T>
+  arma_sparse_wrapper<Scalar_T> operator*(const arma_sparse_wrapper<Scalar_T>& m, Scalar_T s) {
+      return s * m;
+  }
+
+  template<typename Scalar_T>
+  arma_sparse_wrapper<Scalar_T> operator+(const arma_sparse_wrapper<Scalar_T>& lhs, const arma_sparse_wrapper<Scalar_T>& rhs) {
+      arma_sparse_wrapper<Scalar_T> res(lhs);
+      res += rhs;
+      return res;
+  }
+
+  template<typename Scalar_T>
+  arma_sparse_wrapper<Scalar_T> operator-(const arma_sparse_wrapper<Scalar_T>& lhs, const arma_sparse_wrapper<Scalar_T>& rhs) {
+      arma_sparse_wrapper<Scalar_T> res(lhs);
+      res.m_mat -= rhs.m_mat; // Armadillo supports -=
+      res.update_attributes();
+      return res;
+  }
 #endif
 
   // Traits Specializations
