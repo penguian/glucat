@@ -144,7 +144,8 @@ namespace glucat {
     operator const MatrixType&() const;
     operator MatrixType&();
 
-    void update_attributes();
+    // Attributes updated automatically by m_mat operations, accessors delegate directly
+
 
     void set_size(uword rows, uword cols);
 
@@ -199,7 +200,7 @@ namespace glucat {
   arma_matrix_wrapper<Scalar_T> operator*(Scalar_T s, const arma_matrix_wrapper<Scalar_T>& m) {
       arma_matrix_wrapper<Scalar_T> res;
       res.m_mat = s * m.m_mat;
-      res.update_attributes();
+
       return res;
   }
   template<typename Scalar_T>
@@ -212,7 +213,7 @@ namespace glucat {
   arma_matrix_wrapper<T> kron(const arma_matrix_wrapper<T>& A, const arma_matrix_wrapper<T>& B) {
       arma_matrix_wrapper<T> res;
       res.m_mat = arma::kron(A.m_mat, B.m_mat);
-      res.update_attributes();
+
       return res;
   }
 
@@ -284,7 +285,8 @@ namespace glucat {
     eigen_matrix_wrapper(MatrixType&& m);
 
     // Sync attributes after resize
-    void update_attributes();
+    // No longer needed as variables are removed
+
 
     void set_size(uword rows, uword cols);
 
@@ -382,7 +384,7 @@ namespace glucat {
     void zeros();
     void zeros(uword rows, uword cols);
 
-    void update_attributes();
+
 
     // Iterator support
     class const_iterator {
@@ -492,7 +494,7 @@ namespace glucat {
     void zeros(uword rows, uword cols);
     void zeros();
 
-    void update_attributes();
+
 
     using const_iterator = typename MatrixType::const_iterator;
 
@@ -535,7 +537,7 @@ namespace glucat {
   arma_sparse_wrapper<Scalar_T> operator-(const arma_sparse_wrapper<Scalar_T>& lhs, const arma_sparse_wrapper<Scalar_T>& rhs) {
       arma_sparse_wrapper<Scalar_T> res(lhs);
       res.m_mat -= rhs.m_mat; // Armadillo supports -=
-      res.update_attributes();
+
       return res;
   }
 #endif
