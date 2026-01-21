@@ -1714,7 +1714,7 @@ namespace glucat
       const auto& pair_rem_mnpn = rem_mn.divide(ist_pn);
       const auto& val_pn   = pair_rem_mnpn.first;
       const auto& val_1    = pair_rem_mnpn.second;
-      using matrix::kron;
+      using glucat::kron;
       matrix_t res;
       if (odd)
         res = - kron(JK, val_1.fast   (level-1, 1))

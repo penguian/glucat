@@ -132,6 +132,9 @@ namespace glucat {
     template<typename Other_Scalar_T>
     explicit arma_matrix_wrapper(const eigen_sparse_wrapper<Other_Scalar_T>& other);
 
+    template<typename Other_Scalar_T>
+    explicit arma_matrix_wrapper(const arma_sparse_wrapper<Other_Scalar_T>& other);
+
     // Copy/Move
     arma_matrix_wrapper(const arma_matrix_wrapper& other);
     arma_matrix_wrapper(arma_matrix_wrapper&& other) noexcept;
@@ -455,6 +458,19 @@ namespace glucat {
       return res;
   }
 
+  // Kron
+  template<typename T>
+  eigen_matrix_wrapper<T> kron(const eigen_matrix_wrapper<T>& A, const eigen_matrix_wrapper<T>& B);
+
+  template<typename T1, typename T2>
+  eigen_matrix_wrapper<T2> kron(const eigen_sparse_wrapper<T1>& A, const eigen_matrix_wrapper<T2>& B);
+
+  template<typename T1, typename T2>
+  eigen_matrix_wrapper<T2> kron(const eigen_matrix_wrapper<T1>& A, const eigen_sparse_wrapper<T2>& B);
+
+  template<typename T>
+  eigen_sparse_wrapper<T> kron(const eigen_sparse_wrapper<T>& A, const eigen_sparse_wrapper<T>& B);
+
 #if defined(_GLUCAT_USE_ARMADILLO)
   // =========================================================================
   // arma_sparse_wrapper (moved from matrix_imp.h)
@@ -654,17 +670,6 @@ namespace glucat {
 
     // We will re-declare the essential functions consistent with the new types.
 
-    /// Kronecker tensor product of matrices - as per Matlab kron
-    template< typename LHS_T, typename RHS_T >
-    auto
-    kron(const LHS_T& lhs, const RHS_T& rhs) -> const
-    RHS_T;
-
-    /// Sparse Kronecker tensor product of monomial matrices
-    template< typename LHS_T, typename RHS_T >
-    auto
-    mono_kron(const LHS_T& lhs, const RHS_T& rhs) -> const
-    RHS_T;
 
     /// Left inverse of Kronecker product
     template< typename LHS_T, typename RHS_T >

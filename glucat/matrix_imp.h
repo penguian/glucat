@@ -204,6 +204,23 @@ namespace glucat {
       arma_matrix_wrapper<T2> A_dense(A);
       return kron(A_dense, B);
   }
+
+  // Mixed kron: Sparse (arma wrapper) x Dense (arma wrapper) -> Dense (arma wrapper)
+  // This handles the case causing verify_glucat_kron.cpp to fail.
+  template<typename T1, typename T2>
+  arma_matrix_wrapper<T2> kron(const arma_sparse_wrapper<T1>& A, const arma_matrix_wrapper<T2>& B) {
+      // Convert A to compatible type (Dense Wrapper) 
+      arma_matrix_wrapper<T2> A_dense(A); // Will use constructor converting sparse to dense
+      return kron(A_dense, B);
+  }
+
+  // Mixed kron: Dense (arma wrapper) x Sparse (arma wrapper) -> Dense (arma wrapper)
+  template<typename T1, typename T2>
+  arma_matrix_wrapper<T2> kron(const arma_matrix_wrapper<T1>& A, const arma_sparse_wrapper<T2>& B) {
+      // Convert B to compatible type (Dense Wrapper)
+      arma_matrix_wrapper<T1> B_dense(B); 
+      return kron(A, B_dense);
+  }
 #endif
 
   // =========================================================================
@@ -800,7 +817,13 @@ namespace glucat {
       for (auto it = other.begin(); it != other.end(); ++it) {
           m_mat(it.row(), it.col()) = static_cast<Scalar_T>(*it);
       }
+  }
 
+  template<typename Scalar_T>
+  template<typename Other_Scalar_T>
+  arma_matrix_wrapper<Scalar_T>::arma_matrix_wrapper(const arma_sparse_wrapper<Other_Scalar_T>& other) {
+      // Use efficient Armadillo conversion if possible
+      m_mat = arma::conv_to<MatrixType>::from(other.m_mat);
   }
 
   template<typename Scalar_T>
@@ -848,23 +871,6 @@ namespace glucat {
 
 
 
-  template<typename T1, typename T2>
-  arma_matrix_wrapper<T2> kron(const arma_sparse_wrapper<T1>& A, const arma_matrix_wrapper<T2>& B) {
-      arma_matrix_wrapper<T2> res;
-      res.m_mat = arma::kron(arma::Mat<T1>(A.m_mat), B.m_mat); // Convert Sparse to Dense
-
-
-      return res;
-  }
-
-  template<typename T1, typename T2>
-  arma_matrix_wrapper<T2> kron(const arma_matrix_wrapper<T1>& A, const arma_sparse_wrapper<T2>& B) {
-      arma_matrix_wrapper<T2> res;
-      res.m_mat = arma::kron(A.m_mat, arma::Mat<T2>(B.m_mat)); // Convert Sparse to Dense
-
-
-      return res;
-  }
 
 
   template<typename Scalar_T>
@@ -1589,10 +1595,6 @@ namespace glucat {
         return signed_perm_nork(lhs, rhs);
     }
 
-    template<typename LHS_T, typename RHS_T>
-    auto mono_kron(const LHS_T& lhs, const RHS_T& rhs) -> const RHS_T {
-        return kron(lhs, rhs);
-    }
 
 
     template< typename LHS_T, typename RHS_T >
@@ -1654,41 +1656,8 @@ namespace glucat {
     // Implementation of glucat::matrix interface using the selected backend
     // ========================================================================
 
-    template< typename LHS_T, typename RHS_T >
-    auto
-    kron(const LHS_T& lhs, const RHS_T& rhs) -> const RHS_T
-
-    {
-      if constexpr (std::is_same_v<LHS_T, RHS_T>) {
-         return glucat::kron(lhs, rhs);
-      } else {
-         using LHS_Pure = std::decay_t<LHS_T>;
-         using RHS_Pure = std::decay_t<RHS_T>;
-
-
-         if constexpr (glucat::is_eigen_sparse<LHS_Pure>::value && glucat::is_eigen_dense<RHS_Pure>::value) {
-             // Explicitly convert sparse LHS to dense RHS type
-             // This bypasses overload resolution issues
-             RHS_Pure lhs_dense(lhs);
-
-             return glucat::kron(lhs_dense, rhs);
-         } else {
-             return glucat::kron(lhs, rhs);
-         }
-      }
-    }
   }
 
-  // Explicit overloads to force selection over generic arma::kron
-  inline eigen_matrix_wrapper<long double> kron(const eigen_sparse_wrapper<int>& A, const eigen_matrix_wrapper<long double>& B) {
-      eigen_matrix_wrapper<long double> A_dense(A);
-      return kron(A_dense, B);
-  }
-
-  inline eigen_matrix_wrapper<double> kron(const eigen_sparse_wrapper<int>& A, const eigen_matrix_wrapper<double>& B) {
-      eigen_matrix_wrapper<double> A_dense(A);
-      return kron(A_dense, B);
-  }
 
   // Add generic kron visible to glucat namespace
   /*
