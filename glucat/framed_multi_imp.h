@@ -1633,13 +1633,13 @@ namespace glucat
       return result;
     }
     if (level == 0)
-      return matrix::unit<matrix_t>(1) * this->scalar();
+      return unit<matrix_t>(1) * this->scalar();
 
     // Use dense matrices directly to assume robustness and avoid conversion issues
     using basis_matrix_t = glucat::sparse_matrix_t<Scalar_T>;
     using basis_scalar_t = Scalar_T;
 
-    auto I = matrix::unit<basis_matrix_t>(2);
+    auto I = unit<basis_matrix_t>(2);
     auto J = basis_matrix_t(2,2);
     J.zeros(); // Ensure zeroed
     J(0,1)  = basis_scalar_t(-1);

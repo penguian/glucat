@@ -91,14 +91,10 @@ namespace glucat {
 
       // Member functions delegating to namespace matrix implementation
       // Defined in matrix_imp.h to resolve circular dependency
-      auto trace() const;
-      auto eigenvalues() const;
+      // trace, eigenvalues, norm_inf, etc. moved to specific wrappers as members.
+      
+      // Generic classify_eigenvalues relies on eigenvalues() member
       auto classify_eigenvalues() const;
-      auto norm_inf() const;
-      auto norm_frob2() const;
-      auto isnan() const;
-      auto isinf() const;
-      auto nnz() const;
 
       template<typename Scalar_T, typename Other>
       auto inner(const Other& other) const;
@@ -189,6 +185,17 @@ namespace glucat {
     bool has_nan() const { return m_mat.has_nan(); }
     bool is_finite() const { return m_mat.is_finite(); }
 
+
+
+
+    // New Member Functions (formerly free functions)
+    Scalar_T trace() const;
+    std::vector<std::complex<double>> eigenvalues() const;
+    auto norm_inf() const;
+    auto norm_frob2() const;
+    bool isnan() const;
+    bool isinf() const;
+    auto nnz() const;
 
     friend std::ostream& operator<< <>(std::ostream& os, const arma_matrix_wrapper& m);
 
@@ -331,6 +338,15 @@ namespace glucat {
     // Transpose
     eigen_matrix_wrapper t() const;
 
+    // New Member Functions (formerly free functions)
+    auto trace() const;
+    std::vector<std::complex<double>> eigenvalues() const;
+    auto norm_inf() const;
+    auto norm_frob2() const;
+    bool isnan() const;
+    bool isinf() const;
+    auto nnz() const;
+
     friend std::ostream& operator<< <>(std::ostream& os, const eigen_matrix_wrapper& m);
   };
 
@@ -429,6 +445,15 @@ namespace glucat {
 
     eigen_sparse_wrapper& operator*=(const Scalar_T& val);
 
+    // New Member Functions
+    auto trace() const; // Trace of sparse?
+    std::vector<std::complex<double>> eigenvalues() const{ throw std::runtime_error("Not implemented for sparse"); } // Usually not computed directly on sparse
+    auto norm_inf() const;
+    auto norm_frob2() const;
+    bool isnan() const;
+    bool isinf() const;
+    auto nnz() const;
+
     friend std::ostream& operator<< <>(std::ostream& os, const eigen_sparse_wrapper& m);
   };
 
@@ -470,6 +495,35 @@ namespace glucat {
 
   template<typename T>
   eigen_sparse_wrapper<T> kron(const eigen_sparse_wrapper<T>& A, const eigen_sparse_wrapper<T>& B);
+
+  // Helper Free Functions for Member Implementation
+  template<typename T> T trace(const eigen_matrix_wrapper<T>& A);
+  template<typename T> auto norm_inf(const eigen_matrix_wrapper<T>& A);
+  template<typename T> auto norm_frob2(const eigen_matrix_wrapper<T>& A);
+  template<typename T> bool isnan(const eigen_matrix_wrapper<T>& A);
+  template<typename T> bool isinf(const eigen_matrix_wrapper<T>& A);
+  template<typename T> auto nnz(const eigen_matrix_wrapper<T>& A);
+  template<typename T> std::vector<std::complex<double>> eigenvalues(const eigen_matrix_wrapper<T>& A);
+
+  template<typename T> bool isnan(const eigen_sparse_wrapper<T>& A);
+  template<typename T> bool isinf(const eigen_sparse_wrapper<T>& A);
+  template<typename T> auto nnz(const eigen_sparse_wrapper<T>& A);
+
+#if defined(_GLUCAT_USE_ARMADILLO)
+  template<typename T> auto trace(const arma_matrix_wrapper<T>& A);
+  template<typename T> auto norm_inf(const arma_matrix_wrapper<T>& A);
+  template<typename T> auto norm_frob2(const arma_matrix_wrapper<T>& A);
+  template<typename T> bool isnan(const arma_matrix_wrapper<T>& A);
+  template<typename T> bool isinf(const arma_matrix_wrapper<T>& A);
+  template<typename T> auto nnz(const arma_matrix_wrapper<T>& A);
+  template<typename T> std::vector<std::complex<double>> eigenvalues(const arma_matrix_wrapper<T>& A);
+
+  template<typename T> bool isnan(const arma_sparse_wrapper<T>& A);
+  template<typename T> bool isinf(const arma_sparse_wrapper<T>& A);
+  template<typename T> auto nnz(const arma_sparse_wrapper<T>& A);
+  template<typename T> auto norm_inf(const arma_sparse_wrapper<T>& A);
+  template<typename T> auto norm_frob2(const arma_sparse_wrapper<T>& A);
+#endif
 
 #if defined(_GLUCAT_USE_ARMADILLO)
   // =========================================================================
@@ -527,6 +581,15 @@ namespace glucat {
     arma_sparse_wrapper operator*(const arma_sparse_wrapper& other) const;
     arma_sparse_wrapper& operator*=(const Scalar_T& val);
     friend std::ostream& operator<< <>(std::ostream& os, const arma_sparse_wrapper& m);
+
+    // New Member Functions
+    auto trace() const;
+    auto eigenvalues() const { throw std::runtime_error("Not implemented for sparse"); }
+    auto norm_inf() const;
+    auto norm_frob2() const;
+    bool isnan() const;
+    bool isinf() const;
+    auto nnz() const;
   };
 
 
@@ -655,6 +718,35 @@ namespace glucat {
       sparse_matrix(const T& other) : Base(other) {}
   };
 
+  // Core Operations as Free Functions
+  template< typename LHS_T, typename RHS_T >
+  auto nork(const LHS_T& lhs, const RHS_T& rhs, const bool mono = true) -> const RHS_T;
+
+  template< typename LHS_T, typename RHS_T >
+  auto signed_perm_nork(const LHS_T& lhs, const RHS_T& rhs) -> const RHS_T;
+
+  template< typename Matrix_T >
+  auto unit(const size_t dim) -> const Matrix_T;
+
+  template< typename LHS_T, typename RHS_T >
+  auto mono_prod(const LHS_T& lhs, const RHS_T& rhs) -> const decltype(lhs * rhs);
+
+  template< typename LHS_T, typename RHS_T >
+  auto sparse_prod(const LHS_T& lhs, const RHS_T& rhs) -> const decltype(lhs * rhs);
+
+  template< typename LHS_T, typename RHS_T >
+  auto prod(const LHS_T& lhs, const RHS_T& rhs) -> const decltype(lhs * rhs);
+
+  template< typename Scalar_T, typename LHS_T, typename RHS_T >
+  auto inner(const LHS_T& lhs, const RHS_T& rhs) -> Scalar_T;
+
+  // Legacy Nbr Rows/Cols - kept as free functions for generic templates
+  template< typename Matrix_T >
+  auto nbr_rows(const Matrix_T& m) -> std::size_t;
+
+  template< typename Matrix_T >
+  auto nbr_cols(const Matrix_T& m) -> std::size_t;
+
   namespace matrix
   {
     // ... existing function declarations can remain or be updated if signatures change ...
@@ -671,93 +763,9 @@ namespace glucat {
     // We will re-declare the essential functions consistent with the new types.
 
 
-    /// Left inverse of Kronecker product
-    template< typename LHS_T, typename RHS_T >
-    auto
-    nork(const LHS_T& lhs, const RHS_T& rhs, const bool mono = true) -> const
-    RHS_T;
-
-    /// Left inverse of Kronecker product where lhs is a signed permutation matrix
-    template< typename LHS_T, typename RHS_T >
-    auto
-    signed_perm_nork(const LHS_T& lhs, const RHS_T& rhs) -> const
-    RHS_T;
-
-    /// Number of non-zeros
-    template< typename Matrix_T >
-    auto
-    nnz(const Matrix_T& m); // size_type check?
-
-    /// Infinite
-    template< typename Matrix_T >
-    auto
-    isinf(const Matrix_T& m) -> bool;
-
-    /// Not a Number
-    template< typename Matrix_T >
-    auto
-    isnan(const Matrix_T& m) -> bool;
-
-    /// Number of rows
-    template< typename Matrix_T >
-    auto
-    nbr_rows(const Matrix_T& m) -> std::size_t; 
-
-    /// Number of columns
-    template< typename Matrix_T >
-    auto
-    nbr_cols(const Matrix_T& m) -> std::size_t; 
-
-    /// Unit matrix - as per Matlab eye
-    template< typename Matrix_T >
-    auto
-    unit(const size_t dim) -> const
-    Matrix_T; // Simplified signature from uBLAS
-
-    // Monomial and Prod functions - simplified/generic
-    template< typename LHS_T, typename RHS_T >
-    auto
-    mono_prod(const LHS_T& lhs,
-              const RHS_T& rhs) -> const
-    decltype(lhs * rhs); // Assume operator* works
-
-    template< typename LHS_T, typename RHS_T >
-    auto
-    sparse_prod(const LHS_T& lhs,
-                const RHS_T& rhs) -> const
-    decltype(lhs * rhs);
-
-    template< typename LHS_T, typename RHS_T >
-    auto
-    prod(const LHS_T& lhs,
-         const RHS_T& rhs) -> const
-    decltype(lhs * rhs);
-
-    /// Inner product: sum(x(i,j)*y(i,j))/x.nrows()
-    template< typename Scalar_T, typename LHS_T, typename RHS_T >
-    auto
-    inner(const LHS_T& lhs, const RHS_T& rhs) -> Scalar_T;
 
 
-    /// Matrix infinity norm (max row sum)
-    template< typename Matrix_T >
-    auto
-    norm_inf(const Matrix_T& val) -> typename Matrix_T::elem_type;
 
-    /// Square of Frobenius norm
-    template< typename Matrix_T >
-    auto
-    norm_frob2(const Matrix_T& val) -> typename Matrix_T::elem_type; // Use elem_type for Arma/Wrapper compatibility
-
-    /// Matrix trace
-    template< typename Matrix_T >
-    auto
-    trace(const Matrix_T& val) -> typename Matrix_T::elem_type;
-
-    /// Eigenvalues of a matrix
-    template< typename Matrix_T >
-    auto
-    eigenvalues(const Matrix_T& val) -> std::vector< std::complex<double> >;
 
     /// Classification of eigenvalues of a matrix
     using eig_case_t = enum {

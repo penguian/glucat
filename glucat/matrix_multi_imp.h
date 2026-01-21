@@ -1027,7 +1027,7 @@ namespace glucat
       return Scalar_T(0);
 
 
-    const basis_matrix_t&  I = matrix::unit<basis_matrix_t>(2);
+    const basis_matrix_t&  I = glucat::unit<basis_matrix_t>(2);
     basis_matrix_t J(2,2,2);
     J.zeros();
     J(0,1)  = basis_scalar_t(-1);
@@ -1037,7 +1037,7 @@ namespace glucat
     basis_matrix_t JK = I;
     JK(0,0) = basis_scalar_t(-1);
 
-    using matrix::signed_perm_nork;
+    using glucat::signed_perm_nork;
     const index_set_t ist_mn   = index_set_t(-level);
     const index_set_t ist_pn   = index_set_t(level);
     const index_set_t ist_mnpn = ist_mn | ist_pn;
@@ -1208,13 +1208,13 @@ namespace glucat
     const auto q = std::max(index_t(-folded_min), index_t(0));
     const auto* e = (gen::generator_table<basis_matrix_t>::generator())(p, q);
     const auto dim = matrix_index_t(1) << offset_level(p, q);
-    auto result = matrix::unit<basis_matrix_t>(dim);
+    auto result = glucat::unit<basis_matrix_t>(dim);
     for (auto
         k = folded_min;
         k <= folded_max;
         ++k)
       if (folded_set[k])
-        result = matrix::mono_prod(result, e[k]);
+        result = glucat::mono_prod(result, e[k]);
     if (use_cache)
     {
       auto* result_ptr = new basis_matrix_t(result);

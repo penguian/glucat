@@ -96,7 +96,7 @@ namespace glucat { namespace gen
           gen_from_pm4_qp4(gen_vector(p-4, q+4), sig);
         else if (card == 0)
         { // Base case. Save a generator vector containing one matrix, size 1.
-          auto result = result_t(1, matrix::unit<Matrix_T>(1));
+          auto result = result_t(1, unit<Matrix_T>(1));
           this->insert(make_pair(sig, result));
         }
         else
@@ -133,7 +133,7 @@ namespace glucat { namespace gen
     auto result = result_t(new_size);
 
     const auto old_dim = old[0].nbr_rows();
-    const auto& eye = matrix::unit<Matrix_T>(old_dim);
+    const auto& eye = unit<Matrix_T>(old_dim);
 
     auto neg = Matrix_T(2,2,2);
     neg(0,1) =    -1;
@@ -176,7 +176,7 @@ namespace glucat { namespace gen
         k = size_t(1);
         k != size_t(4);
         ++k)
-      h = matrix::mono_prod(old[k], h);
+      h = mono_prod(old[k], h);
 
     for (auto
         k = size_t(0);
@@ -187,7 +187,7 @@ namespace glucat { namespace gen
         k = old_size-4;
         k != old_size;
         ++k)
-      result[k] = matrix::mono_prod(old[k+4-old_size], h);
+      result[k] = mono_prod(old[k+4-old_size], h);
     // Save the resulting generator array.
     this->insert(make_pair(sig, result));
   }
@@ -209,13 +209,13 @@ namespace glucat { namespace gen
         k = size_t(1);
         k != size_t(4);
         ++k)
-      h = matrix::mono_prod(old[old_size-1-k], h);
+      h = mono_prod(old[old_size-1-k], h);
 
     for (auto
         k = size_t(0);
         k != size_t(4);
         ++k)
-      result[k] = matrix::mono_prod(old[k+old_size-4], h);
+      result[k] = mono_prod(old[k+old_size-4], h);
     for (auto
         k = size_t(4);
         k != old_size;
@@ -242,7 +242,7 @@ namespace glucat { namespace gen
         k = size_t(0);
         k != old_size-1;
         ++k)
-      result[k] = matrix::mono_prod(old[old_size-2-k], h);
+      result[k] = mono_prod(old[old_size-2-k], h);
     result[old_size-1] = h;
 
     // Save the resulting generator array.
