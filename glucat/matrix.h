@@ -497,33 +497,7 @@ namespace glucat {
   eigen_sparse_wrapper<T> kron(const eigen_sparse_wrapper<T>& A, const eigen_sparse_wrapper<T>& B);
 
   // Helper Free Functions for Member Implementation
-  template<typename T> T trace(const eigen_matrix_wrapper<T>& A);
-  template<typename T> auto norm_inf(const eigen_matrix_wrapper<T>& A);
-  template<typename T> auto norm_frob2(const eigen_matrix_wrapper<T>& A);
-  template<typename T> bool isnan(const eigen_matrix_wrapper<T>& A);
-  template<typename T> bool isinf(const eigen_matrix_wrapper<T>& A);
-  template<typename T> auto nnz(const eigen_matrix_wrapper<T>& A);
-  template<typename T> std::vector<std::complex<double>> eigenvalues(const eigen_matrix_wrapper<T>& A);
 
-  template<typename T> bool isnan(const eigen_sparse_wrapper<T>& A);
-  template<typename T> bool isinf(const eigen_sparse_wrapper<T>& A);
-  template<typename T> auto nnz(const eigen_sparse_wrapper<T>& A);
-
-#if defined(_GLUCAT_USE_ARMADILLO)
-  template<typename T> auto trace(const arma_matrix_wrapper<T>& A);
-  template<typename T> auto norm_inf(const arma_matrix_wrapper<T>& A);
-  template<typename T> auto norm_frob2(const arma_matrix_wrapper<T>& A);
-  template<typename T> bool isnan(const arma_matrix_wrapper<T>& A);
-  template<typename T> bool isinf(const arma_matrix_wrapper<T>& A);
-  template<typename T> auto nnz(const arma_matrix_wrapper<T>& A);
-  template<typename T> std::vector<std::complex<double>> eigenvalues(const arma_matrix_wrapper<T>& A);
-
-  template<typename T> bool isnan(const arma_sparse_wrapper<T>& A);
-  template<typename T> bool isinf(const arma_sparse_wrapper<T>& A);
-  template<typename T> auto nnz(const arma_sparse_wrapper<T>& A);
-  template<typename T> auto norm_inf(const arma_sparse_wrapper<T>& A);
-  template<typename T> auto norm_frob2(const arma_sparse_wrapper<T>& A);
-#endif
 
 #if defined(_GLUCAT_USE_ARMADILLO)
   // =========================================================================
@@ -741,11 +715,7 @@ namespace glucat {
   auto inner(const LHS_T& lhs, const RHS_T& rhs) -> Scalar_T;
 
   // Legacy Nbr Rows/Cols - kept as free functions for generic templates
-  template< typename Matrix_T >
-  auto nbr_rows(const Matrix_T& m) -> std::size_t;
 
-  template< typename Matrix_T >
-  auto nbr_cols(const Matrix_T& m) -> std::size_t;
 
   namespace matrix
   {
@@ -786,10 +756,8 @@ namespace glucat {
       Scalar_T   m_safe_arg = Scalar_T(0);
     };
 
-    /// Classify the eigenvalues of a matrix
-    template< typename Matrix_T >
-    auto
-    classify_eigenvalues(const Matrix_T& val) -> eig_genus<Matrix_T>;
+    // Classify the eigenvalues of a matrix
+    // Note: implementation moved to matrix_impl_base::classify_eigenvalues()
   }
 }
 

@@ -111,13 +111,7 @@ namespace glucat {
   }
 
 #if defined(_GLUCAT_USE_ARMADILLO)
-/*
-  // Norm for arma_matrix_wrapper
-  template<typename T>
-  auto norm_inf(const arma_matrix_wrapper<T>& A) {
-       return arma::norm(A.m_mat, "inf");
-  }
-*/
+
   // Solve for arma_matrix_wrapper
   template<typename T>
   bool solve(arma_matrix_wrapper<T>& X, const arma_matrix_wrapper<T>& A, const arma_matrix_wrapper<T>& B, int opts = 0) {
@@ -428,45 +422,51 @@ namespace glucat {
   template<typename Scalar_T>
   std::ostream& operator<<(std::ostream& os, const arma_sparse_wrapper<Scalar_T>& m) { return os << m.m_mat; }
 
-  // Armadillo Sparse Helper Free Functions
-  template<typename T>
-  bool isinf(const arma_sparse_wrapper<T>& A) {
-      return A.m_mat.has_inf();
+  // Armadillo Sparse Helper Member Functions
+  template<typename Scalar_T>
+  bool arma_sparse_wrapper<Scalar_T>::isinf() const {
+      return m_mat.has_inf();
   }
 
-  template<typename T>
-  bool isnan(const arma_sparse_wrapper<T>& A) {
-      return A.m_mat.has_nan();
+  template<typename Scalar_T>
+  bool arma_sparse_wrapper<Scalar_T>::isnan() const {
+      return m_mat.has_nan();
   }
 
-  template<typename T>
-  auto nnz(const arma_sparse_wrapper<T>& A) {
-      return A.m_mat.n_nonzero;
+  template<typename Scalar_T>
+  auto arma_sparse_wrapper<Scalar_T>::nnz() const {
+      return m_mat.n_nonzero;
   }
 
-  template<typename T>
-  auto norm_inf(const arma_sparse_wrapper<T>& A) {
-      // arma::norm(A, "inf") works for SpMat?
-      // Yes, documentation says so.
-      return arma::norm(A.m_mat, "inf");
+  template<typename Scalar_T>
+  auto arma_sparse_wrapper<Scalar_T>::norm_inf() const {
+      return arma::norm(m_mat, "inf");
   }
 
-  template<typename T>
-  auto norm_frob2(const arma_sparse_wrapper<T>& A) {
-      // arma::norm(A, "fro") returns sqrt.
-      // Use accu(pow(abs(A),2))?
-      if constexpr (is_complex_t<T>::value) {
-           auto n = arma::norm(A.m_mat, "fro");
+  template<typename Scalar_T>
+  auto arma_sparse_wrapper<Scalar_T>::norm_frob2() const {
+      if constexpr (is_complex_t<Scalar_T>::value) {
+           auto n = arma::norm(m_mat, "fro");
            return n*n;
       } else {
            // efficient squared norm for SpMat?
            // SpMat does not support square() directly.
-           // Use norm(...) and square it, or iterate?
-           // Iterate values.
-           // Or just trust norm("fro")^2.
-           auto n = arma::norm(A.m_mat, "fro");
+           auto n = arma::norm(m_mat, "fro");
            return n*n;
       }
+  }
+
+  template<typename Scalar_T>
+  auto arma_sparse_wrapper<Scalar_T>::trace() const {
+      // generic trace for sparse
+      Scalar_T sum = 0;
+      // Armadillo SpMat iterators
+      for(auto it = m_mat.begin(); it != m_mat.end(); ++it) {
+          if(it.row() == it.col()) {
+              sum += *it;
+          }
+      }
+      return sum;
   }
 
 #endif
@@ -1412,10 +1412,10 @@ namespace glucat {
     // nork / signed_perm_nork implementation
     template<typename LHS_T, typename RHS_T>
     auto signed_perm_nork(const LHS_T& lhs, const RHS_T& rhs) -> const RHS_T {
-         size_t blk_rows = nbr_rows(rhs) / (std::max)(size_t(1), size_t(nbr_rows(lhs)));
-         size_t blk_cols = nbr_cols(rhs) / (std::max)(size_t(1), size_t(nbr_cols(lhs)));
+         size_t blk_rows = rhs.nbr_rows() / (std::max)(size_t(1), size_t(lhs.nbr_rows()));
+         size_t blk_cols = rhs.nbr_cols() / (std::max)(size_t(1), size_t(lhs.nbr_cols()));
 
-         if (nbr_rows(lhs) == 0 || nbr_cols(lhs) == 0) {
+         if (lhs.nbr_rows() == 0 || lhs.nbr_cols() == 0) {
               if constexpr (requires { RHS_T(blk_rows, blk_cols); }) return RHS_T(blk_rows, blk_cols);
               RHS_T res; res.set_size(blk_rows, blk_cols); return res;
          }
@@ -1443,8 +1443,8 @@ namespace glucat {
              }
          } else {
              // Fallback for types without sparse iterators (e.g. dense)
-             for(size_t r=0; r<nbr_rows(lhs); ++r) {
-                 for(size_t c=0; c<nbr_cols(lhs); ++c) {
+             for(size_t r=0; r<lhs.nbr_rows(); ++r) {
+                 for(size_t c=0; c<lhs.nbr_cols(); ++c) {
                      auto val = lhs(r,c);
                      if (val != 0) {
                          size_t start_row = r * blk_rows;
@@ -1463,12 +1463,12 @@ namespace glucat {
          // For a signed permutation matrix of size N, norm_frob2 is N (assuming entries are +/- 1).
          // This matches legacy implementation which used lhs.size1().
          // Use to_scalar_t to safely convert n_rows (size_t/long) to Scalar (potentially qd_real)
-        auto norm_sq = numeric_traits<typename RHS_T::elem_type>::to_scalar_t(nbr_rows(lhs));
+        auto norm_sq = numeric_traits<typename RHS_T::elem_type>::to_scalar_t(lhs.nbr_rows());
         if (norm_sq != numeric_traits<typename RHS_T::elem_type>::to_scalar_t(1)) {
              // If not 1, we must scale result
              if constexpr (requires { res(0,0); }) {
-                 for(size_t i=0; i<nbr_rows(res); ++i)
-                     for(size_t j=0; j<nbr_cols(res); ++j)
+                 for(size_t i=0; i<res.nbr_rows(); ++i)
+                     for(size_t j=0; j<res.nbr_cols(); ++j)
                      res(i,j) /= norm_sq;
              }
         } return res;
@@ -1505,21 +1505,7 @@ namespace glucat {
     }
 
 
-    template< typename Matrix_T >
-    auto nbr_rows(const Matrix_T& m) -> std::size_t {
-        if constexpr (requires { m.nbr_rows(); }) return m.nbr_rows();
-        else if constexpr (requires { m.rows(); }) return m.rows();
-        else if constexpr (requires { m.n_rows; }) return m.n_rows;
-        else return 0;
-    }
 
-    template< typename Matrix_T >
-    auto nbr_cols(const Matrix_T& m) -> std::size_t {
-         if constexpr (requires { m.nbr_cols(); }) return m.nbr_cols();
-         else if constexpr (requires { m.cols(); }) return m.cols();
-         else if constexpr (requires { m.n_cols; }) return m.n_cols;
-         else return 0;
-    }
 
     template< typename Scalar_T, typename LHS_T, typename RHS_T >
     auto
@@ -1544,14 +1530,14 @@ namespace glucat {
             }
         } else {
             // Fallback
-            for(size_t i=0; i<nbr_rows(lhs); ++i) {
-                for(size_t j=0; j<nbr_cols(lhs); ++j) {
+            for(size_t i=0; i<lhs.nbr_rows(); ++i) {
+                for(size_t j=0; j<lhs.nbr_cols(); ++j) {
                     sum += static_cast<Scalar_T>(lhs(i,j)) * static_cast<Scalar_T>(rhs(i,j));
                 }
             }
         }
-        if (nbr_rows(lhs) == 0) return Scalar_T(0);
-        return sum / Scalar_T(double(nbr_rows(lhs)));
+        if (lhs.nbr_rows() == 0) return Scalar_T(0);
+        return sum / Scalar_T(double(lhs.nbr_rows()));
     }
 
     // ========================================================================
