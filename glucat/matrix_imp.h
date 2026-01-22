@@ -51,53 +51,14 @@ namespace glucat {
   template<typename T>
   bool solve(eigen_matrix_wrapper<T>& X, const eigen_matrix_wrapper<T>& A, const eigen_matrix_wrapper<T>& B, int opts = 0) {
       // Solve A*X = B
-      // For square matrices, use LU decomposition (FullPivLU) to match Armadillo/LAPACK behavior
-      // and provide isInvertible() check.
-      if (A.nbr_rows() == A.nbr_cols()) {
-          auto lu = A.m_mat.fullPivLu();
-          // Use standard invertibility check or strict check if needed
-          if (lu.isInvertible()) {
-               X.m_mat = lu.solve(B.m_mat);
-
-               return true;
-          }
-          // If singular, we could return false immediately or fall through to QR which might handle it?
-          // Armadillo returns false for singular.
+      // The matrix representation of a real Clifford algebra is always a real square matrix.
+      if (A.nbr_rows() != A.nbr_cols()) {
           return false;
       }
 
-      // For non-square, use QR
-      auto qr = A.m_mat.colPivHouseholderQr();
-
-      // Strict rank check using R diagonal
-      // Equivalent to Armadillo's default tolerance: max(size) * max_diag * eps
-      using RealScalar = typename Eigen::NumTraits<T>::Real;
-      using traits_t = numeric_traits<RealScalar>;
-      const auto& R = qr.matrixR();
-      const auto diagonal = R.diagonal();
-      const int rank = qr.rank(); // Basic rank from Eigen
-
-      if (rank < A.m_mat.cols()) {
-          // Check if Eigen's rank was permissive but our strict check fails
-           // Actually, colPivHouseholderQr.isInvertible() is usually permissive.
-           // Let's implement strict check manually if isInvertible() passed but we want stricter.
-           // But qr.rank() uses a threshold.
-           // To ensure match with Armadillo, we should use the same logic.
-      }
-
-      // Let's use strict manual check
-      RealScalar max_diag = 0;
-      if (diagonal.size() > 0) max_diag = traits_t::abs(diagonal(0));
-      RealScalar tol = std::max(A.nbr_rows(), A.nbr_cols()) * max_diag * Eigen::NumTraits<RealScalar>::epsilon();
-
-      bool singular = false;
-      for(int i=0; i<diagonal.size(); ++i) {
-          if (traits_t::abs(diagonal(i)) <= tol) { singular = true; break; }
-      }
-
-      if (!singular) {
-           X.m_mat = qr.solve(B.m_mat);
-
+      auto lu = A.m_mat.fullPivLu();
+      if (lu.isInvertible()) {
+           X.m_mat = lu.solve(B.m_mat);
            return true;
       }
       return false;
@@ -115,6 +76,9 @@ namespace glucat {
   // Solve for arma_matrix_wrapper
   template<typename T>
   bool solve(arma_matrix_wrapper<T>& X, const arma_matrix_wrapper<T>& A, const arma_matrix_wrapper<T>& B, int opts = 0) {
+      if (A.nbr_rows() != A.nbr_cols()) {
+          return false;
+      }
       bool status = arma::solve(X.m_mat, A.m_mat, B.m_mat, arma::solve_opts::no_approx);
 
       return status;
@@ -192,7 +156,7 @@ namespace glucat {
   // This handles the case causing verify_glucat_kron.cpp to fail.
   template<typename T1, typename T2>
   arma_matrix_wrapper<T2> kron(const arma_sparse_wrapper<T1>& A, const arma_matrix_wrapper<T2>& B) {
-      // Convert A to compatible type (Dense Wrapper) 
+      // Convert A to compatible type (Dense Wrapper)
       arma_matrix_wrapper<T2> A_dense(A); // Will use constructor converting sparse to dense
       return kron(A_dense, B);
   }
@@ -201,7 +165,7 @@ namespace glucat {
   template<typename T1, typename T2>
   arma_matrix_wrapper<T2> kron(const arma_matrix_wrapper<T1>& A, const arma_sparse_wrapper<T2>& B) {
       // Convert B to compatible type (Dense Wrapper)
-      arma_matrix_wrapper<T1> B_dense(B); 
+      arma_matrix_wrapper<T1> B_dense(B);
       return kron(A, B_dense);
   }
 #endif
@@ -635,7 +599,7 @@ namespace glucat {
   eigen_matrix_wrapper<Scalar_T>::eigen_matrix_wrapper(eigen_matrix_wrapper<Scalar_T>&& other) noexcept
   : m_mat(std::move(other.m_mat))
   {
-      
+
   }
 
   template<typename Scalar_T>
@@ -651,7 +615,7 @@ namespace glucat {
   auto eigen_matrix_wrapper<Scalar_T>::operator=(eigen_matrix_wrapper<Scalar_T>&& other) noexcept -> eigen_matrix_wrapper<Scalar_T>& {
       if (this != &other) {
           m_mat = std::move(other.m_mat);
-          
+
       }
 
       return *this;
@@ -982,7 +946,7 @@ namespace glucat {
            m_mat = std::move(other.m_mat);
 
 
-           
+
       }
 
       return *this;
@@ -1544,7 +1508,7 @@ namespace glucat {
     // ========================================================================
     // Implementation of glucat::matrix interface using the selected backend
     // ========================================================================
-    
+
   // }
 
 

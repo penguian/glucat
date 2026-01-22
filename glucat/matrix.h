@@ -92,7 +92,7 @@ namespace glucat {
       // Member functions delegating to namespace matrix implementation
       // Defined in matrix_imp.h to resolve circular dependency
       // trace, eigenvalues, norm_inf, etc. moved to specific wrappers as members.
-      
+
       // Generic classify_eigenvalues relies on eigenvalues() member
       auto classify_eigenvalues() const;
 
