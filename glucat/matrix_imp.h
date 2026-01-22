@@ -708,9 +708,7 @@ namespace glucat {
 
   template<typename T>
   std::vector<std::complex<double>> eigen_matrix_wrapper<T>::eigenvalues() const {
-#if defined(_GLUCAT_MATRIX_DEBUG)
-      std::cout << "eigenvalues(eigen_matrix_wrapper): ";
-#endif
+
       // If T is real
       if constexpr (std::is_arithmetic_v<T> || std::is_same_v<T, double> || std::is_same_v<T, float> || std::is_same_v<T, long double>) {
            Eigen::EigenSolver<typename eigen_matrix_wrapper<T>::MatrixType> es(m_mat);
@@ -719,13 +717,9 @@ namespace glucat {
            for(int i=0; i<E.size(); ++i)
            {
                res[i] = std::complex<double>(E[i].real(), E[i].imag());
-#if defined(_GLUCAT_MATRIX_DEBUG)
-               std::cout << res[i] << " ";
-#endif
+
            }
-#if defined(_GLUCAT_MATRIX_DEBUG)
-           std::cout << std::endl;
-#endif
+
            return res;
       }
       // If T is complex
@@ -736,13 +730,9 @@ namespace glucat {
            for(int i=0; i<E.size(); ++i) {
                // complex cast to double
                res[i] = std::complex<double>(std::real(E[i]), std::imag(E[i]));
-#if defined(_GLUCAT_MATRIX_DEBUG)
-               std::cout << res[i] << " ";
-#endif
+
            }
-#if defined(_GLUCAT_MATRIX_DEBUG)
-           std::cout << std::endl;
-#endif
+
            return res;
       }
       else {
@@ -757,13 +747,9 @@ namespace glucat {
            for(int i=0; i<E.size(); ++i)
            {
                res[i] = E[i];
-#if defined(_GLUCAT_MATRIX_DEBUG)
-               std::cout << res[i] << " ";
-#endif
+
            }
-#if defined(_GLUCAT_MATRIX_DEBUG)
-           std::cout << std::endl;
-#endif
+
            return res;
       }
   }
@@ -956,9 +942,7 @@ namespace glucat {
 
   template<typename Scalar_T>
   std::vector<std::complex<double>> arma_matrix_wrapper<Scalar_T>::eigenvalues() const {
-  #if defined(_GLUCAT_MATRIX_DEBUG)
-       std::cout << "eigenvalues(arma_matrix_wrapper): " << std::endl;
-  #endif
+
        // Implementation logic from old eigenvalues(const arma::Mat<T>& A)
        arma::cx_vec eigval;
        arma::eig_gen(eigval, m_mat);
@@ -966,13 +950,9 @@ namespace glucat {
        for(size_t i=0; i<eigval.n_elem; ++i)
        {
            res[i] = std::complex<double>(eigval[i].real(), eigval[i].imag());
-   #if defined(_GLUCAT_MATRIX_DEBUG)
-                std::cout << res[i] << " ";
-   #endif
+
        }
-   #if defined(_GLUCAT_MATRIX_DEBUG)
-            std::cout << std::endl;
-   #endif
+
        return res;
   }
 
@@ -1011,9 +991,7 @@ namespace glucat {
 
 
       if (nbr_rows() == 0) {
-           #if defined(_GLUCAT_MATRIX_DEBUG)
-           std::fprintf(stderr, "DEBUG: arma_matrix_wrapper(MatrixType) constructed 0x0! Input rows: %d. Element 0: %s\n", (int)m.n_rows, (m.n_elem > 0 ? "exists" : "none"));
-           #endif
+
       }
   }
 

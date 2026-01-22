@@ -245,9 +245,7 @@ namespace glucat
       try
       {
         auto tmp = val.template fast_matrix_multi<Scalar_T,Tune_P>(this->m_frame);
-        #if defined(_GLUCAT_MATRIX_DEBUG)
-        std::cout << "DEBUG: fast_matrix_multi result scalar: " << tmp.scalar() << " norm: " << tmp.norm() << std::endl;
-        #endif
+
         *this = tmp;
         return;
       }
@@ -255,9 +253,7 @@ namespace glucat
       { }
     const auto dim = folded_dim<matrix_index_t>(this->m_frame);
     if (dim == 0) {
-       #if defined(_GLUCAT_MATRIX_DEBUG)
-       std::fprintf(stderr, "DEBUG: matrix_multi(framed_multi) calculated dim=0! Frame size: %d. Frame min: %d, max: %d\n", (int)this->m_frame.count(), (int)this->m_frame.min(), (int)this->m_frame.max());
-       #endif
+
     }
     this->m_matrix.resize(dim, dim, false);
     this->m_matrix.zeros();
@@ -326,9 +322,7 @@ namespace glucat
          // This is called by operator* via multivector_t(matrix, frame).
          // Don't modify header include here, assume it's available or use matrix_imp.h include?
          // matrix_multi_imp.h includes everything.
-         #if defined(_GLUCAT_MATRIX_DEBUG)
-         std::fprintf(stderr, "DEBUG: matrix_multi(mtx) created 0x0 matrix! Frame count: %d\n", (int)frm.count());
-         #endif
+
     }
   }
 
@@ -523,9 +517,7 @@ namespace glucat
     result.m_matrix.zeros();
     result.m_matrix = lhs_ref.m_matrix * rhs_ref.m_matrix;
     if (result.m_matrix.nbr_rows() == 0) {
-         #if defined(_GLUCAT_MATRIX_DEBUG)
-          std::fprintf(stderr, "DEBUG: operator* returning 0x0 matrix! lhs_ref size: %d, rhs_ref size: %d\n", (int)lhs_ref.m_matrix.nbr_rows(), (int)rhs_ref.m_matrix.nbr_rows());
-         #endif
+
     }
     return result;
   }
@@ -655,14 +647,9 @@ namespace glucat
        // Refinement step omitted for brevity/compatibility unless strictly needed.
        // Armadillo/Eigen solvers are usually robust.
        // If iterative refinement is CRITICAL, it can be re-added using backend norms.
-#if defined(_GLUCAT_MATRIX_MULTI_DEBUG)
-       const auto& R = AT * XT - BT;
-       std::cout << "In operator/, R.norm_inf() == " << R.norm_inf() << std::endl;
-#endif
+
        const auto result = multivector_t(XT.t(), our_frame);
-#if defined(_GLUCAT_MATRIX_MULTI_DEBUG)
-       std::cout << "In operator/, result == " << result << std::endl;
-#endif
+
        return result;
     }
     else
@@ -1298,10 +1285,7 @@ namespace glucat
     const auto& invM = M.inv();
     M = ((M + invM)/Scalar_T(2) + Scalar_T(1)) / Scalar_T(2);
     Y *= (invM + Scalar_T(1)) / Scalar_T(2);
-#if defined(_GLUCAT_MATRIX_MULTI_DEBUG)
-    std::cout << "In db_step, M == " << M << std::endl;
-    std::cout << "In db_step, Y == " << Y << std::endl;
-#endif
+
   }
 
   /// Product form of Denman-Beavers square root iteration
@@ -1329,9 +1313,7 @@ namespace glucat
         return numeric_traits<Scalar_T>::NaN();
       db_step(M, Y);
     }
-#if defined(_GLUCAT_MATRIX_MULTI_DEBUG)
-    std::cout << "In db_sqrt, result == " << Y << std::endl;
-#endif
+
     return Y;
   }
 
@@ -1365,9 +1347,7 @@ namespace glucat
       Z += Y * Scalar_T(2);
     }
     const auto result = Z / Scalar_T(4);
-#if defined(_GLUCAT_MATRIX_MULTI_DEBUG)
-    std::cout << "In cr_sqrt, result == " << result << std::endl;
-#endif
+
     return result;
   }
 }
@@ -1650,9 +1630,7 @@ namespace glucat
         !approx_equal(pow(scaled_result, 2), unitval))
       ? traits_t::NaN()
       : scaled_result * rescale;
-#if defined(_GLUCAT_MATRIX_MULTI_DEBUG)
-    std::cout << "In matrix_sqrt, result == " << result << std::endl;
-#endif
+
     return result;
   }
 
@@ -1899,9 +1877,7 @@ namespace glucat{
     // Reference: [CHKL]
     // Reference: [GL], Section 11.3, p572-576
     // Reference: [Z], Pade1
-#if defined(_GLUCAT_MATRIX_MULTI_DEBUG)
-    std::cout << "In pade_log of " << val << std::endl;
-#endif
+
     using traits_t = numeric_traits<Scalar_T>;
     if (val == Scalar_T(0) || val.isnan())
       return traits_t::NaN();
@@ -1911,9 +1887,7 @@ namespace glucat{
                          pade::pade_log_numer<Scalar_T>::numer,
                          pade::pade_log_denom<Scalar_T>::denom,
                          val - Scalar_T(1));
-#if defined(_GLUCAT_MATRIX_MULTI_DEBUG)
-      std::cout << "In pade_log, result == " << result << std::endl;
-#endif
+
       return result;
     }
   }
@@ -1924,9 +1898,7 @@ namespace glucat{
   auto
   cascade_log(const matrix_multi<Scalar_T,LO,HI,Tune_P>& val) -> const matrix_multi<Scalar_T,LO,HI,Tune_P>
   {
-#if defined(_GLUCAT_MATRIX_MULTI_DEBUG)
-    std::cout << "In cascade_log of " << val << std::endl;
-#endif
+
     // Reference: [CHKL]
     using multivector_t = matrix_multi<Scalar_T,LO,HI,Tune_P>;
     using traits_t = numeric_traits<Scalar_T>;
@@ -1970,9 +1942,7 @@ namespace glucat{
     else
     {
       const auto result = pade_log(Y) * pow_2_outer_step - E;
-#if defined(_GLUCAT_MATRIX_MULTI_DEBUG)
-      std::cout << "In cascade_log, result == " << result << std::endl;
-#endif
+
       return result;
     }
   }
@@ -1986,9 +1956,7 @@ namespace glucat{
   {
     // Scaled incomplete square root cascade and scaled Pade' approximation of log
     // Reference: [CHKL]
-#if defined(_GLUCAT_MATRIX_MULTI_DEBUG)
-    std::cout << "In matrix_log of " << val << " with " << i << std::endl;
-#endif
+
     using traits_t = numeric_traits<Scalar_T>;
     if (val == Scalar_T(0) || val.isnan())
       return traits_t::NaN();
@@ -2052,9 +2020,7 @@ namespace glucat{
     const auto result = (scaled_result.isnan())
       ? traits_t::NaN()
       : scaled_result + rescale;
-#if defined(_GLUCAT_MATRIX_MULTI_DEBUG)
-    std::cout << "In matrix_log, result == " << result << std::endl;
-#endif
+
     return result;
   }
 

@@ -1621,9 +1621,7 @@ namespace glucat
   fast(const index_t level, const bool odd) const -> const matrix_t
   {
     // Assume val is already folded and centred
-    #if defined(_GLUCAT_MATRIX_DEBUG)
-    std::cout << "DEBUG: fast(level=" << level << ", odd=" << odd << ") this->size=" << this->size() << std::endl;
-    #endif
+
     if (this->empty())
     {
       using matrix_index_t = typename matrix_multi_t::matrix_index_t;
@@ -1650,21 +1648,9 @@ namespace glucat
     JK(0,0) = basis_scalar_t(-1);
 
 
-    #if defined(_GLUCAT_MATRIX_DEBUG)
-    if (level == 1) {
-        matrix_t I_dense(I);
-        std::cout << "DEBUG: I_dense(1,1)=" << numeric_traits<Scalar_T>::to_scalar_t(I_dense(1,1)) << std::endl;
-    }
-    #endif
 
-    #if defined(_GLUCAT_MATRIX_DEBUG)
-    if (level == 1) { // Print only once/few times
-        std::cout << "DEBUG: I(0,0)=" << I(0,0) << " I(1,1)=" << I(1,1) << std::endl;
-        std::cout << "DEBUG: J(0,1)=" << J(0,1) << " J(1,0)=" << J(1,0) << std::endl;
-        std::cout << "DEBUG: K(0,1)=" << K(0,1) << " K(1,0)=" << K(1,0) << std::endl;
-        std::cout << "DEBUG: JK(0,0)=" << JK(0,0) << " JK(1,1)=" << JK(1,1) << std::endl;
-    }
-    #endif
+
+
 
     const auto ist_mn = index_set_t(-level);
     const auto ist_pn = index_set_t(level);
@@ -1686,21 +1672,12 @@ namespace glucat
         auto part1 = I * val_scalar;
         auto part2 = JK * val_mnpn;
 
-        #if defined(_GLUCAT_MATRIX_DEBUG)
-        if (level == 1) {
-            std::cout << "DEBUG: part1(0,0)=" << numeric_traits<Scalar_T>::to_scalar_t(part1(0,0))
-                      << " part1(1,1)=" << numeric_traits<Scalar_T>::to_scalar_t(part1(1,1)) << std::endl;
-            std::cout << "DEBUG: part2(0,0)=" << numeric_traits<Scalar_T>::to_scalar_t(part2(0,0))
-                      << " part2(1,1)=" << numeric_traits<Scalar_T>::to_scalar_t(part2(1,1)) << std::endl;
-        }
-        #endif
+
 
         res = matrix_t(part1 + part2);
       }
 
-      #if defined(_GLUCAT_MATRIX_DEBUG)
-      std::cout << "DEBUG: fast(1, " << odd << ") result scalar: " << (res.nbr_cols() > 0 ? numeric_traits<Scalar_T>::to_scalar_t(res(0,0)) : 0) << " norm: " << res.norm_frob2() << std::endl;
-      #endif
+
       return res;
     }
     else
@@ -1727,9 +1704,7 @@ namespace glucat
                + kron(K,  val_mn.fast  (level-1, 1))
                - kron(J,  val_pn.fast  (level-1, 1));
 
-      #if defined(_GLUCAT_MATRIX_DEBUG)
-      std::cout << "DEBUG: fast(" << level << ", " << odd << ") result scalar: " << (res.nbr_cols() > 0 ? numeric_traits<Scalar_T>::to_scalar_t(res(0,0)) : 0) << " norm: " << res.norm_frob2() << std::endl;
-      #endif
+
       return res;
     }
   }
@@ -1768,15 +1743,7 @@ namespace glucat
     auto ev_res = ev_val.fast(level, 0);
     auto od_res = od_val.fast(level, 1);
 
-    #if defined(_GLUCAT_MATRIX_DEBUG)
-    std::cout << "DEBUG: fast_matrix_multi ev norm: " << ev_res.norm_frob2() << " scalar(0,0): " << (ev_res.nbr_cols() > 0 ? numeric_traits<Scalar_T>::to_scalar_t(ev_res(0,0)) : 0) << std::endl;
-    std::cout << "DEBUG: fast_matrix_multi od norm: " << od_res.norm_frob2() << " scalar(0,0): " << (od_res.nbr_cols() > 0 ? numeric_traits<Scalar_T>::to_scalar_t(od_res(0,0)) : 0) << std::endl;
-    auto sum_res = ev_res + od_res;
-    std::cout << "DEBUG: fast_matrix_multi sum norm: " << sum_res.norm_frob2() << " scalar(0,0): " << (sum_res.nbr_cols() > 0 ? numeric_traits<Scalar_T>::to_scalar_t(sum_res(0,0)) : 0) << std::endl;
-    return matrix_multi<Other_Scalar_T,LO,HI,Other_Tune_P>(sum_res, frm);
-    #else
     return matrix_multi<Other_Scalar_T,LO,HI,Other_Tune_P>(ev_res + od_res, frm);
-    #endif
   }
 
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
