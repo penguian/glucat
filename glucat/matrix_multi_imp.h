@@ -1617,11 +1617,11 @@ namespace glucat
         : level + 1;
       switch (genus.m_eig_case)
       {
-      case matrix::neg_real_eigs:
+      case neg_real_eigs:
         scaled_result = matrix_sqrt(-i * unitval, i, next_level) * (i + Scalar_T(1)) / sqrt_2;
         use_approx_sqrt = false;
         break;
-      case matrix::both_eigs:
+      case both_eigs:
         {
           const auto safe_arg = genus.m_safe_arg;
           scaled_result = matrix_sqrt(exp(i*safe_arg) * unitval, i, next_level) * exp(-i*safe_arg / Scalar_T(2));
@@ -2033,10 +2033,10 @@ namespace glucat{
 
       switch (genus.m_eig_case)
       {
-      case matrix::neg_real_eigs:
+      case neg_real_eigs:
         scaled_result = matrix_log(-i * unitval, i, level + 1) + i * pi/Scalar_T(2);
         break;
-      case matrix::both_eigs:
+      case both_eigs:
         {
           const Scalar_T safe_arg = genus.m_safe_arg;
           scaled_result = matrix_log(exp(i*safe_arg) * unitval, i, level + 1) - i * safe_arg;

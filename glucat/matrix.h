@@ -717,25 +717,6 @@ namespace glucat {
   // Legacy Nbr Rows/Cols - kept as free functions for generic templates
 
 
-  namespace matrix
-  {
-    // ... existing function declarations can remain or be updated if signatures change ...
-    // For now, we are focusing on the backend type definition.
-    // The previous implementation used uBLAS matrix expressions.
-    // The new design moves towards an Armadillo-like interface.
-    // We should keep the namespaces and general structure.
-
-    // NOTE: The previous matrix.h contained declarations for functions like kron, etc.
-    // We will keep them but they might need template parameter adjustments if they assume uBLAS.
-    // However, the task specifically asked for "matrix.h" interface updates.
-    // The bulk of the logic is likely moving to free functions compatible with the new matrix_t.
-
-    // We will re-declare the essential functions consistent with the new types.
-
-
-
-
-
 
     /// Classification of eigenvalues of a matrix
     using eig_case_t = enum {
@@ -756,9 +737,11 @@ namespace glucat {
       Scalar_T   m_safe_arg = Scalar_T(0);
     };
 
+
     // Classify the eigenvalues of a matrix
     // Note: implementation moved to matrix_impl_base::classify_eigenvalues()
-  }
 }
+
+
 
 #endif  // _GLUCAT_MATRIX_H

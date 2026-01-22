@@ -64,12 +64,7 @@ namespace glucat {
       return false;
   }
 
-  template<typename T>
-  eigen_matrix_wrapper<T> eye(std::size_t rows, std::size_t cols) {
-      eigen_matrix_wrapper<T> res(rows, cols);
-      res.unit(rows, cols);
-      return res;
-  }
+
 
 #if defined(_GLUCAT_USE_ARMADILLO)
 
@@ -174,109 +169,16 @@ namespace glucat {
   // Eigenvalues
   // =========================================================================
 
-#if defined(_GLUCAT_USE_ARMADILLO)
-  // Overload for Armadillo
-  template<typename T>
-  std::vector<std::complex<double>> eigenvalues(const arma::Mat<T>& A) {
-  #if defined(_GLUCAT_MATRIX_DEBUG)
-      std::cout << "eigenvalues(arma::mat): ";
-  #endif
-      arma::cx_vec eigval;
-      arma::eig_gen(eigval, A);
-      std::vector<std::complex<double>> res(eigval.n_elem);
-      for(size_t i=0; i<eigval.n_elem; ++i)
-      {
-          res[i] = std::complex<double>(eigval[i].real(), eigval[i].imag());
-  #if defined(_GLUCAT_MATRIX_DEBUG)
-               std::cout << res[i] << " ";
-  #endif
-      }
-  #if defined(_GLUCAT_MATRIX_DEBUG)
-           std::cout << std::endl;
-  #endif
-      return res;
-  }
-#endif
+
 
   // Wrappers for arma_matrix_wrapper
 #if defined(_GLUCAT_USE_ARMADILLO)
 
  #endif
 
-  template<typename T>
-  bool isnan(const eigen_matrix_wrapper<T>& A) {
-      return A.m_mat.hasNaN();
-  }
 
-  template<typename T>
-  bool isinf(const eigen_matrix_wrapper<T>& A) {
-      return !A.m_mat.allFinite() && !A.m_mat.hasNaN(); // Crude approximation or use explicit loop if needed
-      // Eigen doesn't have hasInf().
-      // But allFinite() = !hasNaN && !hasInf.
-      // So !allFinite && !hasNaN => hasInf.
-  }
 
-  template<typename T>
-  bool isnan(const eigen_sparse_wrapper<T>& A) {
-      // Sparse matrices usually don't store exact NaN unless explicitly inserted.
-      // We can iterate non-zeros.
-      // Wrapper likely exposes iterator or we use loop.
-      // For now, assume false or implement generic loop?
-      // Better:
-      for(size_t i=0; i<A.n_elem; ++i) { // If wrapper has linear access? No.
-           // Use generic loop over non-zeros if possible.
-           // For now return false as placeholder to avoid link error, but TODO strictly.
-           // Actually, let's try to match existing pattern.
-           return false;
-      }
-      return false;
-  }
 
-  template<typename T>
-  bool isinf(const eigen_sparse_wrapper<T>& A) {
-      return false;
-  }
-
-  template<typename T>
-  auto norm_inf(const eigen_sparse_wrapper<T>& A) {
-       // Sparse infinity norm
-       // Row max sum
-       // Can iterate triplets? Or sparse matrix structure.
-       // Eigen has specific sparse functions?
-       // A.m_mat.infNorm()? No. A.m_mat is SparseMatrix.
-       // Check Eigen docs: norm() might work.
-       // But specific inf norm:
-       // Standard: max_i sum_j |a_ij|
-       // Iterate outer (cols for CSC) and accumulate row sums?
-       // Efficient implementation needed.
-       // For now, simple fallback or trust Eigen?
-       // Eigen Sparse does not have rowwise().sum().
-       // Let's implement generic if not found.
-       // Or convert to dense if small? No.
-       // Iterate values and accumulate to row vector?
-       // Or assume we use it for checking?
-       // Let's rely on generic implementation in matrix namespace for now if complex.
-       // Wait, we removed matrix::norm_inf calls. So we MUST implement `glucat::norm_inf`.
-       // Let's use a simple accumulator.
-       Eigen::Vector<typename numeric_traits<T>::real_t, Eigen::Dynamic> row_sums(A.nbr_rows());
-       row_sums.setZero();
-       for (int k=0; k<A.m_mat.outerSize(); ++k) {
-          for (typename eigen_sparse_wrapper<T>::MatrixType::InnerIterator it(A.m_mat, k); it; ++it) {
-              row_sums(it.row()) += numeric_traits<T>::abs(it.value());
-          }
-       }
-       return row_sums.maxCoeff();
-  }
-
-  template<typename T>
-  auto norm_frob2(const eigen_sparse_wrapper<T>& A) {
-      return A.m_mat.squaredNorm();
-  }
-
-  template<typename T>
-  auto nnz(const eigen_sparse_wrapper<T>& A) {
-      return A.m_mat.nonZeros();
-  }
 
 #if defined(_GLUCAT_USE_ARMADILLO)
   // =========================================================================
@@ -450,7 +352,7 @@ namespace glucat {
   template<typename Derived>
   auto matrix_impl_base<Derived>::classify_eigenvalues() const {
         using Scalar_T = typename Derived::elem_type;
-        matrix::eig_genus<Derived> result;
+        eig_genus<Derived> result;
 
         auto lambda = derived().eigenvalues(); // Call member
 
@@ -500,15 +402,15 @@ namespace glucat {
         if (neg_real_eig_found)
         {
             if (imag_eig_found)
-                result.m_eig_case = matrix::both_eigs;
+                result.m_eig_case = both_eigs;
             else
             {
-                result.m_eig_case = matrix::neg_real_eigs;
+                result.m_eig_case = neg_real_eigs;
                 result.m_safe_arg = Scalar_T(-pi / 2.0);
             }
         }
 
-        if (result.m_eig_case == matrix::both_eigs)
+        if (result.m_eig_case == both_eigs)
         {
             auto arg_it = arg_set.begin();
             auto first_arg = *arg_it;

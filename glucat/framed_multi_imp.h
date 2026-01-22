@@ -1699,7 +1699,7 @@ namespace glucat
       }
 
       #if defined(_GLUCAT_MATRIX_DEBUG)
-      std::cout << "DEBUG: fast(1, " << odd << ") result scalar: " << (res.nbr_cols() > 0 ? numeric_traits<Scalar_T>::to_scalar_t(res(0,0)) : 0) << " norm: " << matrix::norm_frob2(res) << std::endl;
+      std::cout << "DEBUG: fast(1, " << odd << ") result scalar: " << (res.nbr_cols() > 0 ? numeric_traits<Scalar_T>::to_scalar_t(res(0,0)) : 0) << " norm: " << res.norm_frob2() << std::endl;
       #endif
       return res;
     }
@@ -1728,7 +1728,7 @@ namespace glucat
                - kron(J,  val_pn.fast  (level-1, 1));
 
       #if defined(_GLUCAT_MATRIX_DEBUG)
-      std::cout << "DEBUG: fast(" << level << ", " << odd << ") result scalar: " << (res.nbr_cols() > 0 ? numeric_traits<Scalar_T>::to_scalar_t(res(0,0)) : 0) << " norm: " << matrix::norm_frob2(res) << std::endl;
+      std::cout << "DEBUG: fast(" << level << ", " << odd << ") result scalar: " << (res.nbr_cols() > 0 ? numeric_traits<Scalar_T>::to_scalar_t(res(0,0)) : 0) << " norm: " << res.norm_frob2() << std::endl;
       #endif
       return res;
     }
@@ -1769,10 +1769,10 @@ namespace glucat
     auto od_res = od_val.fast(level, 1);
 
     #if defined(_GLUCAT_MATRIX_DEBUG)
-    std::cout << "DEBUG: fast_matrix_multi ev norm: " << matrix::norm_frob2(ev_res) << " scalar(0,0): " << (ev_res.nbr_cols() > 0 ? numeric_traits<Scalar_T>::to_scalar_t(ev_res(0,0)) : 0) << std::endl;
-    std::cout << "DEBUG: fast_matrix_multi od norm: " << matrix::norm_frob2(od_res) << " scalar(0,0): " << (od_res.nbr_cols() > 0 ? numeric_traits<Scalar_T>::to_scalar_t(od_res(0,0)) : 0) << std::endl;
+    std::cout << "DEBUG: fast_matrix_multi ev norm: " << ev_res.norm_frob2() << " scalar(0,0): " << (ev_res.nbr_cols() > 0 ? numeric_traits<Scalar_T>::to_scalar_t(ev_res(0,0)) : 0) << std::endl;
+    std::cout << "DEBUG: fast_matrix_multi od norm: " << od_res.norm_frob2() << " scalar(0,0): " << (od_res.nbr_cols() > 0 ? numeric_traits<Scalar_T>::to_scalar_t(od_res(0,0)) : 0) << std::endl;
     auto sum_res = ev_res + od_res;
-    std::cout << "DEBUG: fast_matrix_multi sum norm: " << matrix::norm_frob2(sum_res) << " scalar(0,0): " << (sum_res.nbr_cols() > 0 ? numeric_traits<Scalar_T>::to_scalar_t(sum_res(0,0)) : 0) << std::endl;
+    std::cout << "DEBUG: fast_matrix_multi sum norm: " << sum_res.norm_frob2() << " scalar(0,0): " << (sum_res.nbr_cols() > 0 ? numeric_traits<Scalar_T>::to_scalar_t(sum_res(0,0)) : 0) << std::endl;
     return matrix_multi<Other_Scalar_T,LO,HI,Other_Tune_P>(sum_res, frm);
     #else
     return matrix_multi<Other_Scalar_T,LO,HI,Other_Tune_P>(ev_res + od_res, frm);
