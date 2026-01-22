@@ -156,7 +156,7 @@ namespace glucat {
     void clear();
     void zeros(uword rows, uword cols);
     void zeros();
-    void eye(uword rows, uword cols);
+    void unit(uword rows, uword cols);
 
     // Element access
     Scalar_T& operator()(uword i, uword j);
@@ -311,7 +311,7 @@ namespace glucat {
     void zeros();
     void zeros(uword rows, uword cols);
 
-    void eye(uword rows, uword cols);
+    void unit(uword rows, uword cols);
 
     bool is_finite() const;
     bool has_nan() const;

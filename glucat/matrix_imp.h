@@ -106,7 +106,7 @@ namespace glucat {
   template<typename T>
   eigen_matrix_wrapper<T> eye(std::size_t rows, std::size_t cols) {
       eigen_matrix_wrapper<T> res(rows, cols);
-      res.eye(rows, cols);
+      res.unit(rows, cols);
       return res;
   }
 
@@ -736,7 +736,7 @@ namespace glucat {
   }
 
   template<typename Scalar_T>
-  void eigen_matrix_wrapper<Scalar_T>::eye(uword rows, uword cols) {
+  void eigen_matrix_wrapper<Scalar_T>::unit(uword rows, uword cols) {
     set_size(rows, cols);
     m_mat.setIdentity();
   }
@@ -1036,7 +1036,7 @@ namespace glucat {
   void arma_matrix_wrapper<Scalar_T>::zeros() { m_mat.zeros(); }
 
   template<typename Scalar_T>
-  void arma_matrix_wrapper<Scalar_T>::eye(uword rows, uword cols) { set_size(rows, cols); m_mat.eye(); }
+  void arma_matrix_wrapper<Scalar_T>::unit(uword rows, uword cols) { set_size(rows, cols); m_mat.eye(); }
 
   template<typename Scalar_T>
   Scalar_T& arma_matrix_wrapper<Scalar_T>::operator()(uword i, uword j) { return m_mat(i, j); }
@@ -1395,7 +1395,8 @@ namespace glucat {
     auto unit(const size_t dim) -> const Matrix_T {
         Matrix_T res(dim, dim);
         // Set to identity
-        if constexpr (requires { res.eye(dim, dim); }) res.eye(dim, dim);
+        if constexpr (requires { res.unit(dim, dim); }) res.unit(dim, dim);
+        else if constexpr (requires { res.eye(dim, dim); }) res.eye(dim, dim);
         else if constexpr (requires { res.setIdentity(); }) res.setIdentity();
 #if defined(_GLUCAT_USE_ARMADILLO)
         else if constexpr (requires { res.m_mat.eye(); }) res.m_mat.eye();
