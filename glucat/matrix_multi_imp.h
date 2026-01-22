@@ -316,17 +316,7 @@ namespace glucat
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
   matrix_multi(const matrix_t& mtx, const index_set_t frm)
   : m_frame( frm ), m_matrix( mtx )
-  {
-    if (m_matrix.nbr_rows() == 0) {
-         // std::fprintf(stderr, "DEBUG: matrix_multi(mtx) created 0x0 matrix! Frame size: %d\n", (int)frm.count());
-         // This is called by operator* via multivector_t(matrix, frame).
-         // Don't modify header include here, assume it's available or use matrix_imp.h include?
-         // matrix_multi_imp.h includes everything.
-
-    }
-  }
-
-
+  { }
 
   /// Find a common frame for operands of a binary operator
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -381,7 +371,7 @@ namespace glucat
     return (lhs_ref.m_matrix - rhs_ref.m_matrix).norm_inf() == 0;
   }
 
-  // Test for equality of multivector and scalar
+  /// Test for equality of multivector and scalar
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
   auto
@@ -642,20 +632,9 @@ namespace glucat
 
     // Solve AT * XT = BT
     if (glucat::solve(XT, AT, BT))
-    {
-       // Basic solve succeeded.
-       // Refinement step omitted for brevity/compatibility unless strictly needed.
-       // Armadillo/Eigen solvers are usually robust.
-       // If iterative refinement is CRITICAL, it can be re-added using backend norms.
-
-       const auto result = multivector_t(XT.t(), our_frame);
-
-       return result;
-    }
+      return multivector_t(XT.t(), our_frame);
     else
-    {
-        return traits_t::NaN();
-    }
+      return traits_t::NaN();
   }
 
   /// Geometric quotient
@@ -696,7 +675,6 @@ namespace glucat
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
   pow(int m) const -> const multivector_t
   { return glucat::pow(*this, m); }
-
 
   /// Move assignment
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -877,11 +855,7 @@ namespace glucat
   norm() const -> Scalar_T
   {
     const matrix_index_t dim = this->m_matrix.nbr_rows();
-    const auto result = this->m_matrix.norm_frob2() / Scalar_T( double(dim) );
-#if defined(_GLUCAT_MATRIX_MULTI_DEBUG_NORM)
-    std::cout << "In norm, result == " << result << std::endl;
-#endif
-    return result;
+    return this->m_matrix.norm_frob2() / Scalar_T( double(dim) );
   }
 
   /// Maximum of absolute values of components of multivector: multivector infinity norm
@@ -1201,7 +1175,7 @@ namespace glucat
         k <= folded_max;
         ++k)
       if (folded_set[k])
-        result = glucat::mono_prod(result, e[k]);
+        result = result * e[k];
     if (use_cache)
     {
       auto* result_ptr = new basis_matrix_t(result);

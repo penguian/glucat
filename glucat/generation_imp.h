@@ -176,7 +176,7 @@ namespace glucat { namespace gen
         k = size_t(1);
         k != size_t(4);
         ++k)
-      h = mono_prod(old[k], h);
+      h = old[k] * h;
 
     for (auto
         k = size_t(0);
@@ -187,7 +187,7 @@ namespace glucat { namespace gen
         k = old_size-4;
         k != old_size;
         ++k)
-      result[k] = mono_prod(old[k+4-old_size], h);
+      result[k] = old[k+4-old_size] * h;
     // Save the resulting generator array.
     this->insert(make_pair(sig, result));
   }
@@ -209,13 +209,13 @@ namespace glucat { namespace gen
         k = size_t(1);
         k != size_t(4);
         ++k)
-      h = mono_prod(old[old_size-1-k], h);
+      h = old[old_size-1-k] * h;
 
     for (auto
         k = size_t(0);
         k != size_t(4);
         ++k)
-      result[k] = mono_prod(old[k+old_size-4], h);
+      result[k] = old[k+old_size-4] * h;
     for (auto
         k = size_t(4);
         k != old_size;
@@ -242,7 +242,7 @@ namespace glucat { namespace gen
         k = size_t(0);
         k != old_size-1;
         ++k)
-      result[k] = mono_prod(old[old_size-2-k], h);
+      result[k] = old[old_size-2-k] * h;
     result[old_size-1] = h;
 
     // Save the resulting generator array.

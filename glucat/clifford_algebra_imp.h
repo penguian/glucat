@@ -794,9 +794,8 @@ namespace glucat
   log(const Multivector<Scalar_T,LO,HI,Tune_P>& val, const Multivector<Scalar_T,LO,HI,Tune_P>& i, bool prechecked) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   {
 
-    const auto result = log(val, i, prechecked);
+    return log(val, i, prechecked);
 
-    return result;
   }
 
   /// Natural logarithm of multivector

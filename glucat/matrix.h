@@ -381,6 +381,9 @@ namespace glucat {
 
     eigen_sparse_wrapper() = default;
 
+    // Constructor from Eigen Sparse Matrix (e.g. expression result)
+    explicit eigen_sparse_wrapper(const MatrixType& m);
+
     // Armadillo/uBLAS/Generator style constructor support
     eigen_sparse_wrapper(uword rows, uword cols, uword estimated_nnz = 0);
 
@@ -519,6 +522,9 @@ namespace glucat {
 
 
     arma_sparse_wrapper() = default;
+
+    // Constructor from Armadillo SpMat
+    explicit arma_sparse_wrapper(const MatrixType& m);
 
     arma_sparse_wrapper(uword rows, uword cols);
 
@@ -702,14 +708,7 @@ namespace glucat {
   template< typename Matrix_T >
   auto unit(const size_t dim) -> const Matrix_T;
 
-  template< typename LHS_T, typename RHS_T >
-  auto mono_prod(const LHS_T& lhs, const RHS_T& rhs) -> const decltype(lhs * rhs);
 
-  template< typename LHS_T, typename RHS_T >
-  auto sparse_prod(const LHS_T& lhs, const RHS_T& rhs) -> const decltype(lhs * rhs);
-
-  template< typename LHS_T, typename RHS_T >
-  auto prod(const LHS_T& lhs, const RHS_T& rhs) -> const decltype(lhs * rhs);
 
   template< typename Scalar_T, typename LHS_T, typename RHS_T >
   auto inner(const LHS_T& lhs, const RHS_T& rhs) -> Scalar_T;

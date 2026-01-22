@@ -37,11 +37,7 @@ namespace glucat {
   template<typename T>
   eigen_matrix_wrapper<T> kron(const eigen_matrix_wrapper<T>& A, const eigen_matrix_wrapper<T>& B) {
      using namespace Eigen;
-     eigen_matrix_wrapper<T> res;
-     // kroneckerProduct returns an expression, verify assignment
-     res.m_mat = kroneckerProduct(A.m_mat, B.m_mat).eval();
-
-     return res;
+     return eigen_matrix_wrapper<T>(kroneckerProduct(A.m_mat, B.m_mat).eval());
   }
 
 
@@ -200,6 +196,10 @@ namespace glucat {
   { return m_mat.n_cols; }
 
   template<typename Scalar_T>
+  arma_sparse_wrapper<Scalar_T>::arma_sparse_wrapper(const MatrixType& m) : m_mat(m) { }
+
+
+  template<typename Scalar_T>
   arma_sparse_wrapper<Scalar_T>::arma_sparse_wrapper(uword rows, uword cols) {
       set_size(rows, cols);
   }
@@ -276,7 +276,7 @@ namespace glucat {
 
   template<typename Scalar_T>
   auto arma_sparse_wrapper<Scalar_T>::operator*(const arma_sparse_wrapper<Scalar_T>& other) const -> arma_sparse_wrapper<Scalar_T> {
-      arma_sparse_wrapper res; res.m_mat = m_mat * other.m_mat; return res;
+      return arma_sparse_wrapper(m_mat * other.m_mat);
   }
 
 
@@ -1019,6 +1019,9 @@ namespace glucat {
   { return static_cast<std::size_t>(m_mat.cols()); }
 
   template<typename Scalar_T>
+  eigen_sparse_wrapper<Scalar_T>::eigen_sparse_wrapper(const MatrixType& m) : m_mat(m) { }
+
+  template<typename Scalar_T>
   eigen_sparse_wrapper<Scalar_T>::eigen_sparse_wrapper(uword rows, uword cols, uword estimated_nnz) {
     set_size(rows, cols);
     if (estimated_nnz > 0) m_mat.reserve(estimated_nnz);
@@ -1102,11 +1105,7 @@ namespace glucat {
 
   template<typename Scalar_T>
   auto eigen_sparse_wrapper<Scalar_T>::operator*(const eigen_sparse_wrapper<Scalar_T>& other) const -> eigen_sparse_wrapper<Scalar_T> {
-       eigen_sparse_wrapper res;
-       res.m_mat = m_mat * other.m_mat;
-
-
-       return res;
+       return eigen_sparse_wrapper(m_mat * other.m_mat);
   }
 
   template<typename Scalar_T>
@@ -1328,26 +1327,7 @@ namespace glucat {
 
 
 
-    template< typename LHS_T, typename RHS_T >
-    auto
-    mono_prod(const LHS_T& lhs, const RHS_T& rhs) -> const decltype(lhs * rhs)
-    {
-        return lhs * rhs;
-    }
 
-    template< typename LHS_T, typename RHS_T >
-    auto
-    prod(const LHS_T& lhs, const RHS_T& rhs) -> const decltype(lhs * rhs)
-    {
-        return lhs * rhs;
-    }
-
-    template< typename LHS_T, typename RHS_T >
-    auto
-    sparse_prod(const LHS_T& lhs, const RHS_T& rhs) -> const decltype(lhs * rhs)
-    {
-        return lhs * rhs;
-    }
 
 
 
