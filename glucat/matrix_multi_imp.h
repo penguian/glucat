@@ -44,7 +44,7 @@
 # if  defined(_GLUCAT_HAVE_BOOST_SERIALIZATION_ARRAY_WRAPPER_H)
 #  include <boost/serialization/array_wrapper.hpp>
 # endif
-// uBLAS includes removed
+
 # if defined(_GLUCAT_GCC_IGNORE_UNUSED_LOCAL_TYPEDEFS)
 #  pragma GCC diagnostic pop
 # endif
