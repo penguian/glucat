@@ -1622,10 +1622,6 @@ namespace glucat
     if (val.isnan())
       return traits_t::NaN();
 
-    using multivector_t = matrix_multi<Scalar_T,LO,HI,Tune_P>;
-
-    using framed_multi_t = typename multivector_t::framed_multi_t;
-
     using tune_same_p = typename Tune_P::tuning_same_p;
     const precision_t function_precision = Tune_P::function_precision;
     check_complex(val, i, prechecked);
@@ -1638,7 +1634,7 @@ namespace glucat
       const auto& demoted_val = demoted_multivector_t(val);
       const auto& demoted_i = demoted_multivector_t(i);
 
-      return multivector_t(framed_multi_t(matrix_sqrt(demoted_val, demoted_i, 0)));
+      return matrix_sqrt(demoted_val, demoted_i, 0);
     }
     else if constexpr (function_precision == precision_promoted)
     {
@@ -1648,10 +1644,10 @@ namespace glucat
       const auto& promoted_val = promoted_multivector_t(val);
       const auto& promoted_i = promoted_multivector_t(i);
 
-      return multivector_t(framed_multi_t(matrix_sqrt(promoted_val, promoted_i, 0)));
+      return matrix_sqrt(promoted_val, promoted_i, 0);
     }
     else
-      return multivector_t(framed_multi_t(matrix_sqrt(val, i, 0)));
+      return matrix_sqrt(val, i, 0);
   }
 }
 
@@ -2010,8 +2006,6 @@ namespace glucat{
 
     check_complex(val, i, prechecked);
 
-    using multivector_t = matrix_multi<Scalar_T,LO,HI,Tune_P>;
-    using framed_multi_t = typename multivector_t::framed_multi_t;
     using tune_same_p = typename Tune_P::tuning_same_p;
     const precision_t function_precision = Tune_P::function_precision;
 
@@ -2023,7 +2017,7 @@ namespace glucat{
       const auto& demoted_val = demoted_multivector_t(val);
       const auto& demoted_i = demoted_multivector_t(i);
 
-      return multivector_t(framed_multi_t(matrix_log(demoted_val, demoted_i, 0)));
+      return matrix_log(demoted_val, demoted_i, 0);
     }
     else if constexpr (function_precision == precision_promoted)
     {
@@ -2033,10 +2027,10 @@ namespace glucat{
       const auto& promoted_val = promoted_multivector_t(val);
       const auto& promoted_i = promoted_multivector_t(i);
 
-      return multivector_t(framed_multi_t(matrix_log(promoted_val, promoted_i, 0)));
+      return matrix_log(promoted_val, promoted_i, 0);
     }
     else
-      return multivector_t(framed_multi_t(matrix_log(val, i, 0)));
+      return matrix_log(val, i, 0);
   }
 
   /// Exponential of multivector
@@ -2052,8 +2046,6 @@ namespace glucat{
     if (val == scr_val)
       return traits_t::exp(scr_val);
 
-    using multivector_t = matrix_multi<Scalar_T,LO,HI,Tune_P>;
-    using framed_multi_t = typename multivector_t::framed_multi_t;
     using tune_same_p = typename Tune_P::tuning_same_p;
     const precision_t function_precision = Tune_P::function_precision;
 
@@ -2063,7 +2055,7 @@ namespace glucat{
       using demoted_multivector_t = matrix_multi<demoted_scalar_t,LO,HI,tune_same_p>;
 
       const auto& demoted_val = demoted_multivector_t(val);
-      return multivector_t(framed_multi_t(clifford_exp(demoted_val)));
+      return clifford_exp(demoted_val);
     }
     else if constexpr (function_precision == precision_promoted)
     {
@@ -2071,10 +2063,10 @@ namespace glucat{
       using promoted_multivector_t = matrix_multi<promoted_scalar_t,LO,HI,tune_same_p>;
 
       const auto& promoted_val = promoted_multivector_t(val);
-      return multivector_t(framed_multi_t(clifford_exp(promoted_val)));
+      return clifford_exp(promoted_val);
     }
     else
-      return multivector_t(framed_multi_t(clifford_exp(val)));
+      return clifford_exp(val);
   }
 }
 #endif  // _GLUCAT_MATRIX_MULTI_IMP_H
