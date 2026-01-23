@@ -60,7 +60,7 @@
   #include <qd/qd_real.h>
 #endif
 
-namespace glucat {
+namespace glucat { namespace matrix {
 
   // =========================================================================
   // Traits
@@ -739,7 +739,7 @@ namespace glucat {
 
     // Classify the eigenvalues of a matrix
     // Note: implementation moved to matrix_impl_base::classify_eigenvalues()
-}
+} }
 
 
 

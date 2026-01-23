@@ -14,10 +14,7 @@
 #include <iostream>
 #include <algorithm>
 
-namespace glucat {
-
-
-
+namespace glucat { namespace matrix {
 
   // =========================================================================
   // matrix_impl_base Member Definitions
@@ -337,10 +334,10 @@ namespace glucat {
 
 #endif
 
-} // namespace glucat
+// } // namespace glucat
 
 
-namespace glucat {
+// namespace glucat {
  // =========================================================================
  // matrix_impl_base Member Definitions
  // =========================================================================
@@ -443,7 +440,7 @@ namespace glucat {
   template<typename Derived>
   template<typename Scalar_T, typename Other>
   auto matrix_impl_base<Derived>::inner(const Other& other) const {
-      return glucat::inner<Scalar_T>(derived(), other);
+      return ::glucat::matrix::inner<Scalar_T>(derived(), other);
   }
 
   // =========================================================================
@@ -1176,12 +1173,12 @@ namespace glucat {
   template<typename Scalar_T>
   auto eigen_sparse_wrapper<Scalar_T>::const_iterator::operator*() const -> Scalar_T { return m_inner.value(); }
 
-} // namespace glucat
+// } // namespace glucat
 
 
 
 
-namespace glucat {
+// namespace glucat {
   // Specializations for traits (must be in glucat namespace)
   // Moved to matrix.h
 
@@ -1382,6 +1379,6 @@ namespace glucat {
 
 #if defined(_GLUCAT_USE_ARMADILLO)
 #endif
-}
+} }
 
 #endif // _GLUCAT_MATRIX_IMP_H

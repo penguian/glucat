@@ -631,7 +631,7 @@ namespace glucat
     matrix_t XT(AT.nbr_rows(), AT.nbr_cols());
 
     // Solve AT * XT = BT
-    if (glucat::solve(XT, AT, BT))
+    if (matrix::solve(XT, AT, BT))
       return multivector_t(XT.t(), our_frame);
     else
       return traits_t::NaN();
@@ -988,7 +988,7 @@ namespace glucat
       return Scalar_T(0);
 
 
-    const basis_matrix_t&  I = glucat::unit<basis_matrix_t>(2);
+    const basis_matrix_t&  I = matrix::unit<basis_matrix_t>(2);
     basis_matrix_t J(2,2,2);
     J.zeros();
     J(0,1)  = basis_scalar_t(-1);
@@ -998,7 +998,7 @@ namespace glucat
     basis_matrix_t JK = I;
     JK(0,0) = basis_scalar_t(-1);
 
-    using glucat::signed_perm_nork;
+    using matrix::signed_perm_nork;
     const index_set_t ist_mn   = index_set_t(-level);
     const index_set_t ist_pn   = index_set_t(level);
     const index_set_t ist_mnpn = ist_mn | ist_pn;
@@ -1169,7 +1169,7 @@ namespace glucat
     const auto q = std::max(index_t(-folded_min), index_t(0));
     const auto* e = (gen::generator_table<basis_matrix_t>::generator())(p, q);
     const auto dim = matrix_index_t(1) << offset_level(p, q);
-    auto result = glucat::unit<basis_matrix_t>(dim);
+    auto result = matrix::unit<basis_matrix_t>(dim);
     for (auto
         k = folded_min;
         k <= folded_max;
@@ -1571,11 +1571,11 @@ namespace glucat
         : level + 1;
       switch (genus.m_eig_case)
       {
-      case neg_real_eigs:
+        case matrix::neg_real_eigs:
         scaled_result = matrix_sqrt(-i * unitval, i, next_level) * (i + Scalar_T(1)) / sqrt_2;
         use_approx_sqrt = false;
         break;
-      case both_eigs:
+      case matrix::both_eigs:
         {
           const auto safe_arg = genus.m_safe_arg;
           scaled_result = matrix_sqrt(exp(i*safe_arg) * unitval, i, next_level) * exp(-i*safe_arg / Scalar_T(2));
@@ -1975,10 +1975,10 @@ namespace glucat{
 
       switch (genus.m_eig_case)
       {
-      case neg_real_eigs:
+        case matrix::neg_real_eigs:
         scaled_result = matrix_log(-i * unitval, i, level + 1) + i * pi/Scalar_T(2);
         break;
-      case both_eigs:
+        case matrix::both_eigs:
         {
           const Scalar_T safe_arg = genus.m_safe_arg;
           scaled_result = matrix_log(exp(i*safe_arg) * unitval, i, level + 1) - i * safe_arg;

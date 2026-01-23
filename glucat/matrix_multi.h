@@ -153,8 +153,8 @@ namespace glucat
     friend class matrix_multi;
 
   private:
-    using basis_matrix_t = glucat::sparse_matrix_t<int>;
-    using matrix_t = glucat::matrix_t<Scalar_T>;
+    using basis_matrix_t = matrix::sparse_matrix_t<int>;
+    using matrix_t = matrix::matrix_t<Scalar_T>;
     using matrix_index_t = typename matrix_t::size_type;
 
   public:

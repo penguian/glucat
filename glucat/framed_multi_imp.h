@@ -1631,13 +1631,13 @@ namespace glucat
       return result;
     }
     if (level == 0)
-      return unit<matrix_t>(1) * this->scalar();
+      return matrix::unit<matrix_t>(1) * this->scalar();
 
     // Use dense matrices directly to assume robustness and avoid conversion issues
-    using basis_matrix_t = glucat::sparse_matrix_t<Scalar_T>;
+    using basis_matrix_t = matrix::sparse_matrix_t<Scalar_T>;
     using basis_scalar_t = Scalar_T;
 
-    auto I = unit<basis_matrix_t>(2);
+    auto I = matrix::unit<basis_matrix_t>(2);
     auto J = basis_matrix_t(2,2);
     J.zeros(); // Ensure zeroed
     J(0,1)  = basis_scalar_t(-1);
@@ -1691,7 +1691,7 @@ namespace glucat
       const auto& pair_rem_mnpn = rem_mn.divide(ist_pn);
       const auto& val_pn   = pair_rem_mnpn.first;
       const auto& val_1    = pair_rem_mnpn.second;
-      using glucat::kron;
+      using matrix::kron;
       matrix_t res;
       if (odd)
         res = - kron(JK, val_1.fast   (level-1, 1))

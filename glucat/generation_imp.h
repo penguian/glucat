@@ -96,7 +96,7 @@ namespace glucat { namespace gen
           gen_from_pm4_qp4(gen_vector(p-4, q+4), sig);
         else if (card == 0)
         { // Base case. Save a generator vector containing one matrix, size 1.
-          auto result = result_t(1, unit<Matrix_T>(1));
+          auto result = result_t(1, matrix::unit<Matrix_T>(1));
           this->insert(make_pair(sig, result));
         }
         else
@@ -133,7 +133,7 @@ namespace glucat { namespace gen
     auto result = result_t(new_size);
 
     const auto old_dim = old[0].nbr_rows();
-    const auto& eye = unit<Matrix_T>(old_dim);
+    const auto& eye = matrix::unit<Matrix_T>(old_dim);
 
     auto neg = Matrix_T(2,2,2);
     neg(0,1) =    -1;
@@ -146,7 +146,7 @@ namespace glucat { namespace gen
     dup(0,0) = 1;
     dup(1,1) =    -1;
 
-    using glucat::kron;
+    using matrix::kron;
     result[0] = kron(neg, eye);
     for (auto
         k = size_t(1);
