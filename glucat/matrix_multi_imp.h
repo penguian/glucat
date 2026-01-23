@@ -379,7 +379,7 @@ namespace glucat
   operator== (const Scalar_T& scr) const -> bool
   {
     if (scr != Scalar_T(0))
-      return *this == multivector_t(framed_multi_t(scr), this->m_frame, true);
+      return *this == multivector_t(scr, this->m_frame);
     else if (this->m_matrix.norm_inf() != 0)
       return false;
     else
