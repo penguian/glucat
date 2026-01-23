@@ -41,10 +41,8 @@ int squaring(const int n)
     cout << "Maximum value allowed is " << max_n << "." << endl;
     return 1;
   }
-#ifdef _GLUCAT_SQUARING_USE_FRAMED_MULTI
   cout << endl << "framed_multi<double>" << endl;
   mult_test< framed_multi<double> >(n, max_n);
-#endif
   cout << endl << "matrix_multi<double>" << endl;
   mult_test< matrix_multi<double> >(n, max_n);
 
