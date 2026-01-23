@@ -44,7 +44,7 @@ namespace peg16
     typedef Multivector_T number;
     typedef typename number::index_set_t index_set_t;
     const index_t hi = index_set_t::v_hi;
-    typedef glucat::matrix_t<number> matrix_of_mv;
+    typedef glucat::matrix::matrix_t<number> matrix_of_mv;
     const int dim = 5;
     matrix_of_mv a(dim,dim);
     for (int i = 0; i != dim; ++i)
