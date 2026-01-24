@@ -60,562 +60,568 @@
   #include <qd/qd_real.h>
 #endif
 
-namespace glucat { namespace matrix {
+namespace glucat
+{
+  namespace matrix
+  {
+    // =========================================================================
+    // Traits
+    // =========================================================================
+    /// Helper trait for complex check
+    template< typename T > struct is_complex_t : std::false_type {};
+    template< typename T > struct is_complex_t<std::complex<T>> : std::true_type {};
 
-  // =========================================================================
-  // Traits
-  // =========================================================================
-  // Helper trait for complex check
-  template<typename T> struct is_complex_t : std::false_type {};
-  template<typename T> struct is_complex_t<std::complex<T>> : std::true_type {};
+    /// Type traits to detect wrappers (Primary Templates)
+    template< typename T > struct is_eigen_sparse : std::false_type {};
+    template< typename T > struct is_eigen_dense : std::false_type {};
 
-  // Type traits to detect wrappers (Primary Templates)
-  template<typename T> struct is_eigen_sparse : std::false_type {};
-  template<typename T> struct is_eigen_dense : std::false_type {};
-
-  template<typename Scalar_T> class arma_matrix_wrapper; // Forward
-  template<typename Scalar_T> class eigen_sparse_wrapper; // Forward
+    template< typename Scalar_T > class arma_matrix_wrapper; // Forward
+    template< typename Scalar_T > class eigen_sparse_wrapper; // Forward
 #if defined(_GLUCAT_USE_ARMADILLO)
-  template<typename Scalar_T> class arma_sparse_wrapper; // Forward
+    template< typename Scalar_T > class arma_sparse_wrapper; // Forward
 #endif
 
-  // =========================================================================
-  // matrix_impl_base (CRTP Pattern)
-  // Base class providing member functions that delegate to the derived implementation
-  // =========================================================================
-  template<typename Derived>
-  class matrix_impl_base {
-  public:
-      const Derived& derived() const;
-      Derived& derived();
+    // =========================================================================
+    // matrix_impl_base (CRTP Pattern)
+    // Base class providing member functions that delegate to the derived implementation
+    // =========================================================================
+    template< typename Derived >
+    class matrix_impl_base
+    {
+    public:
+      auto derived() const -> const Derived&;
+      auto derived() -> Derived&;
 
       // Member functions delegating to namespace matrix implementation
       // Defined in matrix_imp.h to resolve circular dependency
 
-
-      // Generic classify_eigenvalues relies on eigenvalues() member
+      /// Generic classify_eigenvalues relies on eigenvalues() member
       auto classify_eigenvalues() const;
 
-      template<typename Scalar_T, typename Other>
+      template< typename Scalar_T, typename Other >
       auto inner(const Other& other) const;
-  };
+    };
 
 #if defined(_GLUCAT_USE_ARMADILLO)
-  template<typename Scalar_T> class arma_sparse_wrapper;
-  template<typename Scalar_T> std::ostream& operator<<(std::ostream& os, const arma_matrix_wrapper<Scalar_T>& m);
+    template< typename Scalar_T > class arma_sparse_wrapper;
+    template< typename Scalar_T >
+    auto operator<< (std::ostream& os, const arma_matrix_wrapper<Scalar_T>& m) -> std::ostream&;
 
-  template<typename Scalar_T>
-  class arma_matrix_wrapper : public matrix_impl_base<arma_matrix_wrapper<Scalar_T>> {
-  public:
-    using MatrixType = arma::Mat<Scalar_T>;
-    using elem_type = Scalar_T;
-    using value_type = Scalar_T;
-    using uword = arma::uword;
-    using size_type = arma::uword;
+    template< typename Scalar_T >
+    class arma_matrix_wrapper :
+    public matrix_impl_base<arma_matrix_wrapper<Scalar_T>>
+    {
+    public:
+      using MatrixType = arma::Mat<Scalar_T>;
+      using elem_type = Scalar_T;
+      using value_type = Scalar_T;
+      using uword = arma::uword;
+      using size_type = arma::uword;
 
-    MatrixType m_mat;
+      MatrixType m_mat;
 
+      // Constructors
+      arma_matrix_wrapper() = default;
 
+      arma_matrix_wrapper(uword rows, uword cols);
 
-    // Constructors
-    arma_matrix_wrapper() = default;
+      template< typename Other_Matrix_T >
+      explicit arma_matrix_wrapper(const Other_Matrix_T& other);
 
-    arma_matrix_wrapper(uword rows, uword cols);
+      template< typename Other_Scalar_T >
+      explicit arma_matrix_wrapper(const eigen_sparse_wrapper<Other_Scalar_T>& other);
 
-    template<typename Other_Matrix_T>
-    explicit arma_matrix_wrapper(const Other_Matrix_T& other);
+      template< typename Other_Scalar_T >
+      explicit arma_matrix_wrapper(const arma_sparse_wrapper<Other_Scalar_T>& other);
 
-    template<typename Other_Scalar_T>
-    explicit arma_matrix_wrapper(const eigen_sparse_wrapper<Other_Scalar_T>& other);
+      // Copy/Move
+      arma_matrix_wrapper(const arma_matrix_wrapper& other);
+      arma_matrix_wrapper(arma_matrix_wrapper&& other) noexcept;
 
-    template<typename Other_Scalar_T>
-    explicit arma_matrix_wrapper(const arma_sparse_wrapper<Other_Scalar_T>& other);
+      auto operator= (const arma_matrix_wrapper& other) -> arma_matrix_wrapper&;
+      auto operator= (arma_matrix_wrapper&& other) noexcept -> arma_matrix_wrapper&;
+      auto operator= (const arma_sparse_wrapper<Scalar_T>& other) -> arma_matrix_wrapper&;
 
-    // Copy/Move
-    arma_matrix_wrapper(const arma_matrix_wrapper& other);
-    arma_matrix_wrapper(arma_matrix_wrapper&& other) noexcept;
+      // Conversion to Arma Mat (implicit or explicit)
+      operator const MatrixType&() const;
+      operator MatrixType&();
 
-    arma_matrix_wrapper& operator=(const arma_matrix_wrapper& other);
-    arma_matrix_wrapper& operator=(arma_matrix_wrapper&& other) noexcept;
-    arma_matrix_wrapper& operator=(const arma_sparse_wrapper<Scalar_T>& other);
+      // Attributes updated automatically by m_mat operations, accessors delegate directly
 
-    // Conversion to Arma Mat (implicit or explicit)
-    operator const MatrixType&() const;
-    operator MatrixType&();
+      void set_size(uword rows, uword cols);
 
-    // Attributes updated automatically by m_mat operations, accessors delegate directly
+      void resize(uword rows, uword cols, bool preserve = false);
 
+      auto nbr_rows() const -> uword;
+      auto nbr_cols() const -> uword;
 
-    void set_size(uword rows, uword cols);
+      void clear();
+      void zeros(uword rows, uword cols);
+      void zeros();
+      void unit(uword rows, uword cols);
 
-    void resize(uword rows, uword cols, bool preserve = false);
+      // Element access
+      auto operator() (uword i, uword j) -> Scalar_T&;
+      auto operator() (uword i, uword j) const -> const Scalar_T&;
 
-    uword nbr_rows() const;
-    uword nbr_cols() const;
+      // Operators
+      auto operator+= (const arma_matrix_wrapper& other) -> arma_matrix_wrapper&;
+      auto operator-= (const arma_matrix_wrapper& other) -> arma_matrix_wrapper&;
+      auto operator*= (const Scalar_T& val) -> arma_matrix_wrapper&;
+      auto operator/= (const Scalar_T& val) -> arma_matrix_wrapper&;
 
-    void clear();
-    void zeros(uword rows, uword cols);
-    void zeros();
-    void unit(uword rows, uword cols);
+      auto operator+ (const arma_matrix_wrapper& other) const -> arma_matrix_wrapper;
+      auto operator- (const arma_matrix_wrapper& other) const -> arma_matrix_wrapper;
+      auto operator* (const arma_matrix_wrapper& other) const -> arma_matrix_wrapper;
+      auto operator- () const -> arma_matrix_wrapper;
 
-    // Element access
-    Scalar_T& operator()(uword i, uword j);
-    const Scalar_T& operator()(uword i, uword j) const;
+      auto t() const -> arma_matrix_wrapper;
 
-    // Operators
-    arma_matrix_wrapper& operator+=(const arma_matrix_wrapper& other);
-    arma_matrix_wrapper& operator-=(const arma_matrix_wrapper& other);
-    arma_matrix_wrapper& operator*=(const Scalar_T& val);
-    arma_matrix_wrapper& operator/=(const Scalar_T& val);
+      // Iterator support
+      auto begin() { return m_mat.begin(); }
+      auto end() { return m_mat.end(); }
+      auto begin() const { return m_mat.begin(); }
+      auto end() const { return m_mat.end(); }
 
-    arma_matrix_wrapper operator+(const arma_matrix_wrapper& other) const;
-    arma_matrix_wrapper operator-(const arma_matrix_wrapper& other) const;
-    arma_matrix_wrapper operator*(const arma_matrix_wrapper& other) const;
-    arma_matrix_wrapper operator-() const;
+      auto has_inf() const -> bool { return m_mat.has_inf(); }
+      auto has_nan() const -> bool { return m_mat.has_nan(); }
+      auto is_finite() const -> bool { return m_mat.is_finite(); }
 
-    arma_matrix_wrapper t() const;
+      // New Member Functions (formerly free functions)
+      auto trace() const -> Scalar_T;
+      auto eigenvalues() const -> std::vector<std::complex<double>>;
+      auto norm_inf() const;
+      auto norm_frob2() const;
+      auto isnan() const -> bool;
+      auto isinf() const -> bool;
+      auto nnz() const;
 
-    // Iterator support
-    auto begin() { return m_mat.begin(); }
-    auto end() { return m_mat.end(); }
-    auto begin() const { return m_mat.begin(); }
-    auto end() const { return m_mat.end(); }
+      friend auto operator<< <>(std::ostream& os, const arma_matrix_wrapper& m) -> std::ostream&;
 
-    bool has_inf() const { return m_mat.has_inf(); }
-    bool has_nan() const { return m_mat.has_nan(); }
-    bool is_finite() const { return m_mat.is_finite(); }
+    private:
+      /// Helper to construct from raw arma mat
+      arma_matrix_wrapper(const MatrixType& m);
+      arma_matrix_wrapper(MatrixType&& m);
+    };
 
-
-
-
-    // New Member Functions (formerly free functions)
-    Scalar_T trace() const;
-    std::vector<std::complex<double>> eigenvalues() const;
-    auto norm_inf() const;
-    auto norm_frob2() const;
-    bool isnan() const;
-    bool isinf() const;
-    auto nnz() const;
-
-    friend std::ostream& operator<< <>(std::ostream& os, const arma_matrix_wrapper& m);
-
-  private:
-    // Helper to construct from raw arma mat
-    arma_matrix_wrapper(const MatrixType& m);
-    arma_matrix_wrapper(MatrixType&& m);
-  };
-
-  // Mixed op
-  template<typename Scalar_T>
-  arma_matrix_wrapper<Scalar_T> operator*(Scalar_T s, const arma_matrix_wrapper<Scalar_T>& m) {
+    // Mixed op
+    template< typename Scalar_T >
+    auto operator* (Scalar_T s, const arma_matrix_wrapper<Scalar_T>& m) -> arma_matrix_wrapper<Scalar_T>
+    {
       arma_matrix_wrapper<Scalar_T> res;
       res.m_mat = s * m.m_mat;
-
       return res;
-  }
-  template<typename Scalar_T>
-  arma_matrix_wrapper<Scalar_T> operator*(const arma_matrix_wrapper<Scalar_T>& m, Scalar_T s) {
-      return s * m;
-  }
+    }
 
-  // Kron for arma_matrix_wrapper
-  template<typename T>
-  arma_matrix_wrapper<T> kron(const arma_matrix_wrapper<T>& A, const arma_matrix_wrapper<T>& B) {
+    template< typename Scalar_T >
+    auto operator* (const arma_matrix_wrapper<Scalar_T>& m, Scalar_T s) -> arma_matrix_wrapper<Scalar_T>
+    {
+      return s * m;
+    }
+
+    /// Kron for arma_matrix_wrapper
+    template< typename T >
+    auto kron(const arma_matrix_wrapper<T>& A, const arma_matrix_wrapper<T>& B) -> arma_matrix_wrapper<T>
+    {
       arma_matrix_wrapper<T> res;
       res.m_mat = arma::kron(A.m_mat, B.m_mat);
-
       return res;
-  }
+    }
 
-  // Mixed Kron
-  template<typename T1, typename T2>
-  arma_matrix_wrapper<T2> kron(const arma_sparse_wrapper<T1>& A, const arma_matrix_wrapper<T2>& B);
+    /// Mixed Kron
+    template< typename T1, typename T2 >
+    auto kron(const arma_sparse_wrapper<T1>& A, const arma_matrix_wrapper<T2>& B) -> arma_matrix_wrapper<T2>;
 
-  template<typename T1, typename T2>
-  arma_matrix_wrapper<T2> kron(const arma_matrix_wrapper<T1>& A, const arma_sparse_wrapper<T2>& B);
+    template< typename T1, typename T2 >
+    auto kron(const arma_matrix_wrapper<T1>& A, const arma_sparse_wrapper<T2>& B) -> arma_matrix_wrapper<T2>;
 #endif
 
-  // =========================================================================
-  // eigen_matrix_wrapper
-  // =========================================================================
-  template<typename Scalar_T> class eigen_matrix_wrapper; // Forward
-  template<typename Scalar_T> std::ostream& operator<<(std::ostream& os, const eigen_matrix_wrapper<Scalar_T>& m);
+    // =========================================================================
+    // eigen_matrix_wrapper
+    // =========================================================================
+    template< typename Scalar_T > class eigen_matrix_wrapper; // Forward
+    template< typename Scalar_T >
+    auto operator<< (std::ostream& os, const eigen_matrix_wrapper<Scalar_T>& m) -> std::ostream&;
 
-  template<typename Scalar_T>
-  class eigen_matrix_wrapper : public matrix_impl_base<eigen_matrix_wrapper<Scalar_T>> {
-  public:
-    using MatrixType = Eigen::Matrix<Scalar_T, Eigen::Dynamic, Eigen::Dynamic>;
-    using elem_type = Scalar_T;
-    using value_type = Scalar_T;
-    using uword = std::size_t;
-    using size_type = typename MatrixType::Index;
-
-    MatrixType m_mat;
-
-
-
-    // Constructors
-    eigen_matrix_wrapper() = default;
-
-    // Armadillo constructor (rows, cols)
-    eigen_matrix_wrapper(uword rows, uword cols);
-
-    // Constructor from Eigen expressions (e.g. m * s)
-    template<typename Derived>
-    eigen_matrix_wrapper(const Eigen::MatrixBase<Derived>& other);
-
-    // Generic Interop Constructor (e.g. from Armadillo matrix)
-    template<typename Other_Matrix_T>
-    explicit eigen_matrix_wrapper(const Other_Matrix_T& other);
-
-    template<typename Other_Scalar_T>
-    explicit eigen_matrix_wrapper(const eigen_sparse_wrapper<Other_Scalar_T>& other);
-
-    // Copy constructor
-    eigen_matrix_wrapper(const eigen_matrix_wrapper& other);
-
-    // Move constructor
-    eigen_matrix_wrapper(eigen_matrix_wrapper&& other) noexcept;
-
-    // Assignment
-    eigen_matrix_wrapper& operator=(const eigen_matrix_wrapper& other);
-    eigen_matrix_wrapper& operator=(eigen_matrix_wrapper&& other) noexcept;
-
-    // Generic Interop Assignment
-    template<typename Other_Matrix_T>
-    eigen_matrix_wrapper& operator=(const Other_Matrix_T& other);
-
-    // Conversion to Armadillo (if enabled)
-    #if defined(_GLUCAT_USE_ARMADILLO)
-    operator arma::Mat<Scalar_T>() const;
-    #endif
-
-    // Constructor from Eigen
-    eigen_matrix_wrapper(const MatrixType& m);
-    eigen_matrix_wrapper(MatrixType&& m);
-
-    // Sync attributes after resize
-    // No longer needed as variables are removed
-
-
-    void set_size(uword rows, uword cols);
-
-    void resize(uword rows, uword cols, bool preserve = false);
-
-    // Helpers
-    uword nbr_rows() const;
-    uword nbr_cols() const;
-
-    void clear();
-
-    void zeros();
-    void zeros(uword rows, uword cols);
-
-    void unit(uword rows, uword cols);
-
-    bool is_finite() const;
-    bool has_nan() const;
-
-    // Element access
-    Scalar_T& operator()(uword i, uword j);
-    const Scalar_T& operator()(uword i, uword j) const;
-
-    // Operators
-    eigen_matrix_wrapper& operator+=(const eigen_matrix_wrapper& other);
-    eigen_matrix_wrapper& operator-=(const eigen_matrix_wrapper& other);
-    eigen_matrix_wrapper& operator*=(const Scalar_T& val);
-    eigen_matrix_wrapper& operator/=(const Scalar_T& val);
-
-    eigen_matrix_wrapper operator+(const eigen_matrix_wrapper& other) const;
-    eigen_matrix_wrapper operator-(const eigen_matrix_wrapper& other) const;
-
-    // Matrix Multiplication
-    eigen_matrix_wrapper operator*(const eigen_matrix_wrapper& other) const;
-
-    // Unary -
-    eigen_matrix_wrapper operator-() const;
-
-    // Transpose
-    eigen_matrix_wrapper t() const;
-
-    // New Member Functions (formerly free functions)
-    auto trace() const;
-    std::vector<std::complex<double>> eigenvalues() const;
-    auto norm_inf() const;
-    auto norm_frob2() const;
-    bool isnan() const;
-    bool isinf() const;
-    auto nnz() const;
-
-    friend std::ostream& operator<< <>(std::ostream& os, const eigen_matrix_wrapper& m);
-  };
-
-  // Mixed op
-  template<typename Scalar_T>
-  eigen_matrix_wrapper<Scalar_T> operator*(Scalar_T s, const eigen_matrix_wrapper<Scalar_T>& m) {
-      return eigen_matrix_wrapper<Scalar_T>(s * m.m_mat);
-  }
-  template<typename Scalar_T>
-  eigen_matrix_wrapper<Scalar_T> operator*(const eigen_matrix_wrapper<Scalar_T>& m, Scalar_T s) {
-      return eigen_matrix_wrapper<Scalar_T>(m.m_mat * s);
-  }
-
-  // =========================================================================
-  // eigen_sparse_wrapper
-  // =========================================================================
-  template<typename Scalar_T> class eigen_sparse_wrapper;
-  template<typename Scalar_T> std::ostream& operator<<(std::ostream& os, const eigen_sparse_wrapper<Scalar_T>& m);
-
-  template<typename Scalar_T>
-  class eigen_sparse_wrapper : public matrix_impl_base<eigen_sparse_wrapper<Scalar_T>> {
-  public:
-    using MatrixType = Eigen::SparseMatrix<Scalar_T>;
-    using elem_type = Scalar_T;
-    using value_type = Scalar_T;
-    using uword = std::size_t;
-    using size_type = typename MatrixType::Index;
-
-    MatrixType m_mat;
-
-
-
-    eigen_sparse_wrapper() = default;
-
-    // Constructor from Eigen Sparse Matrix (e.g. expression result)
-    explicit eigen_sparse_wrapper(const MatrixType& m);
-
-    // Armadillo/uBLAS/Generator style constructor support
-    eigen_sparse_wrapper(uword rows, uword cols, uword estimated_nnz = 0);
-
-    // Copy/Move similar to dense
-    eigen_sparse_wrapper(const eigen_sparse_wrapper& other);
-
-    eigen_sparse_wrapper(eigen_sparse_wrapper&& other) noexcept;
-
-    eigen_sparse_wrapper& operator=(const eigen_sparse_wrapper& other);
-
-    eigen_sparse_wrapper& operator=(eigen_sparse_wrapper&& other) noexcept;
-
-    void set_size(uword rows, uword cols);
-
-    // Make writable
-    void resize(uword rows, uword cols, bool preserve = false);
-
-    void clear();
-
-    void zeros();
-    void zeros(uword rows, uword cols);
-
-
-
-    // Iterator support
-    class const_iterator {
+    template< typename Scalar_T >
+    class eigen_matrix_wrapper :
+    public matrix_impl_base<eigen_matrix_wrapper<Scalar_T>>
+    {
     public:
+      using MatrixType = Eigen::Matrix<Scalar_T, Eigen::Dynamic, Eigen::Dynamic>;
+      using elem_type = Scalar_T;
+      using value_type = Scalar_T;
+      using uword = std::size_t;
+      using size_type = typename MatrixType::Index;
+
+      MatrixType m_mat;
+
+      // Constructors
+      eigen_matrix_wrapper() = default;
+
+      /// Armadillo constructor (rows, cols)
+      eigen_matrix_wrapper(uword rows, uword cols);
+
+      /// Constructor from Eigen expressions (e.g. m * s)
+      template< typename Derived >
+      eigen_matrix_wrapper(const Eigen::MatrixBase<Derived>& other);
+
+      /// Generic Interop Constructor (e.g. from Armadillo matrix)
+      template< typename Other_Matrix_T >
+      explicit eigen_matrix_wrapper(const Other_Matrix_T& other);
+
+      template< typename Other_Scalar_T >
+      explicit eigen_matrix_wrapper(const eigen_sparse_wrapper<Other_Scalar_T>& other);
+
+      // Copy constructor
+      eigen_matrix_wrapper(const eigen_matrix_wrapper& other);
+
+      // Move constructor
+      eigen_matrix_wrapper(eigen_matrix_wrapper&& other) noexcept;
+
+      // Assignment
+      auto operator= (const eigen_matrix_wrapper& other) -> eigen_matrix_wrapper&;
+      auto operator= (eigen_matrix_wrapper&& other) noexcept -> eigen_matrix_wrapper&;
+
+      /// Generic Interop Assignment
+      template< typename Other_Matrix_T >
+      auto operator= (const Other_Matrix_T& other) -> eigen_matrix_wrapper&;
+
+      /// Conversion to Armadillo (if enabled)
+#if defined(_GLUCAT_USE_ARMADILLO)
+      operator arma::Mat<Scalar_T>() const;
+#endif
+
+      /// Constructor from Eigen
+      eigen_matrix_wrapper(const MatrixType& m);
+      eigen_matrix_wrapper(MatrixType&& m);
+
+      void set_size(uword rows, uword cols);
+
+      void resize(uword rows, uword cols, bool preserve = false);
+
+      // Helpers
+      auto nbr_rows() const -> uword;
+      auto nbr_cols() const -> uword;
+
+      void clear();
+
+      void zeros();
+      void zeros(uword rows, uword cols);
+
+      void unit(uword rows, uword cols);
+
+      auto is_finite() const -> bool;
+      auto has_nan() const -> bool;
+
+      // Element access
+      auto operator() (uword i, uword j) -> Scalar_T&;
+      auto operator() (uword i, uword j) const -> const Scalar_T&;
+
+      // Operators
+      auto operator+= (const eigen_matrix_wrapper& other) -> eigen_matrix_wrapper&;
+      auto operator-= (const eigen_matrix_wrapper& other) -> eigen_matrix_wrapper&;
+      auto operator*= (const Scalar_T& val) -> eigen_matrix_wrapper&;
+      auto operator/= (const Scalar_T& val) -> eigen_matrix_wrapper&;
+
+      auto operator+ (const eigen_matrix_wrapper& other) const -> eigen_matrix_wrapper;
+      auto operator- (const eigen_matrix_wrapper& other) const -> eigen_matrix_wrapper;
+
+      /// Matrix Multiplication
+      auto operator* (const eigen_matrix_wrapper& other) const -> eigen_matrix_wrapper;
+
+      /// Unary -
+      auto operator- () const -> eigen_matrix_wrapper;
+
+      /// Transpose
+      auto t() const -> eigen_matrix_wrapper;
+
+      // New Member Functions (formerly free functions)
+      auto trace() const;
+      auto eigenvalues() const -> std::vector<std::complex<double>>;
+      auto norm_inf() const;
+      auto norm_frob2() const;
+      auto isnan() const -> bool;
+      auto isinf() const -> bool;
+      auto nnz() const;
+
+      friend auto operator<< <>(std::ostream& os, const eigen_matrix_wrapper& m) -> std::ostream&;
+    };
+
+    // Mixed op
+    template< typename Scalar_T >
+    auto operator* (Scalar_T s, const eigen_matrix_wrapper<Scalar_T>& m) -> eigen_matrix_wrapper<Scalar_T>
+    {
+      return eigen_matrix_wrapper<Scalar_T>(s * m.m_mat);
+    }
+    template< typename Scalar_T >
+    auto operator* (const eigen_matrix_wrapper<Scalar_T>& m, Scalar_T s) -> eigen_matrix_wrapper<Scalar_T>
+    {
+      return eigen_matrix_wrapper<Scalar_T>(m.m_mat * s);
+    }
+
+    // =========================================================================
+    // eigen_sparse_wrapper
+    // =========================================================================
+    template< typename Scalar_T > class eigen_sparse_wrapper;
+    template< typename Scalar_T >
+    auto operator<< (std::ostream& os, const eigen_sparse_wrapper<Scalar_T>& m) -> std::ostream&;
+
+    template< typename Scalar_T >
+    class eigen_sparse_wrapper :
+    public matrix_impl_base<eigen_sparse_wrapper<Scalar_T>>
+    {
+    public:
+      using MatrixType = Eigen::SparseMatrix<Scalar_T>;
+      using elem_type = Scalar_T;
+      using value_type = Scalar_T;
+      using uword = std::size_t;
+      using size_type = typename MatrixType::Index;
+
+      MatrixType m_mat;
+
+      eigen_sparse_wrapper() = default;
+
+      /// Constructor from Eigen Sparse Matrix (e.g. expression result)
+      explicit eigen_sparse_wrapper(const MatrixType& m);
+
+      /// Armadillo/uBLAS/Generator style constructor support
+      eigen_sparse_wrapper(uword rows, uword cols, uword estimated_nnz = 0);
+
+      /// Copy/Move similar to dense
+      eigen_sparse_wrapper(const eigen_sparse_wrapper& other);
+
+      eigen_sparse_wrapper(eigen_sparse_wrapper&& other) noexcept;
+
+      auto operator= (const eigen_sparse_wrapper& other) -> eigen_sparse_wrapper&;
+
+      auto operator= (eigen_sparse_wrapper&& other) noexcept -> eigen_sparse_wrapper&;
+
+      void set_size(uword rows, uword cols);
+
+      /// Make writable
+      void resize(uword rows, uword cols, bool preserve = false);
+
+      void clear();
+
+      void zeros();
+      void zeros(uword rows, uword cols);
+
+      /// Iterator support
+      class const_iterator
+      {
+      public:
         using InnerIterator = typename MatrixType::InnerIterator;
 
         const MatrixType* mp_mat;
         int m_outer;
         InnerIterator m_inner;
 
-        // Constructor for begin()
+        /// Constructor for begin()
         const_iterator(const MatrixType* mat, bool start = true);
 
         void advance();
 
-        bool is_end() const;
-        const_iterator& operator++();
+        auto is_end() const -> bool;
+        auto operator++ () -> const_iterator&;
 
-        bool operator!=(const const_iterator& other) const;
+        auto operator!= (const const_iterator& other) const -> bool;
 
-        uword row() const;
-        uword col() const;
-        Scalar_T operator*() const;
+        auto row() const -> uword;
+        auto col() const -> uword;
+        auto operator* () const -> Scalar_T;
+      };
+
+      auto begin() const -> const_iterator;
+      auto end() const -> const_iterator;
+
+      auto nbr_rows() const -> uword;
+      auto nbr_cols() const -> uword;
+
+      auto operator() (uword i, uword j) const -> Scalar_T;
+      auto operator() (uword i, uword j) -> Scalar_T&;
+
+      auto operator+= (const eigen_sparse_wrapper& other) -> eigen_sparse_wrapper&;
+      auto operator-= (const eigen_sparse_wrapper& other) -> eigen_sparse_wrapper&;
+
+      auto operator* (const eigen_sparse_wrapper& other) const -> eigen_sparse_wrapper;
+
+      auto operator*= (const Scalar_T& val) -> eigen_sparse_wrapper&;
+
+      // New Member Functions
+      auto trace() const; // Trace of sparse?
+      auto eigenvalues() const -> std::vector<std::complex<double>> { throw std::runtime_error("Not implemented for sparse"); } // Usually not computed directly on sparse
+      auto norm_inf() const;
+      auto norm_frob2() const;
+      auto isnan() const -> bool;
+      auto isinf() const -> bool;
+      auto nnz() const;
+
+      friend auto operator<< <>(std::ostream& os, const eigen_sparse_wrapper& m) -> std::ostream&;
     };
 
-    const_iterator begin() const;
-    const_iterator end() const;
-
-    uword nbr_rows() const;
-    uword nbr_cols() const;
-
-    Scalar_T operator()(uword i, uword j) const;
-    Scalar_T& operator()(uword i, uword j);
-
-    eigen_sparse_wrapper& operator+=(const eigen_sparse_wrapper& other);
-    eigen_sparse_wrapper& operator-=(const eigen_sparse_wrapper& other);
-
-    eigen_sparse_wrapper operator*(const eigen_sparse_wrapper& other) const;
-
-    eigen_sparse_wrapper& operator*=(const Scalar_T& val);
-
-    // New Member Functions
-    auto trace() const; // Trace of sparse?
-    std::vector<std::complex<double>> eigenvalues() const{ throw std::runtime_error("Not implemented for sparse"); } // Usually not computed directly on sparse
-    auto norm_inf() const;
-    auto norm_frob2() const;
-    bool isnan() const;
-    bool isinf() const;
-    auto nnz() const;
-
-    friend std::ostream& operator<< <>(std::ostream& os, const eigen_sparse_wrapper& m);
-  };
-
-  template<typename Scalar_T>
-  eigen_sparse_wrapper<Scalar_T> operator*(const eigen_sparse_wrapper<Scalar_T>& m, Scalar_T s) {
+    template< typename Scalar_T >
+    auto operator* (const eigen_sparse_wrapper<Scalar_T>& m, Scalar_T s) -> eigen_sparse_wrapper<Scalar_T>
+    {
       eigen_sparse_wrapper<Scalar_T> res(m);
       res *= s;
       return res;
-  }
+    }
 
-  template<typename Scalar_T>
-  eigen_sparse_wrapper<Scalar_T> operator*(Scalar_T s, const eigen_sparse_wrapper<Scalar_T>& m) {
+    template< typename Scalar_T >
+    auto operator* (Scalar_T s, const eigen_sparse_wrapper<Scalar_T>& m) -> eigen_sparse_wrapper<Scalar_T>
+    {
       return m * s;
-  }
+    }
 
-  template<typename Scalar_T>
-  eigen_sparse_wrapper<Scalar_T> operator+(const eigen_sparse_wrapper<Scalar_T>& lhs, const eigen_sparse_wrapper<Scalar_T>& rhs) {
+    template< typename Scalar_T >
+    auto operator+ (const eigen_sparse_wrapper<Scalar_T>& lhs, const eigen_sparse_wrapper<Scalar_T>& rhs) -> eigen_sparse_wrapper<Scalar_T>
+    {
       eigen_sparse_wrapper<Scalar_T> res(lhs);
       res += rhs;
       return res;
-  }
+    }
 
-  template<typename Scalar_T>
-  eigen_sparse_wrapper<Scalar_T> operator-(const eigen_sparse_wrapper<Scalar_T>& lhs, const eigen_sparse_wrapper<Scalar_T>& rhs) {
+    template< typename Scalar_T >
+    auto operator- (const eigen_sparse_wrapper<Scalar_T>& lhs, const eigen_sparse_wrapper<Scalar_T>& rhs) -> eigen_sparse_wrapper<Scalar_T>
+    {
       eigen_sparse_wrapper<Scalar_T> res(lhs);
       res -= rhs;
       return res;
-  }
+    }
 
-  // Kron
-  template<typename T>
-  eigen_matrix_wrapper<T> kron(const eigen_matrix_wrapper<T>& A, const eigen_matrix_wrapper<T>& B);
+    /// Kron
+    template< typename T >
+    auto kron(const eigen_matrix_wrapper<T>& A, const eigen_matrix_wrapper<T>& B) -> eigen_matrix_wrapper<T>;
 
-  template<typename T1, typename T2>
-  eigen_matrix_wrapper<T2> kron(const eigen_sparse_wrapper<T1>& A, const eigen_matrix_wrapper<T2>& B);
+    template< typename T1, typename T2 >
+    auto kron(const eigen_sparse_wrapper<T1>& A, const eigen_matrix_wrapper<T2>& B) -> eigen_matrix_wrapper<T2>;
 
-  template<typename T1, typename T2>
-  eigen_matrix_wrapper<T2> kron(const eigen_matrix_wrapper<T1>& A, const eigen_sparse_wrapper<T2>& B);
+    template< typename T1, typename T2 >
+    auto kron(const eigen_matrix_wrapper<T1>& A, const eigen_sparse_wrapper<T2>& B) -> eigen_matrix_wrapper<T2>;
 
-  template<typename T>
-  eigen_sparse_wrapper<T> kron(const eigen_sparse_wrapper<T>& A, const eigen_sparse_wrapper<T>& B);
+    template< typename T >
+    auto kron(const eigen_sparse_wrapper<T>& A, const eigen_sparse_wrapper<T>& B) -> eigen_sparse_wrapper<T>;
 
-  // Helper Free Functions for Member Implementation
+    // Helper Free Functions for Member Implementation
 
 
 #if defined(_GLUCAT_USE_ARMADILLO)
-  // =========================================================================
-  // arma_sparse_wrapper (moved from matrix_imp.h)
-  // =========================================================================
-  template<typename Scalar_T> class arma_sparse_wrapper;
-  template<typename Scalar_T> std::ostream& operator<<(std::ostream& os, const arma_sparse_wrapper<Scalar_T>& m);
+    // =========================================================================
+    // arma_sparse_wrapper (moved from matrix_imp.h)
+    // =========================================================================
+    template< typename Scalar_T > class arma_sparse_wrapper;
+    template< typename Scalar_T >
+    auto operator<< (std::ostream& os, const arma_sparse_wrapper<Scalar_T>& m) -> std::ostream&;
 
-  template<typename Scalar_T>
-  class arma_sparse_wrapper : public matrix_impl_base<arma_sparse_wrapper<Scalar_T>> {
-  public:
-    using MatrixType = arma::SpMat<Scalar_T>;
-    using elem_type = Scalar_T;
-    using value_type = Scalar_T;
-    using uword = arma::uword;
-    using size_type = arma::uword;
+    template< typename Scalar_T >
+    class arma_sparse_wrapper :
+    public matrix_impl_base<arma_sparse_wrapper<Scalar_T>>
+    {
+    public:
+      using MatrixType = arma::SpMat<Scalar_T>;
+      using elem_type = Scalar_T;
+      using value_type = Scalar_T;
+      using uword = arma::uword;
+      using size_type = arma::uword;
 
-    MatrixType m_mat;
+      MatrixType m_mat;
 
+      arma_sparse_wrapper() = default;
 
-    arma_sparse_wrapper() = default;
+      /// Constructor from Armadillo SpMat
+      explicit arma_sparse_wrapper(const MatrixType& m);
 
-    // Constructor from Armadillo SpMat
-    explicit arma_sparse_wrapper(const MatrixType& m);
+      arma_sparse_wrapper(uword rows, uword cols);
 
-    arma_sparse_wrapper(uword rows, uword cols);
+      /// Copy
+      arma_sparse_wrapper(const arma_sparse_wrapper& other);
+      /// Move
+      arma_sparse_wrapper(arma_sparse_wrapper&& other) noexcept;
 
-    // Copy
-    arma_sparse_wrapper(const arma_sparse_wrapper& other);
-    // Move
-    arma_sparse_wrapper(arma_sparse_wrapper&& other) noexcept;
+      auto operator= (const arma_sparse_wrapper& other) -> arma_sparse_wrapper&;
+      auto operator= (arma_sparse_wrapper&& other) noexcept -> arma_sparse_wrapper&;
 
-    arma_sparse_wrapper& operator=(const arma_sparse_wrapper& other);
-    arma_sparse_wrapper& operator=(arma_sparse_wrapper&& other) noexcept;
+      void set_size(uword rows, uword cols);
 
-    void set_size(uword rows, uword cols);
+      void resize(uword rows, uword cols, bool preserve = false);
 
-    void resize(uword rows, uword cols, bool preserve = false);
+      void clear();
+      void zeros(uword rows, uword cols);
+      void zeros();
 
-    void clear();
-    void zeros(uword rows, uword cols);
-    void zeros();
+      using const_iterator = typename MatrixType::const_iterator;
 
+      auto begin() const -> const_iterator;
+      auto end() const -> const_iterator;
 
+      auto nbr_rows() const -> uword;
+      auto nbr_cols() const -> uword;
 
-    using const_iterator = typename MatrixType::const_iterator;
+      auto operator() (uword i, uword j) const -> Scalar_T;
+      auto operator() (uword i, uword j) -> auto;
 
-    const_iterator begin() const;
-    const_iterator end() const;
+      auto operator+= (const arma_sparse_wrapper& other) -> arma_sparse_wrapper&;
+      auto operator* (const arma_sparse_wrapper& other) const -> arma_sparse_wrapper;
+      auto operator*= (const Scalar_T& val) -> arma_sparse_wrapper&;
+      friend auto operator<< <>(std::ostream& os, const arma_sparse_wrapper& m) -> std::ostream&;
 
-    uword nbr_rows() const;
-    uword nbr_cols() const;
+      // New Member Functions
+      auto trace() const;
+      auto eigenvalues() const { throw std::runtime_error("Not implemented for sparse"); }
+      auto norm_inf() const;
+      auto norm_frob2() const;
+      auto isnan() const -> bool;
+      auto isinf() const -> bool;
+      auto nnz() const;
+    };
 
-    Scalar_T operator()(uword i, uword j) const;
-    auto operator()(uword i, uword j);
-
-    arma_sparse_wrapper& operator+=(const arma_sparse_wrapper& other);
-    arma_sparse_wrapper operator*(const arma_sparse_wrapper& other) const;
-    arma_sparse_wrapper& operator*=(const Scalar_T& val);
-    friend std::ostream& operator<< <>(std::ostream& os, const arma_sparse_wrapper& m);
-
-    // New Member Functions
-    auto trace() const;
-    auto eigenvalues() const { throw std::runtime_error("Not implemented for sparse"); }
-    auto norm_inf() const;
-    auto norm_frob2() const;
-    bool isnan() const;
-    bool isinf() const;
-    auto nnz() const;
-  };
-
-
-  template<typename Scalar_T>
-  arma_sparse_wrapper<Scalar_T> operator*(Scalar_T s, const arma_sparse_wrapper<Scalar_T>& m) {
+    template< typename Scalar_T >
+    auto operator* (Scalar_T s, const arma_sparse_wrapper<Scalar_T>& m) -> arma_sparse_wrapper<Scalar_T>
+    {
       arma_sparse_wrapper<Scalar_T> res(m);
       res *= s;
       return res;
-  }
+    }
 
-  template<typename Scalar_T>
-  arma_sparse_wrapper<Scalar_T> operator*(const arma_sparse_wrapper<Scalar_T>& m, Scalar_T s) {
+    template< typename Scalar_T >
+    auto operator* (const arma_sparse_wrapper<Scalar_T>& m, Scalar_T s) -> arma_sparse_wrapper<Scalar_T>
+    {
       return s * m;
-  }
+    }
 
-  template<typename Scalar_T>
-  arma_sparse_wrapper<Scalar_T> operator+(const arma_sparse_wrapper<Scalar_T>& lhs, const arma_sparse_wrapper<Scalar_T>& rhs) {
+    template< typename Scalar_T >
+    auto operator+ (const arma_sparse_wrapper<Scalar_T>& lhs, const arma_sparse_wrapper<Scalar_T>& rhs) -> arma_sparse_wrapper<Scalar_T>
+    {
       arma_sparse_wrapper<Scalar_T> res(lhs);
       res += rhs;
       return res;
-  }
+    }
 
-  template<typename Scalar_T>
-  arma_sparse_wrapper<Scalar_T> operator-(const arma_sparse_wrapper<Scalar_T>& lhs, const arma_sparse_wrapper<Scalar_T>& rhs) {
+    template< typename Scalar_T >
+    auto operator- (const arma_sparse_wrapper<Scalar_T>& lhs, const arma_sparse_wrapper<Scalar_T>& rhs) -> arma_sparse_wrapper<Scalar_T>
+    {
       arma_sparse_wrapper<Scalar_T> res(lhs);
       res.m_mat -= rhs.m_mat; // Armadillo supports -=
-
       return res;
-  }
+    }
 #endif
 
-  // Traits Specializations
-  template<typename T> struct is_eigen_dense<eigen_matrix_wrapper<T>> : std::true_type {};
-  template<typename T> struct is_eigen_sparse<eigen_sparse_wrapper<T>> : std::true_type {};
+    // Traits Specializations
+    template< typename T > struct is_eigen_dense<eigen_matrix_wrapper<T>> : std::true_type {};
+    template< typename T > struct is_eigen_sparse<eigen_sparse_wrapper<T>> : std::true_type {};
 
-  #if defined(_GLUCAT_USE_ARMADILLO)
-  template<typename T> struct is_eigen_sparse<arma_sparse_wrapper<T>> : std::true_type {};
-  #endif
+#if defined(_GLUCAT_USE_ARMADILLO)
+    template< typename T > struct is_eigen_sparse<arma_sparse_wrapper<T>> : std::true_type {};
+#endif
 
-  // Forward declarations of Wrappers (already defined but to match pattern if needed)
+    // Forward declarations of Wrappers (already defined but to match pattern if needed)
 
-  // Trait to determine if T is natively supported by Armadillo
-  template<typename T>
-  struct is_arma_supported : std::false_type {};
+    /// Trait to determine if T is natively supported by Armadillo
+    template< typename T >
+    struct is_arma_supported : std::false_type {};
 
-  #if defined(_GLUCAT_USE_ARMADILLO)
+#if defined(_GLUCAT_USE_ARMADILLO)
     template<> struct is_arma_supported<float> : std::true_type {};
     template<> struct is_arma_supported<double> : std::true_type {};
     template<> struct is_arma_supported<std::complex<float>> : std::true_type {};
@@ -623,49 +629,54 @@ namespace glucat { namespace matrix {
 
     // Explicitly NOTE: long double, dd_real, qd_real will use the default false_type
     // and thus be dispatched to the Eigen wrapper.
-  #endif
+#endif
 
-  // Dense Selector
-  template<typename Scalar_T, bool UseArma = is_arma_supported<Scalar_T>::value>
-  struct matrix_type_selector {
-    using type = eigen_matrix_wrapper<Scalar_T>;
-  };
+    // Dense Selector
+    template< typename Scalar_T, bool UseArma = is_arma_supported<Scalar_T>::value >
+    struct matrix_type_selector
+    {
+      using type = eigen_matrix_wrapper<Scalar_T>;
+    };
 
-  #if defined(_GLUCAT_USE_ARMADILLO)
-    template<typename Scalar_T>
-    struct matrix_type_selector<Scalar_T, true> {
+#if defined(_GLUCAT_USE_ARMADILLO)
+    template< typename Scalar_T >
+    struct matrix_type_selector<Scalar_T, true>
+    {
       using type = arma_matrix_wrapper<Scalar_T>;
     };
-  #endif
+#endif
 
-  template<typename Scalar_T>
-  using matrix_t = typename matrix_type_selector<Scalar_T>::type;
+    template< typename Scalar_T >
+    using matrix_t = typename matrix_type_selector<Scalar_T>::type;
 
-  // Sparse Selector
-  template<typename Scalar_T, bool UseArma = is_arma_supported<Scalar_T>::value>
-  struct sparse_matrix_type_selector {
-    using type = eigen_sparse_wrapper<Scalar_T>;
-  };
+    // Sparse Selector
+    template< typename Scalar_T, bool UseArma = is_arma_supported<Scalar_T>::value >
+    struct sparse_matrix_type_selector
+    {
+      using type = eigen_sparse_wrapper<Scalar_T>;
+    };
 
-  #if defined(_GLUCAT_USE_ARMADILLO)
-    template<typename Scalar_T>
-    struct sparse_matrix_type_selector<Scalar_T, true> {
+#if defined(_GLUCAT_USE_ARMADILLO)
+    template< typename Scalar_T >
+    struct sparse_matrix_type_selector<Scalar_T, true>
+    {
       using type = arma_sparse_wrapper<Scalar_T>;
     };
-  #endif
+#endif
 
-  template<typename Scalar_T>
-  using sparse_matrix_t = typename sparse_matrix_type_selector<Scalar_T>::type;
+    template< typename Scalar_T >
+    using sparse_matrix_t = typename sparse_matrix_type_selector<Scalar_T>::type;
 
-  // =========================================================================
-  // Matrix Template Classes (Facade)
-  // Named dense_matrix to avoid collision with namespace matrix (legacy)
-  // =========================================================================
+    // =========================================================================
+    // Matrix Template Classes (Facade)
+    // Named dense_matrix to avoid collision with namespace matrix (legacy)
+    // =========================================================================
 
-  template<typename Scalar_T>
-  class dense_matrix : public matrix_type_selector<Scalar_T>::type
-  {
-  public:
+    template< typename Scalar_T >
+    class dense_matrix :
+    public matrix_type_selector<Scalar_T>::type
+    {
+    public:
       using Base = typename matrix_type_selector<Scalar_T>::type;
       using Base::Base; // Inherit constructors
       using Base::operator=;
@@ -673,17 +684,18 @@ namespace glucat { namespace matrix {
       dense_matrix() = default;
       dense_matrix(const dense_matrix&) = default;
       dense_matrix(dense_matrix&&) = default;
-      dense_matrix& operator=(const dense_matrix&) = default;
-      dense_matrix& operator=(dense_matrix&&) = default;
+      auto operator= (const dense_matrix&) -> dense_matrix& = default;
+      auto operator= (dense_matrix&&) -> dense_matrix& = default;
 
-      template<typename T>
+      template< typename T >
       dense_matrix(const T& other) : Base(other) {}
-  };
+    };
 
-  template<typename Scalar_T>
-  class sparse_matrix : public sparse_matrix_type_selector<Scalar_T>::type
-  {
-  public:
+    template< typename Scalar_T >
+    class sparse_matrix :
+    public sparse_matrix_type_selector<Scalar_T>::type
+    {
+    public:
       using Base = typename sparse_matrix_type_selector<Scalar_T>::type;
       using Base::Base; // Inherit constructors
       using Base::operator=;
@@ -691,37 +703,35 @@ namespace glucat { namespace matrix {
       sparse_matrix() = default;
       sparse_matrix(const sparse_matrix&) = default;
       sparse_matrix(sparse_matrix&&) = default;
-      sparse_matrix& operator=(const sparse_matrix&) = default;
-      sparse_matrix& operator=(sparse_matrix&&) = default;
+      auto operator= (const sparse_matrix&) -> sparse_matrix& = default;
+      auto operator= (sparse_matrix&&) -> sparse_matrix& = default;
 
-      template<typename T>
+      template< typename T >
       sparse_matrix(const T& other) : Base(other) {}
-  };
+    };
 
-  // Core Operations as Free Functions
-  template< typename LHS_T, typename RHS_T >
-  auto nork(const LHS_T& lhs, const RHS_T& rhs, const bool mono = true) -> const RHS_T;
+    // Core Operations as Free Functions
+    template< typename LHS_T, typename RHS_T >
+    auto nork(const LHS_T& lhs, const RHS_T& rhs, const bool mono = true) -> const RHS_T;
 
-  template< typename LHS_T, typename RHS_T >
-  auto signed_perm_nork(const LHS_T& lhs, const RHS_T& rhs) -> const RHS_T;
+    template< typename LHS_T, typename RHS_T >
+    auto signed_perm_nork(const LHS_T& lhs, const RHS_T& rhs) -> const RHS_T;
 
-  template< typename Matrix_T >
-  auto unit(const size_t dim) -> const Matrix_T;
+    template< typename Matrix_T >
+    auto unit(const size_t dim) -> const Matrix_T;
 
+    template< typename Scalar_T, typename LHS_T, typename RHS_T >
+    auto inner(const LHS_T& lhs, const RHS_T& rhs) -> Scalar_T;
 
-
-  template< typename Scalar_T, typename LHS_T, typename RHS_T >
-  auto inner(const LHS_T& lhs, const RHS_T& rhs) -> Scalar_T;
-
-  // Legacy Nbr Rows/Cols - kept as free functions for generic templates
-
-
+    // Legacy Nbr Rows/Cols - kept as free functions for generic templates
 
     /// Classification of eigenvalues of a matrix
-    using eig_case_t = enum {
+    using eig_case_t = enum
+    {
       safe_eigs,
       neg_real_eigs,
-      both_eigs};
+      both_eigs
+    };
 
     ///  Structure containing classification of eigenvalues
     template< typename Matrix_T >
@@ -736,11 +746,9 @@ namespace glucat { namespace matrix {
       Scalar_T   m_safe_arg = Scalar_T(0);
     };
 
-
     // Classify the eigenvalues of a matrix
     // Note: implementation moved to matrix_impl_base::classify_eigenvalues()
-} }
-
-
+  }
+}
 
 #endif  // _GLUCAT_MATRIX_H
