@@ -50,7 +50,6 @@ namespace glucat
 
   // Tuning policy default constants
   const unsigned int Tuning_Default_Mult_Matrix_Threshold   =       8;
-  const unsigned int Tuning_Default_Div_Max_Steps           =       4;
   const unsigned int Tuning_Default_CR_Sqrt_Max_Steps       =     256;
   const unsigned int Tuning_Default_DB_Sqrt_Max_Steps       =     256;
   const unsigned int Tuning_Default_Log_Max_Outer_Steps     =     256;
@@ -66,7 +65,6 @@ namespace glucat
   template
   <
   unsigned int Mult_Matrix_Threshold   = Tuning_Default_Mult_Matrix_Threshold,
-  unsigned int Div_Max_Steps           = Tuning_Default_Div_Max_Steps,
   unsigned int CR_Sqrt_Max_Steps       = Tuning_Default_CR_Sqrt_Max_Steps,
   unsigned int DB_Sqrt_Max_Steps       = Tuning_Default_DB_Sqrt_Max_Steps,
   unsigned int Log_Max_Outer_Steps     = Tuning_Default_Log_Max_Outer_Steps,
@@ -83,7 +81,6 @@ namespace glucat
     using tuning_values_p = tuning_values
     <
     Mult_Matrix_Threshold,
-    Div_Max_Steps,
     CR_Sqrt_Max_Steps,
     DB_Sqrt_Max_Steps,
     Log_Max_Outer_Steps,
@@ -98,9 +95,6 @@ namespace glucat
     // Tuning for multiplication
     /// Minimum index count needed to invoke matrix multiplication algorithm
     enum { mult_matrix_threshold = Mult_Matrix_Threshold };
-    // Tuning for division
-    /// Maximum steps of iterative refinement in division algorithm
-    enum { div_max_steps = Div_Max_Steps };
     // Tuning for sqrt
     /// Maximum number of steps in cyclic reduction square root iteration
     enum { cr_sqrt_max_steps = CR_Sqrt_Max_Steps };
