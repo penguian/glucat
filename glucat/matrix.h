@@ -70,12 +70,12 @@ namespace glucat
     // Traits
     // =========================================================================
     /// Helper trait for complex check
-    template< typename T > struct is_complex_t : std::false_type {};
-    template< typename T > struct is_complex_t<std::complex<T>> : std::true_type {};
+    template< typename Scalar_T > struct is_complex_t : std::false_type {};
+    template< typename Scalar_T > struct is_complex_t<std::complex<Scalar_T>> : std::true_type {};
 
     /// Type traits to detect wrappers (Primary Templates)
-    template< typename T > struct is_eigen_sparse : std::false_type {};
-    template< typename T > struct is_eigen_dense : std::false_type {};
+    template< typename Matrix_T > struct is_eigen_sparse : std::false_type {};
+    template< typename Matrix_T > struct is_eigen_dense : std::false_type {};
 
     template< typename Scalar_T > class arma_matrix_wrapper; // Forward
     template< typename Scalar_T > class eigen_sparse_wrapper; // Forward
@@ -221,20 +221,20 @@ namespace glucat
     }
 
     /// Kron for arma_matrix_wrapper
-    template< typename T >
-    auto kron(const arma_matrix_wrapper<T>& A, const arma_matrix_wrapper<T>& B) -> arma_matrix_wrapper<T>
+    template< typename Scalar_T >
+    auto kron(const arma_matrix_wrapper<Scalar_T>& lhs, const arma_matrix_wrapper<Scalar_T>& rhs) -> arma_matrix_wrapper<Scalar_T>
     {
-      arma_matrix_wrapper<T> res;
-      res.m_mat = arma::kron(A.m_mat, B.m_mat);
+      arma_matrix_wrapper<Scalar_T> res;
+      res.m_mat = arma::kron(lhs.m_mat, rhs.m_mat);
       return res;
     }
 
     /// Mixed Kron
-    template< typename T1, typename T2 >
-    auto kron(const arma_sparse_wrapper<T1>& A, const arma_matrix_wrapper<T2>& B) -> arma_matrix_wrapper<T2>;
+    template< typename LHS_Scalar_T, typename RHS_Scalar_T >
+    auto kron(const arma_sparse_wrapper<LHS_Scalar_T>& lhs, const arma_matrix_wrapper<RHS_Scalar_T>& rhs) -> arma_matrix_wrapper<RHS_Scalar_T>;
 
-    template< typename T1, typename T2 >
-    auto kron(const arma_matrix_wrapper<T1>& A, const arma_sparse_wrapper<T2>& B) -> arma_matrix_wrapper<T2>;
+    template< typename LHS_Scalar_T, typename RHS_Scalar_T >
+    auto kron(const arma_matrix_wrapper<LHS_Scalar_T>& lhs, const arma_sparse_wrapper<RHS_Scalar_T>& rhs) -> arma_matrix_wrapper<RHS_Scalar_T>;
 #endif
 
     // =========================================================================
@@ -490,17 +490,17 @@ namespace glucat
     }
 
     /// Kron
-    template< typename T >
-    auto kron(const eigen_matrix_wrapper<T>& A, const eigen_matrix_wrapper<T>& B) -> eigen_matrix_wrapper<T>;
+    template< typename Scalar_T >
+    auto kron(const eigen_matrix_wrapper<Scalar_T>& lhs, const eigen_matrix_wrapper<Scalar_T>& rhs) -> eigen_matrix_wrapper<Scalar_T>;
 
-    template< typename T1, typename T2 >
-    auto kron(const eigen_sparse_wrapper<T1>& A, const eigen_matrix_wrapper<T2>& B) -> eigen_matrix_wrapper<T2>;
+    template< typename LHS_Scalar_T, typename RHS_Scalar_T >
+    auto kron(const eigen_sparse_wrapper<LHS_Scalar_T>& lhs, const eigen_matrix_wrapper<RHS_Scalar_T>& rhs) -> eigen_matrix_wrapper<RHS_Scalar_T>;
 
-    template< typename T1, typename T2 >
-    auto kron(const eigen_matrix_wrapper<T1>& A, const eigen_sparse_wrapper<T2>& B) -> eigen_matrix_wrapper<T2>;
+    template< typename LHS_Scalar_T, typename RHS_Scalar_T >
+    auto kron(const eigen_matrix_wrapper<LHS_Scalar_T>& lhs, const eigen_sparse_wrapper<RHS_Scalar_T>& rhs) -> eigen_matrix_wrapper<RHS_Scalar_T>;
 
-    template< typename T >
-    auto kron(const eigen_sparse_wrapper<T>& A, const eigen_sparse_wrapper<T>& B) -> eigen_sparse_wrapper<T>;
+    template< typename Scalar_T >
+    auto kron(const eigen_sparse_wrapper<Scalar_T>& lhs, const eigen_sparse_wrapper<Scalar_T>& rhs) -> eigen_sparse_wrapper<Scalar_T>;
 
     // Helper Free Functions for Member Implementation
 
@@ -606,17 +606,17 @@ namespace glucat
 #endif
 
     // Traits Specializations
-    template< typename T > struct is_eigen_dense<eigen_matrix_wrapper<T>> : std::true_type {};
-    template< typename T > struct is_eigen_sparse<eigen_sparse_wrapper<T>> : std::true_type {};
+    template< typename Matrix_T > struct is_eigen_dense<eigen_matrix_wrapper<Matrix_T>> : std::true_type {};
+    template< typename Matrix_T > struct is_eigen_sparse<eigen_sparse_wrapper<Matrix_T>> : std::true_type {};
 
 #if defined(_GLUCAT_USE_ARMADILLO)
-    template< typename T > struct is_eigen_sparse<arma_sparse_wrapper<T>> : std::true_type {};
+    template< typename Matrix_T > struct is_eigen_sparse<arma_sparse_wrapper<Matrix_T>> : std::true_type {};
 #endif
 
     // Forward declarations of Wrappers (already defined but to match pattern if needed)
 
     /// Trait to determine if T is natively supported by Armadillo
-    template< typename T >
+    template< typename Scalar_T >
     struct is_arma_supported : std::false_type {};
 
 #if defined(_GLUCAT_USE_ARMADILLO)
@@ -685,8 +685,8 @@ namespace glucat
       auto operator= (const dense_matrix&) -> dense_matrix& = default;
       auto operator= (dense_matrix&&) -> dense_matrix& = default;
 
-      template< typename T >
-      dense_matrix(const T& other) : Base(other) {}
+      template< typename Other_Matrix_T >
+      dense_matrix(const Other_Matrix_T& other) : Base(other) {}
     };
 
     template< typename Scalar_T >
@@ -704,8 +704,8 @@ namespace glucat
       auto operator= (const sparse_matrix&) -> sparse_matrix& = default;
       auto operator= (sparse_matrix&&) -> sparse_matrix& = default;
 
-      template< typename T >
-      sparse_matrix(const T& other) : Base(other) {}
+      template< typename Other_Matrix_T >
+      sparse_matrix(const Other_Matrix_T& other) : Base(other) {}
     };
 
     // Core Operations as Free Functions

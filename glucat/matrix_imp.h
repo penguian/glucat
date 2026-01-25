@@ -40,28 +40,28 @@ namespace glucat
     // =========================================================================
 
     /// Kron
-    template< typename T >
+    template< typename Scalar_T >
     auto
-    kron(const eigen_matrix_wrapper<T>& A, const eigen_matrix_wrapper<T>& B) -> eigen_matrix_wrapper<T>
+    kron(const eigen_matrix_wrapper<Scalar_T>& lhs, const eigen_matrix_wrapper<Scalar_T>& rhs) -> eigen_matrix_wrapper<Scalar_T>
     {
       using namespace Eigen;
-      return eigen_matrix_wrapper<T>(kroneckerProduct(A.m_mat, B.m_mat).eval());
+      return eigen_matrix_wrapper<Scalar_T>(kroneckerProduct(lhs.m_mat, rhs.m_mat).eval());
     }
 
     /// Solve
-    template< typename T >
+    template< typename Scalar_T >
     auto
-    solve(eigen_matrix_wrapper<T>& X, const eigen_matrix_wrapper<T>& A, const eigen_matrix_wrapper<T>& B, int opts = 0) -> bool
+    solve(eigen_matrix_wrapper<Scalar_T>& X, const eigen_matrix_wrapper<Scalar_T>& lhs, const eigen_matrix_wrapper<Scalar_T>& rhs, int opts = 0) -> bool
     {
-      // Solve A*X = B
+      // Solve lhs*X = rhs
       // The matrix representation of a real Clifford algebra is always a real square matrix.
-      if (A.nbr_rows() != A.nbr_cols())
+      if (lhs.nbr_rows() != lhs.nbr_cols())
         return false;
 
-      auto lu = A.m_mat.fullPivLu();
+      auto lu = lhs.m_mat.fullPivLu();
       if (lu.isInvertible())
       {
-        X.m_mat = lu.solve(B.m_mat);
+        X.m_mat = lu.solve(rhs.m_mat);
         return true;
       }
       return false;
@@ -70,66 +70,66 @@ namespace glucat
 #if defined(_GLUCAT_USE_ARMADILLO)
 
     /// Solve for arma_matrix_wrapper
-    template< typename T >
+    template< typename Scalar_T >
     auto
-    solve(arma_matrix_wrapper<T>& X, const arma_matrix_wrapper<T>& A, const arma_matrix_wrapper<T>& B, int opts = 0) -> bool
+    solve(arma_matrix_wrapper<Scalar_T>& X, const arma_matrix_wrapper<Scalar_T>& lhs, const arma_matrix_wrapper<Scalar_T>& rhs, int opts = 0) -> bool
     {
-      if (A.nbr_rows() != A.nbr_cols())
+      if (lhs.nbr_rows() != lhs.nbr_cols())
         return false;
 
-      return arma::solve(X.m_mat, A.m_mat, B.m_mat, arma::solve_opts::no_approx);
+      return arma::solve(X.m_mat, lhs.m_mat, rhs.m_mat, arma::solve_opts::no_approx);
     }
 #endif
 
     /// Mixed kron: Sparse x Dense -> Dense (wrapper)
-    template< typename T1, typename T2 >
+    template< typename LHS_Scalar_T, typename RHS_Scalar_T >
     auto
-    kron(const eigen_sparse_wrapper<T1>& A, const eigen_matrix_wrapper<T2>& B) -> eigen_matrix_wrapper<T2>
+    kron(const eigen_sparse_wrapper<LHS_Scalar_T>& lhs, const eigen_matrix_wrapper<RHS_Scalar_T>& rhs) -> eigen_matrix_wrapper<RHS_Scalar_T>
     {
-      // Convert A to compatible type (Dense)
-      eigen_matrix_wrapper<T2> A_dense(A.nbr_rows(), A.nbr_cols());
-      for (matrix_index_t i = 0; i < A.nbr_rows(); ++i)
-        for (matrix_index_t j = 0; j < A.nbr_cols(); ++j)
-          A_dense(i, j) = static_cast<T2>(A(i, j));
+      // Convert lhs to compatible type (Dense)
+      eigen_matrix_wrapper<RHS_Scalar_T> lhs_dense(lhs.nbr_rows(), lhs.nbr_cols());
+      for (matrix_index_t i = 0; i < lhs.nbr_rows(); ++i)
+        for (matrix_index_t j = 0; j < lhs.nbr_cols(); ++j)
+          lhs_dense(i, j) = static_cast<RHS_Scalar_T>(lhs(i, j));
 
-      return kron(A_dense, B);
+      return kron(lhs_dense, rhs);
     }
 
     /// Dense x Sparse -> Dense (wrapper)
-    template< typename T1, typename T2 >
+    template< typename LHS_Scalar_T, typename RHS_Scalar_T >
     auto
-    kron(const eigen_matrix_wrapper<T1>& A, const eigen_sparse_wrapper<T2>& B) -> eigen_matrix_wrapper<T2>
+    kron(const eigen_matrix_wrapper<LHS_Scalar_T>& lhs, const eigen_sparse_wrapper<RHS_Scalar_T>& rhs) -> eigen_matrix_wrapper<RHS_Scalar_T>
     {
-      // Convert B to compatible type (Dense)
-      eigen_matrix_wrapper<T1> B_dense(B.nbr_rows(), B.nbr_cols());
-      for (matrix_index_t i = 0; i < B.nbr_rows(); ++i)
-        for (matrix_index_t j = 0; j < B.nbr_cols(); ++j)
-          B_dense(i, j) = static_cast<T1>(B(i, j));
+      // Convert rhs to compatible type (Dense)
+      eigen_matrix_wrapper<LHS_Scalar_T> rhs_dense(rhs.nbr_rows(), rhs.nbr_cols());
+      for (matrix_index_t i = 0; i < rhs.nbr_rows(); ++i)
+        for (matrix_index_t j = 0; j < rhs.nbr_cols(); ++j)
+          rhs_dense(i, j) = static_cast<LHS_Scalar_T>(rhs(i, j));
 
-      return kron(A, B_dense);
+      return kron(lhs, rhs_dense);
     }
 
     /// Sparse x Sparse -> Sparse
-    template< typename T >
+    template< typename Scalar_T >
     auto
-    kron(const eigen_sparse_wrapper<T>& A, const eigen_sparse_wrapper<T>& B) -> eigen_sparse_wrapper<T>
+    kron(const eigen_sparse_wrapper<Scalar_T>& lhs, const eigen_sparse_wrapper<Scalar_T>& rhs) -> eigen_sparse_wrapper<Scalar_T>
     {
-      eigen_sparse_wrapper<T> result(A.nbr_rows() * B.nbr_rows(), A.nbr_cols() * B.nbr_cols());
-      std::vector<Eigen::Triplet<T>> triplets;
-      using iterator_t = typename eigen_sparse_wrapper<T>::MatrixType::InnerIterator;
-      // Iterate A
-      for (int k = 0; k < A.m_mat.outerSize(); ++k)
+      eigen_sparse_wrapper<Scalar_T> result(lhs.nbr_rows() * rhs.nbr_rows(), lhs.nbr_cols() * rhs.nbr_cols());
+      std::vector<Eigen::Triplet<Scalar_T>> triplets;
+      using iterator_t = typename eigen_sparse_wrapper<Scalar_T>::MatrixType::InnerIterator;
+      // Iterate lhs
+      for (int k = 0; k < lhs.m_mat.outerSize(); ++k)
       {
-        for (iterator_t itA(A.m_mat, k); itA; ++itA)
+        for (iterator_t itA(lhs.m_mat, k); itA; ++itA)
         {
           auto rA = itA.row();
           auto cA = itA.col();
           auto vA = itA.value();
 
-          // Iterate B
-          for (int l = 0; l < B.m_mat.outerSize(); ++l)
-            for (iterator_t itB(B.m_mat, l); itB; ++itB)
-              triplets.emplace_back(rA * B.nbr_rows() + itB.row(), cA * B.nbr_cols() + itB.col(), vA * itB.value());
+          // Iterate rhs
+          for (int l = 0; l < rhs.m_mat.outerSize(); ++l)
+            for (iterator_t itB(rhs.m_mat, l); itB; ++itB)
+              triplets.emplace_back(rA * rhs.nbr_rows() + itB.row(), cA * rhs.nbr_cols() + itB.col(), vA * itB.value());
         }
       }
       result.m_mat.setFromTriplets(triplets.begin(), triplets.end());
@@ -139,44 +139,44 @@ namespace glucat
 
 #if defined(_GLUCAT_USE_ARMADILLO)
     /// Mixed kron: Sparse (wrapper) x Dense (Armadillo) -> Dense (Armadillo)
-    template< typename T1, typename T2 >
+    template< typename LHS_Scalar_T, typename RHS_Scalar_T >
     auto
-    kron(const eigen_sparse_wrapper<T1>& A, const arma::Mat<T2>& B) -> arma::Mat<T2>
+    kron(const eigen_sparse_wrapper<LHS_Scalar_T>& lhs, const arma::Mat<RHS_Scalar_T>& rhs) -> arma::Mat<RHS_Scalar_T>
     {
-      // Convert A to arma::Mat (dense)
-      arma_matrix_wrapper<T2> wrapper(A);
-      return arma::kron(wrapper.m_mat, B);
+      // Convert lhs to arma::Mat (dense)
+      arma_matrix_wrapper<RHS_Scalar_T> wrapper(lhs);
+      return arma::kron(wrapper.m_mat, rhs);
     }
 
     /// Mixed kron: Sparse (wrapper) x Dense (Armadillo Wrapper) -> Dense (Armadillo Wrapper)
-    template< typename T1, typename T2 >
+    template< typename LHS_Scalar_T, typename RHS_Scalar_T >
     auto
-    kron(const eigen_sparse_wrapper<T1>& A, const arma_matrix_wrapper<T2>& B) -> arma_matrix_wrapper<T2>
+    kron(const eigen_sparse_wrapper<LHS_Scalar_T>& lhs, const arma_matrix_wrapper<RHS_Scalar_T>& rhs) -> arma_matrix_wrapper<RHS_Scalar_T>
     {
-      // Convert A to compatible type (Dense Armadillo Wrapper) efficiently
-      arma_matrix_wrapper<T2> A_dense(A);
-      return kron(A_dense, B);
+      // Convert lhs to compatible type (Dense Armadillo Wrapper) efficiently
+      arma_matrix_wrapper<RHS_Scalar_T> lhs_dense(lhs);
+      return kron(lhs_dense, rhs);
     }
 
     /// Mixed kron: Sparse (arma wrapper) x Dense (arma wrapper) -> Dense (arma wrapper)
     /// This handles the case causing verify_glucat_kron.cpp to fail.
-    template< typename T1, typename T2 >
+    template< typename LHS_Scalar_T, typename RHS_Scalar_T >
     auto
-    kron(const arma_sparse_wrapper<T1>& A, const arma_matrix_wrapper<T2>& B) -> arma_matrix_wrapper<T2>
+    kron(const arma_sparse_wrapper<LHS_Scalar_T>& lhs, const arma_matrix_wrapper<RHS_Scalar_T>& rhs) -> arma_matrix_wrapper<RHS_Scalar_T>
     {
-      // Convert A to compatible type (Dense Wrapper)
-      arma_matrix_wrapper<T2> A_dense(A); // Will use constructor converting sparse to dense
-      return kron(A_dense, B);
+      // Convert lhs to compatible type (Dense Wrapper)
+      arma_matrix_wrapper<RHS_Scalar_T> lhs_dense(lhs); // Will use constructor converting sparse to dense
+      return kron(lhs_dense, rhs);
     }
 
     /// Mixed kron: Dense (arma wrapper) x Sparse (arma wrapper) -> Dense (arma wrapper)
-    template< typename T1, typename T2 >
+    template< typename LHS_Scalar_T, typename RHS_Scalar_T >
     auto
-    kron(const arma_matrix_wrapper<T1>& A, const arma_sparse_wrapper<T2>& B) -> arma_matrix_wrapper<T2>
+    kron(const arma_matrix_wrapper<LHS_Scalar_T>& lhs, const arma_sparse_wrapper<RHS_Scalar_T>& rhs) -> arma_matrix_wrapper<RHS_Scalar_T>
     {
-      // Convert B to compatible type (Dense Wrapper)
-      arma_matrix_wrapper<T1> B_dense(B);
-      return kron(A, B_dense);
+      // Convert rhs to compatible type (Dense Wrapper)
+      arma_matrix_wrapper<LHS_Scalar_T> rhs_dense(rhs);
+      return kron(lhs, rhs_dense);
     }
 #endif
 
@@ -603,15 +603,15 @@ namespace glucat
     isinf() const -> bool
     { return !m_mat.allFinite() && !m_mat.hasNaN(); }
 
-    template< typename T >
+    template< typename Scalar_T >
     auto
-    eigen_matrix_wrapper<T>::
+    eigen_matrix_wrapper<Scalar_T>::
     eigenvalues() const -> std::vector<std::complex<double>>
     {
       // Optimized for real matrices as per matrix representation
-      if constexpr (std::is_arithmetic_v<T> || std::is_same_v<T, double> || std::is_same_v<T, float> || std::is_same_v<T, long double>)
+      if constexpr (std::is_arithmetic_v<Scalar_T> || std::is_same_v<Scalar_T, double> || std::is_same_v<Scalar_T, float> || std::is_same_v<Scalar_T, long double>)
       {
-         Eigen::EigenSolver<typename eigen_matrix_wrapper<T>::MatrixType> es(m_mat);
+         Eigen::EigenSolver<typename eigen_matrix_wrapper<Scalar_T>::MatrixType> es(m_mat);
          const auto& E = es.eigenvalues();
          std::vector<std::complex<double>> result(E.size());
          for (int i = 0; i < E.size(); ++i)
@@ -624,7 +624,7 @@ namespace glucat
          Eigen::MatrixXcd dmat(nbr_rows(), nbr_cols());
          for (matrix_index_t i = 0; i < nbr_rows(); ++i)
            for (matrix_index_t j = 0; j < nbr_cols(); ++j)
-             dmat(i, j) = std::complex<double>(numeric_traits<T>::to_double((*this)(i, j)), 0.0);
+             dmat(i, j) = std::complex<double>(numeric_traits<Scalar_T>::to_double((*this)(i, j)), 0.0);
 
          Eigen::ComplexEigenSolver<Eigen::MatrixXcd> es(dmat);
          const auto& E = es.eigenvalues();
