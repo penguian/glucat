@@ -432,6 +432,7 @@ namespace glucat
     eigen_matrix_wrapper<Scalar_T>::
     resize(matrix_index_t rows, matrix_index_t cols, bool preserve)
     {
+      // Preserve support can be simplified or removed if unused
       if (preserve)
         m_mat.conservativeResize(rows, cols);
       else
@@ -456,7 +457,7 @@ namespace glucat
     zeros(matrix_index_t rows, matrix_index_t cols)
     {
       set_size(rows, cols);
-      m_mat.setZero();
+      zeros();
     }
 
     template< typename Scalar_T >
@@ -607,45 +608,30 @@ namespace glucat
     eigen_matrix_wrapper<T>::
     eigenvalues() const -> std::vector<std::complex<double>>
     {
-      // If T is real
+      // Optimized for real matrices as per matrix representation
       if constexpr (std::is_arithmetic_v<T> || std::is_same_v<T, double> || std::is_same_v<T, float> || std::is_same_v<T, long double>)
       {
-        Eigen::EigenSolver<typename eigen_matrix_wrapper<T>::MatrixType> es(m_mat);
-        const auto& E = es.eigenvalues();
-        std::vector<std::complex<double>> result(E.size());
-        for (int i = 0; i < E.size(); ++i)
-          result[i] = std::complex<double>(E[i].real(), E[i].imag());
-
-        return result;
-      }
-      // TBD !! If T is complex
-      else if constexpr (is_complex_t<T>::value)
-      {
-        Eigen::ComplexEigenSolver<typename eigen_matrix_wrapper<T>::MatrixType> es(m_mat);
-        const auto& E = es.eigenvalues();
-        std::vector<std::complex<double>> result(E.size());
-        for (int i = 0; i < E.size(); ++i)
-        {
-          // complex cast to double
-          result[i] = std::complex<double>(std::real(E[i]), std::imag(E[i]));
-        }
-
-        return result;
+         Eigen::EigenSolver<typename eigen_matrix_wrapper<T>::MatrixType> es(m_mat);
+         const auto& E = es.eigenvalues();
+         std::vector<std::complex<double>> result(E.size());
+         for (int i = 0; i < E.size(); ++i)
+           result[i] = std::complex<double>(E[i].real(), E[i].imag());
+         return result;
       }
       else
       {
-        Eigen::MatrixXcd dmat(nbr_rows(), nbr_cols());
-        for (matrix_index_t i = 0; i < nbr_rows(); ++i)
-          for (matrix_index_t j = 0; j < nbr_cols(); ++j)
-            dmat(i, j) = std::complex<double>(numeric_traits<T>::to_double((*this)(i, j)), 0.0);
+         // Fallback for complex or custom scalar types
+         Eigen::MatrixXcd dmat(nbr_rows(), nbr_cols());
+         for (matrix_index_t i = 0; i < nbr_rows(); ++i)
+           for (matrix_index_t j = 0; j < nbr_cols(); ++j)
+             dmat(i, j) = std::complex<double>(numeric_traits<T>::to_double((*this)(i, j)), 0.0);
 
-        Eigen::ComplexEigenSolver<Eigen::MatrixXcd> es(dmat);
-        const auto& E = es.eigenvalues();
-        std::vector<std::complex<double>> result(E.size());
-        for (int i = 0; i < E.size(); ++i)
-          result[i] = E[i];
-
-        return result;
+         Eigen::ComplexEigenSolver<Eigen::MatrixXcd> es(dmat);
+         const auto& E = es.eigenvalues();
+         std::vector<std::complex<double>> result(E.size());
+         for (int i = 0; i < E.size(); ++i)
+           result[i] = E[i];
+         return result;
       }
     }
 
@@ -796,7 +782,7 @@ namespace glucat
     zeros(matrix_index_t rows, matrix_index_t cols)
     {
       set_size(rows, cols);
-      m_mat.zeros();
+      zeros();
     }
 
     template< typename Scalar_T >
@@ -946,16 +932,7 @@ namespace glucat
     auto
     arma_matrix_wrapper<Scalar_T>::
     norm_frob2() const
-    {
-      // TBD !!
-      if constexpr (is_complex_t<Scalar_T>::value)
-      {
-        auto n = arma::norm(m_mat, "fro");
-        return n * n;
-      }
-      else
-        return arma::accu(arma::square(m_mat));
-    }
+    { return arma::accu(arma::square(m_mat)); }
 
     template< typename Scalar_T >
     auto
@@ -1070,9 +1047,8 @@ namespace glucat
     eigen_sparse_wrapper<Scalar_T>::
     zeros(matrix_index_t rows, matrix_index_t cols)
     {
-      // TBD !!
       set_size(rows, cols);
-      m_mat.setZero();
+      zeros();
     }
 
     template< typename Scalar_T >
@@ -1230,8 +1206,10 @@ namespace glucat
     eigen_sparse_wrapper<Scalar_T>::
     isinf() const -> bool
     {
-      // TBD!!
-      return false; // approximation
+      for (int k = 0; k < m_mat.outerSize(); ++k)
+        for (typename MatrixType::InnerIterator it(m_mat, k); it; ++it)
+          if (numeric_traits<Scalar_T>::isinf(it.value())) return true;
+      return false;
     }
 
     template< typename Scalar_T >
@@ -1239,8 +1217,9 @@ namespace glucat
     eigen_sparse_wrapper<Scalar_T>::
     isnan() const -> bool
     {
-      // TBD!!
-      // Use generic check strictly or return false
+      for (int k = 0; k < m_mat.outerSize(); ++k)
+        for (typename MatrixType::InnerIterator it(m_mat, k); it; ++it)
+          if (numeric_traits<Scalar_T>::isnan(it.value())) return true;
       return false;
     }
 
@@ -1509,19 +1488,15 @@ namespace glucat
     arma_sparse_wrapper<Scalar_T>::
     zeros(matrix_index_t rows, matrix_index_t cols)
     {
-      // TBD !!
       set_size(rows, cols);
-      m_mat.zeros();
+      zeros();
     }
 
     template< typename Scalar_T >
     void
     arma_sparse_wrapper<Scalar_T>::
     zeros()
-    {
-      // TBD !!
-      m_mat.zeros();
-    }
+    { m_mat.zeros(); }
 
     template< typename Scalar_T >
     auto
@@ -1605,19 +1580,7 @@ namespace glucat
     auto
     arma_sparse_wrapper<Scalar_T>::
     norm_frob2() const
-    {
-      // TBD !!
-      if constexpr (is_complex_t<Scalar_T>::value)
-      {
-        auto n = arma::norm(m_mat, "fro");
-        return n * n;
-      }
-      else
-      {
-        auto n = arma::norm(m_mat, "fro");
-        return n * n;
-      }
-    }
+    { return arma::accu(arma::square(m_mat)); }
 
     template< typename Scalar_T >
     auto
