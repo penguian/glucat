@@ -115,7 +115,7 @@ namespace glucat
     {
     public:
       using MatrixType = arma::Mat<Scalar_T>;
-      using elem_type = Scalar_T;
+
       using value_type = Scalar_T;
       using size_type = matrix_index_t;
 
@@ -250,7 +250,7 @@ namespace glucat
     {
     public:
       using MatrixType = Eigen::Matrix<Scalar_T, Eigen::Dynamic, Eigen::Dynamic>;
-      using elem_type = Scalar_T;
+
       using value_type = Scalar_T;
       using size_type = typename MatrixType::Index;
 
@@ -373,7 +373,7 @@ namespace glucat
     {
     public:
       using MatrixType = Eigen::SparseMatrix<Scalar_T>;
-      using elem_type = Scalar_T;
+
       using value_type = Scalar_T;
       using size_type = typename MatrixType::Index;
 
@@ -519,7 +519,7 @@ namespace glucat
     {
     public:
       using MatrixType = arma::SpMat<Scalar_T>;
-      using elem_type = Scalar_T;
+
       using value_type = Scalar_T;
       using size_type = matrix_index_t;
 
@@ -735,7 +735,7 @@ namespace glucat
     template< typename Matrix_T >
     struct eig_genus
     {
-      using Scalar_T = typename Matrix_T::elem_type; // elem_type
+      using Scalar_T = typename Matrix_T::value_type;
       /// Is the matrix singular?
       bool m_is_singular = false;
       /// What kind of eigenvalues does the matrix contain?

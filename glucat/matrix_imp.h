@@ -203,7 +203,7 @@ namespace glucat
     matrix_impl_base<Derived>::
     classify_eigenvalues() const
     {
-      using Scalar_T = typename Derived::elem_type;
+      using Scalar_T = typename Derived::value_type;
       eig_genus<Derived> result;
 
       auto lambda = derived().eigenvalues(); // Call member
@@ -1482,7 +1482,7 @@ namespace glucat
       else
       {
         // Manual identity (may be slow for sparse if insertion not optimized)
-        for (matrix_index_t i = 0; i < dim; ++i) res(i, i) = static_cast<typename Matrix_T::elem_type>(1);
+        for (matrix_index_t i = 0; i < dim; ++i) res(i, i) = static_cast<typename Matrix_T::value_type>(1);
       }
       return res;
     }
@@ -1524,7 +1524,7 @@ namespace glucat
             {
               for (matrix_index_t j = 0; j < blk_cols; ++j)
               {
-                res(i, j) += static_cast<typename RHS_T::elem_type>(val) * static_cast<typename RHS_T::elem_type>(rhs(start_row + i, start_col + j));
+                res(i, j) += static_cast<typename RHS_T::value_type>(val) * static_cast<typename RHS_T::value_type>(rhs(start_row + i, start_col + j));
               }
             }
           }
@@ -1546,7 +1546,7 @@ namespace glucat
               {
                 for (matrix_index_t j = 0; j < blk_cols; ++j)
                 {
-                  res(i, j) += static_cast<typename RHS_T::elem_type>(val) * static_cast<typename RHS_T::elem_type>(rhs(start_row + i, start_col + j));
+                  res(i, j) += static_cast<typename RHS_T::value_type>(val) * static_cast<typename RHS_T::value_type>(rhs(start_row + i, start_col + j));
                 }
               }
             }
@@ -1558,8 +1558,8 @@ namespace glucat
       // For a signed permutation matrix of size N, norm_frob2 is N (assuming entries are +/- 1).
       // This matches legacy implementation which used lhs.size1().
       // Use to_scalar_t to safely convert n_rows (size_t/long) to Scalar (potentially qd_real)
-      auto norm_sq = numeric_traits<typename RHS_T::elem_type>::to_scalar_t(lhs.nbr_rows());
-      if (norm_sq != numeric_traits<typename RHS_T::elem_type>::to_scalar_t(1))
+      auto norm_sq = numeric_traits<typename RHS_T::value_type>::to_scalar_t(lhs.nbr_rows());
+      if (norm_sq != numeric_traits<typename RHS_T::value_type>::to_scalar_t(1))
       {
         // If not 1, we must scale result
         if constexpr (requires { res(0, 0); })
