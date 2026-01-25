@@ -36,7 +36,6 @@
 
 // Check if Armadillo should be used
 #if defined(_GLUCAT_USE_ARMADILLO)
-
   #include <armadillo>
 #endif
 
@@ -46,6 +45,7 @@
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
 #pragma GCC diagnostic pop
+
 #include <type_traits>
 #include <complex>
 #include <vector>
@@ -625,7 +625,7 @@ namespace glucat
     template<> struct is_arma_supported<std::complex<float>> : std::true_type {};
     template<> struct is_arma_supported<std::complex<double>> : std::true_type {};
 
-    // Explicitly NOTE: long double, dd_real, qd_real will use the default false_type
+    // Explicitly NOTE: long double, dd_real, qd_real use the default false_type
     // and thus be dispatched to the Eigen wrapper.
 #endif
 
@@ -665,10 +665,10 @@ namespace glucat
     template< typename Scalar_T >
     using sparse_matrix_t = typename sparse_matrix_type_selector<Scalar_T>::type;
 
-    // =========================================================================
+    // ===========================================================
     // Matrix Template Classes (Facade)
-    // Named dense_matrix to avoid collision with namespace matrix (legacy)
-    // =========================================================================
+    // Named dense_matrix to avoid collision with namespace matrix
+    // ===========================================================
 
     template< typename Scalar_T >
     class dense_matrix :
@@ -743,9 +743,6 @@ namespace glucat
       /// Argument such that exp(pi-m_safe_arg) lies between arguments of eigenvalues
       Scalar_T   m_safe_arg = Scalar_T(0);
     };
-
-    // Classify the eigenvalues of a matrix
-    // Note: implementation moved to matrix_impl_base::classify_eigenvalues()
   }
 }
 
