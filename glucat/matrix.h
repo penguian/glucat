@@ -117,15 +117,14 @@ namespace glucat
       using MatrixType = arma::Mat<Scalar_T>;
       using elem_type = Scalar_T;
       using value_type = Scalar_T;
-      using uword = matrix_index_t;
-      using size_type = uword;
+      using size_type = matrix_index_t;
 
       MatrixType m_mat;
 
       // Constructors
       arma_matrix_wrapper() = default;
 
-      arma_matrix_wrapper(uword rows, uword cols);
+      arma_matrix_wrapper(matrix_index_t rows, matrix_index_t cols);
 
       template< typename Other_Matrix_T >
       explicit arma_matrix_wrapper(const Other_Matrix_T& other);
@@ -150,21 +149,21 @@ namespace glucat
 
       // Attributes updated automatically by m_mat operations, accessors delegate directly
 
-      void set_size(uword rows, uword cols);
+      void set_size(matrix_index_t rows, matrix_index_t cols);
 
-      void resize(uword rows, uword cols, bool preserve = false);
+      void resize(matrix_index_t rows, matrix_index_t cols, bool preserve = false);
 
-      auto nbr_rows() const -> uword;
-      auto nbr_cols() const -> uword;
+      auto nbr_rows() const -> matrix_index_t;
+      auto nbr_cols() const -> matrix_index_t;
 
       void clear();
-      void zeros(uword rows, uword cols);
+      void zeros(matrix_index_t rows, matrix_index_t cols);
       void zeros();
-      void unit(uword rows, uword cols);
+      void unit(matrix_index_t rows, matrix_index_t cols);
 
       // Element access
-      auto operator() (uword i, uword j) -> Scalar_T&;
-      auto operator() (uword i, uword j) const -> const Scalar_T&;
+      auto operator() (matrix_index_t i, matrix_index_t j) -> Scalar_T&;
+      auto operator() (matrix_index_t i, matrix_index_t j) const -> const Scalar_T&;
 
       // Operators
       auto operator+= (const arma_matrix_wrapper& other) -> arma_matrix_wrapper&;
@@ -253,7 +252,6 @@ namespace glucat
       using MatrixType = Eigen::Matrix<Scalar_T, Eigen::Dynamic, Eigen::Dynamic>;
       using elem_type = Scalar_T;
       using value_type = Scalar_T;
-      using uword = matrix_index_t;
       using size_type = typename MatrixType::Index;
 
       MatrixType m_mat;
@@ -262,7 +260,7 @@ namespace glucat
       eigen_matrix_wrapper() = default;
 
       /// Armadillo constructor (rows, cols)
-      eigen_matrix_wrapper(uword rows, uword cols);
+      eigen_matrix_wrapper(matrix_index_t rows, matrix_index_t cols);
 
       /// Constructor from Eigen expressions (e.g. m * s)
       template< typename Derived >
@@ -298,27 +296,27 @@ namespace glucat
       eigen_matrix_wrapper(const MatrixType& m);
       eigen_matrix_wrapper(MatrixType&& m);
 
-      void set_size(uword rows, uword cols);
+      void set_size(matrix_index_t rows, matrix_index_t cols);
 
-      void resize(uword rows, uword cols, bool preserve = false);
+      void resize(matrix_index_t rows, matrix_index_t cols, bool preserve = false);
 
       // Helpers
-      auto nbr_rows() const -> uword;
-      auto nbr_cols() const -> uword;
+      auto nbr_rows() const -> matrix_index_t;
+      auto nbr_cols() const -> matrix_index_t;
 
       void clear();
 
       void zeros();
-      void zeros(uword rows, uword cols);
+      void zeros(matrix_index_t rows, matrix_index_t cols);
 
-      void unit(uword rows, uword cols);
+      void unit(matrix_index_t rows, matrix_index_t cols);
 
       auto is_finite() const -> bool;
       auto has_nan() const -> bool;
 
       // Element access
-      auto operator() (uword i, uword j) -> Scalar_T&;
-      auto operator() (uword i, uword j) const -> const Scalar_T&;
+      auto operator() (matrix_index_t i, matrix_index_t j) -> Scalar_T&;
+      auto operator() (matrix_index_t i, matrix_index_t j) const -> const Scalar_T&;
 
       // Operators
       auto operator+= (const eigen_matrix_wrapper& other) -> eigen_matrix_wrapper&;
@@ -377,7 +375,6 @@ namespace glucat
       using MatrixType = Eigen::SparseMatrix<Scalar_T>;
       using elem_type = Scalar_T;
       using value_type = Scalar_T;
-      using uword = matrix_index_t;
       using size_type = typename MatrixType::Index;
 
       MatrixType m_mat;
@@ -388,7 +385,7 @@ namespace glucat
       explicit eigen_sparse_wrapper(const MatrixType& m);
 
       /// Armadillo/uBLAS/Generator style constructor support
-      eigen_sparse_wrapper(uword rows, uword cols, uword estimated_nnz = 0);
+      eigen_sparse_wrapper(matrix_index_t rows, matrix_index_t cols, matrix_index_t estimated_nnz = 0);
 
       /// Copy/Move similar to dense
       eigen_sparse_wrapper(const eigen_sparse_wrapper& other);
@@ -399,15 +396,15 @@ namespace glucat
 
       auto operator= (eigen_sparse_wrapper&& other) noexcept -> eigen_sparse_wrapper&;
 
-      void set_size(uword rows, uword cols);
+        void set_size(matrix_index_t rows, matrix_index_t cols);
 
       /// Make writable
-      void resize(uword rows, uword cols, bool preserve = false);
+        void resize(matrix_index_t rows, matrix_index_t cols, bool preserve = false);
 
       void clear();
 
       void zeros();
-      void zeros(uword rows, uword cols);
+        void zeros(matrix_index_t rows, matrix_index_t cols);
 
       /// Iterator support
       class const_iterator
@@ -429,19 +426,19 @@ namespace glucat
 
         auto operator!= (const const_iterator& other) const -> bool;
 
-        auto row() const -> uword;
-        auto col() const -> uword;
+        auto row() const -> matrix_index_t;
+        auto col() const -> matrix_index_t;
         auto operator* () const -> Scalar_T;
       };
 
       auto begin() const -> const_iterator;
       auto end() const -> const_iterator;
 
-      auto nbr_rows() const -> uword;
-      auto nbr_cols() const -> uword;
+      auto nbr_rows() const -> matrix_index_t;
+      auto nbr_cols() const -> matrix_index_t;
 
-      auto operator() (uword i, uword j) const -> Scalar_T;
-      auto operator() (uword i, uword j) -> Scalar_T&;
+      auto operator() (matrix_index_t i, matrix_index_t j) const -> Scalar_T;
+      auto operator() (matrix_index_t i, matrix_index_t j) -> Scalar_T&;
 
       auto operator+= (const eigen_sparse_wrapper& other) -> eigen_sparse_wrapper&;
       auto operator-= (const eigen_sparse_wrapper& other) -> eigen_sparse_wrapper&;
@@ -524,8 +521,7 @@ namespace glucat
       using MatrixType = arma::SpMat<Scalar_T>;
       using elem_type = Scalar_T;
       using value_type = Scalar_T;
-      using uword = matrix_index_t;
-      using size_type = uword;
+      using size_type = matrix_index_t;
 
       MatrixType m_mat;
 
@@ -534,7 +530,7 @@ namespace glucat
       /// Constructor from Armadillo SpMat
       explicit arma_sparse_wrapper(const MatrixType& m);
 
-      arma_sparse_wrapper(uword rows, uword cols);
+      arma_sparse_wrapper(matrix_index_t rows, matrix_index_t cols);
 
       /// Copy
       arma_sparse_wrapper(const arma_sparse_wrapper& other);
@@ -544,12 +540,12 @@ namespace glucat
       auto operator= (const arma_sparse_wrapper& other) -> arma_sparse_wrapper&;
       auto operator= (arma_sparse_wrapper&& other) noexcept -> arma_sparse_wrapper&;
 
-      void set_size(uword rows, uword cols);
+      void set_size(matrix_index_t rows, matrix_index_t cols);
 
-      void resize(uword rows, uword cols, bool preserve = false);
+      void resize(matrix_index_t rows, matrix_index_t cols, bool preserve = false);
 
       void clear();
-      void zeros(uword rows, uword cols);
+      void zeros(matrix_index_t rows, matrix_index_t cols);
       void zeros();
 
       using const_iterator = typename MatrixType::const_iterator;
@@ -557,11 +553,11 @@ namespace glucat
       auto begin() const -> const_iterator;
       auto end() const -> const_iterator;
 
-      auto nbr_rows() const -> uword;
-      auto nbr_cols() const -> uword;
+      auto nbr_rows() const -> matrix_index_t;
+      auto nbr_cols() const -> matrix_index_t;
 
-      auto operator() (uword i, uword j) const -> Scalar_T;
-      auto operator() (uword i, uword j) -> auto;
+      auto operator() (matrix_index_t i, matrix_index_t j) const -> Scalar_T;
+      auto operator() (matrix_index_t i, matrix_index_t j) -> auto;
 
       auto operator+= (const arma_sparse_wrapper& other) -> arma_sparse_wrapper&;
       auto operator* (const arma_sparse_wrapper& other) const -> arma_sparse_wrapper;
