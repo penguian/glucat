@@ -97,8 +97,8 @@ namespace glucat
     {
       // Convert A to compatible type (Dense)
       eigen_matrix_wrapper<T2> A_dense(A.nbr_rows(), A.nbr_cols());
-      for (std::size_t i = 0; i < A.nbr_rows(); ++i)
-        for (std::size_t j = 0; j < A.nbr_cols(); ++j)
+      for (matrix_index_t i = 0; i < A.nbr_rows(); ++i)
+        for (matrix_index_t j = 0; j < A.nbr_cols(); ++j)
           A_dense(i, j) = static_cast<T2>(A(i, j));
 
       return kron(A_dense, B);
@@ -111,8 +111,8 @@ namespace glucat
     {
       // Convert B to compatible type (Dense)
       eigen_matrix_wrapper<T1> B_dense(B.nbr_rows(), B.nbr_cols());
-      for (std::size_t i = 0; i < B.nbr_rows(); ++i)
-        for (std::size_t j = 0; j < B.nbr_cols(); ++j)
+      for (matrix_index_t i = 0; i < B.nbr_rows(); ++i)
+        for (matrix_index_t j = 0; j < B.nbr_cols(); ++j)
           B_dense(i, j) = static_cast<T1>(B(i, j));
 
       return kron(A, B_dense);
@@ -310,7 +310,7 @@ namespace glucat
     eigen_matrix_wrapper<Scalar_T>::
     nbr_rows() const -> uword
     {
-      return static_cast<std::size_t>(m_mat.rows());
+      return static_cast<matrix_index_t>(m_mat.rows());
     }
 
     template< typename Scalar_T >
@@ -318,7 +318,7 @@ namespace glucat
     eigen_matrix_wrapper<Scalar_T>::
     nbr_cols() const -> uword
     {
-      return static_cast<std::size_t>(m_mat.cols());
+      return static_cast<matrix_index_t>(m_mat.cols());
     }
 
     template< typename Scalar_T >
@@ -708,8 +708,8 @@ namespace glucat
       else
       {
         Eigen::MatrixXcd dmat(nbr_rows(), nbr_cols());
-        for (std::size_t i = 0; i < nbr_rows(); ++i)
-          for (std::size_t j = 0; j < nbr_cols(); ++j)
+        for (matrix_index_t i = 0; i < nbr_rows(); ++i)
+          for (matrix_index_t j = 0; j < nbr_cols(); ++j)
             dmat(i, j) = std::complex<double>(numeric_traits<T>::to_double((*this)(i, j)), 0.0);
 
         Eigen::ComplexEigenSolver<Eigen::MatrixXcd> es(dmat);
@@ -1035,7 +1035,7 @@ namespace glucat
       arma::cx_vec eigval;
       arma::eig_gen(eigval, m_mat);
       std::vector<std::complex<double>> res(eigval.n_elem);
-      for (size_t i = 0; i < eigval.n_elem; ++i)
+      for (matrix_index_t i = 0; i < eigval.n_elem; ++i)
       {
         res[i] = std::complex<double>(eigval[i].real(), eigval[i].imag());
       }
@@ -1117,7 +1117,7 @@ namespace glucat
     eigen_sparse_wrapper<Scalar_T>::
     nbr_rows() const -> uword
     {
-      return static_cast<std::size_t>(m_mat.rows());
+      return static_cast<matrix_index_t>(m_mat.rows());
     }
 
     template< typename Scalar_T >
@@ -1125,7 +1125,7 @@ namespace glucat
     eigen_sparse_wrapper<Scalar_T>::
     nbr_cols() const -> uword
     {
-      return static_cast<std::size_t>(m_mat.cols());
+      return static_cast<matrix_index_t>(m_mat.cols());
     }
 
     template< typename Scalar_T >
@@ -1466,7 +1466,7 @@ namespace glucat
 
     template< typename Matrix_T >
     auto
-    unit(const size_t dim) -> const Matrix_T
+    unit(const matrix_index_t dim) -> const Matrix_T
     {
       Matrix_T res(dim, dim);
       // Set to identity
@@ -1482,7 +1482,7 @@ namespace glucat
       else
       {
         // Manual identity (may be slow for sparse if insertion not optimized)
-        for (size_t i = 0; i < dim; ++i) res(i, i) = static_cast<typename Matrix_T::elem_type>(1);
+        for (matrix_index_t i = 0; i < dim; ++i) res(i, i) = static_cast<typename Matrix_T::elem_type>(1);
       }
       return res;
     }
@@ -1492,8 +1492,8 @@ namespace glucat
     auto
     signed_perm_nork(const LHS_T& lhs, const RHS_T& rhs) -> const RHS_T
     {
-      size_t blk_rows = rhs.nbr_rows() / (std::max)(size_t(1), size_t(lhs.nbr_rows()));
-      size_t blk_cols = rhs.nbr_cols() / (std::max)(size_t(1), size_t(lhs.nbr_cols()));
+      matrix_index_t blk_rows = rhs.nbr_rows() / (std::max)(matrix_index_t(1), matrix_index_t(lhs.nbr_rows()));
+      matrix_index_t blk_cols = rhs.nbr_cols() / (std::max)(matrix_index_t(1), matrix_index_t(lhs.nbr_cols()));
 
       if (lhs.nbr_rows() == 0 || lhs.nbr_cols() == 0)
       {
@@ -1515,14 +1515,14 @@ namespace glucat
           auto val = *it; // Value
           if (val != 0)
           {
-            size_t r = it.row();
-            size_t c = it.col();
+            matrix_index_t r = it.row();
+            matrix_index_t c = it.col();
 
-            size_t start_row = r * blk_rows;
-            size_t start_col = c * blk_cols;
-            for (size_t i = 0; i < blk_rows; ++i)
+            matrix_index_t start_row = r * blk_rows;
+            matrix_index_t start_col = c * blk_cols;
+            for (matrix_index_t i = 0; i < blk_rows; ++i)
             {
-              for (size_t j = 0; j < blk_cols; ++j)
+              for (matrix_index_t j = 0; j < blk_cols; ++j)
               {
                 res(i, j) += static_cast<typename RHS_T::elem_type>(val) * static_cast<typename RHS_T::elem_type>(rhs(start_row + i, start_col + j));
               }
@@ -1533,18 +1533,18 @@ namespace glucat
       else
       {
         // Fallback for types without sparse iterators (e.g. dense)
-        for (size_t r = 0; r < lhs.nbr_rows(); ++r)
+        for (matrix_index_t r = 0; r < lhs.nbr_rows(); ++r)
         {
-          for (size_t c = 0; c < lhs.nbr_cols(); ++c)
+          for (matrix_index_t c = 0; c < lhs.nbr_cols(); ++c)
           {
             auto val = lhs(r, c);
             if (val != 0)
             {
-              size_t start_row = r * blk_rows;
-              size_t start_col = c * blk_cols;
-              for (size_t i = 0; i < blk_rows; ++i)
+              matrix_index_t start_row = r * blk_rows;
+              matrix_index_t start_col = c * blk_cols;
+              for (matrix_index_t i = 0; i < blk_rows; ++i)
               {
-                for (size_t j = 0; j < blk_cols; ++j)
+                for (matrix_index_t j = 0; j < blk_cols; ++j)
                 {
                   res(i, j) += static_cast<typename RHS_T::elem_type>(val) * static_cast<typename RHS_T::elem_type>(rhs(start_row + i, start_col + j));
                 }
@@ -1564,8 +1564,8 @@ namespace glucat
         // If not 1, we must scale result
         if constexpr (requires { res(0, 0); })
         {
-          for (size_t i = 0; i < res.nbr_rows(); ++i)
-            for (size_t j = 0; j < res.nbr_cols(); ++j)
+          for (matrix_index_t i = 0; i < res.nbr_rows(); ++i)
+            for (matrix_index_t j = 0; j < res.nbr_cols(); ++j)
               res(i, j) /= norm_sq;
         }
       }
@@ -1593,8 +1593,8 @@ namespace glucat
         // Sparse iterator optimization
         for (auto it = lhs.begin(); it != lhs.end(); ++it)
         {
-          size_t r = it.row();
-          size_t c = it.col();
+          matrix_index_t r = it.row();
+          matrix_index_t c = it.col();
           auto val = *it;
 
           // For inner product: sum( lhs(i,j) * rhs(i,j) )

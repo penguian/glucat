@@ -117,8 +117,8 @@ namespace glucat
   : m_frame( val.m_frame ), m_matrix( val.m_matrix.nbr_rows(), val.m_matrix.nbr_cols() )
   {
     this->m_matrix.zeros();
-    for (std::size_t i = 0; i < val.m_matrix.nbr_rows(); ++i)
-      for (std::size_t j = 0; j < val.m_matrix.nbr_cols(); ++j)
+    for (matrix_index_t i = 0; i < val.m_matrix.nbr_rows(); ++i)
+      for (matrix_index_t j = 0; j < val.m_matrix.nbr_cols(); ++j)
         this->m_matrix(i, j) = numeric_traits<Scalar_T>::to_scalar_t(val.m_matrix(i, j));
   }
 
@@ -135,8 +135,8 @@ namespace glucat
     {
       const matrix_index_t dim = folded_dim<matrix_index_t>(frm);
       this->m_matrix.zeros(dim, dim); // Resize and clear
-      for (std::size_t i = 0; i < val.m_matrix.nbr_rows(); ++i)
-        for (std::size_t j = 0; j < val.m_matrix.nbr_cols(); ++j)
+      for (matrix_index_t i = 0; i < val.m_matrix.nbr_rows(); ++i)
+        for (matrix_index_t j = 0; j < val.m_matrix.nbr_cols(); ++j)
           this->m_matrix(i, j) = numeric_traits<Scalar_T>::to_scalar_t(val.m_matrix(i, j));
     }
   }
@@ -298,15 +298,15 @@ namespace glucat
     if constexpr (requires { this->m_matrix = mtx; }) {
          this->m_matrix = mtx;
     } else {
-         std::size_t r = 0, c = 0;
+         matrix_index_t r = 0, c = 0;
          if constexpr(requires { mtx.nbr_rows(); }) { r = mtx.nbr_rows(); c = mtx.nbr_cols(); }
         else if constexpr(requires { mtx.n_rows; }) { r = mtx.n_rows; c = mtx.n_cols; }
         else { r = mtx.rows(); c = mtx.cols(); }
 
          this->m_matrix.resize(r, c, false);
          // this->m_matrix.clear(); // resize might not clear if preserve=false, but we overwrite
-         for (std::size_t i = 0; i < r; ++i)
-           for (std::size_t j = 0; j < c; ++j)
+         for (matrix_index_t i = 0; i < r; ++i)
+           for (matrix_index_t j = 0; j < c; ++j)
              this->m_matrix(i, j) = numeric_traits<Scalar_T>::to_scalar_t(mtx(i, j));
     }
   }

@@ -155,7 +155,7 @@ namespace glucat
   private:
     using basis_matrix_t = matrix::sparse_matrix_t<int>;
     using matrix_t = matrix::matrix_t<Scalar_T>;
-    using matrix_index_t = typename matrix_t::size_type;
+    using matrix_index_t = glucat::matrix_index_t;
 
   public:
     /// Class name used in messages

@@ -62,6 +62,8 @@
 
 namespace glucat
 {
+  using matrix_index_t = std::size_t;
+
   namespace matrix
   {
     // =========================================================================
@@ -115,8 +117,8 @@ namespace glucat
       using MatrixType = arma::Mat<Scalar_T>;
       using elem_type = Scalar_T;
       using value_type = Scalar_T;
-      using uword = arma::uword;
-      using size_type = arma::uword;
+      using uword = matrix_index_t;
+      using size_type = uword;
 
       MatrixType m_mat;
 
@@ -251,7 +253,7 @@ namespace glucat
       using MatrixType = Eigen::Matrix<Scalar_T, Eigen::Dynamic, Eigen::Dynamic>;
       using elem_type = Scalar_T;
       using value_type = Scalar_T;
-      using uword = std::size_t;
+      using uword = matrix_index_t;
       using size_type = typename MatrixType::Index;
 
       MatrixType m_mat;
@@ -375,7 +377,7 @@ namespace glucat
       using MatrixType = Eigen::SparseMatrix<Scalar_T>;
       using elem_type = Scalar_T;
       using value_type = Scalar_T;
-      using uword = std::size_t;
+      using uword = matrix_index_t;
       using size_type = typename MatrixType::Index;
 
       MatrixType m_mat;
@@ -522,8 +524,8 @@ namespace glucat
       using MatrixType = arma::SpMat<Scalar_T>;
       using elem_type = Scalar_T;
       using value_type = Scalar_T;
-      using uword = arma::uword;
-      using size_type = arma::uword;
+      using uword = matrix_index_t;
+      using size_type = uword;
 
       MatrixType m_mat;
 
@@ -718,7 +720,7 @@ namespace glucat
     auto signed_perm_nork(const LHS_T& lhs, const RHS_T& rhs) -> const RHS_T;
 
     template< typename Matrix_T >
-    auto unit(const size_t dim) -> const Matrix_T;
+    auto unit(const matrix_index_t dim) -> const Matrix_T;
 
     template< typename Scalar_T, typename LHS_T, typename RHS_T >
     auto inner(const LHS_T& lhs, const RHS_T& rhs) -> Scalar_T;
