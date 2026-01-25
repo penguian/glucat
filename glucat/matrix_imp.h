@@ -116,11 +116,11 @@ namespace glucat
     {
       eigen_sparse_wrapper<T> result(A.nbr_rows() * B.nbr_rows(), A.nbr_cols() * B.nbr_cols());
       std::vector<Eigen::Triplet<T>> triplets;
-
+      using iterator_t = typename eigen_sparse_wrapper<T>::MatrixType::InnerIterator;
       // Iterate A
       for (int k = 0; k < A.m_mat.outerSize(); ++k)
       {
-        for (typename eigen_sparse_wrapper<T>::MatrixType::InnerIterator itA(A.m_mat, k); itA; ++itA)
+        for (iterator_t itA(A.m_mat, k); itA; ++itA)
         {
           auto rA = itA.row();
           auto cA = itA.col();
@@ -128,7 +128,7 @@ namespace glucat
 
           // Iterate B
           for (int l = 0; l < B.m_mat.outerSize(); ++l)
-            for (typename eigen_sparse_wrapper<T>::MatrixType::InnerIterator itB(B.m_mat, l); itB; ++itB)
+            for (iterator_t itB(B.m_mat, l); itB; ++itB)
               triplets.emplace_back(rA * B.nbr_rows() + itB.row(), cA * B.nbr_cols() + itB.col(), vA * itB.value());
         }
       }
@@ -1175,8 +1175,10 @@ namespace glucat
     const_iterator::
     operator!= (const const_iterator& other) const -> bool
     {
-      if (m_outer != other.m_outer) return true;
-      if (m_outer >= mp_mat->outerSize()) return false;
+      if (m_outer != other.m_outer)
+        return true;
+      if (m_outer >= mp_mat->outerSize())
+        return false;
       return m_inner != other.m_inner;
     }
 
@@ -1208,7 +1210,8 @@ namespace glucat
     {
       for (int k = 0; k < m_mat.outerSize(); ++k)
         for (typename MatrixType::InnerIterator it(m_mat, k); it; ++it)
-          if (numeric_traits<Scalar_T>::isinf(it.value())) return true;
+          if (numeric_traits<Scalar_T>::isinf(it.value()))
+            return true;
       return false;
     }
 
@@ -1219,7 +1222,8 @@ namespace glucat
     {
       for (int k = 0; k < m_mat.outerSize(); ++k)
         for (typename MatrixType::InnerIterator it(m_mat, k); it; ++it)
-          if (numeric_traits<Scalar_T>::isnan(it.value())) return true;
+          if (numeric_traits<Scalar_T>::isnan(it.value()))
+            return true;
       return false;
     }
 
@@ -1230,7 +1234,7 @@ namespace glucat
     {
       Scalar_T sum = 0;
       for (int k = 0; k < m_mat.outerSize(); ++k)
-        for (typename eigen_sparse_wrapper<Scalar_T>::MatrixType::InnerIterator it(m_mat, k); it; ++it)
+        for (typename MatrixType::InnerIterator it(m_mat, k); it; ++it)
           if (it.row() == it.col())
             sum += it.value();
       return sum;
@@ -1244,7 +1248,7 @@ namespace glucat
       Eigen::Vector<typename numeric_traits<Scalar_T>::real_t, Eigen::Dynamic> row_sums(nbr_rows());
       row_sums.setZero();
       for (int k = 0; k < m_mat.outerSize(); ++k)
-        for (typename eigen_sparse_wrapper<Scalar_T>::MatrixType::InnerIterator it(m_mat, k); it; ++it)
+        for (typename MatrixType::InnerIterator it(m_mat, k); it; ++it)
           row_sums(it.row()) += numeric_traits<Scalar_T>::abs(it.value());
       return row_sums.maxCoeff();
     }
