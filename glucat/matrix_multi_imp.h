@@ -967,7 +967,7 @@ namespace glucat
   }
 
   /// Inverse generalized Fast Fourier Transform
-  template< typename Multivector_T, typename Matrix_T, typename Basis_Matrix_T >
+  template< typename Multivector_T, typename Matrix_T >
   static
   auto
   fast(const Matrix_T& X, index_t level) -> Multivector_T
@@ -977,8 +977,7 @@ namespace glucat
     using index_set_t = typename framed_multi_t::index_set_t;
     using Scalar_T = typename framed_multi_t::scalar_t;
     using matrix_t = Matrix_T;
-    using basis_matrix_t = Basis_Matrix_T;
-    using basis_scalar_t = typename basis_matrix_t::value_type;
+    using matrix_scalar_t = typename matrix_t::value_type;
     using traits_t = numeric_traits<Scalar_T>;
 
     if (level == 0)
@@ -988,15 +987,15 @@ namespace glucat
       return Scalar_T(0);
 
 
-    const basis_matrix_t&  I = matrix::unit<basis_matrix_t>(2);
-    basis_matrix_t J(2,2,2);
+    const matrix_t&  I = matrix::unit<matrix_t>(2);
+    matrix_t J(2,2);
     J.zeros();
-    J(0,1)  = basis_scalar_t(-1);
-    J(1,0)  = basis_scalar_t( 1);
-    basis_matrix_t K = J;
-    K(0,1)  = basis_scalar_t( 1);
-    basis_matrix_t JK = I;
-    JK(0,0) = basis_scalar_t(-1);
+    J(0,1)  = matrix_scalar_t(-1);
+    J(1,0)  = matrix_scalar_t( 1);
+    matrix_t K = J;
+    K(0,1)  = matrix_scalar_t( 1);
+    matrix_t JK = I;
+    JK(0,0) = matrix_scalar_t(-1);
 
     using matrix::signed_perm_nork;
     const index_set_t ist_mn   = index_set_t(-level);
@@ -1020,13 +1019,13 @@ namespace glucat
       const framed_multi_t& mn   = framed_multi_t(ist_mn);
       const framed_multi_t& pn   = framed_multi_t(ist_pn);
       const framed_multi_t& mnpn = framed_multi_t(ist_mnpn);
-      const framed_multi_t& i_x  = fast<framed_multi_t, matrix_t, basis_matrix_t>
+      const framed_multi_t& i_x  = fast<framed_multi_t, matrix_t>
                                        (signed_perm_nork(I, X), level-1);
-      const framed_multi_t& j_x  = fast<framed_multi_t, matrix_t, basis_matrix_t>
+      const framed_multi_t& j_x  = fast<framed_multi_t, matrix_t>
                                        (signed_perm_nork(J, X), level-1);
-      const framed_multi_t& k_x  = fast<framed_multi_t, matrix_t, basis_matrix_t>
+      const framed_multi_t& k_x  = fast<framed_multi_t, matrix_t>
                                        (signed_perm_nork(K, X), level-1);
-      const framed_multi_t& jk_x = fast<framed_multi_t, matrix_t, basis_matrix_t>
+      const framed_multi_t& jk_x = fast<framed_multi_t, matrix_t>
                                        (signed_perm_nork(JK,X), level-1);
       framed_multi_t
              result  =  i_x.even() - jk_x.odd();
@@ -1077,10 +1076,14 @@ namespace glucat
       q = old_p-1;
     }
     const index_t level = (p+q)/2;
-
+#if defined(_GLUCAT_MATRIX_MULTI_IMP_DEBUG)
+    std::cout << "DEBUG: In matrix_multi_t::fast_framed_multi, dim(m_matrix) is " << (this->m_matrix).nbr_cols() << std::endl;
+    std::cout << "DEBUG: m_matrix is" << std::endl;
+    std::cout << (this->m_matrix) << std::endl;
+#endif
     // Do the inverse fast transform
     using framed_multi_t = framed_multi<Other_Scalar_T,LO,HI,Other_Tune_P>;
-    framed_multi_t val = fast<framed_multi_t, matrix_t, basis_matrix_t>(this->m_matrix, level);
+    framed_multi_t val = fast<framed_multi_t, matrix_t>(this->m_matrix, level);
 
     // Off-centre val
     switch (pos_mod(orig_p-orig_q, 8))
@@ -1571,7 +1574,7 @@ namespace glucat
         : level + 1;
       switch (genus.m_eig_case)
       {
-        case matrix::neg_real_eigs:
+      case matrix::neg_real_eigs:
         scaled_result = matrix_sqrt(-i * unitval, i, next_level) * (i + Scalar_T(1)) / sqrt_2;
         use_approx_sqrt = false;
         break;
@@ -1600,12 +1603,13 @@ namespace glucat
           ? cr_sqrt(unitval)
           : db_sqrt(unitval);
     }
-    const auto result = (scaled_result.isnan() ||
-        !approx_equal(pow(scaled_result, 2), unitval))
-      ? traits_t::NaN()
-      : scaled_result * rescale;
-
-    return result;
+    const auto frame = (use_approx_sqrt)
+      ? val.frame()
+      : i.frame();
+    return (scaled_result.isnan() ||
+           !approx_equal(pow(scaled_result, 2), unitval))
+      ? multivector_t(traits_t::NaN())
+      : multivector_t(scaled_result * rescale, frame);
   }
 
   /// Square root of multivector with specified complexifier
@@ -1961,6 +1965,7 @@ namespace glucat{
     if (unitval.inv().isnan())
       return traits_t::NaN();
 
+    auto use_approx_log = true;
     auto scaled_result = multivector_t();
     if (level == 0)
     {
@@ -1973,12 +1978,14 @@ namespace glucat{
       {
         case matrix::neg_real_eigs:
         scaled_result = matrix_log(-i * unitval, i, level + 1) + i * pi/Scalar_T(2);
+        use_approx_log = false;
         break;
         case matrix::both_eigs:
         {
           const Scalar_T safe_arg = genus.m_safe_arg;
           scaled_result = matrix_log(exp(i*safe_arg) * unitval, i, level + 1) - i * safe_arg;
         }
+        use_approx_log = false;
         break;
       default:
         scaled_result = cascade_log(unitval);
@@ -1987,11 +1994,12 @@ namespace glucat{
     }
     else
       scaled_result = cascade_log(unitval);
-    const auto result = (scaled_result.isnan())
-      ? traits_t::NaN()
-      : scaled_result + rescale;
-
-    return result;
+    const auto frame = (use_approx_log)
+    ? val.frame()
+    : i.frame();
+    return (scaled_result.isnan())
+      ? multivector_t(traits_t::NaN())
+      : multivector_t(scaled_result + rescale, frame);
   }
 
   /// Natural logarithm of multivector with specified complexifier
