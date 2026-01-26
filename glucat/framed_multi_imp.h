@@ -1624,7 +1624,6 @@ namespace glucat
 
     if (this->empty())
     {
-      using matrix_index_t = typename matrix_multi_t::matrix_index_t;
       const auto dim = matrix_index_t(1) << level;
       auto result = matrix_t(dim, dim);
       result.clear();
@@ -1633,24 +1632,15 @@ namespace glucat
     if (level == 0)
       return matrix::unit<matrix_t>(1) * this->scalar();
 
-    // Use dense matrices directly to assume robustness and avoid conversion issues
-    using basis_matrix_t = matrix::sparse_matrix_t<Scalar_T>;
-    using basis_scalar_t = Scalar_T;
-
-    auto I = matrix::unit<basis_matrix_t>(2);
-    auto J = basis_matrix_t(2,2);
+    auto I = matrix::unit<matrix_t>(2);
+    auto J = matrix_t(2,2);
     J.zeros(); // Ensure zeroed
-    J(0,1)  = basis_scalar_t(-1);
-    J(1,0)  = basis_scalar_t( 1);
+    J(0,1)  = Scalar_T(-1);
+    J(1,0)  = Scalar_T( 1);
     auto K = J;
-    K(0,1)  = basis_scalar_t( 1);
+    K(0,1)  = Scalar_T( 1);
     auto JK = I;
-    JK(0,0) = basis_scalar_t(-1);
-
-
-
-
-
+    JK(0,0) = Scalar_T(-1);
 
     const auto ist_mn = index_set_t(-level);
     const auto ist_pn = index_set_t(level);
@@ -1661,24 +1651,10 @@ namespace glucat
       const auto& val_scalar = this->scalar();
       const auto& val_mnpn = (*this)[ist_mn ^ ist_pn];
 
-      matrix_t res;
-      if (odd) {
-        auto part1 = J * val_mn;
-        auto part2 = K * val_pn;
-        res = matrix_t(part1 + part2);
-      }
-
-      else {
-        auto part1 = I * val_scalar;
-        auto part2 = JK * val_mnpn;
-
-
-
-        res = matrix_t(part1 + part2);
-      }
-
-
-      return res;
+      if (odd)
+        return matrix_t(J * val_mn + K * val_pn);
+      else
+        return matrix_t(I * val_scalar + JK * val_mnpn);
     }
     else
     {
@@ -1692,20 +1668,16 @@ namespace glucat
       const auto& val_pn   = pair_rem_mnpn.first;
       const auto& val_1    = pair_rem_mnpn.second;
       using matrix::kron;
-      matrix_t res;
       if (odd)
-        res = - kron(JK, val_1.fast   (level-1, 1))
+        return - kron(JK, val_1.fast   (level-1, 1))
                + kron(I,  val_mnpn.fast(level-1, 1))
                + kron(J,  val_mn.fast  (level-1, 0))
                + kron(K,  val_pn.fast  (level-1, 0));
       else
-        res =   kron(I,  val_1.fast   (level-1, 0))
+        return   kron(I,  val_1.fast   (level-1, 0))
                + kron(JK, val_mnpn.fast(level-1, 0))
                + kron(K,  val_mn.fast  (level-1, 1))
                - kron(J,  val_pn.fast  (level-1, 1));
-
-
-      return res;
     }
   }
 
