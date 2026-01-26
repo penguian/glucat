@@ -56,7 +56,7 @@ namespace glucat
   const unsigned int Tuning_Default_Log_Max_Inner_Steps     =      32;
   const unsigned int Tuning_Default_Basis_Max_Count         =      12;
   const unsigned int Tuning_Default_Fast_Size_Threshold     =      16;
-  const unsigned int Tuning_Default_Inv_Fast_Dim_Threshold  =       8;
+  const unsigned int Tuning_Default_Inv_Fast_Dim_Threshold  =       4;
   const unsigned int Tuning_Default_Products_Size_Threshold = 1 << 22;
   const unsigned int Tuning_Default_Denom_Different_Bits    =       8;
   const unsigned int Tuning_Default_Extra_Different_Bits    =       8;
