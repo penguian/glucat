@@ -997,17 +997,17 @@ namespace glucat
     matrix_t JK = I;
     JK(0,0) = matrix_scalar_t(-1);
 
-    using matrix::signed_perm_nork;
+    using matrix::nork;
     const index_set_t ist_mn   = index_set_t(-level);
     const index_set_t ist_pn   = index_set_t(level);
     const index_set_t ist_mnpn = ist_mn | ist_pn;
     if (level == 1)
     {
       using term_t = typename framed_multi_t::term_t;
-      const Scalar_T i_x  = traits_t::to_scalar_t(signed_perm_nork(I, X)(0, 0));
-      const Scalar_T j_x  = traits_t::to_scalar_t(signed_perm_nork(J, X)(0, 0));
-      const Scalar_T k_x  = traits_t::to_scalar_t(signed_perm_nork(K, X)(0, 0));
-      const Scalar_T jk_x = traits_t::to_scalar_t(signed_perm_nork(JK,X)(0, 0));
+      const Scalar_T i_x  = traits_t::to_scalar_t(nork(I, X, false)(0, 0));
+      const Scalar_T j_x  = traits_t::to_scalar_t(nork(J, X, false)(0, 0));
+      const Scalar_T k_x  = traits_t::to_scalar_t(nork(K, X, false)(0, 0));
+      const Scalar_T jk_x = traits_t::to_scalar_t(nork(JK,X, false)(0, 0));
       framed_multi_t
              result  = i_x;
              result += term_t(ist_mn,   j_x);  // j_x *  mn;
@@ -1020,13 +1020,13 @@ namespace glucat
       const framed_multi_t& pn   = framed_multi_t(ist_pn);
       const framed_multi_t& mnpn = framed_multi_t(ist_mnpn);
       const framed_multi_t& i_x  = fast<framed_multi_t, matrix_t>
-                                       (signed_perm_nork(I, X), level-1);
+                                       (nork(I, X, false), level-1);
       const framed_multi_t& j_x  = fast<framed_multi_t, matrix_t>
-                                       (signed_perm_nork(J, X), level-1);
+                                       (nork(J, X, false), level-1);
       const framed_multi_t& k_x  = fast<framed_multi_t, matrix_t>
-                                       (signed_perm_nork(K, X), level-1);
+                                       (nork(K, X, false), level-1);
       const framed_multi_t& jk_x = fast<framed_multi_t, matrix_t>
-                                       (signed_perm_nork(JK,X), level-1);
+                                       (nork(JK,X, false), level-1);
       framed_multi_t
              result  =  i_x.even() - jk_x.odd();
              result += (j_x.even() - k_x.odd()) * mn;

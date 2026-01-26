@@ -1496,7 +1496,60 @@ namespace glucat
     template< typename LHS_T, typename RHS_T >
     auto
     nork(const LHS_T& lhs, const RHS_T& rhs, const bool mono) -> const RHS_T
-    { return signed_perm_nork(lhs, rhs); }
+    {
+      // Dispatch based on sparsity of LHS
+      if constexpr (is_eigen_sparse<LHS_T>::value)
+      {
+        return signed_perm_nork(lhs, rhs);
+      }
+      else
+      {
+        // Dense implementation (inverse kron logic)
+        // Definition matches [v] Section 4, Theorem 4.1.
+        matrix_index_t blk_rows = rhs.nbr_rows() / (std::max)(matrix_index_t(1), matrix_index_t(lhs.nbr_rows()));
+        matrix_index_t blk_cols = rhs.nbr_cols() / (std::max)(matrix_index_t(1), matrix_index_t(lhs.nbr_cols()));
+
+        if (lhs.nbr_rows() == 0 || lhs.nbr_cols() == 0)
+        {
+          if constexpr (requires { RHS_T(blk_rows, blk_cols); })
+            return RHS_T(blk_rows, blk_cols);
+          RHS_T result;
+          result.set_size(blk_rows, blk_cols);
+          return result;
+        }
+
+        RHS_T result(blk_rows, blk_cols);
+        result.zeros();
+
+        // Loop over LHS elements using dense indexing
+        for (matrix_index_t r = 0; r < lhs.nbr_rows(); ++r)
+        {
+          for (matrix_index_t c = 0; c < lhs.nbr_cols(); ++c)
+          {
+            auto val = lhs(r, c);
+            if (val != 0)
+            {
+              matrix_index_t start_row = r * blk_rows;
+              matrix_index_t start_col = c * blk_cols;
+              for (matrix_index_t i = 0; i < blk_rows; ++i)
+                for (matrix_index_t j = 0; j < blk_cols; ++j)
+                  result(i, j) += static_cast<typename RHS_T::value_type>(val) * static_cast<typename RHS_T::value_type>(rhs(start_row + i, start_col + j));
+            }
+          }
+        }
+
+        // Normalize
+        auto norm_sq = numeric_traits<typename RHS_T::value_type>::to_scalar_t(lhs.nbr_rows());
+        if (norm_sq != numeric_traits<typename RHS_T::value_type>::to_scalar_t(1))
+        {
+          if constexpr (requires { result(0, 0); })
+            for (matrix_index_t i = 0; i < result.nbr_rows(); ++i)
+              for (matrix_index_t j = 0; j < result.nbr_cols(); ++j)
+                result(i, j) /= norm_sq;
+        }
+        return result;
+      }
+    }
 
     /// Inner product
     template< typename Scalar_T, typename LHS_T, typename RHS_T >
