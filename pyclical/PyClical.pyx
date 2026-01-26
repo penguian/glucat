@@ -1715,7 +1715,7 @@ cpdef inline cos(obj,i = None):
     """
     Cosine of multivector with optional complexifier.
 
-    >>> x=clifford("{1,2}"); print(cos(acos(x),"{1,2,3}"))
+    >>> x=clifford("{1,2}"); i=complexifier(acos(x)); print(cos(acos(x),i))
     {1,2}
     >>> x=clifford("{1,2}"); print(cos(acos(x)))
     {1,2}
@@ -1732,7 +1732,7 @@ cpdef inline acos(obj,i = None):
     """
     Inverse cosine of multivector with optional complexifier.
 
-    >>> x=clifford("{1,2}"); print(cos(acos(x),"{1,2,3}"))
+    >>> x=clifford("{1,2}"); i=complexifier(acos(x)); print(cos(acos(x),i))
     {1,2}
     >>> x=clifford("{1,2}"); print(cos(acos(x),"{-1,1,2,3,4}"))
     {1,2}
