@@ -51,7 +51,7 @@ namespace peg16
       for (int j = 0; j != dim; ++j)
         a(i,j) = number("0");
     a(1,1) = number("1");
-    std::cout << a << std::endl;
+    std::cout << std::endl << a << std::endl;
     matrix_of_mv b(dim,dim);
     for (int i = 0; i != dim; ++i)
     {
@@ -59,12 +59,12 @@ namespace peg16
         b(i,j) = number("0");
       b(i,i) = number(index_set_t((i % hi) +1),1.0);
     }
-    std::cout << b << std::endl;
+    std::cout << std::endl << b << std::endl;
     matrix_of_mv c(dim,dim);
     c = a * b;
-    std::cout << c << std::endl;
+    std::cout << std::endl << c << std::endl;
     c += b;
-    std::cout << c << std::endl;
+    std::cout << std::endl << c << std::endl;
   }
 }
 
