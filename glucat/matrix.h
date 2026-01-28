@@ -106,15 +106,11 @@ namespace glucat
 
       /// Generic classify_eigenvalues relies on eigenvalues() member
       auto classify_eigenvalues() const;
-
-      /// Inner product of matrix and other
-      template< typename Scalar_T, typename Other >
-      auto inner(const Other& other) const;
     };
 
 #if defined(_GLUCAT_USE_ARMADILLO)
-    /// Forward declaration of arma_sparse_wrapper
-    template< typename Scalar_T > class arma_sparse_wrapper;
+
+
     /// Output to stream
     template< typename Scalar_T >
     auto operator<< (std::ostream& os, const arma_matrix_wrapper<Scalar_T>& m) -> std::ostream&;
@@ -247,6 +243,10 @@ namespace glucat
       auto isinf() const -> bool;
       /// Number of non-zeros
       auto nnz() const;
+
+      /// Inner product
+      template< typename Result_Scalar_T, typename Other >
+      auto inner(const Other& other) const -> Result_Scalar_T;
 
       friend auto operator<< <>(std::ostream& os, const arma_matrix_wrapper& m) -> std::ostream&;
 
@@ -433,6 +433,10 @@ namespace glucat
       /// Number of non-zeros
       auto nnz() const;
 
+      /// Inner product
+      template< typename Result_Scalar_T, typename Other >
+      auto inner(const Other& other) const -> Result_Scalar_T;
+
       friend auto operator<< <>(std::ostream& os, const eigen_matrix_wrapper& m) -> std::ostream&;
     };
 
@@ -573,6 +577,10 @@ namespace glucat
       auto isinf() const -> bool;
       /// Number of non-zeros
       auto nnz() const;
+
+      /// Inner product
+      template< typename Result_Scalar_T, typename Other >
+      auto inner(const Other& other) const -> Result_Scalar_T;
 
       friend auto operator<< <>(std::ostream& os, const eigen_sparse_wrapper& m) -> std::ostream&;
     };
@@ -725,6 +733,10 @@ namespace glucat
       auto isinf() const -> bool;
       /// Number of non-zeros
       auto nnz() const;
+
+      /// Inner product
+      template< typename Result_Scalar_T, typename Other >
+      auto inner(const Other& other) const -> Result_Scalar_T;
     };
 
     /// Product of scalar and sparse wrapper
@@ -892,9 +904,7 @@ namespace glucat
     template< typename Matrix_T >
     auto unit(const matrix_index_t dim) -> const Matrix_T;
 
-    /// Inner product
-    template< typename Scalar_T, typename LHS_T, typename RHS_T >
-    auto inner(const LHS_T& lhs, const RHS_T& rhs) -> Scalar_T;
+
 
     // Legacy Nbr Rows/Cols - kept as free functions for generic templates
 

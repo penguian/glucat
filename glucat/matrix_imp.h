@@ -283,13 +283,7 @@ namespace glucat
       return result;
     }
 
-    /// Inner product of matrix and other
-    template< typename Derived >
-    template< typename Scalar_T, typename Other >
-    auto
-    matrix_impl_base<Derived>::
-    inner(const Other& other) const
-    { return ::glucat::matrix::inner<Scalar_T>(derived(), other); }
+
 
     // =========================================================================
     // eigen_matrix_wrapper Member Definitions
@@ -681,6 +675,23 @@ namespace glucat
       }
     }
 
+    /// Inner product
+    template< typename Scalar_T >
+    template< typename Result_Scalar_T, typename Other >
+    auto
+    eigen_matrix_wrapper<Scalar_T>::
+    inner(const Other& other) const -> Result_Scalar_T
+    {
+      Result_Scalar_T sum = Result_Scalar_T(0);
+      for (matrix_index_t i = 0; i < nbr_rows(); ++i)
+        for (matrix_index_t j = 0; j < nbr_cols(); ++j)
+          sum += static_cast<Result_Scalar_T>((*this)(i, j)) * static_cast<Result_Scalar_T>(other(i, j));
+
+      if (nbr_rows() == 0) return Result_Scalar_T(0);
+      return sum / Result_Scalar_T(static_cast<double>(nbr_rows()));
+    }
+
+
 #if defined(_GLUCAT_USE_ARMADILLO)
     // =========================================================================
     // arma_matrix_wrapper Member Definitions
@@ -1037,6 +1048,22 @@ namespace glucat
     arma_matrix_wrapper(MatrixType&& m)
     : m_mat(std::move(m))
     { }
+
+    /// Inner product
+    template< typename Scalar_T >
+    template< typename Result_Scalar_T, typename Other >
+    auto
+    arma_matrix_wrapper<Scalar_T>::
+    inner(const Other& other) const -> Result_Scalar_T
+    {
+      Result_Scalar_T sum = Result_Scalar_T(0);
+      for (matrix_index_t i = 0; i < nbr_rows(); ++i)
+        for (matrix_index_t j = 0; j < nbr_cols(); ++j)
+          sum += static_cast<Result_Scalar_T>(m_mat(i, j)) * static_cast<Result_Scalar_T>(other(i, j));
+
+      if (nbr_rows() == 0) return Result_Scalar_T(0);
+      return sum / Result_Scalar_T(static_cast<double>(nbr_rows()));
+    }
 #endif
 
     // =========================================================================
@@ -1387,6 +1414,23 @@ namespace glucat
     nnz() const
     { return m_mat.nonZeros(); }
 
+    /// Inner product
+    template< typename Scalar_T >
+    template< typename Result_Scalar_T, typename Other >
+    auto
+    eigen_sparse_wrapper<Scalar_T>::
+    inner(const Other& other) const -> Result_Scalar_T
+    {
+       Result_Scalar_T sum = Result_Scalar_T(0);
+       for (int k=0; k < m_mat.outerSize(); ++k)
+         for (typename MatrixType::InnerIterator it(m_mat, k); it; ++it)
+         {
+            sum += static_cast<Result_Scalar_T>(it.value()) * static_cast<Result_Scalar_T>(other(it.row(), it.col()));
+         }
+       if (nbr_rows() == 0) return Result_Scalar_T(0);
+       return sum / Result_Scalar_T(static_cast<double>(nbr_rows()));
+    }
+
     /// Identity matrix
     template< typename Matrix_T >
     auto
@@ -1551,42 +1595,7 @@ namespace glucat
       }
     }
 
-    /// Inner product
-    template< typename Scalar_T, typename LHS_T, typename RHS_T >
-    auto
-    inner(const LHS_T& lhs, const RHS_T& rhs) -> Scalar_T
-    {
-      Scalar_T sum = Scalar_T(0);
-      // Generic implementation assuming n_rows/n_cols and operator()
-      // Note: For sparse LHS, this iteration is inefficient (O(N^2) instead of O(NNZ))
-      // but it is correct and works for all wrappers.
-      // Optimization TODO: Use iterators if LHS is sparse.
-      if constexpr (requires { lhs.begin(); lhs.end(); })
-      {
-        // Sparse iterator optimization
-        for (auto it = lhs.begin(); it != lhs.end(); ++it)
-        {
-          matrix_index_t r = it.row();
-          matrix_index_t c = it.col();
-          auto val = *it;
 
-          // For inner product: sum( lhs(i,j) * rhs(i,j) )
-          // We only need to visit non-zeros of LHS.
-          // Assuming RHS has efficient random access or is dense.
-          sum += static_cast<Scalar_T>(val) * static_cast<Scalar_T>(rhs(r, c));
-        }
-      }
-      else
-      {
-        // Fallback
-        for (size_t i = 0; i < lhs.nbr_rows(); ++i)
-          for (size_t j = 0; j < lhs.nbr_cols(); ++j)
-            sum += static_cast<Scalar_T>(lhs(i, j)) * static_cast<Scalar_T>(rhs(i, j));
-      }
-      if (lhs.nbr_rows() == 0)
-        return Scalar_T(0);
-      return sum / Scalar_T(double(lhs.nbr_rows()));
-    }
 
 #if defined(_GLUCAT_USE_ARMADILLO)
     // =========================================================================
@@ -1804,6 +1813,22 @@ namespace glucat
         if (it.row() == it.col())
           sum += *it;
       return sum;
+    }
+
+    /// Inner product
+    template< typename Scalar_T >
+    template< typename Result_Scalar_T, typename Other >
+    auto
+    arma_sparse_wrapper<Scalar_T>::
+    inner(const Other& other) const -> Result_Scalar_T
+    {
+      Result_Scalar_T sum = Result_Scalar_T(0);
+      for (auto it = m_mat.begin(); it != m_mat.end(); ++it)
+      {
+         sum += static_cast<Result_Scalar_T>(*it) * static_cast<Result_Scalar_T>(other(it.row(), it.col()));
+      }
+      if (nbr_rows() == 0) return Result_Scalar_T(0);
+      return sum / Result_Scalar_T(static_cast<double>(nbr_rows()));
     }
 #endif
   }
