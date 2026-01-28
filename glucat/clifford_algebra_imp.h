@@ -834,7 +834,6 @@ namespace glucat
   auto
   acosh(const Multivector<Scalar_T,LO,HI,Tune_P>& val, const Multivector<Scalar_T,LO,HI,Tune_P>& i, bool prechecked) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   {
-
     using traits_t = numeric_traits<Scalar_T>;
     check_complex(val, i, prechecked);
     if (val.isnan())

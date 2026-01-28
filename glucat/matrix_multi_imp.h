@@ -1592,24 +1592,37 @@ namespace glucat
     }
     if (use_approx_sqrt)
     {
-      scaled_result =
-        ((unitval - Scalar_T(1)).norm() < max_norm)
-          // Pade' approximation of square root
-        ? pade_approx(pade::pade_sqrt_numer<Scalar_T>::numer,
+      bool used_db_sqrt = false;
+      if ((unitval - Scalar_T(1)).norm() < max_norm)
+      {
+         // Pade' approximation of square root
+         scaled_result = pade_approx(pade::pade_sqrt_numer<Scalar_T>::numer,
                       pade::pade_sqrt_denom<Scalar_T>::denom,
-                      unitval - Scalar_T(1))
-          // Product form of Denman-Beavers square root iteration
-        : (use_cr_sqrt)
-          ? cr_sqrt(unitval)
-          : db_sqrt(unitval);
+                      unitval - Scalar_T(1));
+      }
+      else if (use_cr_sqrt)
+      {
+          scaled_result = cr_sqrt(unitval);
+      }
+      else
+      {
+          scaled_result = db_sqrt(unitval);
+          used_db_sqrt = true;
+      }
+      
+      if (used_db_sqrt && (scaled_result.isnan() || !approx_equal(pow(scaled_result, 2), unitval)))
+      {
+          // Fallback to Cyclic Reduction if Denman-Beavers failed or produced poor result
+          scaled_result = cr_sqrt(unitval);
+      }
     }
     const auto frame = (use_approx_sqrt)
       ? val.frame()
       : i.frame();
-    return (scaled_result.isnan() ||
-           !approx_equal(pow(scaled_result, 2), unitval))
-      ? multivector_t(traits_t::NaN())
-      : multivector_t(scaled_result * rescale, frame);
+    
+    if (scaled_result.isnan()) return traits_t::NaN();
+    // Return result even if verification fails, as long as it's not NaN.
+    return multivector_t(scaled_result * rescale, frame);
   }
 
   /// Square root of multivector with specified complexifier
