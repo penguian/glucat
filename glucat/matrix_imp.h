@@ -614,6 +614,62 @@ namespace glucat
       return sum / Result_Scalar_T(static_cast<double>(nbr_rows()));
     }
 
+    /// Normalization of rotation K
+    template< typename Scalar_T >
+    template< typename RHS_T >
+    auto
+    eigen_matrix_wrapper<Scalar_T>::
+    nork(const RHS_T& rhs, bool mono) const -> RHS_T
+    {
+        // Dense implementation (inverse kron logic)
+        matrix_index_t blk_rows = rhs.nbr_rows() / (std::max)(matrix_index_t(1), nbr_rows());
+        matrix_index_t blk_cols = rhs.nbr_cols() / (std::max)(matrix_index_t(1), nbr_cols());
+
+        if (nbr_rows() == 0 || nbr_cols() == 0)
+        {
+          if constexpr (requires { RHS_T(blk_rows, blk_cols); })
+            return RHS_T(blk_rows, blk_cols);
+          RHS_T result;
+          result.set_size(blk_rows, blk_cols);
+          return result;
+        }
+
+        RHS_T result(blk_rows, blk_cols);
+        result.zeros();
+
+        // Loop over LHS (this) elements using dense indexing
+        for (matrix_index_t r = 0; r < nbr_rows(); ++r)
+        {
+          for (matrix_index_t c = 0; c < nbr_cols(); ++c)
+          {
+            auto val = (*this)(r, c);
+            if (val != Scalar_T(0))
+            {
+              matrix_index_t start_row = r * blk_rows;
+              matrix_index_t start_col = c * blk_cols;
+              for (matrix_index_t i = 0; i < blk_rows; ++i)
+                for (matrix_index_t j = 0; j < blk_cols; ++j)
+                  result(i, j) += static_cast<typename RHS_T::value_type>(val) * static_cast<typename RHS_T::value_type>(rhs(start_row + i, start_col + j));
+            }
+          }
+        }
+
+        // Normalize
+        auto norm_sq = numeric_traits<typename RHS_T::value_type>::to_scalar_t(nbr_rows());
+        if (norm_sq != numeric_traits<typename RHS_T::value_type>::to_scalar_t(1))
+        {
+          // We can use generic iteration or dense access depending on RHS_T
+          // Assuming RHS_T supports (i,j) access or we should optimize if sparse
+          // But result is typically dense if RHS is dense-ish or small.
+          // Usually RHS_T is same as LHS_T (wrapper).
+           if constexpr (requires { result(0, 0); })
+            for (matrix_index_t i = 0; i < result.nbr_rows(); ++i)
+              for (matrix_index_t j = 0; j < result.nbr_cols(); ++j)
+                result(i, j) /= norm_sq;
+        }
+        return result;
+    }
+
 
 #if defined(_GLUCAT_USE_ARMADILLO)
     // =========================================================================
@@ -1022,6 +1078,58 @@ namespace glucat
 
       if (nbr_rows() == 0) return Result_Scalar_T(0);
       return sum / Result_Scalar_T(static_cast<double>(nbr_rows()));
+    }
+
+    /// Normalization of rotation K
+    template< typename Scalar_T >
+    template< typename RHS_T >
+    auto
+    arma_matrix_wrapper<Scalar_T>::
+    nork(const RHS_T& rhs, bool mono) const -> RHS_T
+    {
+        // Dense implementation (inverse kron logic)
+        matrix_index_t blk_rows = rhs.nbr_rows() / (std::max)(matrix_index_t(1), nbr_rows());
+        matrix_index_t blk_cols = rhs.nbr_cols() / (std::max)(matrix_index_t(1), nbr_cols());
+
+        if (nbr_rows() == 0 || nbr_cols() == 0)
+        {
+          if constexpr (requires { RHS_T(blk_rows, blk_cols); })
+            return RHS_T(blk_rows, blk_cols);
+          RHS_T result;
+          result.set_size(blk_rows, blk_cols);
+          return result;
+        }
+
+        RHS_T result(blk_rows, blk_cols);
+        result.zeros();
+
+        // Loop over LHS (this) elements using dense indexing
+        for (matrix_index_t r = 0; r < nbr_rows(); ++r)
+        {
+          for (matrix_index_t c = 0; c < nbr_cols(); ++c)
+          {
+            auto val = (*this)(r, c);
+            if (val != Scalar_T(0))
+            {
+              matrix_index_t start_row = r * blk_rows;
+              matrix_index_t start_col = c * blk_cols;
+              for (matrix_index_t i = 0; i < blk_rows; ++i)
+                for (matrix_index_t j = 0; j < blk_cols; ++j)
+                  result(i, j) += static_cast<typename RHS_T::value_type>(val) * static_cast<typename RHS_T::value_type>(rhs(start_row + i, start_col + j));
+            }
+          }
+        }
+
+        // Normalize
+        auto norm_sq = numeric_traits<typename RHS_T::value_type>::to_scalar_t(nbr_rows());
+        if (norm_sq != numeric_traits<typename RHS_T::value_type>::to_scalar_t(1))
+        {
+          if constexpr (requires { result(0, 0); })
+            for (matrix_index_t i = 0; i < result.nbr_rows(); ++i)
+              for (matrix_index_t j = 0; j < result.nbr_cols(); ++j)
+                result(i, j) /= norm_sq;
+        }
+        return result;
     }
 #endif
 
@@ -1434,6 +1542,58 @@ namespace glucat
        return sum / Result_Scalar_T(static_cast<double>(nbr_rows()));
     }
 
+    /// Normalization of rotation K
+    template< typename Scalar_T >
+    template< typename RHS_T >
+    auto
+    eigen_sparse_wrapper<Scalar_T>::
+    nork(const RHS_T& rhs, bool mono) const -> RHS_T
+    {
+       // Sparse implementation (signed_perm_nork logic)
+       matrix_index_t blk_rows = rhs.nbr_rows() / (std::max)(matrix_index_t(1), nbr_rows());
+       matrix_index_t blk_cols = rhs.nbr_cols() / (std::max)(matrix_index_t(1), nbr_cols());
+
+       if (nbr_rows() == 0 || nbr_cols() == 0)
+       {
+         if constexpr (requires { RHS_T(blk_rows, blk_cols); })
+           return RHS_T(blk_rows, blk_cols);
+         RHS_T result;
+         result.set_size(blk_rows, blk_cols);
+         return result;
+       }
+
+       RHS_T result(blk_rows, blk_cols);
+       result.zeros();
+
+       // Sparse iterator optimization
+       for (auto it = begin(); it != end(); ++it)
+       {
+         auto val = *it; // Value
+         if (val != Scalar_T(0))
+         {
+           matrix_index_t r = it.row();
+           matrix_index_t c = it.col();
+
+           matrix_index_t start_row = r * blk_rows;
+           matrix_index_t start_col = c * blk_cols;
+           for (matrix_index_t i = 0; i < blk_rows; ++i)
+             for (matrix_index_t j = 0; j < blk_cols; ++j)
+               result(i, j) += static_cast<typename RHS_T::value_type>(val) * static_cast<typename RHS_T::value_type>(rhs(start_row + i, start_col + j));
+         }
+       }
+
+       // Normalize
+       auto norm_sq = numeric_traits<typename RHS_T::value_type>::to_scalar_t(nbr_rows());
+       if (norm_sq != numeric_traits<typename RHS_T::value_type>::to_scalar_t(1))
+       {
+         if constexpr (requires { result(0, 0); })
+           for (matrix_index_t i = 0; i < result.nbr_rows(); ++i)
+             for (matrix_index_t j = 0; j < result.nbr_cols(); ++j)
+               result(i, j) /= norm_sq;
+       }
+       return result;
+    }
+
     /// Identity matrix
     template< typename Matrix_T >
     auto
@@ -1462,141 +1622,6 @@ namespace glucat
       return result;
     }
 
-    // nork / signed_perm_nork implementation
-    /// Signed permutation of normalization of rotation K
-    template< typename LHS_T, typename RHS_T >
-    auto
-    signed_perm_nork(const LHS_T& lhs, const RHS_T& rhs) -> const RHS_T
-    {
-      matrix_index_t blk_rows = rhs.nbr_rows() / (std::max)(matrix_index_t(1), matrix_index_t(lhs.nbr_rows()));
-      matrix_index_t blk_cols = rhs.nbr_cols() / (std::max)(matrix_index_t(1), matrix_index_t(lhs.nbr_cols()));
-
-      if (lhs.nbr_rows() == 0 || lhs.nbr_cols() == 0)
-      {
-        if constexpr (requires { RHS_T(blk_rows, blk_cols); })
-          return RHS_T(blk_rows, blk_cols);
-        RHS_T result;
-        result.set_size(blk_rows, blk_cols);
-        return result;
-      }
-
-      RHS_T result(blk_rows, blk_cols);
-      result.zeros();
-
-      // Iterate over non-zero elements of LHS using iterator if available, or fallback
-      if constexpr (requires { lhs.begin(); lhs.end(); })
-      {
-        // Sparse iterator optimization
-        for (auto it = lhs.begin(); it != lhs.end(); ++it)
-        {
-          auto val = *it; // Value
-          if (val != 0)
-          {
-            matrix_index_t r = it.row();
-            matrix_index_t c = it.col();
-
-            matrix_index_t start_row = r * blk_rows;
-            matrix_index_t start_col = c * blk_cols;
-            for (matrix_index_t i = 0; i < blk_rows; ++i)
-              for (matrix_index_t j = 0; j < blk_cols; ++j)
-                result(i, j) += static_cast<typename RHS_T::value_type>(val) * static_cast<typename RHS_T::value_type>(rhs(start_row + i, start_col + j));
-          }
-        }
-      }
-      else
-      {
-        // Fallback for types without sparse iterators (e.g. dense)
-        for (matrix_index_t r = 0; r < lhs.nbr_rows(); ++r)
-        {
-          for (matrix_index_t c = 0; c < lhs.nbr_cols(); ++c)
-          {
-            auto val = lhs(r, c);
-            if (val != 0)
-            {
-              matrix_index_t start_row = r * blk_rows;
-              matrix_index_t start_col = c * blk_cols;
-              for (matrix_index_t i = 0; i < blk_rows; ++i)
-                for (matrix_index_t j = 0; j < blk_cols; ++j)
-                  result(i, j) += static_cast<typename RHS_T::value_type>(val) * static_cast<typename RHS_T::value_type>(rhs(start_row + i, start_col + j));
-            }
-          }
-        }
-      }
-
-      // Normalize by dividing by Frobenius norm squared of LHS.
-      // For a signed permutation matrix of size N, norm_frob2 is N (assuming entries are +/- 1).
-      // This matches legacy implementation which used lhs.size1().
-      // Use to_scalar_t to safely convert n_rows (size_t/long) to Scalar (potentially qd_real)
-      auto norm_sq = numeric_traits<typename RHS_T::value_type>::to_scalar_t(lhs.nbr_rows());
-      if (norm_sq != numeric_traits<typename RHS_T::value_type>::to_scalar_t(1))
-      {
-        // If not 1, we must scale result
-        if constexpr (requires { result(0, 0); })
-          for (matrix_index_t i = 0; i < result.nbr_rows(); ++i)
-            for (matrix_index_t j = 0; j < result.nbr_cols(); ++j)
-              result(i, j) /= norm_sq;
-      }
-      return result;
-    }
-
-    /// Normalization of rotation K
-    template< typename LHS_T, typename RHS_T >
-    auto
-    nork(const LHS_T& lhs, const RHS_T& rhs, const bool mono) -> const RHS_T
-    {
-      // Dispatch based on sparsity of LHS
-      if constexpr (is_eigen_sparse<LHS_T>::value)
-      {
-        return signed_perm_nork(lhs, rhs);
-      }
-      else
-      {
-        // Dense implementation (inverse kron logic)
-        // Definition matches [v] Section 4, Theorem 4.1.
-        matrix_index_t blk_rows = rhs.nbr_rows() / (std::max)(matrix_index_t(1), matrix_index_t(lhs.nbr_rows()));
-        matrix_index_t blk_cols = rhs.nbr_cols() / (std::max)(matrix_index_t(1), matrix_index_t(lhs.nbr_cols()));
-
-        if (lhs.nbr_rows() == 0 || lhs.nbr_cols() == 0)
-        {
-          if constexpr (requires { RHS_T(blk_rows, blk_cols); })
-            return RHS_T(blk_rows, blk_cols);
-          RHS_T result;
-          result.set_size(blk_rows, blk_cols);
-          return result;
-        }
-
-        RHS_T result(blk_rows, blk_cols);
-        result.zeros();
-
-        // Loop over LHS elements using dense indexing
-        for (matrix_index_t r = 0; r < lhs.nbr_rows(); ++r)
-        {
-          for (matrix_index_t c = 0; c < lhs.nbr_cols(); ++c)
-          {
-            auto val = lhs(r, c);
-            if (val != 0)
-            {
-              matrix_index_t start_row = r * blk_rows;
-              matrix_index_t start_col = c * blk_cols;
-              for (matrix_index_t i = 0; i < blk_rows; ++i)
-                for (matrix_index_t j = 0; j < blk_cols; ++j)
-                  result(i, j) += static_cast<typename RHS_T::value_type>(val) * static_cast<typename RHS_T::value_type>(rhs(start_row + i, start_col + j));
-            }
-          }
-        }
-
-        // Normalize
-        auto norm_sq = numeric_traits<typename RHS_T::value_type>::to_scalar_t(lhs.nbr_rows());
-        if (norm_sq != numeric_traits<typename RHS_T::value_type>::to_scalar_t(1))
-        {
-          if constexpr (requires { result(0, 0); })
-            for (matrix_index_t i = 0; i < result.nbr_rows(); ++i)
-              for (matrix_index_t j = 0; j < result.nbr_cols(); ++j)
-                result(i, j) /= norm_sq;
-        }
-        return result;
-      }
-    }
 
 
 
@@ -1843,6 +1868,58 @@ namespace glucat
       // Convert lhs to compatible type (Dense Wrapper)
       arma_matrix_wrapper<Other_Scalar_T> lhs_dense(*this); // Will use constructor converting sparse to dense
       return lhs_dense.kron(other);
+    }
+
+    /// Normalization of rotation K
+    template< typename Scalar_T >
+    template< typename RHS_T >
+    auto
+    arma_sparse_wrapper<Scalar_T>::
+    nork(const RHS_T& rhs, bool mono) const -> RHS_T
+    {
+       // Sparse implementation
+       matrix_index_t blk_rows = rhs.nbr_rows() / (std::max)(matrix_index_t(1), nbr_rows());
+       matrix_index_t blk_cols = rhs.nbr_cols() / (std::max)(matrix_index_t(1), nbr_cols());
+
+       if (nbr_rows() == 0 || nbr_cols() == 0)
+       {
+         if constexpr (requires { RHS_T(blk_rows, blk_cols); })
+           return RHS_T(blk_rows, blk_cols);
+         RHS_T result;
+         result.set_size(blk_rows, blk_cols);
+         return result;
+       }
+
+       RHS_T result(blk_rows, blk_cols);
+       result.zeros();
+
+       // Sparse iterator optimization
+       for (auto it = begin(); it != end(); ++it)
+       {
+         auto val = *it; // Value
+         if (val != Scalar_T(0))
+         {
+           matrix_index_t r = it.row();
+           matrix_index_t c = it.col();
+
+           matrix_index_t start_row = r * blk_rows;
+           matrix_index_t start_col = c * blk_cols;
+           for (matrix_index_t i = 0; i < blk_rows; ++i)
+             for (matrix_index_t j = 0; j < blk_cols; ++j)
+               result(i, j) += static_cast<typename RHS_T::value_type>(val) * static_cast<typename RHS_T::value_type>(rhs(start_row + i, start_col + j));
+         }
+       }
+
+       // Normalize
+       auto norm_sq = numeric_traits<typename RHS_T::value_type>::to_scalar_t(nbr_rows());
+       if (norm_sq != numeric_traits<typename RHS_T::value_type>::to_scalar_t(1))
+       {
+         if constexpr (requires { result(0, 0); })
+           for (matrix_index_t i = 0; i < result.nbr_rows(); ++i)
+             for (matrix_index_t j = 0; j < result.nbr_cols(); ++j)
+               result(i, j) /= norm_sq;
+       }
+       return result;
     }
 #endif
   }

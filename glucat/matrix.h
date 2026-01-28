@@ -254,6 +254,10 @@ namespace glucat
       template< typename Other_Scalar_T >
       auto kron(const arma_sparse_wrapper<Other_Scalar_T>& other) const -> arma_matrix_wrapper<Other_Scalar_T>;
 
+      /// Normalization of rotation K
+      template< typename RHS_T >
+      auto nork(const RHS_T& rhs, bool mono = true) const -> RHS_T;
+
       friend auto operator<< <>(std::ostream& os, const arma_matrix_wrapper& m) -> std::ostream&;
 
     private:
@@ -432,6 +436,10 @@ namespace glucat
       template< typename Other_Scalar_T >
       auto kron(const eigen_sparse_wrapper<Other_Scalar_T>& other) const -> eigen_matrix_wrapper<Other_Scalar_T>;
 
+      /// Normalization of rotation K
+      template< typename RHS_T >
+      auto nork(const RHS_T& rhs, bool mono = true) const -> RHS_T;
+
       friend auto operator<< <>(std::ostream& os, const eigen_matrix_wrapper& m) -> std::ostream&;
     };
 
@@ -583,6 +591,10 @@ namespace glucat
       /// Kronecker matrix product of sparse wrappers
       auto kron(const eigen_sparse_wrapper& other) const -> eigen_sparse_wrapper;
 
+      /// Normalization of rotation K
+      template< typename RHS_T >
+      auto nork(const RHS_T& rhs, bool mono = true) const -> RHS_T;
+
       friend auto operator<< <>(std::ostream& os, const eigen_sparse_wrapper& m) -> std::ostream&;
     };
 
@@ -704,6 +716,10 @@ namespace glucat
       /// Mixed Kronecker matrix product: Sparse x Dense -> Dense (wrapper)
       template< typename Other_Scalar_T >
       auto kron(const arma_matrix_wrapper<Other_Scalar_T>& other) const -> arma_matrix_wrapper<Other_Scalar_T>;
+
+      /// Normalization of rotation K
+      template< typename RHS_T >
+      auto nork(const RHS_T& rhs, bool mono = true) const -> RHS_T;
 
       friend auto operator<< <>(std::ostream& os, const arma_sparse_wrapper& m) -> std::ostream&;
 
@@ -881,13 +897,6 @@ namespace glucat
     };
 
     // Core Operations as Free Functions
-    /// Normalization of rotation K
-    template< typename LHS_T, typename RHS_T >
-    auto nork(const LHS_T& lhs, const RHS_T& rhs, const bool mono = true) -> const RHS_T;
-
-    /// Signed permutation of normalization of rotation K
-    template< typename LHS_T, typename RHS_T >
-    auto signed_perm_nork(const LHS_T& lhs, const RHS_T& rhs) -> const RHS_T;
 
     /// Identity matrix
     template< typename Matrix_T >
