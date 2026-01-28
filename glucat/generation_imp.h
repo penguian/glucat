@@ -146,14 +146,13 @@ namespace glucat { namespace gen
     dup(0,0) = 1;
     dup(1,1) =    -1;
 
-    using matrix::kron;
-    result[0] = kron(neg, eye);
+    result[0] = neg.kron(eye);
     for (auto
         k = size_t(1);
         k != new_size-1;
         ++k)
-      result[k] = kron(dup, old[k-1]);
-    result[new_size-1] = kron(pos, eye);
+      result[k] = dup.kron(old[k-1]);
+    result[new_size-1] = pos.kron(eye);
 
     // Save the resulting generator array.
     this->insert(make_pair(sig, result));

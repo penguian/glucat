@@ -41,15 +41,6 @@ namespace glucat
     // Functions for Wrappers (to mimic Arma)
     // =========================================================================
 
-    /// Kronecker matrix product
-    template< typename Scalar_T >
-    auto
-    kron(const eigen_matrix_wrapper<Scalar_T>& lhs, const eigen_matrix_wrapper<Scalar_T>& rhs) -> eigen_matrix_wrapper<Scalar_T>
-    {
-      using namespace Eigen;
-      return eigen_matrix_wrapper<Scalar_T>(kroneckerProduct(lhs.m_mat, rhs.m_mat).eval());
-    }
-
     /// Solve
     template< typename Scalar_T >
     auto
@@ -83,106 +74,6 @@ namespace glucat
     }
 #endif
 
-    /// Mixed Kronecker matrix product: Sparse x Dense -> Dense (wrapper)
-    template< typename LHS_Scalar_T, typename RHS_Scalar_T >
-    auto
-    kron(const eigen_sparse_wrapper<LHS_Scalar_T>& lhs, const eigen_matrix_wrapper<RHS_Scalar_T>& rhs) -> eigen_matrix_wrapper<RHS_Scalar_T>
-    {
-      // Convert lhs to compatible type (Dense)
-      eigen_matrix_wrapper<RHS_Scalar_T> lhs_dense(lhs.nbr_rows(), lhs.nbr_cols());
-      for (matrix_index_t i = 0; i < lhs.nbr_rows(); ++i)
-        for (matrix_index_t j = 0; j < lhs.nbr_cols(); ++j)
-          lhs_dense(i, j) = static_cast<RHS_Scalar_T>(lhs(i, j));
-
-      return kron(lhs_dense, rhs);
-    }
-
-    /// Mixed Kronecker matrix product: Dense x Sparse -> Dense (wrapper)
-    template< typename LHS_Scalar_T, typename RHS_Scalar_T >
-    auto
-    kron(const eigen_matrix_wrapper<LHS_Scalar_T>& lhs, const eigen_sparse_wrapper<RHS_Scalar_T>& rhs) -> eigen_matrix_wrapper<RHS_Scalar_T>
-    {
-      // Convert rhs to compatible type (Dense)
-      eigen_matrix_wrapper<LHS_Scalar_T> rhs_dense(rhs.nbr_rows(), rhs.nbr_cols());
-      for (matrix_index_t i = 0; i < rhs.nbr_rows(); ++i)
-        for (matrix_index_t j = 0; j < rhs.nbr_cols(); ++j)
-          rhs_dense(i, j) = static_cast<LHS_Scalar_T>(rhs(i, j));
-
-      return kron(lhs, rhs_dense);
-    }
-
-
-
-    /// Kronecker matrix product of sparse wrappers
-    template< typename Scalar_T >
-    auto
-    kron(const eigen_sparse_wrapper<Scalar_T>& lhs, const eigen_sparse_wrapper<Scalar_T>& rhs) -> eigen_sparse_wrapper<Scalar_T>
-    {
-      eigen_sparse_wrapper<Scalar_T> result(lhs.nbr_rows() * rhs.nbr_rows(), lhs.nbr_cols() * rhs.nbr_cols());
-      std::vector<Eigen::Triplet<Scalar_T>> triplets;
-      using iterator_t = typename eigen_sparse_wrapper<Scalar_T>::MatrixType::InnerIterator;
-      // Iterate lhs
-      for (int k = 0; k < lhs.m_mat.outerSize(); ++k)
-      {
-        for (iterator_t itA(lhs.m_mat, k); itA; ++itA)
-        {
-          auto rA = itA.row();
-          auto cA = itA.col();
-          auto vA = itA.value();
-
-          // Iterate rhs
-          for (int l = 0; l < rhs.m_mat.outerSize(); ++l)
-            for (iterator_t itB(rhs.m_mat, l); itB; ++itB)
-              triplets.emplace_back(rA * rhs.nbr_rows() + itB.row(), cA * rhs.nbr_cols() + itB.col(), vA * itB.value());
-        }
-      }
-      result.m_mat.setFromTriplets(triplets.begin(), triplets.end());
-
-      return result;
-    }
-
-#if defined(_GLUCAT_USE_ARMADILLO)
-    /// Mixed kron: Sparse (wrapper) x Dense (Armadillo) -> Dense (Armadillo)
-    template< typename LHS_Scalar_T, typename RHS_Scalar_T >
-    auto
-    kron(const eigen_sparse_wrapper<LHS_Scalar_T>& lhs, const arma::Mat<RHS_Scalar_T>& rhs) -> arma::Mat<RHS_Scalar_T>
-    {
-      // Convert lhs to arma::Mat (dense)
-      arma_matrix_wrapper<RHS_Scalar_T> wrapper(lhs);
-      return arma::kron(wrapper.m_mat, rhs);
-    }
-
-    /// Mixed Kronecker matrix product: Sparse x Dense -> Dense (wrapper)
-    template< typename LHS_Scalar_T, typename RHS_Scalar_T >
-    auto
-    kron(const eigen_sparse_wrapper<LHS_Scalar_T>& lhs, const arma_matrix_wrapper<RHS_Scalar_T>& rhs) -> arma_matrix_wrapper<RHS_Scalar_T>
-    {
-      // Convert lhs to compatible type (Dense Armadillo Wrapper) efficiently
-      arma_matrix_wrapper<RHS_Scalar_T> lhs_dense(lhs);
-      return kron(lhs_dense, rhs);
-    }
-
-    /// Mixed kron: Sparse (arma wrapper) x Dense (arma wrapper) -> Dense (arma wrapper)
-    /// This handles the case causing verify_glucat_kron.cpp to fail.
-    template< typename LHS_Scalar_T, typename RHS_Scalar_T >
-    auto
-    kron(const arma_sparse_wrapper<LHS_Scalar_T>& lhs, const arma_matrix_wrapper<RHS_Scalar_T>& rhs) -> arma_matrix_wrapper<RHS_Scalar_T>
-    {
-      // Convert lhs to compatible type (Dense Wrapper)
-      arma_matrix_wrapper<RHS_Scalar_T> lhs_dense(lhs); // Will use constructor converting sparse to dense
-      return kron(lhs_dense, rhs);
-    }
-
-    /// Mixed Kronecker matrix product: Dense x Sparse -> Dense (wrapper)
-    template< typename LHS_Scalar_T, typename RHS_Scalar_T >
-    auto
-    kron(const arma_matrix_wrapper<LHS_Scalar_T>& lhs, const arma_sparse_wrapper<RHS_Scalar_T>& rhs) -> arma_matrix_wrapper<RHS_Scalar_T>
-    {
-      // Convert rhs to compatible type (Dense Wrapper)
-      arma_matrix_wrapper<LHS_Scalar_T> rhs_dense(rhs);
-      return kron(lhs, rhs_dense);
-    }
-#endif
 
     // =========================================================================
     // matrix_impl_base Member Definitions
@@ -600,6 +491,38 @@ namespace glucat
     // New Member Implementations
     // ========================
 
+    /// Kronecker matrix product
+    template< typename Scalar_T >
+    auto
+    eigen_matrix_wrapper<Scalar_T>::
+    kron(const eigen_matrix_wrapper<Scalar_T>& other) const -> eigen_matrix_wrapper<Scalar_T>
+    {
+      using namespace Eigen;
+      return eigen_matrix_wrapper<Scalar_T>(kroneckerProduct(m_mat, other.m_mat).eval());
+    }
+
+    /// Mixed Kronecker matrix product: Dense x Sparse -> Dense (wrapper)
+    template< typename Scalar_T >
+    template< typename Other_Scalar_T >
+    auto
+    eigen_matrix_wrapper<Scalar_T>::
+    kron(const eigen_sparse_wrapper<Other_Scalar_T>& other) const -> eigen_matrix_wrapper<Other_Scalar_T>
+    {
+      // Convert lhs (this, dense) to Other_Scalar_T
+      eigen_matrix_wrapper<Other_Scalar_T> lhs_conv(nbr_rows(), nbr_cols());
+      for (matrix_index_t i = 0; i < nbr_rows(); ++i)
+        for (matrix_index_t j = 0; j < nbr_cols(); ++j)
+          lhs_conv(i, j) = static_cast<Other_Scalar_T>((*this)(i, j));
+
+      // Convert rhs (sparse) to compatible type (Dense)
+      eigen_matrix_wrapper<Other_Scalar_T> rhs_dense(other.nbr_rows(), other.nbr_cols());
+      for (matrix_index_t i = 0; i < other.nbr_rows(); ++i)
+        for (matrix_index_t j = 0; j < other.nbr_cols(); ++j)
+          rhs_dense(i, j) = static_cast<Other_Scalar_T>(other(i, j));
+
+      return lhs_conv.kron(rhs_dense);
+    }
+
     /// Trace
     template< typename Scalar_T >
     auto
@@ -977,6 +900,42 @@ namespace glucat
 
     // New Member Implementations (moved from free functions)
     // ====================================================
+
+    /// Kronecker matrix product
+    template< typename Scalar_T >
+    auto
+    arma_matrix_wrapper<Scalar_T>::
+    kron(const arma_matrix_wrapper<Scalar_T>& other) const -> arma_matrix_wrapper<Scalar_T>
+    {
+      arma_matrix_wrapper<Scalar_T> res;
+      res.m_mat = arma::kron(m_mat, other.m_mat);
+      return res;
+    }
+
+    /// Mixed Kronecker matrix product: Dense x Sparse -> Dense (wrapper)
+    template< typename Scalar_T >
+    template< typename Other_Scalar_T >
+    auto
+    arma_matrix_wrapper<Scalar_T>::
+    kron(const arma_sparse_wrapper<Other_Scalar_T>& other) const -> arma_matrix_wrapper<Other_Scalar_T>
+    {
+        // Convert lhs (dense) to Other_Scalar_T
+        arma_matrix_wrapper<Other_Scalar_T> lhs_conv;
+        if constexpr (std::is_same_v<Scalar_T, Other_Scalar_T>)
+        {
+             lhs_conv = *this; 
+        }
+        else
+        {
+             // conversion logic
+             lhs_conv.m_mat = arma::conv_to<typename arma_matrix_wrapper<Other_Scalar_T>::MatrixType>::from(m_mat);
+        }
+
+        // Convert sparse RHS to dense RHS
+        arma_matrix_wrapper<Other_Scalar_T> rhs_dense(other);
+        
+        return lhs_conv.kron(rhs_dense);
+    }
 
     /// Trace
     template< typename Scalar_T >
@@ -1384,6 +1343,50 @@ namespace glucat
           if (it.row() == it.col())
             sum += it.value();
       return sum;
+    }
+
+    /// Mixed Kronecker matrix product: Sparse x Dense -> Dense (wrapper)
+    template< typename Scalar_T >
+    template< typename Other_Scalar_T >
+    auto
+    eigen_sparse_wrapper<Scalar_T>::
+    kron(const eigen_matrix_wrapper<Other_Scalar_T>& other) const -> eigen_matrix_wrapper<Other_Scalar_T>
+    {
+      // Convert lhs (sparse) to compatible type (Dense of Other_Scalar_T)
+      eigen_matrix_wrapper<Other_Scalar_T> lhs_dense(nbr_rows(), nbr_cols());
+      for (matrix_index_t i = 0; i < nbr_rows(); ++i)
+        for (matrix_index_t j = 0; j < nbr_cols(); ++j)
+          lhs_dense(i, j) = static_cast<Other_Scalar_T>((*this)(i, j)); // using operator() const
+
+      return lhs_dense.kron(other);
+    }
+
+    /// Kronecker matrix product of sparse wrappers
+    template< typename Scalar_T >
+    auto
+    eigen_sparse_wrapper<Scalar_T>::
+    kron(const eigen_sparse_wrapper<Scalar_T>& other) const -> eigen_sparse_wrapper<Scalar_T>
+    {
+      eigen_sparse_wrapper<Scalar_T> result(nbr_rows() * other.nbr_rows(), nbr_cols() * other.nbr_cols());
+      std::vector<Eigen::Triplet<Scalar_T>> triplets;
+      // Iterate lhs
+      for (int k = 0; k < m_mat.outerSize(); ++k)
+      {
+        for (typename MatrixType::InnerIterator itA(m_mat, k); itA; ++itA)
+        {
+          auto rA = itA.row();
+          auto cA = itA.col();
+          auto vA = itA.value();
+
+          // Iterate rhs
+          for (int l = 0; l < other.m_mat.outerSize(); ++l)
+            for (typename MatrixType::InnerIterator itB(other.m_mat, l); itB; ++itB)
+              triplets.emplace_back(rA * other.nbr_rows() + itB.row(), cA * other.nbr_cols() + itB.col(), vA * itB.value());
+        }
+      }
+      result.m_mat.setFromTriplets(triplets.begin(), triplets.end());
+
+      return result;
     }
 
     /// Infinity norm
@@ -1829,6 +1832,17 @@ namespace glucat
       }
       if (nbr_rows() == 0) return Result_Scalar_T(0);
       return sum / Result_Scalar_T(static_cast<double>(nbr_rows()));
+    }
+    /// Mixed Kronecker matrix product: Sparse x Dense -> Dense (wrapper)
+    template< typename Scalar_T >
+    template< typename Other_Scalar_T >
+    auto
+    arma_sparse_wrapper<Scalar_T>::
+    kron(const arma_matrix_wrapper<Other_Scalar_T>& other) const -> arma_matrix_wrapper<Other_Scalar_T>
+    {
+      // Convert lhs to compatible type (Dense Wrapper)
+      arma_matrix_wrapper<Other_Scalar_T> lhs_dense(*this); // Will use constructor converting sparse to dense
+      return lhs_dense.kron(other);
     }
 #endif
   }

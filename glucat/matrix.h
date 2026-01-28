@@ -248,6 +248,12 @@ namespace glucat
       template< typename Result_Scalar_T, typename Other >
       auto inner(const Other& other) const -> Result_Scalar_T;
 
+      /// Kronecker matrix product
+      auto kron(const arma_matrix_wrapper& other) const -> arma_matrix_wrapper;
+      /// Mixed Kronecker matrix product: Dense x Sparse -> Dense (wrapper)
+      template< typename Other_Scalar_T >
+      auto kron(const arma_sparse_wrapper<Other_Scalar_T>& other) const -> arma_matrix_wrapper<Other_Scalar_T>;
+
       friend auto operator<< <>(std::ostream& os, const arma_matrix_wrapper& m) -> std::ostream&;
 
     private:
@@ -273,23 +279,6 @@ namespace glucat
     {
       return s * m;
     }
-
-    /// Kronecker matrix product for arma_matrix_wrapper
-    template< typename Scalar_T >
-    auto kron(const arma_matrix_wrapper<Scalar_T>& lhs, const arma_matrix_wrapper<Scalar_T>& rhs) -> arma_matrix_wrapper<Scalar_T>
-    {
-      arma_matrix_wrapper<Scalar_T> res;
-      res.m_mat = arma::kron(lhs.m_mat, rhs.m_mat);
-      return res;
-    }
-
-    /// Mixed Kronecker matrix product: Sparse x Dense -> Dense (wrapper)
-    template< typename LHS_Scalar_T, typename RHS_Scalar_T >
-    auto kron(const arma_sparse_wrapper<LHS_Scalar_T>& lhs, const arma_matrix_wrapper<RHS_Scalar_T>& rhs) -> arma_matrix_wrapper<RHS_Scalar_T>;
-
-    /// Mixed Kronecker matrix product: Dense x Sparse -> Dense (wrapper)
-    template< typename LHS_Scalar_T, typename RHS_Scalar_T >
-    auto kron(const arma_matrix_wrapper<LHS_Scalar_T>& lhs, const arma_sparse_wrapper<RHS_Scalar_T>& rhs) -> arma_matrix_wrapper<RHS_Scalar_T>;
 #endif
 
     // =========================================================================
@@ -437,6 +426,12 @@ namespace glucat
       template< typename Result_Scalar_T, typename Other >
       auto inner(const Other& other) const -> Result_Scalar_T;
 
+      /// Kronecker matrix product
+      auto kron(const eigen_matrix_wrapper& other) const -> eigen_matrix_wrapper;
+      /// Mixed Kronecker matrix product: Dense x Sparse -> Dense (wrapper)
+      template< typename Other_Scalar_T >
+      auto kron(const eigen_sparse_wrapper<Other_Scalar_T>& other) const -> eigen_matrix_wrapper<Other_Scalar_T>;
+
       friend auto operator<< <>(std::ostream& os, const eigen_matrix_wrapper& m) -> std::ostream&;
     };
 
@@ -582,6 +577,12 @@ namespace glucat
       template< typename Result_Scalar_T, typename Other >
       auto inner(const Other& other) const -> Result_Scalar_T;
 
+      /// Mixed Kronecker matrix product: Sparse x Dense -> Dense (wrapper)
+      template< typename Other_Scalar_T >
+      auto kron(const eigen_matrix_wrapper<Other_Scalar_T>& other) const -> eigen_matrix_wrapper<Other_Scalar_T>;
+      /// Kronecker matrix product of sparse wrappers
+      auto kron(const eigen_sparse_wrapper& other) const -> eigen_sparse_wrapper;
+
       friend auto operator<< <>(std::ostream& os, const eigen_sparse_wrapper& m) -> std::ostream&;
     };
 
@@ -618,22 +619,6 @@ namespace glucat
       res -= rhs;
       return res;
     }
-
-    /// Kronecker matrix product
-    template< typename Scalar_T >
-    auto kron(const eigen_matrix_wrapper<Scalar_T>& lhs, const eigen_matrix_wrapper<Scalar_T>& rhs) -> eigen_matrix_wrapper<Scalar_T>;
-
-    /// Mixed Kronecker matrix product: Sparse x Dense -> Dense (wrapper)
-    template< typename LHS_Scalar_T, typename RHS_Scalar_T >
-    auto kron(const eigen_sparse_wrapper<LHS_Scalar_T>& lhs, const eigen_matrix_wrapper<RHS_Scalar_T>& rhs) -> eigen_matrix_wrapper<RHS_Scalar_T>;
-
-    /// Mixed Kronecker matrix product: Dense x Sparse -> Dense (wrapper)
-    template< typename LHS_Scalar_T, typename RHS_Scalar_T >
-    auto kron(const eigen_matrix_wrapper<LHS_Scalar_T>& lhs, const eigen_sparse_wrapper<RHS_Scalar_T>& rhs) -> eigen_matrix_wrapper<RHS_Scalar_T>;
-
-    /// Kronecker matrix product of sparse wrappers
-    template< typename Scalar_T >
-    auto kron(const eigen_sparse_wrapper<Scalar_T>& lhs, const eigen_sparse_wrapper<Scalar_T>& rhs) -> eigen_sparse_wrapper<Scalar_T>;
 
     // Helper Free Functions for Member Implementation
 
@@ -716,6 +701,10 @@ namespace glucat
       auto operator* (const arma_sparse_wrapper& other) const -> arma_sparse_wrapper;
       /// Multiply by scalar and assign
       auto operator*= (const Scalar_T& val) -> arma_sparse_wrapper&;
+      /// Mixed Kronecker matrix product: Sparse x Dense -> Dense (wrapper)
+      template< typename Other_Scalar_T >
+      auto kron(const arma_matrix_wrapper<Other_Scalar_T>& other) const -> arma_matrix_wrapper<Other_Scalar_T>;
+
       friend auto operator<< <>(std::ostream& os, const arma_sparse_wrapper& m) -> std::ostream&;
 
       // New Member Functions

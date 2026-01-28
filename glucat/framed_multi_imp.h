@@ -1667,17 +1667,16 @@ namespace glucat
       const auto& pair_rem_mnpn = rem_mn.divide(ist_pn);
       const auto& val_pn   = pair_rem_mnpn.first;
       const auto& val_1    = pair_rem_mnpn.second;
-      using matrix::kron;
       if (odd)
-        return - kron(JK, val_1.fast   (level-1, 1))
-               + kron(I,  val_mnpn.fast(level-1, 1))
-               + kron(J,  val_mn.fast  (level-1, 0))
-               + kron(K,  val_pn.fast  (level-1, 0));
+        return - JK.kron(val_1.fast   (level-1, 1))
+               + I.kron(val_mnpn.fast(level-1, 1))
+               + J.kron(val_mn.fast  (level-1, 0))
+               + K.kron(val_pn.fast  (level-1, 0));
       else
-        return   kron(I,  val_1.fast   (level-1, 0))
-               + kron(JK, val_mnpn.fast(level-1, 0))
-               + kron(K,  val_mn.fast  (level-1, 1))
-               - kron(J,  val_pn.fast  (level-1, 1));
+        return   I.kron(val_1.fast   (level-1, 0))
+               + JK.kron(val_mnpn.fast(level-1, 0))
+               + K.kron(val_mn.fast  (level-1, 1))
+               - J.kron(val_pn.fast  (level-1, 1));
     }
   }
 
