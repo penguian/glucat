@@ -890,10 +890,8 @@ Random A in {1,2}
 Random A in {1,2}
 
 Random A in {-1,1,2}
-Note: asin(A) == nan
 
 Random A in {-1,1,2}
-Note: asin(A) == nan
 
 Random A in {-2,-1,1,2}
 
@@ -904,14 +902,8 @@ Random A in {-1,1,2,3}
 Random A in {-1,1,2,3}
 
 Random A in {-2,-1,1,2,3}
-Note: acos(A) == nan
-Note: acosh(A) == nan
-Note: asin(A) == nan
 
 Random A in {-2,-1,1,2,3}
-Note: acos(A) == nan
-Note: acosh(A) == nan
-Note: asin(A) == nan
 
 Random A in {-3,-2,-1,1,2,3}
 
@@ -1548,10 +1540,8 @@ Random A in {1,2}
 Random A in {1,2}
 
 Random A in {-1,1,2}
-Note: asin(A) == nan
 
 Random A in {-1,1,2}
-Note: asin(A) == nan
 
 Random A in {-2,-1,1,2}
 
@@ -1562,14 +1552,8 @@ Random A in {-1,1,2,3}
 Random A in {-1,1,2,3}
 
 Random A in {-2,-1,1,2,3}
-Note: acos(A) == nan
-Note: acosh(A) == nan
-Note: asin(A) == nan
 
 Random A in {-2,-1,1,2,3}
-Note: acos(A) == nan
-Note: acosh(A) == nan
-Note: asin(A) == nan
 
 Random A in {-3,-2,-1,1,2,3}
 
@@ -2216,7 +2200,6 @@ Random A in {1,2}
 Random A in {1,2}
 
 Random A in {-1,1,2}
-Note: asin(A) == nan
 
 Random A in {-1,1,2}
 
@@ -2882,42 +2865,50 @@ Test 16:
 Programming example 16 : Matrices of multivectors
 
 framed_multi<double,-3,3>
+
 0 0 0 0 0
 0 1 0 0 0
 0 0 0 0 0
 0 0 0 0 0
 0 0 0 0 0
+
   {1}   0   0   0   0
   0   {2}   0   0   0
   0   0   {3}   0   0
   0   0   0   {1}   0
   0   0   0   0   {2}
+
   0   0   0   0   0
   0   {2}   0   0   0
   0   0   0   0   0
   0   0   0   0   0
   0   0   0   0   0
+
    {1}    0    0    0    0
    0    2{2}    0    0    0
    0    0    {3}    0    0
    0    0    0    {1}    0
    0    0    0    0    {2}
 matrix_multi<double,-3,3>
+
 0 0 0 0 0
 0 1 0 0 0
 0 0 0 0 0
 0 0 0 0 0
 0 0 0 0 0
+
   {1}   0   0   0   0
   0   {2}   0   0   0
   0   0   {3}   0   0
   0   0   0   {1}   0
   0   0   0   0   {2}
+
   0   0   0   0   0
   0   {2}   0   0   0
   0   0   0   0   0
   0   0   0   0   0
   0   0   0   0   0
+
    {1}    0    0    0    0
    0    2{2}    0    0    0
    0    0    {3}    0    0
@@ -3196,7 +3187,7 @@ b.truncated(truncation):
 {-2}+1.00000000000000005e-04{1}+{2}+1.00000000000000000e+04{3}
 truncation: 1.08420217248550443e-19
 B.truncated(truncation): 
-{-2}+1.00000000000000032e-04{1}+{2}+1.00000000000000000e+04{3}
+{-2}+1.00000000000000018e-04{1}+{2}+1.00000000000000000e+04{3}
 Hexadecimal floating point format
 truncation: 0x8p-66
 a.truncated(truncation): 
@@ -3209,7 +3200,7 @@ b.truncated(truncation):
 {-2}+0x1.a36e2eb1c432dp-14{1}+{2}+0x1.388p+13{3}
 truncation: 0x8p-66
 B.truncated(truncation): 
-{-2}+0x1.a36e2eb1c432fp-14{1}+{2}+0x1.388p+13{3}
+{-2}+0x1.a36e2eb1c432ep-14{1}+{2}+0x1.388p+13{3}
 Default floating point format
 truncation: 1.0842021724855044e-19
 a.truncated(truncation): 
@@ -3222,4 +3213,4 @@ b.truncated(truncation):
 {-2}+0.0001{1}+{2}+10000{3}
 truncation: 1.0842021724855044e-19
 B.truncated(truncation): 
-{-2}+0.00010000000000000003{1}+{2}+10000{3}
+{-2}+0.00010000000000000002{1}+{2}+10000{3}

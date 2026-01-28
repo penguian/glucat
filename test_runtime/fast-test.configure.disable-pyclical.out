@@ -473,14 +473,8 @@ Random A in {-1,1,2,3}
 Random A in {-1,1,2,3}
 
 Random A in {-2,-1,1,2,3}
-Note: acos(A) == nan
-Note: acosh(A) == nan
-Note: asin(A) == nan
 
 Random A in {-2,-1,1,2,3}
-Note: acos(A) == nan
-Note: acosh(A) == nan
-Note: asin(A) == nan
 
 Random A in {-3,-2,-1,1,2,3}
 
