@@ -1608,7 +1608,7 @@ namespace glucat
           scaled_result = db_sqrt(unitval);
           used_db_sqrt = true;
       }
-      
+
       if (used_db_sqrt && (scaled_result.isnan() || !approx_equal(pow(scaled_result, 2), unitval)))
       {
           // Fallback to Cyclic Reduction if Denman-Beavers failed or produced poor result
@@ -1618,7 +1618,7 @@ namespace glucat
     const auto frame = (use_approx_sqrt)
       ? val.frame()
       : i.frame();
-    
+
     if (scaled_result.isnan()) return traits_t::NaN();
     // Return result even if verification fails, as long as it's not NaN.
     return multivector_t(scaled_result * rescale, frame);

@@ -47,8 +47,6 @@
 
 namespace glucat
 {
-
-
   // Forward declarations for friends
 
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
