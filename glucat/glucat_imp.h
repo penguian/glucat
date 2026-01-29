@@ -47,6 +47,10 @@
 
 #include "glucat/matrix_imp.h"
 
+#if defined(_GLUCAT_USE_ARMADILLO)
+#include "glucat/matrix_arma_imp.h"
+#endif
+
 #include "glucat/generation_imp.h"
 
 #include "glucat/matrix_multi_imp.h"
