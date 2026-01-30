@@ -229,7 +229,7 @@ namespace glucat
       template< typename Other_Scalar_T >
       auto kron(const eigen_sparse_wrapper<Other_Scalar_T>& other) const -> eigen_matrix_wrapper<Other_Scalar_T>;
 
-      /// Normalization of rotation K
+      /// Left Kronecker quotient
       template< typename RHS_T >
       auto nork(const RHS_T& rhs, bool mono = true) const -> RHS_T;
 
@@ -386,7 +386,7 @@ namespace glucat
       /// Kronecker matrix product of sparse wrappers
       auto kron(const eigen_sparse_wrapper& other) const -> eigen_sparse_wrapper;
 
-      /// Normalization of rotation K
+      /// Left Kronecker quotient
       template< typename RHS_T >
       auto nork(const RHS_T& rhs, bool mono = true) const -> RHS_T;
 

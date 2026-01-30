@@ -505,19 +505,24 @@ namespace glucat { namespace matrix
   eigen_matrix_wrapper<Scalar_T>::
   kron(const eigen_sparse_wrapper<Other_Scalar_T>& other) const -> eigen_matrix_wrapper<Other_Scalar_T>
   {
-    // Convert lhs (this, dense) to Other_Scalar_T
-    eigen_matrix_wrapper<Other_Scalar_T> lhs_conv(nbr_rows(), nbr_cols());
+    eigen_matrix_wrapper<Other_Scalar_T> result(nbr_rows() * other.nbr_rows(), nbr_cols() * other.nbr_cols());
+    result.zeros();
+
     for (matrix_index_t i = 0; i < nbr_rows(); ++i)
+    {
       for (matrix_index_t j = 0; j < nbr_cols(); ++j)
-        lhs_conv(i, j) = static_cast<Other_Scalar_T>((*this)(i, j));
-
-    // Convert rhs (sparse) to compatible type (Dense)
-    eigen_matrix_wrapper<Other_Scalar_T> rhs_dense(other.nbr_rows(), other.nbr_cols());
-    for (matrix_index_t i = 0; i < other.nbr_rows(); ++i)
-      for (matrix_index_t j = 0; j < other.nbr_cols(); ++j)
-        rhs_dense(i, j) = static_cast<Other_Scalar_T>(other(i, j));
-
-    return lhs_conv.kron(rhs_dense);
+      {
+        auto val = static_cast<Other_Scalar_T>((*this)(i, j));
+        if (val != Other_Scalar_T(0))
+        {
+          matrix_index_t r_offset = i * other.nbr_rows();
+          matrix_index_t c_offset = j * other.nbr_cols();
+          for (auto it = other.begin(); it != other.end(); ++it)
+            result(r_offset + it.row(), c_offset + it.col()) = val * static_cast<Other_Scalar_T>(*it);
+        }
+      }
+    }
+    return result;
   }
 
   /// Trace
@@ -995,13 +1000,20 @@ namespace glucat { namespace matrix
   eigen_sparse_wrapper<Scalar_T>::
   kron(const eigen_matrix_wrapper<Other_Scalar_T>& other) const -> eigen_matrix_wrapper<Other_Scalar_T>
   {
-    // Convert lhs (sparse) to compatible type (Dense of Other_Scalar_T)
-    eigen_matrix_wrapper<Other_Scalar_T> lhs_dense(nbr_rows(), nbr_cols());
-    for (matrix_index_t i = 0; i < nbr_rows(); ++i)
-      for (matrix_index_t j = 0; j < nbr_cols(); ++j)
-        lhs_dense(i, j) = static_cast<Other_Scalar_T>((*this)(i, j)); // using operator() const
+    eigen_matrix_wrapper<Other_Scalar_T> result(nbr_rows() * other.nbr_rows(), nbr_cols() * other.nbr_cols());
+    result.zeros();
 
-    return lhs_dense.kron(other);
+    for (auto it = begin(); it != end(); ++it)
+    {
+      auto val = static_cast<Other_Scalar_T>(*it);
+      matrix_index_t r_offset = it.row() * other.nbr_rows();
+      matrix_index_t c_offset = it.col() * other.nbr_cols();
+
+      for (matrix_index_t i = 0; i < other.nbr_rows(); ++i)
+        for (matrix_index_t j = 0; j < other.nbr_cols(); ++j)
+           result(r_offset + i, c_offset + j) = val * static_cast<Other_Scalar_T>(other(i, j));
+    }
+    return result;
   }
 
   /// Kronecker matrix product of sparse wrappers
@@ -1077,7 +1089,7 @@ namespace glucat { namespace matrix
      return sum / Result_Scalar_T(static_cast<double>(nbr_rows()));
   }
 
-  /// Normalization of rotation K
+  /// Left Kronecker quotient
   template< typename Scalar_T >
   template< typename RHS_T >
   auto
