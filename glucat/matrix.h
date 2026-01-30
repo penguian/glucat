@@ -64,12 +64,12 @@ namespace glucat
     template< typename Scalar_T > class eigen_sparse_wrapper; // Forward
 
     // =========================================================================
-    // matrix_impl_base (CRTP Pattern)
+    // matrix_base (CRTP Pattern)
     // Base class providing member functions that delegate to the derived implementation
     // =========================================================================
     /// Base class providing member functions that delegate to the derived implementation (CRTP Pattern)
     template< typename Derived >
-    class matrix_impl_base
+    class matrix_base
     {
     public:
       /// Return const reference to derived class
@@ -95,7 +95,7 @@ namespace glucat
     /// Wrapper for Eigen matrix
     template< typename Scalar_T >
     class eigen_matrix_wrapper :
-    public matrix_impl_base<eigen_matrix_wrapper<Scalar_T>>
+    public matrix_base<eigen_matrix_wrapper<Scalar_T>>
     {
     public:
       using MatrixType = Eigen::Matrix<Scalar_T, Eigen::Dynamic, Eigen::Dynamic>;
@@ -262,7 +262,7 @@ namespace glucat
     /// Wrapper for Eigen sparse matrix
     template< typename Scalar_T >
     class eigen_sparse_wrapper :
-    public matrix_impl_base<eigen_sparse_wrapper<Scalar_T>>
+    public matrix_base<eigen_sparse_wrapper<Scalar_T>>
     {
     public:
       using MatrixType = Eigen::SparseMatrix<Scalar_T>;

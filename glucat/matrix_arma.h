@@ -56,7 +56,7 @@ namespace glucat { namespace matrix
   /// Wrapper for Armadillo matrix
   template< typename Scalar_T >
   class arma_matrix_wrapper :
-  public matrix_impl_base<arma_matrix_wrapper<Scalar_T>>
+  public matrix_base<arma_matrix_wrapper<Scalar_T>>
   {
   public:
     using MatrixType = arma::Mat<Scalar_T>;
@@ -231,7 +231,7 @@ namespace glucat { namespace matrix
   /// Wrapper for Armadillo sparse matrix
   template< typename Scalar_T >
   class arma_sparse_wrapper :
-  public matrix_impl_base<arma_sparse_wrapper<Scalar_T>>
+  public matrix_base<arma_sparse_wrapper<Scalar_T>>
   {
   public:
     using MatrixType = arma::SpMat<Scalar_T>;

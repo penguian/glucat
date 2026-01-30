@@ -48,20 +48,20 @@ namespace glucat { namespace matrix
 {
 
   // =========================================================================
-  // matrix_impl_base Member Definitions
+  // matrix_base Member Definitions
   // =========================================================================
 
   /// Return const reference to derived class
   template< typename Derived >
   auto
-  matrix_impl_base<Derived>::
+  matrix_base<Derived>::
   derived() const -> const Derived&
   { return static_cast<const Derived&>(*this); }
 
   /// Return reference to derived class
   template< typename Derived >
   auto
-  matrix_impl_base<Derived>::
+  matrix_base<Derived>::
   derived() -> Derived&
   { return static_cast<Derived&>(*this); }
 
@@ -89,13 +89,13 @@ namespace glucat { namespace matrix
   }
 
   // =========================================================================
-  // matrix_impl_base Member Definitions
+  // matrix_base Member Definitions
   // =========================================================================
 
   /// Generic classify_eigenvalues relies on eigenvalues() member
   template< typename Derived >
   auto
-  matrix_impl_base<Derived>::
+  matrix_base<Derived>::
   classify_eigenvalues() const
   {
     using Scalar_T = typename Derived::value_type;
