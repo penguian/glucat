@@ -45,11 +45,6 @@
 #include <vector>
 #include <iostream>
 
-#if defined(_GLUCAT_USE_ARMADILLO)
-#include <armadillo>
-#endif
-
-
 namespace glucat
 {
   using matrix_index_t = std::size_t;
@@ -64,7 +59,7 @@ namespace glucat
     template< typename Scalar_T > struct is_complex_t<std::complex<Scalar_T>> : std::true_type {};
 
     /// Matrix wrapper for Armadillo
-    template< typename Scalar_T > class arma_matrix_wrapper; // Forward
+
     /// Sparse matrix wrapper for Eigen
     template< typename Scalar_T > class eigen_sparse_wrapper; // Forward
 
@@ -109,11 +104,6 @@ namespace glucat
       using size_type = typename MatrixType::Index;
 
       MatrixType m_mat;
-
-#if defined(_GLUCAT_USE_ARMADILLO)
-      /// Conversion to Armadillo Mat
-      operator arma::Mat<Scalar_T>() const;
-#endif
 
       // Constructors
       /// Default constructor
