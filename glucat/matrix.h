@@ -75,6 +75,31 @@ namespace glucat { namespace matrix
   template< typename Scalar_T >
   using sparse_matrix_t = typename sparse_matrix_type_selector<Scalar_T>::type;
 
+#if defined(_GLUCAT_USE_ARMADILLO)
+  /// Armadillo support for float
+  template<> struct is_arma_supported<float> : std::true_type {};
+  /// Armadillo support for double
+  template<> struct is_arma_supported<double> : std::true_type {};
+  /// Armadillo support for complex float
+  template<> struct is_arma_supported<std::complex<float>> : std::true_type {};
+  /// Armadillo support for complex double
+  template<> struct is_arma_supported<std::complex<double>> : std::true_type {};
+
+  /// Matrix type selector specialization for Armadillo
+  template< typename Scalar_T >
+  struct matrix_type_selector<Scalar_T, true>
+  {
+    using type = arma_matrix_wrapper<Scalar_T>;
+  };
+
+  /// Sparse matrix type selector specialization for Armadillo
+  template< typename Scalar_T >
+  struct sparse_matrix_type_selector<Scalar_T, true>
+  {
+    using type = arma_sparse_wrapper<Scalar_T>;
+  };
+#endif
+
   // ===========================================================
   // Matrix Template Classes (Facade)
   // Named dense_matrix to avoid collision with namespace matrix

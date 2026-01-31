@@ -32,8 +32,8 @@
  ***************************************************************************/
 
 #if defined(_GLUCAT_USE_ARMADILLO)
-#include "glucat/glucat_config.h"
-#include "glucat/matrix.h"
+
+#include "glucat/matrix_base.h"
 
 #include <armadillo>
 
@@ -44,12 +44,12 @@
 
 namespace glucat { namespace matrix
 {
-  /// Matrix wrapper for Armadillo
-  template< typename Scalar_T > class arma_matrix_wrapper; // Forward
-  /// Sparse matrix wrapper for Armadillo
-  template< typename Scalar_T > class arma_sparse_wrapper; // Forward
+  /// Matrix wrapper for Armadillo (forward)
+  template< typename Scalar_T > class arma_matrix_wrapper;
+  /// Sparse matrix wrapper for Armadillo (forward)
+  template< typename Scalar_T > class arma_sparse_wrapper;
 
-  /// Output to stream
+  /// Output to stream (forward)
   template< typename Scalar_T >
   auto operator<< (std::ostream& os, const arma_matrix_wrapper<Scalar_T>& m) -> std::ostream&;
 
@@ -359,30 +359,6 @@ namespace glucat { namespace matrix
     return result;
   }
 
-
-
-  /// Armadillo support for float
-  template<> struct is_arma_supported<float> : std::true_type {};
-  /// Armadillo support for double
-  template<> struct is_arma_supported<double> : std::true_type {};
-  /// Armadillo support for complex float
-  template<> struct is_arma_supported<std::complex<float>> : std::true_type {};
-  /// Armadillo support for complex double
-  template<> struct is_arma_supported<std::complex<double>> : std::true_type {};
-
-  /// Matrix type selector specialization for Armadillo
-  template< typename Scalar_T >
-  struct matrix_type_selector<Scalar_T, true>
-  {
-    using type = arma_matrix_wrapper<Scalar_T>;
-  };
-
-  /// Sparse matrix type selector specialization for Armadillo
-  template< typename Scalar_T >
-  struct sparse_matrix_type_selector<Scalar_T, true>
-  {
-    using type = arma_sparse_wrapper<Scalar_T>;
-  };
 } }
 #endif // _GLUCAT_USE_ARMADILLO
 #endif // _GLUCAT_MATRIX_ARMA_H
