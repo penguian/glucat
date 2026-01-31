@@ -65,10 +65,6 @@
 
 #include "glucat/matrix.h"
 
-#if defined(_GLUCAT_USE_ARMADILLO)
-#include "glucat/matrix_arma.h"
-#endif
-
 #include "glucat/generation.h"
 
 #include "glucat/matrix_multi.h"

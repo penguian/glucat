@@ -145,8 +145,9 @@ namespace glucat
   private:
     class var_term; // forward
     using var_term_t = class var_term;
-    using matrix_t = typename matrix_multi_t::matrix_t;
     using basis_matrix_t = typename matrix_multi_t::basis_matrix_t;
+    using matrix_t = typename matrix_multi_t::matrix_t;
+    using matrix_index_t = typename matrix_multi_t::matrix_index_t;
     using sorted_map_t = std::map< index_set_t, Scalar_T, std::less<const index_set_t> >;
     using map_t = std::unordered_map<index_set_t, Scalar_T, index_set_hash<LO, HI>>;
 

@@ -49,10 +49,10 @@
 #  pragma GCC diagnostic pop
 # endif
 
-#include <fstream>
 #include <iomanip>
 #include <array>
 #include <iostream>
+#include <fstream>
 
 namespace glucat
 {

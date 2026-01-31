@@ -40,7 +40,6 @@
 
 #include "glucat/matrix.h"
 
-#include <fstream>
 #include <string>
 #include <utility>
 #include <vector>
@@ -153,7 +152,7 @@ namespace glucat
   private:
     using basis_matrix_t = matrix::sparse_matrix_t<int>;
     using matrix_t = matrix::matrix_t<Scalar_T>;
-    using matrix_index_t = glucat::matrix_index_t;
+    using matrix_index_t = matrix::matrix_index_t;
 
   public:
     /// Class name used in messages
