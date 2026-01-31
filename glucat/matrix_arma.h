@@ -200,6 +200,7 @@ namespace glucat { namespace matrix
     template< typename RHS_T >
     auto nork(const RHS_T& rhs, bool mono = true) const -> RHS_T;
 
+    /// Output to stream
     friend auto operator<< <>(std::ostream& os, const arma_matrix_wrapper& m) -> std::ostream&;
 
   private:
@@ -304,6 +305,7 @@ namespace glucat { namespace matrix
     template< typename RHS_T >
     auto nork(const RHS_T& rhs, bool mono = true) const -> RHS_T;
 
+    /// Output to stream
     friend auto operator<< <>(std::ostream& os, const arma_sparse_wrapper& m) -> std::ostream&;
 
     // New Member Functions

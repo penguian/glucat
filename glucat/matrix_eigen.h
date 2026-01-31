@@ -94,9 +94,11 @@ namespace glucat { namespace matrix
     explicit eigen_matrix_wrapper(const eigen_sparse_wrapper<Other_Scalar_T>& other);
 
     // Copy constructor
+    /// Copy constructor
     eigen_matrix_wrapper(const eigen_matrix_wrapper& other);
 
     // Move constructor
+    /// Move constructor
     eigen_matrix_wrapper(eigen_matrix_wrapper&& other) noexcept;
 
     // Assignment
@@ -202,6 +204,7 @@ namespace glucat { namespace matrix
     template< typename RHS_T >
     auto nork(const RHS_T& rhs, bool mono = true) const -> RHS_T;
 
+    /// Output to stream
     friend auto operator<< <>(std::ostream& os, const eigen_matrix_wrapper& m) -> std::ostream&;
   };
 
@@ -251,21 +254,28 @@ namespace glucat { namespace matrix
     /// Copy/Move similar to dense
     eigen_sparse_wrapper(const eigen_sparse_wrapper& other);
 
+    /// Move constructor
     eigen_sparse_wrapper(eigen_sparse_wrapper&& other) noexcept;
 
+    /// Copy assignment
     auto operator= (const eigen_sparse_wrapper& other) -> eigen_sparse_wrapper&;
 
+    /// Move assignment
     auto operator= (eigen_sparse_wrapper&& other) noexcept -> eigen_sparse_wrapper&;
 
+    /// Set size
     void set_size(matrix_index_t rows, matrix_index_t cols);
 
     /// Make writable
     void resize(matrix_index_t rows, matrix_index_t cols, bool preserve = false);
 
+    /// Clear
     void clear();
 
+    /// Set to zero
     void zeros();
 
+    /// Set to zero
     void zeros(matrix_index_t rows, matrix_index_t cols);
 
     /// Iterator support
@@ -358,6 +368,7 @@ namespace glucat { namespace matrix
     template< typename RHS_T >
     auto nork(const RHS_T& rhs, bool mono = true) const -> RHS_T;
 
+    /// Output to stream
     friend auto operator<< <>(std::ostream& os, const eigen_sparse_wrapper& m) -> std::ostream&;
   };
 

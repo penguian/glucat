@@ -49,7 +49,9 @@ namespace glucat { namespace matrix
   struct is_arma_supported : std::false_type {};
 
   // Declarations to satisfy the compiler
+  /// Matrix wrapper for Eigen (forward)
   template< typename Scalar_T > class eigen_matrix_wrapper;
+  /// Sparse matrix wrapper for Eigen (forward)
   template< typename Scalar_T > class eigen_sparse_wrapper;
 
   // Dense Selector
@@ -115,12 +117,18 @@ namespace glucat { namespace matrix
     using Base::Base; // Inherit constructors
     using Base::operator=;
 
+    /// Default constructor
     dense_matrix() = default;
+    /// Copy constructor
     dense_matrix(const dense_matrix&) = default;
+    /// Move constructor
     dense_matrix(dense_matrix&&) = default;
+    /// Copy assignment
     auto operator= (const dense_matrix&) -> dense_matrix& = default;
+    /// Move assignment
     auto operator= (dense_matrix&&) -> dense_matrix& = default;
 
+    /// Constructor from other matrix type
     template< typename Other_Matrix_T >
     dense_matrix(const Other_Matrix_T& other) : Base(other) {}
   };
@@ -135,12 +143,18 @@ namespace glucat { namespace matrix
     using Base::Base; // Inherit constructors
     using Base::operator=;
 
+    /// Default constructor
     sparse_matrix() = default;
+    /// Copy constructor
     sparse_matrix(const sparse_matrix&) = default;
+    /// Move constructor
     sparse_matrix(sparse_matrix&&) = default;
+    /// Copy assignment
     auto operator= (const sparse_matrix&) -> sparse_matrix& = default;
+    /// Move assignment
     auto operator= (sparse_matrix&&) -> sparse_matrix& = default;
 
+    /// Constructor from other matrix type
     template< typename Other_Matrix_T >
     sparse_matrix(const Other_Matrix_T& other) : Base(other) {}
   };

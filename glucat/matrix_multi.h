@@ -235,35 +235,47 @@ namespace glucat
 
     // Friend declarations
 
+    /// Geometric product
     friend auto
       operator* <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs) -> const matrix_multi_t;
+    /// Outer product
     friend auto
       operator^ <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs) -> const matrix_multi_t;
+    /// Inner product
     friend auto
       operator& <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs) -> const matrix_multi_t;
+    /// Left contraction
     friend auto
       operator% <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs) -> const matrix_multi_t;
+    /// Hestenes scalar product
     friend auto
       star      <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs) -> Scalar_T;
+    /// Geometric quotient
     friend auto
       operator/ <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs) -> const matrix_multi_t;
+    /// Twisted Adjoint Action
     friend auto
       operator| <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs) -> const matrix_multi_t;
 
+    /// Read from stream
     friend auto
       operator>> <>(std::istream& s, multivector_t& val) -> std::istream&;
+    /// Output to stream
     friend auto
       operator<< <>(std::ostream& os, const multivector_t& val) -> std::ostream&;
+    /// Reframe
     template< typename Other_Scalar_T, const index_t Other_LO, const index_t Other_HI, typename Other_Tune_P >
     friend auto
     reframe (const matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>& lhs,    const matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>& rhs,
                    matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>& lhs_reframed, matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>& rhs_reframed) -> const index_set<Other_LO,Other_HI>;
+    /// Matrix Square Root
     template< typename Other_Scalar_T, const index_t Other_LO, const index_t Other_HI, typename Other_Tune_P >
     friend auto
       matrix_sqrt(const matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>& val,
                   const matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>& i,
                   const index_t level)
                -> const matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>;
+    /// Matrix Logarithm
     template< typename Other_Scalar_T, const index_t Other_LO, const index_t Other_HI, typename Other_Tune_P >
     friend auto
       matrix_log(const matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>& val,
