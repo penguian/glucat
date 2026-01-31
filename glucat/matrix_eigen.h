@@ -341,8 +341,7 @@ namespace glucat { namespace matrix
     /// Trace
     auto trace() const; // Trace of sparse?
     /// Eigenvalues
-    auto eigenvalues() const -> std::vector<std::complex<double>>
-    { throw std::runtime_error("Not implemented for sparse"); } // Usually not computed directly on sparse
+    auto eigenvalues() const -> std::vector<std::complex<double>>;
     /// Infinity norm
     auto norm_inf() const;
     /// Squared Frobenius norm

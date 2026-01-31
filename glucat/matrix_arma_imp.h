@@ -531,6 +531,56 @@ namespace glucat { namespace matrix
       }
       return result;
   }
+
+  /// Begin iterator
+  template< typename Scalar_T >
+  auto
+  arma_matrix_wrapper<Scalar_T>::
+  begin()
+  { return m_mat.begin(); }
+
+  /// End iterator
+  template< typename Scalar_T >
+  auto
+  arma_matrix_wrapper<Scalar_T>::
+  end()
+  { return m_mat.end(); }
+
+  /// Begin const iterator
+  template< typename Scalar_T >
+  auto
+  arma_matrix_wrapper<Scalar_T>::
+  begin() const
+  { return m_mat.begin(); }
+
+  /// End const iterator
+  template< typename Scalar_T >
+  auto
+  arma_matrix_wrapper<Scalar_T>::
+  end() const
+  { return m_mat.end(); }
+
+  /// Has infinity?
+  template< typename Scalar_T >
+  auto
+  arma_matrix_wrapper<Scalar_T>::
+  has_inf() const -> bool
+  { return m_mat.has_inf(); }
+
+  /// Has NaN?
+  template< typename Scalar_T >
+  auto
+  arma_matrix_wrapper<Scalar_T>::
+  has_nan() const -> bool
+  { return m_mat.has_nan(); }
+
+  /// Is finite?
+  template< typename Scalar_T >
+  auto
+  arma_matrix_wrapper<Scalar_T>::
+  is_finite() const -> bool
+  { return m_mat.is_finite(); }
+
   // =========================================================================
   // arma_sparse_wrapper Member Definitions
   // =========================================================================
@@ -747,6 +797,13 @@ namespace glucat { namespace matrix
         sum += *it;
     return sum;
   }
+
+  /// Eigenvalues
+  template< typename Scalar_T >
+  auto
+  arma_sparse_wrapper<Scalar_T>::
+  eigenvalues() const
+  { throw std::runtime_error("Not implemented for sparse"); }
 
   /// Inner product
   template< typename Scalar_T >

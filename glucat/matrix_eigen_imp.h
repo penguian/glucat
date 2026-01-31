@@ -1021,8 +1021,17 @@ namespace glucat { namespace matrix
      }
      return result;
   }
+
+  /// Eigenvalues
+  template< typename Scalar_T >
+  auto
+  eigen_sparse_wrapper<Scalar_T>::
+  eigenvalues() const -> std::vector<std::complex<double>>
+  { throw std::runtime_error("Not implemented for sparse"); } // Usually not computed directly on sparse
+
   // =========================================================================
   // unit_helper Specializations
+
   // =========================================================================
 
   // Specialization for Eigen Wrapper

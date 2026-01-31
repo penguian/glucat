@@ -44,6 +44,22 @@
 namespace glucat { namespace matrix
 {
 
+  /// Constructor from other matrix type
+  template< typename Scalar_T >
+  template< typename Other_Matrix_T >
+  dense_matrix<Scalar_T>::
+  dense_matrix(const Other_Matrix_T& other)
+  : Base(other)
+  { }
+
+  /// Constructor from other matrix type
+  template< typename Scalar_T >
+  template< typename Other_Matrix_T >
+  sparse_matrix<Scalar_T>::
+  sparse_matrix(const Other_Matrix_T& other)
+  : Base(other)
+  { }
+
 } }
 
 #endif // _GLUCAT_MATRIX_IMP_H

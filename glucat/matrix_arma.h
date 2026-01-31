@@ -156,20 +156,20 @@ namespace glucat { namespace matrix
 
     // Iterator support
     /// Begin iterator
-    auto begin() { return m_mat.begin(); }
+    auto begin();
     /// End iterator
-    auto end() { return m_mat.end(); }
+    auto end();
     /// Begin const iterator
-    auto begin() const { return m_mat.begin(); }
+    auto begin() const;
     /// End const iterator
-    auto end() const { return m_mat.end(); }
+    auto end() const;
 
     /// Has infinity?
-    auto has_inf() const -> bool { return m_mat.has_inf(); }
+    auto has_inf() const -> bool;
     /// Has NaN?
-    auto has_nan() const -> bool { return m_mat.has_nan(); }
+    auto has_nan() const -> bool;
     /// Is finite?
-    auto is_finite() const -> bool { return m_mat.is_finite(); }
+    auto is_finite() const -> bool;
 
     /// Trace
     auto trace() const -> Scalar_T;
@@ -312,7 +312,7 @@ namespace glucat { namespace matrix
     /// Trace
     auto trace() const;
     /// Eigenvalues
-    auto eigenvalues() const { throw std::runtime_error("Not implemented for sparse"); }
+    auto eigenvalues() const;
     /// Infinity norm
     auto norm_inf() const;
     /// Squared Frobenius norm
