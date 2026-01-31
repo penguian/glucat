@@ -47,21 +47,30 @@ namespace glucat { namespace matrix
   // matrix_base Member Definitions
   // =========================================================================
 
-  /// Return const reference to derived class
+  /**
+   * @brief Return const reference to derived class
+   * @details
+   */
   template< typename Derived >
   auto
   matrix_base<Derived>::
   derived() const -> const Derived&
   { return static_cast<const Derived&>(*this); }
 
-  /// Return reference to derived class
+  /**
+   * @brief Return reference to derived class
+   * @details
+   */
   template< typename Derived >
   auto
   matrix_base<Derived>::
   derived() -> Derived&
   { return static_cast<Derived&>(*this); }
 
-  /// Generic classify_eigenvalues relies on eigenvalues() member
+  /**
+   * @brief Generic classify_eigenvalues relies on eigenvalues() member
+   * @details
+   */
   template< typename Derived >
   auto
   matrix_base<Derived>::
@@ -159,7 +168,10 @@ namespace glucat { namespace matrix
   // unit_helper and unit Definitions
   // =========================================================================
 
-  /// Helper struct generic implementation
+  /**
+   * @brief Helper struct generic implementation
+   * @details
+   */
   template< typename Matrix_T >
   struct unit_helper
   {
@@ -183,7 +195,10 @@ namespace glucat { namespace matrix
     }
   };
 
-  /// Identity matrix
+  /**
+   * @brief Identity matrix
+   * @details
+   */
   template< typename Matrix_T >
   auto unit(const matrix_index_t dim) -> const Matrix_T
   {

@@ -41,10 +41,16 @@
 
 namespace glucat
 {
-  /// Extra traits which extend numeric limits
+  /**
+   * @brief Extra traits which extend numeric limits
+   * @details
+   */
   // Reference: [AA], 2.4, p. 30-31
 
-  /// Cast to float
+  /**
+   * @brief Cast to float
+   * @details
+   */
   template< >
   template< typename Other_Scalar_T >
   inline
@@ -53,7 +59,10 @@ namespace glucat
   to_scalar_t(const Other_Scalar_T& val) -> float
   { return static_cast<float>(numeric_traits<Other_Scalar_T>::to_double(val)); }
 
-  /// Cast to double
+  /**
+   * @brief Cast to double
+   * @details
+   */
   template< >
   template< typename Other_Scalar_T >
   inline
@@ -63,7 +72,10 @@ namespace glucat
   { return numeric_traits<Other_Scalar_T>::to_double(val); }
 
 #if defined(_GLUCAT_USE_QD)
-  /// Cast to long double
+  /**
+   * @brief Cast to long double
+   * @details
+   */
   template< >
   template< >
   inline
@@ -72,7 +84,10 @@ namespace glucat
   to_scalar_t(const dd_real& val) -> long double
   { return static_cast<long double>(val.x[0]) + static_cast<long double>(val.x[1]); }
 
-  /// Cast to long double
+  /**
+   * @brief Cast to long double
+   * @details
+   */
   template< >
   template< >
   inline
@@ -81,7 +96,10 @@ namespace glucat
   to_scalar_t(const qd_real& val) -> long double
   { return static_cast<long double>(val.x[0]) + static_cast<long double>(val.x[1]); }
 
-  /// Cast to dd_real
+  /**
+   * @brief Cast to dd_real
+   * @details
+   */
   template< >
   template< >
   inline
@@ -90,7 +108,10 @@ namespace glucat
   to_scalar_t(const long double& val) -> dd_real
   { return {double(val),double(val - static_cast<long double>(double(val)))}; }
 
-  /// Cast to dd_real
+  /**
+   * @brief Cast to dd_real
+   * @details
+   */
   template< >
   template< >
   inline
@@ -99,7 +120,10 @@ namespace glucat
   to_scalar_t(const qd_real& val) -> dd_real
   { return {val.x[0],val.x[1]}; }
 
-  /// Cast to qd_real
+  /**
+   * @brief Cast to qd_real
+   * @details
+   */
   template< >
   template< >
   inline
@@ -108,7 +132,10 @@ namespace glucat
   to_scalar_t(const long double& val) -> qd_real
   { return {double(val),double(val - static_cast<long double>(double(val))),0.0,0.0}; }
 
-  /// Cast to qd_real
+  /**
+   * @brief Cast to qd_real
+   * @details
+   */
   template< >
   template< >
   inline
@@ -129,7 +156,10 @@ namespace glucat
   // If we specialize Eigen::NumTraits<qd_real>, we might control this.
 #endif
 
-  /// Cast to promote
+  /**
+   * @brief Cast to promote
+   * @details
+   */
   template< typename Scalar_T >
   inline
   auto
@@ -139,7 +169,10 @@ namespace glucat
     return numeric_traits<promoted_scalar_t>::to_scalar_t(val);
   }
 
-  /// Cast to demote
+  /**
+   * @brief Cast to demote
+   * @details
+   */
   template< typename Scalar_T >
   inline
   auto

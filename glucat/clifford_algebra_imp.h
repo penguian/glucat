@@ -68,14 +68,20 @@ namespace glucat
   classname() -> const std::string
   { return "clifford_algebra"; }
 
-  /// Default for truncation
+  /**
+   * @brief Default for truncation
+   * @details
+   */
   template< typename Scalar_T, typename Index_Set_T, typename Multivector_T>
   const
   Scalar_T
   clifford_algebra<Scalar_T,Index_Set_T,Multivector_T>::
   default_truncation = std::numeric_limits<Scalar_T>::epsilon();
 
-  /// Test for inequality of multivectors
+  /**
+   * @brief Test for inequality of multivectors
+   * @details
+   */
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -87,7 +93,10 @@ namespace glucat
   operator!= (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> bool
   { return !(lhs == rhs); }
 
-  /// Test for inequality of multivector and scalar
+  /**
+   * @brief Test for inequality of multivector and scalar
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -95,7 +104,10 @@ namespace glucat
   operator!= (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const Scalar_T& scr) -> bool
   { return !(lhs == scr); }
 
-  /// Test for inequality of scalar and multivector
+  /**
+   * @brief Test for inequality of scalar and multivector
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -103,7 +115,10 @@ namespace glucat
   operator!= (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> bool
   { return !(rhs == scr); }
 
-  /// Quadratic norm error tolerance relative to a specific multivector
+  /**
+   * @brief Quadratic norm error tolerance relative to a specific multivector
+   * @details
+   */
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -124,7 +139,10 @@ namespace glucat
     return abs_tol * abs_tol * std::max(Scalar_T(nbr_terms), Scalar_T(1));
   }
 
-  /// Relative or absolute error using the quadratic norm
+  /**
+   * @brief Relative or absolute error using the quadratic norm
+   * @details
+   */
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -144,7 +162,10 @@ namespace glucat
       : abs_norm_diff;
   }
 
-  /// Test for approximate equality of multivectors
+  /**
+   * @brief Test for approximate equality of multivectors
+   * @details
+   */
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -159,7 +180,10 @@ namespace glucat
                const Scalar_T tolerance) -> bool
   { return error_squared(lhs, rhs, threshold) < tolerance; }
 
-  /// Test for approximate equality of multivectors
+  /**
+   * @brief Test for approximate equality of multivectors
+   * @details
+   */
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -175,7 +199,10 @@ namespace glucat
     return approx_equal(lhs, rhs, rhs_tol, rhs_tol);
   }
 
-  /// Geometric sum of multivector and scalar
+  /**
+   * @brief Geometric sum of multivector and scalar
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -186,7 +213,10 @@ namespace glucat
     return result += scr;
   }
 
-  /// Geometric sum of scalar and multivector
+  /**
+   * @brief Geometric sum of scalar and multivector
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -196,7 +226,10 @@ namespace glucat
     return rhs + scr;
   }
 
-  /// Geometric sum
+  /**
+   * @brief Geometric sum
+   * @details
+   */
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -211,7 +244,10 @@ namespace glucat
     return result += rhs;
   }
 
-  /// Geometric difference of multivector and scalar
+  /**
+   * @brief Geometric difference of multivector and scalar
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -222,7 +258,10 @@ namespace glucat
     return result -= scr;
   }
 
-  /// Geometric difference of scalar and multivector
+  /**
+   * @brief Geometric difference of scalar and multivector
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -230,7 +269,10 @@ namespace glucat
   operator- (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   { return -rhs + scr; }
 
-  /// Geometric difference
+  /**
+   * @brief Geometric difference
+   * @details
+   */
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -245,7 +287,10 @@ namespace glucat
     return result -= rhs;
   }
 
-  /// Product of multivector and scalar
+  /**
+   * @brief Product of multivector and scalar
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -256,7 +301,10 @@ namespace glucat
     return result *= scr;
   }
 
-  /// Product of scalar and multivector
+  /**
+   * @brief Product of scalar and multivector
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -267,7 +315,10 @@ namespace glucat
     return rhs * scr;
   }
 
-  /// Geometric product
+  /**
+   * @brief Geometric product
+   * @details
+   */
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -282,7 +333,10 @@ namespace glucat
     return lhs * multivector_t(rhs);
   }
 
-  /// Outer product
+  /**
+   * @brief Outer product
+   * @details
+   */
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -297,7 +351,10 @@ namespace glucat
     return lhs ^ multivector_t(rhs);
   }
 
-  /// Inner product
+  /**
+   * @brief Inner product
+   * @details
+   */
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -312,7 +369,10 @@ namespace glucat
     return lhs & multivector_t(rhs);
   }
 
-  /// Left contraction
+  /**
+   * @brief Left contraction
+   * @details
+   */
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -327,7 +387,10 @@ namespace glucat
     return lhs % multivector_t(rhs);
   }
 
-  /// Hestenes scalar product
+  /**
+   * @brief Hestenes scalar product
+   * @details
+   */
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -342,7 +405,10 @@ namespace glucat
     return star(lhs, multivector_t(rhs));
   }
 
-  /// Quotient of multivector and scalar
+  /**
+   * @brief Quotient of multivector and scalar
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -353,7 +419,10 @@ namespace glucat
     return result /= scr;
   }
 
-  /// Quotient of scalar and multivector
+  /**
+   * @brief Quotient of scalar and multivector
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -364,7 +433,10 @@ namespace glucat
     return result /= rhs;
   }
 
-  /// Geometric quotient
+  /**
+   * @brief Geometric quotient
+   * @details
+   */
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -379,7 +451,10 @@ namespace glucat
     return lhs / multivector_t(rhs);
   }
 
-  /// Transformation via twisted adjoint action
+  /**
+   * @brief Transformation via twisted adjoint action
+   * @details
+   */
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -394,7 +469,10 @@ namespace glucat
     return lhs | multivector_t(rhs);
   }
 
-  /// Geometric multiplicative inverse
+  /**
+   * @brief Geometric multiplicative inverse
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -402,7 +480,10 @@ namespace glucat
   inv(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   { return val.inv(); }
 
-  /// Integer power of multivector
+  /**
+   * @brief Integer power of multivector
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -436,7 +517,10 @@ namespace glucat
     return result;
   }
 
-  /// Multivector power of multivector
+  /**
+   * @brief Multivector power of multivector
+   * @details
+   */
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -465,14 +549,20 @@ namespace glucat
     return exp(log(lhs) * rhs);
   }
 
-  /// Outer product power of multivector
+  /**
+   * @brief Outer product power of multivector
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
   outer_pow(const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, int rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   { return lhs.outer_pow(rhs); }
 
-  /// Scalar part
+  /**
+   * @brief Scalar part
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -480,7 +570,10 @@ namespace glucat
   scalar(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T
   { return val.scalar(); }
 
-  /// Real part: synonym for scalar part
+  /**
+   * @brief Real part: synonym for scalar part
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -488,7 +581,10 @@ namespace glucat
   real(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T
   { return val.scalar(); }
 
-  /// Imaginary part: deprecated (always 0)
+  /**
+   * @brief Imaginary part: deprecated (always 0)
+   * @details
+   */
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -499,7 +595,10 @@ namespace glucat
   imag(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T
   { return Scalar_T(0); }
 
-  /// Pure part
+  /**
+   * @brief Pure part
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -507,7 +606,10 @@ namespace glucat
   pure(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   { return val - val.scalar(); }
 
-  /// Even part
+  /**
+   * @brief Even part
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -515,7 +617,10 @@ namespace glucat
   even(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   { return val.even(); }
 
-  /// Odd part
+  /**
+   * @brief Odd part
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -523,7 +628,10 @@ namespace glucat
   odd(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   { return val.odd(); }
 
-  /// Vector part of multivector, as a vector_t with respect to frame()
+  /**
+   * @brief Vector part of multivector, as a vector_t with respect to frame()
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -531,7 +639,10 @@ namespace glucat
   vector_part(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const std::vector<Scalar_T>
   { return val.vector_part(); }
 
-  /// Main involution, each {i} is replaced by -{i} in each term, eg. {1} ->-{1}
+  /**
+   * @brief Main involution, each {i} is replaced by -{i} in each term, eg. {1} ->-{1}
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -539,7 +650,10 @@ namespace glucat
   involute(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   { return val.involute(); }
 
-  /// Reversion, eg. {1}*{2} -> {2}*{1}
+  /**
+   * @brief Reversion, eg. {1}*{2} -> {2}*{1}
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -547,7 +661,10 @@ namespace glucat
   reverse(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   { return val.reverse(); }
 
-  /// Conjugation, rev o invo == invo o rev
+  /**
+   * @brief Conjugation, rev o invo == invo o rev
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -555,7 +672,10 @@ namespace glucat
   conj(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   { return val.conj(); }
 
-  /// Scalar_T quadratic form == (rev(x)*x)(0)
+  /**
+   * @brief Scalar_T quadratic form == (rev(x)*x)(0)
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -563,7 +683,10 @@ namespace glucat
   quad(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T
   { return val.quad(); }
 
-  /// Scalar_T norm == sum of norm of coordinates
+  /**
+   * @brief Scalar_T norm == sum of norm of coordinates
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -571,7 +694,10 @@ namespace glucat
   norm(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T
   { return val.norm(); }
 
-  /// Absolute value == sqrt(norm)
+  /**
+   * @brief Absolute value == sqrt(norm)
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -579,7 +705,10 @@ namespace glucat
   abs(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T
   { return numeric_traits<Scalar_T>::sqrt(val.norm()); }
 
-  /// Maximum of absolute values of components of multivector: multivector infinity norm
+  /**
+   * @brief Maximum of absolute values of components of multivector: multivector infinity norm
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -587,7 +716,10 @@ namespace glucat
   max_abs(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T
   { return val.max_abs(); }
 
-  /// Square root of -1 which commutes with all members of the frame of the given multivector
+  /**
+   * @brief Square root of -1 which commutes with all members of the frame of the given multivector
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -636,8 +768,14 @@ namespace glucat
       return traits_t::NaN();
   }
 
-  /// Square root of -1 which commutes with all members of the frame of the given multivector
-  /// The name "elliptic" is now deprecated: use "complexifier" instead.
+  /**
+   * @brief Square root of -1 which commutes with all members of the frame of the given multivector
+   * @details
+   */
+  /**
+   * @brief The name "elliptic" is now deprecated: use "complexifier" instead.
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -645,7 +783,10 @@ namespace glucat
   elliptic(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   { return complexifier(val); }
 
-  /// Check that i is a valid complexifier for val
+  /**
+   * @brief Check that i is a valid complexifier for val
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -668,7 +809,10 @@ namespace glucat
     }
   }
 
-  /// Square root of multivector with specified complexifier
+  /**
+   * @brief Square root of multivector with specified complexifier
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -676,7 +820,10 @@ namespace glucat
   sqrt(const Multivector<Scalar_T,LO,HI,Tune_P>& val, const Multivector<Scalar_T,LO,HI,Tune_P>& i, bool prechecked) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   { return sqrt(val, i, prechecked); }
 
-  /// Square root of multivector
+  /**
+   * @brief Square root of multivector
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -684,7 +831,10 @@ namespace glucat
   sqrt(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   { return sqrt(val, complexifier(val), true); }
 
-  /// Exponential of multivector
+  /**
+   * @brief Exponential of multivector
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -786,7 +936,10 @@ namespace glucat
     return result;
   }
 
-  /// Natural logarithm of multivector with specified complexifier
+  /**
+   * @brief Natural logarithm of multivector with specified complexifier
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -798,7 +951,10 @@ namespace glucat
 
   }
 
-  /// Natural logarithm of multivector
+  /**
+   * @brief Natural logarithm of multivector
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -806,7 +962,10 @@ namespace glucat
   log(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   { return log(val, complexifier(val), true); }
 
-  /// Hyperbolic cosine of multivector
+  /**
+   * @brief Hyperbolic cosine of multivector
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -826,7 +985,10 @@ namespace glucat
     return result;
   }
 
-  /// Inverse hyperbolic cosine of multivector with specified complexifier
+  /**
+   * @brief Inverse hyperbolic cosine of multivector with specified complexifier
+   * @details
+   */
   // Reference: [AS], Section 4.6, p86-89
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -847,7 +1009,10 @@ namespace glucat
     return result;
   }
 
-  /// Inverse hyperbolic cosine of multivector
+  /**
+   * @brief Inverse hyperbolic cosine of multivector
+   * @details
+   */
   // Reference: [AS], Section 4.6, p86-89
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -856,7 +1021,10 @@ namespace glucat
   acosh(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   { return acosh(val, complexifier(val), true); }
 
-  /// Cosine of multivector with specified complexifier
+  /**
+   * @brief Cosine of multivector with specified complexifier
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -881,7 +1049,10 @@ namespace glucat
     return result;
   }
 
-  /// Cosine of multivector
+  /**
+   * @brief Cosine of multivector
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -889,7 +1060,10 @@ namespace glucat
   cos(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   { return cos(val, complexifier(val), true); }
 
-  /// Inverse cosine of multivector with specified complexifier
+  /**
+   * @brief Inverse cosine of multivector with specified complexifier
+   * @details
+   */
   // Reference: [AS], Section 4.4, p79-83
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -912,7 +1086,10 @@ namespace glucat
     return result;
   }
 
-  /// Inverse cosine of multivector
+  /**
+   * @brief Inverse cosine of multivector
+   * @details
+   */
   // Reference: [AS], Section 4.4, p79-83
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -921,7 +1098,10 @@ namespace glucat
   acos(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   { return acos(val, complexifier(val), true); }
 
-  /// Hyperbolic sine of multivector
+  /**
+   * @brief Hyperbolic sine of multivector
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -942,7 +1122,10 @@ namespace glucat
     return result;
   }
 
-  /// Inverse hyperbolic sine of multivector with specified complexifier
+  /**
+   * @brief Inverse hyperbolic sine of multivector with specified complexifier
+   * @details
+   */
   // Reference: [AS], Section 4.6, p86-89
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -964,7 +1147,10 @@ namespace glucat
     return result;
   }
 
-  /// Inverse hyperbolic sine of multivector
+  /**
+   * @brief Inverse hyperbolic sine of multivector
+   * @details
+   */
   // Reference: [AS], Section 4.6, p86-89
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -973,7 +1159,10 @@ namespace glucat
   asinh(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   { return asinh(val, complexifier(val), true); }
 
-  /// Sine of multivector with specified complexifier
+  /**
+   * @brief Sine of multivector with specified complexifier
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -998,7 +1187,10 @@ namespace glucat
     return result;
   }
 
-  /// Sine of multivector
+  /**
+   * @brief Sine of multivector
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1006,7 +1198,10 @@ namespace glucat
   sin(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   { return sin(val, complexifier(val), true); }
 
-  /// Inverse sine of multivector with specified complexifier
+  /**
+   * @brief Inverse sine of multivector with specified complexifier
+   * @details
+   */
   // Reference: [AS], Section 4.4, p79-83
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -1029,7 +1224,10 @@ namespace glucat
     return result;
   }
 
-  /// Inverse sine of multivector
+  /**
+   * @brief Inverse sine of multivector
+   * @details
+   */
   // Reference: [AS], Section 4.4, p79-83
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -1038,7 +1236,10 @@ namespace glucat
   asin(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   { return asin(val, complexifier(val), true); }
 
-  /// Hyperbolic tangent of multivector
+  /**
+   * @brief Hyperbolic tangent of multivector
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1058,7 +1259,10 @@ namespace glucat
     return result;
   }
 
-  /// Inverse hyperbolic tangent of multivector with specified complexifier
+  /**
+   * @brief Inverse hyperbolic tangent of multivector with specified complexifier
+   * @details
+   */
   // Reference: [AS], Section 4.6, p86-89
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -1078,7 +1282,10 @@ namespace glucat
     return result;
   }
 
-  /// Inverse hyperbolic tangent of multivector
+  /**
+   * @brief Inverse hyperbolic tangent of multivector
+   * @details
+   */
   // Reference: [AS], Section 4.6, p86-89
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -1087,7 +1294,10 @@ namespace glucat
   atanh(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   { return atanh(val, complexifier(val), true); }
 
-  /// Tangent of multivector with specified complexifier
+  /**
+   * @brief Tangent of multivector with specified complexifier
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1106,7 +1316,10 @@ namespace glucat
     return sin(val, i, true) / cos(val, i, true);
   }
 
-  /// Tangent of multivector
+  /**
+   * @brief Tangent of multivector
+   * @details
+   */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1114,7 +1327,10 @@ namespace glucat
   tan(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>
   { return tan(val, complexifier(val), true); }
 
-  /// Inverse tangent of multivector with specified complexifier
+  /**
+   * @brief Inverse tangent of multivector with specified complexifier
+   * @details
+   */
   // Reference: [AS], Section 4.4, p79-83
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -1134,7 +1350,10 @@ namespace glucat
     return -i * atanh(i * val, i, true);
   }
 
-  /// Inverse tangent of multivector
+  /**
+   * @brief Inverse tangent of multivector
+   * @details
+   */
   // Reference: [AS], Section 4.4, p79-83
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >

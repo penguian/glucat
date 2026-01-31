@@ -42,7 +42,10 @@ namespace glucat { namespace gen
   // [P]: Ian R. Porteous, "Clifford algebras and the classical groups", Cambridge UP, 1995.
   // [L]: Pertti Lounesto, "Clifford algebras and spinors", Cambridge UP, 1997.
 
-  /// Single instance of generator table
+  /**
+   * @brief Single instance of generator table
+   * @details
+   */
   // Reference: [M] Item 47
   template< class Matrix_T >
   auto
@@ -50,7 +53,10 @@ namespace glucat { namespace gen
   generator() -> generator_table<Matrix_T>&
   { static generator_table<Matrix_T> g; return g;}
 
-  /// Pointer to generators for a specific signature
+  /**
+   * @brief Pointer to generators for a specific signature
+   * @details
+   */
   // Reference: [P] Table 15.27, p 133
   template< class Matrix_T >
   inline
@@ -73,7 +79,10 @@ namespace glucat { namespace gen
     }
   }
 
-  /// Construct a vector of generators for a specific signature
+  /**
+   * @brief Construct a vector of generators for a specific signature
+   * @details
+   */
   template< class Matrix_T >
   auto
   generator_table<Matrix_T>::
@@ -120,7 +129,10 @@ namespace glucat { namespace gen
     return (*this)[sig];
   }
 
-  /// Construct generators for p,q given generators for p-1,q-1
+  /**
+   * @brief Construct generators for p,q given generators for p-1,q-1
+   * @details
+   */
   // Reference: [P] Proposition 15.17, p 131
   template< class Matrix_T >
   void
@@ -158,7 +170,10 @@ namespace glucat { namespace gen
     this->insert(make_pair(sig, result));
   }
 
-  /// Construct generators for p,q given generators for p-4,q+4
+  /**
+   * @brief Construct generators for p,q given generators for p-4,q+4
+   * @details
+   */
   // Reference: [L] 16.4 Periodicity of 8, p216
   template< class Matrix_T >
   void
@@ -191,7 +206,10 @@ namespace glucat { namespace gen
     this->insert(make_pair(sig, result));
   }
 
-  /// Construct generators for p,q given generators for p+4,q-4
+  /**
+   * @brief Construct generators for p,q given generators for p+4,q-4
+   * @details
+   */
   // Reference: [L] 16.4 Periodicity of 8, p216
   template< class Matrix_T >
   void
@@ -224,7 +242,10 @@ namespace glucat { namespace gen
     this->insert(make_pair(sig, result));
   }
 
-  /// Construct generators for p,q given generators for q+1,p-1
+  /**
+   * @brief Construct generators for p,q given generators for q+1,p-1
+   * @details
+   */
   // Reference: [P] Proposition 15.20, p 131
   template< class Matrix_T >
   void

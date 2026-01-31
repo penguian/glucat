@@ -44,7 +44,10 @@
 namespace glucat { namespace matrix
 {
 
-  /// Constructor from other matrix type
+  /**
+   * @brief Constructor from other matrix type
+   * @details
+   */
   template< typename Scalar_T >
   template< typename Other_Matrix_T >
   dense_matrix<Scalar_T>::
@@ -52,7 +55,10 @@ namespace glucat { namespace matrix
   : Base(other)
   { }
 
-  /// Constructor from other matrix type
+  /**
+   * @brief Constructor from other matrix type
+   * @details
+   */
   template< typename Scalar_T >
   template< typename Other_Matrix_T >
   sparse_matrix<Scalar_T>::

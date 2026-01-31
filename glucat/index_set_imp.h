@@ -50,20 +50,29 @@ namespace glucat
   classname() -> const std::string
   { return "index_set"; }
 
-  /// Constructor from index value
+  /**
+   * @brief Constructor from index value
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   index_set<LO,HI>::
   index_set(const index_t idx)
   { this->set(idx); }
 
-  /// Constructor from bitset_t
+  /**
+   * @brief Constructor from bitset_t
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   index_set<LO,HI>::
   index_set(const bitset_t bst):
   bitset_t(bst)
   { }
 
-  /// Constructor from set value of an index set folded within the given frame
+  /**
+   * @brief Constructor from set value of an index set folded within the given frame
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   index_set<LO,HI>::
   index_set(const set_value_t folded_val, const index_set_t frm, const bool prechecked)
@@ -77,7 +86,10 @@ namespace glucat
     *this = folded_set.unfold(frm);
   }
 
-  /// Constructor from range of indices from range.first to range.second
+  /**
+   * @brief Constructor from range of indices from range.first to range.second
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   index_set<LO,HI>::
   index_set(const index_pair_t& range, const bool prechecked)
@@ -97,7 +109,10 @@ namespace glucat
     *this = bitset_t(mask);
   }
 
-  /// Constructor from string
+  /**
+   * @brief Constructor from string
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   index_set<LO,HI>::
   index_set(const std::string& str)
@@ -112,7 +127,10 @@ namespace glucat
       throw error_t("index_set_t(str): could not parse entire string");
   }
 
-  /// Equality
+  /**
+   * @brief Equality
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -123,7 +141,10 @@ namespace glucat
     return *pthis == static_cast<bitset_t>(rhs);
   }
 
-  /// Inequality
+  /**
+   * @brief Inequality
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -134,7 +155,10 @@ namespace glucat
     return *pthis != static_cast<bitset_t>(rhs);
   }
 
-  /// Set complement: not
+  /**
+   * @brief Set complement: not
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -142,7 +166,10 @@ namespace glucat
   operator~ () const -> index_set_t
   { return bitset_t::operator~(); }
 
-  /// Symmetric set difference: exclusive or
+  /**
+   * @brief Symmetric set difference: exclusive or
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -154,7 +181,10 @@ namespace glucat
     return *this;
   }
 
-  /// Symmetric set difference: exclusive or
+  /**
+   * @brief Symmetric set difference: exclusive or
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -167,7 +197,10 @@ namespace glucat
     return static_cast<bitset_t>(lhs) ^ static_cast<bitset_t>(rhs);
   }
 
-  /// Set intersection: and
+  /**
+   * @brief Set intersection: and
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -179,7 +212,10 @@ namespace glucat
     return *this;
   }
 
-  /// Set intersection: and
+  /**
+   * @brief Set intersection: and
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -192,7 +228,10 @@ namespace glucat
     return static_cast<bitset_t>(lhs) & static_cast<bitset_t>(rhs);
   }
 
-  /// Set union: or
+  /**
+   * @brief Set union: or
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -204,7 +243,10 @@ namespace glucat
     return *this;
   }
 
-  /// Set union: or
+  /**
+   * @brief Set union: or
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -217,7 +259,10 @@ namespace glucat
     return static_cast<bitset_t>(lhs) | static_cast<bitset_t>(rhs);
   }
 
-  /// Subscripting: Element access
+  /**
+   * @brief Subscripting: Element access
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -225,7 +270,10 @@ namespace glucat
   operator[] (const index_t idx) -> reference
   { return reference(*this, idx); }
 
-  /// Subscripting: Test idx for membership: test value of bit idx
+  /**
+   * @brief Subscripting: Test idx for membership: test value of bit idx
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -233,7 +281,10 @@ namespace glucat
   operator[] (const index_t idx) const -> bool
   { return this->test(idx); }
 
-  /// Test idx for membership: test value of bit idx
+  /**
+   * @brief Test idx for membership: test value of bit idx
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -248,7 +299,10 @@ namespace glucat
              : false;
   }
 
-  /// Include all indices except 0: set all bits except 0
+  /**
+   * @brief Include all indices except 0: set all bits except 0
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -259,7 +313,10 @@ namespace glucat
     return *this;
   }
 
-  /// Include idx: Set bit at idx if idx != 0
+  /**
+   * @brief Include idx: Set bit at idx if idx != 0
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -273,7 +330,10 @@ namespace glucat
     return *this;
   }
 
-  /// Set membership of idx to val if idx != 0: Set bit at idx to val if idx != 0
+  /**
+   * @brief Set membership of idx to val if idx != 0: Set bit at idx to val if idx != 0
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -287,7 +347,10 @@ namespace glucat
     return *this;
   }
 
-  /// Make set empty: Set all bits to 0
+  /**
+   * @brief Make set empty: Set all bits to 0
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -298,7 +361,10 @@ namespace glucat
     return *this;
   }
 
-  /// Exclude idx:  Set bit at idx to 0
+  /**
+   * @brief Exclude idx:  Set bit at idx to 0
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -312,7 +378,10 @@ namespace glucat
     return *this;
   }
 
-  /// Set complement, except 0: flip all bits, except 0
+  /**
+   * @brief Set complement, except 0: flip all bits, except 0
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -323,7 +392,10 @@ namespace glucat
     return *this;
   }
 
-  /// Complement membership of idx if idx != 0: flip bit at idx if idx != 0
+  /**
+   * @brief Complement membership of idx if idx != 0: flip bit at idx if idx != 0
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -337,7 +409,10 @@ namespace glucat
     return *this;
   }
 
-  /// Cardinality: Number of indices included in set
+  /**
+   * @brief Cardinality: Number of indices included in set
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -357,7 +432,10 @@ namespace glucat
     }
   }
 
-  /// Number of negative indices included in set
+  /**
+   * @brief Number of negative indices included in set
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -369,7 +447,10 @@ namespace glucat
     return neg_part.count();
   }
 
-  /// Number of positive indices included in set
+  /**
+   * @brief Number of positive indices included in set
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -382,7 +463,10 @@ namespace glucat
   }
 
 #if (_GLUCAT_BITS_PER_ULONG == 64)
-  /// Minimum member, or 0 if none: default for 64-bit cpus
+  /**
+   * @brief Minimum member, or 0 if none: default for 64-bit cpus
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -420,7 +504,10 @@ namespace glucat
     }
   }
 #elif (_GLUCAT_BITS_PER_ULONG == 32)
-  /// Minimum member, or 0 if none: default for 32-bit cpus
+  /**
+   * @brief Minimum member, or 0 if none: default for 32-bit cpus
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   index_t
@@ -455,7 +542,10 @@ namespace glucat
     }
   }
 #else
-  /// Minimum member, or 0 if none
+  /**
+   * @brief Minimum member, or 0 if none
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   auto
   index_set<LO,HI>::
@@ -478,7 +568,10 @@ namespace glucat
 #endif
 
 #if (_GLUCAT_BITS_PER_ULONG == 64)
-  /// Maximum member, or 0 if none: default for 64-bit cpus
+  /**
+   * @brief Maximum member, or 0 if none: default for 64-bit cpus
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -512,7 +605,10 @@ namespace glucat
     }
   }
 #elif (_GLUCAT_BITS_PER_ULONG == 32)
-  /// Maximum member, or 0 if none: default for 32-bit cpus
+  /**
+   * @brief Maximum member, or 0 if none: default for 32-bit cpus
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -544,7 +640,10 @@ namespace glucat
     }
   }
 #else
-  /// Maximum member, or 0 if none
+  /**
+   * @brief Maximum member, or 0 if none
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   auto
   index_set<LO,HI>::
@@ -566,7 +665,10 @@ namespace glucat
   }
 #endif
 
-  /// Lexicographic ordering of two sets: -1 if a<b, +1 if a>b, 0 if a==b
+  /**
+   * @brief Lexicographic ordering of two sets: -1 if a<b, +1 if a>b, 0 if a==b
+   * @details
+   */
   //  eg. {3,4,5} is less than {3,7,8}
   template<const index_t LO, const index_t HI>
   inline
@@ -580,7 +682,10 @@ namespace glucat
              :  1;
   }
 
-  /// Lexicographic ordering of two sets: *this < rhs
+  /**
+   * @brief Lexicographic ordering of two sets: *this < rhs
+   * @details
+   */
   //  eg. {3,4,5} is less than {3,7,8}
   template<const index_t LO, const index_t HI>
   inline
@@ -589,7 +694,10 @@ namespace glucat
   lex_less_than(const index_set_t rhs) const -> bool
   { return bitset_t::to_ulong() < rhs.bitset_t::to_ulong(); }
 
-  /// Less than operator used for comparisons, map, etc.
+  /**
+   * @brief Less than operator used for comparisons, map, etc.
+   * @details
+   */
   // Order by count, then order lexicographically within the equivalence class of count.
   template<const index_t LO, const index_t HI>
   inline
@@ -606,7 +714,10 @@ namespace glucat
              : this->lex_less_than(rhs);
   }
 
-  /// Write out index set
+  /**
+   * @brief Write out index set
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   auto
   operator<< (std::ostream& os, const index_set<LO,HI>& ist) -> std::ostream&
@@ -628,7 +739,10 @@ namespace glucat
     return os;
   }
 
-  /// Read in index set
+  /**
+   * @brief Read in index set
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   auto
   operator>> (std::istream& s, index_set<LO,HI>& ist) -> std::istream&
@@ -725,7 +839,10 @@ namespace glucat
     return s;
   }
 
-  /// Determine if the index set is contiguous, ie. has no gaps when 0 is included
+  /**
+   * @brief Determine if the index set is contiguous, ie. has no gaps when 0 is included
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -740,7 +857,10 @@ namespace glucat
            (max_index - min_index == this->count() - 1);
   }
 
-  /// Fold this index set within itself as a frame
+  /**
+   * @brief Fold this index set within itself as a frame
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -749,7 +869,10 @@ namespace glucat
   index_set<LO,HI>
   { return this->fold(*this, true); }
 
-  /// Fold this index set within the given frame
+  /**
+   * @brief Fold this index set within the given frame
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   auto
   index_set<LO,HI>::
@@ -788,7 +911,10 @@ namespace glucat
     return result;
   }
 
-  /// Unfold this index set within the given frame
+  /**
+   * @brief Unfold this index set within the given frame
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   auto
   index_set<LO,HI>::
@@ -822,7 +948,10 @@ namespace glucat
     return result;
   }
 
-  /// The set value of the fold of this index set within the given frame
+  /**
+   * @brief The set value of the fold of this index set within the given frame
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -840,7 +969,10 @@ namespace glucat
     }
   }
 
-  /// Inverse reversed Gray code
+  /**
+   * @brief Inverse reversed Gray code
+   * @details
+   */
   inline
   static
   auto inverse_reversed_gray(unsigned long x) -> unsigned long
@@ -857,7 +989,10 @@ namespace glucat
     return x;
   }
 
-  /// Inverse Gray code
+  /**
+   * @brief Inverse Gray code
+   * @details
+   */
   inline
   static
   auto inverse_gray(unsigned long x) -> unsigned long
@@ -874,7 +1009,10 @@ namespace glucat
     return x;
   }
 
-  /// Sign of geometric product of two Clifford basis elements
+  /**
+   * @brief Sign of geometric product of two Clifford basis elements
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   auto
   index_set<LO,HI>::
@@ -923,7 +1061,10 @@ namespace glucat
     return 1 - int((negative & 1) << 1);
   }
 
-  /// Sign of geometric square of a Clifford basis element
+  /**
+   * @brief Sign of geometric square of a Clifford basis element
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -943,7 +1084,10 @@ namespace glucat
     return result;
   }
 
-  /// Hash function
+  /**
+   * @brief Hash function
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -957,20 +1101,29 @@ namespace glucat
     return size_t(neg_part ^ pos_part);
   }
 
-  /// Square of generator index j
+  /**
+   * @brief Square of generator index j
+   * @details
+   */
   inline
   auto
   sign_of_square(index_t j) -> int
   { return (j < 0) ? -1 : 1; }
 
-  /// Minimum negative index, or 0 if none
+  /**
+   * @brief Minimum negative index, or 0 if none
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
   min_neg(const index_set<LO,HI>& ist) -> index_t
   { return std::min(ist.min(), 0); }
 
-  /// Maximum positive index, or 0 if none
+  /**
+   * @brief Maximum positive index, or 0 if none
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -979,7 +1132,10 @@ namespace glucat
 
 // index_set reference
 
-  /// index_set reference
+  /**
+   * @brief index_set reference
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   index_set<LO,HI>::reference::
@@ -988,7 +1144,10 @@ namespace glucat
     m_idx(idx)
   { }
 
-  /// for b[i] == c[j];
+  /**
+   * @brief for b[i] == c[j];
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -996,7 +1155,10 @@ namespace glucat
   operator== (const reference& c_j) const -> bool
   { return m_pst == c_j.m_pst && m_idx == c_j.m_idx; }
 
-  /// for b[i] = x;
+  /**
+   * @brief for b[i] = x;
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -1010,7 +1172,10 @@ namespace glucat
     return *this;
   }
 
-  /// for b[i] = c[j];
+  /**
+   * @brief for b[i] = c[j];
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -1027,7 +1192,10 @@ namespace glucat
     return *this;
   }
 
-  /// flips the bit
+  /**
+   * @brief flips the bit
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -1035,14 +1203,20 @@ namespace glucat
   operator~ () const -> bool
   { return !(m_pst->test(m_idx)); }
 
-  /// for x = b[i];
+  /**
+   * @brief for x = b[i];
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   index_set<LO,HI>::reference::
   operator bool () const
   { return m_pst->test(m_idx); }
 
-  /// for b[i].flip();
+  /**
+   * @brief for b[i].flip();
+   * @details
+   */
   template<const index_t LO, const index_t HI>
   inline
   auto

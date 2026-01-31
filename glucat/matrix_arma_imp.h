@@ -49,7 +49,10 @@ See also Arvind Raja's original header comments in glucat.h
 
 namespace glucat { namespace matrix
 {
-  /// Solve for arma_matrix_wrapper
+  /**
+   * @brief Solve for arma_matrix_wrapper
+   * @details
+   */
   template< typename Scalar_T >
   auto
   solve(arma_matrix_wrapper<Scalar_T>& X, const arma_matrix_wrapper<Scalar_T>& lhs, const arma_matrix_wrapper<Scalar_T>& rhs, int opts = 0) -> bool
@@ -64,21 +67,30 @@ namespace glucat { namespace matrix
   // arma_matrix_wrapper Member Definitions
   // =========================================================================
 
-  /// Number of rows
+  /**
+   * @brief Number of rows
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
   nbr_rows() const -> matrix_index_t
   { return m_mat.n_rows; }
 
-  /// Number of columns
+  /**
+   * @brief Number of columns
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
   nbr_cols() const -> matrix_index_t
   { return m_mat.n_cols; }
 
-  /// Constructor with size
+  /**
+   * @brief Constructor with size
+   * @details
+   */
   template< typename Scalar_T >
   arma_matrix_wrapper<Scalar_T>::
   arma_matrix_wrapper(matrix_index_t rows, matrix_index_t cols)
@@ -88,7 +100,10 @@ namespace glucat { namespace matrix
   }
 
 
-  /// Constructor from other matrix type
+  /**
+   * @brief Constructor from other matrix type
+   * @details
+   */
   template< typename Scalar_T >
   template< typename Other_Matrix_T >
   arma_matrix_wrapper<Scalar_T>::
@@ -106,7 +121,10 @@ namespace glucat { namespace matrix
     }
   }
 
-  /// Constructor from eigen_matrix_wrapper
+  /**
+   * @brief Constructor from eigen_matrix_wrapper
+   * @details
+   */
   template< typename Scalar_T >
   template< typename Other_Scalar_T >
   arma_matrix_wrapper<Scalar_T>::
@@ -118,7 +136,10 @@ namespace glucat { namespace matrix
         (*this)(i, j) = static_cast<Scalar_T>(other(i, j));
   }
 
-  /// Constructor from eigen_sparse_wrapper
+  /**
+   * @brief Constructor from eigen_sparse_wrapper
+   * @details
+   */
   template< typename Scalar_T >
   template< typename Other_Scalar_T >
   arma_matrix_wrapper<Scalar_T>::
@@ -130,7 +151,10 @@ namespace glucat { namespace matrix
       m_mat(it.row(), it.col()) = static_cast<Scalar_T>(*it);
   }
 
-  /// Constructor from arma_sparse_wrapper
+  /**
+   * @brief Constructor from arma_sparse_wrapper
+   * @details
+   */
   template< typename Scalar_T >
   template< typename Other_Scalar_T >
   arma_matrix_wrapper<Scalar_T>::
@@ -140,21 +164,30 @@ namespace glucat { namespace matrix
     m_mat = arma::conv_to<MatrixType>::from(other.m_mat);
   }
 
-  /// Copy constructor
+  /**
+   * @brief Copy constructor
+   * @details
+   */
   template< typename Scalar_T >
   arma_matrix_wrapper<Scalar_T>::
   arma_matrix_wrapper(const arma_matrix_wrapper<Scalar_T>& other)
   : m_mat(other.m_mat)
   {  }
 
-  /// Move constructor
+  /**
+   * @brief Move constructor
+   * @details
+   */
   template< typename Scalar_T >
   arma_matrix_wrapper<Scalar_T>::
   arma_matrix_wrapper(arma_matrix_wrapper<Scalar_T>&& other) noexcept
   : m_mat(std::move(other.m_mat))
   { }
 
-  /// Copy assignment
+  /**
+   * @brief Copy assignment
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
@@ -165,7 +198,10 @@ namespace glucat { namespace matrix
     return *this;
   }
 
-  /// Move assignment
+  /**
+   * @brief Move assignment
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
@@ -176,7 +212,10 @@ namespace glucat { namespace matrix
     return *this;
   }
 
-  /// Assignment from sparse wrapper
+  /**
+   * @brief Assignment from sparse wrapper
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
@@ -186,26 +225,38 @@ namespace glucat { namespace matrix
     return *this;
   }
 
-  /// Conversion to const MatrixType reference
+  /**
+   * @brief Conversion to const MatrixType reference
+   * @details
+   */
   template< typename Scalar_T >
   arma_matrix_wrapper<Scalar_T>::
   operator const MatrixType&() const
   { return m_mat; }
 
-  /// Conversion to MatrixType reference
+  /**
+   * @brief Conversion to MatrixType reference
+   * @details
+   */
   template< typename Scalar_T >
   arma_matrix_wrapper<Scalar_T>::
   operator MatrixType&()
   { return m_mat; }
 
-  /// Set size
+  /**
+   * @brief Set size
+   * @details
+   */
   template< typename Scalar_T >
   void
   arma_matrix_wrapper<Scalar_T>::
   set_size(matrix_index_t rows, matrix_index_t cols)
   { m_mat.set_size(rows, cols); }
 
-  /// Resize
+  /**
+   * @brief Resize
+   * @details
+   */
   template< typename Scalar_T >
   void
   arma_matrix_wrapper<Scalar_T>::
@@ -217,14 +268,20 @@ namespace glucat { namespace matrix
       m_mat.set_size(rows, cols); // set_size does not preserve (faster)
   }
 
-  /// Clear
+  /**
+   * @brief Clear
+   * @details
+   */
   template< typename Scalar_T >
   void
   arma_matrix_wrapper<Scalar_T>::
   clear()
   { m_mat.zeros(); }
 
-  /// Set to zero
+  /**
+   * @brief Set to zero
+   * @details
+   */
   template< typename Scalar_T >
   void
   arma_matrix_wrapper<Scalar_T>::
@@ -234,14 +291,20 @@ namespace glucat { namespace matrix
     zeros();
   }
 
-  /// Set size then set to zero
+  /**
+   * @brief Set size then set to zero
+   * @details
+   */
   template< typename Scalar_T >
   void
   arma_matrix_wrapper<Scalar_T>::
   zeros()
   { m_mat.zeros(); }
 
-  /// Set to identity
+  /**
+   * @brief Set to identity
+   * @details
+   */
   template< typename Scalar_T >
   void
   arma_matrix_wrapper<Scalar_T>::
@@ -251,21 +314,30 @@ namespace glucat { namespace matrix
     m_mat.eye();
   }
 
-  /// Element access
+  /**
+   * @brief Element access
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
   operator() (matrix_index_t i, matrix_index_t j) -> Scalar_T&
   { return m_mat(i, j); }
 
-  /// Const element access
+  /**
+   * @brief Const element access
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
   operator() (matrix_index_t i, matrix_index_t j) const -> const Scalar_T&
   { return m_mat(i, j); }
 
-  /// Add and assign
+  /**
+   * @brief Add and assign
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
@@ -275,7 +347,10 @@ namespace glucat { namespace matrix
     return *this;
   }
 
-  /// Subtract and assign
+  /**
+   * @brief Subtract and assign
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
@@ -285,7 +360,10 @@ namespace glucat { namespace matrix
     return *this;
   }
 
-  /// Multiply by scalar and assign
+  /**
+   * @brief Multiply by scalar and assign
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
@@ -295,7 +373,10 @@ namespace glucat { namespace matrix
     return *this;
   }
 
-  /// Divide by scalar and assign
+  /**
+   * @brief Divide by scalar and assign
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
@@ -305,21 +386,30 @@ namespace glucat { namespace matrix
     return *this;
   }
 
-  /// Addition
+  /**
+   * @brief Addition
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
   operator+ (const arma_matrix_wrapper<Scalar_T>& other) const -> arma_matrix_wrapper<Scalar_T>
   { return arma_matrix_wrapper(MatrixType(m_mat + other.m_mat)); }
 
-  /// Subtraction
+  /**
+   * @brief Subtraction
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
   operator- (const arma_matrix_wrapper<Scalar_T>& other) const -> arma_matrix_wrapper<Scalar_T>
   { return arma_matrix_wrapper(MatrixType(m_mat - other.m_mat)); }
 
-  /// Multiplication
+  /**
+   * @brief Multiplication
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
@@ -330,21 +420,30 @@ namespace glucat { namespace matrix
     return arma_matrix_wrapper(std::move(res_arma));
   }
 
-  /// Unary negation
+  /**
+   * @brief Unary negation
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
   operator- () const -> arma_matrix_wrapper<Scalar_T>
   { return arma_matrix_wrapper(MatrixType(-m_mat)); }
 
-  /// Transpose
+  /**
+   * @brief Transpose
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
   t() const -> arma_matrix_wrapper<Scalar_T>
   { return arma_matrix_wrapper(MatrixType(m_mat.t())); }
 
-  /// Output to stream
+  /**
+   * @brief Output to stream
+   * @details
+   */
   template< typename Scalar_T >
   auto
   operator<< (std::ostream& os, const arma_matrix_wrapper<Scalar_T>& m) -> std::ostream&
@@ -353,7 +452,10 @@ namespace glucat { namespace matrix
   // New Member Implementations (moved from free functions)
   // ====================================================
 
-  /// Kronecker matrix product
+  /**
+   * @brief Kronecker matrix product
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
@@ -364,7 +466,10 @@ namespace glucat { namespace matrix
     return result;
   }
 
-  /// Mixed Kronecker matrix product: Dense x Sparse -> Dense (wrapper)
+  /**
+   * @brief Mixed Kronecker matrix product: Dense x Sparse -> Dense (wrapper)
+   * @details
+   */
   template< typename Scalar_T >
   template< typename Other_Scalar_T >
   auto
@@ -393,14 +498,20 @@ namespace glucat { namespace matrix
     return result;
   }
 
-  /// Trace
+  /**
+   * @brief Trace
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
   trace() const -> Scalar_T
   { return arma::trace(m_mat); }
 
-  /// Eigenvalues
+  /**
+   * @brief Eigenvalues
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
@@ -415,56 +526,80 @@ namespace glucat { namespace matrix
     return result;
   }
 
-  /// Is NaN?
+  /**
+   * @brief Is NaN?
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
   isnan() const -> bool
   { return m_mat.has_nan(); }
 
-  /// Is infinite?
+  /**
+   * @brief Is infinite?
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
   isinf() const -> bool
   { return m_mat.has_inf(); }
 
-  /// Infinity norm
+  /**
+   * @brief Infinity norm
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
   norm_inf() const
   { return arma::norm(m_mat, "inf"); }
 
-  /// Squared Frobenius norm
+  /**
+   * @brief Squared Frobenius norm
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
   norm_frob2() const
   { return arma::accu(arma::square(m_mat)); }
 
-  /// Number of non-zeros
+  /**
+   * @brief Number of non-zeros
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
   nnz() const
   { return arma::accu(m_mat != 0); }
 
-  /// Helper to construct from raw arma mat
+  /**
+   * @brief Helper to construct from raw arma mat
+   * @details
+   */
   template< typename Scalar_T >
   arma_matrix_wrapper<Scalar_T>::
   arma_matrix_wrapper(const MatrixType& m)
   : m_mat(m)
   { }
 
-  /// Helper to construct from raw arma mat
+  /**
+   * @brief Helper to construct from raw arma mat
+   * @details
+   */
   template< typename Scalar_T >
   arma_matrix_wrapper<Scalar_T>::
   arma_matrix_wrapper(MatrixType&& m)
   : m_mat(std::move(m))
   { }
 
-  /// Inner product
+  /**
+   * @brief Inner product
+   * @details
+   */
   template< typename Scalar_T >
   template< typename Result_Scalar_T, typename Other >
   auto
@@ -480,7 +615,10 @@ namespace glucat { namespace matrix
     return sum / Result_Scalar_T(static_cast<double>(nbr_rows()));
   }
 
-  /// Left Kronecker quotient
+  /**
+   * @brief Left Kronecker quotient
+   * @details
+   */
   template< typename Scalar_T >
   template< typename RHS_T >
   auto
@@ -532,49 +670,70 @@ namespace glucat { namespace matrix
       return result;
   }
 
-  /// Begin iterator
+  /**
+   * @brief Begin iterator
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
   begin()
   { return m_mat.begin(); }
 
-  /// End iterator
+  /**
+   * @brief End iterator
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
   end()
   { return m_mat.end(); }
 
-  /// Begin const iterator
+  /**
+   * @brief Begin const iterator
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
   begin() const
   { return m_mat.begin(); }
 
-  /// End const iterator
+  /**
+   * @brief End const iterator
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
   end() const
   { return m_mat.end(); }
 
-  /// Has infinity?
+  /**
+   * @brief Has infinity?
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
   has_inf() const -> bool
   { return m_mat.has_inf(); }
 
-  /// Has NaN?
+  /**
+   * @brief Has NaN?
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
   has_nan() const -> bool
   { return m_mat.has_nan(); }
 
-  /// Is finite?
+  /**
+   * @brief Is finite?
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_matrix_wrapper<Scalar_T>::
@@ -585,48 +744,69 @@ namespace glucat { namespace matrix
   // arma_sparse_wrapper Member Definitions
   // =========================================================================
 
-  /// Number of rows
+  /**
+   * @brief Number of rows
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_sparse_wrapper<Scalar_T>::
   nbr_rows() const -> matrix_index_t
   { return m_mat.n_rows; }
 
-  /// Number of columns
+  /**
+   * @brief Number of columns
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_sparse_wrapper<Scalar_T>::
   nbr_cols() const -> matrix_index_t
   { return m_mat.n_cols; }
 
-  /// Constructor from Armadillo SpMat
+  /**
+   * @brief Constructor from Armadillo SpMat
+   * @details
+   */
   template< typename Scalar_T >
   arma_sparse_wrapper<Scalar_T>::
   arma_sparse_wrapper(const MatrixType& m)
   : m_mat(m)
   { }
 
-  /// Constructor with size
+  /**
+   * @brief Constructor with size
+   * @details
+   */
   template< typename Scalar_T >
   arma_sparse_wrapper<Scalar_T>::
   arma_sparse_wrapper(matrix_index_t rows, matrix_index_t cols)
   { set_size(rows, cols); }
 
-  /// Copy constructor
+  /**
+   * @brief Copy constructor
+   * @details
+   */
   template< typename Scalar_T >
   arma_sparse_wrapper<Scalar_T>::
   arma_sparse_wrapper(const arma_sparse_wrapper<Scalar_T>& other)
   : m_mat(other.m_mat)
   { }
 
-  /// Move constructor
+  /**
+   * @brief Move constructor
+   * @details
+   */
   template< typename Scalar_T >
   arma_sparse_wrapper<Scalar_T>::
   arma_sparse_wrapper(arma_sparse_wrapper<Scalar_T>&& other) noexcept
   : m_mat(std::move(other.m_mat))
   { }
 
-  /// Copy assignment
+  /**
+   * @brief Copy assignment
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_sparse_wrapper<Scalar_T>::
@@ -637,7 +817,10 @@ namespace glucat { namespace matrix
     return *this;
   }
 
-  /// Move assignment
+  /**
+   * @brief Move assignment
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_sparse_wrapper<Scalar_T>::
@@ -648,28 +831,40 @@ namespace glucat { namespace matrix
     return *this;
   }
 
-  /// Set size
+  /**
+   * @brief Set size
+   * @details
+   */
   template< typename Scalar_T >
   void
   arma_sparse_wrapper<Scalar_T>::
   set_size(matrix_index_t rows, matrix_index_t cols)
   { m_mat.set_size(rows, cols); }
 
-  /// Resize
+  /**
+   * @brief Resize
+   * @details
+   */
   template< typename Scalar_T >
   void
   arma_sparse_wrapper<Scalar_T>::
   resize(matrix_index_t rows, matrix_index_t cols, bool preserve)
   { m_mat.resize(rows, cols); }
 
-  /// Clear
+  /**
+   * @brief Clear
+   * @details
+   */
   template< typename Scalar_T >
   void
   arma_sparse_wrapper<Scalar_T>::
   clear()
   { m_mat.zeros(); }
 
-  /// Set to zero
+  /**
+   * @brief Set to zero
+   * @details
+   */
   template< typename Scalar_T >
   void
   arma_sparse_wrapper<Scalar_T>::
@@ -679,42 +874,60 @@ namespace glucat { namespace matrix
     zeros();
   }
 
-  /// Set to zero
+  /**
+   * @brief Set to zero
+   * @details
+   */
   template< typename Scalar_T >
   void
   arma_sparse_wrapper<Scalar_T>::
   zeros()
   { m_mat.zeros(); }
 
-  /// Begin iterator
+  /**
+   * @brief Begin iterator
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_sparse_wrapper<Scalar_T>::
   begin() const -> const_iterator
   { return m_mat.begin(); }
 
-  /// End iterator
+  /**
+   * @brief End iterator
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_sparse_wrapper<Scalar_T>::
   end() const -> const_iterator
   { return m_mat.end(); }
 
-  /// Const element access
+  /**
+   * @brief Const element access
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_sparse_wrapper<Scalar_T>::
   operator() (matrix_index_t i, matrix_index_t j) const -> Scalar_T
   { return m_mat(i, j); }
 
-  /// Element access
+  /**
+   * @brief Element access
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_sparse_wrapper<Scalar_T>::
   operator() (matrix_index_t i, matrix_index_t j) -> auto
   { return m_mat(i, j); }
 
-  /// Add and assign
+  /**
+   * @brief Add and assign
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_sparse_wrapper<Scalar_T>::
@@ -724,14 +937,20 @@ namespace glucat { namespace matrix
     return *this;
   }
 
-  /// Multiply by sparse wrapper
+  /**
+   * @brief Multiply by sparse wrapper
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_sparse_wrapper<Scalar_T>::
   operator* (const arma_sparse_wrapper<Scalar_T>& other) const -> arma_sparse_wrapper<Scalar_T>
   { return arma_sparse_wrapper(m_mat * other.m_mat); }
 
-  /// Multiply by scalar and assign
+  /**
+   * @brief Multiply by scalar and assign
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_sparse_wrapper<Scalar_T>::
@@ -741,49 +960,70 @@ namespace glucat { namespace matrix
     return *this;
   }
 
-  /// Output to stream
+  /**
+   * @brief Output to stream
+   * @details
+   */
   template< typename Scalar_T >
   auto
   operator<< (std::ostream& os, const arma_sparse_wrapper<Scalar_T>& m) -> std::ostream&
   { return os << m.m_mat; }
 
   // Armadillo Sparse Helper Member Functions
-  /// Is infinite?
+  /**
+   * @brief Is infinite?
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_sparse_wrapper<Scalar_T>::
   isinf() const -> bool
   { return m_mat.has_inf(); }
 
-  /// Is NaN?
+  /**
+   * @brief Is NaN?
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_sparse_wrapper<Scalar_T>::
   isnan() const -> bool
   { return m_mat.has_nan(); }
 
-  /// Number of non-zeros
+  /**
+   * @brief Number of non-zeros
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_sparse_wrapper<Scalar_T>::
   nnz() const
   { return m_mat.n_nonzero; }
 
-  /// Infinity norm
+  /**
+   * @brief Infinity norm
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_sparse_wrapper<Scalar_T>::
   norm_inf() const
   { return arma::norm(m_mat, "inf"); }
 
-  /// Squared Frobenius norm
+  /**
+   * @brief Squared Frobenius norm
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_sparse_wrapper<Scalar_T>::
   norm_frob2() const
   { return arma::accu(arma::square(m_mat)); }
 
-  /// Trace
+  /**
+   * @brief Trace
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_sparse_wrapper<Scalar_T>::
@@ -798,14 +1038,20 @@ namespace glucat { namespace matrix
     return sum;
   }
 
-  /// Eigenvalues
+  /**
+   * @brief Eigenvalues
+   * @details
+   */
   template< typename Scalar_T >
   auto
   arma_sparse_wrapper<Scalar_T>::
   eigenvalues() const
   { throw std::runtime_error("Not implemented for sparse"); }
 
-  /// Inner product
+  /**
+   * @brief Inner product
+   * @details
+   */
   template< typename Scalar_T >
   template< typename Result_Scalar_T, typename Other >
   auto
@@ -819,7 +1065,10 @@ namespace glucat { namespace matrix
       return Result_Scalar_T(0);
     return sum / Result_Scalar_T(static_cast<double>(nbr_rows()));
   }
-  /// Mixed Kronecker matrix product: Sparse x Dense -> Dense (wrapper)
+  /**
+   * @brief Mixed Kronecker matrix product: Sparse x Dense -> Dense (wrapper)
+   * @details
+   */
   template< typename Scalar_T >
   template< typename Other_Scalar_T >
   auto
@@ -846,7 +1095,10 @@ namespace glucat { namespace matrix
     return result;
   }
 
-  /// Left Kronecker quotient
+  /**
+   * @brief Left Kronecker quotient
+   * @details
+   */
   template< typename Scalar_T >
   template< typename RHS_T >
   auto

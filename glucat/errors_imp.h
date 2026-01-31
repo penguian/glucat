@@ -39,7 +39,10 @@
 
 namespace glucat
 {
-  /// Specific exception class
+  /**
+   * @brief Specific exception class
+   * @details
+   */
   template< class Class_T >
   error<Class_T>::
   error(const std::string& msg)
