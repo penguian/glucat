@@ -840,6 +840,34 @@ namespace glucat { namespace matrix
      }
      return result;
   }
+  // =========================================================================
+  // unit_helper Specializations
+  // =========================================================================
+
+  // Specialization for Armadillo Wrapper
+  template< typename Scalar_T >
+  struct unit_helper< arma_matrix_wrapper<Scalar_T> >
+  {
+    static auto apply(matrix_index_t dim) -> const arma_matrix_wrapper<Scalar_T>
+    {
+      arma_matrix_wrapper<Scalar_T> result(dim, dim);
+      result.m_mat.eye();
+      return result;
+    }
+  };
+
+  // Specialization for Armadillo Sparse Wrapper
+  template< typename Scalar_T >
+  struct unit_helper< arma_sparse_wrapper<Scalar_T> >
+  {
+    static auto apply(matrix_index_t dim) -> const arma_sparse_wrapper<Scalar_T>
+    {
+      arma_sparse_wrapper<Scalar_T> result(dim, dim);
+      result.m_mat.eye(dim, dim);
+      return result;
+    }
+  };
+
 } }
 #endif // _GLUCAT_USE_ARMADILLO
 #endif // _GLUCAT_MATRIX_IMP_H

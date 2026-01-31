@@ -155,6 +155,41 @@ namespace glucat { namespace matrix
     }
     return result;
   }
+  // =========================================================================
+  // unit_helper and unit Definitions
+  // =========================================================================
+
+  /// Helper struct generic implementation
+  template< typename Matrix_T >
+  struct unit_helper
+  {
+    static auto apply(matrix_index_t dim) -> const Matrix_T
+    {
+      Matrix_T result(dim, dim);
+      // Fallback logic
+      if constexpr (requires { result.unit(dim, dim); })
+        result.unit(dim, dim);
+      else if constexpr (requires { result.eye(dim, dim); })
+        result.eye(dim, dim);
+      else if constexpr (requires { result.setIdentity(); })
+        result.setIdentity();
+      else
+      {
+         // Manual identity
+         for (matrix_index_t i = 0; i < dim; ++i)
+           result(i, i) = static_cast<typename Matrix_T::value_type>(1);
+      }
+      return result;
+    }
+  };
+
+  /// Identity matrix
+  template< typename Matrix_T >
+  auto unit(const matrix_index_t dim) -> const Matrix_T
+  {
+    return unit_helper<Matrix_T>::apply(dim);
+  }
+
 } }
 
 #endif // _GLUCAT_MATRIX_BASE_IMP_H

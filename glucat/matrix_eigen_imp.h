@@ -1021,6 +1021,34 @@ namespace glucat { namespace matrix
      }
      return result;
   }
+  // =========================================================================
+  // unit_helper Specializations
+  // =========================================================================
+
+  // Specialization for Eigen Wrapper
+  template< typename Scalar_T >
+  struct unit_helper< eigen_matrix_wrapper<Scalar_T> >
+  {
+    static auto apply(matrix_index_t dim) -> const eigen_matrix_wrapper<Scalar_T>
+    {
+      eigen_matrix_wrapper<Scalar_T> result(dim, dim);
+      result.m_mat.setIdentity();
+      return result;
+    }
+  };
+
+  // Specialization for Eigen Sparse Wrapper
+  template< typename Scalar_T >
+  struct unit_helper< eigen_sparse_wrapper<Scalar_T> >
+  {
+    static auto apply(matrix_index_t dim) -> const eigen_sparse_wrapper<Scalar_T>
+    {
+      eigen_sparse_wrapper<Scalar_T> result(dim, dim);
+      result.m_mat.setIdentity();
+      return result;
+    }
+  };
+
 } }
 
 #endif // _GLUCAT_MATRIX_EIGEN_IMP_H

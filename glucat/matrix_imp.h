@@ -43,31 +43,7 @@
 
 namespace glucat { namespace matrix
 {
-  /// Identity matrix
-  template< typename Matrix_T >
-  auto
-  unit(const matrix_index_t dim) -> const Matrix_T
-  {
-    Matrix_T result(dim, dim);
-    // Set to identity
-    if constexpr (requires { result.unit(dim, dim); })
-      result.unit(dim, dim);
-    else if constexpr (requires { result.eye(dim, dim); })
-      result.eye(dim, dim);
-    else if constexpr (requires { result.setIdentity(); })
-      result.setIdentity();
-    else if constexpr (requires { result.m_mat.eye(); })
-      result.m_mat.eye();
-    else if constexpr (requires { result.m_mat.setIdentity(); })
-      result.m_mat.setIdentity();
-    else
-    {
-      // Manual identity (may be slow for sparse if insertion not optimized)
-      for (matrix_index_t i = 0; i < dim; ++i)
-        result(i, i) = static_cast<typename Matrix_T::value_type>(1);
-    }
-    return result;
-  }
+
 } }
 
 #endif // _GLUCAT_MATRIX_IMP_H
