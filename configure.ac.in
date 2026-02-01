@@ -298,6 +298,8 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
                 [CXXFLAGS="$CXXFLAGS -funroll-loops"])
           GLUCAT_CHECK_COMPILER_FLAG([fvariable-expansion-in-unroller],
                 [CXXFLAGS="$CXXFLAGS -fvariable-expansion-in-unroller"])
+          GLUCAT_CHECK_COMPILER_FLAG([fno-var-tracking-assignments],
+                [CXXFLAGS="$CXXFLAGS -fno-var-tracking-assignments"])
           GLUCAT_CHECK_COMPILER_FLAG([flto=auto],
                 [CXXFLAGS="$CXXFLAGS -flto=auto"])
           GLUCAT_CHECK_COMPILER_FLAG([fuse-linker-plugin],
