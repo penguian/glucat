@@ -75,25 +75,6 @@ namespace glucat { namespace matrix
   // eigen_matrix_wrapper Member Definitions
   // =========================================================================
 
-  /**
-   * @brief Number of rows
-   * @details
-   */
-  template< typename Scalar_T >
-  inline auto
-  eigen_matrix_wrapper<Scalar_T>::
-  nbr_rows() const -> matrix_index_t
-  { return static_cast<matrix_index_t>(m_mat.rows()); }
-
-  /**
-   * @brief Number of columns
-   * @details
-   */
-  template< typename Scalar_T >
-  inline auto
-  eigen_matrix_wrapper<Scalar_T>::
-  nbr_cols() const -> matrix_index_t
-  { return static_cast<matrix_index_t>(m_mat.cols()); }
 
   /**
    * @brief Armadillo constructor (rows, cols)
@@ -278,6 +259,26 @@ namespace glucat { namespace matrix
     else
       m_mat.resize(rows, cols);
   }
+
+  /**
+   * @brief Number of rows
+   * @details
+   */
+  template< typename Scalar_T >
+  inline auto
+  eigen_matrix_wrapper<Scalar_T>::
+  nbr_rows() const -> matrix_index_t
+  { return static_cast<matrix_index_t>(m_mat.rows()); }
+
+  /**
+   * @brief Number of columns
+   * @details
+   */
+  template< typename Scalar_T >
+  inline auto
+  eigen_matrix_wrapper<Scalar_T>::
+  nbr_cols() const -> matrix_index_t
+  { return static_cast<matrix_index_t>(m_mat.cols()); }
 
   /**
    * @brief Clear
@@ -480,6 +481,121 @@ namespace glucat { namespace matrix
   // ========================
 
   /**
+   * @brief Trace
+   * @details
+   */
+  template< typename Scalar_T >
+  inline auto
+  eigen_matrix_wrapper<Scalar_T>::
+  trace() const
+  { return m_mat.trace(); }
+
+  /**
+   * @brief Eigenvalues
+   * @details
+   */
+  template< typename Scalar_T >
+  inline auto
+  eigen_matrix_wrapper<Scalar_T>::
+  eigenvalues() const -> std::vector<std::complex<double>>
+  {
+    // Optimized for real matrices as per matrix representation
+    if constexpr (std::is_arithmetic_v<Scalar_T> || std::is_same_v<Scalar_T, double> || std::is_same_v<Scalar_T, float> || std::is_same_v<Scalar_T, long double>)
+    {
+       Eigen::EigenSolver<typename eigen_matrix_wrapper<Scalar_T>::MatrixType> es(m_mat);
+       const auto& E = es.eigenvalues();
+       std::vector<std::complex<double>> result(E.size());
+       for (int i = 0; i < E.size(); ++i)
+         result[i] = std::complex<double>(E[i].real(), E[i].imag());
+       return result;
+    }
+    else
+    {
+       // Fallback for complex or custom scalar types
+       Eigen::MatrixXcd dmat(nbr_rows(), nbr_cols());
+       for (matrix_index_t i = 0; i < nbr_rows(); ++i)
+         for (matrix_index_t j = 0; j < nbr_cols(); ++j)
+           dmat(i, j) = std::complex<double>(numeric_traits<Scalar_T>::to_double((*this)(i, j)), 0.0);
+
+       Eigen::ComplexEigenSolver<Eigen::MatrixXcd> es(dmat);
+       const auto& E = es.eigenvalues();
+       std::vector<std::complex<double>> result(E.size());
+       for (int i = 0; i < E.size(); ++i)
+         result[i] = E[i];
+       return result;
+    }
+  }
+
+  /**
+   * @brief Infinity norm
+   * @details
+   */
+  template< typename Scalar_T >
+  inline auto
+  eigen_matrix_wrapper<Scalar_T>::
+  norm_inf() const
+  { return m_mat.cwiseAbs().rowwise().sum().maxCoeff(); }
+
+  /**
+   * @brief Squared Frobenius norm
+   * @details
+   */
+  template< typename Scalar_T >
+  inline auto
+  eigen_matrix_wrapper<Scalar_T>::
+  norm_frob2() const
+  { return m_mat.squaredNorm(); }
+
+  /**
+   * @brief Is NaN?
+   * @details
+   */
+  template< typename Scalar_T >
+  inline auto
+  eigen_matrix_wrapper<Scalar_T>::
+  isnan() const -> bool
+  { return m_mat.hasNaN(); }
+
+  /**
+   * @brief Is infinite?
+   * @details
+   */
+  template< typename Scalar_T >
+  inline auto
+  eigen_matrix_wrapper<Scalar_T>::
+  isinf() const -> bool
+  { return !m_mat.allFinite() && !m_mat.hasNaN(); }
+
+  /**
+   * @brief Number of non-zeros
+   * @details
+   */
+  template< typename Scalar_T >
+  inline auto
+  eigen_matrix_wrapper<Scalar_T>::
+  nnz() const
+  { return (m_mat.array() != 0).count(); }
+
+  /**
+   * @brief Inner product
+   * @details
+   */
+  template< typename Scalar_T >
+  template< typename Result_Scalar_T, typename Other >
+  inline auto
+  eigen_matrix_wrapper<Scalar_T>::
+  inner(const Other& other) const -> Result_Scalar_T
+  {
+    Result_Scalar_T sum = Result_Scalar_T(0);
+    for (matrix_index_t i = 0; i < nbr_rows(); ++i)
+      for (matrix_index_t j = 0; j < nbr_cols(); ++j)
+        sum += static_cast<Result_Scalar_T>((*this)(i, j)) * static_cast<Result_Scalar_T>(other(i, j));
+
+    if (nbr_rows() == 0) return Result_Scalar_T(0);
+    return sum / Result_Scalar_T(static_cast<double>(nbr_rows()));
+  }
+
+  /**
    * @brief Kronecker matrix product
    * @details
    */
@@ -520,121 +636,6 @@ namespace glucat { namespace matrix
       }
     }
     return result;
-  }
-
-  /**
-   * @brief Trace
-   * @details
-   */
-  template< typename Scalar_T >
-  inline auto
-  eigen_matrix_wrapper<Scalar_T>::
-  trace() const
-  { return m_mat.trace(); }
-
-  /**
-   * @brief Infinity norm
-   * @details
-   */
-  template< typename Scalar_T >
-  inline auto
-  eigen_matrix_wrapper<Scalar_T>::
-  norm_inf() const
-  { return m_mat.cwiseAbs().rowwise().sum().maxCoeff(); }
-
-  /**
-   * @brief Squared Frobenius norm
-   * @details
-   */
-  template< typename Scalar_T >
-  inline auto
-  eigen_matrix_wrapper<Scalar_T>::
-  norm_frob2() const
-  { return m_mat.squaredNorm(); }
-
-  /**
-   * @brief Number of non-zeros
-   * @details
-   */
-  template< typename Scalar_T >
-  inline auto
-  eigen_matrix_wrapper<Scalar_T>::
-  nnz() const
-  { return (m_mat.array() != 0).count(); }
-
-  /**
-   * @brief Is NaN?
-   * @details
-   */
-  template< typename Scalar_T >
-  inline auto
-  eigen_matrix_wrapper<Scalar_T>::
-  isnan() const -> bool
-  { return m_mat.hasNaN(); }
-
-  /**
-   * @brief Is infinite?
-   * @details
-   */
-  template< typename Scalar_T >
-  inline auto
-  eigen_matrix_wrapper<Scalar_T>::
-  isinf() const -> bool
-  { return !m_mat.allFinite() && !m_mat.hasNaN(); }
-
-  /**
-   * @brief Eigenvalues
-   * @details
-   */
-  template< typename Scalar_T >
-  inline auto
-  eigen_matrix_wrapper<Scalar_T>::
-  eigenvalues() const -> std::vector<std::complex<double>>
-  {
-    // Optimized for real matrices as per matrix representation
-    if constexpr (std::is_arithmetic_v<Scalar_T> || std::is_same_v<Scalar_T, double> || std::is_same_v<Scalar_T, float> || std::is_same_v<Scalar_T, long double>)
-    {
-       Eigen::EigenSolver<typename eigen_matrix_wrapper<Scalar_T>::MatrixType> es(m_mat);
-       const auto& E = es.eigenvalues();
-       std::vector<std::complex<double>> result(E.size());
-       for (int i = 0; i < E.size(); ++i)
-         result[i] = std::complex<double>(E[i].real(), E[i].imag());
-       return result;
-    }
-    else
-    {
-       // Fallback for complex or custom scalar types
-       Eigen::MatrixXcd dmat(nbr_rows(), nbr_cols());
-       for (matrix_index_t i = 0; i < nbr_rows(); ++i)
-         for (matrix_index_t j = 0; j < nbr_cols(); ++j)
-           dmat(i, j) = std::complex<double>(numeric_traits<Scalar_T>::to_double((*this)(i, j)), 0.0);
-
-       Eigen::ComplexEigenSolver<Eigen::MatrixXcd> es(dmat);
-       const auto& E = es.eigenvalues();
-       std::vector<std::complex<double>> result(E.size());
-       for (int i = 0; i < E.size(); ++i)
-         result[i] = E[i];
-       return result;
-    }
-  }
-
-  /**
-   * @brief Inner product
-   * @details
-   */
-  template< typename Scalar_T >
-  template< typename Result_Scalar_T, typename Other >
-  inline auto
-  eigen_matrix_wrapper<Scalar_T>::
-  inner(const Other& other) const -> Result_Scalar_T
-  {
-    Result_Scalar_T sum = Result_Scalar_T(0);
-    for (matrix_index_t i = 0; i < nbr_rows(); ++i)
-      for (matrix_index_t j = 0; j < nbr_cols(); ++j)
-        sum += static_cast<Result_Scalar_T>((*this)(i, j)) * static_cast<Result_Scalar_T>(other(i, j));
-
-    if (nbr_rows() == 0) return Result_Scalar_T(0);
-    return sum / Result_Scalar_T(static_cast<double>(nbr_rows()));
   }
 
   /**

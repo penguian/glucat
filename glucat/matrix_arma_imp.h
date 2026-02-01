@@ -67,25 +67,6 @@ namespace glucat { namespace matrix
   // arma_matrix_wrapper Member Definitions
   // =========================================================================
 
-  /**
-   * @brief Number of rows
-   * @details
-   */
-  template< typename Scalar_T >
-  inline auto
-  arma_matrix_wrapper<Scalar_T>::
-  nbr_rows() const -> matrix_index_t
-  { return m_mat.n_rows; }
-
-  /**
-   * @brief Number of columns
-   * @details
-   */
-  template< typename Scalar_T >
-  inline auto
-  arma_matrix_wrapper<Scalar_T>::
-  nbr_cols() const -> matrix_index_t
-  { return m_mat.n_cols; }
 
   /**
    * @brief Constructor with size
@@ -278,6 +259,26 @@ namespace glucat { namespace matrix
   }
 
   /**
+   * @brief Number of rows
+   * @details
+   */
+  template< typename Scalar_T >
+  inline auto
+  arma_matrix_wrapper<Scalar_T>::
+  nbr_rows() const -> matrix_index_t
+  { return m_mat.n_rows; }
+
+  /**
+   * @brief Number of columns
+   * @details
+   */
+  template< typename Scalar_T >
+  inline auto
+  arma_matrix_wrapper<Scalar_T>::
+  nbr_cols() const -> matrix_index_t
+  { return m_mat.n_cols; }
+
+  /**
    * @brief Clear
    * @details
    */
@@ -448,6 +449,76 @@ namespace glucat { namespace matrix
   arma_matrix_wrapper<Scalar_T>::
   t() const -> arma_matrix_wrapper<Scalar_T>
   { return arma_matrix_wrapper(MatrixType(m_mat.t())); }
+
+  /**
+   * @brief Begin iterator
+   * @details
+   */
+  template< typename Scalar_T >
+  inline auto
+  arma_matrix_wrapper<Scalar_T>::
+  begin()
+  { return m_mat.begin(); }
+
+  /**
+   * @brief End iterator
+   * @details
+   */
+  template< typename Scalar_T >
+  inline auto
+  arma_matrix_wrapper<Scalar_T>::
+  end()
+  { return m_mat.end(); }
+
+  /**
+   * @brief Begin const iterator
+   * @details
+   */
+  template< typename Scalar_T >
+  inline auto
+  arma_matrix_wrapper<Scalar_T>::
+  begin() const
+  { return m_mat.begin(); }
+
+  /**
+   * @brief End const iterator
+   * @details
+   */
+  template< typename Scalar_T >
+  inline auto
+  arma_matrix_wrapper<Scalar_T>::
+  end() const
+  { return m_mat.end(); }
+
+  /**
+   * @brief Has infinity?
+   * @details
+   */
+  template< typename Scalar_T >
+  inline auto
+  arma_matrix_wrapper<Scalar_T>::
+  has_inf() const -> bool
+  { return m_mat.has_inf(); }
+
+  /**
+   * @brief Has NaN?
+   * @details
+   */
+  template< typename Scalar_T >
+  inline auto
+  arma_matrix_wrapper<Scalar_T>::
+  has_nan() const -> bool
+  { return m_mat.has_nan(); }
+
+  /**
+   * @brief Is finite?
+   * @details
+   */
+  template< typename Scalar_T >
+  inline auto
+  arma_matrix_wrapper<Scalar_T>::
+  is_finite() const -> bool
+  { return m_mat.is_finite(); }
 
   /**
    * @brief Output to stream
@@ -681,75 +752,6 @@ namespace glucat { namespace matrix
       return result;
   }
 
-  /**
-   * @brief Begin iterator
-   * @details
-   */
-  template< typename Scalar_T >
-  inline auto
-  arma_matrix_wrapper<Scalar_T>::
-  begin()
-  { return m_mat.begin(); }
-
-  /**
-   * @brief End iterator
-   * @details
-   */
-  template< typename Scalar_T >
-  inline auto
-  arma_matrix_wrapper<Scalar_T>::
-  end()
-  { return m_mat.end(); }
-
-  /**
-   * @brief Begin const iterator
-   * @details
-   */
-  template< typename Scalar_T >
-  inline auto
-  arma_matrix_wrapper<Scalar_T>::
-  begin() const
-  { return m_mat.begin(); }
-
-  /**
-   * @brief End const iterator
-   * @details
-   */
-  template< typename Scalar_T >
-  inline auto
-  arma_matrix_wrapper<Scalar_T>::
-  end() const
-  { return m_mat.end(); }
-
-  /**
-   * @brief Has infinity?
-   * @details
-   */
-  template< typename Scalar_T >
-  inline auto
-  arma_matrix_wrapper<Scalar_T>::
-  has_inf() const -> bool
-  { return m_mat.has_inf(); }
-
-  /**
-   * @brief Has NaN?
-   * @details
-   */
-  template< typename Scalar_T >
-  inline auto
-  arma_matrix_wrapper<Scalar_T>::
-  has_nan() const -> bool
-  { return m_mat.has_nan(); }
-
-  /**
-   * @brief Is finite?
-   * @details
-   */
-  template< typename Scalar_T >
-  inline auto
-  arma_matrix_wrapper<Scalar_T>::
-  is_finite() const -> bool
-  { return m_mat.is_finite(); }
 
   // =========================================================================
   // arma_sparse_wrapper Member Definitions
