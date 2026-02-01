@@ -290,10 +290,10 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
                 [CXXFLAGS="$CXXFLAGS --param max-inline-insns-auto=8000"])
           GLUCAT_CHECK_COMPILER_FLAG([-param max-inline-insns-single=8000],
                 [CXXFLAGS="$CXXFLAGS --param max-inline-insns-single=8000"])
-          GLUCAT_CHECK_COMPILER_FLAG([-param inline-unit-growth=200],
-                [CXXFLAGS="$CXXFLAGS --param inline-unit-growth=200"])
-          GLUCAT_CHECK_COMPILER_FLAG([-param large-function-growth=200],
-                [CXXFLAGS="$CXXFLAGS --param large-function-growth=200"])
+          GLUCAT_CHECK_COMPILER_FLAG([-param inline-unit-growth=1000],
+                [CXXFLAGS="$CXXFLAGS --param inline-unit-growth=1000"])
+          GLUCAT_CHECK_COMPILER_FLAG([-param large-function-growth=1000],
+                [CXXFLAGS="$CXXFLAGS --param large-function-growth=1000"])
           GLUCAT_CHECK_COMPILER_FLAG([funroll-loops],
                 [CXXFLAGS="$CXXFLAGS -funroll-loops"])
           GLUCAT_CHECK_COMPILER_FLAG([fvariable-expansion-in-unroller],
@@ -442,7 +442,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       [all_libraries="$all_libraries -limf"],
       [],
       [glucat_have_gsl="no"])
-      GLUCAT_CHECK_COMPILER_FLAG([fp-model source], 
+      GLUCAT_CHECK_COMPILER_FLAG([fp-model source],
                       [CXXFLAGS="-fp-model source $CXXFLAGS"])
       GLUCAT_CHECK_COMPILER_FLAG([fp-model precise],
                       [CXXFLAGS="-fp-model precise $CXXFLAGS"])

@@ -52,7 +52,7 @@ namespace glucat { namespace matrix
    * @details
    */
   template< typename Derived >
-  auto
+  inline auto
   matrix_base<Derived>::
   derived() const -> const Derived&
   { return static_cast<const Derived&>(*this); }
@@ -62,7 +62,7 @@ namespace glucat { namespace matrix
    * @details
    */
   template< typename Derived >
-  auto
+  inline auto
   matrix_base<Derived>::
   derived() -> Derived&
   { return static_cast<Derived&>(*this); }
@@ -72,7 +72,7 @@ namespace glucat { namespace matrix
    * @details
    */
   template< typename Derived >
-  auto
+  inline auto
   matrix_base<Derived>::
   classify_eigenvalues() const
   {
@@ -175,7 +175,7 @@ namespace glucat { namespace matrix
   template< typename Matrix_T >
   struct unit_helper
   {
-    static auto apply(matrix_index_t dim) -> const Matrix_T
+    static inline auto apply(matrix_index_t dim) -> const Matrix_T
     {
       Matrix_T result(dim, dim);
       // Fallback logic
@@ -200,7 +200,7 @@ namespace glucat { namespace matrix
    * @details
    */
   template< typename Matrix_T >
-  auto unit(const matrix_index_t dim) -> const Matrix_T
+  inline auto unit(const matrix_index_t dim) -> const Matrix_T
   {
     return unit_helper<Matrix_T>::apply(dim);
   }

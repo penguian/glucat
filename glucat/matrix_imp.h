@@ -50,6 +50,7 @@ namespace glucat { namespace matrix
    */
   template< typename Scalar_T >
   template< typename Other_Matrix_T >
+  inline
   dense_matrix<Scalar_T>::
   dense_matrix(const Other_Matrix_T& other)
   : Base(other)
@@ -61,6 +62,7 @@ namespace glucat { namespace matrix
    */
   template< typename Scalar_T >
   template< typename Other_Matrix_T >
+  inline
   sparse_matrix<Scalar_T>::
   sparse_matrix(const Other_Matrix_T& other)
   : Base(other)

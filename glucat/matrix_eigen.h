@@ -34,10 +34,12 @@
 #include "glucat/matrix_base.h"
 
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Winline"
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #pragma GCC diagnostic ignored "-Wunused-local-typedefs"
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
+#include <unsupported/Eigen/KroneckerProduct>
 #pragma GCC diagnostic pop
 
 #include <type_traits>
