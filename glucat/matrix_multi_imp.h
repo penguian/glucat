@@ -29,6 +29,7 @@
  "Clifford algebras with numeric and symbolic computations", Birkhauser, 1996.
  ***************************************************************************
      See also Arvind Raja's original header comments in glucat.h
+ *************************************************************************** @return Result
  ***************************************************************************/
 
 #include "glucat/matrix_multi.h"
@@ -67,6 +68,11 @@ namespace glucat
   /**
    * @brief Class name used in messages
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -77,6 +83,9 @@ namespace glucat
   /**
    * @brief Determine the log2 dim corresponding to signature p, q
    * @details
+   * @param p First index
+   * @param q Second index
+   * @return Result
    */
   // Reference: [P] Table 15.27, p 133
   inline
@@ -93,6 +102,7 @@ namespace glucat
   /**
    * @brief Determine the matrix dimension of the fold of a subalegbra
    * @details
+   * @param sub Value
    */
   // Reference: [P] Table 15.27, p 133
   template< typename Matrix_Index_T, const index_t LO, const index_t HI >
@@ -105,6 +115,10 @@ namespace glucat
   /**
    * @brief Default constructor
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
@@ -116,6 +130,11 @@ namespace glucat
   /**
    * @brief Move constructor
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param other Other matrix
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
@@ -127,6 +146,11 @@ namespace glucat
   /**
    * @brief Construct a multivector from a multivector with a different scalar type
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param val Value
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   template< typename Other_Scalar_T, typename Other_Tune_P >
@@ -143,6 +167,13 @@ namespace glucat
   /**
    * @brief Construct a multivector, within a given frame, from a given multivector
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param val Value
+   * @param frm Value
+   * @param prechecked Already checked?
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   template< typename Other_Scalar_T, typename Other_Tune_P >
@@ -165,6 +196,13 @@ namespace glucat
   /**
    * @brief Construct a multivector, within a given frame, from a given multivector
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param val Value
+   * @param frm Value
+   * @param prechecked Already checked?
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
@@ -180,6 +218,12 @@ namespace glucat
   /**
    * @brief Construct a multivector from an index set and a scalar coordinate
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param ist Value
+   * @param crd Value
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
@@ -195,6 +239,14 @@ namespace glucat
   /**
    * @brief Construct a multivector, within a given frame, from an index set and a scalar coordinate
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param ist Value
+   * @param crd Value
+   * @param frm Value
+   * @param prechecked Already checked?
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
@@ -212,6 +264,12 @@ namespace glucat
   /**
    * @brief Construct a multivector from a scalar (within a frame, if given)
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param scr Value
+   * @param frm Value
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
@@ -227,6 +285,12 @@ namespace glucat
   /**
    * @brief Construct a multivector from an int (within a frame, if given)
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param scr Value
+   * @param frm Value
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
@@ -236,6 +300,13 @@ namespace glucat
   /**
    * @brief Construct a multivector, within a given frame, from a given vector
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param vec Value
+   * @param frm Value
+   * @param prechecked Already checked?
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
@@ -263,6 +334,11 @@ namespace glucat
   /**
    * @brief Construct a multivector from a string: eg: "3+2{1,2}-6.1e-2{2,3}"
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param str Value
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
@@ -272,6 +348,13 @@ namespace glucat
   /**
    * @brief Construct a multivector, within a given frame, from a string: eg: "3+2{1,2}-6.1e-2{2,3}"
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param str Value
+   * @param frm Value
+   * @param prechecked Already checked?
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
@@ -281,6 +364,11 @@ namespace glucat
   /**
    * @brief Construct a multivector from a framed_multi_t
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param val Value
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   template< typename Other_Scalar_T, typename Other_Tune_P >
@@ -313,6 +401,13 @@ namespace glucat
   /**
    * @brief Construct a multivector, within a given frame, from a framed_multi_t
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param framed_val Value
+   * @param frm Value
+   * @param prechecked Already checked?
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   template< typename Other_Scalar_T, typename Other_Tune_P >
@@ -342,6 +437,12 @@ namespace glucat
   /**
    * @brief Construct a multivector within a given frame from a given matrix
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param mtx Value
+   * @param frm Value
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   template< typename Matrix_T >
@@ -368,6 +469,12 @@ namespace glucat
   /**
    * @brief Construct a multivector within a given frame from a given matrix
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param mtx Value
+   * @param frm Value
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
@@ -378,6 +485,15 @@ namespace glucat
   /**
    * @brief Find a common frame for operands of a binary operator
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param lhs Left hand side
+   * @param rhs Right hand side
+   * @param lhs_reframed Value
+   * @param rhs_reframed Value
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -410,6 +526,12 @@ namespace glucat
   /**
    * @brief Test for equality of multivectors
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param rhs Right hand side
+   * @return True if equal
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -437,6 +559,12 @@ namespace glucat
   /**
    * @brief Test for equality of multivector and scalar
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param scr Value
+   * @return True if equal
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -458,6 +586,12 @@ namespace glucat
   /**
    * @brief Geometric sum of multivector and scalar
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param scr Value
+   * @return Reference to this
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -469,6 +603,12 @@ namespace glucat
   /**
    * @brief Geometric sum
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param rhs Right hand side
+   * @return Reference to this
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -494,6 +634,12 @@ namespace glucat
   /**
    * @brief Geometric difference of multivector and scalar
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param scr Value
+   * @return Reference to this
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -505,6 +651,12 @@ namespace glucat
   /**
    * @brief Geometric difference
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param rhs Right hand side
+   * @return Reference to this
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -530,6 +682,11 @@ namespace glucat
   /**
    * @brief Unary -
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -541,6 +698,12 @@ namespace glucat
   /**
    * @brief Product of multivector and scalar
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param scr Value
+   * @return Reference to this
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -562,6 +725,13 @@ namespace glucat
   /**
    * @brief Geometric product
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param lhs Left hand side
+   * @param rhs Right hand side
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -602,6 +772,12 @@ namespace glucat
   /**
    * @brief Geometric product
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param rhs Right hand side
+   * @return Reference to this
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -613,6 +789,13 @@ namespace glucat
   /**
    * @brief Outer product
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param lhs Left hand side
+   * @param rhs Right hand side
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -627,6 +810,12 @@ namespace glucat
   /**
    * @brief Outer product
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param rhs Right hand side
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -638,6 +827,13 @@ namespace glucat
   /**
    * @brief Inner product
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param lhs Left hand side
+   * @param rhs Right hand side
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -652,6 +848,12 @@ namespace glucat
   /**
    * @brief Inner product
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param rhs Right hand side
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -663,6 +865,13 @@ namespace glucat
   /**
    * @brief Left contraction
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param lhs Left hand side
+   * @param rhs Right hand side
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -677,6 +886,12 @@ namespace glucat
   /**
    * @brief Left contraction
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param rhs Right hand side
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -688,6 +903,13 @@ namespace glucat
   /**
    * @brief Hestenes scalar product
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param lhs Left hand side
+   * @param rhs Right hand side
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -698,6 +920,12 @@ namespace glucat
   /**
    * @brief Quotient of multivector and scalar
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param scr Value
+   * @return Reference to this
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -709,6 +937,13 @@ namespace glucat
   /**
    * @brief Geometric quotient
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param lhs Left hand side
+   * @param rhs Right hand side
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -757,6 +992,12 @@ namespace glucat
   /**
    * @brief Geometric quotient
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param rhs Right hand side
+   * @return Reference to this
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -768,6 +1009,13 @@ namespace glucat
   /**
    * @brief Transformation via twisted adjoint action
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param lhs Left hand side
+   * @param rhs Right hand side
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -778,6 +1026,12 @@ namespace glucat
   /**
    * @brief Transformation via twisted adjoint action
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param rhs Right hand side
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -789,6 +1043,11 @@ namespace glucat
   /**
    * @brief Clifford multiplicative inverse
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -800,6 +1059,12 @@ namespace glucat
   /**
    * @brief Integer power of multivector: *this to the m
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param m Matrix
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -811,6 +1076,12 @@ namespace glucat
   /**
    * @brief Move assignment
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param other Other matrix
+   * @return Reference to this
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -826,6 +1097,12 @@ namespace glucat
   /**
    * @brief Outer product power of multivector
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param m Matrix
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -841,6 +1118,11 @@ namespace glucat
   /**
    * @brief Grade of multivector: maximum of the grades of each term
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -852,6 +1134,11 @@ namespace glucat
   /**
    * @brief Frame of multivector: union of index sets of terms
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -863,6 +1150,12 @@ namespace glucat
   /**
    * @brief Subscripting: map from index set to scalar coordinate
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param ist Value
+   * @return Element reference
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -880,6 +1173,11 @@ namespace glucat
   /**
    * @brief Grading: part where each term is a grade-vector
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -896,6 +1194,11 @@ namespace glucat
   /**
    * @brief Scalar part
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -910,6 +1213,11 @@ namespace glucat
   /**
    * @brief Pure part
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -921,6 +1229,11 @@ namespace glucat
   /**
    * @brief Even part, sum of the even grade terms
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -932,6 +1245,11 @@ namespace glucat
   /**
    * @brief Odd part, sum of the odd grade terms
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -943,6 +1261,11 @@ namespace glucat
   /**
    * @brief Vector part of multivector, as a vector_t
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -953,6 +1276,13 @@ namespace glucat
   /**
    * @brief Vector part of multivector, as a vector_t
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param frm Value
+   * @param prechecked Already checked?
+   * @return True if successful or condition met
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -983,6 +1313,11 @@ namespace glucat
   /**
    * @brief Main involution, each {i} is replaced by -{i} in each term
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -994,6 +1329,11 @@ namespace glucat
   /**
    * @brief Reversion, order of {i} is reversed in each term
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1005,6 +1345,11 @@ namespace glucat
   /**
    * @brief Conjugation, conj == reverse o involute == involute o reverse
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1016,6 +1361,11 @@ namespace glucat
   /**
    * @brief Quadratic form := scalar part of rev(x)*x
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1030,6 +1380,11 @@ namespace glucat
   /**
    * @brief Scalar_T norm squared= sum of norm squared of coordinates
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1044,6 +1399,11 @@ namespace glucat
   /**
    * @brief Maximum of absolute values of components of multivector: multivector infinity norm
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1055,6 +1415,13 @@ namespace glucat
   /**
    * @brief Random multivector within a frame
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param frm Value
+   * @param fill Value
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -1067,6 +1434,11 @@ namespace glucat
   /**
    * @brief Write multivector to output
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param msg Value
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1078,6 +1450,12 @@ namespace glucat
   /**
    * @brief Write out multivector to file
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param ofile Value
+   * @param msg Value
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1093,6 +1471,13 @@ namespace glucat
   /**
    * @brief Write multivector to output
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param os Output stream
+   * @param val Value
+   * @return Output stream
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1106,6 +1491,13 @@ namespace glucat
   /**
    * @brief Read multivector from input
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param s Value
+   * @param val Value
+   * @return Input stream
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1124,6 +1516,11 @@ namespace glucat
   /**
    * @brief Check if a multivector contains any infinite values
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @return True if successful or condition met
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1140,6 +1537,11 @@ namespace glucat
   /**
    * @brief Check if a multivector contains any IEEE NaN values
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @return True if successful or condition met
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1156,6 +1558,12 @@ namespace glucat
   /**
    * @brief Remove all terms with relative size smaller than limit
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param limit Value
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1167,6 +1575,12 @@ namespace glucat
   /**
    * @brief Add a term, if non-zero
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param term Value
+   * @return Reference to this
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1182,6 +1596,11 @@ namespace glucat
   /**
    * @brief Inverse generalized Fast Fourier Transform
    * @details
+   * @tparam Multivector_T
+   * @tparam Matrix_T
+   * @param X Value
+   * @param level Recursion level
+   * @return Result
    */
   template< typename Multivector_T, typename Matrix_T >
   static
@@ -1253,6 +1672,12 @@ namespace glucat
   /**
    * @brief Use generalized FFT to construct a matrix_multi_t
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param frm Value
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1269,6 +1694,11 @@ namespace glucat
   /**
    * @brief Use inverse generalized FFT to construct a framed_multi_t
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   template< typename Other_Scalar_T, typename Other_Tune_P >
@@ -1331,6 +1761,11 @@ namespace glucat
   /**
    * @brief Table of basis elements used as a cache by basis_element()
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Matrix_T
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Matrix_T >
   class basis_table :
@@ -1341,20 +1776,24 @@ namespace glucat
     /**
      * @brief Single instance of basis table
      * @details
+     * @return Result
      */
     static auto basis() -> basis_table& { static basis_table b; return b;}
   private:
     /**
      * @brief Friend declaration to avoid compiler warning:
      * @details
+     * @return Result
      */
     /**
      * @brief "... only defines a private destructor and has no friends"
      * @details
+     * @return Result
      */
     /**
      * @brief Ref: Carlos O'Ryan, ACE http://doc.ece.uci.edu
      * @details
+     * @return Result
      */
     friend class friend_for_private_destructor;
     // Enforce singleton
@@ -1369,6 +1808,12 @@ namespace glucat
   /**
    * @brief Create a basis element matrix within the current frame
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param ist Value
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -1430,6 +1875,15 @@ namespace glucat
   /**
    * @brief Pade' approximation
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @tparam Size
+   * @param numer Value
+   * @param denom Value
+   * @param X Value
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P, const size_t Size >
   inline
@@ -1496,6 +1950,12 @@ namespace glucat
   /**
    * @brief Single step of product form of Denman-Beavers square root iteration
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param M Value
+   * @param Y Value
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1513,6 +1973,13 @@ namespace glucat
   /**
    * @brief Product form of Denman-Beavers square root iteration
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param val Value
+   * @param norm_tol Value
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   static
@@ -1545,6 +2012,13 @@ namespace glucat
   /**
    * @brief Cyclic reduction square root iteration
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param val Value
+   * @param norm_Y_tol Value
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   static
@@ -1584,6 +2058,7 @@ namespace pade {
   /**
    * @brief Coefficients of numerator polynomials of Pade approximations produced by Pade1(sqrt(1+x),x,n,n)
    * @details
+   * @return Result
    */
   // Reference: [Z], Pade1
   template< typename Scalar_T >
@@ -1604,6 +2079,7 @@ namespace pade {
   /**
    * @brief Coefficients of denominator polynomials of Pade approximations produced by Pade1(sqrt(1+x),x,n,n)
    * @details
+   * @return Result
    */
   // Reference: [Z], Pade1
   template< typename Scalar_T >
@@ -1777,6 +2253,14 @@ namespace glucat
   /**
    * @brief Square root of multivector with specified complexifier
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param val Value
+   * @param i Complexifier -- commuting sqrt of -1
+   * @param level Recursion level
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -1888,6 +2372,14 @@ namespace glucat
   /**
    * @brief Square root of multivector with specified complexifier
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param val Value
+   * @param i Complexifier -- commuting sqrt of -1
+   * @param prechecked Already checked?
+   * @return True if successful or condition met
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -1935,6 +2427,7 @@ namespace pade {
   /**
    * @brief Coefficients of numerator polynomials of Pade approximations produced by Pade1(log(1+x),x,n,n)
    * @details
+   * @return Result
    */
   // Reference: [Z], Pade1
   template< typename Scalar_T >
@@ -1955,6 +2448,7 @@ namespace pade {
   /**
    * @brief Coefficients of denominator polynomials of Pade approximations produced by Pade1(log(1+x),x,n,n)
    * @details
+   * @return Result
    */
   // Reference: [Z], Pade1
   template< typename Scalar_T >
@@ -2126,6 +2620,12 @@ namespace glucat{
   /**
    * @brief Pade' approximation of log
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param val Value
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   static
@@ -2154,6 +2654,12 @@ namespace glucat{
   /**
    * @brief Incomplete square root cascade and Pade' approximation of log
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param val Value
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   static
@@ -2212,6 +2718,14 @@ namespace glucat{
   /**
    * @brief Natural logarithm of multivector with specified complexifier
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param val Value
+   * @param i Complexifier -- commuting sqrt of -1
+   * @param level Recursion level
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -2296,6 +2810,14 @@ namespace glucat{
   /**
    * @brief Natural logarithm of multivector with specified complexifier
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param val Value
+   * @param i Complexifier -- commuting sqrt of -1
+   * @param prechecked Already checked?
+   * @return True if successful or condition met
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -2338,6 +2860,12 @@ namespace glucat{
   /**
    * @brief Exponential of multivector
    * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param val Value
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto

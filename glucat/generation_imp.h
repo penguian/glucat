@@ -29,6 +29,7 @@
  "Clifford algebras with numeric and symbolic computations", Birkhauser, 1996.
  ***************************************************************************
      See also Arvind Raja's original header comments in glucat.h
+ *************************************************************************** @return Result
  ***************************************************************************/
 
 #include "glucat/global.h"
@@ -45,6 +46,7 @@ namespace glucat { namespace gen
   /**
    * @brief Single instance of generator table
    * @details
+   * @return Result
    */
   // Reference: [M] Item 47
   template< class Matrix_T >
@@ -82,6 +84,10 @@ namespace glucat { namespace gen
   /**
    * @brief Construct a vector of generators for a specific signature
    * @details
+   * @tparam Matrix_T
+   * @param p First index
+   * @param q Second index
+   * @return Result
    */
   template< class Matrix_T >
   auto
@@ -132,6 +138,8 @@ namespace glucat { namespace gen
   /**
    * @brief Construct generators for p,q given generators for p-1,q-1
    * @details
+   * @param old Old signature
+   * @param sig New signature
    */
   // Reference: [P] Proposition 15.17, p 131
   template< class Matrix_T >
@@ -173,6 +181,8 @@ namespace glucat { namespace gen
   /**
    * @brief Construct generators for p,q given generators for p-4,q+4
    * @details
+   * @param old Old signature
+   * @param sig New signature
    */
   // Reference: [L] 16.4 Periodicity of 8, p216
   template< class Matrix_T >
@@ -209,6 +219,8 @@ namespace glucat { namespace gen
   /**
    * @brief Construct generators for p,q given generators for p+4,q-4
    * @details
+   * @param old Old signature
+   * @param sig New signature
    */
   // Reference: [L] 16.4 Periodicity of 8, p216
   template< class Matrix_T >
@@ -245,6 +257,8 @@ namespace glucat { namespace gen
   /**
    * @brief Construct generators for p,q given generators for q+1,p-1
    * @details
+   * @param old Old signature
+   * @param sig New signature
    */
   // Reference: [P] Proposition 15.20, p 131
   template< class Matrix_T >

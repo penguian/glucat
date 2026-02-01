@@ -29,6 +29,7 @@
  "Clifford algebras with numeric and symbolic computations", Birkhauser, 1996.
  ***************************************************************************
      See also Arvind Raja's original header comments in glucat.h
+ *************************************************************************** @return Result
  ***************************************************************************/
 
 #include "glucat/errors.h"
@@ -52,6 +53,11 @@ namespace glucat { namespace matrix
   /**
    * @brief Solve
    * @details
+   * @tparam Scalar_T
+   * @param X Value
+   * @param lhs Left hand side
+   * @param rhs Right hand side
+   * @param opts Options
    */
   template< typename Scalar_T >
   inline auto
@@ -79,6 +85,9 @@ namespace glucat { namespace matrix
   /**
    * @brief Armadillo constructor (rows, cols)
    * @details
+   * @tparam Scalar_T
+   * @param rows Number of rows
+   * @param cols Number of columns
    */
   template< typename Scalar_T >
   inline
@@ -92,6 +101,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Constructor from Eigen expressions (e.g. m * s)
    * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
    */
   template< typename Scalar_T >
   template< typename Derived_T >
@@ -103,6 +114,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Generic Interop Constructor (e.g. from Armadillo matrix)
    * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
    */
   template< typename Scalar_T >
   template< typename Other_Matrix_T >
@@ -127,6 +140,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Copy constructor
    * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
    */
   template< typename Scalar_T >
   inline
@@ -138,6 +153,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Move constructor
    * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
    */
   template< typename Scalar_T >
   inline
@@ -149,6 +166,9 @@ namespace glucat { namespace matrix
   /**
    * @brief Copy assignment
    * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
+   * @return Reference to this
    */
   template< typename Scalar_T >
   inline auto
@@ -163,6 +183,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Move assignment
    * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
    */
   template< typename Scalar_T >
   inline auto
@@ -177,6 +199,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Constructor from eigen_sparse_wrapper
    * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
    */
   template< typename Scalar_T >
   template< typename Other_Scalar_T >
@@ -193,6 +217,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Generic Interop Assignment
    * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
    */
   template< typename Scalar_T >
   template< typename Other_Matrix_T >
@@ -215,6 +241,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Constructor from Eigen
    * @details
+   * @tparam Scalar_T
+   * @param m Matrix
    */
   template< typename Scalar_T >
   inline
@@ -226,6 +254,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Constructor from Eigen (move)
    * @details
+   * @tparam Scalar_T
+   * @param m Matrix
    */
   template< typename Scalar_T >
   inline
@@ -237,6 +267,9 @@ namespace glucat { namespace matrix
   /**
    * @brief Set size
    * @details
+   * @tparam Scalar_T
+   * @param rows Number of rows
+   * @param cols Number of columns
    */
   template< typename Scalar_T >
   inline void
@@ -247,6 +280,10 @@ namespace glucat { namespace matrix
   /**
    * @brief Resize
    * @details
+   * @tparam Scalar_T
+   * @param rows Number of rows
+   * @param cols Number of columns
+   * @param preserve Preserve data?
    */
   template< typename Scalar_T >
   inline void
@@ -263,6 +300,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Number of rows
    * @details
+   * @tparam Scalar_T
+   * @return Number of rows
    */
   template< typename Scalar_T >
   inline auto
@@ -273,6 +312,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Number of columns
    * @details
+   * @tparam Scalar_T
+   * @return Number of cols
    */
   template< typename Scalar_T >
   inline auto
@@ -283,6 +324,7 @@ namespace glucat { namespace matrix
   /**
    * @brief Clear
    * @details
+   * @tparam Scalar_T
    */
   template< typename Scalar_T >
   inline void
@@ -293,6 +335,7 @@ namespace glucat { namespace matrix
   /**
    * @brief Set to zero
    * @details
+   * @tparam Scalar_T
    */
   template< typename Scalar_T >
   inline void
@@ -303,6 +346,9 @@ namespace glucat { namespace matrix
   /**
    * @brief Set size then set to zero
    * @details
+   * @tparam Scalar_T
+   * @param rows Number of rows
+   * @param cols Number of columns
    */
   template< typename Scalar_T >
   inline void
@@ -316,6 +362,9 @@ namespace glucat { namespace matrix
   /**
    * @brief Set to identity
    * @details
+   * @tparam Scalar_T
+   * @param rows Number of rows
+   * @param cols Number of columns
    */
   template< typename Scalar_T >
   inline void
@@ -329,6 +378,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Is finite?
    * @details
+   * @tparam Scalar_T
+   * @return True if is finite
    */
   template< typename Scalar_T >
   inline auto
@@ -339,6 +390,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Has NaN?
    * @details
+   * @tparam Scalar_T
+   * @return True if has nan
    */
   template< typename Scalar_T >
   inline auto
@@ -349,6 +402,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Element access
    * @details
+   * @tparam Scalar_T
+   * @return Result
    */
   template< typename Scalar_T >
   inline auto
@@ -359,6 +414,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Const element access
    * @details
+   * @tparam Scalar_T
+   * @return Result
    */
   template< typename Scalar_T >
   inline auto
@@ -369,6 +426,9 @@ namespace glucat { namespace matrix
   /**
    * @brief Add and assign
    * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
+   * @return Reference to this
    */
   template< typename Scalar_T >
   inline auto
@@ -382,6 +442,9 @@ namespace glucat { namespace matrix
   /**
    * @brief Subtract and assign
    * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
+   * @return Reference to this
    */
   template< typename Scalar_T >
   inline auto
@@ -395,6 +458,9 @@ namespace glucat { namespace matrix
   /**
    * @brief Multiply by scalar and assign
    * @details
+   * @tparam Scalar_T
+   * @param val Value
+   * @return Reference to this
    */
   template< typename Scalar_T >
   inline auto
@@ -408,6 +474,9 @@ namespace glucat { namespace matrix
   /**
    * @brief Divide by scalar and assign
    * @details
+   * @tparam Scalar_T
+   * @param val Value
+   * @return Reference to this
    */
   template< typename Scalar_T >
   inline auto
@@ -421,6 +490,9 @@ namespace glucat { namespace matrix
   /**
    * @brief Addition
    * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
+   * @return Result
    */
   template< typename Scalar_T >
   inline auto
@@ -431,6 +503,9 @@ namespace glucat { namespace matrix
   /**
    * @brief Subtraction
    * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
+   * @return Result
    */
   template< typename Scalar_T >
   inline auto
@@ -441,6 +516,9 @@ namespace glucat { namespace matrix
   /**
    * @brief Matrix Multiplication
    * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
+   * @return Result
    */
   template< typename Scalar_T >
   inline auto
@@ -451,6 +529,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Unary -
    * @details
+   * @tparam Scalar_T
+   * @return Result
    */
   template< typename Scalar_T >
   inline auto
@@ -461,6 +541,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Transpose
    * @details
+   * @tparam Scalar_T
+   * @return Transpose
    */
   template< typename Scalar_T >
   inline auto
@@ -471,6 +553,10 @@ namespace glucat { namespace matrix
   /**
    * @brief Output to stream
    * @details
+   * @tparam Scalar_T
+   * @param os Output stream
+   * @param m Matrix
+   * @return Output stream
    */
   template< typename Scalar_T >
   inline auto
@@ -483,6 +569,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Trace
    * @details
+   * @tparam Scalar_T
+   * @return Trace
    */
   template< typename Scalar_T >
   inline auto
@@ -493,6 +581,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Eigenvalues
    * @details
+   * @tparam Scalar_T
+   * @return Eigenvalues
    */
   template< typename Scalar_T >
   inline auto
@@ -529,6 +619,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Infinity norm
    * @details
+   * @tparam Scalar_T
+   * @return Inf norm
    */
   template< typename Scalar_T >
   inline auto
@@ -539,6 +631,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Squared Frobenius norm
    * @details
+   * @tparam Scalar_T
+   * @return Frob2 norm
    */
   template< typename Scalar_T >
   inline auto
@@ -549,6 +643,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Is NaN?
    * @details
+   * @tparam Scalar_T
+   * @return True if successful or condition met
    */
   template< typename Scalar_T >
   inline auto
@@ -559,6 +655,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Is infinite?
    * @details
+   * @tparam Scalar_T
+   * @return True if successful or condition met
    */
   template< typename Scalar_T >
   inline auto
@@ -569,6 +667,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Number of non-zeros
    * @details
+   * @tparam Scalar_T
+   * @return Number of non-zeros
    */
   template< typename Scalar_T >
   inline auto
@@ -579,6 +679,9 @@ namespace glucat { namespace matrix
   /**
    * @brief Inner product
    * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
+   * @return Inner product
    */
   template< typename Scalar_T >
   template< typename Result_Scalar_T, typename Other >
@@ -598,6 +701,9 @@ namespace glucat { namespace matrix
   /**
    * @brief Kronecker matrix product
    * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
+   * @return Kronecker product
    */
   template< typename Scalar_T >
   inline auto
@@ -611,6 +717,9 @@ namespace glucat { namespace matrix
   /**
    * @brief Mixed Kronecker matrix product: Dense x Sparse -> Dense (wrapper)
    * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
+   * @return Kronecker product
    */
   template< typename Scalar_T >
   template< typename Other_Scalar_T >
@@ -641,6 +750,10 @@ namespace glucat { namespace matrix
   /**
    * @brief Left Kronecker quotient
    * @details
+   * @tparam Scalar_T
+   * @param rhs Right hand side
+   * @param mono Value
+   * @return Left Kronecker quotient
    */
   template< typename Scalar_T >
   template< typename RHS_T >
@@ -704,6 +817,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Number of rows
    * @details
+   * @tparam Scalar_T
+   * @return Number of rows
    */
   template< typename Scalar_T >
   inline auto
@@ -714,6 +829,7 @@ namespace glucat { namespace matrix
   /**
    * @brief Number of columns
    * @details
+   * @tparam Scalar_T
    */
   template< typename Scalar_T >
   inline auto
@@ -724,6 +840,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Constructor from Eigen Sparse Matrix (e.g. expression result)
    * @details
+   * @tparam Scalar_T
+   * @param m Matrix
    */
   template< typename Scalar_T >
   inline
@@ -735,6 +853,10 @@ namespace glucat { namespace matrix
   /**
    * @brief Armadillo/uBLAS/Generator style constructor support
    * @details
+   * @tparam Scalar_T
+   * @param rows Number of rows
+   * @param cols Number of columns
+   * @param estimated_nnz Estimated number of non-zeros
    */
   template< typename Scalar_T >
   inline
@@ -748,6 +870,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Copy/Move similar to dense
    * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
    */
   template< typename Scalar_T >
   inline
@@ -759,6 +883,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Move constructor
    * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
    */
   template< typename Scalar_T >
   inline
@@ -770,6 +896,9 @@ namespace glucat { namespace matrix
   /**
    * @brief Copy assignment
    * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
+   * @return Reference to this
    */
   template< typename Scalar_T >
   inline auto
@@ -784,6 +913,9 @@ namespace glucat { namespace matrix
   /**
    * @brief Move assignment
    * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
+   * @return Reference to this
    */
   template< typename Scalar_T >
   inline auto
@@ -798,6 +930,9 @@ namespace glucat { namespace matrix
   /**
    * @brief Set size
    * @details
+   * @tparam Scalar_T
+   * @param rows Number of rows
+   * @param cols Number of columns
    */
   template< typename Scalar_T >
   inline void
@@ -808,6 +943,10 @@ namespace glucat { namespace matrix
   /**
    * @brief Make writable
    * @details
+   * @tparam Scalar_T
+   * @param rows Number of rows
+   * @param cols Number of columns
+   * @param preserve Preserve data?
    */
   template< typename Scalar_T >
   inline void
@@ -821,6 +960,7 @@ namespace glucat { namespace matrix
   /**
    * @brief Clear
    * @details
+   * @tparam Scalar_T
    */
   template< typename Scalar_T >
   inline void
@@ -831,6 +971,7 @@ namespace glucat { namespace matrix
   /**
    * @brief Set to zero
    * @details
+   * @tparam Scalar_T
    */
   template< typename Scalar_T >
   inline void
@@ -841,6 +982,9 @@ namespace glucat { namespace matrix
   /**
    * @brief Set to zero
    * @details
+   * @tparam Scalar_T
+   * @param rows Number of rows
+   * @param cols Number of columns
    */
   template< typename Scalar_T >
   inline void
@@ -854,6 +998,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Begin iterator
    * @details
+   * @tparam Scalar_T
+   * @return Iterator
    */
   template< typename Scalar_T >
   inline auto
@@ -864,6 +1010,8 @@ namespace glucat { namespace matrix
   /**
    * @brief End iterator
    * @details
+   * @tparam Scalar_T
+   * @return Iterator
    */
   template< typename Scalar_T >
   inline auto
@@ -874,6 +1022,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Const element access
    * @details
+   * @tparam Scalar_T
+   * @return Result
    */
   template< typename Scalar_T >
   inline auto
@@ -884,6 +1034,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Element access
    * @details
+   * @tparam Scalar_T
+   * @return Result
    */
   template< typename Scalar_T >
   inline auto
@@ -894,6 +1046,9 @@ namespace glucat { namespace matrix
   /**
    * @brief Add and assign
    * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
+   * @return Reference to this
    */
   template< typename Scalar_T >
   inline auto
@@ -907,6 +1062,9 @@ namespace glucat { namespace matrix
   /**
    * @brief Subtract and assign
    * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
+   * @return Reference to this
    */
   template< typename Scalar_T >
   inline auto
@@ -920,6 +1078,9 @@ namespace glucat { namespace matrix
   /**
    * @brief Multiply by sparse wrapper
    * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
+   * @return Result
    */
   template< typename Scalar_T >
   inline auto
@@ -930,6 +1091,9 @@ namespace glucat { namespace matrix
   /**
    * @brief Multiply by scalar and assign
    * @details
+   * @tparam Scalar_T
+   * @param val Value
+   * @return Reference to this
    */
   template< typename Scalar_T >
   inline auto
@@ -943,6 +1107,10 @@ namespace glucat { namespace matrix
   /**
    * @brief Output to stream
    * @details
+   * @tparam Scalar_T
+   * @param os Output stream
+   * @param m Matrix
+   * @return Output stream
    */
   template< typename Scalar_T >
   inline auto
@@ -953,6 +1121,9 @@ namespace glucat { namespace matrix
   /**
    * @brief Iterator support
    * @details
+   * @tparam Scalar_T
+   * @param mat Value
+   * @param start Value
    */
   template< typename Scalar_T >
   inline
@@ -980,6 +1151,7 @@ namespace glucat { namespace matrix
   /**
    * @brief Constructor for begin()
    * @details
+   * @tparam Scalar_T
    */
   template< typename Scalar_T >
   inline void
@@ -1000,6 +1172,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Check if end
    * @details
+   * @tparam Scalar_T
+   * @return True if is end
    */
   template< typename Scalar_T >
   inline auto
@@ -1011,6 +1185,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Prefix increment
    * @details
+   * @tparam Scalar_T
+   * @return Result
    */
   template< typename Scalar_T >
   inline auto
@@ -1025,6 +1201,9 @@ namespace glucat { namespace matrix
   /**
    * @brief Inequality comparison
    * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
+   * @return True if not equal
    */
   template< typename Scalar_T >
   inline auto
@@ -1042,6 +1221,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Row index
    * @details
+   * @tparam Scalar_T
+   * @return Result
    */
   template< typename Scalar_T >
   inline auto
@@ -1053,6 +1234,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Column index
    * @details
+   * @tparam Scalar_T
+   * @return Result
    */
   template< typename Scalar_T >
   inline auto
@@ -1064,6 +1247,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Dereference
    * @details
+   * @tparam Scalar_T
+   * @return Result
    */
   template< typename Scalar_T >
   inline auto
@@ -1075,6 +1260,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Is infinite?
    * @details
+   * @tparam Scalar_T
+   * @return True if successful or condition met
    */
   template< typename Scalar_T >
   inline auto
@@ -1091,6 +1278,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Is NaN?
    * @details
+   * @tparam Scalar_T
+   * @return True if successful or condition met
    */
   template< typename Scalar_T >
   inline auto
@@ -1107,6 +1296,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Trace
    * @details
+   * @tparam Scalar_T
+   * @return Trace
    */
   template< typename Scalar_T >
   inline auto
@@ -1124,6 +1315,9 @@ namespace glucat { namespace matrix
   /**
    * @brief Mixed Kronecker matrix product: Sparse x Dense -> Dense (wrapper)
    * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
+   * @return Kronecker product
    */
   template< typename Scalar_T >
   template< typename Other_Scalar_T >
@@ -1150,6 +1344,9 @@ namespace glucat { namespace matrix
   /**
    * @brief Kronecker matrix product of sparse wrappers
    * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
+   * @return Kronecker product
    */
   template< typename Scalar_T >
   inline auto
@@ -1181,6 +1378,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Infinity norm
    * @details
+   * @tparam Scalar_T
+   * @return Inf norm
    */
   template< typename Scalar_T >
   inline auto
@@ -1198,6 +1397,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Squared Frobenius norm
    * @details
+   * @tparam Scalar_T
+   * @return Frob2 norm
    */
   template< typename Scalar_T >
   inline auto
@@ -1208,6 +1409,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Number of non-zeros
    * @details
+   * @tparam Scalar_T
+   * @return Number of non-zeros
    */
   template< typename Scalar_T >
   inline auto
@@ -1218,6 +1421,9 @@ namespace glucat { namespace matrix
   /**
    * @brief Inner product
    * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
+   * @return Inner product
    */
   template< typename Scalar_T >
   template< typename Result_Scalar_T, typename Other >
@@ -1238,6 +1444,10 @@ namespace glucat { namespace matrix
   /**
    * @brief Left Kronecker quotient
    * @details
+   * @tparam Scalar_T
+   * @param rhs Right hand side
+   * @param mono Value
+   * @return Left Kronecker quotient
    */
   template< typename Scalar_T >
   template< typename RHS_T >
@@ -1293,6 +1503,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Eigenvalues
    * @details
+   * @tparam Scalar_T
+   * @return Eigenvalues
    */
   template< typename Scalar_T >
   inline auto

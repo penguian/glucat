@@ -42,6 +42,8 @@ namespace glucat
   /**
    * @brief Specific exception class
    * @details
+   * @tparam Class_T
+   * @param msg Value
    */
   template< class Class_T >
   error<Class_T>::

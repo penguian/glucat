@@ -47,6 +47,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Constructor from other matrix type
    * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
    */
   template< typename Scalar_T >
   template< typename Other_Matrix_T >
@@ -59,6 +61,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Constructor from other matrix type
    * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
    */
   template< typename Scalar_T >
   template< typename Other_Matrix_T >

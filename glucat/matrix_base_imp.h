@@ -29,6 +29,7 @@
  "Clifford algebras with numeric and symbolic computations", Birkhauser, 1996.
  ***************************************************************************
      See also Arvind Raja's original header comments in glucat.h
+ *************************************************************************** @return Result
  ***************************************************************************/
 
 #include "glucat/errors.h"
@@ -50,6 +51,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Return const reference to derived class
    * @details
+   * @tparam Derived_T
+   * @return Result
    */
   template< typename Derived_T >
   inline auto
@@ -60,6 +63,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Return reference to derived class
    * @details
+   * @tparam Derived_T
+   * @return Result
    */
   template< typename Derived_T >
   inline auto
@@ -70,6 +75,8 @@ namespace glucat { namespace matrix
   /**
    * @brief Generic classify_eigenvalues relies on eigenvalues() member
    * @details
+   * @tparam Derived_T
+   * @retval result Eigenvalue classification
    */
   template< typename Derived_T >
   inline auto
@@ -171,6 +178,8 @@ namespace glucat { namespace matrix
    /**
     * @brief Helper struct for unit matrix creation
     * @details
+    * @tparam Matrix_T
+    * @return Result
     */
   template< typename Matrix_T >
   struct unit_helper
@@ -198,6 +207,9 @@ namespace glucat { namespace matrix
   /**
    * @brief Identity matrix
    * @details
+   * @tparam Matrix_T
+   * @param dim Value
+   * @return Result
    */
   template< typename Matrix_T >
   inline auto unit(const matrix_index_t dim) -> const Matrix_T

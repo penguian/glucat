@@ -53,6 +53,9 @@ namespace glucat
   /**
    * @brief Constructor from index value
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param idx Value
    */
   template<const index_t LO, const index_t HI>
   index_set<LO,HI>::
@@ -62,6 +65,9 @@ namespace glucat
   /**
    * @brief Constructor from bitset_t
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param bst Value
    */
   template<const index_t LO, const index_t HI>
   index_set<LO,HI>::
@@ -72,6 +78,11 @@ namespace glucat
   /**
    * @brief Constructor from set value of an index set folded within the given frame
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param folded_val Value
+   * @param frm Value
+   * @param prechecked Already checked?
    */
   template<const index_t LO, const index_t HI>
   index_set<LO,HI>::
@@ -89,6 +100,10 @@ namespace glucat
   /**
    * @brief Constructor from range of indices from range.first to range.second
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param range Value
+   * @param prechecked Already checked?
    */
   template<const index_t LO, const index_t HI>
   index_set<LO,HI>::
@@ -112,6 +127,9 @@ namespace glucat
   /**
    * @brief Constructor from string
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param str Value
    */
   template<const index_t LO, const index_t HI>
   index_set<LO,HI>::
@@ -130,6 +148,10 @@ namespace glucat
   /**
    * @brief Equality
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param rhs Right hand side
+   * @return True if equal
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -144,6 +166,10 @@ namespace glucat
   /**
    * @brief Inequality
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param rhs Right hand side
+   * @return True if not equal
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -158,6 +184,9 @@ namespace glucat
   /**
    * @brief Set complement: not
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -169,6 +198,10 @@ namespace glucat
   /**
    * @brief Symmetric set difference: exclusive or
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param rhs Right hand side
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -184,6 +217,11 @@ namespace glucat
   /**
    * @brief Symmetric set difference: exclusive or
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param lhs Left hand side
+   * @param rhs Right hand side
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -200,6 +238,10 @@ namespace glucat
   /**
    * @brief Set intersection: and
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param rhs Right hand side
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -215,6 +257,11 @@ namespace glucat
   /**
    * @brief Set intersection: and
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param lhs Left hand side
+   * @param rhs Right hand side
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -231,6 +278,10 @@ namespace glucat
   /**
    * @brief Set union: or
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param rhs Right hand side
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -246,6 +297,11 @@ namespace glucat
   /**
    * @brief Set union: or
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param lhs Left hand side
+   * @param rhs Right hand side
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -262,6 +318,10 @@ namespace glucat
   /**
    * @brief Subscripting: Element access
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param idx Value
+   * @return Element reference
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -273,6 +333,10 @@ namespace glucat
   /**
    * @brief Subscripting: Test idx for membership: test value of bit idx
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param idx Value
+   * @return Element reference
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -284,6 +348,10 @@ namespace glucat
   /**
    * @brief Test idx for membership: test value of bit idx
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param idx Value
+   * @return True if successful or condition met
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -302,6 +370,9 @@ namespace glucat
   /**
    * @brief Include all indices except 0: set all bits except 0
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -316,6 +387,10 @@ namespace glucat
   /**
    * @brief Include idx: Set bit at idx if idx != 0
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param idx Value
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -333,6 +408,11 @@ namespace glucat
   /**
    * @brief Set membership of idx to val if idx != 0: Set bit at idx to val if idx != 0
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param idx Value
+   * @param val Value
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -350,6 +430,9 @@ namespace glucat
   /**
    * @brief Make set empty: Set all bits to 0
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -364,6 +447,10 @@ namespace glucat
   /**
    * @brief Exclude idx:  Set bit at idx to 0
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param idx Value
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -381,6 +468,9 @@ namespace glucat
   /**
    * @brief Set complement, except 0: flip all bits, except 0
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -395,6 +485,10 @@ namespace glucat
   /**
    * @brief Complement membership of idx if idx != 0: flip bit at idx if idx != 0
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param idx Value
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -412,6 +506,9 @@ namespace glucat
   /**
    * @brief Cardinality: Number of indices included in set
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -435,6 +532,9 @@ namespace glucat
   /**
    * @brief Number of negative indices included in set
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -450,6 +550,9 @@ namespace glucat
   /**
    * @brief Number of positive indices included in set
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -466,6 +569,9 @@ namespace glucat
   /**
    * @brief Minimum member, or 0 if none: default for 64-bit cpus
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -507,6 +613,9 @@ namespace glucat
   /**
    * @brief Minimum member, or 0 if none: default for 32-bit cpus
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -545,6 +654,9 @@ namespace glucat
   /**
    * @brief Minimum member, or 0 if none
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   auto
@@ -571,6 +683,9 @@ namespace glucat
   /**
    * @brief Maximum member, or 0 if none: default for 64-bit cpus
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -608,6 +723,9 @@ namespace glucat
   /**
    * @brief Maximum member, or 0 if none: default for 32-bit cpus
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -643,6 +761,9 @@ namespace glucat
   /**
    * @brief Maximum member, or 0 if none
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   auto
@@ -668,6 +789,9 @@ namespace glucat
   /**
    * @brief Lexicographic ordering of two sets: -1 if a<b, +1 if a>b, 0 if a==b
    * @details
+   * @param a Value
+   * @param b Value
+   * @return Result
    */
   //  eg. {3,4,5} is less than {3,7,8}
   template<const index_t LO, const index_t HI>
@@ -685,6 +809,8 @@ namespace glucat
   /**
    * @brief Lexicographic ordering of two sets: *this < rhs
    * @details
+   * @param rhs Right hand side
+   * @return Result
    */
   //  eg. {3,4,5} is less than {3,7,8}
   template<const index_t LO, const index_t HI>
@@ -697,6 +823,7 @@ namespace glucat
   /**
    * @brief Less than operator used for comparisons, map, etc.
    * @details
+   * @param rhs Right hand side
    */
   // Order by count, then order lexicographically within the equivalence class of count.
   template<const index_t LO, const index_t HI>
@@ -717,6 +844,11 @@ namespace glucat
   /**
    * @brief Write out index set
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param os Output stream
+   * @param ist Value
+   * @return Output stream
    */
   template<const index_t LO, const index_t HI>
   auto
@@ -742,6 +874,11 @@ namespace glucat
   /**
    * @brief Read in index set
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param s Value
+   * @param ist Value
+   * @return Input stream
    */
   template<const index_t LO, const index_t HI>
   auto
@@ -842,6 +979,9 @@ namespace glucat
   /**
    * @brief Determine if the index set is contiguous, ie. has no gaps when 0 is included
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @return True if is contiguous
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -860,6 +1000,9 @@ namespace glucat
   /**
    * @brief Fold this index set within itself as a frame
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -872,6 +1015,11 @@ namespace glucat
   /**
    * @brief Fold this index set within the given frame
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param frm Value
+   * @param prechecked Already checked?
+   * @return True if successful or condition met
    */
   template<const index_t LO, const index_t HI>
   auto
@@ -914,6 +1062,11 @@ namespace glucat
   /**
    * @brief Unfold this index set within the given frame
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param frm Value
+   * @param prechecked Already checked?
+   * @return True if successful or condition met
    */
   template<const index_t LO, const index_t HI>
   auto
@@ -951,6 +1104,10 @@ namespace glucat
   /**
    * @brief The set value of the fold of this index set within the given frame
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param frm Value
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -972,6 +1129,8 @@ namespace glucat
   /**
    * @brief Inverse reversed Gray code
    * @details
+   * @param x Value
+   * @return Result
    */
   inline
   static
@@ -992,6 +1151,8 @@ namespace glucat
   /**
    * @brief Inverse Gray code
    * @details
+   * @param x Value
+   * @return Result
    */
   inline
   static
@@ -1012,6 +1173,10 @@ namespace glucat
   /**
    * @brief Sign of geometric product of two Clifford basis elements
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param rhs Right hand side
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   auto
@@ -1064,6 +1229,9 @@ namespace glucat
   /**
    * @brief Sign of geometric square of a Clifford basis element
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -1087,6 +1255,9 @@ namespace glucat
   /**
    * @brief Hash function
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -1104,6 +1275,8 @@ namespace glucat
   /**
    * @brief Square of generator index j
    * @details
+   * @param j Column index
+   * @return Result
    */
   inline
   auto
@@ -1113,6 +1286,10 @@ namespace glucat
   /**
    * @brief Minimum negative index, or 0 if none
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param ist Value
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -1123,6 +1300,10 @@ namespace glucat
   /**
    * @brief Maximum positive index, or 0 if none
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param ist Value
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -1135,6 +1316,10 @@ namespace glucat
   /**
    * @brief index_set reference
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param ist Value
+   * @param idx Value
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -1147,6 +1332,10 @@ namespace glucat
   /**
    * @brief for b[i] == c[j];
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param c_j Value
+   * @return True if equal
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -1158,6 +1347,10 @@ namespace glucat
   /**
    * @brief for b[i] = x;
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param x Value
+   * @return Reference to this
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -1175,6 +1368,10 @@ namespace glucat
   /**
    * @brief for b[i] = c[j];
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @param c_j Value
+   * @return Reference to this
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -1195,6 +1392,9 @@ namespace glucat
   /**
    * @brief flips the bit
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @return True if successful or condition met
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -1206,6 +1406,9 @@ namespace glucat
   /**
    * @brief for x = b[i];
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @return True if successful or condition met
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -1216,6 +1419,9 @@ namespace glucat
   /**
    * @brief for b[i].flip();
    * @details
+   * @tparam LO
+   * @tparam HI
+   * @return Result
    */
   template<const index_t LO, const index_t HI>
   inline
