@@ -113,10 +113,10 @@ namespace glucat { namespace matrix
    * @details
    */
   template< typename Scalar_T >
-  template< typename Derived >
+  template< typename Derived_T >
   inline
   eigen_matrix_wrapper<Scalar_T>::
-  eigen_matrix_wrapper(const Eigen::MatrixBase<Derived>& other)
+  eigen_matrix_wrapper(const Eigen::MatrixBase<Derived_T>& other)
   { m_mat = other; }
 
   /**
@@ -166,7 +166,7 @@ namespace glucat { namespace matrix
   { }
 
   /**
-   * @brief Assignment
+   * @brief Copy assignment
    * @details
    */
   template< typename Scalar_T >
@@ -180,7 +180,7 @@ namespace glucat { namespace matrix
   }
 
   /**
-   * @brief Move Assignment
+   * @brief Move assignment
    * @details
    */
   template< typename Scalar_T >
@@ -638,7 +638,7 @@ namespace glucat { namespace matrix
   }
 
   /**
-   * @brief Normalization of rotation K
+   * @brief Left Kronecker quotient
    * @details
    */
   template< typename Scalar_T >

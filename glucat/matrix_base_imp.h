@@ -51,33 +51,33 @@ namespace glucat { namespace matrix
    * @brief Return const reference to derived class
    * @details
    */
-  template< typename Derived >
+  template< typename Derived_T >
   inline auto
-  matrix_base<Derived>::
-  derived() const -> const Derived&
-  { return static_cast<const Derived&>(*this); }
+  matrix_base<Derived_T>::
+  derived() const -> const Derived_T&
+  { return static_cast<const Derived_T&>(*this); }
 
   /**
    * @brief Return reference to derived class
    * @details
    */
-  template< typename Derived >
+  template< typename Derived_T >
   inline auto
-  matrix_base<Derived>::
-  derived() -> Derived&
-  { return static_cast<Derived&>(*this); }
+  matrix_base<Derived_T>::
+  derived() -> Derived_T&
+  { return static_cast<Derived_T&>(*this); }
 
   /**
    * @brief Generic classify_eigenvalues relies on eigenvalues() member
    * @details
    */
-  template< typename Derived >
+  template< typename Derived_T >
   inline auto
-  matrix_base<Derived>::
+  matrix_base<Derived_T>::
   classify_eigenvalues() const
   {
-    using Scalar_T = typename Derived::value_type;
-    eig_genus<Derived> result;
+    using Scalar_T = typename Derived_T::value_type;
+    eig_genus<Derived_T> result;
 
     auto lambda = derived().eigenvalues(); // Call member
 
@@ -168,10 +168,10 @@ namespace glucat { namespace matrix
   // unit_helper and unit Definitions
   // =========================================================================
 
-  /**
-   * @brief Helper struct generic implementation
-   * @details
-   */
+   /**
+    * @brief Helper struct for unit matrix creation
+    * @details
+    */
   template< typename Matrix_T >
   struct unit_helper
   {

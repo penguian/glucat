@@ -84,8 +84,8 @@ namespace glucat { namespace matrix
     eigen_matrix_wrapper(matrix_index_t rows, matrix_index_t cols);
 
     /// Constructor from Eigen expressions (e.g. m * s)
-    template< typename Derived >
-    eigen_matrix_wrapper(const Eigen::MatrixBase<Derived>& other);
+    template< typename Derived_T >
+    eigen_matrix_wrapper(const Eigen::MatrixBase<Derived_T>& other);
 
     /// Generic Interop Constructor (e.g. from Armadillo matrix)
     template< typename Other_Matrix_T >

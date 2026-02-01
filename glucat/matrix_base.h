@@ -47,14 +47,14 @@ namespace glucat { namespace matrix
   template< typename Scalar_T > struct is_complex_t<std::complex<Scalar_T>> : std::true_type {};
 
   /// Base class providing member functions that delegate to the derived implementation (CRTP Pattern)
-  template< typename Derived >
+  template< typename Derived_T >
   class matrix_base
   {
   public:
     /// Return const reference to derived class
-    auto derived() const -> const Derived&;
+    auto derived() const -> const Derived_T&;
     /// Return reference to derived class
-    auto derived() -> Derived&;
+    auto derived() -> Derived_T&;
 
     // Member functions delegating to namespace matrix implementation
     // defined in matrix_base_imp.h
