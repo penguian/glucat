@@ -279,6 +279,24 @@ Since the default for `--enable-debug` is `no`, the option `--disable-debug`
 does nothing.
 
 ```
+  --enable-strict         compile with strict compiler options (may not work!)
+```
+This option adds strict compiler flags to `CXXFLAGS`, such as `-pedantic`. Use this
+with caution as it may cause the build to fail on warnings.
+
+```
+  --disable-warnings      disable compilation with -Wall and similiar
+```
+By default, the compiler flag `-Wall` is added to `CXXFLAGS`. This option prevents
+`-Wall` from being added.
+
+```
+  --enable-profile        create profiling infos [default=no]
+```
+This option adds profiling flags (e.g. `-pg`) to `CXXFLAGS` and `LDFLAGS` to
+enable performance profiling with tools like `gprof`.
+
+```
   --enable-pyclical       uses Cython to build PyClical Python extension module
                           [default=yes]
 ```
@@ -335,48 +353,32 @@ You will also need to ensure that the include path used by the compiler sees
 `<qd/qd_real.h>` and the library path sees `libqd.*`.
 
 ```
-  --with-eig[=ARG]        library to use for eigenvalues
-                          (no|blaze) [default=no]
+  --with-armadillo        use Armadillo library [default=no]
 ```
-This option is used to control `_GLUCAT_USE_EIGENVALUES` and determine which
-libraries to use. ARG can be `no` or `blaze`. The default is `no`.
+This option controls the use of the Armadillo C++ linear algebra library.
 
-The option `--with-eig=blaze` adds `-D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BLAZE`
-to `CXXFLAGS` and adds the flags `-llapack -lblas` to the list of libraries,
-`LIBS` in the Makefiles, if the header file `<blaze/Math.h>` and the libraries
-`liblapack` and `libblas` are usable. To accomplish this, the configure script
-uses the `AX_LAPACK` and `AX_BLAS macros`, as mentioned above.
+The option `--with-armadillo` adds `-D_GLUCAT_USE_ARMADILLO` to `CXXFLAGS` and adds the
+flag `-larmadillo` to the list of libraries, `LIBS` in the Makefiles.
 
-The preprocessor symbol `_GLUCAT_USE_EIGENVALUES` controls whether the `sqrt()`
-and `log()` functions in `glucat/matrix_multi_imp.h`  detect and handle negative
-real eigenvalues and imaginary eigenvalues correctly. If `_GLUCAT_USE_EIGENVALUES`
-is defined, then `sqrt()` and `log()` call the function `classify_eigenvalues()`,
-defined in `glucat/matrix_imp.h`, to detect negative real eigenvalues and imaginary
-eigenvalues, and handle negative real eigenvalues by expanding the algebra.
-Otherwise, `sqrt()` and `log()` operate as per GluCat 0.5.0 and earlier, which gives
-incorrect results in the case of negative real eigenvalues.
 
-The function `eigenvalues()` in `glucat/matrix_imp.h` calls an external function
-to obtain the eigenvalues of a matrix. Which function is used depends on one of
-a number of preprocessor symbols:
+To compile your own programs using the GluCat library with Armadillo, your Makefile
+needs to pass the flags `-D_GLUCAT_USE_ARMADILLO` and `-larmadillo` to the C++ compiler.
+You will also need to ensure that the include path used by the compiler sees
+`<armadillo>` and the library path sees `libarmadillo.*`.
 
-If `_GLUCAT_USE_BLAZE` is defined, `glucat/matrix_imp.h` includes
-`<blaze/Math.h>` and related Blaze include files, as per the Blaze template
-library. To use this library, you will need to install it yourself, preferably
-from https://bitbucket.org/blaze-lib/blaze/src/master/
+```
+  --with-openmp           use OpenMP (requires Armadillo) [default=no]
+```
+This option controls the use of OpenMP for parallel processing. This option requires
+that the Armadillo library is also used.
 
-To compile your own programs using the GluCat library, to detect and correctly
-handle negative real eigenvalues in the `sqrt()` and `log()` functions, your
-Makefile needs to pass the flag `-D_GLUCAT_USE_EIGENVALUES` to the C++ compiler,
-as well as one of the following choices of flags, and the corresponding header
-files and libraries must be usable.
+The option `--with-openmp` adds `-D_GLUCAT_USE_OPENMP` and OpenMP compiler flags
+(e.g. `-fopenmp`) to `CXXFLAGS` in the Makefiles.
 
-* For Blaze:
-  `-D_GLUCAT_USE_BLAZE -llapack -lblas`
-  You will also need to ensure that the include path used by the compiler sees
-  `<blaze/Math.h>` etc. and the library path sees `liblapack.*` and `libblas.*`.
-  Blaze also requires C++14, so your Makefile needs to use `-std=c++14` or the
-  equivalent for your C++ compiler.
+
+To compile your own programs using the GluCat library with OpenMP, your Makefile
+needs to pass the flags `-D_GLUCAT_USE_OPENMP` and the OpenMP compiler flags
+to the C++ compiler.
 
 
 Operation Controls
