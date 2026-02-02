@@ -411,3 +411,4 @@ Recent Changes
 As of GluCat 0.13.0+, the following deprecated functions have been removed:
 * `elliptic`: Use `complexifier` instead.
 * `imag`: This function was deprecated and always returned 0.
+* `MS_PER_S`: Defined in `glucat/global.h`, deprecated and unused. Use `MS_PER_SEC` in `test/timing.h` instead.

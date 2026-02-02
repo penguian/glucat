@@ -79,8 +79,6 @@ namespace glucat
   using set_value_t = unsigned long;
 
   // Global constants
-  // Timing constant: deprecated here - moved to test/timing.h
-  const double MS_PER_S = 1000.0;
 
   // Constants which determine sizes
 
