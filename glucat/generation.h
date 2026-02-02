@@ -44,7 +44,7 @@ namespace glucat { namespace gen
 {
 
 
-  // A signature is a pair of indices, p, q, with p == frame.max(), q == -frame.min()
+  /// A signature is a pair of indices, p, q, with p == frame.max(), q == -frame.min()
   using signature_t = std::pair<index_t, index_t>;
 
   /// Table of generators for specific signatures
@@ -69,9 +69,9 @@ namespace glucat { namespace gen
     // Construct generators for p,q given generators for q+1,p-1
     void gen_from_qp1_pm1(const std::vector<Matrix_T>& old, const signature_t sig);
 
-    // Friend declaration to avoid compiler warning:
-    // "... only defines a private destructor and has no friends"
-    // Ref: Carlos O'Ryan, ACE http://doc.ece.uci.edu
+    /// Friend declaration to avoid compiler warning:
+    /// "... only defines a private destructor and has no friends"
+    /// Ref: Carlos O'Ryan, ACE http://doc.ece.uci.edu
     friend class friend_for_private_destructor;
     /// Enforce singleton
     /// Reference: A. Alexandrescu, "Modern C++ Design", Chapter 6

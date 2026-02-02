@@ -186,7 +186,7 @@ namespace glucat
     void write       (std::ofstream& ofile, const std::string& msg="") const  override;
 #endif // _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
 
-  /// Test for inequality of multivectors
+  // Test for inequality of multivectors
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -196,7 +196,7 @@ namespace glucat
   auto
   operator!= (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> bool;
 
-  /// Test for inequality of multivector and scalar
+  // Test for inequality of multivector and scalar
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -205,7 +205,7 @@ namespace glucat
   auto
   operator!= (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const Scalar_T& scr) -> bool;
 
-  /// Test for inequality of scalar and multivector
+  // Test for inequality of scalar and multivector
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -214,7 +214,7 @@ namespace glucat
   auto
   operator!= (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> bool;
 
-  /// Quadratic norm error tolerance relative to a specific multivector
+  // Quadratic norm error tolerance relative to a specific multivector
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -223,7 +223,7 @@ namespace glucat
   auto
   error_squared_tol(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T;
 
-  /// Relative or absolute error using the quadratic norm
+  // Relative or absolute error using the quadratic norm
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -235,7 +235,7 @@ namespace glucat
                 const RHS<Scalar_T,LO,HI,Tune_P>& rhs,
                 const Scalar_T threshold) -> Scalar_T;
 
-  /// Test for approximate equality of multivectors
+  // Test for approximate equality of multivectors
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -248,7 +248,7 @@ namespace glucat
                const Scalar_T threshold,
                const Scalar_T tolerance) -> bool;
 
-  /// Test for approximate equality of multivectors
+  // Test for approximate equality of multivectors
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -259,7 +259,7 @@ namespace glucat
   approx_equal(const Multivector<Scalar_T,LO,HI,Tune_P>& lhs,
                const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> bool;
 
-  /// Geometric sum of multivector and scalar
+  // Geometric sum of multivector and scalar
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -268,7 +268,7 @@ namespace glucat
   auto
   operator+ (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const Scalar_T& scr) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Geometric sum of scalar and multivector
+  // Geometric sum of scalar and multivector
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -277,7 +277,7 @@ namespace glucat
   auto
   operator+ (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Geometric sum
+  // Geometric sum
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -287,7 +287,7 @@ namespace glucat
   auto
   operator+ (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Geometric difference of multivector and scalar
+  // Geometric difference of multivector and scalar
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -296,7 +296,7 @@ namespace glucat
   auto
   operator- (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const Scalar_T& scr) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Geometric difference of scalar and multivector
+  // Geometric difference of scalar and multivector
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -305,7 +305,7 @@ namespace glucat
   auto
   operator- (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Geometric difference
+  // Geometric difference
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -315,7 +315,7 @@ namespace glucat
   auto
   operator- (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Product of multivector and scalar
+  // Product of multivector and scalar
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -324,7 +324,7 @@ namespace glucat
   auto
   operator* (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const Scalar_T& scr) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Product of scalar and multivector
+  // Product of scalar and multivector
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -333,7 +333,7 @@ namespace glucat
   auto
   operator* (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Geometric product
+  // Geometric product
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -343,7 +343,7 @@ namespace glucat
   auto
   operator* (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Outer product
+  // Outer product
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -353,7 +353,7 @@ namespace glucat
   auto
   operator^ (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Inner product
+  // Inner product
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -363,7 +363,7 @@ namespace glucat
   auto
   operator& (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Left contraction
+  // Left contraction
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -373,7 +373,7 @@ namespace glucat
   auto
   operator% (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Hestenes scalar product
+  // Hestenes scalar product
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -383,7 +383,7 @@ namespace glucat
   auto
   star (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> Scalar_T;
 
-  /// Quotient of multivector and scalar
+  // Quotient of multivector and scalar
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -392,7 +392,7 @@ namespace glucat
   auto
   operator/ (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const Scalar_T& scr) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Quotient of scalar and multivector
+  // Quotient of scalar and multivector
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -401,7 +401,7 @@ namespace glucat
   auto
   operator/ (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Geometric quotient
+  // Geometric quotient
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -411,7 +411,7 @@ namespace glucat
   auto
   operator/ (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Transformation via twisted adjoint action
+  // Transformation via twisted adjoint action
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -421,7 +421,7 @@ namespace glucat
   auto
   operator| (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Geometric multiplicative inverse
+  // Geometric multiplicative inverse
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -430,7 +430,7 @@ namespace glucat
   auto
   inv(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Integer power of multivector
+  // Integer power of multivector
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -439,7 +439,7 @@ namespace glucat
   auto
   pow(const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, int rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Multivector power of multivector
+  // Multivector power of multivector
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -449,13 +449,13 @@ namespace glucat
   auto
   pow(const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Outer product power of multivector
+  // Outer product power of multivector
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
   outer_pow(const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, int rhs) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Scalar part
+  // Scalar part
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -464,7 +464,7 @@ namespace glucat
   auto
   scalar(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T;
 
-  /// Real part: synonym for scalar part
+  // Real part: synonym for scalar part
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -474,7 +474,7 @@ namespace glucat
   real(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T;
 
 
-  /// Pure part
+  // Pure part
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -483,7 +483,7 @@ namespace glucat
   auto
   pure(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Even part
+  // Even part
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -492,7 +492,7 @@ namespace glucat
   auto
   even(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Odd part
+  // Odd part
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -501,7 +501,7 @@ namespace glucat
   auto
   odd(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Vector part of multivector, as a vector_t with respect to frame()
+  // Vector part of multivector, as a vector_t with respect to frame()
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -510,7 +510,7 @@ namespace glucat
   auto
   vector_part(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const std::vector<Scalar_T>;
 
-  /// Main involution, each {i} is replaced by -{i} in each term, eg. {1}*{2} -> (-{2})*(-{1})
+  // Main involution, each {i} is replaced by -{i} in each term, eg. {1}*{2} -> (-{2})*(-{1})
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -519,7 +519,7 @@ namespace glucat
   auto
   involute(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Reversion, eg. {1}*{2} -> {2}*{1}
+  // Reversion, eg. {1}*{2} -> {2}*{1}
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -528,7 +528,7 @@ namespace glucat
   auto
   reverse(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Conjugation, rev o invo == invo o rev
+  // Conjugation, rev o invo == invo o rev
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -537,7 +537,7 @@ namespace glucat
   auto
   conj(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Scalar_T quadratic form == (rev(x)*x)(0)
+  // Scalar_T quadratic form == (rev(x)*x)(0)
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -546,7 +546,7 @@ namespace glucat
   auto
   quad(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T;
 
-  /// Scalar_T norm == sum of norm of coordinates
+  // Scalar_T norm == sum of norm of coordinates
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -555,7 +555,7 @@ namespace glucat
   auto
   norm(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T;
 
-  /// Absolute value == sqrt(norm)
+  // Absolute value == sqrt(norm)
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -564,7 +564,7 @@ namespace glucat
   auto
   abs(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T;
 
-  /// Maximum of absolute values of components of multivector: multivector infinity norm
+  // Maximum of absolute values of components of multivector: multivector infinity norm
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -573,7 +573,7 @@ namespace glucat
   auto
   max_abs(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T;
 
-  /// Square root of -1 which commutes with all members of the frame of the given multivector
+  // Square root of -1 which commutes with all members of the frame of the given multivector
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -582,9 +582,9 @@ namespace glucat
   auto
   complexifier(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Square root of -1 which commutes with all members of the frame of the given multivector
+  // Square root of -1 which commutes with all members of the frame of the given multivector
 
-  /// Square root of multivector with specified complexifier
+  // Square root of multivector with specified complexifier
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -595,7 +595,7 @@ namespace glucat
        const Multivector<Scalar_T,LO,HI,Tune_P>& i,
        const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Square root of multivector
+  // Square root of multivector
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -606,7 +606,7 @@ namespace glucat
 
   // Transcendental functions
 
-  /// Exponential of multivector
+  // Exponential of multivector
   template
   < template<typename, const index_t, const index_t, typename> class Multivector,
     typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
@@ -614,7 +614,7 @@ namespace glucat
   auto
   clifford_exp(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Natural logarithm of multivector with specified complexifier
+  // Natural logarithm of multivector with specified complexifier
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -625,7 +625,7 @@ namespace glucat
       const Multivector<Scalar_T,LO,HI,Tune_P>& i,
       const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Natural logarithm of multivector
+  // Natural logarithm of multivector
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -634,7 +634,7 @@ namespace glucat
   auto
   log(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Cosine of multivector with specified complexifier
+  // Cosine of multivector with specified complexifier
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -645,7 +645,7 @@ namespace glucat
       const Multivector<Scalar_T,LO,HI,Tune_P>& i,
       const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Cosine of multivector
+  // Cosine of multivector
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -654,7 +654,7 @@ namespace glucat
   auto
   cos(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Inverse cosine of multivector with specified complexifier
+  // Inverse cosine of multivector with specified complexifier
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -665,7 +665,7 @@ namespace glucat
        const Multivector<Scalar_T,LO,HI,Tune_P>& i,
        const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Inverse cosine of multivector
+  // Inverse cosine of multivector
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -674,7 +674,7 @@ namespace glucat
   auto
   acos(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Hyperbolic cosine of multivector
+  // Hyperbolic cosine of multivector
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -683,7 +683,7 @@ namespace glucat
   auto
   cosh(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Inverse hyperbolic cosine of multivector with specified complexifier
+  // Inverse hyperbolic cosine of multivector with specified complexifier
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -694,7 +694,7 @@ namespace glucat
         const Multivector<Scalar_T,LO,HI,Tune_P>& i,
         const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Inverse hyperbolic cosine of multivector
+  // Inverse hyperbolic cosine of multivector
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -703,7 +703,7 @@ namespace glucat
   auto
   acosh(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Sine of multivector with specified complexifier
+  // Sine of multivector with specified complexifier
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -714,7 +714,7 @@ namespace glucat
       const Multivector<Scalar_T,LO,HI,Tune_P>& i,
       const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Sine of multivector
+  // Sine of multivector
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -723,7 +723,7 @@ namespace glucat
   auto
   sin(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Inverse sine of multivector with specified complexifier
+  // Inverse sine of multivector with specified complexifier
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -734,7 +734,7 @@ namespace glucat
        const Multivector<Scalar_T,LO,HI,Tune_P>& i,
        const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Inverse sine of multivector
+  // Inverse sine of multivector
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -743,7 +743,7 @@ namespace glucat
   auto
   asin(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Hyperbolic sine of multivector
+  // Hyperbolic sine of multivector
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -752,7 +752,7 @@ namespace glucat
   auto
   sinh(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Inverse hyperbolic sine of multivector with specified complexifier
+  // Inverse hyperbolic sine of multivector with specified complexifier
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -763,7 +763,7 @@ namespace glucat
         const Multivector<Scalar_T,LO,HI,Tune_P>& i,
         const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Inverse hyperbolic sine of multivector
+  // Inverse hyperbolic sine of multivector
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -772,7 +772,7 @@ namespace glucat
   auto
   asinh(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Tangent of multivector with specified complexifier
+  // Tangent of multivector with specified complexifier
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -783,7 +783,7 @@ namespace glucat
       const Multivector<Scalar_T,LO,HI,Tune_P>& i,
       const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Tangent of multivector
+  // Tangent of multivector
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -792,7 +792,7 @@ namespace glucat
   auto
   tan(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Inverse tangent of multivector with specified complexifier
+  // Inverse tangent of multivector with specified complexifier
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -803,7 +803,7 @@ namespace glucat
        const Multivector<Scalar_T,LO,HI,Tune_P>& i,
        const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Inverse tangent of multivector
+  // Inverse tangent of multivector
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -812,7 +812,7 @@ namespace glucat
   auto
   atan(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Hyperbolic tangent of multivector
+  // Hyperbolic tangent of multivector
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -821,7 +821,7 @@ namespace glucat
   auto
   tanh(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Inverse hyperbolic tangent of multivector with specified complexifier
+  // Inverse hyperbolic tangent of multivector with specified complexifier
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,
@@ -832,7 +832,7 @@ namespace glucat
         const Multivector<Scalar_T,LO,HI,Tune_P>& i,
         const bool prechecked = false) -> const Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  /// Inverse hyperbolic tangent of multivector
+  // Inverse hyperbolic tangent of multivector
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,

@@ -40,10 +40,10 @@
 namespace glucat
 {
   /**
-   * @brief Specific exception class
+   * @brief Specific exception with an error message
    * @details
-   * @tparam Class_T
-   * @param msg Value
+   * @tparam Class_T Base exception class
+   * @param msg Error message
    */
   template< class Class_T >
   error<Class_T>::

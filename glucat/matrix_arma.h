@@ -66,7 +66,7 @@ namespace glucat { namespace matrix
 
     MatrixType m_mat;
 
-    /// Constructors
+    // Constructors
     /// Default constructor
     arma_matrix_wrapper() = default;
 
