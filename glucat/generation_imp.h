@@ -46,9 +46,18 @@ namespace glucat { namespace gen
   /**
    * @brief Single instance of generator table
    * @details
+   * 
+   * Usage example:
+   * Location: glucat/matrix_multi_imp.h:1208
+   * 
+   * @code
+   *
+   * generator_table<matrix_t>::generator()(p, q);
+   * @endcode
+   * 
    * @return Result
    */
-  // Reference: [M] Item 47
+  /// Reference: [M] Item 47
   template< class Matrix_T >
   auto
   generator_table<Matrix_T>::
@@ -59,7 +68,7 @@ namespace glucat { namespace gen
    * @brief Pointer to generators for a specific signature
    * @details
    */
-  // Reference: [P] Table 15.27, p 133
+  /// Reference: [P] Table 15.27, p 133
   template< class Matrix_T >
   inline
   auto
@@ -141,7 +150,7 @@ namespace glucat { namespace gen
    * @param old Old signature
    * @param sig New signature
    */
-  // Reference: [P] Proposition 15.17, p 131
+  /// Reference: [P] Proposition 15.17, p 131
   template< class Matrix_T >
   void
   generator_table<Matrix_T>::
@@ -184,7 +193,7 @@ namespace glucat { namespace gen
    * @param old Old signature
    * @param sig New signature
    */
-  // Reference: [L] 16.4 Periodicity of 8, p216
+  /// Reference: [L] 16.4 Periodicity of 8, p216
   template< class Matrix_T >
   void
   generator_table<Matrix_T>::
@@ -222,7 +231,7 @@ namespace glucat { namespace gen
    * @param old Old signature
    * @param sig New signature
    */
-  // Reference: [L] 16.4 Periodicity of 8, p216
+  /// Reference: [L] 16.4 Periodicity of 8, p216
   template< class Matrix_T >
   void
   generator_table<Matrix_T>::
@@ -260,7 +269,7 @@ namespace glucat { namespace gen
    * @param old Old signature
    * @param sig New signature
    */
-  // Reference: [P] Proposition 15.20, p 131
+  /// Reference: [P] Proposition 15.20, p 131
   template< class Matrix_T >
   void
   generator_table<Matrix_T>::

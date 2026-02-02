@@ -830,6 +830,15 @@ namespace glucat
   /**
    * @brief Square root of -1 which commutes with all members of the frame of the given multivector
    * @details
+   * 
+   * Usage example:
+   * Location: glucat/clifford_algebra_imp.h:1096
+   * 
+   * @code
+   * 
+   * return log(val, complexifier(val), true);
+   * @endcode
+   * 
    * @param val Value
    * @return Result
    */
@@ -880,24 +889,6 @@ namespace glucat
       // Return IEEE NaN or -Inf
       return traits_t::NaN();
   }
-
-  /**
-   * @brief Square root of -1 which commutes with all members of the frame of the given multivector
-   * @details
-   * @return Result
-   */
-  /**
-   * @brief The name "elliptic" is now deprecated: use "complexifier" instead.
-   * @details
-   * @param val Value
-   * @return Result
-   */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  elliptic(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> const Multivector<Scalar_T,LO,HI,Tune_P>
-  { return complexifier(val); }
 
   /**
    * @brief Check that i is a valid complexifier for val
@@ -959,6 +950,15 @@ namespace glucat
   /**
    * @brief Exponential of multivector
    * @details
+   *
+   * Usage example:
+   * Location: glucat/framed_multi_imp.h:2520
+   *
+   *
+   * @code
+   *     return clifford_exp(val);
+   * @endcode
+   *
    * @param val Value
    * @return Result
    */
@@ -1085,6 +1085,15 @@ namespace glucat
   /**
    * @brief Natural logarithm of multivector
    * @details
+   * 
+   * Usage example:
+   * Location: test11/peg11.h:179
+   * 
+   * @code
+   * 
+   * check(exp(log(A)), A, "exp(log(A)) != A", true);
+   * @endcode
+   * 
    * @param val Value
    * @return Result
    */
@@ -1098,6 +1107,15 @@ namespace glucat
   /**
    * @brief Hyperbolic cosine of multivector
    * @details
+   * 
+   * Usage example:
+   * Location: test11/peg11.h:149
+   * 
+   * @code
+   * 
+   * check(cosh(A)+sinh(A), exp(A), "cosh(A)+sinh(A) != exp(A)");
+   * @endcode
+   * 
    * @param val Value
    * @return Result
    */
@@ -1128,7 +1146,7 @@ namespace glucat
    * @param prechecked Already checked?
    * @return Result
    */
-  // Reference: [AS], Section 4.6, p86-89
+  /// Reference: [AS], Section 4.6, p86-89
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1151,10 +1169,19 @@ namespace glucat
   /**
    * @brief Inverse hyperbolic cosine of multivector
    * @details
+   * 
+   * Usage example:
+   * Location: test11/peg11.h:191
+   * 
+   * @code
+   * 
+   * check(cosh(acosh(A)), A, "cosh(acosh(A)) != A", true);
+   * @endcode
+   * 
    * @param val Value
    * @return Result
    */
-  // Reference: [AS], Section 4.6, p86-89
+  /// Reference: [AS], Section 4.6, p86-89
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1197,6 +1224,15 @@ namespace glucat
   /**
    * @brief Cosine of multivector
    * @details
+   * 
+   * Usage example:
+   * Location: test11/peg11.h:140
+   * 
+   * @code
+   * 
+   * check(cos(A)+complexifier(A)*sin(A), exp(complexifier(A)*A), ...);
+   * @endcode
+   * 
    * @param val Value
    * @return Result
    */
@@ -1215,7 +1251,7 @@ namespace glucat
    * @param prechecked Already checked?
    * @return Result
    */
-  // Reference: [AS], Section 4.4, p79-83
+  /// Reference: [AS], Section 4.4, p79-83
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1240,10 +1276,19 @@ namespace glucat
   /**
    * @brief Inverse cosine of multivector
    * @details
+   * 
+   * Usage example:
+   * Location: test11/peg11.h:185
+   * 
+   * @code
+   * 
+   * check(cos(acos(A)), A, "cos(acos(A)) != A", true);
+   * @endcode
+   * 
    * @param val Value
    * @return Result
    */
-  // Reference: [AS], Section 4.4, p79-83
+  /// Reference: [AS], Section 4.4, p79-83
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1254,6 +1299,15 @@ namespace glucat
   /**
    * @brief Hyperbolic sine of multivector
    * @details
+   * 
+   * Usage example:
+   * Location: test11/peg11.h:149
+   * 
+   * @code
+   * 
+   * check(cosh(A)+sinh(A), exp(A), "cosh(A)+sinh(A) != exp(A)");
+   * @endcode
+   * 
    * @param val Value
    * @return Result
    */
@@ -1285,7 +1339,7 @@ namespace glucat
    * @param prechecked Already checked?
    * @return Result
    */
-  // Reference: [AS], Section 4.6, p86-89
+  /// Reference: [AS], Section 4.6, p86-89
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1309,10 +1363,19 @@ namespace glucat
   /**
    * @brief Inverse hyperbolic sine of multivector
    * @details
+   * 
+   * Usage example:
+   * Location: test11/peg11.h:203
+   * 
+   * @code
+   * 
+   * check(sinh(asinh(A)), A, "sinh(asinh(A)) != A", true);
+   * @endcode
+   * 
    * @param val Value
    * @return Result
    */
-  // Reference: [AS], Section 4.6, p86-89
+  /// Reference: [AS], Section 4.6, p86-89
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1355,6 +1418,15 @@ namespace glucat
   /**
    * @brief Sine of multivector
    * @details
+   * 
+   * Usage example:
+   * Location: test11/peg11.h:140
+   * 
+   * @code
+   * 
+   * check(cos(A)+complexifier(A)*sin(A), exp(complexifier(A)*A), ...);
+   * @endcode
+   * 
    * @param val Value
    * @return Result
    */
@@ -1373,7 +1445,7 @@ namespace glucat
    * @param prechecked Already checked?
    * @return Result
    */
-  // Reference: [AS], Section 4.4, p79-83
+  /// Reference: [AS], Section 4.4, p79-83
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1398,10 +1470,19 @@ namespace glucat
   /**
    * @brief Inverse sine of multivector
    * @details
+   * 
+   * Usage example:
+   * Location: test11/peg11.h:197
+   * 
+   * @code
+   * 
+   * check(sin(asin(A)), A, "sin(asin(A)) != A", true);
+   * @endcode
+   * 
    * @param val Value
    * @return Result
    */
-  // Reference: [AS], Section 4.4, p79-83
+  /// Reference: [AS], Section 4.4, p79-83
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1412,6 +1493,15 @@ namespace glucat
   /**
    * @brief Hyperbolic tangent of multivector
    * @details
+   * 
+   * Usage example:
+   * Location: test11/peg11.h:167
+   * 
+   * @code
+   * 
+   * check(cosh(A)*tanh(A), sinh(A), "cosh(A)*tanh(A) != sinh(A)");
+   * @endcode
+   * 
    * @param val Value
    * @return Result
    */
@@ -1442,7 +1532,7 @@ namespace glucat
    * @param prechecked Already checked?
    * @return Result
    */
-  // Reference: [AS], Section 4.6, p86-89
+  /// Reference: [AS], Section 4.6, p86-89
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1464,10 +1554,19 @@ namespace glucat
   /**
    * @brief Inverse hyperbolic tangent of multivector
    * @details
+   * 
+   * Usage example:
+   * Location: test11/peg11.h:215
+   * 
+   * @code
+   * 
+   * check(tanh(atanh(A)), A, "tanh(atanh(A)) != A", true);
+   * @endcode
+   * 
    * @param val Value
    * @return Result
    */
-  // Reference: [AS], Section 4.6, p86-89
+  /// Reference: [AS], Section 4.6, p86-89
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1504,6 +1603,15 @@ namespace glucat
   /**
    * @brief Tangent of multivector
    * @details
+   * 
+   * Usage example:
+   * Location: test11/peg11.h:158
+   * 
+   * @code
+   * 
+   * check(cos(A)*tan(A), sin(A), "cos(A)*tan(A) != sin(A)");
+   * @endcode
+   * 
    * @param val Value
    * @return Result
    */
@@ -1522,7 +1630,7 @@ namespace glucat
    * @param prechecked Already checked?
    * @return Result
    */
-  // Reference: [AS], Section 4.4, p79-83
+  /// Reference: [AS], Section 4.4, p79-83
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1544,10 +1652,19 @@ namespace glucat
   /**
    * @brief Inverse tangent of multivector
    * @details
+   * 
+   * Usage example:
+   * Location: test11/peg11.h:209
+   * 
+   * @code
+   * 
+   * check(tan(atan(A)), A, "tan(atan(A)) != A", true);
+   * @endcode
+   * 
    * @param val Value
    * @return Result
    */
-  // Reference: [AS], Section 4.4, p79-83
+  /// Reference: [AS], Section 4.4, p79-83
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline

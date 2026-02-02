@@ -41,12 +41,12 @@
 
 namespace glucat
 {
-  /// Extra traits which extend numeric limits
+  // Extra traits which extend numeric limits
   // Reference: [AA], 2.4, p. 30-31
 
 #if defined(_GLUCAT_USE_QD) && defined(QD_API)
 
-  /// Macro to apply function _F to type _T
+  // Macro to apply function _F to type _T
 # define _GLUCAT_QD_F(_T, _F) \
   template<>              \
   inline                  \
@@ -55,7 +55,7 @@ namespace glucat
   _F(const _T& val) -> _T \
   { return ::_F(val); }
 
-  /// Smart isnan for dd_real
+  // Smart isnan for dd_real
   template<>
   inline
   auto
@@ -63,7 +63,7 @@ namespace glucat
   isNaN(const dd_real& val) -> bool
   { return val.isnan(); }
 
-  /// Smart isinf for dd_real
+  // Smart isinf for dd_real
   template<>
   inline
   auto
@@ -71,7 +71,7 @@ namespace glucat
   isInf(const dd_real& val) -> bool
   { return val.isinf(); }
 
-  /// Smart isnan or isinf for dd_real
+  // Smart isnan or isinf for dd_real
   template<>
   inline
   auto
@@ -79,7 +79,7 @@ namespace glucat
   isNaN_or_isInf(const dd_real& val) -> bool
   { return val.isnan() || val.isinf(); }
 
-  /// to_int for dd_real
+  // to_int for dd_real
   template<>
   inline
   auto
@@ -87,7 +87,7 @@ namespace glucat
   to_int(const dd_real& val) -> int
   { return ::to_int(val); }
 
-  /// to_double for dd_real
+  // to_double for dd_real
   template<>
   inline
   auto
@@ -95,7 +95,7 @@ namespace glucat
   to_double(const dd_real& val) -> double
   { return ::to_double(val); }
 
-  /// to_scalar_t for dd_real
+  // to_scalar_t for dd_real
   template<>
   template<typename Other_Scalar_T>
   inline
@@ -114,7 +114,7 @@ namespace glucat
     }
   }
 
-  /// Modulo function for dd_real
+  // Modulo function for dd_real
   template<>
   inline
   auto
@@ -122,7 +122,7 @@ namespace glucat
   fmod(const dd_real& lhs, const dd_real& rhs) -> dd_real
   { return ::fmod(lhs, rhs); }
 
-  /// pow for dd_real
+  // pow for dd_real
   template<>
   inline
   auto
@@ -155,7 +155,7 @@ namespace glucat
     return result;
   }
 
-  /// Pi for dd_real
+  // Pi for dd_real
   template<>
   inline
   auto
@@ -163,7 +163,7 @@ namespace glucat
   pi() -> dd_real
   { return dd_real::_pi; }
 
-  /// log(2) for dd_real
+  // log(2) for dd_real
   template<>
   inline
   auto
@@ -171,40 +171,40 @@ namespace glucat
   ln_2() -> dd_real
   { return dd_real::_log2; }
 
-  /// Exp of dd_real
+  // Exp of dd_real
   _GLUCAT_QD_F(dd_real, exp)
 
-  /// Log of dd_real
+  // Log of dd_real
   _GLUCAT_QD_F(dd_real, log)
 
-  /// Cosine of dd_real
+  // Cosine of dd_real
   _GLUCAT_QD_F(dd_real, cos)
 
-  /// Inverse cosine of dd_real
+  // Inverse cosine of dd_real
   _GLUCAT_QD_F(dd_real, acos)
 
-  /// Hyperbolic cosine of dd_real
+  // Hyperbolic cosine of dd_real
   _GLUCAT_QD_F(dd_real, cosh)
 
-  /// Sine of dd_real
+  // Sine of dd_real
   _GLUCAT_QD_F(dd_real, sin)
 
-  /// Inverse sine of dd_real
+  // Inverse sine of dd_real
   _GLUCAT_QD_F(dd_real, asin)
 
-  /// Hyperbolic sine of dd_real
+  // Hyperbolic sine of dd_real
   _GLUCAT_QD_F(dd_real, sinh)
 
-  /// Tangent of dd_real
+  // Tangent of dd_real
   _GLUCAT_QD_F(dd_real, tan)
 
-  /// Inverse tangent of dd_real
+  // Inverse tangent of dd_real
   _GLUCAT_QD_F(dd_real, atan)
 
-  /// Hyperbolic tangent of dd_real
+  // Hyperbolic tangent of dd_real
   _GLUCAT_QD_F(dd_real, tanh)
 
-  /// Smart isnan for qd_real
+  // Smart isnan for qd_real
   template<>
   inline
   auto
@@ -212,7 +212,7 @@ namespace glucat
   isNaN(const qd_real& val) -> bool
   { return val.isnan(); }
 
-  /// Smart isinf for qd_real
+  // Smart isinf for qd_real
   template<>
   inline
   auto
@@ -220,7 +220,7 @@ namespace glucat
   isInf(const qd_real& val) -> bool
   { return val.isinf(); }
 
-  /// Smart isnan or isinf for qd_real
+  // Smart isnan or isinf for qd_real
   template<>
   inline
   auto
@@ -228,7 +228,7 @@ namespace glucat
   isNaN_or_isInf(const qd_real& val) -> bool
   { return val.isnan() || val.isinf(); }
 
-  /// to_int for qd_real
+  // to_int for qd_real
   template<>
   inline
   auto
@@ -236,7 +236,7 @@ namespace glucat
   to_int(const qd_real& val) -> int
   { return ::to_int(val); }
 
-  /// to_double for qd_real
+  // to_double for qd_real
   template<>
   inline
   auto
@@ -244,7 +244,7 @@ namespace glucat
   to_double(const qd_real& val) -> double
   { return ::to_double(val); }
 
-  /// to_scalar_t for qd_real
+  // to_scalar_t for qd_real
   template<>
   template<typename Other_Scalar_T>
   inline
@@ -261,7 +261,7 @@ namespace glucat
     }
   }
 
-  /// Modulo function for qd_real
+  // Modulo function for qd_real
   template<>
   inline
   auto
@@ -269,7 +269,7 @@ namespace glucat
   fmod(const qd_real& lhs, const qd_real& rhs) -> qd_real
   { return ::fmod(lhs, rhs); }
 
-  /// pow for qd_real
+  // pow for qd_real
   template<>
   inline
   auto
@@ -302,7 +302,7 @@ namespace glucat
     return result;
   }
 
-  /// Pi for qd_real
+  // Pi for qd_real
   template<>
   inline
   auto
@@ -310,7 +310,7 @@ namespace glucat
   pi() -> qd_real
   { return qd_real::_pi; }
 
-  /// log(2) for qd_real
+  // log(2) for qd_real
   template<>
   inline
   auto
@@ -318,37 +318,37 @@ namespace glucat
   ln_2() -> qd_real
   { return qd_real::_log2; }
 
-  /// Exp of qd_real
+  // Exp of qd_real
   _GLUCAT_QD_F(qd_real, exp)
 
-  /// Log of qd_real
+  // Log of qd_real
   _GLUCAT_QD_F(qd_real, log)
 
-  /// Cosine of qd_real
+  // Cosine of qd_real
   _GLUCAT_QD_F(qd_real, cos)
 
-  /// Inverse cosine of qd_real
+  // Inverse cosine of qd_real
   _GLUCAT_QD_F(qd_real, acos)
 
-  /// Hyperbolic cosine of qd_real
+  // Hyperbolic cosine of qd_real
   _GLUCAT_QD_F(qd_real, cosh)
 
-  /// Sine of qd_real
+  // Sine of qd_real
   _GLUCAT_QD_F(qd_real, sin)
 
-  /// Inverse sine of qd_real
+  // Inverse sine of qd_real
   _GLUCAT_QD_F(qd_real, asin)
 
-  /// Hyperbolic sine of qd_real
+  // Hyperbolic sine of qd_real
   _GLUCAT_QD_F(qd_real, sinh)
 
-  /// Tangent of qd_real
+  // Tangent of qd_real
   _GLUCAT_QD_F(qd_real, tan)
 
-  /// Inverse tangent of qd_real
+  // Inverse tangent of qd_real
   _GLUCAT_QD_F(qd_real, atan)
 
-  /// Hyperbolic tangent of qd_real
+  // Hyperbolic tangent of qd_real
   _GLUCAT_QD_F(qd_real, tanh)
 
 #endif // !defined(_GLUCAT_USE_QD) || !defined(QD_API)

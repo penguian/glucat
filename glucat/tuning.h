@@ -36,10 +36,10 @@ _GLUCAT_CTAssert(std::numeric_limits<unsigned int>::radix == 2, CannotSetThresho
 
 namespace glucat
 {
-  /// Base class for policies
+  // Base class for policies
   struct policy{};
 
-  /// Precision policy
+  // Precision policy
   enum precision_t
   {
     precision_demoted,
@@ -93,33 +93,33 @@ namespace glucat
     Extra_Different_Bits
     >;
     // Tuning for multiplication
-    /// Minimum index count needed to invoke matrix multiplication algorithm
+    // Minimum index count needed to invoke matrix multiplication algorithm
     enum { mult_matrix_threshold = Mult_Matrix_Threshold };
     // Tuning for sqrt
-    /// Maximum number of steps in cyclic reduction square root iteration
+    // Maximum number of steps in cyclic reduction square root iteration
     enum { cr_sqrt_max_steps = CR_Sqrt_Max_Steps };
-    /// Maximum number of steps in Denman-Beavers square root iteration
+    // Maximum number of steps in Denman-Beavers square root iteration
     enum { db_sqrt_max_steps = DB_Sqrt_Max_Steps };
     // Tuning for log
-    /// Maximum number of incomplete square roots in cascade log algorithm
+    // Maximum number of incomplete square roots in cascade log algorithm
     enum { log_max_outer_steps = Log_Max_Outer_Steps };
-    /// Maximum number of steps in incomplete square root within cascade log algorithm
+    // Maximum number of steps in incomplete square root within cascade log algorithm
     enum { log_max_inner_steps = Log_Max_Inner_Steps };
     // Tuning for basis cache
-    /// Maximum index count of folded frames in basis cache
+    // Maximum index count of folded frames in basis cache
     enum { basis_max_count = Basis_Max_Count };
     // Tuning for FFT
-    /// Minimum map size needed to invoke generalized FFT
+    // Minimum map size needed to invoke generalized FFT
     enum { fast_size_threshold = Fast_Size_Threshold };
-    /// Minimum matrix dimension needed to invoke inverse generalized FFT
+    // Minimum matrix dimension needed to invoke inverse generalized FFT
     enum { inv_fast_dim_threshold = Inv_Fast_Dim_Threshold };
     // Tuning for products (other than geometric product)
-    /// Minimum size needed for to invoke faster products algorithms
+    // Minimum size needed for to invoke faster products algorithms
     enum { products_size_threshold = Products_Size_Threshold };
     // Tuning for precision of exp, log and sqrt functions
-    /// Denominator of proportion of different bits allowed in approximate equality
+    // Denominator of proportion of different bits allowed in approximate equality
     enum { denom_different_bits = Denom_Different_Bits };
-    /// Extra number of different bits allowed in approximate equality
+    // Extra number of different bits allowed in approximate equality
     enum { extra_different_bits = Extra_Different_Bits };
   };
 
@@ -139,9 +139,9 @@ namespace glucat
       Function_Precision
     >;
     using tuning_values_p = Tuning_Values_P;
-    /// Precision used for exp, log and sqrt functions
+    // Precision used for exp, log and sqrt functions
     static const precision_t function_precision = Function_Precision;
-    /// Tuning used for return values of exp, log and sqrt functions
+    // Tuning used for return values of exp, log and sqrt functions
     using tuning_same_p = tuning
     <
       Tuning_Values_P,

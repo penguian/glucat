@@ -39,9 +39,9 @@ namespace glucat { namespace matrix
   // Default index to use with matrices
   using matrix_index_t = std::size_t;
 
-  // =========================================================================
-  // Traits
-  // =========================================================================
+  /// =========================================================================
+  /// Traits
+  /// =========================================================================
   /// Helper trait for complex check
   template< typename Scalar_T > struct is_complex_t : std::false_type {};
   template< typename Scalar_T > struct is_complex_t<std::complex<Scalar_T>> : std::true_type {};
@@ -51,15 +51,15 @@ namespace glucat { namespace matrix
   class matrix_base
   {
   public:
-    /// Return const reference to derived class
+    // Return const reference to derived class
     auto derived() const -> const Derived_T&;
-    /// Return reference to derived class
+    // Return reference to derived class
     auto derived() -> Derived_T&;
 
     // Member functions delegating to namespace matrix implementation
     // defined in matrix_base_imp.h
 
-    /// Generic classify_eigenvalues relies on eigenvalues() member
+    // Generic classify_eigenvalues relies on eigenvalues() member
     auto classify_eigenvalues() const;
   };
 
@@ -68,11 +68,11 @@ namespace glucat { namespace matrix
   /// Helper struct for unit matrix creation
   template< typename Matrix_T > struct unit_helper;
 
-  /// Identity matrix
+  // Identity matrix
   template< typename Matrix_T >
   auto unit(const matrix_index_t dim) -> const Matrix_T;
 
-  /// Classification of eigenvalues of a matrix
+  // Classification of eigenvalues of a matrix
   using eig_case_t = enum
   {
     safe_eigs,
@@ -85,11 +85,11 @@ namespace glucat { namespace matrix
   struct eig_genus
   {
     using Scalar_T = typename Matrix_T::value_type;
-    /// Is the matrix singular?
+    // Is the matrix singular?
     bool m_is_singular = false;
-    /// What kind of eigenvalues does the matrix contain?
+    // What kind of eigenvalues does the matrix contain?
     eig_case_t m_eig_case = safe_eigs;
-    /// Argument such that exp(pi-m_safe_arg) lies between arguments of eigenvalues
+    // Argument such that exp(pi-m_safe_arg) lies between arguments of eigenvalues
     Scalar_T   m_safe_arg = Scalar_T(0);
   };
 } }

@@ -49,7 +49,7 @@ namespace glucat { namespace matrix
   /// Sparse matrix wrapper for Armadillo (forward)
   template< typename Scalar_T > class arma_sparse_wrapper;
 
-  /// Output to stream (forward)
+  // Output to stream (forward)
   template< typename Scalar_T >
   auto operator<< (std::ostream& os, const arma_matrix_wrapper<Scalar_T>& m) -> std::ostream&;
 
@@ -66,152 +66,152 @@ namespace glucat { namespace matrix
 
     MatrixType m_mat;
 
-    // Constructors
+    /// Constructors
     /// Default constructor
     arma_matrix_wrapper() = default;
 
-    /// Constructor with size
+    // Constructor with size
     arma_matrix_wrapper(matrix_index_t rows, matrix_index_t cols);
 
     /// Constructor from other matrix type
     template< typename Other_Matrix_T >
     explicit arma_matrix_wrapper(const Other_Matrix_T& other);
 
-    /// Constructor from eigen_matrix_wrapper
+    // Constructor from eigen_matrix_wrapper
     template< typename Other_Scalar_T >
     explicit arma_matrix_wrapper(const eigen_matrix_wrapper<Other_Scalar_T>& other);
 
-    /// Constructor from eigen_sparse_wrapper
+    // Constructor from eigen_sparse_wrapper
     template< typename Other_Scalar_T >
     explicit arma_matrix_wrapper(const eigen_sparse_wrapper<Other_Scalar_T>& other);
 
-    /// Constructor from arma_sparse_wrapper
+    // Constructor from arma_sparse_wrapper
     template< typename Other_Scalar_T >
     explicit arma_matrix_wrapper(const arma_sparse_wrapper<Other_Scalar_T>& other);
 
     // Copy/Move
-    /// Copy constructor
+    // Copy constructor
     arma_matrix_wrapper(const arma_matrix_wrapper& other);
-    /// Move constructor
+    // Move constructor
     arma_matrix_wrapper(arma_matrix_wrapper&& other) noexcept;
 
-    /// Copy assignment
+    // Copy assignment
     auto operator= (const arma_matrix_wrapper& other) -> arma_matrix_wrapper&;
-    /// Move assignment
+    // Move assignment
     auto operator= (arma_matrix_wrapper&& other) noexcept -> arma_matrix_wrapper&;
-    /// Assignment from sparse wrapper
+    // Assignment from sparse wrapper
     auto operator= (const arma_sparse_wrapper<Scalar_T>& other) -> arma_matrix_wrapper&;
 
     // Conversion to Arma Mat (implicit or explicit)
-    /// Conversion to const MatrixType reference
+    // Conversion to const MatrixType reference
     operator const MatrixType&() const;
-    /// Conversion to MatrixType reference
+    // Conversion to MatrixType reference
     operator MatrixType&();
 
     // Attributes updated automatically by m_mat operations, accessors delegate directly
-    /// Set size
+    // Set size
     void set_size(matrix_index_t rows, matrix_index_t cols);
-    /// Resize
+    // Resize
     void resize(matrix_index_t rows, matrix_index_t cols, bool preserve = false);
 
-    /// Number of rows
+    // Number of rows
     auto nbr_rows() const -> matrix_index_t;
-    /// Number of columns
+    // Number of columns
     auto nbr_cols() const -> matrix_index_t;
 
-    /// Clear
+    // Clear
     void clear();
-    /// Set to zero
+    // Set to zero
     void zeros(matrix_index_t rows, matrix_index_t cols);
-    /// Set size then set to zero
+    // Set size then set to zero
     void zeros();
-    /// Set to identity
+    // Set to identity
     void unit(matrix_index_t rows, matrix_index_t cols);
 
     // Element access
-    /// Element access
+    // Element access
     auto operator() (matrix_index_t i, matrix_index_t j) -> Scalar_T&;
-    /// Const element access
+    // Const element access
     auto operator() (matrix_index_t i, matrix_index_t j) const -> const Scalar_T&;
 
     // Operators
-    /// Add and assign
+    // Add and assign
     auto operator+= (const arma_matrix_wrapper& other) -> arma_matrix_wrapper&;
-    /// Subtract and assign
+    // Subtract and assign
     auto operator-= (const arma_matrix_wrapper& other) -> arma_matrix_wrapper&;
-    /// Multiply by scalar and assign
+    // Multiply by scalar and assign
     auto operator*= (const Scalar_T& val) -> arma_matrix_wrapper&;
-    /// Divide by scalar and assign
+    // Divide by scalar and assign
     auto operator/= (const Scalar_T& val) -> arma_matrix_wrapper&;
-    /// Addition
+    // Addition
     auto operator+ (const arma_matrix_wrapper& other) const -> arma_matrix_wrapper;
-    /// Subtraction
+    // Subtraction
     auto operator- (const arma_matrix_wrapper& other) const -> arma_matrix_wrapper;
-    /// Multiplication
+    // Multiplication
     auto operator* (const arma_matrix_wrapper& other) const -> arma_matrix_wrapper;
-    /// Unary negation
+    // Unary negation
     auto operator- () const -> arma_matrix_wrapper;
-    /// Transpose
+    // Transpose
     auto t() const -> arma_matrix_wrapper;
 
     // Iterator support
-    /// Begin iterator
+    // Begin iterator
     auto begin();
-    /// End iterator
+    // End iterator
     auto end();
-    /// Begin const iterator
+    // Begin const iterator
     auto begin() const;
-    /// End const iterator
+    // End const iterator
     auto end() const;
 
-    /// Has infinity?
+    // Has infinity?
     auto has_inf() const -> bool;
-    /// Has NaN?
+    // Has NaN?
     auto has_nan() const -> bool;
-    /// Is finite?
+    // Is finite?
     auto is_finite() const -> bool;
 
-    /// Trace
+    // Trace
     auto trace() const -> Scalar_T;
-    /// Eigenvalues
+    // Eigenvalues
     auto eigenvalues() const -> std::vector<std::complex<double>>;
-    /// Infinity norm
+    // Infinity norm
     auto norm_inf() const;
-    /// Squared Frobenius norm
+    // Squared Frobenius norm
     auto norm_frob2() const;
-    /// Is NaN?
+    // Is NaN?
     auto isnan() const -> bool;
-    /// Is infinite?
+    // Is infinite?
     auto isinf() const -> bool;
-    /// Number of non-zeros
+    // Number of non-zeros
     auto nnz() const;
 
-    /// Inner product
+    // Inner product
     template< typename Result_Scalar_T, typename Other >
     auto inner(const Other& other) const -> Result_Scalar_T;
 
-    /// Kronecker matrix product
+    // Kronecker matrix product
     auto kron(const arma_matrix_wrapper& other) const -> arma_matrix_wrapper;
-    /// Mixed Kronecker matrix product: Dense x Sparse -> Dense (wrapper)
+    // Mixed Kronecker matrix product: Dense x Sparse -> Dense (wrapper)
     template< typename Other_Scalar_T >
     auto kron(const arma_sparse_wrapper<Other_Scalar_T>& other) const -> arma_matrix_wrapper<Other_Scalar_T>;
 
-    /// Left Kronecker quotient
+    // Left Kronecker quotient
     template< typename RHS_T >
     auto nork(const RHS_T& rhs, bool mono = true) const -> RHS_T;
 
-    /// Output to stream
+    // Output to stream
     friend auto operator<< <>(std::ostream& os, const arma_matrix_wrapper& m) -> std::ostream&;
 
   private:
-    /// Helper to construct from raw arma mat
+    // Helper to construct from raw arma mat
     arma_matrix_wrapper(const MatrixType& m);
-    /// Helper to construct from raw arma mat
+    // Helper to construct from raw arma mat
     arma_matrix_wrapper(MatrixType&& m);
   };
 
   // Mixed op
-  /// Product of scalar and matrix wrapper
+  // Product of scalar and matrix wrapper
   template< typename Scalar_T >
   auto operator* (Scalar_T s, const arma_matrix_wrapper<Scalar_T>& m) -> arma_matrix_wrapper<Scalar_T>
   {
@@ -220,12 +220,12 @@ namespace glucat { namespace matrix
     return result;
   }
 
-  /// Product of matrix wrapper and scalar
+  // Product of matrix wrapper and scalar
   template< typename Scalar_T >
   auto operator* (const arma_matrix_wrapper<Scalar_T>& m, Scalar_T s) -> arma_matrix_wrapper<Scalar_T>
   {  return s * m; }
 
-  /// Output to stream
+  // Output to stream
   template< typename Scalar_T >
   auto operator<< (std::ostream& os, const arma_sparse_wrapper<Scalar_T>& m) -> std::ostream&;
 
@@ -245,91 +245,91 @@ namespace glucat { namespace matrix
     /// Default constructor
     arma_sparse_wrapper() = default;
 
-    /// Constructor from Armadillo SpMat
+    // Constructor from Armadillo SpMat
     explicit arma_sparse_wrapper(const MatrixType& m);
 
-    /// Constructor with size
+    // Constructor with size
     arma_sparse_wrapper(matrix_index_t rows, matrix_index_t cols);
 
-    /// Copy constructor
+    // Copy constructor
     arma_sparse_wrapper(const arma_sparse_wrapper& other);
-    /// Move constructor
+    // Move constructor
     arma_sparse_wrapper(arma_sparse_wrapper&& other) noexcept;
 
-    /// Copy assignment
+    // Copy assignment
     auto operator= (const arma_sparse_wrapper& other) -> arma_sparse_wrapper&;
-    /// Move assignment
+    // Move assignment
     auto operator= (arma_sparse_wrapper&& other) noexcept -> arma_sparse_wrapper&;
 
-    /// Set size
+    // Set size
     void set_size(matrix_index_t rows, matrix_index_t cols);
 
-    /// Resize
+    // Resize
     void resize(matrix_index_t rows, matrix_index_t cols, bool preserve = false);
 
-    /// Clear
+    // Clear
     void clear();
-    /// Set to zero
+    // Set to zero
     void zeros(matrix_index_t rows, matrix_index_t cols);
-    /// Set to zero
+    // Set to zero
     void zeros();
 
     using const_iterator = typename MatrixType::const_iterator;
 
-    /// Begin iterator
+    // Begin iterator
     auto begin() const -> const_iterator;
-    /// End iterator
+    // End iterator
     auto end() const -> const_iterator;
 
-    /// Number of rows
+    // Number of rows
     auto nbr_rows() const -> matrix_index_t;
-    /// Number of columns
+    // Number of columns
     auto nbr_cols() const -> matrix_index_t;
 
-    /// Const element access
+    // Const element access
     auto operator() (matrix_index_t i, matrix_index_t j) const -> Scalar_T;
-    /// Element access
+    // Element access
     auto operator() (matrix_index_t i, matrix_index_t j) -> auto;
 
-    /// Add and assign
+    // Add and assign
     auto operator+= (const arma_sparse_wrapper& other) -> arma_sparse_wrapper&;
-    /// Multiply by sparse wrapper
+    // Multiply by sparse wrapper
     auto operator* (const arma_sparse_wrapper& other) const -> arma_sparse_wrapper;
-    /// Multiply by scalar and assign
+    // Multiply by scalar and assign
     auto operator*= (const Scalar_T& val) -> arma_sparse_wrapper&;
-    /// Mixed Kronecker matrix product: Sparse x Dense -> Dense (wrapper)
+    // Mixed Kronecker matrix product: Sparse x Dense -> Dense (wrapper)
     template< typename Other_Scalar_T >
     auto kron(const arma_matrix_wrapper<Other_Scalar_T>& other) const -> arma_matrix_wrapper<Other_Scalar_T>;
 
-    /// Left Kronecker quotient
+    // Left Kronecker quotient
     template< typename RHS_T >
     auto nork(const RHS_T& rhs, bool mono = true) const -> RHS_T;
 
-    /// Output to stream
+    // Output to stream
     friend auto operator<< <>(std::ostream& os, const arma_sparse_wrapper& m) -> std::ostream&;
 
     // New Member Functions
-    /// Trace
+    // Trace
     auto trace() const;
-    /// Eigenvalues
+    // Eigenvalues
     auto eigenvalues() const;
-    /// Infinity norm
+    // Infinity norm
     auto norm_inf() const;
-    /// Squared Frobenius norm
+    // Squared Frobenius norm
     auto norm_frob2() const;
-    /// Is NaN?
+    // Is NaN?
     auto isnan() const -> bool;
-    /// Is infinite?
+    // Is infinite?
     auto isinf() const -> bool;
-    /// Number of non-zeros
+    // Number of non-zeros
     auto nnz() const;
 
-    /// Inner product
+    // Inner product
     template< typename Result_Scalar_T, typename Other >
     auto inner(const Other& other) const -> Result_Scalar_T;
   };
 
-  /// Product of scalar and sparse wrapper
+  // Product of scalar and sparse wrapper
   template< typename Scalar_T >
   auto operator* (Scalar_T s, const arma_sparse_wrapper<Scalar_T>& m) -> arma_sparse_wrapper<Scalar_T>
   {
@@ -338,12 +338,12 @@ namespace glucat { namespace matrix
     return result;
   }
 
-  /// Product of sparse wrapper and scalar
+  // Product of sparse wrapper and scalar
   template< typename Scalar_T >
   auto operator* (const arma_sparse_wrapper<Scalar_T>& m, Scalar_T s) -> arma_sparse_wrapper<Scalar_T>
   { return s * m; }
 
-  /// Sum of sparse wrappers
+  // Sum of sparse wrappers
   template< typename Scalar_T >
   auto operator+ (const arma_sparse_wrapper<Scalar_T>& lhs, const arma_sparse_wrapper<Scalar_T>& rhs) -> arma_sparse_wrapper<Scalar_T>
   {
@@ -352,7 +352,7 @@ namespace glucat { namespace matrix
     return result;
   }
 
-  /// Difference of sparse wrappers
+  // Difference of sparse wrappers
   template< typename Scalar_T >
   auto operator- (const arma_sparse_wrapper<Scalar_T>& lhs, const arma_sparse_wrapper<Scalar_T>& rhs) -> arma_sparse_wrapper<Scalar_T>
   {

@@ -36,18 +36,18 @@
 namespace glucat
 {
   /// Random number generator with single instance per Scalar_T
-  // Enforce singleton
-  // Reference: A. Alexandrescu, "Modern C++ Design", Chapter 6
+  /// Enforce singleton
+  /// Reference: A. Alexandrescu, "Modern C++ Design", Chapter 6
   template< typename Scalar_T >
   class random_generator
   {
   private:
-    /// Friend declaration to avoid compiler warning:
-    /// "... only defines a private destructor and has no friends"
-    /// Ref: Carlos O'Ryan, ACE http://doc.ece.uci.edu
+    // Friend declaration to avoid compiler warning:
+    // "... only defines a private destructor and has no friends"
+    // Ref: Carlos O'Ryan, ACE http://doc.ece.uci.edu
     friend class friend_for_private_destructor;
   public:
-    /// Single instance of Random number generator
+    // Single instance of Random number generator
     static auto generator() -> random_generator& { static random_generator g; return g;}
     random_generator(const random_generator&) = delete;
     auto operator= (const random_generator&) -> random_generator& = delete;

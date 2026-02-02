@@ -48,13 +48,13 @@ namespace glucat { namespace matrix
   template< typename Scalar_T >
   struct is_arma_supported : std::false_type {};
 
-  // Declarations to satisfy the compiler
+  /// Declarations to satisfy the compiler
   /// Matrix wrapper for Eigen (forward)
   template< typename Scalar_T > class eigen_matrix_wrapper;
   /// Sparse matrix wrapper for Eigen (forward)
   template< typename Scalar_T > class eigen_sparse_wrapper;
 
-  // Dense Selector
+  /// Dense Selector
   /// Dense matrix type selector
   template< typename Scalar_T, bool UseArma = is_arma_supported<Scalar_T>::value >
   struct matrix_type_selector
@@ -62,7 +62,7 @@ namespace glucat { namespace matrix
     using type = eigen_matrix_wrapper<Scalar_T>;
   };
 
-  /// Dense matrix type selector
+  // Dense matrix type selector
   template< typename Scalar_T >
   using matrix_t = typename matrix_type_selector<Scalar_T>::type;
 
@@ -73,7 +73,7 @@ namespace glucat { namespace matrix
     using type = eigen_sparse_wrapper<Scalar_T>;
   };
 
-  /// Sparse matrix type selector
+  // Sparse matrix type selector
   template< typename Scalar_T >
   using sparse_matrix_t = typename sparse_matrix_type_selector<Scalar_T>::type;
 
@@ -154,7 +154,7 @@ namespace glucat { namespace matrix
     /// Move assignment
     auto operator= (sparse_matrix&&) -> sparse_matrix& = default;
 
-    /// Constructor from other matrix type
+    // Constructor from other matrix type
     template< typename Other_Matrix_T >
     sparse_matrix(const Other_Matrix_T& other);
   };

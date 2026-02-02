@@ -104,7 +104,7 @@ namespace glucat
    * @details
    * @param sub Value
    */
-  // Reference: [P] Table 15.27, p 133
+  /// Reference: [P] Table 15.27, p 133
   template< typename Matrix_Index_T, const index_t LO, const index_t HI >
   inline
   static
@@ -115,6 +115,15 @@ namespace glucat
   /**
    * @brief Default constructor
    * @details
+   * 
+   * Usage example:
+   * Location: glucat/framed_multi_imp.h:1136
+   * 
+   * @code
+   *
+   * auto result = matrix_multi_t(Scalar_T(1), this->frame());
+   * @endcode
+   * 
    * @tparam Scalar_T
    * @tparam LO
    * @tparam HI
@@ -584,34 +593,42 @@ namespace glucat
   }
 
   /**
-   * @brief Geometric sum of multivector and scalar
+   * @brief Add scalar
    * @details
-   * @tparam Scalar_T
-   * @tparam LO
-   * @tparam HI
-   * @tparam Tune_P
-   * @param scr Value
-   * @return Reference to this
+   * 
+   * Usage example:
+   * Location: glucat/clifford_algebra_imp.h:237
+   * 
+   * @code
+   * 
+   * return result += scr;
+   * @endcode
+   * 
+   * @param scr Scalar
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
   auto
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
   operator+= (const Scalar_T& scr) -> multivector_t&
   { return *this += term_t(index_set_t(), scr); }
 
   /**
-   * @brief Geometric sum
+   * @brief Add multivector
    * @details
-   * @tparam Scalar_T
-   * @tparam LO
-   * @tparam HI
-   * @tparam Tune_P
+   * 
+   * Usage example:
+   * Location: glucat/framed_multi_imp.h:635
+   * 
+   * @code
+   * 
+   * result += lhs_term * rhs_term;
+   * @endcode
+   * 
    * @param rhs Right hand side
-   * @return Reference to this
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
   auto
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
   operator+= (const multivector_t& rhs) -> multivector_t&
@@ -632,17 +649,21 @@ namespace glucat
   }
 
   /**
-   * @brief Geometric difference of multivector and scalar
+   * @brief Subtract scalar
    * @details
-   * @tparam Scalar_T
-   * @tparam LO
-   * @tparam HI
-   * @tparam Tune_P
-   * @param scr Value
-   * @return Reference to this
+   * 
+   * Usage example:
+   * Location: glucat/clifford_algebra_imp.h:291
+   * 
+   * @code
+   * 
+   * return result -= scr;
+   * @endcode
+   * 
+   * @param scr Scalar
+   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
   auto
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
   operator-= (const Scalar_T& scr) -> multivector_t&
@@ -680,16 +701,20 @@ namespace glucat
   }
 
   /**
-   * @brief Unary -
+   * @brief Unary minus
    * @details
-   * @tparam Scalar_T
-   * @tparam LO
-   * @tparam HI
-   * @tparam Tune_P
+   * 
+   * Usage example:
+   * Location: test11/peg11.h:277
+   * 
+   * @code
+   * 
+   * transcendtest(-m_(1));
+   * @endcode
+   * 
    * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
   auto
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
   operator- () const -> const multivector_t
@@ -725,6 +750,15 @@ namespace glucat
   /**
    * @brief Geometric product
    * @details
+   * 
+   * Usage example:
+   * Location: glucat/framed_multi_imp.h:1101
+   * 
+   * @code
+   *
+   * return matrix_multi_t(rhs) * matrix_multi_t(lhs) / matrix_multi_t(rhs.involute());
+   * @endcode
+   * 
    * @tparam Scalar_T
    * @tparam LO
    * @tparam HI
@@ -903,6 +937,15 @@ namespace glucat
   /**
    * @brief Hestenes scalar product
    * @details
+   * 
+   * Usage example:
+   * Location: test00/peg00.h:260
+   * 
+   * @code
+   * 
+   * const scalar_t scalar_lhs = star(a, b);
+   * @endcode
+   * 
    * @tparam Scalar_T
    * @tparam LO
    * @tparam HI
@@ -937,6 +980,15 @@ namespace glucat
   /**
    * @brief Geometric quotient
    * @details
+   * 
+   * Usage example:
+   * Location: test00/peg00.h:114
+   * 
+   * @code
+   * 
+   * rhs = (a_r * b_s)(index_t(std::abs(r-s)));
+   * @endcode
+   * 
    * @tparam Scalar_T
    * @tparam LO
    * @tparam HI
@@ -1573,14 +1625,9 @@ namespace glucat
   { return framed_multi_t(*this).truncated(limit); }
 
   /**
-   * @brief Add a term, if non-zero
-   * @details
-   * @tparam Scalar_T
-   * @tparam LO
-   * @tparam HI
-   * @tparam Tune_P
-   * @param term Value
-   * @return Reference to this
+   * @brief Add a term.
+   * @param term The term to add.
+   * @return Reference to this.
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1796,8 +1843,8 @@ namespace glucat
      * @return Result
      */
     friend class friend_for_private_destructor;
-    // Enforce singleton
-    // Reference: A. Alexandrescu, "Modern C++ Design", Chapter 6
+    /// Enforce singleton
+    /// Reference: A. Alexandrescu, "Modern C++ Design", Chapter 6
     basis_table() = default;
     ~basis_table() = default;
   public:
@@ -2060,7 +2107,7 @@ namespace pade {
    * @details
    * @return Result
    */
-  // Reference: [Z], Pade1
+  /// Reference: [Z], Pade1
   template< typename Scalar_T >
   struct pade_sqrt_numer
   {
@@ -2081,7 +2128,7 @@ namespace pade {
    * @details
    * @return Result
    */
-  // Reference: [Z], Pade1
+  /// Reference: [Z], Pade1
   template< typename Scalar_T >
   struct pade_sqrt_denom
   {
@@ -2429,7 +2476,7 @@ namespace pade {
    * @details
    * @return Result
    */
-  // Reference: [Z], Pade1
+  /// Reference: [Z], Pade1
   template< typename Scalar_T >
   struct pade_log_numer
   {
@@ -2450,7 +2497,7 @@ namespace pade {
    * @details
    * @return Result
    */
-  // Reference: [Z], Pade1
+  /// Reference: [Z], Pade1
   template< typename Scalar_T >
   struct pade_log_denom
   {

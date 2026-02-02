@@ -64,8 +64,18 @@ namespace glucat
   { return static_cast<float>(numeric_traits<Other_Scalar_T>::to_double(val)); }
 
   /**
-   * @brief Cast to double
+   * @brief to_scalar_t
    * @details
+   *
+   * Usage example:
+   * Location: glucat/framed_multi_imp.h:125
+   *
+   * @code
+   *
+   * this->insert(term_t(val_term.first, numeric_traits<Scalar_T>::to_scalar_t(val_term.second)));
+   * @endcode
+   *
+   * @tparam Other_Scalar_T
    * @param val Value
    * @return Result
    */
@@ -177,6 +187,15 @@ namespace glucat
   /**
    * @brief Cast to promote
    * @details
+   * 
+   * Usage example:
+   * Location: glucat/framed_multi_imp.h:2327
+   * 
+   * @code
+   *
+   * return to_promote(val);
+   * @endcode
+   * 
    * @tparam Scalar_T
    * @param val Value
    * @return Result
@@ -193,6 +212,15 @@ namespace glucat
   /**
    * @brief Cast to demote
    * @details
+   * 
+   * Usage example:
+   * Location: glucat/framed_multi_imp.h:2310
+   * 
+   * @code
+   *
+   * return to_demote(val);
+   * @endcode
+   * 
    * @tparam Scalar_T
    * @param val Value
    * @return Result

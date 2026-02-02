@@ -37,7 +37,7 @@
 
 namespace glucat
 {
-  /// Abstract exception class
+  // Abstract exception class
   class glucat_error : public std::logic_error
   {
   public:

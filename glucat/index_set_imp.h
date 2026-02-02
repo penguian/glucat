@@ -217,6 +217,15 @@ namespace glucat
   /**
    * @brief Symmetric set difference: exclusive or
    * @details
+   * 
+   * Usage example:
+   * Location: glucat/framed_multi_imp.h:2433
+   * 
+   * @code
+   *
+   * return term_t(lhs.first ^ rhs.first, crd_of_mult(lhs, rhs));
+   * @endcode
+   * 
    * @tparam LO
    * @tparam HI
    * @param lhs Left hand side
@@ -793,7 +802,7 @@ namespace glucat
    * @param b Value
    * @return Result
    */
-  //  eg. {3,4,5} is less than {3,7,8}
+  ///  eg. {3,4,5} is less than {3,7,8}
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -812,7 +821,7 @@ namespace glucat
    * @param rhs Right hand side
    * @return Result
    */
-  //  eg. {3,4,5} is less than {3,7,8}
+  ///  eg. {3,4,5} is less than {3,7,8}
   template<const index_t LO, const index_t HI>
   inline
   auto
@@ -1173,6 +1182,15 @@ namespace glucat
   /**
    * @brief Sign of geometric product of two Clifford basis elements
    * @details
+   * 
+   * Usage example:
+   * Location: glucat/framed_multi_imp.h:2414
+   * 
+   * @code
+   *
+   * { return lhs.first.sign_of_mult(rhs.first) * lhs.second * rhs.second; }
+   * @endcode
+   * 
    * @tparam LO
    * @tparam HI
    * @param rhs Right hand side

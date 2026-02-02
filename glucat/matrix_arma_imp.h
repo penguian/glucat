@@ -1379,7 +1379,7 @@ namespace glucat { namespace matrix
   // unit_helper Specializations
   // =========================================================================
 
-  // Specialization for Armadillo Wrapper
+  /// Specialization for Armadillo Wrapper
   template< typename Scalar_T >
   struct unit_helper< arma_matrix_wrapper<Scalar_T> >
   {
@@ -1391,7 +1391,7 @@ namespace glucat { namespace matrix
     }
   };
 
-  // Specialization for Armadillo Sparse Wrapper
+  /// Specialization for Armadillo Sparse Wrapper
   template< typename Scalar_T >
   struct unit_helper< arma_sparse_wrapper<Scalar_T> >
   {

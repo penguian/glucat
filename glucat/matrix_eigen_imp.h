@@ -1517,7 +1517,7 @@ namespace glucat { namespace matrix
 
   // =========================================================================
 
-  // Specialization for Eigen Wrapper
+  /// Specialization for Eigen Wrapper
   template< typename Scalar_T >
   struct unit_helper< eigen_matrix_wrapper<Scalar_T> >
   {
@@ -1529,7 +1529,7 @@ namespace glucat { namespace matrix
     }
   };
 
-  // Specialization for Eigen Sparse Wrapper
+  /// Specialization for Eigen Sparse Wrapper
   template< typename Scalar_T >
   struct unit_helper< eigen_sparse_wrapper<Scalar_T> >
   {
