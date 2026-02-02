@@ -403,3 +403,11 @@ Some code conventions are:
 * `Other_Sentence_Case`: Other template parameters, including template template
 parameters.
 * `ALL_CAPS_WITH_UNDERSCORES`: A global constant defined in `<glucat/global.h>`
+
+
+Recent Changes
+==============
+
+As of GluCat 0.13.0+, the following deprecated functions have been removed:
+* `elliptic`: Use `complexifier` instead.
+* `imag`: This function was deprecated and always returned 0.
