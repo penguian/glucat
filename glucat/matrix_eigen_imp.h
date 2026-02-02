@@ -1541,6 +1541,72 @@ namespace glucat { namespace matrix
     }
   };
 
+  /**
+   * @brief Product of sparse wrapper and scalar
+   * @details
+   * @tparam Scalar_T
+   * @param m Matrix
+   * @param s Scalar
+   * @return Result
+   */
+  template< typename Scalar_T >
+  inline auto
+  operator* (const eigen_sparse_wrapper<Scalar_T>& m, Scalar_T s) -> eigen_sparse_wrapper<Scalar_T>
+  {
+    eigen_sparse_wrapper<Scalar_T> res(m);
+    res *= s;
+    return res;
+  }
+
+  /**
+   * @brief Product of scalar and sparse wrapper
+   * @details
+   * @tparam Scalar_T
+   * @param s Scalar
+   * @param m Matrix
+   * @return Result
+   */
+  template< typename Scalar_T >
+  inline auto
+  operator* (Scalar_T s, const eigen_sparse_wrapper<Scalar_T>& m) -> eigen_sparse_wrapper<Scalar_T>
+  {
+    return m * s;
+  }
+
+  /**
+   * @brief Sum of sparse wrappers
+   * @details
+   * @tparam Scalar_T
+   * @param lhs Left Hand Side
+   * @param rhs Right Hand Side
+   * @return Result
+   */
+  template< typename Scalar_T >
+  inline auto
+  operator+ (const eigen_sparse_wrapper<Scalar_T>& lhs, const eigen_sparse_wrapper<Scalar_T>& rhs) -> eigen_sparse_wrapper<Scalar_T>
+  {
+    eigen_sparse_wrapper<Scalar_T> res(lhs);
+    res += rhs;
+    return res;
+  }
+
+  /**
+   * @brief Difference of sparse wrappers
+   * @details
+   * @tparam Scalar_T
+   * @param lhs Left Hand Side
+   * @param rhs Right Hand Side
+   * @return Result
+   */
+  template< typename Scalar_T >
+  inline auto
+  operator- (const eigen_sparse_wrapper<Scalar_T>& lhs, const eigen_sparse_wrapper<Scalar_T>& rhs) -> eigen_sparse_wrapper<Scalar_T>
+  {
+    eigen_sparse_wrapper<Scalar_T> res(lhs);
+    res -= rhs;
+    return res;
+  }
+
 } }
 
 #endif // _GLUCAT_MATRIX_EIGEN_IMP_H

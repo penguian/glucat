@@ -375,37 +375,19 @@ namespace glucat { namespace matrix
 
   // Product of sparse wrapper and scalar
   template< typename Scalar_T >
-  auto operator* (const eigen_sparse_wrapper<Scalar_T>& m, Scalar_T s) -> eigen_sparse_wrapper<Scalar_T>
-  {
-    eigen_sparse_wrapper<Scalar_T> res(m);
-    res *= s;
-    return res;
-  }
+  auto operator* (const eigen_sparse_wrapper<Scalar_T>& m, Scalar_T s) -> eigen_sparse_wrapper<Scalar_T>;
 
   // Product of scalar and sparse wrapper
   template< typename Scalar_T >
-  auto operator* (Scalar_T s, const eigen_sparse_wrapper<Scalar_T>& m) -> eigen_sparse_wrapper<Scalar_T>
-  {
-    return m * s;
-  }
+  auto operator* (Scalar_T s, const eigen_sparse_wrapper<Scalar_T>& m) -> eigen_sparse_wrapper<Scalar_T>;
 
   // Sum of sparse wrappers
   template< typename Scalar_T >
-  auto operator+ (const eigen_sparse_wrapper<Scalar_T>& lhs, const eigen_sparse_wrapper<Scalar_T>& rhs) -> eigen_sparse_wrapper<Scalar_T>
-  {
-    eigen_sparse_wrapper<Scalar_T> res(lhs);
-    res += rhs;
-    return res;
-  }
+  auto operator+ (const eigen_sparse_wrapper<Scalar_T>& lhs, const eigen_sparse_wrapper<Scalar_T>& rhs) -> eigen_sparse_wrapper<Scalar_T>;
 
   // Difference of sparse wrappers
   template< typename Scalar_T >
-  auto operator- (const eigen_sparse_wrapper<Scalar_T>& lhs, const eigen_sparse_wrapper<Scalar_T>& rhs) -> eigen_sparse_wrapper<Scalar_T>
-  {
-    eigen_sparse_wrapper<Scalar_T> res(lhs);
-    res -= rhs;
-    return res;
-  }
+  auto operator- (const eigen_sparse_wrapper<Scalar_T>& lhs, const eigen_sparse_wrapper<Scalar_T>& rhs) -> eigen_sparse_wrapper<Scalar_T>;
 } }
 
 #endif  // _GLUCAT_MATRIX_EIGEN_H
