@@ -473,14 +473,6 @@ namespace glucat
   auto
   real(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T;
 
-  /// Imaginary part: deprecated (always 0)
-  template
-  <
-    template<typename, const index_t, const index_t, typename> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
-  >
-  auto
-  imag(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T;
 
   /// Pure part
   template

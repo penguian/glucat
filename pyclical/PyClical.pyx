@@ -1475,16 +1475,6 @@ cpdef inline real(obj):
     """
     return clifford(obj).scalar()
 
-cpdef inline imag(obj):
-    """
-    Imaginary part: deprecated (always 0).
-
-    >>> imag(clifford("1+{1}+{1,2}"))
-    0.0
-    >>> imag(clifford("{1,2}"))
-    0.0
-    """
-    return 0.0
 
 cpdef inline pure(obj):
     """

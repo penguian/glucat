@@ -100,7 +100,6 @@ cdef extern from "PyClical.h":
     bint     approx_equal(Clifford Lhs, Clifford Rhs, scalar_t threshold, scalar_t tol)
     scalar_t scalar(Clifford Clf)
     scalar_t real(Clifford Clf)
-    scalar_t imag(Clifford Clf)
     Clifford pure(Clifford Clf)
     Clifford even(Clifford Clf)
     Clifford odd(Clifford Clf)
