@@ -571,7 +571,7 @@ namespace glucat
   { // multiply coordinates of all terms by -1
     auto result = *this;
     for (auto& result_term : result)
-      result_term.second *= Scalar_T(-1);
+      const_cast<Scalar_T&>(result_term.second) *= Scalar_T(-1);
     return result;
   }
 
@@ -601,7 +601,7 @@ namespace glucat
         this->clear();
     else
       for (auto& this_term : *this)
-        this_term.second *= scr;
+        const_cast<Scalar_T&>(this_term.second) *= scr;
     return *this;
   }
 
@@ -631,6 +631,7 @@ namespace glucat
   {
     using multivector_t = framed_multi<Scalar_T,LO,HI,Tune_P>;
     using traits_t = numeric_traits<Scalar_T>;
+    using term_t = typename multivector_t::term_t;
 
     if (lhs.isnan() || rhs.isnan())
       return traits_t::NaN();
@@ -647,7 +648,7 @@ namespace glucat
         _GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
       for (auto& lhs_term : lhs)
         for (auto& rhs_term : rhs)
-          result += lhs_term * rhs_term;
+          result += term_t(lhs_term) * term_t(rhs_term);
       return result;
     }
     else
@@ -747,7 +748,7 @@ namespace glucat
             {
               const auto rhs_it = rhs.find(rhs_ist);
               if (rhs_it != rhs_end)
-                result_crd += crd_of_mult(*lhs_it, *rhs_it);
+                result_crd += crd_of_mult(term_t(*lhs_it), term_t(*rhs_it));
             }
           }
         }
@@ -761,7 +762,7 @@ namespace glucat
       for (auto& lhs_term : lhs)
         for (auto& rhs_term : rhs)
           if ((lhs_term.first & rhs_term.first) == empty_set)
-            result += lhs_term * rhs_term;
+            result += term_t(lhs_term) * term_t(rhs_term);
       return result;
     }
   }
@@ -859,7 +860,7 @@ namespace glucat
             {
               const auto rhs_it = rhs.find(comp_ist);
               if (rhs_it != rhs_end)
-                result_crd += crd_of_mult(*lhs_it, *rhs_it);
+                result_crd += crd_of_mult(term_t(*lhs_it), term_t(*rhs_it));
             }
           }
           if (result_stv != 0)
@@ -871,7 +872,7 @@ namespace glucat
               {
                 const auto lhs_it = lhs.find(comp_ist);
                 if (lhs_it != lhs_end)
-                  result_crd += crd_of_mult(*lhs_it, *rhs_it);
+                  result_crd += crd_of_mult(term_t(*lhs_it), term_t(*rhs_it));
               }
             }
           }
@@ -894,7 +895,7 @@ namespace glucat
             {
               const auto our_ist = lhs_ist | rhs_ist;
               if ((lhs_ist == our_ist) || (rhs_ist == our_ist))
-                result += lhs_term * rhs_term;
+                result += term_t(lhs_term) * term_t(rhs_term);
             }
           }
       }
@@ -993,7 +994,7 @@ namespace glucat
             {
               const auto lhs_it = lhs.find(comp_ist);
               if (lhs_it != lhs_end)
-                result_crd += crd_of_mult(*lhs_it, *rhs_it);
+                result_crd += crd_of_mult(term_t(*lhs_it), term_t(*rhs_it));
             }
           }
         }
@@ -1010,7 +1011,7 @@ namespace glucat
         {
           const index_set_t lhs_ist = lhs_term.first;
           if ((lhs_ist | rhs_ist) == rhs_ist)
-            result += lhs_term * rhs_term;
+            result += term_t(lhs_term) * term_t(rhs_term);
         }
       }
     }
@@ -1105,7 +1106,7 @@ namespace glucat
         this->clear();
     else
       for (auto& this_term : *this)
-        this_term.second /= scr;
+        const_cast<Scalar_T&>(this_term.second) /= scr;
     return *this;
   }
 
@@ -1504,7 +1505,7 @@ namespace glucat
     for (auto& result_term : result)
     { // for a k-vector u, involute(u) == (-1)^k * u
       if ((result_term.first.count() % 2) == 1)
-        result_term.second *= Scalar_T(-1);
+        const_cast<Scalar_T&>(result_term.second) *= Scalar_T(-1);
     }
     return result;
   }
@@ -1531,7 +1532,7 @@ namespace glucat
       {
       case 2:
       case 3:
-        result_term.second *= Scalar_T(-1);
+        const_cast<Scalar_T&>(result_term.second) *= Scalar_T(-1);
         break;
       default:
         break;
@@ -1554,18 +1555,23 @@ namespace glucat
   conj() const -> const multivector_t
   {
     auto result = *this;
-    for (auto& result_term : result)
+    // Use explicit iterator to avoid deduction issues with robin_map
+    using map_t = typename framed_multi<Scalar_T,LO,HI,Tune_P>::map_t;
+    for (typename map_t::iterator it = result.begin(); it != result.end(); ++it)
+    {
+      auto& result_term = *it;
       // For a k-vector u, conj(u) = { -u, k == 1,2 (mod 4)
       //                             {  u, k == 0,3 (mod 4)
       switch (result_term.first.count() % 4)
       {
       case 1:
       case 2:
-        result_term.second *= Scalar_T(-1);
+        const_cast<Scalar_T&>(result_term.second) *= Scalar_T(-1);
         break;
       default:
         break;
       }
+    }
     return result;
   }
 
@@ -2047,7 +2053,7 @@ namespace glucat
         // Erase term if resulting coordinate is 0
         this->erase(this_it);
       else
-        this_it->second += term.second;
+        const_cast<Scalar_T&>(this_it->second) += term.second;
     }
     return *this;
   }

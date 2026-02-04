@@ -127,10 +127,16 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     [glucat_use_pyclical="yes"])
 
   AC_ARG_WITH([demo-dir],
-    AS_HELP_STRING([--with-demo-dir=DIR],                [define the installation directory for the PyClical demos [default=$DATAROOTDIR/pyclical/demos]]),,
+    AS_HELP_STRING([--with-demo-dir=DIR],[define the installation directory for the PyClical demos [default=$DATAROOTDIR/pyclical/demos]]),,
     [with_demo_dir="${datarootdir}/pyclical/demos"])
   demodir="$with_demo_dir"
   AC_SUBST([demodir])
+
+
+  AC_ARG_WITH([unordered-map],
+    AS_HELP_STRING([--with-unordered-map=ARG],[use specified map implementation (boost|std) [default=boost]]),
+    [glucat_map_impl="$withval"],
+    [glucat_map_impl="boost"])
 
   AC_ARG_WITH([qd],           [[  --with-qd               use dd_real and qd_real [default=no]]],
     [glucat_use_qd="$withval"],
@@ -139,6 +145,21 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   AC_ARG_WITH([armadillo],    [[  --with-armadillo        use Armadillo library [default=no]]],
     [glucat_use_armadillo="$withval"],
     [glucat_use_armadillo="no"])
+
+  if [[[ "$glucat_map_impl" == "boost" ]]]; then
+    GLUCAT_CHECK_HEADERS([boost/unordered/unordered_flat_map.hpp],
+    [
+      CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_BOOST_FLAT_MAP"
+      AC_MSG_NOTICE([boost::unordered_flat_map support enabled.])
+    ],
+    [
+      AC_MSG_WARN([boost/unordered/unordered_flat_map.hpp not found. Defaulting to std::unordered_map.])
+      glucat_map_impl="std"
+    ],[])
+  elif [[[ "$glucat_map_impl" != "std" ]]]; then
+     AC_MSG_WARN([Unknown map implementation "$glucat_map_impl". Defaulting to std.])
+     glucat_map_impl="std"
+  fi
 
   if [[[ "$glucat_use_armadillo" == "yes" ]]]; then
     glucat_have_libarmadillo="no"
