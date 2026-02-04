@@ -381,6 +381,16 @@ needs to pass the flags `-D_GLUCAT_USE_OPENMP` and the OpenMP compiler flags
 to the C++ compiler.
 
 
+```
+  --with-unordered-map=boost|std
+                          use specified map implementation [default=boost]
+```
+This option chooses the implementation of the hash map used in `framed_multi`.
+The default is `boost`, which uses `boost::unordered_flat_map` (requires `Boost 1.83.0` or later).
+The value `std` uses `std::unordered_map`.
+Use `boost` for potentially better performance.
+
+
 Operation Controls
 ------------------
 
