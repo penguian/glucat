@@ -504,7 +504,7 @@ The test_runtime directory
 The test runtime directory `./test_runtime` contains sample test output files.
 
 The sample test output files include `eg3.res`, `gfft_test-11.out`, `products-8.out`,
-`squaring-11.out` and `transforms-8.out`. There are also 22 versions of the output
+`squaring-11.out` and `transforms-8.out`. There are also 24 versions of the output
 of the regression tests. These are described below.
 
 `./test_runtime` also contains the test input file `eg8.txt`. This file is needed
@@ -528,8 +528,8 @@ order. With zero parameters, all examples from `00` to `17` are run in order.
 Many of the examples are run twice - once with `framed_multi<Scalar_T>` and once
 with `matrix_multi<Scalar_T>`.
 
-The `./test_runtime` directory contains 22 sample versions of the regression test
-results, corresponding to 11 different combinations of configuration parameters,
+The `./test_runtime` directory contains 24 sample versions of the regression test
+results, corresponding to 12 different combinations of configuration parameters,
 for two different sets of tests: the complete set of 18 tests, and a subset of 3
 tests. The tests were all run on an 8 core 
 `AMD Ryzen 7 8840HS w/ Radeon 780M Graphics` @ 3.3 GHz with
@@ -577,39 +577,45 @@ in `./test/config-options.txt` and are:
 ```
 ./configure --prefix=$HOME/opt
 ```
-  7. `test.configure.qd.out`:
 
-```
-./configure --with-qd
-```
-  8. `test.configure.armadillo.out`:
+  7. `test.configure.armadillo.out`:
 
 ```
 ./configure --with-armadillo
 ```
-  9. `test.configure.armadillo-debug-yes.out`:
+  7. `test.configure.armadillo-debug-yes.out`:
 
 ```
 ./configure --with-armadillo --enable-debug=yes
 ```
- 10. `test.configure.armadillo-openmp.out`:
+  9. `test.configure.armadillo-openmp.out`:
 
 ```
 ./configure --with-armadillo --with-openmp
 ```
- 11. `test.configure.armadillo-qd.out`:
+ 10. `test.configure.armadillo-qd-std.out`:
 
 ```
-./configure --with-armadillo --with-qd
+./configure --with-armadillo --with-qd --with-unordered-map=std
 ```
-For each of the 11 `test.configure.*.out` files, there is a corresponding
-`fast-test.configure.*.out` file, making a total of 22 files.
+ 11. `test.configure.qd.out`:
+
+```
+./configure --with-qd
+```
+ 12. `test.configure.armadillo-qd.out`:
+
+```
+./configure --with-unordered-map=std
+```
+For each of the 12 `test.configure.*.out` files, there is a corresponding
+`fast-test.configure.*.out` file, making a total of 24 files.
 
 When you run your own test using `./test/test.sh`, you should compare its output
 to the output file corresponding to the closest match to the configuration
 options you used to build your copy of the GluCat library.
 
-The reason why sample test results corresponding to 11 different combinations
+The reason why sample test results corresponding to 12 different combinations
 of configuration parameters are included in `test_runtime` is that the test output
 strongly depends on the configuration options chosen. In particular:
 
@@ -702,7 +708,7 @@ speeding up the entire testing process.
 Rather than running the regression tests in-place and copying the output
 directly into `./test_runtime`, the script `./test/test-all-config-options.sh`
 produces as many copies of the whole directory `glucat-1.0.0` as there are lines
-in `./test/config-options.txt`, naming them `glucat-1.0.0.1` to `glucat-1.0.0.11`,
+in `./test/config-options.txt`, naming them `glucat-1.0.0.1` to `glucat-1.0.0.12`,
 in the parent directory of `glucat-1.0.0`. This allows the effect of each set
 of configuration options to be directly compared, and also ensures that any
 side-effect of a configuration does not affect the test results of another
@@ -721,7 +727,7 @@ causes `./test/diff-all-config-outputs.sh` to use diff to compare
 `glucat-1.0.0.4/pyclical/test.out` to `glucat-1.0.0/pyclical/test.out`.
 
 Each comparison should only produce a line containing the line number of
-the configuration being compared: 1 to 11.
+the configuration being compared: 1 to 12.
 
 The exceptional cases are:
 
@@ -883,7 +889,7 @@ GluCat 1.0.0 with PyClical has so far been built and tested using:
     ```
 
     `./test/test-all-config-options.sh`:
-    All 11 configuration commands corresponding to each of the 11
+    All 12 configuration commands corresponding to each of the 12
     `test.configure*.out` files in `./test_runtime`
     tested with the following compiler versions:
 
@@ -912,7 +918,7 @@ GluCat 1.0.0 with PyClical has so far been built and tested using:
     ```
 
     `./test/fast-test-all-config-options.sh`:
-    All 11 configuration commands corresponding to each of the 11
+    All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`
     tested with the following compiler versions:
 
@@ -945,7 +951,7 @@ GluCat 1.0.0 with PyClical has so far been built and tested using:
     pdfTeX 3.141592653-2.6-1.40.26 (TeX Live 2024/TeX Live for SUSE Linux)
     ```
     `./test/fast-test-all-config-options.sh`
-    All 11 configuration commands corresponding to each of the 11
+    All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`
 
     Note: One test in test_runtime/fast-test.configure.eig-blaze-qd.out
@@ -967,7 +973,7 @@ GluCat 1.0.0 with PyClical has so far been built and tested using:
     Python 3.8.10
     ```
     `./test/fast-test-all-config-options.sh`
-    All 11 configuration commands corresponding to each of the 11
+    All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`.
     Note: All tests involving `long double` give different answers
     from the same tests on x86-64 hardware, because `long double` is
@@ -991,7 +997,7 @@ GluCat 1.0.0 with PyClical has so far been built and tested using:
     LD_LIBRARY_PATH=`/home/user/lib`
     ```
     `./test/fast-test-all-config-options.sh`
-    All 11 configuration commands corresponding to each of the 11
+    All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`
 
     Note: One test in test_runtime/fast-test.configure.eig-blaze-qd.out
@@ -1013,7 +1019,7 @@ GluCat 1.0.0 with PyClical has so far been built and tested using:
     Python 3.12.1
     ```
     `./test/fast-test-all-config-options.sh`
-    All 11 configuration commands corresponding to each of the 11
+    All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`.
 
      Note: all configuration commands other than
