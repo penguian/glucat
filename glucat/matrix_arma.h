@@ -213,17 +213,11 @@ namespace glucat { namespace matrix
   // Mixed op
   // Product of scalar and matrix wrapper
   template< typename Scalar_T >
-  auto operator* (Scalar_T s, const arma_matrix_wrapper<Scalar_T>& m) -> arma_matrix_wrapper<Scalar_T>
-  {
-    arma_matrix_wrapper<Scalar_T> result;
-    result.m_mat = s * m.m_mat;
-    return result;
-  }
+  auto operator* (Scalar_T s, const arma_matrix_wrapper<Scalar_T>& m) -> arma_matrix_wrapper<Scalar_T>;
 
   // Product of matrix wrapper and scalar
   template< typename Scalar_T >
-  auto operator* (const arma_matrix_wrapper<Scalar_T>& m, Scalar_T s) -> arma_matrix_wrapper<Scalar_T>
-  {  return s * m; }
+  auto operator* (const arma_matrix_wrapper<Scalar_T>& m, Scalar_T s) -> arma_matrix_wrapper<Scalar_T>;
 
   // Output to stream
   template< typename Scalar_T >
@@ -331,35 +325,19 @@ namespace glucat { namespace matrix
 
   // Product of scalar and sparse wrapper
   template< typename Scalar_T >
-  auto operator* (Scalar_T s, const arma_sparse_wrapper<Scalar_T>& m) -> arma_sparse_wrapper<Scalar_T>
-  {
-    arma_sparse_wrapper<Scalar_T> result(m);
-    result *= s;
-    return result;
-  }
+  auto operator* (Scalar_T s, const arma_sparse_wrapper<Scalar_T>& m) -> arma_sparse_wrapper<Scalar_T>;
 
   // Product of sparse wrapper and scalar
   template< typename Scalar_T >
-  auto operator* (const arma_sparse_wrapper<Scalar_T>& m, Scalar_T s) -> arma_sparse_wrapper<Scalar_T>
-  { return s * m; }
+  auto operator* (const arma_sparse_wrapper<Scalar_T>& m, Scalar_T s) -> arma_sparse_wrapper<Scalar_T>;
 
   // Sum of sparse wrappers
   template< typename Scalar_T >
-  auto operator+ (const arma_sparse_wrapper<Scalar_T>& lhs, const arma_sparse_wrapper<Scalar_T>& rhs) -> arma_sparse_wrapper<Scalar_T>
-  {
-    arma_sparse_wrapper<Scalar_T> result(lhs);
-    result += rhs;
-    return result;
-  }
+  auto operator+ (const arma_sparse_wrapper<Scalar_T>& lhs, const arma_sparse_wrapper<Scalar_T>& rhs) -> arma_sparse_wrapper<Scalar_T>;
 
   // Difference of sparse wrappers
   template< typename Scalar_T >
-  auto operator- (const arma_sparse_wrapper<Scalar_T>& lhs, const arma_sparse_wrapper<Scalar_T>& rhs) -> arma_sparse_wrapper<Scalar_T>
-  {
-    arma_sparse_wrapper<Scalar_T> result(lhs);
-    result.m_mat -= rhs.m_mat; // Armadillo supports -=
-    return result;
-  }
+  auto operator- (const arma_sparse_wrapper<Scalar_T>& lhs, const arma_sparse_wrapper<Scalar_T>& rhs) -> arma_sparse_wrapper<Scalar_T>;
 
 } }
 #endif // _GLUCAT_USE_ARMADILLO

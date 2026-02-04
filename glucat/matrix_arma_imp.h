@@ -1403,6 +1403,100 @@ namespace glucat { namespace matrix
     }
   };
 
+  /**
+   * @brief Product of scalar and matrix wrapper
+   * @details
+   * @tparam Scalar_T
+   * @param s Scalar
+   * @param m Matrix
+   * @return Result
+   */
+  template< typename Scalar_T >
+  inline auto
+  operator* (Scalar_T s, const arma_matrix_wrapper<Scalar_T>& m) -> arma_matrix_wrapper<Scalar_T>
+  {
+    arma_matrix_wrapper<Scalar_T> result;
+    result.m_mat = s * m.m_mat;
+    return result;
+  }
+
+  /**
+   * @brief Product of matrix wrapper and scalar
+   * @details
+   * @tparam Scalar_T
+   * @param m Matrix
+   * @param s Scalar
+   * @return Result
+   */
+  template< typename Scalar_T >
+  inline auto
+  operator* (const arma_matrix_wrapper<Scalar_T>& m, Scalar_T s) -> arma_matrix_wrapper<Scalar_T>
+  {  return s * m; }
+
+  /**
+   * @brief Product of scalar and sparse wrapper
+   * @details
+   * @tparam Scalar_T
+   * @param s Scalar
+   * @param m Matrix
+   * @return Result
+   */
+  template< typename Scalar_T >
+  inline auto
+  operator* (Scalar_T s, const arma_sparse_wrapper<Scalar_T>& m) -> arma_sparse_wrapper<Scalar_T>
+  {
+    arma_sparse_wrapper<Scalar_T> result(m);
+    result *= s;
+    return result;
+  }
+
+  /**
+   * @brief Product of sparse wrapper and scalar
+   * @details
+   * @tparam Scalar_T
+   * @param m Matrix
+   * @param s Scalar
+   * @return Result
+   */
+  template< typename Scalar_T >
+  inline auto
+  operator* (const arma_sparse_wrapper<Scalar_T>& m, Scalar_T s) -> arma_sparse_wrapper<Scalar_T>
+  { return s * m; }
+
+  /**
+   * @brief Sum of sparse wrappers
+   * @details
+   * @tparam Scalar_T
+   * @param lhs Left Hand Side
+   * @param rhs Right Hand Side
+   * @return Result
+   */
+  template< typename Scalar_T >
+  inline auto
+  operator+ (const arma_sparse_wrapper<Scalar_T>& lhs, const arma_sparse_wrapper<Scalar_T>& rhs) -> arma_sparse_wrapper<Scalar_T>
+  {
+    arma_sparse_wrapper<Scalar_T> result(lhs);
+    result += rhs;
+    return result;
+  }
+
+  /**
+   * @brief Difference of sparse wrappers
+   * @details
+   * @tparam Scalar_T
+   * @param lhs Left Hand Side
+   * @param rhs Right Hand Side
+   * @return Result
+   */
+  template< typename Scalar_T >
+  inline auto
+  operator- (const arma_sparse_wrapper<Scalar_T>& lhs, const arma_sparse_wrapper<Scalar_T>& rhs) -> arma_sparse_wrapper<Scalar_T>
+  {
+    arma_sparse_wrapper<Scalar_T> result(lhs);
+    result.m_mat -= rhs.m_mat; // Armadillo supports -=
+    return result;
+  }
+
 } }
 #endif // _GLUCAT_USE_ARMADILLO
 #endif // _GLUCAT_MATRIX_IMP_H
