@@ -46,7 +46,11 @@
 #include <utility>
 #include <map>
 #include <unordered_map>
+#ifdef _GLUCAT_USE_BOOST_FLAT_MAP
+#include <boost/unordered/unordered_flat_map.hpp>
+#endif
 #include <vector>
+
 
 namespace glucat
 {
@@ -125,8 +129,13 @@ namespace glucat
   template< typename Scalar_T = double,  const index_t LO = DEFAULT_LO, const index_t HI = DEFAULT_HI, typename Tune_P = tuning<> >
   class framed_multi :
   public clifford_algebra< Scalar_T, index_set<LO,HI>, framed_multi<Scalar_T,LO,HI,Tune_P> >,
+#ifdef _GLUCAT_USE_BOOST_FLAT_MAP
+  private boost::unordered_flat_map< index_set<LO,HI>, Scalar_T, index_set_hash<LO,HI> >
+#else
   private std::unordered_map< index_set<LO,HI>, Scalar_T, index_set_hash<LO,HI> >
+#endif
   {
+
   public:
     using multivector_t = framed_multi;
     using framed_multi_t = multivector_t;
@@ -149,7 +158,12 @@ namespace glucat
     using matrix_t = typename matrix_multi_t::matrix_t;
     using matrix_index_t = typename matrix_multi_t::matrix_index_t;
     using sorted_map_t = std::map< index_set_t, Scalar_T, std::less<const index_set_t> >;
+#ifdef _GLUCAT_USE_BOOST_FLAT_MAP
+    using map_t = boost::unordered_flat_map<index_set_t, Scalar_T, index_set_hash<LO, HI>>;
+#else
     using map_t = std::unordered_map<index_set_t, Scalar_T, index_set_hash<LO, HI>>;
+#endif
+
 
     class hash_size_t
     {
