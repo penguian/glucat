@@ -572,25 +572,25 @@ in `./test/config-options.txt` and are:
 ```
 ./configure --with-qd
 ```
-  8. `test.configure.eig-blaze.out`:
+  8. `test.configure.armadillo.out`:
 
 ```
-./configure --with-eig=blaze
+./configure --with-armadillo
 ```
-  9. `test.configure.eig-blaze-debug-full.out`:
+  9. `test.configure.armadillo-debug-yes.out`:
 
 ```
-./configure --with-eig=blaze --enable-debug=full
+./configure --with-armadillo --enable-debug=yes
 ```
- 10. `test.configure.eig-blaze-debug-yes.out`:
+ 10. `test.configure.armadillo-openmp.out`:
 
 ```
-./configure --with-eig=blaze --enable-debug=yes
+./configure --with-armadillo --with-openmp
 ```
- 11. `test.configure.eig-blaze-qd.out`:
+ 11. `test.configure.armadillo-qd.out`:
 
 ```
-./configure --with-eig=blaze --with-qd
+./configure --with-armadillo --with-qd
 ```
 For each of the 11 `test.configure.*.out` files, there is a corresponding
 `fast-test.configure.*.out` file, making a total of 22 files.
@@ -606,20 +606,11 @@ strongly depends on the configuration options chosen. In particular:
 * If `--with-qd` is chosen, extra tests in `./test00/test00` and `./test11/test11`
   are done using the `dd_real` and `qd_real` scalar types.
 
-* If `--with-eig=blaze` is chosen the algorithms used for the square root,
-  logarithm and inverse trig functions will become much more accurate, and most
-  tests in `./test11/test11` will succeed. Even if this option is chosen, some
-  tests in `./test11/test11` fail due to insufficient accuracy. This is most
-  likely caused by a combination of excessive round off and truncation error
-  with respect to the condition numbers of the matrices used in calculating
-  these functions.
-
 The tests typically use floating point arithmetic, and `./test00/test00` and
 `./test11/test11` in particular also use random number generators. Therefore if
 you run the tests using different architecture, compilers or random number
 generators, you should expect to have different floating point arithmetic
-results, but generally, still within acceptable error tolerances, except as
-noted for `./test11/test11` above.
+results, but generally, still within acceptable error tolerances.
 
 The regression tests `./test00/test00` to `./test17/test17` recognize the program
 arguments `--help`, `--no-catch`, and `--verbose`. The `--no-catch` argument
@@ -792,15 +783,16 @@ The sample timing test results in `./test_runtime` are from programs
 built and run using the configure command:
 
 ```
-./configure --with-eig=blaze --with-qd
+./configure --with-armadillo --with-qd
 ```
 on an 8 core `AMD Ryzen 7 8840HS w/ Radeon 780M Graphics` @ 3.3 GHz with
 ```
-    Linux 6.11.0-14-generic #15-Ubuntu SMP 2025
-    Kubuntu 24.10
-    g++ 14.2.0 (Ubuntu 14.2.0-4ubuntu2)
-    Blaze 3.9.0
-    Boost 1.83.0
+    Linux 6.17.0-12-generic #12-Ubuntu SMP UTC
+    Kubuntu 25.10
+    g++ 15.2.0 (Ubuntu 15.2.0-4ubuntu4)
+    Armadillo 14.2.3
+    Boost 1.88.0
+    Eigen 3.4.0
     GSL 2.8
     QD 2.3.23
 ```
@@ -812,7 +804,7 @@ Once you have built PyClical, run the doctests. In `python3` or `ipython3`, etc.
 ```
  >>> import PyClical
  >>> PyClical._test()
- TestResults(failed=0, attempted=647)
+ TestResults(failed=0, attempted=661)
  >>> quit()
 ```
 Alternatively, in the directory `pyclical`, run the script `test.py` using:
@@ -861,20 +853,23 @@ GluCat 1.0.0 with PyClical has so far been built and tested using:
     8 core `AMD Ryzen 7 8840HS w/ Radeon 780M Graphics` @ 3.3 GHz with
 
     ```
-    Linux 6.11.0-14-generic #15-Ubuntu SMP 2025
-    Kubuntu 24.10
-    Boost 1.83.0
+    Linux 6.17.0-12-generic #12-Ubuntu SMP UTC
+    Kubuntu 25.10
+    g++ 15.2.0 (Ubuntu 15.2.0-4ubuntu4)
+    Armadillo 14.2.3
+    Boost 1.88.0
+    Eigen 3.4.0
     GSL 2.8
     QD 2.3.23
     Cython 3.0.11
-    Python 3.12.7
+    Python 3.13
 
-    Numpy 1.21.5
-    Matplotlib 3.5.1
-    Mayavi2 4.8.1
-    VTK 9.1.0
+    Numpy 2.2.4
+    Matplotlib 3.10.1
+    Mayavi2 4.8.3
+    VTK 9.3.0
     Doxygen 1.9.8
-    pdfTeX 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian)
+    pdfTeX 3.141592653-2.6-1.40.26 (TeX Live 2025/dev/Debian)
     ```
 
     `./test/test-all-config-options.sh`:
@@ -882,7 +877,7 @@ GluCat 1.0.0 with PyClical has so far been built and tested using:
     `test.configure*.out` files in `./test_runtime`
     tested with the following compiler versions:
 
-    1) `g++ 14.2.0 (Ubuntu 14.2.0-4ubuntu2)`
+    1) `g++ 15.2.0 (Ubuntu 15.2.0-4ubuntu4)`
     2) `Ubuntu clang version 19.1.1 (1ubuntu1)`
 
  2) Pensieri:
