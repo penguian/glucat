@@ -240,7 +240,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   have_eigen=no
   GLUCAT_CHECK_HEADERS([Eigen/Dense], [have_eigen=yes], [])
 
-  if test "$have_eigen" = "no"; then
+  if [[[ "$have_eigen" == "no" ]]]; then
      dnl Try adding -I/usr/include/eigen3
      saved_CPPFLAGS="$CPPFLAGS"
      CPPFLAGS="$CPPFLAGS -I/usr/include/eigen3"
@@ -254,8 +254,8 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
      CPPFLAGS="$saved_CPPFLAGS"
   fi
 
-  if test "$have_eigen" = "yes"; then
-    if test "$glucat_use_qd" = "yes"; then
+  if [[[ "$have_eigen" == "yes" ]]]; then
+    if [[[ "$glucat_use_qd" == "yes" ]]]; then
        CXXFLAGS="$CXXFLAGS -DEIGEN_DEFAULT_DENSE_INDEX_TYPE=int"
        AC_MSG_NOTICE([Defining EIGEN_DEFAULT_DENSE_INDEX_TYPE=int for QD compatibility.])
     fi
