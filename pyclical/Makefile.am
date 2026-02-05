@@ -5,23 +5,14 @@ if make_pyclical
 ext_name = PyClical
 
 EXTCYTHON_SOURCE = $(ext_name).pyx $(ext_name).pxd glucat.pxd
-EXTNOCYTHONCPP = $(ext_name)_nocython.cpp
-EXTNOCYTHON_SOURCE = $(EXTNOCYTHONCPP)
 EXT_HEADER = $(ext_name).h
 
-EXTRA_DIST = Makefile.am $(EXTCYTHON_SOURCE) $(EXTNOCYTHON_SOURCE) $(EXT_HEADER) \
+EXTRA_DIST = Makefile.am $(EXTCYTHON_SOURCE) $(EXT_HEADER) \
              setup_ext.py  setup_nocython.py  setup.py  test.py test.out
 
-# Setup options depend on availability of Cython
-if use_cython
-  SETUP_SOURCE_LIST = $(EXTCYTHON_SOURCE) $(EXT_HEADER)
-  SETUP_SOURCE_PARAM = source_pyx="$(ext_name).pyx"
-  SETUP = setup
-else
-  SETUP_SOURCE_LIST = $(EXTNOCYTHON_SOURCE) $(EXT_HEADER)
-  SETUP_SOURCE_PARAM = source_cpp="$(EXTNOCYTHONCPP)"
-  SETUP = setup_nocython
-endif
+SETUP_SOURCE_LIST = $(EXTCYTHON_SOURCE) $(EXT_HEADER)
+SETUP_SOURCE_PARAM = source_pyx="$(ext_name).pyx"
+SETUP = setup
 
 # C++ compiler flags
 EXTCXXFLAGS = $(glucat_extra_cxxflags_pyclical) $(CXXFLAGS)
@@ -39,15 +30,6 @@ $(pyexec_DATA): $(SETUP_SOURCE_LIST) $(SETUP).py setup_ext.py
 	CXX="$(CXX)" CXXVERSION="$(CXXVERSION)" CFLAGS="" CXXFLAGS="$(EXTCXXFLAGS)" AM_CPPFLAGS="$(EXTAM_CPPFLAGS)" \
 	all_includes="$(all_includes) -I$(top_srcdir) -I$(top_builddir)" LDFLAGS="$(USER_LDFLAGS)" LIBRARIES="$(LIBS)" \
 	$(PYTHON) $(SETUP).py build_ext --inplace
-
-if use_cython
-$(ext_name).cpp: $(pyexec_DATA)
-
-$(EXTNOCYTHONCPP): $(ext_name).cpp
-	cp $(ext_name).cpp $@
-	$(MAKE) clean
-
-endif
 
 check: $(CHECK_OUT)
 

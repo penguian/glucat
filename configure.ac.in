@@ -383,40 +383,38 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       AC_MSG_RESULT([$cythonversion])
       glucat_use_cython="yes"
     fi
-    case "$basename_cxx" in
-      "clang++"*)
-        ;;
-      "g++"*)
-        GLUCAT_CHECK_COMPILER_FLAG([fno-strict-aliasing],
-        [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -fno-strict-aliasing"])
-        GLUCAT_CHECK_COMPILER_FLAG([Wno-unused],
-        [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-unused"])
-        ;;
-      icpc|icpx)
-        case "$basename_cxx" in
-          icpc)
-            GLUCAT_CHECK_COMPILER_FLAG([diag-disable=1292],
-            [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -diag-disable=1292"])
-            ;;
-          icpx)
-            GLUCAT_CHECK_COMPILER_FLAG([Wno-deprecated],
-            [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-deprecated"])
-            ;;
-        esac
-        GLUCAT_CHECK_LIB([imf],[cos],
-        [],
-        [glucat_use_pyclical="no"])
-        ;;
-      *)
-        ;;
-    esac
-
     if [[[ "$glucat_use_cython" == "no" ]]]; then
       AC_MSG_WARN([Cannot build using Cython.])
-      AC_CHECK_FILE([pyclical/PyClical_nocython.cpp],
-      [
-        AC_MSG_WARN([The ability to build PyClical without Cython $glucat_deprecated_warning])
-      ],[glucat_use_pyclical="no"])
+      glucat_use_pyclical="no"
+    fi
+    if [[[ "$glucat_use_pyclical" != "no" ]]]; then
+      case "$basename_cxx" in
+        "clang++"*)
+          ;;
+        "g++"*)
+          GLUCAT_CHECK_COMPILER_FLAG([fno-strict-aliasing],
+          [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -fno-strict-aliasing"])
+          GLUCAT_CHECK_COMPILER_FLAG([Wno-unused],
+          [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-unused"])
+          ;;
+        icpc|icpx)
+          case "$basename_cxx" in
+            icpc)
+              GLUCAT_CHECK_COMPILER_FLAG([diag-disable=1292],
+              [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -diag-disable=1292"])
+              ;;
+            icpx)
+              GLUCAT_CHECK_COMPILER_FLAG([Wno-deprecated],
+              [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-deprecated"])
+              ;;
+          esac
+          GLUCAT_CHECK_LIB([imf],[cos],
+          [],
+          [glucat_use_pyclical="no"])
+          ;;
+        *)
+          ;;
+      esac
     fi
     if [[[ "$glucat_use_pyclical" == "no" ]]]; then
       AC_MSG_WARN([Cannot build PyClical.])
