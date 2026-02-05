@@ -132,11 +132,10 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   demodir="$with_demo_dir"
   AC_SUBST([demodir])
 
-
   AC_ARG_WITH([unordered-map],
     AS_HELP_STRING([--with-unordered-map=ARG],[use specified map implementation (boost|std) [default=boost]]),
-    [glucat_map_impl="$withval"],
-    [glucat_map_impl="boost"])
+    [glucat_use_unordered_map="$withval"],
+    [glucat_use_unordered_map="boost"])
 
   AC_ARG_WITH([qd],           [[  --with-qd               use dd_real and qd_real [default=no]]],
     [glucat_use_qd="$withval"],
@@ -146,19 +145,19 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     [glucat_use_armadillo="$withval"],
     [glucat_use_armadillo="no"])
 
-  if [[[ "$glucat_map_impl" == "boost" ]]]; then
+  if [[[ "$glucat_use_unordered_map" == "boost" ]]]; then
     GLUCAT_CHECK_HEADERS([boost/unordered/unordered_flat_map.hpp],
     [
-      CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_BOOST_FLAT_MAP"
+      CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_BOOST_UNORDERED_FLAT_MAP"
       AC_MSG_NOTICE([boost::unordered_flat_map support enabled.])
     ],
     [
       AC_MSG_WARN([boost/unordered/unordered_flat_map.hpp not found. Defaulting to std::unordered_map.])
-      glucat_map_impl="std"
+      glucat_use_unordered_map="std"
     ],[])
-  elif [[[ "$glucat_map_impl" != "std" ]]]; then
-     AC_MSG_WARN([Unknown map implementation "$glucat_map_impl". Defaulting to std.])
-     glucat_map_impl="std"
+  elif [[[ "$glucat_use_unordered_map" != "std" ]]]; then
+     AC_MSG_WARN([Unknown map implementation "$glucat_use_unordered_map". Defaulting to std.])
+     glucat_use_unordered_map="std"
   fi
 
   if [[[ "$glucat_use_armadillo" == "yes" ]]]; then
