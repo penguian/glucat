@@ -33,7 +33,7 @@ Linux machine or equivalent Posix environment connected to the Internet:
 ```
 > git clone git@github.com:penguian/glucat.git glucat-1.0.0
 > cd glucat-1.0.0
-> make -f admin/Makefile.common cvs
+> make -f admin/Makefile.common bootstrap
 ```
 This results in a directory structure that includes glucat-1.0.0/configure,
 allowing you to make and install GluCat in the same way as if you had downloaded
