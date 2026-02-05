@@ -1,6 +1,6 @@
 #! /bin/sh
 #
-# cvs.sh
+# bootstrap.sh
 #
 # This file contains support code from Makefile.common
 # It defines a shell function for each known target
@@ -72,7 +72,7 @@ case $AUTOMAKE_STRING in
 esac
 }
 
-cvs()
+bootstrap()
 {
 check_autotool_versions
 
@@ -111,9 +111,9 @@ fi
 echo "*** Creating Makefile templates"
 $AUTOMAKE || exit 1
 
-if egrep "^cvs-local:" $makefile_am >/dev/null; then \
+if egrep "^bootstrap-local:" $makefile_am >/dev/null; then \
   strip_makefile
-  $MAKE -f $makefile_wo cvs-local || exit 1
+  $MAKE -f $makefile_wo bootstrap-local || exit 1
 fi
 
 echo "*** Creating date/time stamp"
@@ -146,13 +146,13 @@ $AUTOHEADER
 $AUTOMAKE --foreign --include-deps
 call_and_fix_autoconf
 touch stamp-h.in
-if grep "^cvs-local:" $makefile_am >/dev/null; then
+if grep "^bootstrap-local:" $makefile_am >/dev/null; then
   strip_makefile
-  $MAKE -f $makefile_wo cvs-local
+  $MAKE -f $makefile_wo bootstrap-local
 fi
-if grep "^cvs-dist-local:" $makefile_am >/dev/null; then
+if grep "^bootstrap-dist-local:" $makefile_am >/dev/null; then
   strip_makefile
-  $MAKE -f $makefile_wo cvs-dist-local
+  $MAKE -f $makefile_wo bootstrap-dist-local
 fi
 }
 
@@ -331,10 +331,10 @@ fi
 
 arg=`echo $1 | tr '\-.' __`
 case $arg in
-  cvs | dist | subdir_dist | configure_ac | configure_files | subdirs ) $arg ;;
-  * ) echo "Usage: cvs.sh <target>"
+  bootstrap | dist | subdir_dist | configure_ac | configure_files | subdirs ) $arg ;;
+  * ) echo "Usage: bootstrap.sh <target>"
       echo "Target can be one of:"
-      echo "    cvs dist subdir.dist"
+      echo "    bootstrap dist subdir.dist"
       echo "    configure.ac configure.files"
       echo ""
       echo "Usage: anything but $1"
