@@ -86,6 +86,7 @@ cdef extern from "PyClical.h":
         scalar_t norm()
         scalar_t quad()
         IndexSet frame()
+        int      grade()
         scalar_t max_abs()
         Clifford inv()
         Clifford pow(int m)
