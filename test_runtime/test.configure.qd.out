@@ -2859,7 +2859,6 @@ even(c): -1e+08+1e+08{-3,-1}+1e+08{-2,-1}-2e+08{-1,1,2,3}
 scalar(c): -1e+08
 pure(c): 1e+08{-3,-1}+1e+08{-2,-1}-2e+08{-1,1,2,3}
 real(c): -1e+08
-imag(c): 0
 
 Test 16:
 Programming example 16 : Matrices of multivectors
