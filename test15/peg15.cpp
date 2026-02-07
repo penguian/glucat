@@ -67,7 +67,6 @@ int test15()
   cout << "scalar(c): " << scalar(c) << endl;
   cout << "pure(c): "   << pure(c) << endl;
   cout << "real(c): "   << real(c) << endl;
-  cout << "imag(c): "   << imag(c) << endl;
   return 0;
 }
 
