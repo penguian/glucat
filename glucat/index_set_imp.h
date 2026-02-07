@@ -226,6 +226,12 @@ namespace glucat
    * return term_t(lhs.first ^ rhs.first, crd_of_mult(lhs, rhs));
    * @endcode
    * 
+   * @par Example:
+   * @code
+   * index_set<>("{1}") ^ index_set<>("{2}"); // Returns {1,2}
+   * index_set<>("{1,2}") ^ index_set<>("{2}"); // Returns {1}
+   * @endcode
+   * 
    * @tparam LO
    * @tparam HI
    * @param lhs Left hand side
@@ -266,6 +272,12 @@ namespace glucat
   /**
    * @brief Set intersection: and
    * @details
+   * @par Example:
+   * @code
+   * index_set<>("{1}") & index_set<>("{2}"); // Returns {}
+   * index_set<>("{1,2}") & index_set<>("{2}"); // Returns {2}
+   * @endcode
+   * 
    * @tparam LO
    * @tparam HI
    * @param lhs Left hand side
@@ -306,6 +318,12 @@ namespace glucat
   /**
    * @brief Set union: or
    * @details
+   * @par Example:
+   * @code
+   * index_set<>("{1}") | index_set<>("{2}"); // Returns {1,2}
+   * index_set<>("{1,2}") | index_set<>("{2}"); // Returns {1,2}
+   * @endcode
+   * 
    * @tparam LO
    * @tparam HI
    * @param lhs Left hand side

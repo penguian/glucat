@@ -256,6 +256,11 @@ namespace glucat
   /**
    * @brief Geometric sum
    * @details
+   * @par Example:
+   * @code
+   * clifford<>("1") + clifford<>("{1}"); // Returns 1+{1}
+   * @endcode
+   * 
    * @param lhs Left hand side
    * @param rhs Right hand side
    * @return Result
@@ -308,6 +313,11 @@ namespace glucat
   /**
    * @brief Geometric difference
    * @details
+   * @par Example:
+   * @code
+   * clifford<>("1") - clifford<>("{1}"); // Returns 1-{1}
+   * @endcode
+   * 
    * @param lhs Left hand side
    * @param rhs Right hand side
    * @return Result
@@ -502,6 +512,11 @@ namespace glucat
   /**
    * @brief Geometric quotient
    * @details
+   * @par Example:
+   * @code
+   * clifford<>("2{1}") / clifford<>("{1}"); // Returns 2
+   * @endcode
+   * 
    * @param lhs Left hand side
    * @param rhs Right hand side
    * @return Result
@@ -724,6 +739,11 @@ namespace glucat
   /**
    * @brief Main involution, each {i} is replaced by -{i} in each term, eg. {1} ->-{1}
    * @details
+   * @par Example:
+   * @code
+   * involute(clifford<>("{1}")); // Returns -{1}
+   * @endcode
+   * 
    * @param val Value
    * @return Result
    */
@@ -737,6 +757,11 @@ namespace glucat
   /**
    * @brief Reversion, eg. {1}*{2} -> {2}*{1}
    * @details
+   * @par Example:
+   * @code
+   * reverse(clifford<>("{1}*{2}")); // Returns -{1}*{2}
+   * @endcode
+   * 
    * @param val Value
    * @return Result
    */
@@ -750,6 +775,11 @@ namespace glucat
   /**
    * @brief Conjugation, rev o invo == invo o rev
    * @details
+   * @par Example:
+   * @code
+   * conj(clifford<>("{1}")); // Returns -{1}
+   * @endcode
+   * 
    * @param val Value
    * @return Result
    */

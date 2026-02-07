@@ -759,6 +759,11 @@ namespace glucat
    * return matrix_multi_t(rhs) * matrix_multi_t(lhs) / matrix_multi_t(rhs.involute());
    * @endcode
    * 
+   * @par Example:
+   * @code
+   * clifford<>("{1}") * clifford<>("{2}"); // Returns {1,2}
+   * @endcode
+   * 
    * @tparam Scalar_T
    * @tparam LO
    * @tparam HI
@@ -823,6 +828,11 @@ namespace glucat
   /**
    * @brief Outer product
    * @details
+   * @par Example:
+   * @code
+   * clifford<>("{1}") ^ clifford<>("{2}"); // Returns {1,2}
+   * @endcode
+   * 
    * @tparam Scalar_T
    * @tparam LO
    * @tparam HI
@@ -868,6 +878,11 @@ namespace glucat
    * @param lhs Left hand side
    * @param rhs Right hand side
    * @return Result
+   *
+   * @par Example:
+   * @code
+   * clifford<>("{1}") & clifford<>("{1}"); // Returns 1
+   * @endcode
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -906,6 +921,11 @@ namespace glucat
    * @param lhs Left hand side
    * @param rhs Right hand side
    * @return Result
+   *
+   * @par Example:
+   * @code
+   * clifford<>("{1,2}") % clifford<>("{1}"); // Returns -{2}
+   * @endcode
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -996,6 +1016,11 @@ namespace glucat
    * @param lhs Left hand side
    * @param rhs Right hand side
    * @return Result
+   *
+   * @par Example:
+   * @code
+   * clifford<>("2{1}") / clifford<>("{1}"); // Returns 2
+   * @endcode
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -1068,6 +1093,11 @@ namespace glucat
    * @param lhs Left hand side
    * @param rhs Right hand side
    * @return Result
+   *
+   * @par Example:
+   * @code
+   * clifford<>("{2}") | clifford<>("{1,2}"); // Returns -{2}
+   * @endcode
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1370,6 +1400,11 @@ namespace glucat
    * @tparam HI
    * @tparam Tune_P
    * @return Result
+   *
+   * @par Example:
+   * @code
+   * involute(clifford<>("{1}")); // Returns -{1}
+   * @endcode
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1386,6 +1421,11 @@ namespace glucat
    * @tparam HI
    * @tparam Tune_P
    * @return Result
+   *
+   * @par Example:
+   * @code
+   * reverse(clifford<>("{1}*{2}")); // Returns -{1}*{2}
+   * @endcode
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1402,6 +1442,11 @@ namespace glucat
    * @tparam HI
    * @tparam Tune_P
    * @return Result
+   *
+   * @par Example:
+   * @code
+   * conj(clifford<>("{1}")); // Returns -{1}
+   * @endcode
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
