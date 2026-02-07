@@ -34,7 +34,7 @@ $(pyexec_DATA): $(SETUP_SOURCE_LIST) $(SETUP).py setup_ext.py
 check: $(CHECK_OUT)
 
 $(CHECK_OUT): all
-	$(PYTHON) -iq < test.py > $(CHECK_OUT) 2>&1
+	$(PYTHON) test.py > $(CHECK_OUT) 2>&1
 
 CLEAN_CYTHON = $(ext_name).cpp $(ext_name).html
 
@@ -45,5 +45,25 @@ clean-local:
 	rm -rf build
 	rm -rf __pycache__
 	rm -f $(CHECK_OUT)
+
+
+
+if HAVE_SPHINX
+.PHONY: doc
+doc:
+	$(SPHINXBUILD) -D release=$(VERSION) -D version=$(VERSION) -b html doc doc/_build/html
+
+.PHONY: clean-doc
+clean-doc:
+	rm -rf doc/_build
+
+.PHONY: install-doc
+install-doc: doc
+	$(MKDIR_P) "$(DESTDIR)$(docdir)/pyclical"
+	cp -r doc/_build/html/* "$(DESTDIR)$(docdir)/pyclical"
+else
+install-doc:
+	@echo "Sphinx not found, skipping PyClical doc installation"
+endif
 
 endif

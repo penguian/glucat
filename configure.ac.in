@@ -582,6 +582,11 @@ AC_SUBST([all_includes])
 AC_SUBST([LIBS])
 AC_SUBST([AUTODIRS])
 
-AM_CONDITIONAL([make_pyclical],[test "$glucat_use_pyclical" == "yes"])
-AM_CONDITIONAL([use_cython],[test "$glucat_use_cython" == "yes"])
+  AC_CHECK_PROGS([SPHINXBUILD], [sphinx-build])
+  if [[[ -z "$SPHINXBUILD" ]]]; then
+     AC_MSG_WARN([sphinx-build not found - continuing without Sphinx support])
+  fi
+  AM_CONDITIONAL([HAVE_SPHINX], [test -n "$SPHINXBUILD"])
 
+  AM_CONDITIONAL([make_pyclical],[test "$glucat_use_pyclical" == "yes"])
+AM_CONDITIONAL([use_cython],[test "$glucat_use_cython" == "yes"])
