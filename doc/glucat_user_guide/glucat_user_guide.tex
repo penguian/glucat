@@ -1,0 +1,47 @@
+\documentclass[a4paper,11pt]{book}
+\usepackage[australian]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{pdfpages}
+
+\title{Practical Computation with Clifford Algebras\\
+\Large Book 3: GluCat User Guide}
+\author{Paul Leopardi}
+\date{\today}
+
+\begin{document}
+\frontmatter
+\maketitle
+\tableofcontents
+
+\chapter{Introduction}
+\input{chapters/intro}
+
+\chapter{Getting Started}
+\input{chapters/getting_started}
+
+\mainmatter
+
+\part{Programming with GluCat}
+\chapter{Programming Guide}
+\input{chapters/programming_guide}
+
+\chapter{API Overview}
+\input{chapters/api_overview}
+
+\part{Examples}
+\chapter{GluCat Examples}
+\input{chapters/examples}
+
+\backmatter
+\appendix
+\chapter{Algorithms}
+% \input{chapters/algorithms}
+
+\chapter{Design History}
+% \input{chapters/design_history}
+
+\end{document}

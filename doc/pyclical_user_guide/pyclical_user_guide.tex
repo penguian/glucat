@@ -1,0 +1,47 @@
+\documentclass[a4paper,11pt]{book}
+\usepackage[australian]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{pdfpages}
+
+\title{Practical Computation with Clifford Algebras\\
+\Large Book 2: PyClical User Guide}
+\author{Paul Leopardi}
+\date{\today}
+
+\begin{document}
+\frontmatter
+\maketitle
+\tableofcontents
+
+\chapter{Introduction}
+\input{chapters/intro}
+
+\chapter{Getting Started}
+\input{chapters/getting_started}
+
+\mainmatter
+
+\part{Core Features}
+\chapter{Basics}
+\input{chapters/basics}
+
+\part{Geometric Algebras}
+\chapter{Geometry}
+\input{chapters/geometry}
+
+\part{Advanced Examples}
+\chapter{Applications}
+\input{chapters/applications}
+
+\backmatter
+\appendix
+\chapter{PyClical API Reference}
+\label{ch:sphinx_ref}
+The following pages contain the automatically generated API documentation for the PyClical module.
+\includepdf[pages=-]{../../pyclical/doc/_build/latex/pyclical.pdf}
+
+\end{document}

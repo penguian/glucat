@@ -1,0 +1,36 @@
+\chapter{Getting Started}
+\label{ch:getting_started_pyclical}
+
+\section{Installation}
+PyClical is part of the \glucat project. To install it, you generally follow the standard \glucat installation procedure:
+
+\begin{verbatim}
+./configure
+make
+sudo make install
+\end{verbatim}
+
+This installs the PyClical Python extension module, typically into your site-packages directory.
+For detailed installation instructions, including dependencies on Cython and Boost, refer to the \texttt{INSTALL.md} file in the source distribution.
+
+\section{Running PyClical}
+To use PyClical, start your Python interpreter (e.g., \texttt{python3} or \texttt{ipython3}) and import the module:
+
+\begin{verbatim}
+>>> from PyClical import *
+\end{verbatim}
+
+You can verify your installation by creating a simple multivector:
+
+\begin{verbatim}
+>>> e(1)
+{1}
+\end{verbatim}
+
+\section{Demos and Tutorials}
+The distribution includes a set of tutorials and demos in the \texttt{pyclical/demos} directory.
+You can run the interactive tutorial menu by executing:
+
+\begin{verbatim}
+python3 pyclical_tutorials.py
+\end{verbatim}

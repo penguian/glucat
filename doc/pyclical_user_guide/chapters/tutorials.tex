@@ -1,0 +1,43 @@
+\chapter{Tutorials}
+\label{ch:tutorials_pyclical}
+
+\section{Notation and Basic Operations}
+PyClical uses a specific notation for Clifford algebra elements.
+The \texttt{clifford} class represents multivectors, and the \texttt{index\_set} class represents the basis elements.
+
+\subsection{Creating Multivectors}
+You can create multivectors using the \texttt{e()} helper function (short for \texttt{clifford(index\_set(...))}).
+\begin{verbatim}
+>>> x = 2*e(1) + 3*e(2)
+>>> print(x)
+2{1}+3{2}
+\end{verbatim}
+Generators with negative indices square to $-1$, and those with positive indices square to $+1$.
+
+\section{Rotations in $\Real^3$}
+Rotations can be performed using rotors (exponentials of bivectors).
+\begin{verbatim}
+>>> x = 2*e(1)+3*e(2)+5*e(3)
+>>> a = (3*e(1)+2*e(2)+e(3))/10
+>>> s = exp(e({1,2,3})*a/2)
+>>> y = s*x/s
+>>> print(y*y)
+38
+\end{verbatim}
+The norm is preserved.
+
+\section{Spacetime Physics}
+PyClical can model Minkowski spacetime $\Real^{3,1}$.
+\begin{verbatim}
+>>> x = 2*e(-1)+2*e(1)+3*e(2)+5*e(3)
+\end{verbatim}
+Lorentz transformations are implemented as rotors in this algebra.
+
+\section{Advanced Topics}
+PyClical is versatile enough to handle:
+\begin{itemize}
+    \item Octonions (via Cayley algebra construction).
+    \item Conformal Geometric Algebra (CGA).
+    \item Functions of multivectors (sqrt, log, exp).
+\end{itemize}
+See the \texttt{pyclical\_demo.py} and \texttt{sqrt\_log\_demo.py} files for advanced examples.

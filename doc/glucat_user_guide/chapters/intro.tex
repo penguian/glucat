@@ -1,0 +1,13 @@
+\chapter{Introduction}
+\label{ch:intro_glucat}
+
+\section{What is GluCat?}
+GluCat is a library of C++ template classes for calculations with the universal Clifford algebras over the real field. The dimension of the algebras you can use is limited only by computer word size. Unlike some software packages for Clifford algebras, the maximum signature is fixed by default or by user defined template parameter values, and calculations are performed in the appropriate subalgebra.
+
+\section{Design Philosophy}
+GluCat classes are meant to be used as numeric classes with other template libraries. To do this, GluCat classes need to look and behave like floating point numeric types such as \texttt{float} and \texttt{double}. The GluCat classes do this by providing a definition for \texttt{std::numeric\_limits<>}, most or all the expected operators like +, -, *, /, and functions like \texttt{sqrt()}.
+Two key differences from standard floating point types are:
+\begin{itemize}
+    \item Clifford algebras do not have a total ordering.
+    \item Multiplication in Clifford algebras is not necessarily commutative.
+\end{itemize}

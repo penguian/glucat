@@ -1,0 +1,26 @@
+\chapter{Getting Started}
+\label{ch:getting_started_glucat}
+
+\section{Installation}
+To install the GluCat C++ library, follow the standard build procedure:
+
+\begin{verbatim}
+./configure
+make
+sudo make install
+\end{verbatim}
+
+\subsection{Configuration Options}
+You can customize the build using various flags:
+\begin{itemize}
+    \item \texttt{--with-armadillo}: Use the Armadillo linear algebra library.
+    \item \texttt{--with-ordering=boost|std}: Choose the map implementation.
+    \item \texttt{--enable-debug=yes|no|full}: Control debugging and optimization levels.
+\end{itemize}
+
+\section{Compiling Your First Program}
+To compile a C++ program using GluCat, you need to include the header files and link against any necessary libraries (like Armadillo if configured).
+\begin{verbatim}
+g++ my_program.cpp -o my_program -I/usr/local/include
+\end{verbatim}
+Refer to \texttt{INSTALL.md} for detailed dependency information.
