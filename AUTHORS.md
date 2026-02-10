@@ -255,6 +255,24 @@ Gene H. Golub, and Bart L. R. Moor (eds.), 1993, pp. 293--314.
 2. Y. Hardy, "On Kronecker quotients", Electronic Journal of Linear Algebra,
 Vol. 27, 2014, pp. 172--189.
 
+### References for M-Theory and Physics Demos
+
+#### Fundamental Physics
+
+1. E. Witten, "String Theory Dynamics In Various Dimensions", Nuclear Physics B, 1995.
+
+2. P. K. Townsend, "The eleven-dimensional supermembrane", Physics Letters B, 1995.
+
+3. K. Becker, M. Becker, J. H. Schwarz, "String Theory and M-Theory: A Modern Introduction", Cambridge University Press, 2007.
+
+#### Mathematical Physics & Clifford Algebras
+
+1. P. Lounesto, "Clifford Algebras and Spinors", Cambridge University Press, 2001.
+
+2. M. J. Duff, "The World in Eleven Dimensions: Supergravity, Supermembranes and M-theory", CRC Press, 1999.
+
+3. D. Z. Freedman, A. Van Proeyen, "Supergravity", Cambridge University Press, 2012.
+
 Recommended general references
 ------------------------------
 
