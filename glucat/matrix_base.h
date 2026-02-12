@@ -33,6 +33,7 @@
 
 #include <type_traits>
 #include <complex>
+#include <cstddef>
 
 namespace glucat { namespace matrix
 {
