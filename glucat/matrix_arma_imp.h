@@ -29,7 +29,7 @@ in Ablamowicz, Lounesto and Parra (eds.)
 "Clifford algebras with numeric and symbolic computations", Birkhauser, 1996.
 ***************************************************************************
 See also Arvind Raja's original header comments in glucat.h
-*************************************************************************** @return Result
+***************************************************************************
 ***************************************************************************/
 
 #if defined(_GLUCAT_USE_ARMADILLO)
@@ -385,7 +385,7 @@ namespace glucat { namespace matrix
    * @brief Element access
    * @details
    * @tparam Scalar_T
-   * @return Result
+   * @return Element
    */
   template< typename Scalar_T >
   inline auto
@@ -397,7 +397,7 @@ namespace glucat { namespace matrix
    * @brief Const element access
    * @details
    * @tparam Scalar_T
-   * @return Result
+   * @return Element
    */
   template< typename Scalar_T >
   inline auto
@@ -474,7 +474,7 @@ namespace glucat { namespace matrix
    * @details
    * @tparam Scalar_T
    * @param other Other matrix
-   * @return Result
+   * @return Sum
    */
   template< typename Scalar_T >
   inline auto
@@ -487,7 +487,7 @@ namespace glucat { namespace matrix
    * @details
    * @tparam Scalar_T
    * @param other Other matrix
-   * @return Result
+   * @return Difference
    */
   template< typename Scalar_T >
   inline auto
@@ -500,7 +500,7 @@ namespace glucat { namespace matrix
    * @details
    * @tparam Scalar_T
    * @param other Other matrix
-   * @return Result
+   * @return Product
    */
   template< typename Scalar_T >
   inline auto
@@ -516,7 +516,7 @@ namespace glucat { namespace matrix
    * @brief Unary negation
    * @details
    * @tparam Scalar_T
-   * @return Result
+   * @return Unary minus
    */
   template< typename Scalar_T >
   inline auto
@@ -1093,7 +1093,7 @@ namespace glucat { namespace matrix
    * @brief Const element access
    * @details
    * @tparam Scalar_T
-   * @return Result
+   * @return Element
    */
   template< typename Scalar_T >
   inline auto
@@ -1105,7 +1105,7 @@ namespace glucat { namespace matrix
    * @brief Element access
    * @details
    * @tparam Scalar_T
-   * @return Result
+   * @return Element
    */
   template< typename Scalar_T >
   inline auto
@@ -1134,7 +1134,7 @@ namespace glucat { namespace matrix
    * @details
    * @tparam Scalar_T
    * @param other Other matrix
-   * @return Result
+   * @return Product
    */
   template< typename Scalar_T >
   inline auto
@@ -1409,7 +1409,7 @@ namespace glucat { namespace matrix
    * @tparam Scalar_T
    * @param s Scalar
    * @param m Matrix
-   * @return Result
+   * @return Product
    */
   template< typename Scalar_T >
   inline auto
@@ -1426,7 +1426,7 @@ namespace glucat { namespace matrix
    * @tparam Scalar_T
    * @param m Matrix
    * @param s Scalar
-   * @return Result
+   * @return Product
    */
   template< typename Scalar_T >
   inline auto
@@ -1439,7 +1439,7 @@ namespace glucat { namespace matrix
    * @tparam Scalar_T
    * @param s Scalar
    * @param m Matrix
-   * @return Result
+   * @return Product
    */
   template< typename Scalar_T >
   inline auto
@@ -1456,7 +1456,7 @@ namespace glucat { namespace matrix
    * @tparam Scalar_T
    * @param m Matrix
    * @param s Scalar
-   * @return Result
+   * @return Product
    */
   template< typename Scalar_T >
   inline auto
@@ -1469,7 +1469,7 @@ namespace glucat { namespace matrix
    * @tparam Scalar_T
    * @param lhs Left Hand Side
    * @param rhs Right Hand Side
-   * @return Result
+   * @return Sum
    */
   template< typename Scalar_T >
   inline auto
@@ -1486,7 +1486,7 @@ namespace glucat { namespace matrix
    * @tparam Scalar_T
    * @param lhs Left Hand Side
    * @param rhs Right Hand Side
-   * @return Result
+   * @return Difference
    */
   template< typename Scalar_T >
   inline auto

@@ -30,7 +30,7 @@
  "Clifford algebras with numeric and symbolic computations", Birkhauser, 1996.
  ***************************************************************************
      See also Arvind Raja's original header comments in glucat.h
- *************************************************************************** @return Result
+ ***************************************************************************
  ***************************************************************************/
 
 #include "glucat/framed_multi.h"
@@ -470,7 +470,7 @@ namespace glucat
    * @endcode
    *
    * @param scr Scalar
-   * @return Result
+   * @return Reference to this
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -516,7 +516,7 @@ namespace glucat
    * @endcode
    *
    * @param scr Scalar
-   * @return Result
+   * @return Reference to this
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -561,7 +561,7 @@ namespace glucat
    * transcendtest(-m_(1));
    * @endcode
    *
-   * @return Result
+   * @return Unary minus
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -623,7 +623,7 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @param lhs Left hand side
    * @param rhs Right hand side
-   * @return Result
+   * @return Product
    *
    * @par Example:
    * @code
@@ -699,7 +699,7 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @param lhs Left hand side
    * @param rhs Right hand side
-   * @return Result
+   * @return Outer product
    *
    * @par Example:
    * @code
@@ -790,7 +790,7 @@ namespace glucat
    * @endcode
    *
    * @param rhs Right hand side
-   * @return Result
+   * @return Reference to this
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -817,7 +817,7 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @param lhs Left hand side
    * @param rhs Right hand side
-   * @return Result
+   * @return Inner product
    *
    * @par Example:
    * @code
@@ -926,7 +926,7 @@ namespace glucat
    * @tparam HI High index limit
    * @tparam Tune_P Tuning policy
    * @param rhs Right hand side
-   * @return Result
+   * @return Reference to this
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1139,7 +1139,7 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @param lhs Left hand side
    * @param rhs Right hand side
-   * @return Result
+   * @return Quotient
    *
    * @par Example:
    * @code
@@ -1188,7 +1188,7 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @param lhs Left hand side
    * @param rhs Right hand side
-   * @return Result
+   * @return Bitwise OR
    *
    * @par Example:
    * @code
@@ -1214,7 +1214,7 @@ namespace glucat
    * @tparam HI High index limit
    * @tparam Tune_P Tuning policy
    * @param rhs Right hand side
-   * @return Result
+   * @return Reference to this
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1333,7 +1333,7 @@ namespace glucat
    * @tparam LO Low index limit
    * @tparam HI High index limit
    * @tparam Tune_P Tuning policy
-   * @return Result
+   * @return Grade
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1377,7 +1377,7 @@ namespace glucat
    * @tparam LO Low index limit
    * @tparam HI High index limit
    * @tparam Tune_P Tuning policy
-   * @return Result
+   * @return Element
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -1403,7 +1403,7 @@ namespace glucat
    * @tparam LO Low index limit
    * @tparam HI High index limit
    * @tparam Tune_P Tuning policy
-   * @return Result
+   * @return Scalar part
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1419,7 +1419,7 @@ namespace glucat
    * @tparam LO Low index limit
    * @tparam HI High index limit
    * @tparam Tune_P Tuning policy
-   * @return Result
+   * @return Pure part
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1435,7 +1435,7 @@ namespace glucat
    * @tparam LO Low index limit
    * @tparam HI High index limit
    * @tparam Tune_P Tuning policy
-   * @return Result
+   * @return Even part
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -1456,7 +1456,7 @@ namespace glucat
    * @tparam LO Low index limit
    * @tparam HI High index limit
    * @tparam Tune_P Tuning policy
-   * @return Result
+   * @return Odd part
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -1477,7 +1477,7 @@ namespace glucat
    * @tparam LO Low index limit
    * @tparam HI High index limit
    * @tparam Tune_P Tuning policy
-   * @return Result
+   * @return Vector part
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -1524,7 +1524,7 @@ namespace glucat
    * @tparam LO Low index limit
    * @tparam HI High index limit
    * @tparam Tune_P Tuning policy
-   * @return Result
+   * @return Main involution
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -1547,7 +1547,7 @@ namespace glucat
    * @tparam LO Low index limit
    * @tparam HI High index limit
    * @tparam Tune_P Tuning policy
-   * @return Result
+   * @return Reverse
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -1577,7 +1577,7 @@ namespace glucat
    * @tparam LO Low index limit
    * @tparam HI High index limit
    * @tparam Tune_P Tuning policy
-   * @return Result
+   * @return Clifford conjugate
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -1612,7 +1612,7 @@ namespace glucat
    * @tparam LO Low index limit
    * @tparam HI High index limit
    * @tparam Tune_P Tuning policy
-   * @return Result
+   * @return Quadratic form
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -1640,7 +1640,7 @@ namespace glucat
    * @tparam LO Low index limit
    * @tparam HI High index limit
    * @tparam Tune_P Tuning policy
-   * @return Result
+   * @return Norm
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -1665,7 +1665,7 @@ namespace glucat
    * @tparam LO Low index limit
    * @tparam HI High index limit
    * @tparam Tune_P Tuning policy
-   * @return Result
+   * @return Maximum absolute value
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -1771,7 +1771,6 @@ namespace glucat
    * @details
    * @tparam Map_T
    * @tparam Sorted_Map_T
-   * @return Result
    */
   template< typename Map_T,typename Sorted_Map_T >
   class sorted_range

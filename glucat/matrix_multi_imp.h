@@ -29,7 +29,7 @@
  "Clifford algebras with numeric and symbolic computations", Birkhauser, 1996.
  ***************************************************************************
      See also Arvind Raja's original header comments in glucat.h
- *************************************************************************** @return Result
+ ***************************************************************************
  ***************************************************************************/
 
 #include "glucat/matrix_multi.h"
@@ -605,7 +605,7 @@ namespace glucat
    * @endcode
    * 
    * @param scr Scalar
-   * @return Result
+   * @return Reference to this
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -626,7 +626,7 @@ namespace glucat
    * @endcode
    * 
    * @param rhs Right hand side
-   * @return Result
+   * @return Reference to this
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -661,7 +661,7 @@ namespace glucat
    * @endcode
    * 
    * @param scr Scalar
-   * @return Result
+   * @return Reference to this
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -712,7 +712,7 @@ namespace glucat
    * transcendtest(-m_(1));
    * @endcode
    * 
-   * @return Result
+   * @return Unary minus
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -770,7 +770,7 @@ namespace glucat
    * @tparam Tune_P
    * @param lhs Left hand side
    * @param rhs Right hand side
-   * @return Result
+   * @return Product
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -839,7 +839,7 @@ namespace glucat
    * @tparam Tune_P
    * @param lhs Left hand side
    * @param rhs Right hand side
-   * @return Result
+   * @return Outer product
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -859,7 +859,7 @@ namespace glucat
    * @tparam HI
    * @tparam Tune_P
    * @param rhs Right hand side
-   * @return Result
+   * @return Reference to this
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -877,7 +877,7 @@ namespace glucat
    * @tparam Tune_P
    * @param lhs Left hand side
    * @param rhs Right hand side
-   * @return Result
+   * @return Inner product
    *
    * @par Example:
    * @code
@@ -902,7 +902,7 @@ namespace glucat
    * @tparam HI
    * @tparam Tune_P
    * @param rhs Right hand side
-   * @return Result
+   * @return Reference to this
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1015,7 +1015,7 @@ namespace glucat
    * @tparam Tune_P
    * @param lhs Left hand side
    * @param rhs Right hand side
-   * @return Result
+   * @return Quotient
    *
    * @par Example:
    * @code
@@ -1092,7 +1092,7 @@ namespace glucat
    * @tparam Tune_P
    * @param lhs Left hand side
    * @param rhs Right hand side
-   * @return Result
+   * @return Bitwise OR
    *
    * @par Example:
    * @code
@@ -1113,7 +1113,7 @@ namespace glucat
    * @tparam HI
    * @tparam Tune_P
    * @param rhs Right hand side
-   * @return Result
+   * @return Reference to this
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1204,7 +1204,7 @@ namespace glucat
    * @tparam LO
    * @tparam HI
    * @tparam Tune_P
-   * @return Result
+   * @return Grade
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1259,7 +1259,7 @@ namespace glucat
    * @tparam LO
    * @tparam HI
    * @tparam Tune_P
-   * @return Result
+   * @return Element
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1280,7 +1280,7 @@ namespace glucat
    * @tparam LO
    * @tparam HI
    * @tparam Tune_P
-   * @return Result
+   * @return Scalar part
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1299,7 +1299,7 @@ namespace glucat
    * @tparam LO
    * @tparam HI
    * @tparam Tune_P
-   * @return Result
+   * @return Pure part
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1315,7 +1315,7 @@ namespace glucat
    * @tparam LO
    * @tparam HI
    * @tparam Tune_P
-   * @return Result
+   * @return Even part
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1331,7 +1331,7 @@ namespace glucat
    * @tparam LO
    * @tparam HI
    * @tparam Tune_P
-   * @return Result
+   * @return Odd part
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1347,7 +1347,7 @@ namespace glucat
    * @tparam LO
    * @tparam HI
    * @tparam Tune_P
-   * @return Result
+   * @return Vector part
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
@@ -1399,7 +1399,7 @@ namespace glucat
    * @tparam LO
    * @tparam HI
    * @tparam Tune_P
-   * @return Result
+   * @return Main involution
    *
    * @par Example:
    * @code
@@ -1420,7 +1420,7 @@ namespace glucat
    * @tparam LO
    * @tparam HI
    * @tparam Tune_P
-   * @return Result
+   * @return Reverse
    *
    * @par Example:
    * @code
@@ -1441,7 +1441,7 @@ namespace glucat
    * @tparam LO
    * @tparam HI
    * @tparam Tune_P
-   * @return Result
+   * @return Clifford conjugate
    *
    * @par Example:
    * @code
@@ -1462,7 +1462,7 @@ namespace glucat
    * @tparam LO
    * @tparam HI
    * @tparam Tune_P
-   * @return Result
+   * @return Quadratic form
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1481,7 +1481,7 @@ namespace glucat
    * @tparam LO
    * @tparam HI
    * @tparam Tune_P
-   * @return Result
+   * @return Norm
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1500,7 +1500,7 @@ namespace glucat
    * @tparam LO
    * @tparam HI
    * @tparam Tune_P
-   * @return Result
+   * @return Maximum absolute value
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1857,7 +1857,6 @@ namespace glucat
    * @tparam LO
    * @tparam HI
    * @tparam Matrix_T
-   * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Matrix_T >
   class basis_table :
@@ -1875,12 +1874,10 @@ namespace glucat
     /**
      * @brief Friend declaration to avoid compiler warning:
      * @details
-     * @return Result
      */
     /**
      * @brief "... only defines a private destructor and has no friends"
      * @details
-     * @return Result
      */
     /**
      * @brief Ref: Carlos O'Ryan, ACE http://doc.ece.uci.edu
@@ -2150,7 +2147,6 @@ namespace pade {
   /**
    * @brief Coefficients of numerator polynomials of Pade approximations produced by Pade1(sqrt(1+x),x,n,n)
    * @details
-   * @return Result
    */
   /// Reference: [Z], Pade1
   template< typename Scalar_T >
@@ -2171,7 +2167,6 @@ namespace pade {
   /**
    * @brief Coefficients of denominator polynomials of Pade approximations produced by Pade1(sqrt(1+x),x,n,n)
    * @details
-   * @return Result
    */
   /// Reference: [Z], Pade1
   template< typename Scalar_T >
@@ -2519,7 +2514,6 @@ namespace pade {
   /**
    * @brief Coefficients of numerator polynomials of Pade approximations produced by Pade1(log(1+x),x,n,n)
    * @details
-   * @return Result
    */
   /// Reference: [Z], Pade1
   template< typename Scalar_T >
@@ -2540,7 +2534,6 @@ namespace pade {
   /**
    * @brief Coefficients of denominator polynomials of Pade approximations produced by Pade1(log(1+x),x,n,n)
    * @details
-   * @return Result
    */
   /// Reference: [Z], Pade1
   template< typename Scalar_T >

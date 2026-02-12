@@ -29,7 +29,7 @@
  "Clifford algebras with numeric and symbolic computations", Birkhauser, 1996.
  ***************************************************************************
      See also Arvind Raja's original header comments in glucat.h
- *************************************************************************** @return Result
+ ***************************************************************************
  ***************************************************************************/
 
 // References for algorithms:
@@ -85,7 +85,7 @@ namespace glucat
    * @details
    * @param lhs Left hand side
    * @param rhs Right hand side
-   * @return Result
+   * @return True if not equal
    */
   template
   <
@@ -225,7 +225,7 @@ namespace glucat
    * @details
    * @param lhs Left hand side
    * @param scr Value
-   * @return Result
+   * @return Sum
    */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -242,7 +242,7 @@ namespace glucat
    * @details
    * @param scr Value
    * @param rhs Right hand side
-   * @return Result
+   * @return Sum
    */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -263,7 +263,7 @@ namespace glucat
    * 
    * @param lhs Left hand side
    * @param rhs Right hand side
-   * @return Result
+   * @return Sum
    */
   template
   <
@@ -284,7 +284,7 @@ namespace glucat
    * @details
    * @param lhs Left hand side
    * @param scr Value
-   * @return Result
+   * @return Difference
    */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -301,7 +301,7 @@ namespace glucat
    * @details
    * @param scr Value
    * @param rhs Right hand side
-   * @return Result
+   * @return Difference
    */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -320,7 +320,7 @@ namespace glucat
    * 
    * @param lhs Left hand side
    * @param rhs Right hand side
-   * @return Result
+   * @return Difference
    */
   template
   <
@@ -341,7 +341,7 @@ namespace glucat
    * @details
    * @param lhs Left hand side
    * @param scr Value
-   * @return Result
+   * @return Product
    */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -358,7 +358,7 @@ namespace glucat
    * @details
    * @param scr Value
    * @param rhs Right hand side
-   * @return Result
+   * @return Product
    */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -375,7 +375,7 @@ namespace glucat
    * @details
    * @param lhs Left hand side
    * @param rhs Right hand side
-   * @return Result
+   * @return Product
    */
   template
   <
@@ -396,7 +396,7 @@ namespace glucat
    * @details
    * @param lhs Left hand side
    * @param rhs Right hand side
-   * @return Result
+   * @return Outer product
    */
   template
   <
@@ -417,7 +417,7 @@ namespace glucat
    * @details
    * @param lhs Left hand side
    * @param rhs Right hand side
-   * @return Result
+   * @return Inner product
    */
   template
   <
@@ -480,7 +480,7 @@ namespace glucat
    * @details
    * @param lhs Left hand side
    * @param scr Value
-   * @return Result
+   * @return Quotient
    */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -497,7 +497,7 @@ namespace glucat
    * @details
    * @param scr Value
    * @param rhs Right hand side
-   * @return Result
+   * @return Quotient
    */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -519,7 +519,7 @@ namespace glucat
    * 
    * @param lhs Left hand side
    * @param rhs Right hand side
-   * @return Result
+   * @return Quotient
    */
   template
   <
@@ -540,7 +540,7 @@ namespace glucat
    * @details
    * @param lhs Left hand side
    * @param rhs Right hand side
-   * @return Result
+   * @return Bitwise OR
    */
   template
   <
@@ -661,7 +661,7 @@ namespace glucat
    * @brief Scalar part
    * @details
    * @param val Value
-   * @return Result
+   * @return Scalar part
    */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -688,7 +688,7 @@ namespace glucat
    * @brief Pure part
    * @details
    * @param val Value
-   * @return Result
+   * @return Pure part
    */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -701,7 +701,7 @@ namespace glucat
    * @brief Even part
    * @details
    * @param val Value
-   * @return Result
+   * @return Even part
    */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -714,7 +714,7 @@ namespace glucat
    * @brief Odd part
    * @details
    * @param val Value
-   * @return Result
+   * @return Odd part
    */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -727,7 +727,7 @@ namespace glucat
    * @brief Vector part of multivector, as a vector_t with respect to frame()
    * @details
    * @param val Value
-   * @return Result
+   * @return Vector part
    */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -745,7 +745,7 @@ namespace glucat
    * @endcode
    * 
    * @param val Value
-   * @return Result
+   * @return Main involution
    */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -763,7 +763,7 @@ namespace glucat
    * @endcode
    * 
    * @param val Value
-   * @return Result
+   * @return Reverse
    */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -781,7 +781,7 @@ namespace glucat
    * @endcode
    * 
    * @param val Value
-   * @return Result
+   * @return Clifford conjugate
    */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -794,7 +794,7 @@ namespace glucat
    * @brief Scalar_T quadratic form == (rev(x)*x)(0)
    * @details
    * @param val Value
-   * @return Result
+   * @return Quadratic form
    */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -807,7 +807,7 @@ namespace glucat
    * @brief Scalar_T norm == sum of norm of coordinates
    * @details
    * @param val Value
-   * @return Result
+   * @return Norm
    */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -833,7 +833,7 @@ namespace glucat
    * @brief Maximum of absolute values of components of multivector: multivector infinity norm
    * @details
    * @param val Value
-   * @return Result
+   * @return Maximum absolute value
    */
   template< template<typename, const index_t, const index_t, typename> class Multivector,
             typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >

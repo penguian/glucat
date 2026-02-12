@@ -201,7 +201,7 @@ namespace glucat
    * @tparam LO
    * @tparam HI
    * @param rhs Right hand side
-   * @return Result
+   * @return Reference to this
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -236,7 +236,7 @@ namespace glucat
    * @tparam HI
    * @param lhs Left hand side
    * @param rhs Right hand side
-   * @return Result
+   * @return Outer product
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -256,7 +256,7 @@ namespace glucat
    * @tparam LO
    * @tparam HI
    * @param rhs Right hand side
-   * @return Result
+   * @return Reference to this
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -282,7 +282,7 @@ namespace glucat
    * @tparam HI
    * @param lhs Left hand side
    * @param rhs Right hand side
-   * @return Result
+   * @return Inner product
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -302,7 +302,7 @@ namespace glucat
    * @tparam LO
    * @tparam HI
    * @param rhs Right hand side
-   * @return Result
+   * @return Reference to this
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -328,7 +328,7 @@ namespace glucat
    * @tparam HI
    * @param lhs Left hand side
    * @param rhs Right hand side
-   * @return Result
+   * @return Bitwise OR
    */
   template<const index_t LO, const index_t HI>
   inline
@@ -1157,7 +1157,7 @@ namespace glucat
    * @brief Inverse reversed Gray code
    * @details
    * @param x Value
-   * @return Result
+   * @return Inverse
    */
   inline
   static
@@ -1179,7 +1179,7 @@ namespace glucat
    * @brief Inverse Gray code
    * @details
    * @param x Value
-   * @return Result
+   * @return Inverse
    */
   inline
   static
@@ -1293,7 +1293,7 @@ namespace glucat
    * @details
    * @tparam LO
    * @tparam HI
-   * @return Result
+   * @return Size
    */
   template<const index_t LO, const index_t HI>
   inline

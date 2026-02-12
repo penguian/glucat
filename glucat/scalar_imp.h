@@ -29,7 +29,7 @@
  "Clifford algebras with numeric and symbolic computations, Birkhauser, 1996."
  ***************************************************************************
  See also Arvind Raja's original header comments and references in glucat.h
- *************************************************************************** @return Result
+ ***************************************************************************
  ***************************************************************************/
 
 #include "glucat/scalar.h"
@@ -45,7 +45,6 @@ namespace glucat
   /**
    * @brief Extra traits which extend numeric limits
    * @details
-   * @return Result
    */
   // Reference: [AA], 2.4, p. 30-31
 
@@ -53,7 +52,7 @@ namespace glucat
    * @brief Cast to float
    * @details
    * @param val Value
-   * @return Result
+   * @return Converted value
    */
   template< >
   template< typename Other_Scalar_T >
@@ -77,7 +76,7 @@ namespace glucat
    *
    * @tparam Other_Scalar_T
    * @param val Value
-   * @return Result
+   * @return Converted value
    */
   template< >
   template< typename Other_Scalar_T >
@@ -92,7 +91,7 @@ namespace glucat
    * @brief Cast to long double
    * @details
    * @param val Value
-   * @return Result
+   * @return Converted value
    */
   template< >
   template< >
@@ -106,7 +105,7 @@ namespace glucat
    * @brief Cast to long double
    * @details
    * @param val Value
-   * @return Result
+   * @return Converted value
    */
   template< >
   template< >
@@ -120,7 +119,7 @@ namespace glucat
    * @brief Cast to dd_real
    * @details
    * @param val Value
-   * @return Result
+   * @return Converted value
    */
   template< >
   template< >
@@ -134,7 +133,7 @@ namespace glucat
    * @brief Cast to dd_real
    * @details
    * @param val Value
-   * @return Result
+   * @return Converted value
    */
   template< >
   template< >
@@ -148,7 +147,7 @@ namespace glucat
    * @brief Cast to qd_real
    * @details
    * @param val Value
-   * @return Result
+   * @return Converted value
    */
   template< >
   template< >
@@ -162,7 +161,7 @@ namespace glucat
    * @brief Cast to qd_real
    * @details
    * @param val Value
-   * @return Result
+   * @return Converted value
    */
   template< >
   template< >
