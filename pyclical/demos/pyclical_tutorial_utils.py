@@ -29,8 +29,8 @@ from PyClical import *
 import PyClical
 import math
 
-# Whitelist of safe builtins
-safe_builtins = {
+# Allowed builtins
+allowed_builtins = {
     'False': False,
     'None': None,
     'True': True,
@@ -65,7 +65,7 @@ safe_builtins = {
     'zip': zip,
 }
 
-def safe_import(name, globals=None, locals=None, fromlist=(), level=0):
+def allowed_import(name, globals=None, locals=None, fromlist=(), level=0):
     """
     Restricted __import__ function that only allows importing PyClical.
     """
@@ -73,27 +73,27 @@ def safe_import(name, globals=None, locals=None, fromlist=(), level=0):
         return PyClical
     raise ImportError(f"Import of '{name}' is not allowed in tutorial sandbox.")
 
-safe_builtins['__import__'] = safe_import
+allowed_builtins['__import__'] = allowed_import
 
-def get_safe_scope():
+def get_allowed_scope():
     """
     Returns a dictionary suitable for use as a restricted execution namespace.
-    Includes safe builtins and all public symbols from PyClical.
+    Includes allowed builtins and all public symbols from PyClical.
     """
-    scope = {'__builtins__': safe_builtins}
+    scope = {'__builtins__': allowed_builtins}
     for name in dir(PyClical):
         if not name.startswith('_'):
             scope[name] = getattr(PyClical, name)
     return scope
 
-def safe_exec(command_str, scope=None):
+def allowed_exec(command_str, scope=None):
     if scope is None:
-        scope = get_safe_scope()
+        scope = get_allowed_scope()
     exec(command_str, scope)
 
-def safe_eval(expression_str, scope=None):
+def allowed_eval(expression_str, scope=None):
     if scope is None:
-        scope = get_safe_scope()
+        scope = get_allowed_scope()
     return eval(expression_str, scope)
 
 def get_console_width():
@@ -178,8 +178,8 @@ class interaction_context(object):
 
 class tutorial_context(interaction_context):
     def __init__(self, dictionary=None):
-        # We ignore the passed dictionary to enforce the safe scope
-        self.object_names = get_safe_scope()
+        # We ignore the passed dictionary to enforce the allowed scope
+        self.object_names = get_allowed_scope()
 
     def pause(self):
         if sys.stdin.isatty() and sys.stdout.isatty():
@@ -196,15 +196,15 @@ class tutorial_context(interaction_context):
 
     def print_exec(self, command_str):
         print(">>>", command_str)
-        safe_exec(command_str, self.object_names)
+        allowed_exec(command_str, self.object_names)
 
     def input_exec(self, prompt, sandbox):
         input_str = input(prompt + "\n>>> ")
-        safe_exec(input_str, sandbox)
+        allowed_exec(input_str, sandbox)
 
     def input_eval(self, prompt):
         input_str = input(prompt + "\n>>> ")
-        return safe_eval(input_str, self.object_names)
+        return allowed_eval(input_str, self.object_names)
 
     def check_exec(self, prompt, var_name, value_str):
         try:
@@ -212,7 +212,7 @@ class tutorial_context(interaction_context):
             filled_prompt = fill("Exercise: Enter a Python statement to " + prompt, "")
             print("")
             self.input_exec(filled_prompt, sandbox)
-            value = safe_eval(value_str, self.object_names)
+            value = allowed_eval(value_str, self.object_names)
         except KeyboardInterrupt:
             raise
         except:
@@ -226,7 +226,7 @@ class tutorial_context(interaction_context):
 
     def check_eval(self, prompt, value_str, command_str):
         try:
-            value = safe_eval(value_str, self.object_names)
+            value = allowed_eval(value_str, self.object_names)
         except:
             value = None
         try:
