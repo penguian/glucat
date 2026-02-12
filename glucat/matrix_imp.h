@@ -2,7 +2,7 @@
 #define _GLUCAT_MATRIX_IMP_H
 /***************************************************************************
     GluCat : Generic library of universal Clifford algebra templates
-    matrix.h : Declare common matrix classes and functions
+    matrix_imp.h : Define common matrix classes and functions
                              -------------------
     begin                : Sun 2001-12-09
     copyright            : (C) 2001-2026 by Paul C. Leopardi
