@@ -209,7 +209,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
            [])
 
         if [[[ "$glucat_have_fopenmp" == "yes" ]]] && [[[ "$glucat_have_openblas" == "yes" ]]]; then
-           CXXFLAGS="$CXXFLAGS -fopenmp -DARMA_USE_OPENMP"
+           CXXFLAGS="$CXXFLAGS -fopenmp -D_GLUCAT_USE_OPENMP -DARMA_USE_OPENMP"
            all_libraries="$all_libraries -lopenblas"
            AC_MSG_NOTICE([OpenMP support enabled with -fopenmp and -lopenblas])
         else
