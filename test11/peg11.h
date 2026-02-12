@@ -122,97 +122,114 @@ namespace peg11
     else
       A.write("A");
 
-    check(exp(A)*exp(-A), m_(1),
+    m_ sqrt_A = sqrt(A);
+    m_ exp_A = exp(A);
+    m_ log_A = log(A);
+    m_ exp_mA = exp(-A);
+    m_ cos_A = cos(A);
+    m_ cosh_A = cosh(A);
+    m_ sin_A = sin(A);
+    m_ sinh_A = sinh(A);
+    m_ tan_A = tan(A);
+    m_ tanh_A = tanh(A);
+    m_ acos_A = acos(A);
+    m_ acosh_A = acosh(A);
+    m_ asin_A = asin(A);
+    m_ asinh_A = asinh(A);
+    m_ atan_A = atan(A);
+    m_ atanh_A = atanh(A);
+
+    check(exp_A*exp_mA, m_(1),
          "exp(A)*exp(-A) != 1");
 
-    check(exp(-A)*exp(A), m_(1),
+    check(exp_mA*exp_A, m_(1),
          "exp(-A)*exp(A) != 1");
 
-    check(exp(scalar(A))*exp(pure(A)), exp(A),
+    check(exp(scalar(A))*exp(pure(A)), exp_A,
          "exp(scalar(A))*exp(pure(A)) != exp(A)");
 
-    if (isnan_or_isinf(cos(A)) || isnan_or_isinf(sin(A)))
+    if (isnan_or_isinf(cos_A) || isnan_or_isinf(sin_A))
     {
-      note_isnan_or_isinf(cos(A), "cos(A)");
-      note_isnan_or_isinf(sin(A), "sin(A)");
+      note_isnan_or_isinf(cos_A, "cos(A)");
+      note_isnan_or_isinf(sin_A, "sin(A)");
     }
     else
-      check(cos(A)+complexifier(A)*sin(A), exp(complexifier(A)*A),
+      check(cos_A+complexifier(A)*sin_A, exp(complexifier(A)*A),
            "cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)");
 
-    if (isnan_or_isinf(cosh(A)) || isnan_or_isinf(sinh(A)))
+    if (isnan_or_isinf(cosh_A) || isnan_or_isinf(sinh_A))
     {
-      note_isnan_or_isinf(cosh(A), "cosh(A)");
-      note_isnan_or_isinf(sinh(A), "sinh(A)");
+      note_isnan_or_isinf(cosh_A, "cosh(A)");
+      note_isnan_or_isinf(sinh_A, "sinh(A)");
     }
     else
-      check(cosh(A)+sinh(A), exp(A),
+      check(cosh_A+sinh_A, exp_A,
            "cosh(A)+sinh(A) != exp(A)");
 
-    if (isnan_or_isinf(cos(A)) || isnan_or_isinf(tan(A)))
+    if (isnan_or_isinf(cos_A) || isnan_or_isinf(tan_A))
     {
       // sin(A) has been noted above
-      note_isnan_or_isinf(tan(A), "tan(A)");
+      note_isnan_or_isinf(tan_A, "tan(A)");
     }
     else
-      check(cos(A)*tan(A), sin(A),
+      check(cos_A*tan_A, sin_A,
            "cos(A)*tan(A) != sin(A)");
 
-    if (isnan_or_isinf(cosh(A)) || isnan_or_isinf(tanh(A)))
+    if (isnan_or_isinf(cosh_A) || isnan_or_isinf(tanh_A))
     {
       // sinh(A) has been noted above
-      note_isnan_or_isinf(tanh(A), "tanh(A)");
+      note_isnan_or_isinf(tanh_A, "tanh(A)");
     }
     else
-      check(cosh(A)*tanh(A), sinh(A),
+      check(cosh_A*tanh_A, sinh_A,
            "cosh(A)*tanh(A) != sinh(A)");
 
-    if (isnan_or_isinf(sqrt(A)))
-      note_isnan_or_isinf(sqrt(A), "sqrt(A)");
+    if (isnan_or_isinf(sqrt_A))
+      note_isnan_or_isinf(sqrt_A, "sqrt(A)");
     else
-      check(sqrt(A)*sqrt(A), A,
+      check(sqrt_A*sqrt_A, A,
            "sqrt(A)*sqrt(A) != A");
 
-    if (isnan_or_isinf(log(A)))
-      note_isnan_or_isinf(log(A), "log(A)");
+    if (isnan_or_isinf(log_A))
+      note_isnan_or_isinf(log_A, "log(A)");
     else
-      check(exp(log(A)), A,
+      check(exp(log_A), A,
            "exp(log(A)) != A", true);
 
-    if (isnan_or_isinf(acos(A)))
-      note_isnan_or_isinf(acos(A), "acos(A)");
+    if (isnan_or_isinf(acos_A))
+      note_isnan_or_isinf(acos_A, "acos(A)");
     else
-      check(cos(acos(A)), A,
+      check(cos(acos_A), A,
            "cos(acos(A)) != A", true);
 
-    if (isnan_or_isinf(acosh(A)))
-      note_isnan_or_isinf(acosh(A), "acosh(A)");
+    if (isnan_or_isinf(acosh_A))
+      note_isnan_or_isinf(acosh_A, "acosh(A)");
     else
-      check(cosh(acosh(A)), A,
+      check(cosh(acosh_A), A,
            "cosh(acosh(A)) != A", true);
 
-    if (isnan_or_isinf(asin(A)))
-      note_isnan_or_isinf(asin(A), "asin(A)");
+    if (isnan_or_isinf(asin_A))
+      note_isnan_or_isinf(asin_A, "asin(A)");
     else
-      check(sin(asin(A)), A,
+      check(sin(asin_A), A,
            "sin(asin(A)) != A", true);
 
-    if (isnan_or_isinf(asinh(A)))
-      note_isnan_or_isinf(asinh(A), "asinh(A)");
+    if (isnan_or_isinf(asinh_A))
+      note_isnan_or_isinf(asinh_A, "asinh(A)");
     else
-      check(sinh(asinh(A)), A,
+      check(sinh(asinh_A), A,
            "sinh(asinh(A)) != A", true);
 
-    if (isnan_or_isinf(atan(A)))
-      note_isnan_or_isinf(atan(A), "atan(A)");
+    if (isnan_or_isinf(atan_A))
+      note_isnan_or_isinf(atan_A, "atan(A)");
     else
-      check(tan(atan(A)), A,
+      check(tan(atan_A), A,
            "tan(atan(A)) != A", true);
 
-    if (isnan_or_isinf(atanh(A)))
-      note_isnan_or_isinf(atanh(A), "atanh(A)");
+    if (isnan_or_isinf(atanh_A))
+      note_isnan_or_isinf(atanh_A, "atanh(A)");
     else
-      check(tanh(atanh(A)), A,
+      check(tanh(atanh_A), A,
            "tanh(atanh(A)) != A", true);
 
     cout << endl;
