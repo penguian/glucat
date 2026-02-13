@@ -74,12 +74,12 @@ def run(ctx=tutorial_context(globals())):
     print_exec("M2 = e({1, 2})")
     print_fill("Define a rotor for a 90-degree rotation in the (2, 3) plane.")
     # Rotor R = exp(theta/2 * Bivector)
-    print_exec("theta = 1.57079632679 # pi/2")
+    print_exec("theta = math.pi/2")
     print_exec("B = e({2, 3})")
     print_exec("R = cos(theta/2) - B * sin(theta/2)")
 
-    print_fill("Apply rotation: M2_new = R * M2 * ~R")
-    print_exec("M2_new = R * M2 * ~R")
+    print_fill("Apply rotation: M2_new = M2 | R")
+    print_exec("M2_new = M2 | R")
     print_exec("print(f'Rotated M2-brane: {M2_new}')")
     print_line()
 
