@@ -66,7 +66,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
 
   dnl process the command line arguments
 
-
   AC_ARG_ENABLE([debug],
     AS_HELP_STRING(
       [--enable-debug[=ARG]],
@@ -171,6 +170,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       [use specified map implementation (boost|std) [default=boost]]),
     [glucat_use_unordered_map="$withval"],
     [glucat_use_unordered_map="boost"])
+
+  dnl Check for Boost version
+  GLUCAT_CHECK_HEADERS([boost/version.hpp], [], [])
 
   dnl enable warnings for debug build
   if [[[ "$glucat_use_debug_code" != "no" ]]]; then
