@@ -1170,7 +1170,7 @@ namespace glucat
    * @tparam HI High index limit
    * @tparam Tune_P Tuning policy
    * @param rhs Right hand side
-   * @return Reference to this
+   * @return Geometric quotient *this / rhs
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline
@@ -1188,7 +1188,7 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @param lhs Left hand side
    * @param rhs Right hand side
-   * @return Bitwise OR
+   * @return rhs transformed by lhs
    *
    * @par Example:
    * @code
