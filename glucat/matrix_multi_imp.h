@@ -115,15 +115,15 @@ namespace glucat
   /**
    * @brief Default constructor
    * @details
-   * 
+   *
    * Usage example:
    * Location: glucat/framed_multi_imp.h:1136
-   * 
+   *
    * @code
    *
    * auto result = matrix_multi_t(Scalar_T(1), this->frame());
    * @endcode
-   * 
+   *
    * @tparam Scalar_T
    * @tparam LO
    * @tparam HI
@@ -595,15 +595,15 @@ namespace glucat
   /**
    * @brief Add scalar
    * @details
-   * 
+   *
    * Usage example:
    * Location: glucat/clifford_algebra_imp.h:237
-   * 
+   *
    * @code
-   * 
+   *
    * return result += scr;
    * @endcode
-   * 
+   *
    * @param scr Scalar
    * @return Reference to this
    */
@@ -616,15 +616,15 @@ namespace glucat
   /**
    * @brief Add multivector
    * @details
-   * 
+   *
    * Usage example:
    * Location: glucat/framed_multi_imp.h:635
-   * 
+   *
    * @code
-   * 
+   *
    * result += lhs_term * rhs_term;
    * @endcode
-   * 
+   *
    * @param rhs Right hand side
    * @return Reference to this
    */
@@ -651,15 +651,15 @@ namespace glucat
   /**
    * @brief Subtract scalar
    * @details
-   * 
+   *
    * Usage example:
    * Location: glucat/clifford_algebra_imp.h:291
-   * 
+   *
    * @code
-   * 
+   *
    * return result -= scr;
    * @endcode
-   * 
+   *
    * @param scr Scalar
    * @return Reference to this
    */
@@ -703,15 +703,15 @@ namespace glucat
   /**
    * @brief Unary minus
    * @details
-   * 
+   *
    * Usage example:
    * Location: test11/peg11.h:277
-   * 
+   *
    * @code
-   * 
+   *
    * transcendtest(-m_(1));
    * @endcode
-   * 
+   *
    * @return Unary minus
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -750,20 +750,20 @@ namespace glucat
   /**
    * @brief Geometric product
    * @details
-   * 
+   *
    * Usage example:
    * Location: glucat/framed_multi_imp.h:1101
-   * 
+   *
    * @code
    *
    * return matrix_multi_t(rhs) * matrix_multi_t(lhs) / matrix_multi_t(rhs.involute());
    * @endcode
-   * 
+   *
    * @par Example:
    * @code
    * clifford<>("{1}") * clifford<>("{2}"); // Returns {1,2}
    * @endcode
-   * 
+   *
    * @tparam Scalar_T
    * @tparam LO
    * @tparam HI
@@ -832,7 +832,7 @@ namespace glucat
    * @code
    * clifford<>("{1}") ^ clifford<>("{2}"); // Returns {1,2}
    * @endcode
-   * 
+   *
    * @tparam Scalar_T
    * @tparam LO
    * @tparam HI
@@ -957,15 +957,15 @@ namespace glucat
   /**
    * @brief Hestenes scalar product
    * @details
-   * 
+   *
    * Usage example:
    * Location: test00/peg00.h:260
-   * 
+   *
    * @code
-   * 
+   *
    * const scalar_t scalar_lhs = star(a, b);
    * @endcode
-   * 
+   *
    * @tparam Scalar_T
    * @tparam LO
    * @tparam HI
@@ -1000,15 +1000,15 @@ namespace glucat
   /**
    * @brief Geometric quotient
    * @details
-   * 
+   *
    * Usage example:
    * Location: test00/peg00.h:114
-   * 
+   *
    * @code
-   * 
+   *
    * rhs = (a_r * b_s)(index_t(std::abs(r-s)));
    * @endcode
-   * 
+   *
    * @tparam Scalar_T
    * @tparam LO
    * @tparam HI
@@ -2056,7 +2056,6 @@ namespace glucat
     const auto& invM = M.inv();
     M = ((M + invM)/Scalar_T(2) + Scalar_T(1)) / Scalar_T(2);
     Y *= (invM + Scalar_T(1)) / Scalar_T(2);
-
   }
 
   /**
@@ -2793,11 +2792,7 @@ namespace glucat{
     if (outer_step == Tuning_Values_P::log_max_outer_steps && norm_Y_1 * pow_2_outer_step > max_outer_norm)
       return traits_t::NaN();
     else
-    {
-      const auto result = pade_log(Y) * pow_2_outer_step - E;
-
-      return result;
-    }
+      return pade_log(Y) * pow_2_outer_step - E;
   }
 
   /**
@@ -2822,7 +2817,7 @@ namespace glucat{
     // Reference: [CHKL]
 
     using traits_t = numeric_traits<Scalar_T>;
-    if (val == Scalar_T(0) || val.isnan())
+    if (val == Scalar_T(0) || val.isnan() || val.inv().isnan())
       return traits_t::NaN();
 
     static const auto pi = traits_t::pi();
