@@ -122,22 +122,23 @@ namespace peg11
     else
       A.write("A");
 
-    m_ sqrt_A = sqrt(A);
-    m_ exp_A = exp(A);
-    m_ log_A = log(A);
-    m_ exp_mA = exp(-A);
-    m_ cos_A = cos(A);
-    m_ cosh_A = cosh(A);
-    m_ sin_A = sin(A);
-    m_ sinh_A = sinh(A);
-    m_ tan_A = tan(A);
-    m_ tanh_A = tanh(A);
-    m_ acos_A = acos(A);
-    m_ acosh_A = acosh(A);
-    m_ asin_A = asin(A);
-    m_ asinh_A = asinh(A);
-    m_ atan_A = atan(A);
-    m_ atanh_A = atanh(A);
+    const m_ inv_A = inv(A);
+    const m_ sqrt_A = sqrt(A);
+    const m_ exp_A = exp(A);
+    const m_ log_A = log(A);
+    const m_ exp_mA = exp(-A);
+    const m_ cos_A = cos(A);
+    const m_ cosh_A = cosh(A);
+    const m_ sin_A = sin(A);
+    const m_ sinh_A = sinh(A);
+    const m_ tan_A = tan(A);
+    const m_ tanh_A = tanh(A);
+    const m_ acos_A = acos(A);
+    const m_ acosh_A = acosh(A);
+    const m_ asin_A = asin(A);
+    const m_ asinh_A = asinh(A);
+    const m_ atan_A = atan(A);
+    const m_ atanh_A = atanh(A);
 
     check(exp_A*exp_mA, m_(1),
          "exp(A)*exp(-A) != 1");
@@ -190,6 +191,10 @@ namespace peg11
       check(sqrt_A*sqrt_A, A,
            "sqrt(A)*sqrt(A) != A");
 
+    // The check below requires that inv(A) is not NaN
+    if (isnan_or_isinf(inv_A))
+      note_isnan_or_isinf(inv_A, "inv(A)");
+
     if (isnan_or_isinf(log_A))
       note_isnan_or_isinf(log_A, "log(A)");
     else
@@ -200,37 +205,37 @@ namespace peg11
       note_isnan_or_isinf(acos_A, "acos(A)");
     else
       check(cos(acos_A), A,
-           "cos(acos(A)) != A", true);
+           "cos(acos(A)) != A");
 
     if (isnan_or_isinf(acosh_A))
       note_isnan_or_isinf(acosh_A, "acosh(A)");
     else
       check(cosh(acosh_A), A,
-           "cosh(acosh(A)) != A", true);
+           "cosh(acosh(A)) != A");
 
     if (isnan_or_isinf(asin_A))
       note_isnan_or_isinf(asin_A, "asin(A)");
     else
       check(sin(asin_A), A,
-           "sin(asin(A)) != A", true);
+           "sin(asin(A)) != A");
 
     if (isnan_or_isinf(asinh_A))
       note_isnan_or_isinf(asinh_A, "asinh(A)");
     else
       check(sinh(asinh_A), A,
-           "sinh(asinh(A)) != A", true);
+           "sinh(asinh(A)) != A");
 
     if (isnan_or_isinf(atan_A))
       note_isnan_or_isinf(atan_A, "atan(A)");
     else
       check(tan(atan_A), A,
-           "tan(atan(A)) != A", true);
+           "tan(atan(A)) != A");
 
     if (isnan_or_isinf(atanh_A))
       note_isnan_or_isinf(atanh_A, "atanh(A)");
     else
       check(tanh(atanh_A), A,
-           "tanh(atanh(A)) != A", true);
+           "tanh(atanh(A)) != A");
 
     cout << endl;
     cout.precision(prec);
@@ -285,7 +290,7 @@ namespace peg11
     using m_ = Multivector_T;
     using scalar_t = typename Multivector_T::scalar_t;
 
-    cout << "Epsilon ==" << numeric_limits<scalar_t>::epsilon() << endl;
+    cout << "Epsilon == " << numeric_limits<scalar_t>::epsilon() << endl;
 
     const auto pi = numeric_traits<scalar_t>::pi();
     const auto i = m_("{-1}");
