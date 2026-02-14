@@ -37,11 +37,6 @@
 #include "glucat/clifford_algebra.h"
 #include "glucat/tuning.h"
 
-#if defined(_GLUCAT_USE_BOOST_POOL_ALLOC)
-// Use the Boost pool allocator
-#include <boost/pool/poolfwd.hpp>
-#endif
-
 #include <string>
 #include <utility>
 #include <map>
