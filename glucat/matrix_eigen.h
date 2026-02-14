@@ -80,7 +80,7 @@ namespace glucat { namespace matrix
     /// Default constructor
     eigen_matrix_wrapper() = default;
 
-    // Armadillo constructor (rows, cols)
+    // Sized constructor (rows, cols)
     eigen_matrix_wrapper(matrix_index_t rows, matrix_index_t cols);
 
     // Constructor from Eigen expressions (e.g. m * s)
@@ -96,10 +96,8 @@ namespace glucat { namespace matrix
     explicit eigen_matrix_wrapper(const eigen_sparse_wrapper<Other_Scalar_T>& other);
 
     // Copy constructor
-    // Copy constructor
     eigen_matrix_wrapper(const eigen_matrix_wrapper& other);
 
-    // Move constructor
     // Move constructor
     eigen_matrix_wrapper(eigen_matrix_wrapper&& other) noexcept;
 
@@ -146,7 +144,6 @@ namespace glucat { namespace matrix
     // Has NaN?
     auto has_nan() const -> bool;
 
-    // Element access
     // Element access
     auto operator() (matrix_index_t i, matrix_index_t j) -> Scalar_T&;
     // Const element access
@@ -277,7 +274,7 @@ namespace glucat { namespace matrix
     // Set to zero
     void zeros();
 
-    // Set to zero
+    // Set size then set to zero
     void zeros(matrix_index_t rows, matrix_index_t cols);
 
     // Iterator support
