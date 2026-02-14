@@ -34,8 +34,6 @@
 #include "glucat/global.h"
 #include "glucat/errors.h"
 
-#include <boost/static_assert.hpp>
-
 #include <bitset>
 #include <utility>
 
@@ -74,10 +72,11 @@ namespace glucat
   private std::bitset<HI-LO>
   {
   private:
-    BOOST_STATIC_ASSERT((LO <= 0) && (0 <= HI) && (LO < HI) && \
+    static_assert((LO <= 0) && (0 <= HI) && (LO < HI) && \
                        (-LO    <  _GLUCAT_BITS_PER_ULONG)   && \
                        ( HI    <  _GLUCAT_BITS_PER_ULONG)   && \
-                       ( HI-LO <= _GLUCAT_BITS_PER_ULONG));
+                       ( HI-LO <= _GLUCAT_BITS_PER_ULONG),
+                       "index_set parameters LO and HI are out of bounds");
     using bitset_t = std::bitset<HI - LO>;
     using error_t = error<index_set>;
   public:
