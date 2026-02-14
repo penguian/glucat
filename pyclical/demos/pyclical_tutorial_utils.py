@@ -5,7 +5,7 @@
 #
 # pyclical_tutorial_utils.py: This file contains utilities for use with PyClical tutorials.
 #
-#    copyright            : (C) 2012-2020 by Paul C. Leopardi
+#    copyright            : (C) 2012-2026 by Paul C. Leopardi
 #
 #    This library is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Lesser General Public License as published
@@ -68,6 +68,9 @@ allowed_builtins = {
 def allowed_import(name, globals=None, locals=None, fromlist=(), level=0):
     """
     Restricted __import__ function that only allows importing PyClical.
+
+    Note: this is not a security measure and assumes a non-malicious user.
+    It is intended to prevent accidental execution of arbitrary code.
     """
     if name == 'PyClical':
         return PyClical
@@ -77,8 +80,11 @@ allowed_builtins['__import__'] = allowed_import
 
 def get_allowed_scope():
     """
-    Returns a dictionary suitable for use as a restricted execution namespace.
-    Includes allowed builtins and all public symbols from PyClical.
+    Return a dictionary suitable for use as a restricted execution namespace.
+    This includes allowed builtins and all public symbols from PyClical.
+
+    Note: this is not a security measure and assumes a non-malicious user.
+    It is intended to prevent accidental execution of arbitrary code.
     """
     scope = {'__builtins__': allowed_builtins}
     for name in dir(PyClical):
@@ -87,11 +93,23 @@ def get_allowed_scope():
     return scope
 
 def allowed_exec(command_str, scope=None):
+    """
+    Restricted exec function that executes within an allowed scope.
+
+    Note: this is not a security measure and assumes a non-malicious user.
+    It is intended to prevent accidental execution of arbitrary code.
+    """
     if scope is None:
         scope = get_allowed_scope()
     exec(command_str, scope)
 
 def allowed_eval(expression_str, scope=None):
+    """
+    Restricted eval function that evaluates within an allowed scope.
+
+    Note: this is not a security measure and assumes a non-malicious user.
+    It is intended to prevent accidental execution of arbitrary code.
+    """
     if scope is None:
         scope = get_allowed_scope()
     return eval(expression_str, scope)
