@@ -579,9 +579,10 @@ Programming example 11 : Square root and transcendental functions
 Promoted:
 
 framed_multi<float,-32,32>
-Epsilon ==1.19209e-07
+Epsilon == 1.19209e-07
 A
   0
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
@@ -670,28 +671,34 @@ Note: atanh(A) == nan
 
 A
   1+{-1,1}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   1-{-1,1}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {-1}+{1,2}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {-1}-{1,2}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {1}+{1,2}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {1}-{1,2}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
@@ -705,6 +712,7 @@ Note: atanh(A) == nan
 A
   {-1}+{1}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 Random A in {}
@@ -745,9 +753,10 @@ Random A in {-3,-2,-1,1,2,3}
 
 
 matrix_multi<float,-32,32>
-Epsilon ==1.19209e-07
+Epsilon == 1.19209e-07
 A
   0
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
@@ -836,28 +845,34 @@ Note: atanh(A) == nan
 
 A
   1+{-1,1}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   1-{-1,1}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {-1}+{1,2}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {-1}-{1,2}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {1}+{1,2}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {1}-{1,2}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
@@ -871,6 +886,7 @@ Note: atanh(A) == nan
 A
   {-1}+{1}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 Random A in {}
@@ -912,9 +928,10 @@ Random A in {-3,-2,-1,1,2,3}
 Promoted:
 
 framed_multi<double,-32,32>
-Epsilon ==2.22045e-16
+Epsilon == 2.22045e-16
 A
   0
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
@@ -997,28 +1014,34 @@ Note: atanh(A) == nan
 
 A
   1+{-1,1}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   1-{-1,1}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {-1}+{1,2}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {-1}-{1,2}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {1}+{1,2}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {1}-{1,2}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
@@ -1032,6 +1055,7 @@ Note: atanh(A) == nan
 A
   {-1}+{1}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 Random A in {}
@@ -1072,9 +1096,10 @@ Random A in {-3,-2,-1,1,2,3}
 
 
 matrix_multi<double,-32,32>
-Epsilon ==2.22045e-16
+Epsilon == 2.22045e-16
 A
   0
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
@@ -1157,28 +1182,34 @@ Note: atanh(A) == nan
 
 A
   1+{-1,1}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   1-{-1,1}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {-1}+{1,2}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {-1}-{1,2}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {1}+{1,2}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {1}-{1,2}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
@@ -1192,6 +1223,7 @@ Note: atanh(A) == nan
 A
   {-1}+{1}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 Random A in {}
@@ -1233,9 +1265,10 @@ Random A in {-3,-2,-1,1,2,3}
 Promoted:
 
 framed_multi<long double,-32,32>
-Epsilon ==1.0842e-19
+Epsilon == 1.0842e-19
 A
   0
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
@@ -1322,28 +1355,34 @@ Note: atanh(A) == nan
 
 A
   1+{-1,1}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   1-{-1,1}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {-1}+{1,2}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {-1}-{1,2}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {1}+{1,2}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {1}-{1,2}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
@@ -1357,6 +1396,7 @@ Note: atanh(A) == nan
 A
   {-1}+{1}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 Random A in {}
@@ -1397,9 +1437,10 @@ Random A in {-3,-2,-1,1,2,3}
 
 
 matrix_multi<long double,-32,32>
-Epsilon ==1.0842e-19
+Epsilon == 1.0842e-19
 A
   0
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
@@ -1486,28 +1527,34 @@ Note: atanh(A) == nan
 
 A
   1+{-1,1}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   1-{-1,1}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {-1}+{1,2}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {-1}-{1,2}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {1}+{1,2}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {1}-{1,2}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
@@ -1521,6 +1568,7 @@ Note: atanh(A) == nan
 A
   {-1}+{1}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 Random A in {}
@@ -1562,9 +1610,10 @@ Random A in {-3,-2,-1,1,2,3}
 Default:
 
 framed_multi<dd_real,-32,32>
-Epsilon ==4.93038e-32
+Epsilon == 4.93038e-32
 A
   0
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
@@ -1653,28 +1702,34 @@ Note: atanh(A) == nan
 
 A
   1+{-1,1}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   1-{-1,1}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {-1}+{1,2}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {-1}-{1,2}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {1}+{1,2}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {1}-{1,2}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
@@ -1688,6 +1743,7 @@ Note: atanh(A) == nan
 A
   {-1}+{1}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 Random A in {}
@@ -1728,9 +1784,10 @@ Random A in {-3,-2,-1,1,2,3}
 
 
 matrix_multi<dd_real,-32,32>
-Epsilon ==4.93038e-32
+Epsilon == 4.93038e-32
 A
   0
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
@@ -1817,28 +1874,34 @@ Note: atanh(A) == nan
 
 A
   1+{-1,1}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   1-{-1,1}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {-1}+{1,2}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {-1}-{1,2}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {1}+{1,2}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {1}-{1,2}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
@@ -1852,6 +1915,7 @@ Note: atanh(A) == nan
 A
   {-1}+{1}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 Random A in {}
@@ -1893,9 +1957,10 @@ Random A in {-3,-2,-1,1,2,3}
 Promoted:
 
 framed_multi<dd_real,-32,32>
-Epsilon ==4.93038e-32
+Epsilon == 4.93038e-32
 A
   0
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
@@ -1982,28 +2047,34 @@ Note: atanh(A) == nan
 
 A
   1+{-1,1}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   1-{-1,1}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {-1}+{1,2}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {-1}-{1,2}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {1}+{1,2}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {1}-{1,2}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
@@ -2017,6 +2088,7 @@ Note: atanh(A) == nan
 A
   {-1}+{1}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 Random A in {}
@@ -2057,9 +2129,10 @@ Random A in {-3,-2,-1,1,2,3}
 
 
 matrix_multi<dd_real,-32,32>
-Epsilon ==4.93038e-32
+Epsilon == 4.93038e-32
 A
   0
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
@@ -2146,28 +2219,34 @@ Note: atanh(A) == nan
 
 A
   1+{-1,1}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   1-{-1,1}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {-1}+{1,2}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {-1}-{1,2}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {1}+{1,2}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {1}-{1,2}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
@@ -2181,6 +2260,7 @@ Note: atanh(A) == nan
 A
   {-1}+{1}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 Random A in {}
@@ -2222,9 +2302,10 @@ Random A in {-3,-2,-1,1,2,3}
 Promoted:
 
 framed_multi<qd_real,-32,32>
-Epsilon ==1.21543e-63
+Epsilon == 1.21543e-63
 A
   0
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
@@ -2313,28 +2394,34 @@ Note: atanh(A) == nan
 
 A
   1+{-1,1}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   1-{-1,1}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {-1}+{1,2}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {-1}-{1,2}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {1}+{1,2}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {1}-{1,2}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
@@ -2348,6 +2435,7 @@ Note: atanh(A) == nan
 A
   {-1}+{1}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 Random A in {}
@@ -2388,9 +2476,10 @@ Random A in {-3,-2,-1,1,2,3}
 
 
 matrix_multi<qd_real,-32,32>
-Epsilon ==1.21543e-63
+Epsilon == 1.21543e-63
 A
   0
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
@@ -2479,28 +2568,34 @@ Note: atanh(A) == nan
 
 A
   1+{-1,1}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   1-{-1,1}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {-1}+{1,2}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {-1}-{1,2}
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {1}+{1,2}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
   {1}-{1,2}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 A
@@ -2514,6 +2609,7 @@ Note: atanh(A) == nan
 A
   {-1}+{1}
 Note: sqrt(A) == nan
+Note: inv(A) == nan
 Note: log(A) == nan
 
 Random A in {}
