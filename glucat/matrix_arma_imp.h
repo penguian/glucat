@@ -292,16 +292,7 @@ namespace glucat { namespace matrix
    * @param cols Number of columns
    * @param preserve Preserve data?
    */
-  template< typename Scalar_T >
-  inline void
-  arma_matrix_wrapper<Scalar_T>::
-  resize(matrix_index_t rows, matrix_index_t cols, bool preserve)
-  {
-    if (preserve)
-      m_mat.resize(rows, cols); // Arma resize preserves data
-    else
-      m_mat.set_size(rows, cols); // set_size does not preserve (faster)
-  }
+
 
   /**
    * @brief Number of rows
@@ -1021,11 +1012,7 @@ namespace glucat { namespace matrix
    * @param cols Number of columns
    * @param preserve Preserve data?
    */
-  template< typename Scalar_T >
-  inline void
-  arma_sparse_wrapper<Scalar_T>::
-  resize(matrix_index_t rows, matrix_index_t cols, bool preserve)
-  { m_mat.resize(rows, cols); }
+
 
   /**
    * @brief Clear

@@ -119,8 +119,7 @@ namespace glucat { namespace matrix
     // Set size
     void set_size(matrix_index_t rows, matrix_index_t cols);
 
-    // Resize
-    void resize(matrix_index_t rows, matrix_index_t cols, bool preserve = false);
+
 
     // Helpers
     // Number of rows
@@ -265,8 +264,7 @@ namespace glucat { namespace matrix
     // Set size
     void set_size(matrix_index_t rows, matrix_index_t cols);
 
-    // Make writable
-    void resize(matrix_index_t rows, matrix_index_t cols, bool preserve = false);
+
 
     // Clear
     void clear();

@@ -111,8 +111,7 @@ namespace glucat { namespace matrix
     // Attributes updated automatically by m_mat operations, accessors delegate directly
     // Set size
     void set_size(matrix_index_t rows, matrix_index_t cols);
-    // Resize
-    void resize(matrix_index_t rows, matrix_index_t cols, bool preserve = false);
+
 
     // Number of rows
     auto nbr_rows() const -> matrix_index_t;
@@ -258,8 +257,7 @@ namespace glucat { namespace matrix
     // Set size
     void set_size(matrix_index_t rows, matrix_index_t cols);
 
-    // Resize
-    void resize(matrix_index_t rows, matrix_index_t cols, bool preserve = false);
+
 
     // Clear
     void clear();

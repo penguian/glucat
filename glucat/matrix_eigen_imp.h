@@ -285,17 +285,7 @@ namespace glucat { namespace matrix
    * @param cols Number of columns
    * @param preserve Preserve data?
    */
-  template< typename Scalar_T >
-  inline void
-  eigen_matrix_wrapper<Scalar_T>::
-  resize(matrix_index_t rows, matrix_index_t cols, bool preserve)
-  {
-    // Preserve support can be simplified or removed if unused
-    if (preserve)
-      m_mat.conservativeResize(rows, cols);
-    else
-      m_mat.resize(rows, cols);
-  }
+
 
   /**
    * @brief Number of rows
@@ -948,14 +938,7 @@ namespace glucat { namespace matrix
    * @param cols Number of columns
    * @param preserve Preserve data?
    */
-  template< typename Scalar_T >
-  inline void
-  eigen_sparse_wrapper<Scalar_T>::
-  resize(matrix_index_t rows, matrix_index_t cols, bool preserve)
-  {
-    // preserve not directly supported in simple resize
-    m_mat.resize(rows, cols);
-  }
+
 
   /**
    * @brief Clear
