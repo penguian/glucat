@@ -73,8 +73,8 @@ namespace glucat { namespace matrix
   template< typename Matrix_T >
   auto unit(const matrix_index_t dim) -> const Matrix_T;
 
-  // Classification of eigenvalues of a matrix
-  using eig_case_t = enum
+  /// Classification of eigenvalues of a matrix
+  enum eig_case_t
   {
     safe_eigs,
     neg_real_eigs,
