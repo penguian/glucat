@@ -448,7 +448,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     fi
   fi
 
-  dnl Handle $glucat_use_warnings: enable compilation with -Wall and similiar
+  dnl Handle $glucat_use_warnings: enable compilation with -Wall and similar
   if [[[ "$glucat_use_warnings" == "yes" ]]]; then
       CXXFLAGS="-Wall $CXXFLAGS"
       case "$basename_cxx" in
