@@ -24,5 +24,6 @@
 import PyClical
 
 print(PyClical.__version__)
-print(PyClical._test())
-
+test_result = PyClical._test()
+print(test_result)
+exit(test_result.failed > 0)
