@@ -195,7 +195,7 @@ namespace glucat
     else
     {
       const matrix_index_t dim = folded_dim<matrix_index_t>(frm);
-      this->m_matrix.zeros(dim, dim); // Resize and clear
+      this->m_matrix.zeros(dim, dim);
       for (matrix_index_t i = 0; i < val.m_matrix.nbr_rows(); ++i)
         for (matrix_index_t j = 0; j < val.m_matrix.nbr_cols(); ++j)
           this->m_matrix(i, j) = numeric_traits<Scalar_T>::to_scalar_t(val.m_matrix(i, j));
@@ -240,8 +240,7 @@ namespace glucat
   : m_frame( ist )
   {
     const auto dim = folded_dim<matrix_index_t>(this->m_frame);
-    this->m_matrix.resize(dim, dim, false);
-    this->m_matrix.zeros();
+    this->m_matrix.zeros(dim, dim);
     *this += term_t(ist, crd);
   }
 
@@ -265,8 +264,7 @@ namespace glucat
     if (!prechecked && (ist | frm) != frm)
       throw error_t("multivector_t(ist,crd,frm): cannot initialize with value outside of frame");
     const matrix_index_t dim = folded_dim<matrix_index_t>(frm);
-    this->m_matrix.resize(dim, dim, false);
-    this->m_matrix.zeros();
+    this->m_matrix.zeros(dim, dim);
     *this += term_t(ist, crd);
   }
 
@@ -286,8 +284,7 @@ namespace glucat
   : m_frame( frm )
   {
     const auto dim = folded_dim<matrix_index_t>(frm);
-    this->m_matrix.resize(dim, dim, false);
-    this->m_matrix.zeros();
+    this->m_matrix.zeros(dim, dim);
     *this += term_t(index_set_t(), scr);
   }
 
@@ -326,7 +323,7 @@ namespace glucat
     if (!prechecked && index_t(vec.size()) != frm.count())
       throw error_t("multivector_t(vec,frm): cannot initialize with vector not matching frame");
     const auto dim = folded_dim<matrix_index_t>(frm);
-    this->m_matrix.zeros(dim, dim); // Resize and clear
+    this->m_matrix.zeros(dim, dim);
     auto idx = frm.min();
     const auto frm_end = frm.max()+1;
     for (auto& crd : vec)
@@ -400,8 +397,7 @@ namespace glucat
     if (dim == 0) {
 
     }
-    this->m_matrix.resize(dim, dim, false);
-    this->m_matrix.zeros();
+    this->m_matrix.zeros(dim, dim);
 
     for (auto& val_term : val)
       *this += val_term;
@@ -436,8 +432,7 @@ namespace glucat
       { }
     this->m_frame = our_frame;
     const auto dim = folded_dim<matrix_index_t>(our_frame);
-    this->m_matrix.resize(dim, dim, false);
-    this->m_matrix.zeros();
+    this->m_matrix.zeros(dim, dim);
 
     for (auto& val_term : val)
       *this += val_term;
@@ -467,7 +462,7 @@ namespace glucat
         else if constexpr(requires { mtx.n_rows; }) { r = mtx.n_rows; c = mtx.n_cols; }
         else { r = mtx.rows(); c = mtx.cols(); }
 
-         this->m_matrix.resize(r, c, false);
+         this->m_matrix.set_size(r, c);
          // this->m_matrix.clear(); // resize might not clear if preserve=false, but we overwrite
          for (matrix_index_t i = 0; i < r; ++i)
            for (matrix_index_t j = 0; j < c; ++j)
@@ -799,7 +794,6 @@ namespace glucat
 
     const matrix_index_t dim = lhs_ref.m_matrix.nbr_rows();
     multivector_t result = multivector_t(matrix_t(dim, dim), our_frame);
-    // result.m_matrix.clear();
     result.m_matrix.zeros();
     result.m_matrix = lhs_ref.m_matrix * rhs_ref.m_matrix;
     if (result.m_matrix.nbr_rows() == 0) {
