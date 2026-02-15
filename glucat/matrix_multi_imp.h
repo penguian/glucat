@@ -454,19 +454,17 @@ namespace glucat
   matrix_multi(const Matrix_T& mtx, const index_set_t frm)
   : m_frame( frm )
   {
-    if constexpr (requires { this->m_matrix = mtx; }) {
-         this->m_matrix = mtx;
-    } else {
-         matrix_index_t r = 0, c = 0;
-         if constexpr(requires { mtx.nbr_rows(); }) { r = mtx.nbr_rows(); c = mtx.nbr_cols(); }
-        else if constexpr(requires { mtx.n_rows; }) { r = mtx.n_rows; c = mtx.n_cols; }
-        else { r = mtx.rows(); c = mtx.cols(); }
+    if constexpr (requires { this->m_matrix = mtx; })
+      this->m_matrix = mtx;
+    else
+    {
+      const matrix_index_t mtx_nbr_rows = matrix::nbr_rows(mtx);
+      const matrix_index_t mtx_nbr_cols = matrix::nbr_cols(mtx);
 
-         this->m_matrix.set_size(r, c);
-         // this->m_matrix.clear(); // resize might not clear if preserve=false, but we overwrite
-         for (matrix_index_t i = 0; i < r; ++i)
-           for (matrix_index_t j = 0; j < c; ++j)
-             this->m_matrix(i, j) = numeric_traits<Scalar_T>::to_scalar_t(mtx(i, j));
+      this->m_matrix.set_size(mtx_nbr_rows, mtx_nbr_cols);
+      for (matrix_index_t i = 0; i < mtx_nbr_rows; ++i)
+        for (matrix_index_t j = 0; j < mtx_nbr_cols; ++j)
+          this->m_matrix(i, j) = numeric_traits<Scalar_T>::to_scalar_t(mtx(i, j));
     }
   }
 

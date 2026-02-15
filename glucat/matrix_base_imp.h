@@ -172,6 +172,46 @@ namespace glucat { namespace matrix
     return result;
   }
   // =========================================================================
+  // nbr_rows and nbr_cols Definitions
+  // =========================================================================
+
+  /**
+   * @brief Number of rows
+   * @details
+   * @tparam Matrix_T
+   * @param mat Matrix
+   * @return Number of rows
+   */
+  template< typename Matrix_T >
+  inline auto nbr_rows(const Matrix_T& mat) -> matrix_index_t
+  {
+    if constexpr(requires { mat.nbr_rows(); })
+      return mat.nbr_rows();
+    else if constexpr(requires { mat.n_rows; })
+      return mat.n_rows;
+    else if constexpr(requires { mat.rows(); })
+      return mat.rows();
+  }
+
+  /**
+   * @brief Number of columns
+   * @details
+   * @tparam Matrix_T
+   * @param mat Matrix
+   * @return Number of columns
+   */
+  template< typename Matrix_T >
+  inline auto nbr_cols(const Matrix_T& mat) -> matrix_index_t
+  {
+    if constexpr(requires { mat.nbr_cols(); })
+      return mat.nbr_cols();
+    else if constexpr(requires { mat.n_cols; })
+      return mat.n_cols;
+    else if constexpr(requires { mat.cols(); })
+      return mat.cols();
+  }
+
+  // =========================================================================
   // unit_helper and unit Definitions
   // =========================================================================
 

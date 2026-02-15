@@ -66,6 +66,14 @@ namespace glucat { namespace matrix
 
   // Core Operations as Free Functions
 
+  // Number of rows
+  template< typename Matrix_T >
+  auto nbr_rows(const Matrix_T& mat) -> matrix_index_t;
+
+  // Number of columns
+  template< typename Matrix_T >
+  auto nbr_cols(const Matrix_T& mat) -> matrix_index_t;
+
   /// Helper struct for unit matrix creation
   template< typename Matrix_T > struct unit_helper;
 
