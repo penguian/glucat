@@ -143,6 +143,7 @@ namespace glucat
     using term_t = std::pair<const index_set_t, Scalar_T>;
     using vector_t = std::vector<Scalar_T>;
     using error_t = error<multivector_t>;
+    using size_type = std::size_t;
     using framed_multi_t = framed_multi<Scalar_T,LO,HI,Tune_P>;
     template< typename Other_Scalar_T, const index_t Other_LO, const index_t Other_HI, typename Other_Tune_P >
     friend class framed_multi;
@@ -223,6 +224,9 @@ namespace glucat
 
   public:
     _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
+
+    // Number of terms
+    auto nbr_terms() const -> size_type;
 
 
     // Move assignment

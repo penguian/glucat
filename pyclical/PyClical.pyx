@@ -1386,6 +1386,28 @@ cdef class clifford:
         """
         return clifford().wrap( self.instance.outer_pow(m) )
 
+    def nbr_terms(self):
+        """
+        Number of terms in the multivector.
+
+        Returns
+        -------
+        int
+            The number of terms.
+
+        Examples
+        --------
+        >>> clifford(2.0).nbr_terms()
+        1
+        >>> clifford("2{1}").nbr_terms()
+        1
+        >>> clifford(0.0).nbr_terms()
+        0
+        >>> clifford("1+2{1}+3{1,2}").nbr_terms()
+        3
+        """
+        return self.instance.nbr_terms()
+
     def __call__(self, grade):
         """
         Pure grade-vector part.

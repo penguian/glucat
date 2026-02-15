@@ -2930,6 +2930,23 @@ namespace glucat{
   }
 
   /**
+   * @brief Number of terms
+   * @details
+   * @tparam Scalar_T Scalar type
+   * @tparam LO Low index limit
+   * @tparam HI High index limit
+   * @tparam Tune_P Tuning policy
+   * @return Number of terms
+   */
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  auto
+  matrix_multi<Scalar_T,LO,HI,Tune_P>::
+  nbr_terms() const -> size_type
+  {
+    return framed_multi_t(*this).nbr_terms();
+  }
+
+  /**
    * @brief Exponential of multivector
    * @details
    * @tparam Scalar_T

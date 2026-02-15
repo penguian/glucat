@@ -95,6 +95,7 @@ cdef extern from "PyClical.h":
         bint     isinf()
         bint     isnan()
         void     write(char* msg)
+        size_t   nbr_terms()
 
     scalar_t error_squared_tol(Clifford Clf)
     scalar_t error_squared(Clifford Lhs, Clifford Rhs, scalar_t threshold)

@@ -2054,7 +2054,7 @@ namespace glucat
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
   framed_multi<Scalar_T,LO,HI,Tune_P>::
-  nbr_terms () const -> unsigned long
+  nbr_terms () const -> size_type
   { return this->size(); }
 
   /**

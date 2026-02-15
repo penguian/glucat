@@ -45,6 +45,7 @@
 #include <boost/unordered/unordered_flat_map.hpp>
 #endif
 #include <vector>
+#include <cstddef>
 
 
 namespace glucat
@@ -132,6 +133,7 @@ namespace glucat
   {
 
   public:
+    using size_type = std::size_t;
     using multivector_t = framed_multi;
     using framed_multi_t = multivector_t;
     using scalar_t = Scalar_T;
@@ -173,7 +175,7 @@ namespace glucat
     };
 
     using framed_pair_t = std::pair<const multivector_t, const multivector_t>;
-    using size_type = typename map_t::size_type;
+    // using size_type = typename map_t::size_type;
     using iterator = typename map_t::iterator;
     using const_iterator = typename map_t::const_iterator;
 
@@ -239,7 +241,7 @@ namespace glucat
     _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
 
     // Number of terms
-    auto nbr_terms() const -> unsigned long;
+    auto nbr_terms() const -> size_type;
     // Move assignment
     auto     operator= (framed_multi&& other) noexcept -> framed_multi&;
     /// Default copy assignment
