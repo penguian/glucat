@@ -496,17 +496,15 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
                       [CXXFLAGS="-fp-model source $CXXFLAGS"])
       GLUCAT_CHECK_COMPILER_FLAG([fp-model precise],
                       [CXXFLAGS="-fp-model precise $CXXFLAGS"])
-      GLUCAT_CHECK_COMPILER_FLAG([xHost],
-            [CXXFLAGS="$CXXFLAGS -xHost"])
-      CXXFLAGS="$CXXFLAGS -DBOOST_UBLAS_USE_LONG_DOUBLE"
+
+      GLUCAT_CHECK_COMPILER_FLAG([march=native],
+            [CXXFLAGS="$CXXFLAGS -march=native"])
       ;;
     *)
       ;;
   esac
 
-  dnl To work around backwards incompatibility of boost::serialization changes
-  GLUCAT_CHECK_HEADERS([boost/serialization/array_wrapper.hpp],
-    [CXXFLAGS="$CXXFLAGS -D_GLUCAT_HAVE_BOOST_SERIALIZATION_ARRAY_WRAPPER_H"],[],[])
+
 
   GLUCAT_CHECK_COMPILER_FLAG([fexceptions],
             [USE_EXCEPTIONS="-fexceptions"],
