@@ -38,18 +38,6 @@
 #include "glucat/generation.h"
 #include "glucat/matrix.h"
 
-# if  defined(_GLUCAT_GCC_IGNORE_UNUSED_LOCAL_TYPEDEFS)
-#  pragma GCC diagnostic push
-#  pragma GCC diagnostic ignored "-Wunused-local-typedefs"
-# endif
-# if  defined(_GLUCAT_HAVE_BOOST_SERIALIZATION_ARRAY_WRAPPER_H)
-#  include <boost/serialization/array_wrapper.hpp>
-# endif
-
-# if defined(_GLUCAT_GCC_IGNORE_UNUSED_LOCAL_TYPEDEFS)
-#  pragma GCC diagnostic pop
-# endif
-
 #include <iomanip>
 #include <array>
 #include <iostream>
