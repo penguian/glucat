@@ -160,7 +160,7 @@ namespace glucat
 #else
     using map_t = std::unordered_map<index_set_t, Scalar_T, index_set_hash<LO, HI>>;
 #endif
-
+    static_assert(std::is_convertible<typename map_t::size_type, size_type>::value, "map_t::size_type must be convertible to size_type");
 
     class hash_size_t
     {
