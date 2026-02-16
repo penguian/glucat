@@ -699,8 +699,8 @@ for example, `some-other-file.txt`, and invoke your tests with the command
 ```
 config_options_file=some-other-file.txt ./test/test-all-config-options.sh
 ```
-You can also give parameters to `./test/test-all-config-options.sh` and these
-are passed to the make command. In particular, invoking (e.g.)
+You can also give parameters to `./test/test-all-config-options.sh` and these are
+passed to the make command. In particular, invoking (e.g.)
 
 ```
 ./test/test-all-config-options.sh -j 4
@@ -802,14 +802,13 @@ The sample timing test results in `./test_runtime` are from programs
 built and run using the configure command:
 
 ```
-./configure --with-armadillo --with-qd
+./configure
 ```
 on an 8 core `AMD Ryzen 7 8840HS w/ Radeon 780M Graphics` @ 3.3 GHz with
 ```
     Linux 6.17.0-12-generic #12-Ubuntu SMP UTC
     Kubuntu 25.10
     g++ 15.2.0 (Ubuntu 15.2.0-4ubuntu4)
-    Armadillo 14.2.3
     Boost 1.88.0
     Eigen 3.4.0
     GSL 2.8
