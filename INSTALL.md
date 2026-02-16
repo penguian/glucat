@@ -357,37 +357,39 @@ You will also need to ensure that the include path used by the compiler sees
 ```
 This option controls the use of the Armadillo C++ linear algebra library.
 
-The option `--with-armadillo` adds `-D_GLUCAT_USE_ARMADILLO` to `CXXFLAGS` and adds the
-flag `-larmadillo` to the list of libraries, `LIBS` in the Makefiles.
+The option `--with-armadillo` adds `-D_GLUCAT_USE_ARMADILLO` to `CXXFLAGS` and 
+adds the flag `-larmadillo` to the list of libraries, `LIBS` in the Makefiles.
 
 
-To compile your own programs using the GluCat library with Armadillo, your Makefile
-needs to pass the flags `-D_GLUCAT_USE_ARMADILLO` and `-larmadillo` to the C++ compiler.
-You will also need to ensure that the include path used by the compiler sees
-`<armadillo>` and the library path sees `libarmadillo.*`.
+To compile your own programs using the GluCat library with Armadillo, your 
+Makefile needs to pass the flags `-D_GLUCAT_USE_ARMADILLO` and `-larmadillo` to 
+the C++ compiler. You will also need to ensure that the include path used by the 
+compiler sees `<armadillo>` and the library path sees `libarmadillo.*`.
 
 ```
   --with-openmp           use OpenMP (requires Armadillo) [default=no]
 ```
-This option controls the use of OpenMP for parallel processing. This option requires
-that the Armadillo library is also used.
+This option controls the use of OpenMP for parallel processing. This option 
+requires that the Armadillo library is also used.
 
 The option `--with-openmp` adds `-D_GLUCAT_USE_OPENMP` and OpenMP compiler flags
-(e.g. `-fopenmp`) to `CXXFLAGS` in the Makefiles.
+(e.g. `-fopenmp` or `-qopenmp`) to `CXXFLAGS` in the Makefiles.
 
 
 To compile your own programs using the GluCat library with OpenMP, your Makefile
 needs to pass the flags `-D_GLUCAT_USE_OPENMP` and the OpenMP compiler flags
 to the C++ compiler.
 
+Note: If you are using the clang++ compiler you will need to ensure that libomp
+is installed.
 
 ```
   --with-unordered-map=boost|std
                           use specified map implementation [default=boost]
 ```
 This option chooses the implementation of the hash map used in `framed_multi`.
-The default is `boost`, which uses `boost::unordered_flat_map` (requires `Boost 1.83.0` or later).
-The value `std` uses `std::unordered_map`.
+The default is `boost`, which uses `boost::unordered_flat_map` (requires
+`Boost 1.83.0` or later). The value `std` uses `std::unordered_map`.
 Use `boost` for potentially better performance.
 
 
@@ -452,8 +454,9 @@ with `EXTCXXFLAGS = $(glucat_extra_cxxflags_pyclical) $(CXXFLAGS)`,
 `EXTAM_CPPFLAGS=$(all_includes)`, and the values of the other environment variables
 set by `./configure`.
 
-You can run `pyclical/setup.py` yourself, but you must set the environment variables
-to appropriate values. See `To Configure` above to determine these values.
+You can run `pyclical/setup.py` yourself, but you must set the environment 
+variables to appropriate values. See `To Configure` above to determine these 
+values.
 
 Alternatively, if you have Python installed but do not have Cython, then
 `./configure` will recognize this, and make will build PyClical via the command
@@ -894,7 +897,8 @@ GluCat 1.0.0 with PyClical has so far been built and tested using:
     tested with the following compiler versions:
 
     1) `g++ 15.2.0 (Ubuntu 15.2.0-4ubuntu4)`
-    2) `Ubuntu clang version 19.1.1 (1ubuntu1)`
+    2) `Ubuntu clang version 20.1.8 (0ubuntu4)`
+    3) `Intel(R) oneAPI DPC++/C++ Compiler 2025.3.2 (2025.3.2.20260112)`
 
  2) Pensieri:
     4 core `Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz` with
