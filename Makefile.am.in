@@ -26,16 +26,16 @@ EXTRA_DIST = admin m4 test test_runtime $(EXAMPLES) $(SEMANTICS) subdirs configu
              $(doc_DATA) doc/Makefile.am doc/Makefile.in
 
 AUTHORS: AUTHORS.md
-	ln -s AUTHORS.md AUTHORS
+	ln -sf AUTHORS.md AUTHORS
 
 INSTALL: INSTALL.md
-	ln -s INSTALL.md INSTALL
+	ln -sf INSTALL.md INSTALL
 
 README: README.md
-	ln -s README.md README
+	ln -sf README.md README
 
 TODO: TODO.md
-	ln -s TODO.md TODO
+	ln -sf TODO.md TODO
 
 check: test-out $(PYCLICAL_CHECK_OUT)
 
@@ -75,8 +75,8 @@ $(top_srcdir)/subdirs:
 
 MAINTAINERCLEANFILES = subdirs configure.ac acinclude.m4 configure.files
 
-cvs:
-	$(MAKE) -f admin/Makefile.common cvs
+bootstrap:
+	$(MAKE) -f admin/Makefile.common bootstrap
 
 clean-local:
 	-for d in $(DOC) $(PYCLICALdir) $(PYCLICAL_DEMOSdir) $(EXAMPLES) $(SEMANTICS); do \
