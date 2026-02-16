@@ -198,25 +198,41 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
 
   if [[[ "$glucat_use_openmp" == "yes" ]]]; then
      if [[[ "$glucat_use_armadillo" == "yes" ]]]; then
-        dnl Check for -fopenmp
-        glucat_have_fopenmp="no"
-        GLUCAT_CHECK_COMPILER_FLAG([fopenmp],
-           [glucat_have_fopenmp="yes"],
-           [])
+         dnl Check for OpenMP flag
+         glucat_have_openmp="no"
+         glucat_openmp_flag=""
 
-        dnl Check for -lopenblas
-        glucat_have_openblas="no"
-        GLUCAT_CHECK_LIB([openblas],[cblas_dgemm],
-           [glucat_have_openblas="yes"],
-           [])
+         dnl Try -fopenmp (GCC, Clang)
+         GLUCAT_CHECK_COMPILER_FLAG([fopenmp],
+            [
+               glucat_have_openmp="yes"
+               glucat_openmp_flag="-fopenmp"
+            ],
+            [])
 
-        if [[[ "$glucat_have_fopenmp" == "yes" ]]] && [[[ "$glucat_have_openblas" == "yes" ]]]; then
-           CXXFLAGS="$CXXFLAGS -fopenmp -D_GLUCAT_USE_OPENMP -DARMA_USE_OPENMP"
-           all_libraries="$all_libraries -lopenblas"
-           AC_MSG_NOTICE([OpenMP support enabled with -fopenmp and -lopenblas])
-        else
-           AC_MSG_WARN([OpenMP support requested but prerequisites (-fopenmp and -lopenblas) were not found.])
-        fi
+         dnl If not found, try -qopenmp (Intel icpx)
+         if [[[ "$glucat_have_openmp" == "no" ]]]; then
+            GLUCAT_CHECK_COMPILER_FLAG([qopenmp],
+               [
+                  glucat_have_openmp="yes"
+                  glucat_openmp_flag="-qopenmp"
+               ],
+               [])
+         fi
+
+         dnl Check for -lopenblas
+         glucat_have_openblas="no"
+         GLUCAT_CHECK_LIB([openblas],[cblas_dgemm],
+            [glucat_have_openblas="yes"],
+            [])
+
+         if [[[ "$glucat_have_openmp" == "yes" ]]] && [[[ "$glucat_have_openblas" == "yes" ]]]; then
+            CXXFLAGS="$CXXFLAGS $glucat_openmp_flag -D_GLUCAT_USE_OPENMP -DARMA_USE_OPENMP"
+            all_libraries="$all_libraries -lopenblas"
+            AC_MSG_NOTICE([OpenMP support enabled with $glucat_openmp_flag and -lopenblas])
+         else
+            AC_MSG_WARN([OpenMP support requested but prerequisites (OpenMP flag and -lopenblas) were not found.])
+         fi
 
      else
         AC_MSG_WARN([--with-openmp ignored because --with-armadillo is not enabled.])
