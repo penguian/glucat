@@ -1,4 +1,4 @@
-INSTALL for GluCat 1.0.0 with PyClical
+INSTALL for GluCat 0.98a0 with PyClical
 ========================================
 
 Prerequisites: Before You Begin
@@ -31,13 +31,13 @@ To install the first way, from (e.g.) GitHub, run the following commands on a
 Linux machine or equivalent Posix environment connected to the Internet:
 
 ```
-> git clone git@github.com:penguian/glucat.git glucat-1.0.0
-> cd glucat-1.0.0
+> git clone git@github.com:penguian/glucat.git glucat-0.98a0
+> cd glucat-0.98a0
 > make -f admin/Makefile.common bootstrap
 ```
-This results in a directory structure that includes glucat-1.0.0/configure,
+This results in a directory structure that includes glucat-0.98a0/configure,
 allowing you to make and install GluCat in the same way as if you had downloaded
-and unzipped the tarball glucat-1.0.0.tar.gz.
+and unzipped the tarball glucat-0.98a0.tar.gz.
 
 
 Directory Structure
@@ -45,12 +45,12 @@ Directory Structure
 
 Once you have downloaded, unzipped and untarred the source code, or followed
 the instructions above to install from Git clone, you should have a directory,
-glucat-1.0.0. Under this directory you should see a number of subdirectories,
+glucat-0.98a0. Under this directory you should see a number of subdirectories,
 including `./admin`, `./doc`, `./glucat`, `./gfft_test`, `./products`,
 `./pyclical`, `./squaring`, `./test`, `./test_move`, `./test_runtime`,
 `./testxx`, and `./transforms`.
 
-The following instructions are meant to be used with `glucat-1.0.0` as the
+The following instructions are meant to be used with `glucat-0.98a0` as the
 current directory.
 
 
@@ -150,7 +150,7 @@ subdirectories.
 
 As briefly described above, the simplest way to install this package is:
 
- 1. `cd` to the `glucat-1.0.0` directory containing the source code and type
+ 1. `cd` to the `glucat-0.98a0` directory containing the source code and type
     `./configure` to configure GluCat with PyClical for your system.
     If you are using `csh` on an old version of System V, you might need to type
     `sh ./configure` instead to prevent `csh` from trying to execute
@@ -710,9 +710,9 @@ speeding up the entire testing process.
 
 Rather than running the regression tests in-place and copying the output
 directly into `./test_runtime`, the script `./test/test-all-config-options.sh`
-produces as many copies of the whole directory `glucat-1.0.0` as there are lines
-in `./test/config-options.txt`, naming them `glucat-1.0.0.1` to `glucat-1.0.0.12`,
-in the parent directory of `glucat-1.0.0`. This allows the effect of each set
+produces as many copies of the whole directory `glucat-0.98a0` as there are lines
+in `./test/config-options.txt`, naming them `glucat-0.98a0.1` to `glucat-0.98a0.12`,
+in the parent directory of `glucat-0.98a0`. This allows the effect of each set
 of configuration options to be directly compared, and also ensures that any
 side-effect of a configuration does not affect the test results of another
 configuration.
@@ -725,9 +725,9 @@ line 4 of `./test/config-options.txt`
 disable-dependency:          --disable-dependency-tracking
 ```
 causes `./test/diff-all-config-outputs.sh` to use diff to compare
-`glucat-1.0.0.4/test_runtime/test.configure.disable-dependency.out` to
-`glucat-1.0.0/test_runtime/test.configure.disable-dependency.out`, and compare
-`glucat-1.0.0.4/pyclical/test.out` to `glucat-1.0.0/pyclical/test.out`.
+`glucat-0.98a0.4/test_runtime/test.configure.disable-dependency.out` to
+`glucat-0.98a0/test_runtime/test.configure.disable-dependency.out`, and compare
+`glucat-0.98a0.4/pyclical/test.out` to `glucat-0.98a0/pyclical/test.out`.
 
 Each comparison should only produce a line containing the line number of
 the configuration being compared: 1 to 12.
@@ -865,7 +865,7 @@ to use `sudo`, login as `root`, or `su` to `root` before you run `make install`.
 List of Successful Builds
 =========================
 
-GluCat 1.0.0 with PyClical has so far been built and tested using:
+GluCat 0.98a0 with PyClical has so far been built and tested using:
 
  1) Tempesta:
     8 core `AMD Ryzen 7 8840HS w/ Radeon 780M Graphics` @ 3.3 GHz with
