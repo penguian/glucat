@@ -157,10 +157,10 @@ namespace glucat
   inline
   auto
   index_set<LO,HI>::
-  operator== (const index_set_t rhs) const -> bool
+  operator== (const index_set_t& rhs) const -> bool
   {
     const auto* pthis = static_cast<const bitset_t*>(this);
-    return *pthis == static_cast<bitset_t>(rhs);
+    return *pthis == static_cast<const bitset_t&>(rhs);
   }
 
   /**
@@ -175,10 +175,10 @@ namespace glucat
   inline
   auto
   index_set<LO,HI>::
-  operator!= (const index_set_t rhs) const -> bool
+  operator!= (const index_set_t& rhs) const -> bool
   {
     const auto* pthis = static_cast<const bitset_t*>(this);
-    return *pthis != static_cast<bitset_t>(rhs);
+    return *pthis != static_cast<const bitset_t&>(rhs);
   }
 
   /**
@@ -857,7 +857,7 @@ namespace glucat
   inline
   auto
   index_set<LO,HI>::
-  operator< (const index_set_t rhs) const -> bool
+  operator< (const index_set_t& rhs) const -> bool
   {
     const auto this_grade = this->count();
     const auto rhs_grade  = rhs.count();
@@ -1217,7 +1217,7 @@ namespace glucat
   template<const index_t LO, const index_t HI>
   auto
   index_set<LO,HI>::
-  sign_of_mult(const index_set_t rhs) const -> int
+  sign_of_mult(const index_set_t& rhs) const -> int
   {
     // Implemented using Walsh functions and Gray codes.
     // Reference: [L] Chapter 21, 21.3
@@ -1469,4 +1469,65 @@ namespace glucat
     return *this;
   }
 }
+#ifdef GLUCAT_DOCTEST
+#include <iostream>
+#include <sstream>
+
+TEST_CASE("index_set<LO,HI>") {
+  using is_t = glucat::index_set<-32, 32>;
+
+  SUBCASE("Constructor and string representation") {
+    is_t s1(1);
+    std::ostringstream oss1;
+    oss1 << s1;
+    CHECK(oss1.str() == "{1}");
+
+    is_t s2("{1,2}");
+    std::ostringstream oss2;
+    oss2 << s2;
+    CHECK(oss2.str() == "{1,2}");
+
+    is_t s3("");
+    std::ostringstream oss3;
+    oss3 << s3;
+    CHECK(oss3.str() == "{}");
+  }
+
+  SUBCASE("Comparisons") {
+    CHECK(is_t(1) == is_t("{1}"));
+    CHECK(is_t("{1}") != is_t("{2}"));
+    CHECK(is_t("{1}") < is_t("{2}"));
+    CHECK(is_t("{1}") <= is_t("{2}"));
+    CHECK_FALSE(is_t("{1}") > is_t("{2}"));
+    CHECK_FALSE(is_t("{1}") >= is_t("{2}"));
+  }
+
+  SUBCASE("Set operations") {
+    is_t s1("{1}");
+    is_t s2("{2}");
+    CHECK((s1 ^ s2) == is_t("{1,2}"));
+    CHECK((is_t("{1,2}") ^ s2) == s1);
+    CHECK((is_t("{1,2}") & s2) == s2);
+    CHECK((is_t("{1}") & s2) == is_t("{}"));
+    CHECK((s1 | s2) == is_t("{1,2}"));
+  }
+
+  SUBCASE("Cardinality and bounds") {
+    is_t s("{-1,1,2}");
+    CHECK(s.count() == 3);
+    CHECK(s.count_neg() == 1);
+    CHECK(s.count_pos() == 2);
+    CHECK(s.min() == -1);
+    CHECK(s.max() == 2);
+  }
+
+  SUBCASE("Sign functions") {
+    is_t s1("{1,2}");
+    is_t s2("{-1}");
+    CHECK(s1.sign_of_mult(s2) == 1);
+    CHECK(s1.sign_of_square() == -1);
+  }
+}
+#endif
+
 #endif // _GLUCAT_INDEX_SET_IMP_H

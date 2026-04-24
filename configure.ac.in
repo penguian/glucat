@@ -171,8 +171,20 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     [glucat_use_unordered_map="$withval"],
     [glucat_use_unordered_map="boost"])
 
+  AC_ARG_WITH([doctest],
+    AS_HELP_STRING(
+      [--with-doctest=DIR],
+      [use doctest from DIR [default=no]]),
+    [glucat_doctest_dir="$withval"],
+    [glucat_doctest_dir="no"])
+
   dnl Check for Boost version
   GLUCAT_CHECK_HEADERS([boost/version.hpp], [], [])
+
+  if [[[ "$glucat_doctest_dir" != "no" ]]]; then
+     all_includes="$all_includes -I$glucat_doctest_dir"
+     AC_MSG_NOTICE([Added doctest include path: $glucat_doctest_dir])
+  fi
 
   dnl enable warnings for debug build
   if [[[ "$glucat_use_debug_code" != "no" ]]]; then

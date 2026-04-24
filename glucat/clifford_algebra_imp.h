@@ -1688,4 +1688,20 @@ namespace glucat
   { return atan(val, complexifier(val), true); }
 
 }
+#ifdef GLUCAT_DOCTEST
+#include "glucat/matrix_multi.h"
+
+TEST_CASE("clifford_algebra_imp (generic templates)") {
+  using mm_t = glucat::matrix_multi<double, -32, 32>;
+
+  SUBCASE("Generic operators and approx_equal") {
+    mm_t m1(1.0);
+    mm_t m2(1.0 + 1e-15);
+    CHECK(approx_equal(m1, m2));
+    CHECK_FALSE(m1 != m1);
+    CHECK(m1 != mm_t(2.0));
+  }
+}
+#endif
+
 #endif  // _GLUCAT_CLIFFORD_ALGEBRA_IMP_H

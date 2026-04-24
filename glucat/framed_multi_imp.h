@@ -2687,4 +2687,78 @@ namespace glucat
     return log(matrix_multi_t(val), matrix_multi_t(i), prechecked);
   }
 }
+#ifdef GLUCAT_DOCTEST
+#include <iostream>
+#include <sstream>
+#include <cmath>
+#include <numbers>
+
+TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
+  using fm_t = glucat::framed_multi<double, -32, 32>;
+  using is_t = fm_t::index_set_t;
+
+  SUBCASE("Constructor and string representation") {
+    fm_t f1(2.0);
+    std::ostringstream oss1;
+    oss1 << f1;
+    CHECK(oss1.str() == "2");
+
+    fm_t f2("2{1,2,3}");
+    std::ostringstream oss2;
+    oss2 << f2;
+    CHECK(oss2.str() == "2{1,2,3}");
+
+    fm_t f3("-{1}");
+    std::ostringstream oss3;
+    oss3 << f3;
+    CHECK(oss3.str() == "-{1}");
+  }
+
+  SUBCASE("Geometric operations") {
+    fm_t e1("{1}");
+    fm_t e2("{2}");
+    fm_t e3("{3}");
+    CHECK((e1 * e2) == fm_t("{1,2}"));
+    CHECK((e2 * e1) == fm_t("-{1,2}"));
+    CHECK((e1 * e1) == fm_t(1.0));
+
+    // HS (1.21a): (a_r * b_s)(|r-s|) == a_r & b_s
+    CHECK(scalar(e1 * e2) == 0.0);
+    CHECK(scalar(e1 * e1) == 1.0);
+
+    // HS (1.25a): (a ^ b) ^ c == a ^ (b ^ c)
+    CHECK(((e1 ^ e2) ^ e3) == (e1 ^ (e2 ^ e3)));
+
+    // HS (1.31): a_1 * b == (a_1 & b) + (a_1 ^ b)
+    fm_t b = fm_t("1+{1}+{2}+{1,2}");
+    CHECK((e1 * b) == ((e1 & b) + (e1 ^ b)));
+  }
+
+  SUBCASE("Transcendental functions") {
+    fm_t x("{1,2}");
+    const double pi = std::numbers::pi;
+
+    // exp and log
+    fm_t e_x = exp(x * (pi/4.0));
+    // exp({1,2}*pi/4) = cos(pi/4) + {1,2}*sin(pi/4) = (1 + {1,2})/sqrt(2)
+    CHECK(approx_equal(e_x, (fm_t(1.0) + fm_t("{1,2}")) / std::sqrt(2.0)));
+    CHECK(approx_equal(exp(log(e_x)), e_x));
+
+    // sin and cos
+    fm_t s_x = sin(x);
+    fm_t c_x = cos(x);
+    // sin^2 + cos^2 = 1
+    CHECK(approx_equal(s_x*s_x + c_x*c_x, fm_t(1.0)));
+    CHECK(approx_equal(cos(acos(fm_t(0.5))), fm_t(0.5)));
+
+    // peg11.h identities
+    fm_t A = fm_t("0.5{1}+0.5{1,2}");
+    CHECK(approx_equal(exp(A) * exp(-A), fm_t(1.0)));
+    CHECK(approx_equal(cosh(A) + sinh(A), exp(A)));
+    CHECK(approx_equal(cos(A) + complexifier(A)*sin(A), exp(complexifier(A)*A)));
+    CHECK(approx_equal(sqrt(fm_t(4.0)), fm_t(2.0)));
+  }
+}
+#endif
+
 #endif  // _GLUCAT_FRAMED_MULTI_IMP_H

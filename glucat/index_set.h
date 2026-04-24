@@ -110,9 +110,20 @@ namespace glucat
     auto operator= (const index_set&) -> index_set& = default;
 
     // Equality
-    auto operator==  (const index_set_t rhs) const -> bool;
+    auto operator==  (const index_set_t& rhs) const -> bool;
     // Inequality
-    auto operator!=  (const index_set_t rhs) const -> bool;
+    auto operator!=  (const index_set_t& rhs) const -> bool;
+    // Less than
+    auto operator<   (const index_set_t& rhs) const -> bool;
+    // Less than or equal
+    auto operator<=  (const index_set_t& rhs) const -> bool
+    { return (*this < rhs) || (*this == rhs); }
+    // Greater than
+    auto operator>   (const index_set_t& rhs) const -> bool
+    { return !(*this <= rhs); }
+    // Greater than or equal
+    auto operator>=  (const index_set_t& rhs) const -> bool
+    { return !(*this < rhs); }
     // Set complement: not
     auto operator~   () const -> index_set_t;
     // Symmetric set difference: exclusive or
@@ -151,8 +162,7 @@ namespace glucat
     auto max() const -> index_t;
 
   // Functions which support Clifford algebra operations
-    // Less than operator used for comparisons, map, etc.
-    auto operator<     (const index_set_t rhs) const -> bool;
+
     // Determine if the index set is contiguous, ie. has no gaps
     auto is_contiguous () const -> bool;
     // Fold this index set within itself as a frame
@@ -164,7 +174,7 @@ namespace glucat
     // The set value of the fold of this index set within the given frame
     auto value_of_fold (const index_set_t frm) const -> set_value_t;
     // Sign of geometric product of two Clifford basis elements
-    auto sign_of_mult  (const index_set_t ist) const -> int;
+    auto sign_of_mult  (const index_set_t& ist) const -> int;
     // Sign of geometric square of a Clifford basis element
     auto sign_of_square()                      const -> int;
 

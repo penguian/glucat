@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+# Move to the project root directory
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT_DIR"
+
 echo "=== Bootstrapping ==="
 ./admin/Makefile.common bootstrap || true
 

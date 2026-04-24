@@ -2979,4 +2979,108 @@ namespace glucat{
       return clifford_exp(val);
   }
 }
+#ifdef GLUCAT_DOCTEST
+#include <iostream>
+#include <sstream>
+#include <cmath>
+#include <numbers>
+
+TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
+  using mm_t = glucat::matrix_multi<double, -32, 32>;
+  using is_t = mm_t::index_set_t;
+
+  SUBCASE("Constructor and string representation") {
+    mm_t m1(2.0);
+    std::ostringstream oss1;
+    oss1 << m1;
+    CHECK(oss1.str() == "2");
+
+    mm_t m2("2{1,2,3}");
+    std::ostringstream oss2;
+    oss2 << m2;
+    CHECK(oss2.str() == "2{1,2,3}");
+
+    mm_t m3("-{1}");
+    std::ostringstream oss3;
+    oss3 << m3;
+    CHECK(oss3.str() == "-{1}");
+  }
+
+  SUBCASE("Geometric operations") {
+    mm_t e1("{1}");
+    mm_t e2("{2}");
+    mm_t e3("{3}");
+    CHECK((e1 * e2) == mm_t("{1,2}"));
+    CHECK((e2 * e1) == mm_t("-{1,2}"));
+    CHECK((e1 * e1) == mm_t(1.0));
+
+    // HS (1.21a): (a_r * b_s)(|r-s|) == a_r & b_s
+    CHECK(scalar(e1 * e2) == 0.0);
+    CHECK(scalar(e1 * e1) == 1.0);
+
+    // HS (1.25a): (a ^ b) ^ c == a ^ (b ^ c)
+    CHECK(((e1 ^ e2) ^ e3) == (e1 ^ (e2 ^ e3)));
+
+    // HS (1.31): a_1 * b == (a_1 & b) + (a_1 ^ b)
+    mm_t b = mm_t("1+{1}+{2}+{1,2}");
+    CHECK((e1 * b) == ((e1 & b) + (e1 ^ b)));
+
+    // HS (1.44): star(a, b) == scalar(a * b)
+    CHECK(star(e1, e2) == scalar(e1 * e2));
+    CHECK(star(e1, e1) == scalar(e1 * e1));
+  }
+
+  SUBCASE("Arithmetic and approximate equality") {
+    mm_t m1(1.0);
+    mm_t m2("{1}");
+    CHECK((m1 + m2) == mm_t("1+{1}"));
+    CHECK((m1 - m2) == mm_t("1-{1}"));
+    CHECK((m1 * 2.0) == mm_t(2.0));
+    CHECK((2.0 * m1) == mm_t(2.0));
+    CHECK(approx_equal(m1, mm_t(1.0 + 1e-15)));
+    CHECK(m1 != m2);
+    CHECK(m1 != 0.0);
+    CHECK(0.0 != m1);
+  }
+
+  SUBCASE("Transcendental functions") {
+    mm_t x("{1,2}");
+    const double pi = std::numbers::pi;
+
+    // exp and log
+    mm_t e_x = exp(x * (pi/4.0));
+    // exp({1,2}*pi/4) = cos(pi/4) + {1,2}*sin(pi/4) = (1 + {1,2})/sqrt(2)
+    CHECK(approx_equal(e_x, (mm_t(1.0) + mm_t("{1,2}")) / std::sqrt(2.0)));
+    CHECK(approx_equal(exp(log(e_x)), e_x));
+
+    // sin and cos
+    mm_t s_x = sin(x);
+    mm_t c_x = cos(x);
+    // sin^2 + cos^2 = 1
+    CHECK(approx_equal(s_x*s_x + c_x*c_x, mm_t(1.0)));
+    CHECK(approx_equal(cos(acos(mm_t(0.5))), mm_t(0.5)));
+
+    // sinh and cosh
+    mm_t sh_x = sinh(x);
+    mm_t ch_x = cosh(x);
+    // cosh^2 - sinh^2 = 1
+    CHECK(approx_equal(ch_x*ch_x - sh_x*sh_x, mm_t(1.0)));
+    CHECK(approx_equal(cosh(acosh(mm_t(2.0))), mm_t(2.0)));
+
+    // tan and tanh
+    CHECK(approx_equal(tan(atan(mm_t(0.5))), mm_t(0.5)));
+    CHECK(approx_equal(tanh(atanh(mm_t(0.5))), mm_t(0.5)));
+
+    // peg11.h identities
+    mm_t A = mm_t("0.5{1}+0.5{1,2}");
+    CHECK(approx_equal(exp(A) * exp(-A), mm_t(1.0)));
+    CHECK(approx_equal(cosh(A) + sinh(A), exp(A)));
+    CHECK(approx_equal(cos(A) + complexifier(A)*sin(A), exp(complexifier(A)*A)));
+    CHECK(approx_equal(cos(A)*tan(A), sin(A)));
+    CHECK(approx_equal(cosh(A)*tanh(A), sinh(A)));
+    CHECK(approx_equal(sqrt(mm_t(4.0)), mm_t(2.0)));
+  }
+}
+#endif
+
 #endif  // _GLUCAT_MATRIX_MULTI_IMP_H
