@@ -32,5 +32,5 @@ source   = os.environ['source_pyx']
 ext = setup_ext(ext_name, source)
 setup(
     name = ext_name,
-    ext_modules = cythonize([ext])
+    ext_modules = cythonize([ext], compiler_directives={'linetrace': True})
 )
