@@ -3080,6 +3080,30 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK(approx_equal(cosh(A)*tanh(A), sinh(A)));
     CHECK(approx_equal(sqrt(mm_t(4.0)), mm_t(2.0)));
   }
+
+  SUBCASE("Adversarial and edge cases") {
+    // NaN handling
+    mm_t n(glucat::numeric_traits<double>::NaN());
+    CHECK(n.isnan());
+    CHECK(exp(n).isnan());
+    CHECK(log(n).isnan());
+
+    // Purely scalar multivector in transcendental functions
+    mm_t s(2.0);
+    CHECK(approx_equal(exp(s), mm_t(std::exp(2.0))));
+    CHECK(approx_equal(log(s), mm_t(std::log(2.0))));
+    CHECK(approx_equal(sqrt(s), mm_t(std::sqrt(2.0))));
+
+    // Zero
+    mm_t zero(0.0);
+    // Log of zero returns NaN in GluCat
+    CHECK(log(zero).isnan());
+
+    // Negative log with complexifier
+    mm_t neg(-1.0);
+    mm_t i("{-1}");
+    CHECK(approx_equal(log(neg, i, false), i * std::numbers::pi));
+  }
 }
 #endif
 

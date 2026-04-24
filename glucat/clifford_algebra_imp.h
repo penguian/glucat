@@ -1701,6 +1701,17 @@ TEST_CASE("clifford_algebra_imp (generic templates)") {
     CHECK_FALSE(m1 != m1);
     CHECK(m1 != mm_t(2.0));
   }
+
+  SUBCASE("Non-scalar transcendental branches") {
+    mm_t e12("{1,2}");
+    // atan of non-scalar
+    CHECK(approx_equal(tan(atan(e12 * 0.5)), e12 * 0.5));
+    // NaN handling branches
+    mm_t n(glucat::numeric_traits<double>::NaN());
+    CHECK(atan(n).isnan());
+    CHECK(tan(n).isnan());
+    CHECK(atanh(n).isnan());
+  }
 }
 #endif
 

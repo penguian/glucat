@@ -1527,6 +1527,38 @@ TEST_CASE("index_set<LO,HI>") {
     CHECK(s1.sign_of_mult(s2) == 1);
     CHECK(s1.sign_of_square() == -1);
   }
+
+  SUBCASE("Adversarial and edge cases") {
+    // sign_of_square for single index
+    CHECK(glucat::sign_of_square(1) == 1);
+    CHECK(glucat::sign_of_square(-1) == -1);
+
+    // reference operators
+    is_t s;
+    s[1] = true;
+    CHECK(s.test(1));
+    s[1] = false;
+    CHECK_FALSE(s.test(1));
+    s[1].flip();
+    CHECK(s.test(1));
+
+    is_t s2;
+    s2[2] = s[1];
+    CHECK(s2.test(2));
+    s2[2] = s[3]; // s[3] is false
+    CHECK_FALSE(s2.test(2));
+
+    // operator~ and operator bool
+    CHECK(s[1]);
+    CHECK_FALSE(~s[1]);
+    CHECK(s[1] == s[1]); // same index set and index
+    s[1] = s[1]; // self assignment
+
+    // Comparisons with more varied sets
+    CHECK(is_t("{1,2}") < is_t("{1,2,3}"));
+    CHECK(is_t("{1,3}") > is_t("{1,2}"));
+    CHECK(is_t("{-1,1}") != is_t("{1}"));
+  }
 }
 #endif
 

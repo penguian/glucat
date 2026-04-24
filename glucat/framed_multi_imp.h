@@ -2758,6 +2758,29 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK(approx_equal(cos(A) + complexifier(A)*sin(A), exp(complexifier(A)*A)));
     CHECK(approx_equal(sqrt(fm_t(4.0)), fm_t(2.0)));
   }
+
+  SUBCASE("Adversarial and edge cases") {
+    // NaN handling
+    fm_t n(glucat::numeric_traits<double>::NaN());
+    CHECK(n.isnan());
+    CHECK(exp(n).isnan());
+    CHECK(log(n, fm_t(glucat::numeric_traits<double>::NaN()), false).isnan());
+
+    // Purely scalar multivector
+    fm_t s(2.0);
+    CHECK(approx_equal(exp(s), fm_t(std::exp(2.0))));
+    // For log of scalar, we need a valid complexifier
+    fm_t i("{-1}");
+    CHECK(approx_equal(log(s, i, false), fm_t(std::log(2.0))));
+
+    // Large multivector to trigger matrix-based exp
+    fm_t large = fm_t("1+{1}+{2}+{3}+{4}+{5}+{1,2}+{1,3}+{1,4}+{1,5}+{2,3}+{2,4}+{2,5}+{3,4}+{3,5}+{4,5}");
+    CHECK(approx_equal(exp(large), exp(glucat::matrix_multi<double, -32, 32>(large))));
+
+    // Negative log for framed_multi
+    fm_t neg(-1.0);
+    CHECK(approx_equal(log(neg, fm_t("{-1}"), false), fm_t("{-1}") * std::numbers::pi));
+  }
 }
 #endif
 
