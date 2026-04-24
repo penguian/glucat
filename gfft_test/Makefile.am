@@ -13,3 +13,5 @@ gfft_test_LDADD = $(LDADD)
 AM_CPPFLAGS = $(all_includes)
 # the library search path.
 gfft_test_LDFLAGS = $(USER_LDFLAGS)
+
+CLEANFILES = *.gcno *.gcda

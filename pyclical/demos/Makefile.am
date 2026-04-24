@@ -27,3 +27,5 @@ clean-local:
 	rm -rf *.pyc *.ipynb __pycache__
 
 endif
+
+CLEANFILES = *.gcno *.gcda

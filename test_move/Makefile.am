@@ -16,4 +16,4 @@ AM_CPPFLAGS = $(all_includes)
 # the library search path.
 test_move_LDFLAGS = $(USER_LDFLAGS)
 
-CLEANFILES = test_move.out
+CLEANFILES = test_move.out *.gcno *.gcda

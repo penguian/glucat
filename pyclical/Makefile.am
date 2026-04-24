@@ -38,7 +38,7 @@ $(CHECK_OUT): all
 
 CLEAN_CYTHON = $(ext_name).cpp $(ext_name).html
 
-CLEANFILES = $(pyexec_DATA) $(CLEAN_CYTHON)
+CLEANFILES = $(pyexec_DATA) $(CLEAN_CYTHON) *.gcno *.gcda
 
 clean-local:
 	rm -f *.pyc

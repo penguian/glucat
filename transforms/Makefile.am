@@ -13,3 +13,5 @@ transforms_LDADD = $(LDADD)
 AM_CPPFLAGS = $(all_includes)
 # the library search path.
 transforms_LDFLAGS = $(USER_LDFLAGS)
+
+CLEANFILES = *.gcno *.gcda
