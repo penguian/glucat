@@ -217,21 +217,21 @@ namespace glucat
   /**
    * @brief Symmetric set difference: exclusive or
    * @details
-   * 
+   *
    * Usage example:
    * Location: glucat/framed_multi_imp.h:2433
-   * 
+   *
    * @code
    *
    * return term_t(lhs.first ^ rhs.first, crd_of_mult(lhs, rhs));
    * @endcode
-   * 
+   *
    * @par Example:
    * @code
    * index_set<>("{1}") ^ index_set<>("{2}"); // Returns {1,2}
    * index_set<>("{1,2}") ^ index_set<>("{2}"); // Returns {1}
    * @endcode
-   * 
+   *
    * @tparam LO
    * @tparam HI
    * @param lhs Left hand side
@@ -277,7 +277,7 @@ namespace glucat
    * index_set<>("{1}") & index_set<>("{2}"); // Returns {}
    * index_set<>("{1,2}") & index_set<>("{2}"); // Returns {2}
    * @endcode
-   * 
+   *
    * @tparam LO
    * @tparam HI
    * @param lhs Left hand side
@@ -323,7 +323,7 @@ namespace glucat
    * index_set<>("{1}") | index_set<>("{2}"); // Returns {1,2}
    * index_set<>("{1,2}") | index_set<>("{2}"); // Returns {1,2}
    * @endcode
-   * 
+   *
    * @tparam LO
    * @tparam HI
    * @param lhs Left hand side
@@ -1200,15 +1200,15 @@ namespace glucat
   /**
    * @brief Sign of geometric product of two Clifford basis elements
    * @details
-   * 
+   *
    * Usage example:
    * Location: glucat/framed_multi_imp.h:2414
-   * 
+   *
    * @code
    *
    * { return lhs.first.sign_of_mult(rhs.first) * lhs.second * rhs.second; }
    * @endcode
-   * 
+   *
    * @tparam LO
    * @tparam HI
    * @param rhs Right hand side
@@ -1417,7 +1417,7 @@ namespace glucat
   {
     if (&c_j != this && c_j != *this)
     {
-      if ( (c_j.m_pst)[c_j.m_idx] )
+      if ( (*c_j.m_pst)[c_j.m_idx] )
         m_pst->set(m_idx);
       else
         m_pst->reset(m_idx);
