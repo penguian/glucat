@@ -204,6 +204,10 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
      fi
   fi
 
+  if [[[ "$glucat_use_doctest" == "no" ]]]; then
+    DO_NOT_COMPILE="$DO_NOT_COMPILE test_doctest"
+  fi
+
   dnl enable warnings for debug build
   if [[[ "$glucat_use_debug_code" != "no" ]]]; then
     glucat_use_warnings="yes"
