@@ -5,7 +5,6 @@ set -e
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT_DIR"
 
-DOCTEST_DIR="/home/leopardi/src-downloaded/doctest/doctest/doctest"
 
 echo "=== Bootstrapping ==="
 make -f admin/Makefile.common bootstrap || true
@@ -16,7 +15,7 @@ export CXXFLAGS="-O0 -g -fprofile-instr-generate -fcoverage-mapping"
 export LDFLAGS="-fprofile-instr-generate"
 
 # Configure with doctest and without pyclical
-./configure --disable-pyclical --with-doctest=$DOCTEST_DIR
+./configure --disable-pyclical --with-doctest
 
 echo "=== Cleaning previous builds ==="
 make clean || true

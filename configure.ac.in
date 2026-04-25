@@ -173,17 +173,35 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
 
   AC_ARG_WITH([doctest],
     AS_HELP_STRING(
-      [--with-doctest=DIR],
-      [use doctest from DIR [default=no]]),
-    [glucat_doctest_dir="$withval"],
-    [glucat_doctest_dir="no"])
+      [--with-doctest],
+      [use doctest [default=no]]),
+    [glucat_use_doctest="$withval"],
+    [glucat_use_doctest="no"])
 
   dnl Check for Boost version
   GLUCAT_CHECK_HEADERS([boost/version.hpp], [], [])
 
-  if [[[ "$glucat_doctest_dir" != "no" ]]]; then
-     all_includes="$all_includes -I$glucat_doctest_dir"
-     AC_MSG_NOTICE([Added doctest include path: $glucat_doctest_dir])
+  if [[[ "$glucat_use_doctest" == "yes" ]]]; then
+     dnl Try default include
+     doctest_found=no
+     GLUCAT_CHECK_HEADERS([doctest.h], [doctest_found=yes], [])
+     if [[[ "$doctest_found" == "no" ]]]; then
+        dnl Try adding /usr/include/doctest
+        saved_CPPFLAGS="$CPPFLAGS"
+        CPPFLAGS="$CPPFLAGS -isystem /usr/include/doctest"
+        unset ac_cv_header_doctest_h
+        GLUCAT_CHECK_HEADERS([doctest.h],
+        [
+           doctest_found=yes
+           all_includes="$all_includes -isystem /usr/include/doctest"
+           AC_MSG_NOTICE([Found doctest.h in /usr/include/doctest. Added to all_includes.])
+        ], [])
+        CPPFLAGS="$saved_CPPFLAGS"
+     fi
+     if [[[ "$doctest_found" == "no" ]]]; then
+        AC_MSG_WARN([doctest.h not found.])
+        glucat_use_doctest="no"
+     fi
   fi
 
   dnl enable warnings for debug build
