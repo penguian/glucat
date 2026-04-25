@@ -2,7 +2,7 @@
 set -e
 
 # Move to the project root directory
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT_DIR"
 
 echo "=== Configuring for PyClical Coverage ==="
@@ -16,15 +16,14 @@ export USER_LDFLAGS="-fprofile-instr-generate"
 
 echo "=== Cleaning and Building ==="
 make clean || true
-rm -f $(find . -name "*.profraw") glucat.profdata
+find . -name "*.profraw" -delete
+find . -name "*.profdata" -delete
 make -j$(nproc)
 
 echo "=== Running PyClical tests ==="
 export LLVM_PROFILE_FILE="$(pwd)/%p.profraw"
-# Run PyClical tests
-cd pyclical
-python3 test.py
-cd ..
+# This builds PyClical and runs the python tests
+make -C pyclical check -j$(nproc)
 
 echo "=== Merging profiling data ==="
 profraw_files=$(find . -name "*.profraw")
@@ -43,4 +42,12 @@ if [ -z "$SO_FILE" ]; then
     exit 1
 fi
 
+OUTPUT_DIR="test_coverage/results/coverage_html_pyclical"
+mkdir -p "$OUTPUT_DIR"
+
+llvm-cov show -format=html -output-dir="$OUTPUT_DIR" \
+    -instr-profile=pyclical.profdata "$SO_FILE" -- glucat/
+
 llvm-cov report -instr-profile=pyclical.profdata "$SO_FILE" -- glucat/
+
+echo "Coverage report generated in $OUTPUT_DIR/index.html"

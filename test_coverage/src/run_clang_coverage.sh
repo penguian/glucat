@@ -2,7 +2,7 @@
 set -e
 
 # Move to the project root directory
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT_DIR"
 
 echo "=== Bootstrapping ==="
@@ -18,24 +18,14 @@ export LDFLAGS="-fprofile-instr-generate"
 
 echo "=== Cleaning previous builds ==="
 make clean || true
-# Explicitly remove old profraw files to prevent merging stale data
-rm -f *.profraw test*/*.profraw test*/*.profdata
+# Explicitly remove all old profiling files to prevent merging stale data
+find . -name "*.profraw" -delete
+find . -name "*.profdata" -delete
 
-TESTS="test00 test01 test02 test03 test04 test05 test06 test07 test08 test09 test10 test11 test12 test13 test14 test15 test16 test17"
-
-echo "=== Building and running tests ==="
+echo "=== Building and running tests in parallel ==="
 export LLVM_PROFILE_FILE="%p.profraw"
-# We'll just build the specific test directories directly. 
-# Depending on automake, we might need to build the root first or dependencies,
-# so we'll build the root libraries (if any) and then the tests.
-make -j$(nproc)
-
-for t in $TESTS; do
-    echo "Running $t..."
-    # The tests might need to be run manually if `make -C test check` doesn't build the dependencies properly.
-    # But usually make check works.
-    make -C $t check -j$(nproc)
-done
+# This builds the library and runs all tests (test00-test17) using all cores
+make check -j$(nproc)
 
 echo "=== Merging profiling data ==="
 # Find all profraw files created by the tests
@@ -48,15 +38,17 @@ else
 fi
 
 echo "=== Generating llvm-cov HTML report ==="
-mkdir -p coverage_html_clang
+OUTPUT_DIR="test_coverage/results/coverage_html_clang"
+mkdir -p "$OUTPUT_DIR"
 
 # We must pass every compiled test binary to llvm-cov so it can read the coverage map
+# Even if they are all merged into one profdata, llvm-cov needs the binary for the debug symbols/mapping
+TESTS="test00 test01 test02 test03 test04 test05 test06 test07 test08 test09 test10 test11 test12 test13 test14 test15 test16 test17"
 OBJECT_ARGS=""
 for t in $TESTS; do
     if [ -f "${t}/${t}" ]; then
         OBJECT_ARGS="$OBJECT_ARGS -object ${t}/${t}"
     else
-        # It might be an object inside .libs or similar if libtool is used, but glucat seems to build direct binaries.
         echo "Warning: binary ${t}/${t} not found."
     fi
 done
@@ -72,11 +64,11 @@ for arg in $OBJECT_ARGS; do
     fi
 done
 
-llvm-cov show -format=html -output-dir=coverage_html_clang \
+llvm-cov show -format=html -output-dir="$OUTPUT_DIR" \
     -instr-profile=glucat.profdata \
     $FIRST_OBJ $REST_ARGS \
     -- glucat/
 
 llvm-cov report -instr-profile=glucat.profdata $FIRST_OBJ $REST_ARGS -- glucat/
 
-echo "Coverage report generated in coverage_html_clang/index.html"
+echo "Coverage report generated in $OUTPUT_DIR/index.html"

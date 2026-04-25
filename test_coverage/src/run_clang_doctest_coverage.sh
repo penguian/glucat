@@ -2,7 +2,7 @@
 set -e
 
 # Move to the project root directory
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT_DIR"
 
 DOCTEST_DIR="/home/leopardi/src-downloaded/doctest/doctest/doctest"
@@ -20,23 +20,25 @@ export LDFLAGS="-fprofile-instr-generate"
 
 echo "=== Cleaning previous builds ==="
 make clean || true
-rm -f *.profraw test_doctest/*.profraw test_doctest/*.profdata
+find . -name "*.profraw" -delete
+find . -name "*.profdata" -delete
 
 echo "=== Building and running doctest ==="
-export LLVM_PROFILE_FILE="test_doctest.profraw"
-make -C test_doctest -j$(nproc)
-./test_doctest/test_doctest
+# We set LLVM_PROFILE_FILE as an absolute path to avoid directory confusion
+export LLVM_PROFILE_FILE="$(pwd)/test_doctest.profraw"
+make -C test_doctest check -j$(nproc)
 
 echo "=== Merging profiling data ==="
 llvm-profdata merge -sparse test_doctest.profraw -o glucat_doctest.profdata
 
 echo "=== Generating llvm-cov HTML report ==="
-mkdir -p coverage_html_doctest
-llvm-cov show -format=html -output-dir=coverage_html_doctest \
+OUTPUT_DIR="test_coverage/results/coverage_html_doctest"
+mkdir -p "$OUTPUT_DIR"
+llvm-cov show -format=html -output-dir="$OUTPUT_DIR" \
     -instr-profile=glucat_doctest.profdata \
     test_doctest/test_doctest \
     -- glucat/
 
 llvm-cov report -instr-profile=glucat_doctest.profdata test_doctest/test_doctest -- glucat/
 
-echo "Coverage report generated in coverage_html_doctest/index.html"
+echo "Coverage report generated in $OUTPUT_DIR/index.html"
