@@ -24,9 +24,7 @@ libtool
 .coverage
 *.profraw
 *.profdata
-coverage_html/
-coverage_html_clang/
-coverage_html_doctest/
+test_coverage/results/
 pyclical.profdata
 glucat_doctest.profdata
 
