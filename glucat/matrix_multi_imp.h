@@ -2986,6 +2986,7 @@ namespace glucat{
 #include <numbers>
 
 TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
+  using namespace glucat;
   using mm_t = glucat::matrix_multi<double, -32, 32>;
 
   SUBCASE("Constructor and string representation") {
@@ -3102,6 +3103,58 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
     mm_t neg(-1.0);
     mm_t i("{-1}");
     CHECK(approx_equal(log(neg, i, false), i * std::numbers::pi));
+  }
+  SUBCASE("Transcendental identities (random)") {
+    using namespace glucat;
+    using index_set_t = mm_t::index_set_t; index_set_t frm = index_set_t();
+    const double fill = 0.5;
+    for (index_t i = 1; i <= 7; ++i) {
+      frm |= index_set_t(i);
+      frm |= index_set_t(-i);
+      
+      mm_t a = mm_t::random(frm, fill);
+      
+      // exp(a) * exp(-a) == 1
+      CHECK(approx_equal(exp(a) * exp(-a), mm_t(1.0)));
+      
+      // cosh(a) + sinh(a) == exp(a)
+      CHECK(approx_equal(cosh(a) + sinh(a), exp(a)));
+      
+      // sqrt(a) * sqrt(a) == a
+      mm_t s = sqrt(a);
+      if (!s.isnan() && !s.isinf())
+        CHECK(approx_equal(s * s, a));
+    }
+  }
+
+  SUBCASE("Geometric algebra identities (random)") {
+    using index_set_t = mm_t::index_set_t; using index_set_t = mm_t::index_set_t; index_set_t frm = index_set_t();
+    const double fill = 0.5;
+    for (index_t i = 1; i <= 7; ++i) {
+      frm |= index_set_t(i);
+      frm |= index_set_t(-i);
+      
+      mm_t a = mm_t::random(frm, fill);
+      mm_t b = mm_t::random(frm, fill);
+      mm_t c = mm_t::random(frm, fill);
+      
+      // [HS] (1.25a): (a ^ b) ^ c == a ^ (b ^ c)
+      CHECK(approx_equal((a ^ b) ^ c, a ^ (b ^ c)));
+      
+      // [HS] (1.31): a_1 * b == (a_1 & b) + (a_1 ^ b)
+      mm_t a_1 = a(1);
+      CHECK(approx_equal(a_1 * b, (a_1 & b) + (a_1 ^ b)));
+      
+      // [HS] (1.44): star(a, b) == scalar(a * b)
+      CHECK(star(a, b) == doctest::Approx(scalar(a * b)));
+      
+      // [HS] (1.21a): (a_r * b_s)(|r-s|) == a_r & b_s (sampled)
+      index_t r = frm.count() / 2;
+      index_t s = frm.count() / 2;
+      mm_t a_r = a(r);
+      mm_t b_s = b(s);
+      CHECK(approx_equal(a_r & b_s, (a_r * b_s)(index_t(std::abs(r-s)))));
+    }
   }
 }
 #endif

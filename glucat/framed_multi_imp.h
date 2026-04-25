@@ -2694,6 +2694,7 @@ namespace glucat
 #include <numbers>
 
 TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
+  using namespace glucat;
   using fm_t = glucat::framed_multi<double, -32, 32>;
 
   SUBCASE("Constructor and string representation") {
@@ -2779,6 +2780,60 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     // Negative log for framed_multi
     fm_t neg(-1.0);
     CHECK(approx_equal(log(neg, fm_t("{-1}"), false), fm_t("{-1}") * std::numbers::pi));
+  }
+  SUBCASE("Transcendental identities (random)") {
+    using namespace glucat;
+    using index_set_t = fm_t::index_set_t; index_set_t frm = index_set_t();
+    const double fill = 0.5;
+    for (index_t i = 1; i <= 7; ++i) {
+      frm |= index_set_t(i);
+      frm |= index_set_t(-i);
+      
+      fm_t a = fm_t::random(frm, fill);
+      
+      // exp(a) * exp(-a) == 1
+      CHECK(approx_equal(exp(a) * exp(-a), fm_t(1.0)));
+      
+      // cosh(a) + sinh(a) == exp(a)
+      CHECK(approx_equal(cosh(a) + sinh(a), exp(a)));
+      
+      // sqrt(a) * sqrt(a) == a
+      // Note: sqrt might not always return a value that squares back to a due to branch cuts,
+      // but for many random a it should work or be close.
+      fm_t s = sqrt(a);
+      if (!s.isnan() && !s.isinf())
+        CHECK(approx_equal(s * s, a));
+    }
+  }
+
+  SUBCASE("Geometric algebra identities (random)") {
+    using index_set_t = fm_t::index_set_t; using index_set_t = fm_t::index_set_t; index_set_t frm = index_set_t();
+    const double fill = 0.5;
+    for (index_t i = 1; i <= 7; ++i) {
+      frm |= index_set_t(i);
+      frm |= index_set_t(-i);
+      
+      fm_t a = fm_t::random(frm, fill);
+      fm_t b = fm_t::random(frm, fill);
+      fm_t c = fm_t::random(frm, fill);
+      
+      // [HS] (1.25a): (a ^ b) ^ c == a ^ (b ^ c)
+      CHECK(approx_equal((a ^ b) ^ c, a ^ (b ^ c)));
+      
+      // [HS] (1.31): a_1 * b == (a_1 & b) + (a_1 ^ b)
+      fm_t a_1 = a(1);
+      CHECK(approx_equal(a_1 * b, (a_1 & b) + (a_1 ^ b)));
+      
+      // [HS] (1.44): star(a, b) == scalar(a * b)
+      CHECK(star(a, b) == doctest::Approx(scalar(a * b)));
+      
+      // [HS] (1.21a): (a_r * b_s)(|r-s|) == a_r & b_s (sampled)
+      index_t r = frm.count() / 2;
+      index_t s = frm.count() / 2;
+      fm_t a_r = a(r);
+      fm_t b_s = b(s);
+      CHECK(approx_equal(a_r & b_s, (a_r * b_s)(index_t(std::abs(r-s)))));
+    }
   }
 }
 #endif
