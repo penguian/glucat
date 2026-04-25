@@ -1,3 +1,1054 @@
+2026-04-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* AUTHORS.md, DESIGN.md, INSTALL.md, NEWS, README.md, TODO.md: 
+	Update the documentation
+
+2026-04-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h, glucat/matrix_multi_imp.h: Increase
+	test coverage
+
+2026-04-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .gitignore: Add a .gitignore file
+
+2026-04-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h, glucat/matrix_multi_imp.h: Remove an
+	unused type
+
+2026-04-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in, test_coverage/src/run_clang_doctest_coverage.sh: 
+	Assume that the doctest.h header is installed
+
+2026-04-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_coverage/src/run_clang_coverage.sh,
+	test_coverage/src/run_clang_doctest_coverage.sh,
+	test_coverage/src/run_pyclical_coverage.sh: Compile in parallel
+
+2026-04-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_coverage/{ => src}/run_clang_coverage.sh, test_coverage/{ =>
+	src}/run_clang_doctest_coverage.sh, test_coverage/{ =>
+	src}/run_pyclical_coverage.sh: Move coverarge scripts to
+	test_coverage/src
+
+2026-04-24  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra_imp.h, glucat/framed_multi_imp.h,
+	glucat/index_set_imp.h, glucat/matrix_multi_imp.h: Check edge cases
+
+2026-04-24  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/index_set_imp.h: Fix a dereferencing bug
+
+2026-04-24  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* gfft_test/Makefile.am, products/Makefile.am,
+	pyclical/Makefile.am, pyclical/demos/Makefile.am,
+	squaring/Makefile.am, test/Makefile.am, test00/Makefile.am,
+	test01/Makefile.am, test02/Makefile.am, test03/Makefile.am,
+	test04/Makefile.am, test05/Makefile.am, test06/Makefile.am,
+	test07/Makefile.am, test08/Makefile.am, test09/Makefile.am,
+	test10/Makefile.am, test11/Makefile.am, test12/Makefile.am,
+	test13/Makefile.am, test14/Makefile.am, test15/Makefile.am,
+	test16/Makefile.am, test17/Makefile.am, test_doctest/Makefile.am,
+	test_move/Makefile.am, transforms/Makefile.am: Clean out coverage
+	output files
+
+2026-04-24  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .gitignore: Add .gitignore
+
+2026-04-24  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* Makefile.am.in, admin/Makefile.common, configure.ac.in,
+	glucat/clifford_algebra_imp.h, glucat/framed_multi_imp.h,
+	glucat/index_set.h, glucat/index_set_imp.h,
+	glucat/matrix_multi_imp.h, run_clang_coverage.sh =>
+	test_coverage/run_clang_coverage.sh,
+	test_coverage/run_clang_doctest_coverage.sh,
+	run_pyclical_coverage.sh => test_coverage/run_pyclical_coverage.sh,
+	test_doctest/Makefile.am, test_doctest/main.cpp: Create
+	test_coverage. Add C++ doctest testing
+
+2026-04-24  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .coveragerc, pyclical/setup.py, pyclical/setup_ext.py,
+	pyclical/test_pytest_doctests.py, run_clang_coverage.sh,
+	run_pyclical_coverage.sh: Set up coverage testing
+
+2026-04-24  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .clang-format: Add C++ code styling rules
+
+2026-04-24  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* AUTHORS.md, INSTALL.md, README.md, TODO.md, configure.ac.in,
+	pyclical/test.out: Change version to 0.98a0
+
+2026-02-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md: Update
+
+2026-02-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md: Wrap at 82 columns. Partially update
+
+2026-02-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/test.out: Update pyclical test results since there are
+	now more tests
+
+2026-02-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* Makefile.am.in: Change cvs to bootstrap to match admin. Use ln -sf
+	for idempotency
+
+2026-02-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in: Try -qopenmp as well as -fopenmp
+
+2026-02-15  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/portability.h: Conditionally define _GLUCAT_USE_GCC_PRAGMAS
+
+2026-02-15  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_eigen.h: Guard pragmas
+
+2026-02-15  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in: Do not use boost/serialization/array_wrapper.hpp.
+	Use -march=native
+
+2026-02-15  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_multi_imp.h: Do not use
+	boost/serialization/array_wrapper.hpp
+
+2026-02-15  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* admin/compile, admin/config.guess, admin/config.sub,
+	admin/depcomp, admin/install-sh, admin/missing: Run autoreconf
+
+2026-02-15  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi.h: Add a static assert about converibility of
+	size_type
+
+2026-02-15  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi.h, glucat/framed_multi_imp.h,
+	glucat/matrix_multi.h, glucat/matrix_multi_imp.h,
+	pyclical/PyClical.pyx, pyclical/glucat.pxd: Widen the applicability
+	of nbr_terms
+
+2026-02-15  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_base.h, glucat/matrix_base_imp.h,
+	glucat/matrix_multi_imp.h: Define and use matrix::nbr_rows and
+	matrix::nbr_cols
+
+2026-02-15  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_multi_imp.h: Use zeros instead of resize;zeros
+
+2026-02-15  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_arma.h, glucat/matrix_arma_imp.h,
+	glucat/matrix_eigen.h, glucat/matrix_eigen_imp.h: Remove the
+	redundant resize function
+
+2026-02-15  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_eigen.h: Improve some comments
+
+2026-02-15  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in: Fix a typo in a comment
+
+2026-02-15  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/test.configure.armadillo-debug-yes.out,
+	test_runtime/test.configure.armadillo-openmp.out,
+	test_runtime/test.configure.armadillo-qd-std.out,
+	test_runtime/test.configure.armadillo.out,
+	test_runtime/test.configure.debug-full.out,
+	test_runtime/test.configure.debug-yes.out,
+	test_runtime/test.configure.default.out,
+	test_runtime/test.configure.disable-dependency.out,
+	test_runtime/test.configure.disable-pyclical.out,
+	test_runtime/test.configure.prefix-home-opt.out,
+	test_runtime/test.configure.qd.out,
+	test_runtime/test.configure.std.out: Update test output
+
+2026-02-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/fast-test.configure.armadillo-debug-yes.out,
+	test_runtime/fast-test.configure.armadillo-openmp.out,
+	test_runtime/fast-test.configure.armadillo-qd-std.out,
+	test_runtime/fast-test.configure.armadillo.out,
+	test_runtime/fast-test.configure.debug-full.out,
+	test_runtime/fast-test.configure.debug-yes.out,
+	test_runtime/fast-test.configure.default.out,
+	test_runtime/fast-test.configure.disable-dependency.out,
+	test_runtime/fast-test.configure.disable-pyclical.out,
+	test_runtime/fast-test.configure.prefix-home-opt.out,
+	test_runtime/fast-test.configure.qd.out,
+	test_runtime/fast-test.configure.std.out: Update fast test results
+
+2026-02-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/test.py: Exit with a non-zero status if any tests fail
+
+2026-02-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test11/peg11.h: Check inv(A). Set need_inv correctly. Declare
+	constants to be const
+
+2026-02-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_multi_imp.h: In matrix_log, check that val is
+	invertible. Tidy up
+
+2026-02-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/pyclical_tutorial_utils.py: In docstrings, explain
+	the purpose of allowed scope
+
+2026-02-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h: Improve some return descriptions
+
+2026-02-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/Makefile.am: Remove setup_nocython.py from EXTRA_DIST
+
+2026-02-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_base.h: Define the enum eig_case_t correctly
+
+2026-02-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/index_set.h: Use static_assert rtaher than
+	BOOST_STATIC_ASSERT
+
+2026-02-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi.h: Remove #include of poolfwd.hpp since Boost
+	pool alloctor is no longer used
+
+2026-02-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in: Check for Boost version
+
+2026-02-13  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/m_theory_demo.py: Improve the M Theory demo
+
+2026-02-13  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/pyclical_tutorial_utils.py: Rename from safe to
+	allowed
+
+2026-02-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_imp.h: Fix a header comment
+
+2026-02-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_base.h: Add dependence on <cstddef>
+
+2026-02-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in: Add a _GLUCAT_USE_OPENMP preprocessor symbol
+
+2026-02-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test11/peg11.h: Speed up the test
+
+2026-02-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra_imp.h, glucat/framed_multi_imp.h,
+	glucat/generation_imp.h, glucat/glucat_imp.h,
+	glucat/index_set_imp.h, glucat/matrix_arma_imp.h,
+	glucat/matrix_base_imp.h, glucat/matrix_eigen_imp.h,
+	glucat/matrix_multi_imp.h, glucat/scalar_imp.h: Improve the
+	descriptions of returned results
+
+2026-02-10  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/m_theory_demo.py: Add an M Theory example: Python
+	source
+
+2026-02-10  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* AUTHORS.md: Add a draft update to the AUTHORS file
+
+2026-02-10  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/gfft_test-11.out, test_runtime/products-8.out,
+	test_runtime/squaring-11.out, test_runtime/transforms-8.out: Update
+	the timing test results
+
+2026-02-10  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/pyclical_tutorial_utils.py: Make the PyClical
+	tutorials safer
+
+2026-02-08  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/build_pyclical_notebooks.py: Add an M Theory
+	example
+
+2026-02-08  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra_imp.h, glucat/framed_multi_imp.h,
+	glucat/index_set_imp.h, glucat/matrix_multi_imp.h: Add examples to
+	Doxygen comments
+
+2026-02-08  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in, pyclical/Makefile.am: Use Sphinx to document
+	PyClical
+
+2026-02-08  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/{fast-test.configure.armadillo-qd.out =>
+	fast-test.configure.armadillo-qd-std.out},
+	test_runtime/fast-test.configure.std.out,
+	test_runtime/test.configure.armadillo-debug-yes.out,
+	test_runtime/test.configure.armadillo-openmp.out,
+	test_runtime/{test.configure.armadillo-qd.out =>
+	test.configure.armadillo-qd-std.out},
+	test_runtime/test.configure.armadillo.out,
+	test_runtime/test.configure.debug-full.out,
+	test_runtime/test.configure.debug-yes.out,
+	test_runtime/test.configure.default.out,
+	test_runtime/test.configure.disable-dependency.out,
+	test_runtime/test.configure.disable-pyclical.out,
+	test_runtime/test.configure.prefix-home-opt.out,
+	test_runtime/test.configure.qd.out,
+	test_runtime/test.configure.std.out: Add new tests. Delete unused
+	tests. Update test results
+
+2026-02-08  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/test.out, pyclical/test.py: Update the PyClical test and
+	results
+
+2026-02-08  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/glucat.pxd: Add the grade function
+
+2026-02-08  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/PyClical.pyx: Add the grade function. Improve docstrings
+	for Sphinx doc
+
+2026-02-08  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test15/peg15.cpp: Do not test the imag() function -- it has been
+	removed
+
+2026-02-06  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in, pyclical/Makefile.am,
+	pyclical/setup_nocython.py, pyclical/test.out: Make Cython
+	compulsory for building PyClical
+
+2026-02-06  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md: Change 'cvs' to 'bootstrap'
+
+2026-02-06  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* admin/Makefile.common, admin/{cvs.sh => bootstrap.sh}: Change
+	'cvs' to 'bootstrap'
+
+2026-02-05  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in: Use 'if [[[' consistently
+
+2026-02-05  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in: Use AS_HELP_STRING. Reorder the AC_ARG_WITH calls
+	and the tests
+
+2026-02-05  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in, glucat/framed_multi.h: Use the macro name
+	_GLUCAT_USE_UNORDERED_FLAT_MAP Also change the name glucat_map_imp to glucat_use_unordered_map
+
+2026-02-05  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md, test/config-options.txt: Update the regression tests
+
+2026-02-05  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md: Describe the use of --with-unordered-map
+
+2026-02-05  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi.h: Support boost::unordered_flat_map for use
+	with framed_multi
+
+2026-02-05  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in, glucat/framed_multi_imp.h: Correctly cast terms
+	and scalars
+
+2026-02-04  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md: Update regression test descriptions. Update some
+	software dependencies
+
+2026-02-04  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_arma.h, glucat/matrix_arma_imp.h: Move some
+	Armadillo operator definitions to matrix_arma_imp.h
+
+2026-02-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* AUTHORS.md, INSTALL.md, README.md, TODO.md: Update version to
+	1.0.0
+
+2026-02-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_eigen.h, glucat/matrix_eigen_imp.h: Move definitions
+	to matrix_eigen_imp.h
+
+2026-02-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* README.md, glucat/global.h: Remove deprecated MS_PER_S definition
+
+2026-02-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra.h, glucat/errors.h, glucat/errors_imp.h,
+	glucat/generation.h, glucat/generation_imp.h, glucat/matrix_arma.h: 
+	Adjust Doxygen comments
+
+2026-02-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* README.md: Note that deprecated functions have been removed
+
+2026-02-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra.h, glucat/clifford_algebra_imp.h,
+	pyclical/PyClical.pyx, pyclical/glucat.pxd: Remove the deprecated
+	imag function
+
+2026-02-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* Doxyfile.in, glucat/clifford_algebra.h,
+	glucat/clifford_algebra_imp.h, glucat/errors.h,
+	glucat/framed_multi.h, glucat/framed_multi_imp.h,
+	glucat/generation.h, glucat/generation_imp.h, glucat/global.h,
+	glucat/index_set.h, glucat/index_set_imp.h, glucat/long_double.h,
+	glucat/matrix.h, glucat/matrix_arma.h, glucat/matrix_arma_imp.h,
+	glucat/matrix_base.h, glucat/matrix_eigen.h,
+	glucat/matrix_eigen_imp.h, glucat/matrix_multi.h,
+	glucat/matrix_multi_imp.h, glucat/promotion.h, glucat/qd.h,
+	glucat/random.h, glucat/scalar.h, glucat/scalar_imp.h,
+	glucat/tuning.h: Remove deprecated elliptic function. Update Doxygen
+	comments
+
+2026-02-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md: Start updating the installation instructions
+
+2026-02-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra_imp.h, glucat/errors_imp.h,
+	glucat/framed_multi_imp.h, glucat/generation_imp.h,
+	glucat/glucat_imp.h, glucat/index_set_imp.h,
+	glucat/matrix_arma_imp.h, glucat/matrix_base_imp.h,
+	glucat/matrix_eigen_imp.h, glucat/matrix_imp.h,
+	glucat/matrix_multi_imp.h, glucat/scalar_imp.h: Add some details for
+	Doxygen
+
+2026-02-01  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_arma_imp.h, glucat/matrix_eigen_imp.h: Reorder
+	definitions to match declarations
+
+2026-02-01  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_base.h, glucat/matrix_base_imp.h,
+	glucat/matrix_eigen.h, glucat/matrix_eigen_imp.h: Change Derived to
+	Derived_T. Make @brief descriptions consistent
+
+2026-02-01  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in: Add -fno-var-tracking-assignments
+
+2026-02-01  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in, glucat/matrix_arma_imp.h,
+	glucat/matrix_base_imp.h, glucat/matrix_eigen.h,
+	glucat/matrix_eigen_imp.h, glucat/matrix_imp.h: Inline everything
+
+2026-01-31  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* Doxyfile.in: Sort Doxygen doc
+
+2026-01-31  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra_imp.h, glucat/errors_imp.h,
+	glucat/framed_multi_imp.h, glucat/generation_imp.h,
+	glucat/index_set_imp.h, glucat/matrix_arma_imp.h,
+	glucat/matrix_base_imp.h, glucat/matrix_eigen_imp.h,
+	glucat/matrix_imp.h, glucat/matrix_multi_imp.h, glucat/scalar_imp.h: 
+	Expand Doxygen comments
+
+2026-01-31  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix.h, glucat/matrix_arma.h, glucat/matrix_arma_imp.h,
+	glucat/matrix_eigen.h, glucat/matrix_eigen_imp.h,
+	glucat/matrix_imp.h: Cleanly separate declarations and definitions
+
+2026-01-31  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix.h, glucat/matrix_arma.h, glucat/matrix_eigen.h,
+	glucat/matrix_multi.h: Add more Doxygen comments
+
+2026-01-31  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_arma_imp.h, glucat/matrix_base.h,
+	glucat/matrix_base_imp.h, glucat/matrix_eigen_imp.h,
+	glucat/matrix_imp.h: Use template specialization to dispatch the
+	unit function
+
+2026-01-31  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix.h, glucat/matrix_arma.h: Move the declarations of
+	is_arma_supported
+
+2026-01-31  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi.h, glucat/glucat.h, glucat/glucat_imp.h,
+	glucat/matrix.h, glucat/matrix_base.h, glucat/matrix_base_imp.h,
+	glucat/matrix_eigen.h, glucat/matrix_eigen_imp.h,
+	glucat/matrix_imp.h, glucat/matrix_multi.h,
+	glucat/matrix_multi_imp.h: Refactor the matrix headers to separate
+	concerns
+
+2026-01-31  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix.h, glucat/matrix_arma.h, glucat/matrix_imp.h: Change
+	matrix_impl_base to matrix_base
+
+2026-01-30  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix.h, glucat/matrix_imp.h: Iterate over the existing
+	lhs matrices in kron
+
+2026-01-30  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_arma.h, glucat/matrix_arma_imp.h: Add the Armadillo
+	backend header files
+
+2026-01-30  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix.h: Remove the arma:Mat operator
+
+2026-01-30  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/test.out: Update version to 1.0.0
+
+2026-01-30  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_multi.h, glucat/matrix_multi_imp.h: Cosmetic changes
+
+2026-01-30  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/glucat.h, glucat/glucat_imp.h, glucat/matrix.h,
+	glucat/matrix_imp.h: Put the Armadillo backend into separate header
+	files
+
+2026-01-29  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/gfft_test-11.out, test_runtime/products-8.out,
+	test_runtime/squaring-11.out, test_runtime/transforms-8.out: Update
+	timing test results
+
+2026-01-29  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/fast-test.configure.armadillo-debug-yes.out,
+	test_runtime/fast-test.configure.armadillo-openmp.out,
+	test_runtime/fast-test.configure.armadillo-qd.out,
+	test_runtime/fast-test.configure.armadillo.out,
+	test_runtime/fast-test.configure.debug-full.out,
+	test_runtime/fast-test.configure.debug-yes.out,
+	test_runtime/fast-test.configure.default.out,
+	test_runtime/fast-test.configure.disable-dependency.out,
+	test_runtime/fast-test.configure.disable-pyclical.out,
+	test_runtime/fast-test.configure.prefix-home-opt.out,
+	test_runtime/fast-test.configure.qd.out,
+	test_runtime/test.configure.armadillo-debug-yes.out,
+	test_runtime/test.configure.armadillo-openmp.out,
+	test_runtime/test.configure.armadillo-qd.out,
+	test_runtime/test.configure.armadillo.out,
+	test_runtime/test.configure.debug-full.out,
+	test_runtime/test.configure.debug-yes.out,
+	test_runtime/test.configure.default.out,
+	test_runtime/test.configure.disable-dependency.out,
+	test_runtime/test.configure.disable-pyclical.out,
+	test_runtime/test.configure.prefix-home-opt.out,
+	test_runtime/test.configure.qd.out: Update test results
+
+2026-01-29  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix.h, glucat/matrix_imp.h, glucat/matrix_multi_imp.h: 
+	Make matrix::nork into a member function
+
+2026-01-28  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra_imp.h, glucat/matrix_multi_imp.h: Adjust
+	the matrix sqrt function to yield approx results rather than NaN
+
+2026-01-28  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h, glucat/generation_imp.h,
+	glucat/matrix.h, glucat/matrix_imp.h: Make matrix::kron into a
+	member function
+
+2026-01-28  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix.h, glucat/matrix_imp.h: Make matrix::inner into a
+	member function
+
+2026-01-27  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_imp.h, glucat/matrix_multi_imp.h: Dispatch nork
+	based on sparsity of lhs
+
+2026-01-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_multi_imp.h: Streamline the fast functions. Ensure
+	that matrix_log and matrix_sqrt use the right frames
+
+2026-01-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test16/peg16.h: Output newlines before matrices
+
+2026-01-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/tuning.h: Revert the previous change to
+	Tuning_Default_Mult_Matrix_Threshold
+
+2026-01-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/PyClical.pyx: Adjust a doctest
+
+2026-01-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/tuning.h: Prevent problems with complexifiers
+
+2026-01-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/tuning.h: Tune for new matrix back end
+
+2026-01-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi.h, glucat/framed_multi_imp.h: Use dense
+	matrices for fast transform
+
+2026-01-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/fast-test.configure.armadillo-debug-yes.out,
+	test_runtime/fast-test.configure.armadillo-openmp.out,
+	test_runtime/fast-test.configure.armadillo-qd.out,
+	test_runtime/fast-test.configure.armadillo.out,
+	test_runtime/fast-test.configure.debug-full.out,
+	test_runtime/fast-test.configure.debug-yes.out,
+	test_runtime/fast-test.configure.default.out,
+	test_runtime/fast-test.configure.disable-dependency.out,
+	test_runtime/fast-test.configure.disable-pyclical.out,
+	test_runtime/fast-test.configure.prefix-home-opt.out,
+	test_runtime/fast-test.configure.qd.out,
+	test_runtime/test.configure.armadillo-debug-yes.out,
+	test_runtime/test.configure.armadillo-openmp.out,
+	test_runtime/test.configure.armadillo-qd.out,
+	test_runtime/test.configure.armadillo.out,
+	test_runtime/test.configure.debug-full.out,
+	test_runtime/test.configure.debug-yes.out,
+	test_runtime/test.configure.default.out,
+	test_runtime/test.configure.disable-dependency.out,
+	test_runtime/test.configure.disable-pyclical.out,
+	test_runtime/test.configure.prefix-home-opt.out,
+	test_runtime/test.configure.qd.out: Update test results
+
+2026-01-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix.h, glucat/matrix_imp.h: Add Doxygen comments
+
+2026-01-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix.h, glucat/matrix_imp.h: Make template and variable
+	names clearer
+
+2026-01-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_imp.h: Simplify the use of iterators. Format if
+	statements consistently
+
+2026-01-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_imp.h: Address some anomalies in matrix_imp.h
+
+2026-01-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/glucat.h, glucat/matrix.h, glucat/matrix_imp.h: Tidy up
+
+2026-01-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix.h, glucat/matrix_imp.h: Consistently use value_type
+
+2026-01-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix.h, glucat/matrix_imp.h: Use matrix_index_t instead
+	of uword
+
+2026-01-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/tuning.h, test/tuning.h: Remove unused tuning values
+
+2026-01-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix.h, glucat/matrix_imp.h, glucat/matrix_multi.h,
+	glucat/matrix_multi_imp.h: Consistently use matrix_index_t
+
+2026-01-24  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix.h, glucat/matrix_imp.h: Reformat. Use Doxygen
+	comments
+
+2026-01-23  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_multi_imp.h: Remove unneeded multiple calls to
+	constructors
+
+2026-01-23  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test16/peg16.h: Use the glucat::matrix namespace
+
+2026-01-23  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_multi_imp.h: Remove a redundant use of a
+	framed_multi_t constructor
+
+2026-01-23  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h, glucat/generation_imp.h,
+	glucat/matrix.h, glucat/matrix_imp.h, glucat/matrix_multi.h,
+	glucat/matrix_multi_imp.h: Reintroduce the glucat::matrix namespace
+
+2026-01-23  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* squaring/squaring.cpp: Re-add the use of framed_multi by default
+
+2026-01-22  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra_imp.h, glucat/generation_imp.h,
+	glucat/matrix.h, glucat/matrix_imp.h, glucat/matrix_multi_imp.h: 
+	Remove some variables used only to return results. Remove matrix
+	prod functions
+
+2026-01-22  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra_imp.h, glucat/framed_multi_imp.h,
+	glucat/matrix_imp.h, glucat/matrix_multi_imp.h, test11/peg11.h: 
+	Remove debug print statements
+
+2026-01-22  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h, glucat/matrix.h, glucat/matrix_imp.h,
+	glucat/matrix_multi_imp.h: Remove all fallback free functions.
+	Remove the matrix namespace
+
+2026-01-22  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix.h, glucat/matrix_imp.h, glucat/matrix_multi_imp.h: 
+	Remove comments about code changes
+
+2026-01-22  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix.h, glucat/matrix_imp.h: Assume that matrices are
+	square
+
+2026-01-22  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix.h, glucat/matrix_imp.h: Change eye() to unit() for
+	consistency
+
+2026-01-22  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix.h, glucat/matrix_imp.h: Remove unused free single
+	matrix argument functions
+
+2026-01-22  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h, glucat/generation_imp.h,
+	glucat/matrix.h, glucat/matrix_imp.h, glucat/matrix_multi_imp.h: 
+	Begin changing free matrix functions into class members
+
+2026-01-21  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h, glucat/generation_imp.h,
+	glucat/matrix.h, glucat/matrix_imp.h: Eliminate matrix::mono_kron
+	and matrix::kron
+
+2026-01-21  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix.h, glucat/matrix_imp.h: Remove redundant
+	update_attributes() member functions
+
+2026-01-21  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* reproduce_fast.cpp: Remove file committed by mistake
+
+2026-01-20  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h, glucat/matrix.h, glucat/matrix_imp.h: 
+	Fix Armadillo compilation and Eigen signedness issues
+
+2026-01-20  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h, glucat/matrix.h, glucat/matrix_imp.h: 
+	Use sparse generators
+
+2026-01-20  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_imp.h, reproduce_fast.cpp: Fix regression in
+	3e7077b: norm_frob2 NaN issue
+
+2026-01-20  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h, glucat/generation_imp.h,
+	glucat/matrix.h, glucat/matrix_imp.h, glucat/matrix_multi_imp.h: 
+	Thin the matrix wrappers
+
+2026-01-19  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/fast-test.configure.debug-full.out,
+	test_runtime/fast-test.configure.debug-yes.out,
+	test_runtime/fast-test.configure.default.out,
+	test_runtime/fast-test.configure.disable-dependency.out,
+	test_runtime/fast-test.configure.disable-pyclical.out,
+	test_runtime/fast-test.configure.prefix-home-opt.out,
+	test_runtime/fast-test.configure.qd.out,
+	test_runtime/test.configure.debug-full.out,
+	test_runtime/test.configure.debug-yes.out,
+	test_runtime/test.configure.default.out,
+	test_runtime/test.configure.disable-dependency.out,
+	test_runtime/test.configure.disable-pyclical.out,
+	test_runtime/test.configure.prefix-home-opt.out,
+	test_runtime/test.configure.qd.out: Update test results
+
+2026-01-19  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h, glucat/matrix.h, glucat/matrix_imp.h,
+	glucat/matrix_multi_imp.h: Save changes so far
+
+2026-01-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra_imp.h, glucat/matrix.h,
+	glucat/matrix_imp.h, glucat/matrix_multi_imp.h, test11/peg11.cpp,
+	test11/peg11.h: Add debugging cout statements. Save work in progress
+
+2026-01-13  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h, glucat/matrix.h, glucat/matrix_imp.h,
+	glucat/matrix_multi_imp.h: Matrix refactoring stage 2: Add
+	dense_matrix and sparse_matrix template classes
+
+2026-01-13  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test00/peg00.cpp: Use #if defined instead of #ifdef
+
+2026-01-13  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_multi_imp.h: Use round-trip wrappers to ensure
+	truncation to the correct frame
+
+2026-01-13  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_imp.h, test11/peg11.h,
+	test_runtime/fast-test.configure.armadillo-debug-yes.out,
+	test_runtime/fast-test.configure.armadillo-openmp.out,
+	test_runtime/fast-test.configure.armadillo-qd.out,
+	test_runtime/fast-test.configure.armadillo.out,
+	test_runtime/fast-test.configure.debug-full.out,
+	test_runtime/fast-test.configure.debug-yes.out,
+	test_runtime/fast-test.configure.default.out,
+	test_runtime/fast-test.configure.disable-dependency.out,
+	test_runtime/fast-test.configure.disable-pyclical.out,
+	test_runtime/fast-test.configure.prefix-home-opt.out,
+	test_runtime/fast-test.configure.qd.out,
+	test_runtime/test.configure.armadillo-debug-yes.out,
+	test_runtime/test.configure.armadillo-openmp.out,
+	test_runtime/test.configure.armadillo-qd.out,
+	test_runtime/test.configure.armadillo.out,
+	test_runtime/test.configure.debug-full.out,
+	test_runtime/test.configure.debug-yes.out,
+	test_runtime/test.configure.default.out,
+	test_runtime/test.configure.disable-dependency.out,
+	test_runtime/test.configure.disable-pyclical.out,
+	test_runtime/test.configure.prefix-home-opt.out,
+	test_runtime/test.configure.qd.out: Restore classify_eigenvalues.
+	Update test results
+
+2026-01-11  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_imp.h: Matrix refactoring stage 1: Add
+	matrix_impl_base
+
+2026-01-09  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test/config-options.txt,
+	test_runtime/fast-test.configure.debug-full.out,
+	test_runtime/fast-test.configure.debug-yes.out,
+	test_runtime/fast-test.configure.default.out,
+	test_runtime/fast-test.configure.disable-dependency.out,
+	test_runtime/fast-test.configure.disable-pyclical.out,
+	test_runtime/fast-test.configure.prefix-home-opt.out,
+	test_runtime/fast-test.configure.qd.out,
+	test_runtime/test.configure.debug-full.out,
+	test_runtime/test.configure.debug-yes.out,
+	test_runtime/test.configure.default.out,
+	test_runtime/test.configure.disable-dependency.out,
+	test_runtime/test.configure.disable-pyclical.out,
+	test_runtime/test.configure.prefix-home-opt.out,
+	test_runtime/test.configure.qd.out: Update tests and test output
+
+2026-01-09  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_imp.h,
+	test_runtime/{fast-test.configure.eig-blaze-debug-full.out =>
+	fast-test.configure.armadillo-debug-yes.out},
+	test_runtime/{fast-test.configure.eig-blaze-debug-yes.out =>
+	fast-test.configure.armadillo-openmp.out},
+	test_runtime/fast-test.configure.armadillo-qd.out,
+	test_runtime/{fast-test.configure.eig-blaze.out =>
+	fast-test.configure.armadillo.out},
+	test_runtime/fast-test.configure.eig-blaze-qd.out,
+	test_runtime/{test.configure.eig-blaze-debug-full.out =>
+	test.configure.armadillo-debug-yes.out},
+	test_runtime/{test.configure.eig-blaze-debug-yes.out =>
+	test.configure.armadillo-openmp.out},
+	test_runtime/{test.configure.eig-blaze-qd.out =>
+	test.configure.armadillo-qd.out},
+	test_runtime/{test.configure.eig-blaze.out =>
+	test.configure.armadillo.out}: Define and use traits_t
+
+2026-01-08  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/generation.h, glucat/matrix.h, glucat/matrix_imp.h,
+	glucat/matrix_multi.h, test/control.h, test/timing.h,
+	test01/peg01.h, test02/peg02.h, test03/peg03.h, test04/peg04.h,
+	test05/peg05.h, test06/peg06.h, test08/peg08.h, test09/peg09.h,
+	test10/peg10.h, test12/peg12.h, test16/peg16.h: Remove trailing
+	blanks
+
+2026-01-08  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_multi_imp.h: In matrix_log, return NaN if the matrix
+	is singular. Remove trailing blanks
+
+2026-01-08  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in, glucat/matrix_imp.h: Restore
+	classify_eigenvalues. Save work in progress
+
+2026-01-07  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* Doxyfile.in, configure.ac.in, glucat/matrix.h,
+	glucat/matrix_imp.h, glucat/matrix_multi_imp.h, glucat/qd.h,
+	glucat/scalar.h, glucat/scalar_imp.h, m4/acinclude.m4,
+	pyclical/Makefile.am, squaring/squaring.cpp,
+	test/config-options.txt, test11/peg11.cpp, test16/peg16.cpp: Add
+	--with-openmp. Fix some config bugs. Save work in progress
+
+2026-01-05  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in, glucat/generation.h, glucat/matrix.h,
+	glucat/matrix_imp.h, glucat/matrix_multi.h,
+	glucat/matrix_multi_imp.h, glucat/scalar.h, glucat/scalar_imp.h,
+	test16/peg16.cpp, test16/peg16.h: Save work in progress on matrix
+	back ends
+
+2026-01-04  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #70 from
+	penguian/69-use-more-scalar-types-in-tests Use more scalar types in tests
+
+2026-01-04  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #68 from
+	penguian/67-promote-or-demote-only-once Promote or demote only once
+
+2026-01-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #66 from penguian/vibe-code-stage-2 Enable move semantics
+
+2026-01-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Update to support Kubuntu 25.10. Update minimum C++ version to
+	C++23
+
+2026-01-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in, m4/m4_ax_cxx_compile_stdcxx.m4: Update minimum
+	C++ version to C++23
+
+2026-01-01  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md, README.md: Update documentation
+
+2025-12-27  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* admin/cvs.sh: Update to support latest versions of autotools
+
+2025-12-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/sqrt_log_demo.out: Update sqrt_log_demo output
+
+2025-12-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* Makefile.am.in, pyclical/demos/Makefile.am: Properly install
+	pyclical/demos Mayavi helper scripts
+
+2025-12-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* Makefile.am.in, pyclical/demos/{kubuntu-24-mayavi-env.sh =>
+	kubuntu-mayavi-env.sh}: Rename the Mayavi environment helper script
+
+2025-12-27  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* admin/cvs.sh: Update to support latest versions of autotools
+
+2025-12-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/sqrt_log_demo.out: Update sqrt_log_demo output
+
+2025-12-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* Makefile.am.in, pyclical/demos/Makefile.am: Properly install
+	pyclical/demos Mayavi helper scripts
+
+2025-12-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* Makefile.am.in, pyclical/demos/{kubuntu-24-mayavi-env.sh =>
+	kubuntu-mayavi-env.sh}: Rename the Mayavi environment helper script
+
+2025-03-09  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* ChangeLog: Update for version 0.3.0
+
 2025-03-09  Paul Leopardi <paul.leopardi@anu.edu.au>
 
 	* : Merge pull request #61 from penguian/60-update-the-dist-tarball Add Mayavi Kubuntu installation scripts to the dist tarball
