@@ -2695,7 +2695,6 @@ namespace glucat
 
 TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
   using fm_t = glucat::framed_multi<double, -32, 32>;
-  using is_t = fm_t::index_set_t;
 
   SUBCASE("Constructor and string representation") {
     fm_t f1(2.0);

@@ -2987,7 +2987,6 @@ namespace glucat{
 
 TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
   using mm_t = glucat::matrix_multi<double, -32, 32>;
-  using is_t = mm_t::index_set_t;
 
   SUBCASE("Constructor and string representation") {
     mm_t m1(2.0);
