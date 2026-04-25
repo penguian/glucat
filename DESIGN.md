@@ -171,8 +171,9 @@ contains:
     using matrix_index_t = matrix::matrix_index_t;
 ```
 where `matrix_t` and `sparse_matrix_t` are selected based on the scalar type and
-available libraries (Eigen is the current default, with Armadillo support enabled
-via `--with-armadillo`).
+via `--with-armadillo`). To ensure template robustness and avoid issues with 
+circular dependencies or complex deduction, these wrappers use explicit return 
+types for all public methods (e.g., `trace()`, `norm_inf()`, `nnz()`).
 and in `glucat/framed_multi.h`, the definition of the template class `framed_multi<>`
 contains:
 ```

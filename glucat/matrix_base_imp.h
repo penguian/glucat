@@ -191,6 +191,8 @@ namespace glucat { namespace matrix
       return mat.n_rows;
     else if constexpr(requires { mat.rows(); })
       return mat.rows();
+    else
+      static_assert(dependent_false<Matrix_T>::value, "Unsupported matrix type");
   }
 
   /**
@@ -209,6 +211,8 @@ namespace glucat { namespace matrix
       return mat.n_cols;
     else if constexpr(requires { mat.cols(); })
       return mat.cols();
+    else
+      static_assert(dependent_false<Matrix_T>::value, "Unsupported matrix type");
   }
 
   // =========================================================================
@@ -236,6 +240,11 @@ namespace glucat { namespace matrix
       else
       {
          // Manual identity
+         if constexpr (requires { result.zeros(); })
+           result.zeros();
+         else if constexpr (requires { result.clear(); })
+           result.clear();
+
          for (matrix_index_t i = 0; i < dim; ++i)
            result(i, i) = static_cast<typename Matrix_T::value_type>(1);
       }

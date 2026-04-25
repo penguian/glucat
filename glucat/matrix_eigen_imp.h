@@ -565,7 +565,7 @@ namespace glucat { namespace matrix
   template< typename Scalar_T >
   inline auto
   eigen_matrix_wrapper<Scalar_T>::
-  trace() const
+  trace() const -> Scalar_T
   { return m_mat.trace(); }
 
   /**
@@ -615,7 +615,7 @@ namespace glucat { namespace matrix
   template< typename Scalar_T >
   inline auto
   eigen_matrix_wrapper<Scalar_T>::
-  norm_inf() const
+  norm_inf() const -> typename Eigen::NumTraits<Scalar_T>::Real
   { return m_mat.cwiseAbs().rowwise().sum().maxCoeff(); }
 
   /**
@@ -627,7 +627,7 @@ namespace glucat { namespace matrix
   template< typename Scalar_T >
   inline auto
   eigen_matrix_wrapper<Scalar_T>::
-  norm_frob2() const
+  norm_frob2() const -> typename Eigen::NumTraits<Scalar_T>::Real
   { return m_mat.squaredNorm(); }
 
   /**
@@ -663,7 +663,7 @@ namespace glucat { namespace matrix
   template< typename Scalar_T >
   inline auto
   eigen_matrix_wrapper<Scalar_T>::
-  nnz() const
+  nnz() const -> matrix_index_t
   { return (m_mat.array() != 0).count(); }
 
   /**
@@ -1285,7 +1285,7 @@ namespace glucat { namespace matrix
   template< typename Scalar_T >
   inline auto
   eigen_sparse_wrapper<Scalar_T>::
-  trace() const
+  trace() const -> Scalar_T
   {
     Scalar_T sum = 0;
     for (int k = 0; k < m_mat.outerSize(); ++k)
@@ -1367,9 +1367,9 @@ namespace glucat { namespace matrix
   template< typename Scalar_T >
   inline auto
   eigen_sparse_wrapper<Scalar_T>::
-  norm_inf() const
+  norm_inf() const -> typename Eigen::NumTraits<Scalar_T>::Real
   {
-    Eigen::Vector<typename numeric_traits<Scalar_T>::real_t, Eigen::Dynamic> row_sums(nbr_rows());
+    Eigen::Vector<typename Eigen::NumTraits<Scalar_T>::Real, Eigen::Dynamic> row_sums(nbr_rows());
     row_sums.setZero();
     for (int k = 0; k < m_mat.outerSize(); ++k)
       for (typename MatrixType::InnerIterator it(m_mat, k); it; ++it)
@@ -1386,7 +1386,7 @@ namespace glucat { namespace matrix
   template< typename Scalar_T >
   inline auto
   eigen_sparse_wrapper<Scalar_T>::
-  norm_frob2() const
+  norm_frob2() const -> typename Eigen::NumTraits<Scalar_T>::Real
   { return m_mat.squaredNorm(); }
 
   /**
@@ -1398,7 +1398,7 @@ namespace glucat { namespace matrix
   template< typename Scalar_T >
   inline auto
   eigen_sparse_wrapper<Scalar_T>::
-  nnz() const
+  nnz() const -> matrix_index_t
   { return m_mat.nonZeros(); }
 
   /**
@@ -1591,5 +1591,60 @@ namespace glucat { namespace matrix
   }
 
 } }
+#ifdef GLUCAT_DOCTEST
+#include <doctest.h>
+#include <iostream>
+
+TEST_CASE("matrix::eigen_matrix_wrapper<Scalar_T>") {
+  using namespace glucat::matrix;
+  using Scalar_T = double;
+  using Matrix_T = eigen_matrix_wrapper<Scalar_T>;
+
+  SUBCASE("Dense initialization and basic operations") {
+    const matrix_index_t rows = 2, cols = 3;
+    Matrix_T mat(rows, cols);
+    mat.zeros();
+    CHECK(mat.nbr_rows() == rows);
+    CHECK(mat.nbr_cols() == cols);
+    CHECK(mat.nnz() == 0);
+    CHECK(mat.trace() == doctest::Approx(0.0));
+
+    mat(0, 0) = 1.0;
+    mat(1, 1) = 2.0;
+    mat(0, 2) = -3.0;
+    CHECK(mat.nnz() == 3);
+    CHECK(mat.trace() == doctest::Approx(3.0));
+    CHECK(mat.norm_inf() == doctest::Approx(4.0)); // |1| + |0| + |-3| = 4
+    CHECK(mat.norm_frob2() == doctest::Approx(1.0*1.0 + 2.0*2.0 + (-3.0)*(-3.0)));
+  }
+
+  SUBCASE("Dense unit matrix") {
+    Matrix_T mat;
+    mat.unit(3, 3);
+    CHECK(mat.nbr_rows() == 3);
+    CHECK(mat.nbr_cols() == 3);
+    CHECK(mat.nnz() == 3);
+    CHECK(mat.trace() == doctest::Approx(3.0));
+  }
+
+  SUBCASE("Sparse initialization and basic operations") {
+    using Sparse_T = eigen_sparse_wrapper<Scalar_T>;
+    const matrix_index_t rows = 4, cols = 4;
+    Sparse_T mat(rows, cols);
+    mat.zeros();
+    CHECK(mat.nbr_rows() == rows);
+    CHECK(mat.nbr_cols() == cols);
+    CHECK(mat.nnz() == 0);
+
+    mat(0, 0) = 5.0;
+    mat(3, 3) = -2.0;
+    mat(1, 2) = 1.0;
+    CHECK(mat.nnz() == 3);
+    CHECK(mat.trace() == doctest::Approx(3.0));
+    CHECK(mat.norm_inf() == doctest::Approx(5.0));
+    CHECK(mat.norm_frob2() == doctest::Approx(25.0 + 4.0 + 1.0));
+  }
+}
+#endif
 
 #endif // _GLUCAT_MATRIX_EIGEN_IMP_H

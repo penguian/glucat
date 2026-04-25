@@ -40,6 +40,9 @@ namespace glucat { namespace matrix
   // Default index to use with matrices
   using matrix_index_t = std::size_t;
 
+  /// Helper for static_assert in templates
+  template< typename... > struct dependent_false : std::false_type {};
+
   /// =========================================================================
   /// Traits
   /// =========================================================================

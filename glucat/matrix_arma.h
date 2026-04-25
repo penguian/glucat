@@ -175,15 +175,15 @@ namespace glucat { namespace matrix
     // Eigenvalues
     auto eigenvalues() const -> std::vector<std::complex<double>>;
     // Infinity norm
-    auto norm_inf() const;
+    auto norm_inf() const -> typename arma::get_pod_type<Scalar_T>::result;
     // Squared Frobenius norm
-    auto norm_frob2() const;
+    auto norm_frob2() const -> typename arma::get_pod_type<Scalar_T>::result;
     // Is NaN?
     auto isnan() const -> bool;
     // Is infinite?
     auto isinf() const -> bool;
     // Number of non-zeros
-    auto nnz() const;
+    auto nnz() const -> matrix_index_t;
 
     // Inner product
     template< typename Result_Scalar_T, typename Other >
@@ -302,19 +302,19 @@ namespace glucat { namespace matrix
 
     // New Member Functions
     // Trace
-    auto trace() const;
+    auto trace() const -> Scalar_T;
     // Eigenvalues
-    auto eigenvalues() const;
+    auto eigenvalues() const -> std::vector<std::complex<double>>;
     // Infinity norm
-    auto norm_inf() const;
+    auto norm_inf() const -> typename arma::get_pod_type<Scalar_T>::result;
     // Squared Frobenius norm
-    auto norm_frob2() const;
+    auto norm_frob2() const -> typename arma::get_pod_type<Scalar_T>::result;
     // Is NaN?
     auto isnan() const -> bool;
     // Is infinite?
     auto isinf() const -> bool;
     // Number of non-zeros
-    auto nnz() const;
+    auto nnz() const -> matrix_index_t;
 
     // Inner product
     template< typename Result_Scalar_T, typename Other >

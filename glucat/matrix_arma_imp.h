@@ -744,7 +744,7 @@ namespace glucat { namespace matrix
   template< typename Scalar_T >
   inline auto
   arma_matrix_wrapper<Scalar_T>::
-  norm_inf() const
+  norm_inf() const -> typename arma::get_pod_type<Scalar_T>::result
   { return arma::norm(m_mat, "inf"); }
 
   /**
@@ -756,7 +756,7 @@ namespace glucat { namespace matrix
   template< typename Scalar_T >
   inline auto
   arma_matrix_wrapper<Scalar_T>::
-  norm_frob2() const
+  norm_frob2() const -> typename arma::get_pod_type<Scalar_T>::result
   { return arma::accu(arma::square(m_mat)); }
 
   /**
@@ -767,7 +767,7 @@ namespace glucat { namespace matrix
   template< typename Scalar_T >
   inline auto
   arma_matrix_wrapper<Scalar_T>::
-  nnz() const
+  nnz() const -> matrix_index_t
   { return arma::accu(m_mat != 0); }
 
   /**
@@ -1192,7 +1192,7 @@ namespace glucat { namespace matrix
   template< typename Scalar_T >
   inline auto
   arma_sparse_wrapper<Scalar_T>::
-  nnz() const
+  nnz() const -> matrix_index_t
   { return m_mat.n_nonzero; }
 
   /**
@@ -1204,7 +1204,7 @@ namespace glucat { namespace matrix
   template< typename Scalar_T >
   inline auto
   arma_sparse_wrapper<Scalar_T>::
-  norm_inf() const
+  norm_inf() const -> typename arma::get_pod_type<Scalar_T>::result
   { return arma::norm(m_mat, "inf"); }
 
   /**
@@ -1216,7 +1216,7 @@ namespace glucat { namespace matrix
   template< typename Scalar_T >
   inline auto
   arma_sparse_wrapper<Scalar_T>::
-  norm_frob2() const
+  norm_frob2() const -> typename arma::get_pod_type<Scalar_T>::result
   { return arma::accu(arma::square(m_mat)); }
 
   /**
@@ -1228,7 +1228,7 @@ namespace glucat { namespace matrix
   template< typename Scalar_T >
   inline auto
   arma_sparse_wrapper<Scalar_T>::
-  trace() const
+  trace() const -> Scalar_T
   {
     // generic trace for sparse
     Scalar_T sum = 0;
@@ -1248,7 +1248,7 @@ namespace glucat { namespace matrix
   template< typename Scalar_T >
   inline auto
   arma_sparse_wrapper<Scalar_T>::
-  eigenvalues() const
+  eigenvalues() const -> std::vector<std::complex<double>>
   { throw std::runtime_error("Not implemented for sparse"); }
 
   /**
@@ -1485,5 +1485,76 @@ namespace glucat { namespace matrix
   }
 
 } }
+#ifdef GLUCAT_DOCTEST
+#include <doctest.h>
+#include <iostream>
+
+TEST_CASE("matrix::arma_matrix_wrapper<Scalar_T>") {
+  using namespace glucat::matrix;
+  using Scalar_T = double;
+  using Matrix_T = arma_matrix_wrapper<Scalar_T>;
+
+  SUBCASE("Dense initialization and basic operations") {
+    const matrix_index_t rows = 2, cols = 3;
+    Matrix_T mat(rows, cols);
+    mat.zeros();
+    CHECK(mat.nbr_rows() == rows);
+    CHECK(mat.nbr_cols() == cols);
+    CHECK(mat.nnz() == 0);
+    CHECK(mat.trace() == doctest::Approx(0.0));
+
+    mat(0, 0) = 1.0;
+    mat(1, 1) = 2.0;
+    mat(0, 2) = -3.0;
+    CHECK(mat.nnz() == 3);
+    CHECK(mat.trace() == doctest::Approx(3.0));
+    CHECK(mat.norm_inf() == doctest::Approx(4.0));
+    CHECK(mat.norm_frob2() == doctest::Approx(1.0*1.0 + 2.0*2.0 + (-3.0)*(-3.0)));
+  }
+
+  SUBCASE("Dense unit matrix") {
+    Matrix_T mat;
+    mat.unit(3, 3);
+    CHECK(mat.nbr_rows() == 3);
+    CHECK(mat.nbr_cols() == 3);
+    CHECK(mat.nnz() == 3);
+    CHECK(mat.trace() == doctest::Approx(3.0));
+  }
+
+  SUBCASE("Sparse initialization and basic operations") {
+    using Sparse_T = arma_sparse_wrapper<Scalar_T>;
+    const matrix_index_t rows = 4, cols = 4;
+    Sparse_T mat(rows, cols);
+    mat.zeros();
+    CHECK(mat.nbr_rows() == rows);
+    CHECK(mat.nbr_cols() == cols);
+    CHECK(mat.nnz() == 0);
+
+    mat(0, 0) = 5.0;
+    mat(3, 3) = -2.0;
+    mat(1, 2) = 1.0;
+    CHECK(mat.nnz() == 3);
+    CHECK(mat.trace() == doctest::Approx(3.0));
+    CHECK(mat.norm_inf() == doctest::Approx(5.0));
+    CHECK(mat.norm_frob2() == doctest::Approx(25.0 + 4.0 + 1.0));
+  }
+
+  SUBCASE("Cross-backend construction") {
+    using Eigen_T = eigen_matrix_wrapper<Scalar_T>;
+    Eigen_T e_mat(2, 2);
+    e_mat.zeros();
+    e_mat(0, 0) = 1.0;
+    e_mat(1, 1) = 2.0;
+
+    Matrix_T a_mat(e_mat);
+    CHECK(a_mat.nbr_rows() == 2);
+    CHECK(a_mat.nbr_cols() == 2);
+    CHECK(a_mat(0, 0) == doctest::Approx(1.0));
+    CHECK(a_mat(1, 1) == doctest::Approx(2.0));
+    CHECK(a_mat.nnz() == 2);
+  }
+}
+#endif
+
 #endif // _GLUCAT_USE_ARMADILLO
-#endif // _GLUCAT_MATRIX_IMP_H
+#endif // _GLUCAT_MATRIX_ARMA_IMP_H

@@ -120,7 +120,9 @@ The `./test_doctest` directory contains modern unit tests using the `doctest`
 framework, integrated directly into the library headers.
 
 The `./test_coverage` directory contains scripts for generating code coverage
-reports for the various test suites.
+reports for the various test suites. The `doctest` coverage script supports
+selective testing of the Eigen and Armadillo backends, as well as combined 
+reports.
 
 The `./test_runtime` directory contains regression test input and sample output
 for the GluCat timing and regression tests.

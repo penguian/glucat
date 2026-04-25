@@ -2,7 +2,7 @@
 #define _GLUCAT_MATRIX_EIGEN_H
 /***************************************************************************
     GluCat : Generic library of universal Clifford algebra templates
-    matrix.h : Declare common matrix functions
+    matrix_eigen.h : Declare Eigen matrix wrappers
                              -------------------
     begin                : Sun 2001-12-09
     copyright            : (C) 2001-2026 by Paul C. Leopardi
@@ -181,19 +181,19 @@ namespace glucat { namespace matrix
 
     // New Member Functions (formerly free functions)
     // Trace
-    auto trace() const;
+    auto trace() const -> Scalar_T;
     // Eigenvalues
     auto eigenvalues() const -> std::vector<std::complex<double>>;
     // Infinity norm
-    auto norm_inf() const;
+    auto norm_inf() const -> typename Eigen::NumTraits<Scalar_T>::Real;
     // Squared Frobenius norm
-    auto norm_frob2() const;
+    auto norm_frob2() const -> typename Eigen::NumTraits<Scalar_T>::Real;
     // Is NaN?
     auto isnan() const -> bool;
     // Is infinite?
     auto isinf() const -> bool;
     // Number of non-zeros
-    auto nnz() const;
+    auto nnz() const -> matrix_index_t;
 
     // Inner product
     template< typename Result_Scalar_T, typename Other >
@@ -343,19 +343,19 @@ namespace glucat { namespace matrix
 
     // New Member Functions
     // Trace
-    auto trace() const; // Trace of sparse?
+    auto trace() const -> Scalar_T;
     // Eigenvalues
     auto eigenvalues() const -> std::vector<std::complex<double>>;
     // Infinity norm
-    auto norm_inf() const;
+    auto norm_inf() const -> typename Eigen::NumTraits<Scalar_T>::Real;
     // Squared Frobenius norm
-    auto norm_frob2() const;
+    auto norm_frob2() const -> typename Eigen::NumTraits<Scalar_T>::Real;
     // Is NaN?
     auto isnan() const -> bool;
     // Is infinite?
     auto isinf() const -> bool;
     // Number of non-zeros
-    auto nnz() const;
+    auto nnz() const -> matrix_index_t;
 
     // Inner product
     template< typename Result_Scalar_T, typename Other >

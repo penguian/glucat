@@ -551,8 +551,12 @@ using the scripts in `test_coverage/src/`.
 
 To run the coverage tests for the doctest suite:
 ```
- bash test_coverage/src/run_clang_doctest_coverage.sh
+ bash test_coverage/src/run_clang_doctest_coverage.sh [--backend=eigen|arma|both]
 ```
+
+By default, the script tests both backends and combines their results into a 
+unified report. You can use the `--backend` argument to select a specific 
+backend.
 
 The resulting HTML report will be available in
 `test_coverage/results/coverage_html_doctest/index.html`.
