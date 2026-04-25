@@ -130,7 +130,7 @@ namespace glucat { namespace matrix
 
     /// Constructor from other matrix type
     template< typename Other_Matrix_T >
-    dense_matrix(const Other_Matrix_T& other);
+    explicit dense_matrix(const Other_Matrix_T& other);
   };
 
   /// Sparse matrix class
@@ -156,7 +156,7 @@ namespace glucat { namespace matrix
 
     // Constructor from other matrix type
     template< typename Other_Matrix_T >
-    sparse_matrix(const Other_Matrix_T& other);
+    explicit sparse_matrix(const Other_Matrix_T& other);
   };
 
 } }

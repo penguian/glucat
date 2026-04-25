@@ -82,7 +82,7 @@ namespace glucat { namespace matrix
 
   // Identity matrix
   template< typename Matrix_T >
-  auto unit(const matrix_index_t dim) -> const Matrix_T;
+  auto unit(const matrix_index_t dim) -> Matrix_T;
 
   /// Classification of eigenvalues of a matrix
   enum eig_case_t

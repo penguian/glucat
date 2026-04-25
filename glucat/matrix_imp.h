@@ -1,6 +1,6 @@
 #ifndef _GLUCAT_MATRIX_IMP_H
 #define _GLUCAT_MATRIX_IMP_H
-/***************************************************************************
+/**************************************************************************
     GluCat : Generic library of universal Clifford algebra templates
     matrix_imp.h : Define common matrix classes and functions
                              -------------------
@@ -44,7 +44,7 @@
 namespace glucat { namespace matrix
 {
 
-  /**
+  /*
    * @brief Constructor from other matrix type
    * @details
    * @tparam Scalar_T
@@ -58,7 +58,7 @@ namespace glucat { namespace matrix
   : Base(other)
   { }
 
-  /**
+  /*
    * @brief Constructor from other matrix type
    * @details
    * @tparam Scalar_T

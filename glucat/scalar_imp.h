@@ -1,6 +1,6 @@
 #ifndef _GLUCAT_SCALAR_IMP_H
 #define _GLUCAT_SCALAR_IMP_H
-/***************************************************************************
+/**************************************************************************
     GluCat : Generic library of universal Clifford algebra templates
     scalar_imp.h : Define functions for scalar_t
                              -------------------
@@ -42,13 +42,13 @@
 
 namespace glucat
 {
-  /**
+  /*
    * @brief Extra traits which extend numeric limits
    * @details
    */
   // Reference: [AA], 2.4, p. 30-31
 
-  /**
+  /*
    * @brief Cast to float
    * @details
    * @param val Value
@@ -62,7 +62,7 @@ namespace glucat
   to_scalar_t(const Other_Scalar_T& val) -> float
   { return static_cast<float>(numeric_traits<Other_Scalar_T>::to_double(val)); }
 
-  /**
+  /*
    * @brief to_scalar_t
    * @details
    *
@@ -87,7 +87,7 @@ namespace glucat
   { return numeric_traits<Other_Scalar_T>::to_double(val); }
 
 #if defined(_GLUCAT_USE_QD)
-  /**
+  /*
    * @brief Cast to long double
    * @details
    * @param val Value
@@ -101,7 +101,7 @@ namespace glucat
   to_scalar_t(const dd_real& val) -> long double
   { return static_cast<long double>(val.x[0]) + static_cast<long double>(val.x[1]); }
 
-  /**
+  /*
    * @brief Cast to long double
    * @details
    * @param val Value
@@ -115,7 +115,7 @@ namespace glucat
   to_scalar_t(const qd_real& val) -> long double
   { return static_cast<long double>(val.x[0]) + static_cast<long double>(val.x[1]); }
 
-  /**
+  /*
    * @brief Cast to dd_real
    * @details
    * @param val Value
@@ -129,7 +129,7 @@ namespace glucat
   to_scalar_t(const long double& val) -> dd_real
   { return {double(val),double(val - static_cast<long double>(double(val)))}; }
 
-  /**
+  /*
    * @brief Cast to dd_real
    * @details
    * @param val Value
@@ -143,7 +143,7 @@ namespace glucat
   to_scalar_t(const qd_real& val) -> dd_real
   { return {val.x[0],val.x[1]}; }
 
-  /**
+  /*
    * @brief Cast to qd_real
    * @details
    * @param val Value
@@ -157,7 +157,7 @@ namespace glucat
   to_scalar_t(const long double& val) -> qd_real
   { return {double(val),double(val - static_cast<long double>(double(val))),0.0,0.0}; }
 
-  /**
+  /*
    * @brief Cast to qd_real
    * @details
    * @param val Value
@@ -183,7 +183,7 @@ namespace glucat
   // If we specialize Eigen::NumTraits<qd_real>, we might control this.
 #endif
 
-  /**
+  /*
    * @brief Cast to promote
    * @details
    * 
@@ -208,7 +208,7 @@ namespace glucat
     return numeric_traits<promoted_scalar_t>::to_scalar_t(val);
   }
 
-  /**
+  /*
    * @brief Cast to demote
    * @details
    * 

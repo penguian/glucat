@@ -1,6 +1,6 @@
 #ifndef _GLUCAT_ERRORS_IMP_H
 #define _GLUCAT_ERRORS_IMP_H
-/***************************************************************************
+/**************************************************************************
     GluCat : Generic library of universal Clifford algebra templates
     errors_imp.h : Define error functions
                              -------------------
@@ -39,7 +39,7 @@
 
 namespace glucat
 {
-  /**
+  /*
    * @brief Specific exception with an error message
    * @details
    * @tparam Class_T Base exception class

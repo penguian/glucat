@@ -1,6 +1,6 @@
 #ifndef _GLUCAT_MATRIX_BASE_IMP_H
 #define _GLUCAT_MATRIX_BASE_IMP_H
-/***************************************************************************
+/**************************************************************************
     GluCat : Generic library of universal Clifford algebra templates
     matrix_base.h : Declare common matrix class
                              -------------------
@@ -41,6 +41,9 @@
 #include <complex>
 #include <type_traits>
 
+#include <algorithm>
+#include <limits>
+
 namespace glucat { namespace matrix
 {
 
@@ -48,7 +51,7 @@ namespace glucat { namespace matrix
   // matrix_base Member Definitions
   // =========================================================================
 
-  /**
+  /*
    * @brief Return const reference to derived class
    * @details
    * @tparam Derived_T
@@ -60,7 +63,7 @@ namespace glucat { namespace matrix
   derived() const -> const Derived_T&
   { return static_cast<const Derived_T&>(*this); }
 
-  /**
+  /*
    * @brief Return reference to derived class
    * @details
    * @tparam Derived_T
@@ -72,7 +75,7 @@ namespace glucat { namespace matrix
   derived() -> Derived_T&
   { return static_cast<Derived_T&>(*this); }
 
-  /**
+  /*
    * @brief Generic classify_eigenvalues relies on eigenvalues() member
    * @details
    * @tparam Derived_T
@@ -175,7 +178,7 @@ namespace glucat { namespace matrix
   // nbr_rows and nbr_cols Definitions
   // =========================================================================
 
-  /**
+  /*
    * @brief Number of rows
    * @details
    * @tparam Matrix_T
@@ -195,7 +198,7 @@ namespace glucat { namespace matrix
       static_assert(dependent_false<Matrix_T>::value, "Unsupported matrix type");
   }
 
-  /**
+  /*
    * @brief Number of columns
    * @details
    * @tparam Matrix_T
@@ -219,7 +222,7 @@ namespace glucat { namespace matrix
   // unit_helper and unit Definitions
   // =========================================================================
 
-   /**
+   /*
     * @brief Helper struct for unit matrix creation
     * @details
     * @tparam Matrix_T
@@ -227,7 +230,7 @@ namespace glucat { namespace matrix
   template< typename Matrix_T >
   struct unit_helper
   {
-    static inline auto apply(matrix_index_t dim) -> const Matrix_T
+    static inline auto apply(matrix_index_t dim) -> Matrix_T
     {
       Matrix_T result(dim, dim);
       // Fallback logic
@@ -252,7 +255,7 @@ namespace glucat { namespace matrix
     }
   };
 
-  /**
+  /*
    * @brief Identity matrix
    * @details
    * @tparam Matrix_T
@@ -260,7 +263,7 @@ namespace glucat { namespace matrix
    * @return Identity matrix
    */
   template< typename Matrix_T >
-  inline auto unit(const matrix_index_t dim) -> const Matrix_T
+  inline auto unit(const matrix_index_t dim) -> Matrix_T
   {
     return unit_helper<Matrix_T>::apply(dim);
   }

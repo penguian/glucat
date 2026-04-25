@@ -46,19 +46,19 @@ namespace glucat
   template<const index_t LO, const index_t HI>
   auto
   operator^ (const index_set<LO,HI>& lhs,
-             const index_set<LO,HI>& rhs) -> const index_set<LO,HI>;
+             const index_set<LO,HI>& rhs) -> index_set<LO,HI>;
 
   // Set intersection: and
   template<const index_t LO, const index_t HI>
   auto
   operator& (const index_set<LO,HI>& lhs,
-             const index_set<LO,HI>& rhs) -> const index_set<LO,HI>;
+             const index_set<LO,HI>& rhs) -> index_set<LO,HI>;
 
   // Set union: or
   template<const index_t LO, const index_t HI>
   auto
   operator| (const index_set<LO,HI>& lhs,
-             const index_set<LO,HI>& rhs) -> const index_set<LO,HI>;
+             const index_set<LO,HI>& rhs) -> index_set<LO,HI>;
 
   // "lexicographic compare" eg. {3,4,5} is less than {3,7,8}
   // -1 if a<b, +1 if a>b, 0 if a==b
@@ -86,7 +86,7 @@ namespace glucat
     static const index_t v_lo = LO;
     static const index_t v_hi = HI;
 
-    static auto classname() -> const std::string;
+    static auto classname() -> std::string;
     /// Default constructor creates an empty set
     index_set    () = default;
     // Constructor from bitset_t
@@ -166,11 +166,11 @@ namespace glucat
     // Determine if the index set is contiguous, ie. has no gaps
     auto is_contiguous () const -> bool;
     // Fold this index set within itself as a frame
-    auto fold          () const -> const index_set_t;
+    auto fold          () const -> index_set_t;
     // Fold this index set within the given frame
-    auto fold          (const index_set_t frm, const bool prechecked = false) const -> const index_set_t;
+    auto fold          (const index_set_t frm, const bool prechecked = false) const -> index_set_t;
     // Unfold this index set within the given frame
-    auto unfold        (const index_set_t frm, const bool prechecked = false) const -> const index_set_t;
+    auto unfold        (const index_set_t frm, const bool prechecked = false) const -> index_set_t;
     // The set value of the fold of this index set within the given frame
     auto value_of_fold (const index_set_t frm) const -> set_value_t;
     // Sign of geometric product of two Clifford basis elements
@@ -182,9 +182,9 @@ namespace glucat
     auto hash_fn       ()                      const -> size_t;
 
   // Friends
-    friend auto operator^<> (const index_set_t& lhs, const index_set_t& rhs) -> const index_set_t;
-    friend auto operator&<> (const index_set_t& lhs, const index_set_t& rhs) -> const index_set_t;
-    friend auto operator|<> (const index_set_t& lhs, const index_set_t& rhs) -> const index_set_t;
+    friend auto operator^<> (const index_set_t& lhs, const index_set_t& rhs) -> index_set_t;
+    friend auto operator&<> (const index_set_t& lhs, const index_set_t& rhs) -> index_set_t;
+    friend auto operator|<> (const index_set_t& lhs, const index_set_t& rhs) -> index_set_t;
     friend auto compare<>                 (const index_set_t& lhs, const index_set_t& rhs) -> int;
 
   // Member reference:

@@ -1,6 +1,6 @@
 #ifndef _GLUCAT_GENERATION_IMP_H
 #define _GLUCAT_GENERATION_IMP_H
-/***************************************************************************
+/**************************************************************************
 	  GluCat : Generic library of universal Clifford algebra templates
     generation_imp.h : Implement functions for generation of the matrix representation
                              -------------------
@@ -43,7 +43,7 @@ namespace glucat { namespace gen
   // [P]: Ian R. Porteous, "Clifford algebras and the classical groups", Cambridge UP, 1995.
   // [L]: Pertti Lounesto, "Clifford algebras and spinors", Cambridge UP, 1997.
 
-  /**
+  /*
    * @brief Single instance of generator table
    * @details
    * Reference: [M] Item 47
@@ -64,7 +64,7 @@ namespace glucat { namespace gen
   generator() -> generator_table<Matrix_T>&
   { static generator_table<Matrix_T> g; return g;}
 
-  /**
+  /*
    * @brief Pointer to generators for a specific signature
    * @details
    * Reference: [P] Table 15.27, p 133
@@ -90,7 +90,7 @@ namespace glucat { namespace gen
     }
   }
 
-  /**
+  /*
    * @brief Construct a vector of generators for a specific signature
    * @details
    * @tparam Matrix_T
@@ -144,7 +144,7 @@ namespace glucat { namespace gen
     return (*this)[sig];
   }
 
-  /**
+  /*
    * @brief Construct generators for p,q given generators for p-1,q-1
    * @details
    * Reference: [P] Proposition 15.17, p 131
@@ -187,7 +187,7 @@ namespace glucat { namespace gen
     this->insert(make_pair(sig, result));
   }
 
-  /**
+  /*
    * @brief Construct generators for p,q given generators for p-4,q+4
    * @details
    * Reference: [L] 16.4 Periodicity of 8, p216
@@ -225,7 +225,7 @@ namespace glucat { namespace gen
     this->insert(make_pair(sig, result));
   }
 
-  /**
+  /*
    * @brief Construct generators for p,q given generators for p+4,q-4
    * @details
    * Reference: [L] 16.4 Periodicity of 8, p216
@@ -263,7 +263,7 @@ namespace glucat { namespace gen
     this->insert(make_pair(sig, result));
   }
 
-  /**
+  /*
    * @brief Construct generators for p,q given generators for q+1,p-1
    * @details
    * Reference: [P] Proposition 15.20, p 131
