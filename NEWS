@@ -1,5 +1,15 @@
-NEWS for GluCat 0.13.0 with PyClical
+NEWS for GluCat 0.98a0+ with PyClical
 ====================================
+
+2026-04-25: 0.98a0+
+GluCat modernization phase (2024-2026) has reached a major milestone.
+
+o Refactored the linear algebra architecture to use Eigen and Armadillo wrappers.
+o Decoupled the library from its hard dependency on uBLAS.
+o Upgraded the required C++ standard to C++23.
+o Integrated the new Doctest-based unit testing suite in test_doctest.
+o Added code coverage infrastructure and scripts in test_coverage.
+o Modernized the project documentation (README, INSTALL, DESIGN).
 
 2025-03-02: 0.13.0
 GluCat 0.13.0 has improved configuration and testing.

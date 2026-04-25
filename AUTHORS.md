@@ -1,4 +1,4 @@
-AUTHORS for GluCat 0.98a0 with PyClical
+AUTHORS for GluCat 0.98a0+ with PyClical
 =======================================
 
 Paul C. Leopardi <paul.leopardi@gmail.com>
@@ -110,8 +110,16 @@ C.F. Gerald,  P.O. Wheatley:
 * Michael Clausen, Ulrich Baum, David K. Maslen, Daniel N. Rockmore:
   Generalized FFTs for finite groups.
 
-uBLAS Interface
----------------
+Linear Algebra Backends (Modernization Phase)
+---------------------------------------------
+
+* Paul C. Leopardi: CRTP-based linear algebra abstraction, Eigen and Armadillo 
+  wrappers.
+* Eigen project: Default linear algebra backend.
+* Armadillo project: Alternative linear algebra backend.
+
+Legacy uBLAS Interface
+----------------------
 
 * Joerg Walter: uBLAS interface.
 

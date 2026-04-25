@@ -4,16 +4,23 @@ INSTALL for GluCat 0.98a0 with PyClical
 Prerequisites: Before You Begin
 ===============================
 
-GluCat uses the C++ Standard Library and the Boost Library. The PyClical Python
-extension module is built using Cython and Python. Make sure that you have all
-of these installed and working before attempting to use GluCat with PyClical.
+GluCat uses the C++ Standard Library, the Boost Library, and either Eigen or 
+Armadillo for linear algebra. The PyClical Python extension module is built 
+using Cython and Python. Make sure that you have all of these installed and 
+working before attempting to use GluCat with PyClical.
+
 Use the instructions at http://www.boost.org/more/download.html to obtain
 the Boost Library. Make sure that you are able to build the Boost library with
 the same C++ compiler version as you will be using to build programs that will
 use the GluCat library.
 
+GluCat uses the Eigen C++ library by default for its linear algebra backend.
+You can obtain Eigen from http://eigen.tuxfamily.org/. Alternatively, you can 
+configure GluCat to use the Armadillo C++ library, available from 
+http://arma.sourceforge.net/.
+
 The default configuration of GluCat, as well as most combinations of
-configuration options, require a compiler that supports the C++ 2011 standard.
+configuration options, require a compiler that supports the C++ 2023 standard.
 
 Scroll to the end of these instructions to see a list of successful builds,
 including version numbers of various software components, and notes on software
@@ -47,8 +54,8 @@ Once you have downloaded, unzipped and untarred the source code, or followed
 the instructions above to install from Git clone, you should have a directory,
 glucat-0.98a0. Under this directory you should see a number of subdirectories,
 including `./admin`, `./doc`, `./glucat`, `./gfft_test`, `./products`,
-`./pyclical`, `./squaring`, `./test`, `./test_move`, `./test_runtime`,
-`./testxx`, and `./transforms`.
+`./pyclical`, `./squaring`, `./test`, `./test_coverage`, `./test_doctest`,
+`./test_move`, `./test_runtime`, `./testxx`, and `./transforms`.
 
 The following instructions are meant to be used with `glucat-0.98a0` as the
 current directory.
@@ -62,8 +69,9 @@ library with PyClical. These are:
 
  1. The PyClical Python extension module.
  2. The timing test programs.
- 3. The regression test programs.
- 4. Your own programs, written in C++.
+ 3. The legacy regression test programs.
+ 4. The new doctest-based unit tests.
+ 5. Your own programs, written in C++.
 
 There are four different things to install. These are:
 
@@ -135,10 +143,23 @@ Pay special attention to the `-D` flags described in the configuration section
 below, as these control optional parts of the compilation of the GluCat library.
 In particular, if you compile your own programs without setting any of these
 `-D` flags, please be aware that the default random number generator used by
-GluCat requires the use of the C++ 2011 standard. See details below.
+GluCat requires the use of the C++ 2023 standard. See details below.
 
 To automate the build process, you should use GNU make with your own Makefile.
 For very elaborate software, you may also want to consider using GNU Autotools.
+
+Code Coverage and Unit Tests
+----------------------------
+
+GluCat now includes a modern unit testing suite based on `doctest`, and
+infrastructure for generating code coverage reports.
+
+The `./test_doctest` directory contains the build system for the doctest-based
+unit tests. These tests are integrated directly into the header files and can
+be enabled by defining `GLUCAT_DOCTEST`.
+
+The `./test_coverage` directory contains shell scripts for generating code
+coverage reports using Clang/LLVM. See "Running Coverage Tests" below.
 
 
 To Configure
@@ -179,6 +200,13 @@ shell script `./config.status` that you can run in the future to recreate the
 current configuration, a file `./config.cache` that saves the results of its
 tests to speed up reconfiguring, and a file `./config.log` containing compiler
 output (useful mainly for debugging `./configure`).
+
+The following additional options are recognized by `./configure`:
+
+  `--with-doctest`: Enables the modern unit testing suite in `test_doctest`.
+  
+  `--with-unordered-map=boost|std`: Chooses the implementation of the hash
+  map used in `framed_multi`. The default is `boost` (requires Boost 1.83.0+).
 
 If you need to do unusual things to compile GluCat with PyClical, please try to
 figure out how `./configure` could check whether to do them, and email diffs or
@@ -253,10 +281,13 @@ The option `--enable-debug=full` turns on full debugging, by adding the compiler
 flags `-O0 -g3` to `CXXFLAGS` in the Makefiles, and does not add the compiler flag
 `-DNDEBUG` to `CXXFLAGS` in the Makefiles.
 
-The preprocessor symbol `NDEBUG` is used by Boost uBLAS to control debugging.
-If NDEBUG is defined, then uBLAS compiles in release mode, including the use of
-expression templates. If `NDEBUG` is not defined, then uBLAS compiles in debug
-mode.
+The preprocessor symbol `NDEBUG` is used to control debugging in the C++ 
+Standard Library and the linear algebra backends (Eigen or Armadillo).
+
+If `NDEBUG` is defined, the library compiles in release mode, which typically 
+disables runtime assertions and enables optimizations. If `NDEBUG` is not 
+defined, the library compiles in debug mode, providing more extensive runtime 
+checks at the cost of performance.
 
 
 If you are compiling your own programs using the GluCat library, to control
@@ -269,7 +300,7 @@ the C++ compiler.
  For testing with some debugging capability:
   `-DNDEBUG -O1 -g`
 
- For full debugging capability, including the use of debug code in uBLAS:
+ For full debugging capability:
   `-O0 -g3`
 
 ```
@@ -496,6 +527,35 @@ modern multicore machines.
 
 Warning: If you use too many jobs with parallel make, the compiler will have
 problems obtaining enough memory to run efficiently.
+
+
+Building and running the doctest unit tests
+-------------------------------------------
+
+To build and run the modern unit tests, you must configure with the
+`--with-doctest` option. Then run:
+
+```
+ make -C test_doctest check
+```
+
+This will compile and run the unit tests integrated into the library headers.
+The output will be written to `test_doctest/test_doctest.out`.
+
+
+Running Coverage Tests
+----------------------
+
+If you have Clang and LLVM installed, you can generate code coverage reports
+using the scripts in `test_coverage/src/`.
+
+To run the coverage tests for the doctest suite:
+```
+ bash test_coverage/src/run_clang_doctest_coverage.sh
+```
+
+The resulting HTML report will be available in
+`test_coverage/results/coverage_html_doctest/index.html`.
 
 
 To Test

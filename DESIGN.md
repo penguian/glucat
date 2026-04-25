@@ -1,4 +1,4 @@
-GluCat design notes 2016-07-10, updated 2022-03-14
+GluCat design notes 2016-07-10, updated 2026-04-25
 ==================================================
 
 This document describes some of the decisions that underly the design of GluCat,
@@ -62,8 +62,73 @@ still is) asymptotically slow. For details, see:
   ](http://lists.boost.org/ublas/2008/01/2585.php)
 
 
-GluCat use of uBLAS
--------------------
+Modernization phase (2024-2026)
+-------------------------------
+
+Starting in 2024, a major refactoring effort was undertaken to modernize the
+GluCat codebase and address the long-standing goal of moving away from a hard
+dependency on uBLAS.
+
+The key design decisions during this phase were:
+
+1. Adoption of the C++23 standard, enabling the use of modern features such as
+`std::numbers::pi`, concepts (via `requires` expressions), and improved move
+semantics.
+
+2. Introduction of a CRTP-based (Curiously Recurring Template Pattern) matrix
+abstraction layer. The new base class `matrix_base<>` (in `glucat/matrix_base.h`)
+provides a unified interface that delegates to specific implementation wrappers.
+
+3. Implementation of wrappers for Eigen (`eigen_matrix_wrapper`) and Armadillo
+(`arma_matrix_wrapper`), allowing GluCat to use these high-performance libraries
+as backends.
+
+4. Migration of the core `matrix_multi` and `framed_multi` classes to use these
+new wrappers, effectively decoupling the Clifford algebra logic from the
+underlying linear algebra library.
+
+5. Integration of a modern unit testing framework (`doctest`) and code coverage
+analysis infrastructure.
+
+
+Split of code between glucat/matrix_imp.h and glucat/matrix_multi_imp.h
+-----------------------------------------------------------------------
+
+The source code of GluCat that uses linear algebra is concentrated in two files,
+`glucat/matrix_imp.h` and `glucat/matrix_multi_imp.h`. The reason for the split
+is to hide some of the linear algebra implementation details from the
+`matrix_multi<>` class by placing them within template functions in the
+namespace `matrix`. In general, functions in the namespace `matrix` operate on
+operands of type `LHS_T`, `RHS_T` or `Matrix_T`, where each of these is treated
+("duck typed") as a generic matrix type.
+
+Functions such as `classify_eigenvalues()` and the underlying eigenvalue
+solvers are provided by the backend-specific wrappers (Eigen or Armadillo).
+This allows GluCat to accurately compute the matrix square root and
+logarithm functions, which in turn are used to compute the corresponding
+functions for elements of a Clifford algebra.
+See [2] for further details.
+
+
+The header file `glucat/matrix_multi_imp.h` is used to implement the Clifford
+algebra interface of `matrix_multi<>`, including algebraic operations and
+transcendental functions. Besides the scaling and squaring type algorithms used
+for the square root and logarithm, Pade' approximations are used, which in turn
+depend on being able to quickly calculate and divide matrix polynomials. See the
+comment header of `glucat/matrix_multi_imp.h` for references.
+
+
+Historically, Joerg Walter initially conducted the port of GluCat to
+uBLAS. He coded `ublas::lu_factorize` and `lu_substitute` as part of the port, then
+moved them into uBLAS. In `operator/()`, GluCat performs division in a Clifford
+algebra by using this LU decomposition and back substitution to compute X=B/A by
+solving AT*XT=BT, with a right hand side consisting of the whole square matrix
+BT. The function uses iterative refinement to obtain a more accurate solution.
+See the reference given in the source code.
+
+
+GluCat Linear Algebra Architecture
+--------------------------------
 
 Right now, the design of GluCat depends on being able to use sparse matrices
 easily. The reason why sparse matrices are used at all comes down to two things:
@@ -78,27 +143,36 @@ basis elements are to be stored in e.g. a cache, they must be stored
 efficiently.
 
 
-Essentially, GluCat uses a uBLAS matrix for one of two things:
+To support multiple backends (Eigen, Armadillo), GluCat uses a CRTP-based
+abstraction layer. The `matrix_multi<>` template class no longer directly
+references specific library types. Instead, it uses type selectors to choose
+between the available wrappers (e.g., `eigen_matrix_wrapper` or
+`arma_matrix_wrapper`).
+
+
+Essentially, GluCat uses a matrix for one of two things:
 
 1. As a matrix which the value of a generator or a basis element of a Clifford
 algebra (relative to a frame).
 
 This is the class `matrix_multi<>::basis_matrix_t`.
 
-2. As a matrix which stores the value of a general element of a Clifford algebra
-(relative to a frame) in the `matrix_multi<>` template class.
-
 This is the class `matrix_multi<>::matrix_t`, `framed_multi<>::matrix_t`, etc.
+To store its terms efficiently, `framed_multi` uses a high-performance hash map.
+Specifically, GluCat uses `boost::unordered_flat_map` when available (requires
+Boost 1.83.0+), falling back to `std::unordered_map` otherwise.
 
 Thus, in `glucat/matrix_multi.h`, the definition of the template class `matrix_multi<>`
 contains:
 ```
   private:
-    using orientation_t = ublas::row_major;
-    using basis_matrix_t = ublas::compressed_matrix<int, orientation_t>;
-    using matrix_t = ublas::matrix<Scalar_T, orientation_t>;
-    using matrix_index_t = typename matrix_t::size_type;
+    using basis_matrix_t = matrix::sparse_matrix_t<int>;
+    using matrix_t = matrix::matrix_t<Scalar_T>;
+    using matrix_index_t = matrix::matrix_index_t;
 ```
+where `matrix_t` and `sparse_matrix_t` are selected based on the scalar type and
+available libraries (Eigen is the current default, with Armadillo support enabled
+via `--with-armadillo`).
 and in `glucat/framed_multi.h`, the definition of the template class `framed_multi<>`
 contains:
 ```
@@ -109,9 +183,11 @@ In `glucat/framed_multi_imp.h`, the function `fast()` uses the class
 `glucat/matrix_multi_imp.h`.
 
 In `glucat/matrix_imp.h` and `glucat/matrix_multi_imp.h`, there are loops that
-use iterators over whole matrices or over one dimension of a matrix. In uBLAS
-these iterate over the structural non-zeros of a compressed matrix or over all
-elements of a dense matrix. Thus in `glucat/matrix_imp.h` and
+use iterators over whole matrices or over one dimension of a matrix. In the
+library backends (Eigen or Armadillo), these iterate over the
+structural non-zeros of a compressed matrix or over all elements of a dense
+matrix.
+ Thus in `glucat/matrix_imp.h` and
 `glucat/matrix_multi_imp.h`, the same functions are often used for both sparse
 and dense matrices. One exception is the function `matrix::mono_prod()` in
 `glucat/matrix_imp.h`, which assumes that the matrix is sparse, in fact
@@ -132,10 +208,9 @@ that, but the conversion between the two classes needed to be efficient for both
 small signatures (e.g. Cl(1,1)) and large signatures (e.g. Cl(8,8)).
 
 
-The reason why the template class `basis_matrix_t` is defined as
-`ublas::compressed_matrix<int, orientation_t>` rather than
-`ublas::compressed_matrix<Scalar_T, orientation_t>` or
-`ublas::compressed_matrix<float, orientation_t>`
+The reason why the template class `basis_matrix_t` is defined using
+`matrix::sparse_matrix_t<int>` rather than using the multivector's scalar type
+(e.g., `matrix::sparse_matrix_t<Scalar_T>`)
 comes down to space and speed.
 
 The type Scalar_T can be `float` (32 bits), `double` (64 bits), `long double`
@@ -172,8 +247,9 @@ and in `basis_table::basis()` in `glucat/matrix_multi_imp.h`, respectively.
 
 The key function used in the naive conversion from `framed_multi_t` to
 `matrix_multi_t` is `matrix_multi_t::operator+=(term_t)`, defined in
-`glucat/matrix_multi_imp.h`. This function uses the uBLAS `matrix_t plus_assign()`
-member function, along with a call to `matrix_multi_t::basis_element()`.
+`glucat/matrix_multi_imp.h`. This function uses the underlying matrix's
+`plus_assign()` member function, along with a call to
+`matrix_multi_t::basis_element()`.
 
 Conversion in the other direction is given by the `framed_multi_t` constructor
 from `matrix_multi_t`, defined in `glucat/framed_multi_imp.h`. This uses the function
@@ -200,9 +276,9 @@ In the definition of `template struct tuning<>` in `glucat/tuning.h` you will fi
 the following lines
 ```
   // Tuning for FFT
-    /// Minimum map size needed to invoke generalized FFT
+    // Minimum map size needed to invoke generalized FFT
     enum { fast_size_threshold = Fast_Size_Threshold };
-    /// Minimum matrix dimension needed to invoke inverse generalized FFT
+    // Minimum matrix dimension needed to invoke inverse generalized FFT
     enum { inv_fast_dim_threshold = Inv_Fast_Dim_Threshold };
 ```
 These parameters are used to tune the choice between the naive and the fast algorithms
@@ -216,7 +292,7 @@ explicit specialization of `template struct tuning<>`. See `test/tuning.h` for e
 In `glucat/matrix_multi_imp.h`, in the constructor of `matrix_multi_t` from
 `framed_multi_t`, there appears an `if` statement starting with:
 ```
-if (val.size() >= Tune_P::fast_size_threshold)
+if (val.size() >= Tuning_Values_P::fast_size_threshold)
 ```
 The effect of the if statement is that if the number of terms in `val` is at least
 `fast_size_threshold`, then the fast algorithm is used to convert `framed_multi_t`
@@ -226,7 +302,7 @@ to `matrix_multi_t`, otherwise the naive algorithm is used.
 In `glucat/framed_multi_imp.h`, in the constructor of `framed_multi_t` from
 `matrix_multi_t`, appears the line:
 ```
-const auto dim = val.m_matrix.size1();
+const auto dim = val.m_matrix.nbr_rows();
 ```
 In other words, `dim` is set to the first dimension of the `matrix_t` representing
 `val` (and the matrix is assumed to be square).
@@ -239,7 +315,7 @@ The definition of `template struct tuning` also contains the tuning parameter
 `basis_max_count`:
 ```
   // Tuning for basis cache
-    /// Maximum index count of folded frames in basis cache
+    // Maximum index count of folded frames in basis cache
     enum { basis_max_count = Basis_Max_Count };
 ```
 This parameter is used in the function `matrix_multi_t::basis_element()` to
@@ -259,14 +335,14 @@ going through the constructors. The test output looks like:
 Clifford algebra transform test:
 Fill: 0.5
 R_{-11,11} in R_{-11,11}:
- CPU = mm:        0.031 fm:        0.017 trials mm:     1 fm:     1  diff: 0.00e+00
+ CPU = mm:        0.012 fm:        0.009 trials mm:     1 fm:     1  diff: 0.00e+00
 R_{-10,10} in R_{-10,10}:
- CPU = mm:        0.010 fm:        0.008 trials mm:     1 fm:     1  diff: 0.00e+00
+ CPU = mm:        0.002 fm:        0.001 trials mm:     1 fm:     1  diff: 0.00e+00
 [...]
 R_{-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10} in R_{-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10}:
- CPU = mm:     3039.964 fm:     6162.253 trials mm:     1 fm:     1  diff: 1.98e-16
+ CPU = mm:      931.432 fm:     1509.958 trials mm:     1 fm:     1  diff: 1.98e-16
 R_{-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10,11} in R_{-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10,11}:
- CPU = mm:    14858.769 fm:    31077.762 trials mm:     1 fm:     1  diff: 2.09e-16
+ CPU = mm:     5133.609 fm:     7969.989 trials mm:     1 fm:     1  diff: 2.09e-16
 ```
 The `mm` CPU time is time to convert from `framed_multi_t` to `matrix_multi_t`.
 
@@ -279,122 +355,33 @@ converting to `matrix_multi_t` and back again.
 The second test is `transforms`, which compares the naive and fast transforms.
 The test output looks like:
 ```
-framed_multi<double,DEFAULT_LO,DEFAULT_HI,tuning_naive>
+framed_multi<double,DEFAULT_LO,DEFAULT_HI,tuning_naive_p>
 Clifford algebra transform test:
 Fill: 0.5
-Cl( 1, 0) in Cl(16, 0) CPU = mm:       1.98 (old)       7.58 (new) fm:    3993.18 (old)       1.99 (new)  diff: old: 6.43e-15 new: 0.00e+00 fm: 0.00e+00 mm: 6.43e-15
-Cl( 2, 0) in Cl(16, 0) CPU = mm:       0.30 (old)       4.23 (new) fm:    3972.90 (old)       2.00 (new)  diff: old: 5.10e-15 new: 3.36e-17 fm: 0.00e+00 mm: 5.10e-15
+Cl( 1, 0) in Cl(16, 0) CPU = mm:       1.90 (old)       4.08 (new) fm:    3887.53 (old)       1.29 (new)  diff: old: 6.22e-15 new: 0.00e+00 fm: 0.00e+00 mm: 6.22e-15
+Cl( 2, 0) in Cl(16, 0) CPU = mm:       1.40 (old)       3.93 (new) fm:    3919.84 (old)       1.19 (new)  diff: old: 5.10e-15 new: 3.36e-17 fm: 0.00e+00 mm: 5.10e-15
 ```
 Here, `mm` is again conversion from `framed_multi_t` to `matrix_multi_t`, and `fm` is
 conversion from `matrix_multi_t` to `framed_multi_t`. The naive algorithm is called
 `(old)` and the fast algorithm is called `(new)`.
 
 
-Split of code between glucat/matrix_imp.h and glucat/matrix_multi_imp.h
------------------------------------------------------------------------
-
-The source code of GluCat that uses linear algebra is concentrated in two files,
-`glucat/matrix_imp.h` and `glucat/matrix_multi_imp.h`. The reason for the split
-is to hide some of the linear algebra implementation details from the
-`matrix_multi<>` class by placing them within template functions in the
-namespace `matrix`. In general, functions in the namespace `matrix` operate on
-operands of type `LHS_T`, `RHS_T` or `Matrix_T`, where each of these is treated
-("duck typed") as a uBLAS matrix type.
-
-Three functions, `to_lapack()`, `eigenvalues()` and `classify_eigenvalues()`
-(optionally, via `_GLUCAT_USE_BINDINGS`) make use of Boost bindings to allow a
-object of type `matrix_multi<>` to determine the eigenvalues of the corresponding
-matrix. This, in turn, allows GluCat to accurately compute the matrix square
-root and logarithm functions, which in turn are used to compute the
-corresponding functions for elements of a Clifford algebra.
-See [2] for further details.
 
 
-The header file `glucat/matrix_multi_imp.h` is used to implement the Clifford
-algebra interface of `matrix_multi<>`, including algebraic operations and
-transcendental functions. Besides the scaling and squaring type algorithms used
-for the square root and logarithm, Pade' approximations are used, which in turn
-depend on being able to quickly calculate and divide matrix polynomials. See the
-comment header of `glucat/matrix_multi_imp.h` for references.
 
 
-As mentioned above, Joerg Walter initially conducted the port of GluCat to
-uBLAS. He coded `ublas::lu_factorize` and `lu_substitute` as part of the port, then
-moved them into uBLAS. In `operator/()`, GluCat performs division in a Clifford
-algebra by using this LU decomposition and back substitution to compute X=B/A by
-solving AT*XT=BT, with a right hand side consisting of the whole square matrix
-BT. The function uses iterative refinement to obtain a more accurate solution.
-See the reference given in the source code.
 
 
-GluCat use of boost::numeric::bindings
---------------------------------------
 
-The `boost::numeric::bindings` library is used in `glucat/matrix_imp.h`:
-```
-$ grep -i boost::numeric::bindings glucat/*.h
-glucat/matrix_imp.h:    namespace lapack = boost::numeric::bindings::lapack;
-```
-The namespace `boost::numeric::bindings::lapack` is used in the function
-`eigenvalues()` in `glucat/matrix_imp.h` to gain access to the function
-`lapack::gees` to calculate the eigenvalues of a matrix. The uBlas library does
-not have such an eigenvalue function. The lack of such a function, and the slow
-speed of some uBLAS functions, were some of the issues that first prompted me to
-consider a replacement for uBLAS, such as MTL3, Eigen or Armadillo.
-
-
-GluCat uses of Boost other than for linear algebra
---------------------------------------------------
-
-The only other uses of Boost besides `boost::numeric::ublas` and
-`boost::numeric::bindings` is `BOOST_STATIC_ASSERT` in `glucat/index_set.h`:
-```
-$  grep -i assert glucat/*.h | grep -i boost
-glucat/index_set.h:#include <boost/static_assert.hpp>
-glucat/index_set.h:    BOOST_STATIC_ASSERT((LO <= 0) && (0 <= HI) && (LO < HI) && \
-```
-In the file `glucat/global.h` there is a definition for `_GLUCAT_CTAssert` that is also
-used in `glucat/index_set.h`, and this could be used instead of `BOOST_STATIC_ASSERT`:
-```
-$ grep -i _GLUCAT_CTAssert glucat/*.h
-glucat/global.h:  #define _GLUCAT_CTAssert(expr, msg) \
-glucat/global.h:  _GLUCAT_CTAssert(std::numeric_limits<unsigned char>::radix == 2, CannotDetermineBitsPerChar)
-glucat/global.h:  _GLUCAT_CTAssert(_GLUCAT_BITS_PER_ULONG == BITS_PER_SET_VALUE, BitsPerULongDoesNotMatchSetValueT)
-glucat/index_set.h:  _GLUCAT_CTAssert(sizeof(set_value_t) >= sizeof(std::bitset<DEFAULT_HI-DEFAULT_LO>),
-glucat/tuning.h:_GLUCAT_CTAssert(std::numeric_limits<unsigned int>::radix == 2, CannotSetThresholds)
-```
 
 
 In future
 ---------
 
-Here is a brief description of where I would like linear algebra in GluCat to go.
-The criteria listed below are in addition to the criteria I listed when I
-initially chose MTL, and the criteria I used to move from MTL to UBLAS.
+Most of the goals identified in the 2016-2022 period have been addressed by the
+move to the CRTP-based architecture and the support for Eigen and Armadillo.
 
-1. The use of the two libraries uBLAS and Boost bindings should be replaced by a
-library or suite of libraries with a unified stable interface.
-
-2. For the sake of speed and space, ideally the library should support the
-addition and multiplication of compressed integer matrices, with fast iteration
-over non-zeros.
-
-3. Ideally, the library should support operator syntax close to that used by
-uBLAS, Matlab, NumPy, etc.
-
-4. Ideally, the library should support deep copy assignment, or its logical
-equivalent in terms of C++11 move assignment, so that accidental aliasing, scope
-problems and potential memory leaks are avoided in GluCat code.
-
-5. Ideally, the library should be faster than uBLAS in all practical cases.
-
-6. Ideally, there should be some support for parallelism, whether via OpenMP or
-GPUs, but in a way that is as transparent as possible to GluCat code.
-
-7. Finally, the porting and re-testing effort should be as small as possible. I
-have been very time poor, which explains why I have not yet attempted the port.
-
-The libraries that I have seriously considered so far are Eigen 3 and Armadillo.
+Remaining areas for development:
 
 * [Eigen 3 does not depend on other linear algebra libraries,
   ](http://eigen.tuxfamily.org/index.php?title=Main_Page)

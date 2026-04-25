@@ -1,4 +1,4 @@
-TODO for GluCat 0.98a0 with PyClical
+TODO for GluCat 0.98a0+ with PyClical
 ====================================
 
 ## Likely
@@ -7,8 +7,16 @@ Documentation:
 * Write a programmer's guide with descriptions of usage via use cases.
 * Provide better user documentation for PyClical.
 
+Testing:
+* Increase code coverage for `framed_multi_imp.h` and `matrix_multi_imp.h` beyond 85%.
+* Further harden the stochastic identity tests in `test_doctest`.
+* Complete the transition of all legacy tests to the modern unit testing
+  framework.
+
 Packaging:
 * Improve the packaging of the example and test programs.
+* Finalize the transition to a modern build system that minimizes dependency on
+  legacy autotools.
 
 
 ## Unlikely
