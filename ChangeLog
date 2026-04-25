@@ -1,5 +1,40 @@
 2026-04-25  Paul Leopardi <paul.leopardi@anu.edu.au>
 
+	* test_runtime/gfft_test-11.out, test_runtime/products-8.out,
+	test_runtime/squaring-11.out, test_runtime/transforms-8.out: Update
+	timing test results
+
+2026-04-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* Makefile.am.in, configure.ac.in: Configure test_doctest correctly
+
+2026-04-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra.h, glucat/clifford_algebra_imp.h,
+	glucat/errors_imp.h, glucat/framed_multi.h,
+	glucat/framed_multi_imp.h, glucat/generation_imp.h,
+	glucat/glucat_imp.h, glucat/index_set.h, glucat/index_set_imp.h,
+	glucat/matrix.h, glucat/matrix_arma_imp.h, glucat/matrix_base.h,
+	glucat/matrix_base_imp.h, glucat/matrix_eigen_imp.h,
+	glucat/matrix_imp.h, glucat/matrix_multi.h,
+	glucat/matrix_multi_imp.h, glucat/scalar_imp.h: Enable move
+	semantics. Avoid Doxygen duplication.
+
+2026-04-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* DESIGN.md, INSTALL.md, NEWS, README.md, glucat/generation_imp.h,
+	glucat/matrix_arma.h, glucat/matrix_arma_imp.h,
+	glucat/matrix_base.h, glucat/matrix_base_imp.h,
+	glucat/matrix_eigen.h, glucat/matrix_eigen_imp.h,
+	test_coverage/src/run_clang_doctest_coverage.sh: Improve doctest
+	coverage
+
+2026-04-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* ChangeLog: Update ChangeLog
+
+2026-04-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
 	* AUTHORS.md, DESIGN.md, INSTALL.md, NEWS, README.md, TODO.md: 
 	Update the documentation
 
