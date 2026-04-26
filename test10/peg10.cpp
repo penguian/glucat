@@ -44,8 +44,8 @@ int test10()
   const framed_multi<double> b(b_str);
   test_norms_and_involutions< framed_multi<double> >(a, b);
   cout << "matrix_multi<double>" << endl;
-  const framed_multi<double> A(a_str);
-  const framed_multi<double> B(b_str);
+  const matrix_multi<double> A(a_str);
+  const matrix_multi<double> B(b_str);
   test_norms_and_involutions< matrix_multi<double> >(A, B);
   return 0;
 }
