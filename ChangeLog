@@ -1,3 +1,40 @@
+2026-04-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* DESIGN.md, TODO.md: Update the documentation
+
+2026-04-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra_imp.h, glucat/framed_multi.h,
+	glucat/framed_multi_imp.h, glucat/index_set.h,
+	glucat/index_set_imp.h, glucat/matrix_base.h,
+	glucat/matrix_base_imp.h, glucat/matrix_multi.h,
+	glucat/matrix_multi_imp.h: Use explicit constructors
+
+2026-04-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra.h: Add new assignment operators
+
+2026-04-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* Makefile.am.in: Use check-local to match recent Autotools changes
+
+2026-04-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* transforms/transforms.h: Use initialization syntax
+
+2026-04-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test10/peg10.cpp: Use the correct classes
+
+2026-04-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_coverage/src/run_full_coverage.sh: Add a combined coverage
+	test
+
+2026-04-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* ChangeLog: Update ChangeLog
+
 2026-04-25  Paul Leopardi <paul.leopardi@anu.edu.au>
 
 	* test_runtime/gfft_test-11.out, test_runtime/products-8.out,
