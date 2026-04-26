@@ -316,7 +316,7 @@ This option adds strict compiler flags to `CXXFLAGS`, such as `-pedantic`. Use t
 with caution as it may cause the build to fail on warnings.
 
 ```
-  --disable-warnings      disable compilation with -Wall and similiar
+  --disable-warnings      disable compilation with -Wall and similar
 ```
 By default, the compiler flag `-Wall` is added to `CXXFLAGS`. This option prevents
 `-Wall` from being added.
