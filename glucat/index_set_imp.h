@@ -841,7 +841,7 @@ namespace glucat
   inline
   auto
   index_set<LO,HI>::
-  lex_less_than(const index_set_t rhs) const -> bool
+  lex_less_than(const index_set_t& rhs) const -> bool
   { return bitset_t::to_ulong() < rhs.bitset_t::to_ulong(); }
 
   /*

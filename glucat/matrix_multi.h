@@ -166,9 +166,9 @@ namespace glucat
     matrix_multi(matrix_multi&& other) noexcept;
     /// Default copy constructor
     matrix_multi(const matrix_multi&) = default;
-    // Construct a multivector from a multivector with a different scalar type
+    /// Construct a multivector from a multivector with a different scalar type (explicit)
     template< typename Other_Scalar_T, typename Other_Tune_P >
-    matrix_multi(const matrix_multi<Other_Scalar_T,LO,HI,Other_Tune_P>& val);
+    explicit matrix_multi(const matrix_multi<Other_Scalar_T,LO,HI,Other_Tune_P>& val);
     /// Construct a multivector, within a given frame, from a given multivector
     template< typename Other_Scalar_T, typename Other_Tune_P >
     matrix_multi(const matrix_multi<Other_Scalar_T,LO,HI,Other_Tune_P>& val,
@@ -189,20 +189,20 @@ namespace glucat
     matrix_multi(const vector_t& vec,
                  const index_set_t frm, const bool prechecked = false);
     // Construct a multivector from a string: eg: "3+2{1,2}-6.1e-2{2,3}"
-    matrix_multi(const std::string& str);
+    explicit matrix_multi(const std::string& str);
     // Construct a multivector, within a given frame, from a string: eg: "3+2{1,2}-6.1e-2{2,3}"
     matrix_multi(const std::string& str,
                  const index_set_t frm, const bool prechecked = false);
     // Construct a multivector from a char*: eg: "3+2{1,2}-6.1e-2{2,3}"
-    matrix_multi(const char* str)
+    explicit matrix_multi(const char* str)
     { *this = matrix_multi(std::string(str)); };
     // Construct a multivector, within a given frame, from a char*: eg: "3+2{1,2}-6.1e-2{2,3}"
     matrix_multi(const char* str,
                  const index_set_t frm, const bool prechecked = false)
     { *this = matrix_multi(std::string(str), frm, prechecked); };
-    // Construct a multivector from a framed_multi_t
+    /// Construct a multivector from a framed_multi_t (explicit)
     template< typename Other_Scalar_T, typename Other_Tune_P >
-    matrix_multi(const framed_multi<Other_Scalar_T,LO,HI,Other_Tune_P>& val);
+    explicit matrix_multi(const framed_multi<Other_Scalar_T,LO,HI,Other_Tune_P>& val);
     /// Construct a multivector, within a given frame, from a framed_multi_t
     template< typename Other_Scalar_T, typename Other_Tune_P >
     matrix_multi(const framed_multi<Other_Scalar_T,LO,HI,Other_Tune_P>& val,
@@ -224,6 +224,7 @@ namespace glucat
 
   public:
     _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
+    _GLUCAT_CLIFFORD_ALGEBRA_ASSIGNMENT_OPERATIONS
 
     // Number of terms
     auto nbr_terms() const -> size_type;

@@ -337,7 +337,7 @@ namespace glucat
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
   matrix_multi(const std::string& str)
-  { *this = framed_multi_t(str); }
+  { *this = multivector_t(framed_multi_t(str)); }
 
   /*
    * @brief Construct a multivector, within a given frame, from a string: eg: "3+2{1,2}-6.1e-2{2,3}"
@@ -629,6 +629,8 @@ namespace glucat
     return *this;
   }
 
+  _GLUCAT_CLIFFORD_ALGEBRA_ASSIGNMENT_OPERATIONS_IMP(matrix_multi)
+
   /*
    * @brief Subtract scalar
    * @details
@@ -762,7 +764,7 @@ namespace glucat
     using index_set_t = typename multivector_t::index_set_t;
 
     if (lhs.isnan() || rhs.isnan())
-      return numeric_traits<Scalar_T>::NaN();
+      return multivector_t(numeric_traits<Scalar_T>::NaN());
 
     // Operate only within a common frame
     multivector_t lhs_reframed;
@@ -828,7 +830,7 @@ namespace glucat
   {
     using multivector_t = matrix_multi<Scalar_T,LO,HI,Tune_P>;
     using framed_multi_t = typename multivector_t::framed_multi_t;
-    return framed_multi_t(lhs) ^ framed_multi_t(rhs);
+    return multivector_t(framed_multi_t(lhs) ^ framed_multi_t(rhs));
   }
 
   /*
@@ -871,7 +873,7 @@ namespace glucat
   {
     using multivector_t = matrix_multi<Scalar_T,LO,HI,Tune_P>;
     using framed_multi_t = typename multivector_t::framed_multi_t;
-    return framed_multi_t(lhs) & framed_multi_t(rhs);
+    return multivector_t(framed_multi_t(lhs) & framed_multi_t(rhs));
   }
 
   /*
@@ -914,7 +916,7 @@ namespace glucat
   {
     using multivector_t = matrix_multi<Scalar_T,LO,HI,Tune_P>;
     using framed_multi_t = typename multivector_t::framed_multi_t;
-    return framed_multi_t(lhs) % framed_multi_t(rhs);
+    return multivector_t(framed_multi_t(lhs) % framed_multi_t(rhs));
   }
 
   /*
@@ -1008,13 +1010,12 @@ namespace glucat
   {
     using traits_t = numeric_traits<Scalar_T>;
 
+    using multivector_t = matrix_multi<Scalar_T,LO,HI,Tune_P>;
     if (lhs.isnan() || rhs.isnan())
-      return traits_t::NaN();
+      return multivector_t(traits_t::NaN());
 
     if (rhs == Scalar_T(0))
-      return traits_t::NaN();
-
-    using multivector_t = matrix_multi<Scalar_T,LO,HI,Tune_P>;
+      return multivector_t(traits_t::NaN());
 
     // Operate only within a common frame
     multivector_t lhs_reframed;
@@ -1043,7 +1044,7 @@ namespace glucat
     if (matrix::solve(XT, AT, BT))
       return multivector_t(XT.t(), our_frame);
     else
-      return traits_t::NaN();
+      return multivector_t(traits_t::NaN());
   }
 
   /*
@@ -1173,8 +1174,8 @@ namespace glucat
   {
     if (m < 0)
       throw error_t("outer_pow(m): negative exponent");
-    framed_multi_t a = *this;
-    return a.outer_pow(m);
+    framed_multi_t a(*this);
+    return multivector_t(a.outer_pow(m));
   }
 
   /*
@@ -1250,7 +1251,7 @@ namespace glucat
     if ((grade < 0) || (grade > HI-LO))
       return 0;
     else
-      return (framed_multi_t(*this))(grade);
+      return multivector_t((framed_multi_t(*this))(grade));
   }
 
   /*
@@ -1302,7 +1303,7 @@ namespace glucat
   auto
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
   even() const -> multivector_t
-  { return framed_multi_t(*this).even(); }
+  { return multivector_t(framed_multi_t(*this).even()); }
 
   /*
    * @brief Odd part, sum of the odd grade terms
@@ -1318,7 +1319,7 @@ namespace glucat
   auto
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
   odd() const -> multivector_t
-  { return framed_multi_t(*this).odd(); }
+  { return multivector_t(framed_multi_t(*this).odd()); }
 
   /*
    * @brief Vector part of multivector, as a vector_t
@@ -1391,7 +1392,7 @@ namespace glucat
   auto
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
   involute() const -> multivector_t
-  { return framed_multi_t(*this).involute(); }
+  { return multivector_t(framed_multi_t(*this).involute()); }
 
   /*
    * @brief Reversion, order of {i} is reversed in each term
@@ -1412,7 +1413,7 @@ namespace glucat
   auto
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
   reverse() const -> multivector_t
-  { return framed_multi_t(*this).reverse(); }
+  { return multivector_t(framed_multi_t(*this).reverse()); }
 
   /*
    * @brief Conjugation, conj == reverse o involute == involute o reverse
@@ -1433,7 +1434,7 @@ namespace glucat
   auto
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
   conj() const -> multivector_t
-  { return framed_multi_t(*this).conj(); }
+  { return multivector_t(framed_multi_t(*this).conj()); }
 
   /*
    * @brief Quadratic form := scalar part of rev(x)*x
@@ -1505,7 +1506,7 @@ namespace glucat
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
   random(const index_set<LO,HI> frm, Scalar_T fill) -> multivector_t
   {
-    return framed_multi<Scalar_T,LO,HI,Tune_P>::random(frm, fill);
+    return multivector_t(framed_multi<Scalar_T,LO,HI,Tune_P>::random(frm, fill));
   }
 
   /*
@@ -1586,7 +1587,7 @@ namespace glucat
     // If s.bad() then we have a corrupt input
     // otherwise we are fine and can copy the resulting matrix_multi
     if (!s.bad())
-      val = local;
+      val = matrix_multi<Scalar_T,LO,HI,Tune_P>(local);
     return s;
   }
 
@@ -1647,7 +1648,7 @@ namespace glucat
   auto
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
   truncated(const Scalar_T& limit) const -> multivector_t
-  { return framed_multi_t(*this).truncated(limit); }
+  { return multivector_t(framed_multi_t(*this).truncated(limit)); }
 
   /*
    * @brief Add a term.
@@ -2056,6 +2057,7 @@ namespace glucat
           Scalar_T norm_tol=std::pow(std::numeric_limits<Scalar_T>::epsilon(), 4)) -> matrix_multi<Scalar_T,LO,HI,Tune_P>
   {
     // Reference: [CHKL]
+    using multivector_t = matrix_multi<Scalar_T, LO, HI, Tune_P>;
     if (val == Scalar_T(0))
       return val;
 
@@ -2070,7 +2072,7 @@ namespace glucat
         ++step)
     {
       if (Y.isnan())
-        return numeric_traits<Scalar_T>::NaN();
+        return multivector_t(numeric_traits<Scalar_T>::NaN());
       db_step(M, Y);
     }
 
@@ -2095,6 +2097,7 @@ namespace glucat
           Scalar_T norm_Y_tol=std::pow(std::numeric_limits<Scalar_T>::epsilon(), 1)) -> matrix_multi<Scalar_T,LO,HI,Tune_P>
   {
     // Reference: [MB]
+    using multivector_t = matrix_multi<Scalar_T, LO, HI, Tune_P>;
     if (val == Scalar_T(0))
       return val;
 
@@ -2112,7 +2115,7 @@ namespace glucat
       Y = (-Y / Z) * Y;
       norm_Y = Y.norm();
       if (Y.isnan() || (norm_Y > old_norm_Y * Scalar_T(2)))
-        return numeric_traits<Scalar_T>::NaN();
+        return multivector_t(numeric_traits<Scalar_T>::NaN());
 
       Z += Y * Scalar_T(2);
     }
@@ -2472,7 +2475,7 @@ namespace glucat
       const auto& demoted_val = demoted_multivector_t(val);
       const auto& demoted_i = demoted_multivector_t(i);
 
-      return matrix_sqrt(demoted_val, demoted_i, 0);
+      return matrix_multi<Scalar_T,LO,HI,Tune_P>(matrix_sqrt(demoted_val, demoted_i, 0));
     }
     else if constexpr (function_precision == precision_promoted)
     {
@@ -2482,7 +2485,7 @@ namespace glucat
       const auto& promoted_val = promoted_multivector_t(val);
       const auto& promoted_i = promoted_multivector_t(i);
 
-      return matrix_sqrt(promoted_val, promoted_i, 0);
+      return matrix_multi<Scalar_T,LO,HI,Tune_P>(matrix_sqrt(promoted_val, promoted_i, 0));
     }
     else
       return matrix_sqrt(val, i, 0);
@@ -2901,7 +2904,7 @@ namespace glucat{
       const auto& demoted_val = demoted_multivector_t(val);
       const auto& demoted_i = demoted_multivector_t(i);
 
-      return matrix_log(demoted_val, demoted_i, 0);
+      return matrix_multi<Scalar_T,LO,HI,Tune_P>(matrix_log(demoted_val, demoted_i, 0));
     }
     else if constexpr (function_precision == precision_promoted)
     {
@@ -2911,7 +2914,7 @@ namespace glucat{
       const auto& promoted_val = promoted_multivector_t(val);
       const auto& promoted_i = promoted_multivector_t(i);
 
-      return matrix_log(promoted_val, promoted_i, 0);
+      return matrix_multi<Scalar_T,LO,HI,Tune_P>(matrix_log(promoted_val, promoted_i, 0));
     }
     else
       return matrix_log(val, i, 0);
@@ -2965,7 +2968,7 @@ namespace glucat{
       using demoted_multivector_t = matrix_multi<demoted_scalar_t,LO,HI,tune_same_p>;
 
       const auto& demoted_val = demoted_multivector_t(val);
-      return clifford_exp(demoted_val);
+      return matrix_multi<Scalar_T,LO,HI,Tune_P>(clifford_exp(demoted_val));
     }
     else if constexpr (function_precision == precision_promoted)
     {
@@ -2973,7 +2976,7 @@ namespace glucat{
       using promoted_multivector_t = matrix_multi<promoted_scalar_t,LO,HI,tune_same_p>;
 
       const auto& promoted_val = promoted_multivector_t(val);
-      return clifford_exp(promoted_val);
+      return matrix_multi<Scalar_T,LO,HI,Tune_P>(clifford_exp(promoted_val));
     }
     else
       return clifford_exp(val);
@@ -3155,6 +3158,72 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
       mm_t b_s = b(s);
       CHECK(approx_equal(a_r & b_s, (a_r * b_s)(index_t(std::abs(r-s)))));
     }
+  }
+
+  SUBCASE("Mixed-precision and assignment interchangeability") {
+    using mm_f_t = glucat::matrix_multi<float, -32, 32>;
+    using mm_d_t = glucat::matrix_multi<double, -32, 32>;
+
+    mm_f_t m_f1("{1}");
+    mm_f_t m_f2("{2}");
+    mm_d_t m_d1("{1}");
+    mm_d_t m_d2("{2}");
+
+    // Compound assignment (matching scalar)
+    m_f1 = mm_f_t("{1}");
+    m_f1 += m_f2;
+    CHECK(m_f1 == mm_f_t("{1}+{2}"));
+
+    m_f1 = mm_f_t("{1}");
+    m_f1 -= m_f2;
+    CHECK(m_f1 == mm_f_t("{1}-{2}"));
+
+    m_f1 = mm_f_t("{1}");
+    m_f1 *= m_f2;
+    CHECK(m_f1 == (mm_f_t("{1}") * m_f2));
+
+    m_f1 = mm_f_t("{1}");
+    m_f1 /= m_f2;
+    CHECK(m_f1 == (mm_f_t("{1}") / m_f2));
+
+    m_f1 = mm_f_t("{1}");
+    m_f1 ^= m_f2;
+    CHECK(m_f1 == (mm_f_t("{1}") ^ m_f2));
+
+    m_f1 = mm_f_t("{1}");
+    m_f1 &= m_f2;
+    CHECK(m_f1 == (mm_f_t("{1}") & m_f2));
+
+    m_f1 = mm_f_t("{1}");
+    m_f1 %= m_f2;
+    CHECK(m_f1 == (mm_f_t("{1}") % m_f2));
+
+    m_f1 = mm_f_t("{1}");
+    m_f1 |= m_f2;
+    CHECK(m_f1 == (mm_f_t("{1}") | m_f2));
+
+    // Interchangeability: A += B is interchangeable with A = A + B (matching scalar)
+    mm_f_t A("{1}");
+    mm_f_t B("{2}");
+    mm_f_t C = A;
+    C += B;
+    A = A + B;
+    CHECK(A == C);
+
+    // Verify that mixed-precision assignment still works if we use the constructor explicitly
+    m_f1 = mm_f_t(m_d1);
+    CHECK(m_f1 == mm_f_t("{1}"));
+  }
+
+  SUBCASE("Mixed-representation assignment") {
+    using fm_d_t = glucat::framed_multi<double, -32, 32>;
+    mm_t m("{1,2}");
+    fm_d_t f("{1,2}");
+    
+    // Framed to Matrix (matching scalar)
+    mm_t m2;
+    m2 = f;
+    CHECK(m2 == m);
   }
 }
 #endif

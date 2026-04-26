@@ -195,9 +195,9 @@ namespace glucat
     // Private constructor using hash_size
     framed_multi(const hash_size_t& hash_size);
   public:
-    // Construct a multivector from a multivector with a different scalar type
+    /// Construct a multivector from a multivector with a different scalar type (explicit)
     template< typename Other_Scalar_T, typename Other_Tune_P >
-    framed_multi(const framed_multi<Other_Scalar_T,LO,HI,Other_Tune_P>& val);
+    explicit framed_multi(const framed_multi<Other_Scalar_T,LO,HI,Other_Tune_P>& val);
     /// Construct a multivector, within a given frame, from a given multivector
     template< typename Other_Scalar_T, typename Other_Tune_P >
     framed_multi(const framed_multi<Other_Scalar_T,LO,HI,Other_Tune_P>& val,
@@ -218,20 +218,20 @@ namespace glucat
     framed_multi(const vector_t& vec,
                  const index_set_t frm, const bool prechecked = false);
     // Construct a multivector from a string: eg: "3+2{1,2}-6.1e-2{2,3}"
-    framed_multi(const std::string& str);
+    explicit framed_multi(const std::string& str);
     // Construct a multivector, within a given frame, from a string: eg: "3+2{1,2}-6.1e-2{2,3}"
     framed_multi(const std::string& str,
                  const index_set_t frm, const bool prechecked = false);
     // Construct a multivector from a char*: eg: "3+2{1,2}-6.1e-2{2,3}"
-    framed_multi(const char* str)
+    explicit framed_multi(const char* str)
     { *this = framed_multi(std::string(str)); };
     // Construct a multivector, within a given frame, from a char*: eg: "3+2{1,2}-6.1e-2{2,3}"
     framed_multi(const char* str,
                  const index_set_t frm, const bool prechecked = false)
     { *this = framed_multi(std::string(str), frm, prechecked); };
-    // Construct a multivector from a matrix_multi_t
+    /// Construct a multivector from a matrix_multi_t (explicit)
     template< typename Other_Scalar_T, typename Other_Tune_P  >
-    framed_multi(const matrix_multi<Other_Scalar_T,LO,HI,Other_Tune_P >& val);
+    explicit framed_multi(const matrix_multi<Other_Scalar_T,LO,HI,Other_Tune_P >& val);
     // Use generalized FFT to construct a matrix_multi_t
     template< typename Other_Scalar_T, typename Other_Tune_P >
     auto fast_matrix_multi(const index_set_t frm) const -> matrix_multi<Other_Scalar_T,LO,HI,Other_Tune_P >;
@@ -239,6 +239,7 @@ namespace glucat
     auto fast_framed_multi() const -> framed_multi_t;
 
     _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
+    _GLUCAT_CLIFFORD_ALGEBRA_ASSIGNMENT_OPERATIONS
 
     // Number of terms
     auto nbr_terms() const -> size_type;

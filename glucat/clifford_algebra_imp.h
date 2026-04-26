@@ -81,6 +81,27 @@ namespace glucat
   default_truncation = std::numeric_limits<Scalar_T>::epsilon();
 
   /*
+   * @brief Test for equality of multivectors
+   * @details
+   * @param lhs Left hand side
+   * @param rhs Right hand side
+   * @return True if equal
+   */
+  template
+  <
+    template<typename, const index_t, const index_t, typename> class Multivector,
+    template<typename, const index_t, const index_t, typename> class RHS,
+    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
+  >
+  inline
+  auto
+  operator== (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> bool
+  {
+    using multivector_t = Multivector<Scalar_T,LO,HI,Tune_P>;
+    return lhs == multivector_t(rhs);
+  }
+
+  /*
    * @brief Test for inequality of multivectors
    * @details
    * @param lhs Left hand side
@@ -275,8 +296,9 @@ namespace glucat
   auto
   operator+ (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> Multivector<Scalar_T,LO,HI,Tune_P>
   {
+    using multivector_t = Multivector<Scalar_T,LO,HI,Tune_P>;
     auto result = lhs;
-    return result += rhs;
+    return result += multivector_t(rhs);
   }
 
   /*
@@ -332,8 +354,9 @@ namespace glucat
   auto
   operator- (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> Multivector<Scalar_T,LO,HI,Tune_P>
   {
+    using multivector_t = Multivector<Scalar_T,LO,HI,Tune_P>;
     auto result = lhs;
-    return result -= rhs;
+    return result -= multivector_t(rhs);
   }
 
   /*
@@ -505,8 +528,9 @@ namespace glucat
   auto
   operator/ (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> Multivector<Scalar_T,LO,HI,Tune_P>
   {
-    Multivector<Scalar_T,LO,HI,Tune_P> result = scr;
-    return result /= rhs;
+    using multivector_t = Multivector<Scalar_T,LO,HI,Tune_P>;
+    multivector_t result = scr;
+    return result /= multivector_t(rhs);
   }
 
   /*
@@ -585,12 +609,12 @@ namespace glucat
     if (lhs == Scalar_T(0))
     {
       using traits_t = numeric_traits<Scalar_T>;
-      return
+      return multivector_t(
         (rhs < 0)
         ? traits_t::NaN()
         : (rhs == 0)
           ? Scalar_T(1)
-          : Scalar_T(0);
+          : Scalar_T(0));
     }
     auto result = multivector_t(Scalar_T(1));
     auto power =

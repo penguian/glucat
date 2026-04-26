@@ -221,7 +221,7 @@ namespace glucat
     auto operator[](index_t idx) -> reference;
   private:
     // Lexicographic ordering of two sets: *this < rhs
-    auto lex_less_than (const index_set_t rhs) const -> bool;
+    auto lex_less_than (const index_set_t& rhs) const -> bool;
   };
 
   // Size of set_value_t should be enough to contain bitset<DEFAULT_HI-DEFAULT_LO>

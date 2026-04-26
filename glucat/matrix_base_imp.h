@@ -84,7 +84,7 @@ namespace glucat { namespace matrix
   template< typename Derived_T >
   inline auto
   matrix_base<Derived_T>::
-  classify_eigenvalues() const
+  classify_eigenvalues() const -> eig_genus<Derived_T>
   {
     using Scalar_T = typename Derived_T::value_type;
     eig_genus<Derived_T> result;

@@ -29,6 +29,7 @@
  "Clifford algebras with numeric and symbolic computations", Birkhauser, 1996.
  ***************************************************************************
      See also Arvind Raja's original header comments in glucat.h
+ ***************************************************************************
  ***************************************************************************/
 
 #include <type_traits>
@@ -50,40 +51,6 @@ namespace glucat { namespace matrix
   template< typename Scalar_T > struct is_complex_t : std::false_type {};
   template< typename Scalar_T > struct is_complex_t<std::complex<Scalar_T>> : std::true_type {};
 
-  /// Base class providing member functions that delegate to the derived implementation (CRTP Pattern)
-  template< typename Derived_T >
-  class matrix_base
-  {
-  public:
-    // Return const reference to derived class
-    auto derived() const -> const Derived_T&;
-    // Return reference to derived class
-    auto derived() -> Derived_T&;
-
-    // Member functions delegating to namespace matrix implementation
-    // defined in matrix_base_imp.h
-
-    // Generic classify_eigenvalues relies on eigenvalues() member
-    auto classify_eigenvalues() const;
-  };
-
-  // Core Operations as Free Functions
-
-  // Number of rows
-  template< typename Matrix_T >
-  auto nbr_rows(const Matrix_T& mat) -> matrix_index_t;
-
-  // Number of columns
-  template< typename Matrix_T >
-  auto nbr_cols(const Matrix_T& mat) -> matrix_index_t;
-
-  /// Helper struct for unit matrix creation
-  template< typename Matrix_T > struct unit_helper;
-
-  // Identity matrix
-  template< typename Matrix_T >
-  auto unit(const matrix_index_t dim) -> Matrix_T;
-
   /// Classification of eigenvalues of a matrix
   enum eig_case_t
   {
@@ -104,6 +71,41 @@ namespace glucat { namespace matrix
     // Argument such that exp(pi-m_safe_arg) lies between arguments of eigenvalues
     Scalar_T   m_safe_arg = Scalar_T(0);
   };
+
+  /// Base class providing member functions that delegate to the derived implementation (CRTP Pattern)
+  template< typename Derived_T >
+  class matrix_base
+  {
+  public:
+    // Return const reference to derived class
+    auto derived() const -> const Derived_T&;
+    // Return reference to derived class
+    auto derived() -> Derived_T&;
+
+    // Member functions delegating to namespace matrix implementation
+    // defined in matrix_base_imp.h
+
+    // Generic classify_eigenvalues relies on eigenvalues() member
+    auto classify_eigenvalues() const -> eig_genus<Derived_T>;
+  };
+
+  // Core Operations as Free Functions
+
+  // Number of rows
+  template< typename Matrix_T >
+  auto nbr_rows(const Matrix_T& mat) -> matrix_index_t;
+
+  // Number of columns
+  template< typename Matrix_T >
+  auto nbr_cols(const Matrix_T& mat) -> matrix_index_t;
+
+  /// Helper struct for unit matrix creation
+  template< typename Matrix_T > struct unit_helper;
+
+  // Identity matrix
+  template< typename Matrix_T >
+  auto unit(const matrix_index_t dim) -> Matrix_T;
+
 } }
 
 #endif  // _GLUCAT_MATRIX_BASE_H
