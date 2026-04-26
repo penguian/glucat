@@ -125,7 +125,7 @@ namespace glucat_fast_test
     }
 #endif
     cpu_time = clock();
-      framed_multi_t old_a = old_A;
+      framed_multi_t old_a(old_A);
     double old_fm_cpu_time = elapsed(cpu_time);
 #ifdef _GLUCAT_TEST_REPEAT
     for (int nbr_trials = EXTRA_TRIALS; old_fm_cpu_time == 0.0; nbr_trials *= EXTRA_TRIALS)
@@ -137,7 +137,7 @@ namespace glucat_fast_test
     }
 #endif
     cpu_time = clock();
-      framed_multi_t new_a = new_A.template fast_framed_multi<scalar_t,tune_p>();
+      framed_multi_t new_a(new_A.template fast_framed_multi<scalar_t,tune_p>());
     double new_fm_cpu_time = elapsed(cpu_time);
 #ifdef _GLUCAT_TEST_REPEAT
     for (int nbr_trials = EXTRA_TRIALS; new_fm_cpu_time == 0.0; nbr_trials *= EXTRA_TRIALS)
