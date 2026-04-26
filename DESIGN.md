@@ -78,6 +78,10 @@ semantics.
 2. Introduction of a CRTP-based (Curiously Recurring Template Pattern) matrix
 abstraction layer. The new base class `matrix_base<>` (in `glucat/matrix_base.h`)
 provides a unified interface that delegates to specific implementation wrappers.
+To ensure template robustness and avoid issues with circular dependencies or 
+complex deduction, these wrappers and the base class use explicit or trailing 
+return types for all public methods (e.g., `trace()`, `norm_inf()`, `nnz()`, 
+`classify_eigenvalues()`).
 
 3. Implementation of wrappers for Eigen (`eigen_matrix_wrapper`) and Armadillo
 (`arma_matrix_wrapper`), allowing GluCat to use these high-performance libraries
@@ -89,6 +93,16 @@ underlying linear algebra library.
 
 5. Integration of a modern unit testing framework (`doctest`) and code coverage
 analysis infrastructure.
+
+6. Hardening of the C++ API by marking cross-representation and string-based 
+constructors as `explicit`. This prevents unintended implicit conversions 
+that could lead to subtle performance regressions or logical errors. 
+To maintain mathematical expressiveness, templated assignment and compound 
+assignment operators (e.g., `=`, `+=`) are used to allow mixed-representation 
+operations without requiring explicit casts, provided the scalar types match. 
+This ensures that `A += B` remains interchangeable with `A = A + B`. 
+Global operator templates continue to be used for mixed-type binary 
+algebraic expressions.
 
 
 Split of code between glucat/matrix_imp.h and glucat/matrix_multi_imp.h
