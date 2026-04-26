@@ -18,7 +18,6 @@ TESTOUT = test_move/test_move.out \
 
 if test_doctest_SUBDIR_included
 EXAMPLES += test_doctest
-TESTOUT += test_doctest/test_doctest.out
 endif
 
 FAST_TESTOUT = test_move/test_move.out test00/test00.out test10/test10.out test11/test11.out
@@ -42,7 +41,7 @@ README: README.md
 TODO: TODO.md
 	ln -sf TODO.md TODO
 
-check: test-out $(PYCLICAL_CHECK_OUT)
+check-local: test-out $(PYCLICAL_CHECK_OUT)
 
 fast-check: fast-test-out $(PYCLICAL_CHECK_OUT)
 
