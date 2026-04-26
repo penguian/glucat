@@ -186,6 +186,83 @@ namespace glucat
     void write       (std::ofstream& ofile, const std::string& msg="") const  override;
 #endif // _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
 
+#ifndef _GLUCAT_CLIFFORD_ALGEBRA_ASSIGNMENT_OPERATIONS
+/**
+ * @brief Macro defining templated assignment and compound assignment operators for Clifford algebras.
+ *
+ * These operators allow for mixed-representation operations (e.g. framed = matrix) 
+ * provided that the scalar type, limits (LO, HI), and tuning parameters match.
+ */
+#define _GLUCAT_CLIFFORD_ALGEBRA_ASSIGNMENT_OPERATIONS \
+    /** @brief Templated assignment operator for mixed representation. */ \
+    template<template<typename, const index_t, const index_t, typename> class Other_Multivector> \
+    auto operator=  (const Other_Multivector<Scalar_T, LO, HI, Tune_P>& rhs) -> multivector_t&; \
+    /** @brief Templated addition-assignment operator for mixed representation. */ \
+    template<template<typename, const index_t, const index_t, typename> class Other_Multivector> \
+    auto operator+= (const Other_Multivector<Scalar_T, LO, HI, Tune_P>& rhs) -> multivector_t&; \
+    /** @brief Templated subtraction-assignment operator for mixed representation. */ \
+    template<template<typename, const index_t, const index_t, typename> class Other_Multivector> \
+    auto operator-= (const Other_Multivector<Scalar_T, LO, HI, Tune_P>& rhs) -> multivector_t&; \
+    /** @brief Templated multiplication-assignment operator for mixed representation. */ \
+    template<template<typename, const index_t, const index_t, typename> class Other_Multivector> \
+    auto operator*= (const Other_Multivector<Scalar_T, LO, HI, Tune_P>& rhs) -> multivector_t&; \
+    /** @brief Templated division-assignment operator for mixed representation. */ \
+    template<template<typename, const index_t, const index_t, typename> class Other_Multivector> \
+    auto operator/= (const Other_Multivector<Scalar_T, LO, HI, Tune_P>& rhs) -> multivector_t&; \
+    /** @brief Templated outer product assignment operator for mixed representation. */ \
+    template<template<typename, const index_t, const index_t, typename> class Other_Multivector> \
+    auto operator^= (const Other_Multivector<Scalar_T, LO, HI, Tune_P>& rhs) -> multivector_t&; \
+    /** @brief Templated inner product assignment operator for mixed representation. */ \
+    template<template<typename, const index_t, const index_t, typename> class Other_Multivector> \
+    auto operator&= (const Other_Multivector<Scalar_T, LO, HI, Tune_P>& rhs) -> multivector_t&; \
+    /** @brief Templated contraction assignment operator for mixed representation. */ \
+    template<template<typename, const index_t, const index_t, typename> class Other_Multivector> \
+    auto operator%= (const Other_Multivector<Scalar_T, LO, HI, Tune_P>& rhs) -> multivector_t&; \
+    /** @brief Templated twisted adjoint action assignment operator for mixed representation. */ \
+    template<template<typename, const index_t, const index_t, typename> class Other_Multivector> \
+    auto operator|= (const Other_Multivector<Scalar_T, LO, HI, Tune_P>& rhs) -> multivector_t&;
+#endif // _GLUCAT_CLIFFORD_ALGEBRA_ASSIGNMENT_OPERATIONS
+
+#ifndef _GLUCAT_CLIFFORD_ALGEBRA_ASSIGNMENT_OPERATIONS_IMP
+#define _GLUCAT_CLIFFORD_ALGEBRA_ASSIGNMENT_OPERATIONS_IMP(CLASS) \
+    template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P > \
+    template< template<typename, const index_t, const index_t, typename> class Other_Multivector > \
+    auto CLASS<Scalar_T,LO,HI,Tune_P>:: \
+    operator=  (const Other_Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> multivector_t& { return *this = multivector_t(rhs); } \
+    template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P > \
+    template< template<typename, const index_t, const index_t, typename> class Other_Multivector > \
+    auto CLASS<Scalar_T,LO,HI,Tune_P>:: \
+    operator+= (const Other_Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> multivector_t& { return *this += multivector_t(rhs); } \
+    template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P > \
+    template< template<typename, const index_t, const index_t, typename> class Other_Multivector > \
+    auto CLASS<Scalar_T,LO,HI,Tune_P>:: \
+    operator-= (const Other_Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> multivector_t& { return *this -= multivector_t(rhs); } \
+    template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P > \
+    template< template<typename, const index_t, const index_t, typename> class Other_Multivector > \
+    auto CLASS<Scalar_T,LO,HI,Tune_P>:: \
+    operator*= (const Other_Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> multivector_t& { return *this *= multivector_t(rhs); } \
+    template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P > \
+    template< template<typename, const index_t, const index_t, typename> class Other_Multivector > \
+    auto CLASS<Scalar_T,LO,HI,Tune_P>:: \
+    operator/= (const Other_Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> multivector_t& { return *this /= multivector_t(rhs); } \
+    template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P > \
+    template< template<typename, const index_t, const index_t, typename> class Other_Multivector > \
+    auto CLASS<Scalar_T,LO,HI,Tune_P>:: \
+    operator^= (const Other_Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> multivector_t& { return *this ^= multivector_t(rhs); } \
+    template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P > \
+    template< template<typename, const index_t, const index_t, typename> class Other_Multivector > \
+    auto CLASS<Scalar_T,LO,HI,Tune_P>:: \
+    operator&= (const Other_Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> multivector_t& { return *this &= multivector_t(rhs); } \
+    template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P > \
+    template< template<typename, const index_t, const index_t, typename> class Other_Multivector > \
+    auto CLASS<Scalar_T,LO,HI,Tune_P>:: \
+    operator%= (const Other_Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> multivector_t& { return *this %= multivector_t(rhs); } \
+    template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P > \
+    template< template<typename, const index_t, const index_t, typename> class Other_Multivector > \
+    auto CLASS<Scalar_T,LO,HI,Tune_P>:: \
+    operator|= (const Other_Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> multivector_t& { return *this |= multivector_t(rhs); }
+#endif // _GLUCAT_CLIFFORD_ALGEBRA_ASSIGNMENT_OPERATIONS_IMP
+
   // Test for inequality of multivectors
   template
   <
