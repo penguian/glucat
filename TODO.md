@@ -13,6 +13,9 @@ Testing:
 * Complete the transition of all legacy tests to the modern unit testing
   framework.
 
+Abstraction:
+* [x] Reinforce representation-independence by defining `nbr_rows()` and `nbr_cols()` as protected in `matrix_multi`.
+
 Packaging:
 * Improve the packaging of the example and test programs.
 * Finalize the transition to a modern build system that minimizes dependency on

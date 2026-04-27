@@ -104,6 +104,15 @@ This ensures that `A += B` remains interchangeable with `A = A + B`.
 Global operator templates continue to be used for mixed-type binary 
 algebraic expressions.
 
+7. Reinforcement of representation-independence. To ensure that the public API
+only exposes essential Clifford algebra properties, matrix-specific
+metadata functions such as nbr_rows() and nbr_cols() in matrix_multi
+are defined as protected. This design choice, consistent with the previous
+uBLAS-based implementation which did not expose matrix dimensions,
+prevents user code from relying on internal representation details and
+ensures a consistent interface across all multivector representations
+(e.g., framed_multi).
+
 
 Split of code between glucat/matrix_imp.h and glucat/matrix_multi_imp.h
 -----------------------------------------------------------------------

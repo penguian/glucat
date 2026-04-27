@@ -521,9 +521,22 @@ C++, then run `./configure` as above, and then run `make check`. This builds and
 runs the executable files `./test_move/test_move` and `./test00/test00` to
 `./test17/test17`. This produces the intermediate output files
 `./test_move/test_move.out` and `./test00/test00.out` to `./test17/test17.out`,
-and the final test output file `./test_runtime/test.out`. You can use a parallel
-make for `make check` , e.g. `make check -j 4`. This is especially useful on
-modern multicore machines.
+and the final test output file `./test_runtime/test.out`. 
+
+Note the difference between `make check` and `make check-local`:
+* `make check` is a standard recursive Automake target. It first enters each 
+  subdirectory in the `SUBDIRS` list (including timing tests like `gfft_test`) 
+  and runs `make check` there, before running the legacy regression tests.
+* `make check-local` is a faster alternative that skips the recursive pass 
+  through `SUBDIRS` and only runs the legacy functionality tests.
+
+When you want to generate `test_runtime/test.out` to compare with the existing 
+sample files in `test_runtime`, you should use parallel make with the 
+`check-local` target:
+```
+  make -j${NPROCS} check-local
+```
+where `${NPROCS}` is the number of processes you want to use (e.g. `make -j4 check-local`).
 
 Warning: If you use too many jobs with parallel make, the compiler will have
 problems obtaining enough memory to run efficiently.
