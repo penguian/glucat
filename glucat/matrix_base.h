@@ -78,41 +78,41 @@ namespace glucat { namespace matrix
   {
   public:
     /// Element access
-    inline auto operator() (matrix_index_t i, matrix_index_t j) -> decltype(auto)
+    inline decltype(auto) operator() (matrix_index_t i, matrix_index_t j)
     { return derived()(i, j); }
 
     /// Const element access
-    inline auto operator() (matrix_index_t i, matrix_index_t j) const -> decltype(auto)
+    inline decltype(auto) operator() (matrix_index_t i, matrix_index_t j) const
     { return derived()(i, j); }
 
     // Return const reference to derived class
-    auto derived() const -> const Derived_T&;
+    const Derived_T& derived() const;
     // Return reference to derived class
-    auto derived() -> Derived_T&;
+    Derived_T& derived();
 
     // Member functions delegating to namespace matrix implementation
     // defined in matrix_base_imp.h
 
     // Generic classify_eigenvalues relies on eigenvalues() member
-    auto classify_eigenvalues() const -> eig_genus<Derived_T>;
+    eig_genus<Derived_T> classify_eigenvalues() const;
   };
 
   // Core Operations as Free Functions
 
   // Number of rows
   template< typename Matrix_T >
-  auto nbr_rows(const Matrix_T& mat) -> matrix_index_t;
+  matrix_index_t nbr_rows(const Matrix_T& mat);
 
   // Number of columns
   template< typename Matrix_T >
-  auto nbr_cols(const Matrix_T& mat) -> matrix_index_t;
+  matrix_index_t nbr_cols(const Matrix_T& mat);
 
   /// Helper struct for unit matrix creation
   template< typename Matrix_T > struct unit_helper;
 
   // Identity matrix
   template< typename Matrix_T >
-  auto unit(const matrix_index_t dim) -> Matrix_T;
+  Matrix_T unit(const matrix_index_t dim);
 
 } }
 

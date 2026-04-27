@@ -1,11 +1,13 @@
 2026-04-27: 0.98a0+
 Hardening the Clifford algebra abstraction.
 
-o Reinforced representation-independence by keeping internal matrix dimension
-  accessors (nbr_rows, nbr_cols) protected in the matrix_multi class.
-o Updated unit tests to reflect the new visibility constraints while maintaining
-  verification of internal matrix representation logic.
-o Fixed build system issues related to doctest.h include paths.
+o Optimized sparse matrix unit() and trace() operations in Eigen and 
+  Armadillo backends to avoid slow manual diagonal write loops.
+o Modernized the public API across all core classes and matrix wrappers 
+  by replacing trailing return types (auto func() -> T) with standard 
+  return types (T func()).
+o Implemented decltype(auto) for Armadillo sparse matrix element access 
+  to correctly handle proxy objects while removing trailing returns.
 
 2026-04-25: 0.98a0+
 GluCat modernization phase (2024-2026) has reached a major milestone.

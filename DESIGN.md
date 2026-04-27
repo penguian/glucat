@@ -122,6 +122,14 @@ generic `unit(dim)` free function uses backend-optimized methods (e.g.,
 for sparse wrappers was also optimized to use backend-specific efficient 
 implementations.
 
+9. Modernization of the public API by replacing trailing return types 
+(`auto func() -> T`) with standard ones (`T func()`) across all core 
+classes and matrix wrappers. This improves API reasoning and consistency 
+while maintaining the stability of template instantiations. Where 
+necessary for sparse matrix proxy objects (e.g., in Armadillo), 
+`decltype(auto)` is used to preserve reference semantics without trailing 
+syntax.
+
 
 Split of code between glucat/matrix_imp.h and glucat/matrix_multi_imp.h
 -----------------------------------------------------------------------

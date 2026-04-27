@@ -56,78 +56,78 @@ namespace glucat
 
   // Geometric product
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  operator* (const matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs, const matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs) -> matrix_multi<Scalar_T,LO,HI,Tune_P>;
+  matrix_multi<Scalar_T,LO,HI,Tune_P>
+  operator* (const matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs, const matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs);
 
   // Outer product
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  operator^ (const matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs, const matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs) -> matrix_multi<Scalar_T,LO,HI,Tune_P>;
+  matrix_multi<Scalar_T,LO,HI,Tune_P>
+  operator^ (const matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs, const matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs);
 
   // Inner product
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  operator& (const matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs, const matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs) -> matrix_multi<Scalar_T,LO,HI,Tune_P>;
+  matrix_multi<Scalar_T,LO,HI,Tune_P>
+  operator& (const matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs, const matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs);
 
   // Left contraction
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  operator% (const matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs, const matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs) -> matrix_multi<Scalar_T,LO,HI,Tune_P>;
+  matrix_multi<Scalar_T,LO,HI,Tune_P>
+  operator% (const matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs, const matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs);
 
   // Hestenes scalar product
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  star(const matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs, const matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs) -> Scalar_T;
+  Scalar_T
+  star(const matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs, const matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs);
 
   // Geometric quotient
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  operator/ (const matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs, const matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs) -> matrix_multi<Scalar_T,LO,HI,Tune_P>;
+  matrix_multi<Scalar_T,LO,HI,Tune_P>
+  operator/ (const matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs, const matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs);
 
   // Transformation via twisted adjoint action
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  operator| (const matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs, const matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs) -> matrix_multi<Scalar_T,LO,HI,Tune_P>;
+  matrix_multi<Scalar_T,LO,HI,Tune_P>
+  operator| (const matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs, const matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs);
 
   // Read multivector from input
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  operator>> (std::istream& s, matrix_multi<Scalar_T,LO,HI,Tune_P>& val) -> std::istream&;
+  std::istream&
+  operator>> (std::istream& s, matrix_multi<Scalar_T,LO,HI,Tune_P>& val);
 
   // Write multivector to output
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  operator<< (std::ostream& os, const matrix_multi<Scalar_T,LO,HI,Tune_P>& val) -> std::ostream&;
+  std::ostream&
+  operator<< (std::ostream& os, const matrix_multi<Scalar_T,LO,HI,Tune_P>& val);
 
   // Find a common frame for operands of a binary operator
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
+  index_set<LO,HI>
   reframe (const matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs,    const matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs,
-                 matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs_reframed, matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs_reframed) -> index_set<LO,HI>;
+                 matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs_reframed, matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs_reframed);
 
   // Square root of multivector with specified complexifier
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  sqrt(const matrix_multi<Scalar_T,LO,HI,Tune_P>& val, const matrix_multi<Scalar_T,LO,HI,Tune_P>& i, bool prechecked) -> matrix_multi<Scalar_T,LO,HI,Tune_P>;
+  matrix_multi<Scalar_T,LO,HI,Tune_P>
+  sqrt(const matrix_multi<Scalar_T,LO,HI,Tune_P>& val, const matrix_multi<Scalar_T,LO,HI,Tune_P>& i, bool prechecked);
 
   // Square root of multivector with specified complexifier
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
+  matrix_multi<Scalar_T,LO,HI,Tune_P>
   matrix_sqrt(const matrix_multi<Scalar_T,LO,HI,Tune_P>& val,
               const matrix_multi<Scalar_T,LO,HI,Tune_P>& i,
-              const index_t level) -> matrix_multi<Scalar_T,LO,HI,Tune_P>;
+              const index_t level);
 
   // Natural logarithm of multivector with specified complexifier
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  log(const matrix_multi<Scalar_T,LO,HI,Tune_P>& val, const matrix_multi<Scalar_T,LO,HI,Tune_P>& i, bool prechecked) -> matrix_multi<Scalar_T,LO,HI,Tune_P>;
+  matrix_multi<Scalar_T,LO,HI,Tune_P>
+  log(const matrix_multi<Scalar_T,LO,HI,Tune_P>& val, const matrix_multi<Scalar_T,LO,HI,Tune_P>& i, bool prechecked);
 
   // Natural logarithm of multivector with specified complexifier
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
+  matrix_multi<Scalar_T,LO,HI,Tune_P>
   matrix_log( const matrix_multi<Scalar_T,LO,HI,Tune_P>& val,
               const matrix_multi<Scalar_T,LO,HI,Tune_P>& i,
-              const index_t level) -> matrix_multi<Scalar_T,LO,HI,Tune_P>;
+              const index_t level);
 
   /// A matrix_multi<Scalar_T,LO,HI,Tune_P> is a matrix approximation to a multivector
   template< typename Scalar_T = double, const index_t LO = DEFAULT_LO, const index_t HI = DEFAULT_HI, typename Tune_P = tuning<> >
@@ -157,7 +157,7 @@ namespace glucat
 
   public:
     // Class name used in messages
-    static auto classname() -> std::string;
+    static std::string classname();
     /// Destructor
     ~matrix_multi() override = default;
     // Default constructor
@@ -208,10 +208,10 @@ namespace glucat
     matrix_multi(const framed_multi<Other_Scalar_T,LO,HI,Other_Tune_P>& val,
                  const index_set_t frm, const bool prechecked = false);
     // Use generalized FFT to construct a matrix_multi_t
-    auto fast_matrix_multi(const index_set_t frm) const -> matrix_multi_t;
+    matrix_multi_t fast_matrix_multi(const index_set_t frm) const;
     // Use inverse generalized FFT to construct a framed_multi_t
     template< typename Other_Scalar_T, typename Other_Tune_P >
-    auto fast_framed_multi() const -> framed_multi<Other_Scalar_T,LO,HI,Other_Tune_P>;
+    framed_multi<Other_Scalar_T,LO,HI,Other_Tune_P> fast_framed_multi() const;
 
   private:
     /// Construct a multivector within a given frame from a given matrix
@@ -220,82 +220,69 @@ namespace glucat
     // Construct a multivector within a given frame from a given matrix
     matrix_multi(const matrix_t& mtx, const index_set_t frm);
     // Create a basis element matrix within the current frame
-    auto basis_element(const index_set<LO,HI>& ist) const -> basis_matrix_t;
+    basis_matrix_t basis_element(const index_set<LO,HI>& ist) const;
 
   public:
     _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
     _GLUCAT_CLIFFORD_ALGEBRA_ASSIGNMENT_OPERATIONS
 
     // Number of terms
-    auto nbr_terms() const -> size_type;
+    size_type nbr_terms() const;
   protected:
     // Number of rows
-    auto nbr_rows() const -> matrix_index_t;
+    matrix_index_t nbr_rows() const;
     // Number of columns
-    auto nbr_cols() const -> matrix_index_t;
+    matrix_index_t nbr_cols() const;
   public:
 
 
     // Move assignment
-    auto     operator= (matrix_multi&& other) noexcept -> matrix_multi&;
+    matrix_multi&    operator= (matrix_multi&& other) noexcept;
     /// Default copy assignment
-    auto     operator= (const matrix_multi&) -> matrix_multi& = default;
+    matrix_multi&    operator= (const matrix_multi&) = default;
 
     // Random multivector within a frame
-    static auto random(const index_set_t frm, Scalar_T fill = Scalar_T(1)) -> matrix_multi_t;
+    static matrix_multi_t random(const index_set_t frm, Scalar_T fill = Scalar_T(1));
 
     // Friend declarations
 
-    // Geometric product
-    friend auto
-      operator* <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs) -> matrix_multi_t;
-    // Outer product
-    friend auto
-      operator^ <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs) -> matrix_multi_t;
-    // Inner product
-    friend auto
-      operator& <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs) -> matrix_multi_t;
-    // Left contraction
-    friend auto
-      operator% <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs) -> matrix_multi_t;
-    // Hestenes scalar product
-    friend auto
-      star      <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs) -> Scalar_T;
-    // Geometric quotient
-    friend auto
-      operator/ <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs) -> matrix_multi_t;
-    // Twisted Adjoint Action
-    friend auto
-      operator| <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs) -> matrix_multi_t;
+    friend matrix_multi_t
+      operator* <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs);
+    friend matrix_multi_t
+      operator^ <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs);
+    friend matrix_multi_t
+      operator& <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs);
+    friend matrix_multi_t
+      operator% <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs);
+    friend Scalar_T
+      star      <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs);
+    friend matrix_multi_t
+      operator/ <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs);
+    friend matrix_multi_t
+      operator| <>(const matrix_multi_t& lhs, const matrix_multi_t& rhs);
 
-    // Read from stream
-    friend auto
-      operator>> <>(std::istream& s, multivector_t& val) -> std::istream&;
-    // Output to stream
-    friend auto
-      operator<< <>(std::ostream& os, const multivector_t& val) -> std::ostream&;
+    friend std::istream&
+      operator>> <>(std::istream& s, multivector_t& val);
+    friend std::ostream&
+      operator<< <>(std::ostream& os, const multivector_t& val);
     // Reframe
     template< typename Other_Scalar_T, const index_t Other_LO, const index_t Other_HI, typename Other_Tune_P >
-    friend auto
+    friend index_set<Other_LO,Other_HI>
     reframe (const matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>& lhs,    const matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>& rhs,
-                   matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>& lhs_reframed, matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>& rhs_reframed) -> index_set<Other_LO,Other_HI>;
-    // Matrix Square Root
+                   matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>& lhs_reframed, matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>& rhs_reframed);
     template< typename Other_Scalar_T, const index_t Other_LO, const index_t Other_HI, typename Other_Tune_P >
-    friend auto
+    friend matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>
       matrix_sqrt(const matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>& val,
                   const matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>& i,
-                  const index_t level)
-               -> matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>;
-    // Matrix Logarithm
+                  const index_t level);
     template< typename Other_Scalar_T, const index_t Other_LO, const index_t Other_HI, typename Other_Tune_P >
-    friend auto
+    friend matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>
       matrix_log(const matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>& val,
                  const matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>& i,
-                 const index_t level)
-              -> matrix_multi<Other_Scalar_T,Other_LO,Other_HI,Other_Tune_P>;
+                 const index_t level);
 
     // Add a term, if non-zero
-    auto     operator+= (const term_t& rhs) -> multivector_t&;
+    multivector_t&    operator+= (const term_t& rhs);
 
    private:
     // Data members
@@ -308,10 +295,9 @@ namespace glucat
 
   // Non-members
 
-  // Exponential of multivector
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  exp(const matrix_multi<Scalar_T,LO,HI,Tune_P>& val) -> matrix_multi<Scalar_T,LO,HI,Tune_P>;
+  matrix_multi<Scalar_T,LO,HI,Tune_P>
+  exp(const matrix_multi<Scalar_T,LO,HI,Tune_P>& val);
 
 }
 

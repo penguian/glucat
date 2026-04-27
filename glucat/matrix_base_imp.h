@@ -58,9 +58,9 @@ namespace glucat { namespace matrix
    * @return Derived class
    */
   template< typename Derived_T >
-  inline auto
+  inline const Derived_T&
   matrix_base<Derived_T>::
-  derived() const -> const Derived_T&
+  derived() const
   { return static_cast<const Derived_T&>(*this); }
 
   /*
@@ -70,9 +70,9 @@ namespace glucat { namespace matrix
    * @return Derived class
    */
   template< typename Derived_T >
-  inline auto
+  inline Derived_T&
   matrix_base<Derived_T>::
-  derived() -> Derived_T&
+  derived()
   { return static_cast<Derived_T&>(*this); }
 
   /*
@@ -82,9 +82,9 @@ namespace glucat { namespace matrix
    * @retval result Eigenvalue classification
    */
   template< typename Derived_T >
-  inline auto
+  inline eig_genus<Derived_T>
   matrix_base<Derived_T>::
-  classify_eigenvalues() const -> eig_genus<Derived_T>
+  classify_eigenvalues() const
   {
     using Scalar_T = typename Derived_T::value_type;
     eig_genus<Derived_T> result;
@@ -186,7 +186,7 @@ namespace glucat { namespace matrix
    * @return Number of rows
    */
   template< typename Matrix_T >
-  inline auto nbr_rows(const Matrix_T& mat) -> matrix_index_t
+  inline matrix_index_t nbr_rows(const Matrix_T& mat)
   {
     if constexpr(requires { mat.nbr_rows(); })
       return mat.nbr_rows();
@@ -206,7 +206,7 @@ namespace glucat { namespace matrix
    * @return Number of columns
    */
   template< typename Matrix_T >
-  inline auto nbr_cols(const Matrix_T& mat) -> matrix_index_t
+  inline matrix_index_t nbr_cols(const Matrix_T& mat)
   {
     if constexpr(requires { mat.nbr_cols(); })
       return mat.nbr_cols();
@@ -230,7 +230,7 @@ namespace glucat { namespace matrix
   template< typename Matrix_T >
   struct unit_helper
   {
-    static inline auto apply(matrix_index_t dim) -> Matrix_T
+    static inline Matrix_T apply(matrix_index_t dim)
     {
       Matrix_T result(dim, dim);
       // Fallback logic
@@ -263,7 +263,7 @@ namespace glucat { namespace matrix
    * @return Identity matrix
    */
   template< typename Matrix_T >
-  inline auto unit(const matrix_index_t dim) -> Matrix_T
+  inline Matrix_T unit(const matrix_index_t dim)
   {
     return unit_helper<Matrix_T>::apply(dim);
   }
