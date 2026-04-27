@@ -1,3 +1,27 @@
+2026-04-27  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* DESIGN.md, INSTALL.md, NEWS, TODO.md: Update the documentation
+
+2026-04-27  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_coverage/src/run_full_coverage.sh: Add QD to the full
+	coverage test
+
+2026-04-27  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in, glucat/matrix_base.h, glucat/matrix_eigen.h,
+	glucat/matrix_eigen_imp.h, glucat/matrix_multi.h,
+	glucat/matrix_multi_imp.h, glucat/qd.h: Fix the matrix index type
+	used by Eigen with QD. Protect sizes
+
+2026-04-27  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md, configure.ac.in: Fix a spelling error
+
+2026-04-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* ChangeLog: Update ChangeLog
+
 2026-04-26  Paul Leopardi <paul.leopardi@anu.edu.au>
 
 	* DESIGN.md, TODO.md: Update the documentation
