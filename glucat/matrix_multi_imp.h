@@ -1634,6 +1634,38 @@ namespace glucat
   }
 
   /*
+   * @brief Number of rows
+   * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @return Number of rows
+   */
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  inline
+  auto
+  matrix_multi<Scalar_T,LO,HI,Tune_P>::
+  nbr_rows() const -> matrix_index_t
+  { return matrix::nbr_rows(this->m_matrix); }
+
+  /*
+   * @brief Number of columns
+   * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @return Number of columns
+   */
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  inline
+  auto
+  matrix_multi<Scalar_T,LO,HI,Tune_P>::
+  nbr_cols() const -> matrix_index_t
+  { return matrix::nbr_cols(this->m_matrix); }
+
+  /*
    * @brief Remove all terms with relative size smaller than limit
    * @details
    * @tparam Scalar_T
@@ -3224,6 +3256,11 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
     mm_t m2;
     m2 = f;
     CHECK(m2 == m);
+
+    // Matrix to Framed
+    fm_d_t f2;
+    f2 = m2;
+    CHECK(f2 == f);
   }
 }
 #endif

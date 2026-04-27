@@ -33,6 +33,10 @@
 
 #include "glucat/matrix_base.h"
 
+#if defined(_GLUCAT_USE_QD)
+# include "glucat/qd.h"
+#endif
+
 #ifdef _GLUCAT_USE_GCC_PRAGMAS
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Winline"
@@ -42,6 +46,11 @@
 #  pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 # endif
 #endif
+
+#if defined(_GLUCAT_USE_QD)
+#include <Eigen/Core>
+#endif
+
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
 #include <unsupported/Eigen/KroneckerProduct>
@@ -289,7 +298,7 @@ namespace glucat { namespace matrix
       using InnerIterator = typename MatrixType::InnerIterator;
 
       const MatrixType* mp_mat;
-      int m_outer;
+      matrix_index_t m_outer;
       InnerIterator m_inner;
 
       // Constructor for begin()

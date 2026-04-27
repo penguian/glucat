@@ -306,13 +306,8 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
      CPPFLAGS="$saved_CPPFLAGS"
   fi
 
-  if [[[ "$have_eigen" == "yes" ]]]; then
-    if [[[ "$glucat_use_qd" == "yes" ]]]; then
-       CXXFLAGS="$CXXFLAGS -DEIGEN_DEFAULT_DENSE_INDEX_TYPE=int"
-       AC_MSG_NOTICE([Defining EIGEN_DEFAULT_DENSE_INDEX_TYPE=int for QD compatibility.])
-    fi
-   else
-     AC_MSG_WARN([Eigen/Dense not found. PyClical might fail to build.])
+  if [[[ "$have_eigen" == "no" ]]]; then
+    AC_MSG_WARN([Eigen/Dense not found. PyClical might fail to build.])
   fi
 
   dnl Check for a C++ compiler

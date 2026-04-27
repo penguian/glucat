@@ -585,7 +585,7 @@ namespace glucat { namespace matrix
        Eigen::EigenSolver<typename eigen_matrix_wrapper<Scalar_T>::MatrixType> es(m_mat);
        const auto& E = es.eigenvalues();
        std::vector<std::complex<double>> result(E.size());
-       for (int i = 0; i < E.size(); ++i)
+       for (matrix_index_t i = 0; i < static_cast<matrix_index_t>(E.size()); ++i)
          result[i] = std::complex<double>(E[i].real(), E[i].imag());
        return result;
     }
@@ -600,7 +600,7 @@ namespace glucat { namespace matrix
        Eigen::ComplexEigenSolver<Eigen::MatrixXcd> es(dmat);
        const auto& E = es.eigenvalues();
        std::vector<std::complex<double>> result(E.size());
-       for (int i = 0; i < E.size(); ++i)
+       for (matrix_index_t i = 0; i < static_cast<matrix_index_t>(E.size()); ++i)
          result[i] = E[i];
        return result;
     }
@@ -1128,7 +1128,7 @@ namespace glucat { namespace matrix
       if (!m_inner) advance();
     }
     else
-      m_outer = mp_mat->outerSize();
+      m_outer = static_cast<matrix_index_t>(mp_mat->outerSize());
   }
 
   /*
@@ -1144,10 +1144,10 @@ namespace glucat { namespace matrix
   {
     if (m_inner)
       ++m_inner;
-    while (!m_inner && m_outer < mp_mat->outerSize())
+    while (!m_inner && m_outer < static_cast<matrix_index_t>(mp_mat->outerSize()))
     {
       m_outer++;
-      if (m_outer < mp_mat->outerSize())
+      if (m_outer < static_cast<matrix_index_t>(mp_mat->outerSize()))
         m_inner = InnerIterator(*mp_mat, m_outer);
     }
   }
@@ -1163,7 +1163,7 @@ namespace glucat { namespace matrix
   eigen_sparse_wrapper<Scalar_T>::
   const_iterator::
   is_end() const -> bool
-  { return m_outer >= mp_mat->outerSize(); }
+  { return m_outer >= static_cast<matrix_index_t>(mp_mat->outerSize()); }
 
   /*
    * @brief Prefix increment
@@ -1196,7 +1196,7 @@ namespace glucat { namespace matrix
   {
     if (m_outer != other.m_outer)
       return true;
-    if (m_outer >= mp_mat->outerSize())
+    if (m_outer >= static_cast<matrix_index_t>(mp_mat->outerSize()))
       return false;
     return m_inner != other.m_inner;
   }
@@ -1251,7 +1251,7 @@ namespace glucat { namespace matrix
   eigen_sparse_wrapper<Scalar_T>::
   isinf() const -> bool
   {
-    for (int k = 0; k < m_mat.outerSize(); ++k)
+    for (matrix_index_t k = 0; k < static_cast<matrix_index_t>(m_mat.outerSize()); ++k)
       for (typename MatrixType::InnerIterator it(m_mat, k); it; ++it)
         if (numeric_traits<Scalar_T>::isinf(it.value()))
           return true;
@@ -1269,7 +1269,7 @@ namespace glucat { namespace matrix
   eigen_sparse_wrapper<Scalar_T>::
   isnan() const -> bool
   {
-    for (int k = 0; k < m_mat.outerSize(); ++k)
+    for (matrix_index_t k = 0; k < static_cast<matrix_index_t>(m_mat.outerSize()); ++k)
       for (typename MatrixType::InnerIterator it(m_mat, k); it; ++it)
         if (numeric_traits<Scalar_T>::isnan(it.value()))
           return true;
@@ -1288,7 +1288,7 @@ namespace glucat { namespace matrix
   trace() const -> Scalar_T
   {
     Scalar_T sum = 0;
-    for (int k = 0; k < m_mat.outerSize(); ++k)
+    for (matrix_index_t k = 0; k < static_cast<matrix_index_t>(m_mat.outerSize()); ++k)
       for (typename MatrixType::InnerIterator it(m_mat, k); it; ++it)
         if (it.row() == it.col())
           sum += it.value();
@@ -1339,7 +1339,7 @@ namespace glucat { namespace matrix
     eigen_sparse_wrapper<Scalar_T> result(nbr_rows() * other.nbr_rows(), nbr_cols() * other.nbr_cols());
     std::vector<Eigen::Triplet<Scalar_T>> triplets;
     // Iterate lhs
-    for (int k = 0; k < m_mat.outerSize(); ++k)
+    for (matrix_index_t k = 0; k < static_cast<matrix_index_t>(m_mat.outerSize()); ++k)
     {
       for (typename MatrixType::InnerIterator itA(m_mat, k); itA; ++itA)
       {
@@ -1348,7 +1348,7 @@ namespace glucat { namespace matrix
         auto vA = itA.value();
 
         // Iterate rhs
-        for (int l = 0; l < other.m_mat.outerSize(); ++l)
+        for (matrix_index_t l = 0; l < static_cast<matrix_index_t>(other.m_mat.outerSize()); ++l)
           for (typename MatrixType::InnerIterator itB(other.m_mat, l); itB; ++itB)
             triplets.emplace_back(rA * other.nbr_rows() + itB.row(), cA * other.nbr_cols() + itB.col(), vA * itB.value());
       }
@@ -1371,7 +1371,7 @@ namespace glucat { namespace matrix
   {
     Eigen::Vector<typename Eigen::NumTraits<Scalar_T>::Real, Eigen::Dynamic> row_sums(nbr_rows());
     row_sums.setZero();
-    for (int k = 0; k < m_mat.outerSize(); ++k)
+    for (matrix_index_t k = 0; k < static_cast<matrix_index_t>(m_mat.outerSize()); ++k)
       for (typename MatrixType::InnerIterator it(m_mat, k); it; ++it)
         row_sums(it.row()) += numeric_traits<Scalar_T>::abs(it.value());
     return row_sums.maxCoeff();
@@ -1415,7 +1415,7 @@ namespace glucat { namespace matrix
   inner(const Other& other) const -> Result_Scalar_T
   {
      Result_Scalar_T sum = Result_Scalar_T(0);
-     for (int k=0; k < m_mat.outerSize(); ++k)
+     for (matrix_index_t k=0; k < static_cast<matrix_index_t>(m_mat.outerSize()); ++k)
        for (typename MatrixType::InnerIterator it(m_mat, k); it; ++it)
        {
           sum += static_cast<Result_Scalar_T>(it.value()) * static_cast<Result_Scalar_T>(other(it.row(), it.col()));
@@ -1618,7 +1618,13 @@ TEST_CASE("matrix::eigen_matrix_wrapper<Scalar_T>") {
     CHECK(mat.norm_frob2() == doctest::Approx(1.0*1.0 + 2.0*2.0 + (-3.0)*(-3.0)));
   }
 
-  SUBCASE("Dense unit matrix") {
+    SUBCASE("Dimensions") {
+      Matrix_T mat_dims(2, 2);
+      CHECK(mat_dims.nbr_rows() == 2);
+      CHECK(mat_dims.nbr_cols() == 2);
+    }
+
+    SUBCASE("Assignment and Operations") {
     Matrix_T mat;
     mat.unit(3, 3);
     CHECK(mat.nbr_rows() == 3);
@@ -1646,5 +1652,46 @@ TEST_CASE("matrix::eigen_matrix_wrapper<Scalar_T>") {
   }
 }
 #endif
+  // =========================================================================
+  // Eigen Internal Cast Specializations for High Precision
+  // =========================================================================
 
-#endif // _GLUCAT_MATRIX_EIGEN_IMP_H
+
+#if defined(_GLUCAT_USE_QD) && defined(EIGEN_MAJOR_VERSION)
+namespace Eigen { namespace internal {
+
+  // Resolves ambiguity for qd_real(long) and qd_real(unsigned long)
+  // by explicitly routing through double for cast<T>(index).
+  template<>
+  struct cast_impl<long, qd_real> {
+    static inline qd_real run(const long& x) {
+      return qd_real(static_cast<double>(x));
+    }
+  };
+
+  template<>
+  struct cast_impl<unsigned long, qd_real> {
+    static inline qd_real run(const unsigned long& x) {
+      return qd_real(static_cast<double>(x));
+    }
+  };
+
+  // Resolves ambiguity for dd_real(long) and dd_real(unsigned long)
+  template<>
+  struct cast_impl<long, dd_real> {
+    static inline dd_real run(const long& x) {
+      return dd_real(static_cast<double>(x));
+    }
+  };
+
+  template<>
+  struct cast_impl<unsigned long, dd_real> {
+    static inline dd_real run(const unsigned long& x) {
+      return dd_real(static_cast<double>(x));
+    }
+  };
+
+} } // namespace Eigen::internal
+#endif
+
+#endif  // _GLUCAT_MATRIX_EIGEN_IMP_H

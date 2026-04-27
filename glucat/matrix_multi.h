@@ -228,6 +228,12 @@ namespace glucat
 
     // Number of terms
     auto nbr_terms() const -> size_type;
+  protected:
+    // Number of rows
+    auto nbr_rows() const -> matrix_index_t;
+    // Number of columns
+    auto nbr_cols() const -> matrix_index_t;
+  public:
 
 
     // Move assignment

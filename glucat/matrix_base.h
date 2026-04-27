@@ -77,6 +77,14 @@ namespace glucat { namespace matrix
   class matrix_base
   {
   public:
+    /// Element access
+    inline auto operator() (matrix_index_t i, matrix_index_t j) -> decltype(auto)
+    { return derived()(i, j); }
+
+    /// Const element access
+    inline auto operator() (matrix_index_t i, matrix_index_t j) const -> decltype(auto)
+    { return derived()(i, j); }
+
     // Return const reference to derived class
     auto derived() const -> const Derived_T&;
     // Return reference to derived class

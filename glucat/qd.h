@@ -355,4 +355,105 @@ namespace glucat
 
 } // namespace glucat
 
+#if defined(_GLUCAT_USE_QD) && defined(QD_API)
+namespace Eigen {
+  template<typename T> struct GenericNumTraits;
+  template<typename T> struct NumTraits;
+
+  // Wrapper types for Eigen's internal Real scalar to resolve ambiguity.
+  // We use composition to completely hide the base class constructors.
+  struct qd_real_eigen {
+    ::qd_real val;
+    qd_real_eigen() : val(0.0) {}
+    qd_real_eigen(const ::qd_real& x) : val(x) {}
+    qd_real_eigen(double x) : val(x) {}
+    qd_real_eigen(int x) : val(x) {}
+    qd_real_eigen(long x) : val(static_cast<double>(x)) {}
+    qd_real_eigen(unsigned long x) : val(static_cast<double>(x)) {}
+    qd_real_eigen(long long x) : val(static_cast<double>(x)) {}
+    qd_real_eigen(unsigned long long x) : val(static_cast<double>(x)) {}
+
+    operator ::qd_real&() { return val; }
+    operator const ::qd_real&() const { return val; }
+
+    qd_real_eigen operator-() const { return qd_real_eigen(-val); }
+    friend qd_real_eigen operator*(const qd_real_eigen& a, const qd_real_eigen& b) { return qd_real_eigen(a.val * b.val); }
+    friend qd_real_eigen operator+(const qd_real_eigen& a, const qd_real_eigen& b) { return qd_real_eigen(a.val + b.val); }
+    friend qd_real_eigen operator-(const qd_real_eigen& a, const qd_real_eigen& b) { return qd_real_eigen(a.val - b.val); }
+    friend bool operator<(const qd_real_eigen& a, const qd_real_eigen& b) { return a.val < b.val; }
+    friend bool operator==(const qd_real_eigen& a, const qd_real_eigen& b) { return a.val == b.val; }
+    friend bool operator!=(const qd_real_eigen& a, const qd_real_eigen& b) { return a.val != b.val; }
+    friend bool operator==(const qd_real_eigen& a, int b) { return a.val == b; }
+    friend bool operator!=(const qd_real_eigen& a, int b) { return a.val != b; }
+  };
+
+  struct dd_real_eigen {
+    ::dd_real val;
+    dd_real_eigen() : val(0.0) {}
+    dd_real_eigen(const ::dd_real& x) : val(x) {}
+    dd_real_eigen(double x) : val(x) {}
+    dd_real_eigen(int x) : val(x) {}
+    dd_real_eigen(long x) : val(static_cast<double>(x)) {}
+    dd_real_eigen(unsigned long x) : val(static_cast<double>(x)) {}
+    dd_real_eigen(long long x) : val(static_cast<double>(x)) {}
+    dd_real_eigen(unsigned long long x) : val(static_cast<double>(x)) {}
+
+    operator ::dd_real&() { return val; }
+    operator const ::dd_real&() const { return val; }
+
+    dd_real_eigen operator-() const { return dd_real_eigen(-val); }
+    friend dd_real_eigen operator*(const dd_real_eigen& a, const dd_real_eigen& b) { return dd_real_eigen(a.val * b.val); }
+    friend dd_real_eigen operator+(const dd_real_eigen& a, const dd_real_eigen& b) { return dd_real_eigen(a.val + b.val); }
+    friend dd_real_eigen operator-(const dd_real_eigen& a, const dd_real_eigen& b) { return dd_real_eigen(a.val - b.val); }
+    friend bool operator<(const dd_real_eigen& a, const dd_real_eigen& b) { return a.val < b.val; }
+    friend bool operator==(const dd_real_eigen& a, const dd_real_eigen& b) { return a.val == b.val; }
+    friend bool operator!=(const dd_real_eigen& a, const dd_real_eigen& b) { return a.val != b.val; }
+    friend bool operator==(const dd_real_eigen& a, int b) { return a.val == b; }
+    friend bool operator!=(const dd_real_eigen& a, int b) { return a.val != b; }
+  };
+
+  template<> struct NumTraits<qd_real> {
+    typedef qd_real_eigen Real;
+    typedef qd_real NonInteger;
+    typedef qd_real Literal;
+    enum { IsComplex = 0, IsInteger = 0, IsSigned = 1, RequireInitialization = 1, ReadCost = 4, AddCost = 16, MulCost = 16 };
+    static inline Real epsilon() { return qd_real::_eps; }
+    static inline Real dummy_precision() { return qd_real::_eps * 1e3; }
+    static inline Real highest() { return qd_real::_max; }
+    static inline Real lowest() { return -qd_real::_max; }
+  };
+
+  template<> struct NumTraits<dd_real> {
+    typedef dd_real_eigen Real;
+    typedef dd_real NonInteger;
+    typedef dd_real Literal;
+    enum { IsComplex = 0, IsInteger = 0, IsSigned = 1, RequireInitialization = 1, ReadCost = 2, AddCost = 8, MulCost = 8 };
+    static inline Real epsilon() { return dd_real::_eps; }
+    static inline Real dummy_precision() { return dd_real::_eps * 1e3; }
+    static inline Real highest() { return dd_real::_max; }
+    static inline Real lowest() { return -dd_real::_max; }
+  };
+
+  // Explicit specializations of Eigen templates to avoid ambiguity
+  template<typename T> inline typename NumTraits<T>::Real abs(const T &x);
+  template<typename T> inline typename NumTraits<T>::Real real(const T &x);
+  template<typename T> inline typename NumTraits<T>::Real imag(const T &x);
+
+  template<> inline qd_real_eigen abs(const ::qd_real &x) { return ::abs(x); }
+  template<> inline dd_real_eigen abs(const ::dd_real &x) { return ::abs(x); }
+  template<> inline qd_real_eigen real(const ::qd_real &x) { return x; }
+  template<> inline dd_real_eigen real(const ::dd_real &x) { return x; }
+  template<> inline qd_real_eigen imag(const ::qd_real &) { return 0.0; }
+  template<> inline dd_real_eigen imag(const ::dd_real &) { return 0.0; }
+
+  // Math functions for wrappers
+  inline qd_real_eigen abs(const qd_real_eigen& x) { return ::abs(x.val); }
+  inline dd_real_eigen abs(const dd_real_eigen& x) { return ::abs(x.val); }
+  inline qd_real_eigen real(const qd_real_eigen& x) { return x.val; }
+  inline dd_real_eigen real(const dd_real_eigen& x) { return x.val; }
+  inline qd_real_eigen imag(const qd_real_eigen&) { return 0.0; }
+  inline dd_real_eigen imag(const dd_real_eigen&) { return 0.0; }
+}
+#endif
+
 #endif // _GLUCAT_QD_H
