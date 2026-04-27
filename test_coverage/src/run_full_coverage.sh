@@ -20,7 +20,7 @@ mkdir -p test_coverage/results/coverage_html_full
 
 # 1. Run Legacy Test Suite (test00-test17)
 echo "=== 1. Running Legacy Test Suite ==="
-./configure --disable-pyclical --with-doctest
+./configure --disable-pyclical --with-doctest --with-qd
 make clean || true
 # We use a unique name for legacy profile
 export LLVM_PROFILE_FILE="$(pwd)/legacy_%p.profraw"
@@ -36,7 +36,7 @@ cp test_doctest/test_doctest test_doctest/test_doctest_eigen
 # 3. Run Doctest Suite (Armadillo Backend)
 if [ -d "/usr/include/armadillo" ] || [ -f "/usr/include/armadillo" ] || [ -d "/usr/local/include/armadillo" ]; then
     echo "=== 3. Running Doctest (Armadillo) ==="
-    ./configure --disable-pyclical --with-doctest --with-armadillo
+    ./configure --disable-pyclical --with-doctest --with-armadillo --with-qd
     make clean || true
     export LLVM_PROFILE_FILE="$(pwd)/doctest_arma.profraw"
     make -C test_doctest check
