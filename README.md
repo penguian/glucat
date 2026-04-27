@@ -417,7 +417,9 @@ parameters.
 Recent Changes
 ==============
 
-As of GluCat 0.98a0+, the following deprecated functions have been removed:
-* `elliptic`: Use `complexifier` instead.
-* `imag`: This function was deprecated and always returned 0.
-* `MS_PER_S`: Defined in `glucat/global.h`, deprecated and unused. Use `MS_PER_SEC` in `test/timing.h` instead.
+As of GluCat 0.98a0+, the following changes have been made:
+* **Sparse Diagonal Optimization**: Optimization of sparse matrix `unit()` and `trace()` operations in Eigen and Armadillo backends to avoid slow manual diagonal write loops.
+* **Deprecated Function Removal**: The following deprecated functions have been removed:
+    * `elliptic`: Use `complexifier` instead.
+    * `imag`: This function was deprecated and always returned 0.
+    * `MS_PER_S`: Defined in `glucat/global.h`, deprecated and unused. Use `MS_PER_SEC` in `test/timing.h` instead.

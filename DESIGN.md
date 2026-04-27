@@ -113,6 +113,15 @@ prevents user code from relying on internal representation details and
 ensures a consistent interface across all multivector representations
 (e.g., framed_multi).
 
+8. Optimization of sparse diagonal operations. To address performance issues 
+with manual diagonal write loops (which are particularly slow for compressed 
+sparse formats), the `unit(rows, cols)` method was added to the backend 
+wrappers, and `unit_helper` was specialized for all wrappers to ensure the 
+generic `unit(dim)` free function uses backend-optimized methods (e.g., 
+`setIdentity()` for Eigen, `eye()` for Armadillo). The `trace()` function 
+for sparse wrappers was also optimized to use backend-specific efficient 
+implementations.
+
 
 Split of code between glucat/matrix_imp.h and glucat/matrix_multi_imp.h
 -----------------------------------------------------------------------

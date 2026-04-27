@@ -291,6 +291,9 @@ namespace glucat { namespace matrix
     // Set size then set to zero
     void zeros(matrix_index_t rows, matrix_index_t cols);
 
+    // Set to identity
+    void unit(matrix_index_t rows, matrix_index_t cols);
+
     // Iterator support
     class const_iterator
     {

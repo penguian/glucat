@@ -1042,6 +1042,22 @@ namespace glucat { namespace matrix
   }
 
   /*
+   * @brief Set to identity
+   * @details
+   * @tparam Scalar_T
+   * @param rows Number of rows
+   * @param cols Number of columns
+   */
+  template< typename Scalar_T >
+  inline void
+  arma_sparse_wrapper<Scalar_T>::
+  unit(matrix_index_t rows, matrix_index_t cols)
+  {
+    set_size(rows, cols);
+    m_mat.eye(rows, cols);
+  }
+
+  /*
    * @brief Set to zero
    * @details
    * @tparam Scalar_T
@@ -1229,15 +1245,7 @@ namespace glucat { namespace matrix
   inline auto
   arma_sparse_wrapper<Scalar_T>::
   trace() const -> Scalar_T
-  {
-    // generic trace for sparse
-    Scalar_T sum = 0;
-    // Armadillo SpMat iterators
-    for (auto it = m_mat.begin(); it != m_mat.end(); ++it)
-      if (it.row() == it.col())
-        sum += *it;
-    return sum;
-  }
+  { return arma::trace(m_mat); }
 
   /*
    * @brief Eigenvalues

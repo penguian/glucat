@@ -979,6 +979,22 @@ namespace glucat { namespace matrix
   }
 
   /*
+   * @brief Set to identity
+   * @details
+   * @tparam Scalar_T
+   * @param rows Number of rows
+   * @param cols Number of columns
+   */
+  template< typename Scalar_T >
+  inline void
+  eigen_sparse_wrapper<Scalar_T>::
+  unit(matrix_index_t rows, matrix_index_t cols)
+  {
+    set_size(rows, cols);
+    m_mat.setIdentity();
+  }
+
+  /*
    * @brief Begin iterator
    * @details
    * @tparam Scalar_T
@@ -1286,14 +1302,7 @@ namespace glucat { namespace matrix
   inline auto
   eigen_sparse_wrapper<Scalar_T>::
   trace() const -> Scalar_T
-  {
-    Scalar_T sum = 0;
-    for (matrix_index_t k = 0; k < static_cast<matrix_index_t>(m_mat.outerSize()); ++k)
-      for (typename MatrixType::InnerIterator it(m_mat, k); it; ++it)
-        if (it.row() == it.col())
-          sum += it.value();
-    return sum;
-  }
+  { return m_mat.diagonal().sum(); }
 
   /*
    * @brief Mixed Kronecker matrix product: Sparse x Dense -> Dense (wrapper)
@@ -1589,6 +1598,8 @@ namespace glucat { namespace matrix
     res -= rhs;
     return res;
   }
+
+
 
 } }
 #ifdef GLUCAT_DOCTEST

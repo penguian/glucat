@@ -266,6 +266,9 @@ namespace glucat { namespace matrix
     // Set to zero
     void zeros();
 
+    // Set to identity
+    void unit(matrix_index_t rows, matrix_index_t cols);
+
     using const_iterator = typename MatrixType::const_iterator;
 
     // Begin iterator
