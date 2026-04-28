@@ -2910,6 +2910,19 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     f2 = m;
     CHECK(f2 == f);
   }
+
+  SUBCASE("Exceptions") {
+    fm_t f1(1.0);
+    // Parsing errors
+    CHECK_THROWS(fm_t("{invalid}"));
+    
+    // Negative exponent
+    CHECK_THROWS(f1.outer_pow(-1));
+
+    // Construction with value outside of frame
+    using is_t = fm_t::index_set_t;
+    CHECK_THROWS(fm_t(is_t(33), 1.0, is_t(), false));
+  }
 }
 #endif
 

@@ -1547,16 +1547,36 @@ TEST_CASE("index_set<LO,HI>") {
     s2[2] = s[3]; // s[3] is false
     CHECK_FALSE(s2.test(2));
 
-    // operator~ and operator bool
-    CHECK(s[1]);
-    CHECK_FALSE(~s[1]);
-    CHECK(s[1] == s[1]); // same index set and index
-    s[1] = s[1]; // self assignment
+    // operator~ and operator bool (via reference)
+    is_t s3("{1}");
+    CHECK(s3[1]);
+    CHECK_FALSE(s3[2]);
+    CHECK((~s3).test(1) == false);
+    CHECK((~s3).test(2) == true);
+    
+    // reference operators
+    is_t s_ref;
+    s_ref[1] = true;
+    CHECK(s_ref[1]);
+    CHECK_FALSE(~s_ref[1]);
+    CHECK(s_ref[1] == s_ref[1]); // same index set and index
+    s_ref[1] = s_ref[1]; // self assignment
 
     // Comparisons with more varied sets
     CHECK(is_t("{1,2}") < is_t("{1,2,3}"));
     CHECK(is_t("{1,3}") > is_t("{1,2}"));
     CHECK(is_t("{-1,1}") != is_t("{1}"));
+  }
+
+  SUBCASE("Exceptions") {
+    CHECK_THROWS(is_t("{invalid}"));
+    CHECK_THROWS(is_t("{1,invalid}"));
+    CHECK_THROWS(is_t("{1,,2}"));
+    // Out of frame: is_t is <-32, 32>, so index 33 should throw if we try to set it via string or other means
+    // that check bounds.
+    // The constructor index_set(index_t val) uses prechecked=false by default, which should throw if out of bounds.
+    CHECK_THROWS(is_t(33));
+    CHECK_THROWS(is_t(-33));
   }
 }
 #endif

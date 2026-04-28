@@ -1561,6 +1561,12 @@ TEST_CASE("matrix::arma_matrix_wrapper<Scalar_T>") {
     CHECK(a_mat(1, 1) == doctest::Approx(2.0));
     CHECK(a_mat.nnz() == 2);
   }
+
+  SUBCASE("Exceptions") {
+    using Sparse_T = arma_sparse_wrapper<Scalar_T>;
+    Sparse_T mat(2, 2);
+    CHECK_THROWS_AS(mat.eigenvalues(), std::runtime_error);
+  }
 }
 #endif
 

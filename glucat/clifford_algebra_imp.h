@@ -1741,6 +1741,13 @@ TEST_CASE("clifford_algebra_imp (generic templates)") {
     CHECK(tan(n).isnan());
     CHECK(atanh(n).isnan());
   }
+
+  SUBCASE("Exceptions") {
+    mm_t m1(1.0);
+    mm_t e1("{1}");
+    // e1 is not a complexifier because e1*e1 == 1, not -1
+    CHECK_THROWS(log(m1, e1, false));
+  }
 }
 #endif
 

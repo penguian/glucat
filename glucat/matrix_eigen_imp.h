@@ -1655,6 +1655,12 @@ TEST_CASE("matrix::eigen_matrix_wrapper<Scalar_T>") {
     CHECK(mat.norm_inf() == doctest::Approx(5.0));
     CHECK(mat.norm_frob2() == doctest::Approx(25.0 + 4.0 + 1.0));
   }
+
+  SUBCASE("Exceptions") {
+    using Sparse_T = eigen_sparse_wrapper<Scalar_T>;
+    Sparse_T mat(2, 2);
+    CHECK_THROWS_AS(mat.eigenvalues(), std::runtime_error);
+  }
 }
 #endif
   // =========================================================================

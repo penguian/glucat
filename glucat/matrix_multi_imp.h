@@ -3239,6 +3239,17 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
     f2 = m2;
     CHECK(f2 == f);
   }
+
+  SUBCASE("Exceptions") {
+    mm_t m1(1.0);
+    // Negative exponent in outer_pow
+    CHECK_THROWS(m1.outer_pow(-1));
+
+    // Construction with value outside of frame
+    // mm_t is <-32, 32>, index_set_t(33) is out of frame
+    using is_t = mm_t::index_set_t;
+    CHECK_THROWS(mm_t(is_t(33), 1.0, is_t(), false));
+  }
 }
 #endif
 
