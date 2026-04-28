@@ -35,6 +35,7 @@
 
 #include <limits>
 #include <climits>
+#include <string_view>
 
 namespace glucat
 {

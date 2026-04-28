@@ -47,7 +47,7 @@ namespace glucat
   inline
   auto
   index_set<LO,HI>::
-  classname() -> std::string
+  classname() -> std::string_view
   { return "index_set"; }
 
   /*
@@ -1470,6 +1470,10 @@ namespace glucat
 
 TEST_CASE("index_set<LO,HI>") {
   using is_t = glucat::index_set<-32, 32>;
+
+  SUBCASE("Metadata") {
+    CHECK(is_t::classname() == "index_set");
+  }
 
   SUBCASE("Constructor and string representation") {
     is_t s1(1);

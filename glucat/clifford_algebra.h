@@ -55,7 +55,7 @@ namespace glucat
     using pair_t = std::pair<const index_set_t, Scalar_T>;
     using vector_t = std::vector<Scalar_T>;
 
-    static  auto   classname() -> std::string;
+    static  auto   classname() -> std::string_view;
 
     // Default for truncation
     static const Scalar_T default_truncation;

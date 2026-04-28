@@ -41,12 +41,12 @@ namespace glucat
   class glucat_error : public std::logic_error
   {
   public:
-    glucat_error(const std::string& context, const std::string& msg)
+    glucat_error(std::string_view context, const std::string& msg)
     : logic_error(msg), name(context)
     { }
     ~glucat_error() noexcept override = default;
-    virtual auto heading() const noexcept -> const std::string =0;
-    virtual auto classname() const noexcept -> const std::string =0;
+    virtual auto heading() const noexcept -> std::string_view =0;
+    virtual auto classname() const noexcept -> std::string_view =0;
     virtual void print_error_msg() const =0;
     std::string name;
   };
@@ -58,8 +58,8 @@ namespace glucat
   public:
     error(const std::string& msg);
     error(const std::string& context, const std::string& msg);
-    auto heading() const noexcept -> const std::string override;
-    auto classname() const noexcept -> const std::string override;
+    auto heading() const noexcept -> std::string_view override;
+    auto classname() const noexcept -> std::string_view override;
     void print_error_msg() const override;
   };
 }

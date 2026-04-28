@@ -86,7 +86,7 @@ namespace glucat
     static const index_t v_lo = LO;
     static const index_t v_hi = HI;
 
-    static auto classname() -> std::string;
+    static auto classname() -> std::string_view;
     /// Default constructor creates an empty set
     index_set    () = default;
     // Constructor from bitset_t

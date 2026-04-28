@@ -181,7 +181,7 @@ namespace glucat
 
   public:
     // Class name used in messages
-    static auto classname() -> std::string;
+    static auto classname() -> std::string_view;
     /// Destructor
     ~framed_multi() override = default;
     // Default constructor
@@ -305,7 +305,7 @@ namespace glucat
       using var_pair_t = std::pair<index_set<LO, HI>, Scalar_T>;
 
       // Class name used in messages
-      static auto classname() -> std::string
+      static auto classname() -> std::string_view
       { return "var_term"; };
       /// Destructor
       ~var_term() = default;

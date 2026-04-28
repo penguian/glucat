@@ -63,7 +63,7 @@ namespace glucat
    * @return Result
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline std::string
+  inline std::string_view
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
   classname()
   { return "matrix_multi"; }
@@ -2996,6 +2996,10 @@ namespace glucat{
 TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
   using namespace glucat;
   using mm_t = glucat::matrix_multi<double, -32, 32>;
+
+  SUBCASE("Metadata") {
+    CHECK(mm_t::classname() == "matrix_multi");
+  }
 
   SUBCASE("Constructor and string representation") {
     mm_t m1(2.0);

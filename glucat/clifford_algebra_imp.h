@@ -66,7 +66,7 @@ namespace glucat
   template< typename Scalar_T, typename Index_Set_T, typename Multivector_T>
   auto
   clifford_algebra<Scalar_T,Index_Set_T,Multivector_T>::
-  classname() -> std::string
+  classname() -> std::string_view
   { return "clifford_algebra"; }
 
   /*
@@ -1717,6 +1717,11 @@ namespace glucat
 
 TEST_CASE("clifford_algebra_imp (generic templates)") {
   using mm_t = glucat::matrix_multi<double, -32, 32>;
+  using ca_t = glucat::clifford_algebra<double, mm_t::index_set_t, mm_t>;
+
+  SUBCASE("Metadata") {
+    CHECK(ca_t::classname() == "clifford_algebra");
+  }
 
   SUBCASE("Generic operators and approx_equal") {
     mm_t m1(1.0);

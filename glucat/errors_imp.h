@@ -60,13 +60,13 @@ namespace glucat
   template< class Class_T >
   auto
   error<Class_T>::
-  heading() const noexcept -> const std::string
+  heading() const noexcept -> std::string_view
   { return "Error in glucat::"; }
 
   template< class Class_T >
   auto
   error<Class_T>::
-  classname() const noexcept -> const std::string
+  classname() const noexcept -> std::string_view
   { return name; }
 
   template< class Class_T >
@@ -75,4 +75,20 @@ namespace glucat
   print_error_msg() const
   { std::cerr << heading() << classname() << std::endl << what() << std::endl; }
 }
+
+#ifdef GLUCAT_DOCTEST
+TEST_CASE("errors") {
+  using namespace glucat;
+  struct dummy { static std::string_view classname() { return "dummy"; } };
+  error<dummy> e("context", "message");
+
+  CHECK(e.heading() == "Error in glucat::");
+  CHECK(e.classname() == "context");
+  CHECK(std::string(e.what()) == "message");
+
+  error<dummy> e2("message2");
+  CHECK(e2.classname() == "dummy");
+}
+#endif
+
 #endif // _GLUCAT_ERRORS_IMP_H

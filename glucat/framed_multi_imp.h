@@ -56,7 +56,7 @@ namespace glucat
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
   framed_multi<Scalar_T,LO,HI,Tune_P>::
-  classname() -> std::string
+  classname() -> std::string_view
   { return "framed_multi"; }
 
 #define _GLUCAT_HASH_N(x) (x)
@@ -2701,6 +2701,10 @@ namespace glucat
 TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
   using namespace glucat;
   using fm_t = glucat::framed_multi<double, -32, 32>;
+
+  SUBCASE("Metadata") {
+    CHECK(fm_t::classname() == "framed_multi");
+  }
 
   SUBCASE("Constructor and string representation") {
     fm_t f1(2.0);

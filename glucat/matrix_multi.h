@@ -157,7 +157,7 @@ namespace glucat
 
   public:
     // Class name used in messages
-    static std::string classname();
+    static std::string_view classname();
     /// Destructor
     ~matrix_multi() override = default;
     // Default constructor
