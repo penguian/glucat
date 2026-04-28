@@ -24,7 +24,7 @@ echo "=== 1. Running Legacy Test Suite ==="
 make clean || true
 # We use a unique name for legacy profile
 export LLVM_PROFILE_FILE="$(pwd)/legacy_%p.profraw"
-make check -j$(nproc)
+make check -j$(( $(nproc) / 2 ))
 
 # 2. Run Doctest Suite (Eigen Backend)
 echo "=== 2. Running Doctest (Eigen) ==="

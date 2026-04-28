@@ -18,12 +18,12 @@ echo "=== Cleaning and Building ==="
 make clean || true
 find . -name "*.profraw" -delete
 find . -name "*.profdata" -delete
-make -j$(nproc)
+make -j$(( $(nproc) / 2 ))
 
 echo "=== Running PyClical tests ==="
 export LLVM_PROFILE_FILE="$(pwd)/%p.profraw"
 # This builds PyClical and runs the python tests
-make -C pyclical check -j$(nproc)
+make -C pyclical check -j$(( $(nproc) / 2 ))
 
 echo "=== Merging profiling data ==="
 profraw_files=$(find . -name "*.profraw")

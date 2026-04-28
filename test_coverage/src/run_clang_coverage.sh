@@ -25,7 +25,7 @@ find . -name "*.profdata" -delete
 echo "=== Building and running tests in parallel ==="
 export LLVM_PROFILE_FILE="%p.profraw"
 # This builds the library and runs all tests (test00-test17) using all cores
-make check -j$(nproc)
+make check -j$(( $(nproc) / 2 ))
 
 echo "=== Merging profiling data ==="
 # Find all profraw files created by the tests
