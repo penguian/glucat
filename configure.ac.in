@@ -604,7 +604,7 @@ AC_CONFIG_HEADERS([config.h])
 AX_PREFIX_CONFIG_H([glucat/glucat_config.h])
 
 GLUCAT_CHECK_EXTRA_LIBS
-all_includes="$all_includes $USER_INCLUDES"
+all_includes="-I. -I\$(srcdir) -I\$(top_srcdir) -I\$(top_builddir) $all_includes $USER_INCLUDES"
 
 dnl checks for programs.
 dnl first check for C++ compilers
