@@ -32,6 +32,7 @@
  ***************************************************************************/
 
 #include "glucat/global.h"
+#include "glucat/scalar.h"
 
 #include <limits>
 #include <string>
@@ -44,6 +45,7 @@ namespace glucat
   template< typename Scalar_T, typename Index_Set_T, typename Multivector_T>
   class clifford_algebra
   {
+    static_assert(!is_complex_v<Scalar_T>, "Scalar_T cannot be std::complex<T>");
   public:
     using scalar_t = Scalar_T;
     using index_set_t = Index_Set_T;

@@ -38,14 +38,22 @@
 
 #include <cmath>
 #include <limits>
+#include <complex>
+#include <type_traits>
 
 namespace glucat
 {
   /// Extra traits which extend numeric limits
   /// Reference: [AA], 2.4, p. 30-31
+
+  template<typename T> struct is_complex : std::false_type {};
+  template<typename T> struct is_complex<std::complex<T>> : std::true_type {};
+  template<typename T> inline constexpr bool is_complex_v = is_complex<T>::value;
+
   template< typename Scalar_T >
   class numeric_traits
   {
+    static_assert(!is_complex_v<Scalar_T>, "Scalar_T cannot be std::complex<T>");
   private:
     // Smart isinf specialised for Scalar_T without infinity
     inline
