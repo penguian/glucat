@@ -163,7 +163,7 @@ namespace glucat
     // Default constructor
     matrix_multi();
     // Move constructor
-    matrix_multi(matrix_multi&& other) noexcept;
+    matrix_multi(matrix_multi&& other) noexcept(std::is_nothrow_move_constructible_v<Scalar_T>);
     /// Default copy constructor
     matrix_multi(const matrix_multi&) = default;
     /// Construct a multivector from a multivector with a different scalar type (explicit)
@@ -237,7 +237,7 @@ namespace glucat
 
 
     // Move assignment
-    matrix_multi&    operator= (matrix_multi&& other) noexcept;
+    matrix_multi&    operator= (matrix_multi&& other) noexcept(std::is_nothrow_move_assignable_v<Scalar_T>);
     /// Default copy assignment
     matrix_multi&    operator= (const matrix_multi&) = default;
 

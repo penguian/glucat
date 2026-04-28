@@ -93,12 +93,12 @@ namespace glucat { namespace matrix
     // Copy constructor
     arma_matrix_wrapper(const arma_matrix_wrapper& other);
     // Move constructor
-    arma_matrix_wrapper(arma_matrix_wrapper&& other) noexcept;
+    arma_matrix_wrapper(arma_matrix_wrapper&& other) noexcept(std::is_nothrow_move_constructible_v<Scalar_T>);
 
     // Copy assignment
     arma_matrix_wrapper& operator= (const arma_matrix_wrapper& other);
     // Move assignment
-    arma_matrix_wrapper& operator= (arma_matrix_wrapper&& other) noexcept;
+    arma_matrix_wrapper& operator= (arma_matrix_wrapper&& other) noexcept(std::is_nothrow_move_assignable_v<Scalar_T>);
     // Assignment from sparse wrapper
     arma_matrix_wrapper& operator= (const arma_sparse_wrapper<Scalar_T>& other);
 
@@ -247,12 +247,12 @@ namespace glucat { namespace matrix
     // Copy constructor
     arma_sparse_wrapper(const arma_sparse_wrapper& other);
     // Move constructor
-    arma_sparse_wrapper(arma_sparse_wrapper&& other) noexcept;
+    arma_sparse_wrapper(arma_sparse_wrapper&& other) noexcept(std::is_nothrow_move_constructible_v<Scalar_T>);
 
     // Copy assignment
     arma_sparse_wrapper& operator= (const arma_sparse_wrapper& other);
     // Move assignment
-    arma_sparse_wrapper& operator= (arma_sparse_wrapper&& other) noexcept;
+    arma_sparse_wrapper& operator= (arma_sparse_wrapper&& other) noexcept(std::is_nothrow_move_assignable_v<Scalar_T>);
 
     // Set size
     void set_size(matrix_index_t rows, matrix_index_t cols);

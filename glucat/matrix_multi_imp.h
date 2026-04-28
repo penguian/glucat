@@ -132,7 +132,7 @@ namespace glucat
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
-  matrix_multi(matrix_multi&& other) noexcept
+  matrix_multi(matrix_multi&& other) noexcept(std::is_nothrow_move_constructible_v<Scalar_T>)
   : m_frame(std::move(other.m_frame)),
     m_matrix(std::move(other.m_matrix))
   { }
@@ -1127,7 +1127,7 @@ namespace glucat
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline typename matrix_multi<Scalar_T,LO,HI,Tune_P>::multivector_t&
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
-  operator= (matrix_multi&& other) noexcept
+  operator= (matrix_multi&& other) noexcept(std::is_nothrow_move_assignable_v<Scalar_T>)
   {
     this->m_frame = std::move(other.m_frame);
     this->m_matrix = std::move(other.m_matrix);

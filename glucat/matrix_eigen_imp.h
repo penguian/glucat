@@ -159,7 +159,7 @@ namespace glucat { namespace matrix
   template< typename Scalar_T >
   inline
   eigen_matrix_wrapper<Scalar_T>::
-  eigen_matrix_wrapper(eigen_matrix_wrapper<Scalar_T>&& other) noexcept
+  eigen_matrix_wrapper(eigen_matrix_wrapper<Scalar_T>&& other) noexcept(std::is_nothrow_move_constructible_v<Scalar_T>)
   : m_mat(std::move(other.m_mat))
   { }
 
@@ -189,7 +189,7 @@ namespace glucat { namespace matrix
   template< typename Scalar_T >
   inline eigen_matrix_wrapper<Scalar_T>&
   eigen_matrix_wrapper<Scalar_T>::
-  operator= (eigen_matrix_wrapper<Scalar_T>&& other) noexcept
+  operator= (eigen_matrix_wrapper<Scalar_T>&& other) noexcept(std::is_nothrow_move_assignable_v<Scalar_T>)
   {
     if (this != &other)
       m_mat = std::move(other.m_mat);
@@ -879,7 +879,7 @@ namespace glucat { namespace matrix
   template< typename Scalar_T >
   inline
   eigen_sparse_wrapper<Scalar_T>::
-  eigen_sparse_wrapper(eigen_sparse_wrapper<Scalar_T>&& other) noexcept
+  eigen_sparse_wrapper(eigen_sparse_wrapper<Scalar_T>&& other) noexcept(std::is_nothrow_move_constructible_v<Scalar_T>)
   : m_mat(std::move(other.m_mat))
   { }
 
@@ -910,7 +910,7 @@ namespace glucat { namespace matrix
   template< typename Scalar_T >
   inline eigen_sparse_wrapper<Scalar_T>&
   eigen_sparse_wrapper<Scalar_T>::
-  operator= (eigen_sparse_wrapper<Scalar_T>&& other) noexcept
+  operator= (eigen_sparse_wrapper<Scalar_T>&& other) noexcept(std::is_nothrow_move_assignable_v<Scalar_T>)
   {
     if (this != &other)
       m_mat = std::move(other.m_mat);

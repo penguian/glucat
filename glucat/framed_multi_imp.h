@@ -96,7 +96,7 @@ namespace glucat
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   framed_multi<Scalar_T,LO,HI,Tune_P>::
-  framed_multi(framed_multi&& other) noexcept
+  framed_multi(framed_multi&& other) noexcept(std::is_nothrow_move_constructible_v<Scalar_T>)
   : map_t(std::move(other))
   { }
 
@@ -1258,7 +1258,7 @@ namespace glucat
   inline
   auto
   framed_multi<Scalar_T,LO,HI,Tune_P>::
-  operator= (framed_multi&& other) noexcept -> multivector_t&
+  operator= (framed_multi&& other) noexcept(std::is_nothrow_move_assignable_v<Scalar_T>) -> multivector_t&
   {
     map_t::operator=(std::move(other));
     return *this;

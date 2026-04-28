@@ -187,7 +187,7 @@ namespace glucat
     // Default constructor
     framed_multi();
     // Move constructor
-    framed_multi(framed_multi&& other) noexcept;
+    framed_multi(framed_multi&& other) noexcept(std::is_nothrow_move_constructible_v<Scalar_T>);
     /// Default copy constructor
     framed_multi(const framed_multi&) = default;
 
@@ -244,7 +244,7 @@ namespace glucat
     // Number of terms
     auto nbr_terms() const -> size_type;
     // Move assignment
-    auto     operator= (framed_multi&& other) noexcept -> framed_multi&;
+    auto     operator= (framed_multi&& other) noexcept(std::is_nothrow_move_assignable_v<Scalar_T>) -> framed_multi&;
     /// Default copy assignment
     auto     operator= (const framed_multi&) -> framed_multi& = default;
 

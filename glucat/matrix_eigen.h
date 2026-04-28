@@ -115,13 +115,13 @@ namespace glucat { namespace matrix
     eigen_matrix_wrapper(const eigen_matrix_wrapper& other);
 
     // Move constructor
-    eigen_matrix_wrapper(eigen_matrix_wrapper&& other) noexcept;
+    eigen_matrix_wrapper(eigen_matrix_wrapper&& other) noexcept(std::is_nothrow_move_constructible_v<Scalar_T>);
 
     // Assignment
     // Copy assignment
     eigen_matrix_wrapper& operator= (const eigen_matrix_wrapper& other);
     // Move assignment
-    eigen_matrix_wrapper& operator= (eigen_matrix_wrapper&& other) noexcept;
+    eigen_matrix_wrapper& operator= (eigen_matrix_wrapper&& other) noexcept(std::is_nothrow_move_assignable_v<Scalar_T>);
 
     // Generic Interop Assignment
     template< typename Other_Matrix_T >
@@ -269,13 +269,13 @@ namespace glucat { namespace matrix
     eigen_sparse_wrapper(const eigen_sparse_wrapper& other);
 
     // Move constructor
-    eigen_sparse_wrapper(eigen_sparse_wrapper&& other) noexcept;
+    eigen_sparse_wrapper(eigen_sparse_wrapper&& other) noexcept(std::is_nothrow_move_constructible_v<Scalar_T>);
 
     // Copy assignment
     eigen_sparse_wrapper& operator= (const eigen_sparse_wrapper& other);
 
     // Move assignment
-    eigen_sparse_wrapper& operator= (eigen_sparse_wrapper&& other) noexcept;
+    eigen_sparse_wrapper& operator= (eigen_sparse_wrapper&& other) noexcept(std::is_nothrow_move_assignable_v<Scalar_T>);
 
     // Set size
     void set_size(matrix_index_t rows, matrix_index_t cols);
