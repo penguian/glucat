@@ -32,7 +32,6 @@ make -f admin/Makefile.common bootstrap || true
 # Prepare for coverage
 export CXX="clang++"
 export CXXFLAGS="-O0 -g -fprofile-instr-generate -fcoverage-mapping"
-export LDFLAGS="-fprofile-instr-generate"
 
 # Clean previous
 find . -name "*.profraw" -delete

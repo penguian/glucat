@@ -11,8 +11,6 @@ make -f admin/Makefile.common bootstrap || true
 echo "=== Configuring for PyClical Coverage ==="
 export CXX="clang++"
 export CXXFLAGS="-O0 -g -fprofile-instr-generate -fcoverage-mapping"
-export LDFLAGS="-fprofile-instr-generate"
-export USER_LDFLAGS="-fprofile-instr-generate"
 
 # Make sure we have Cython and Python headers
 ./configure --enable-pyclical
