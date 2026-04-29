@@ -11,7 +11,6 @@ make -f admin/Makefile.common bootstrap || true
 echo "=== Configuring for Clang Coverage ==="
 export CXX="clang++"
 export CXXFLAGS="-O0 -g -fprofile-instr-generate -fcoverage-mapping"
-export LDFLAGS="-fprofile-instr-generate"
 
 # Configure without pyclical to focus on C++ library coverage
 ./configure --disable-pyclical
