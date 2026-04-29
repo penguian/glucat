@@ -683,7 +683,7 @@ in `./test/config-options.txt` and are:
 ```
 ./configure --with-qd
 ```
- 12. `test.configure.armadillo-qd.out`:
+ 12. `test.configure.std.out`:
 
 ```
 ./configure --with-unordered-map=std

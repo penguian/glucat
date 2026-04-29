@@ -1,4 +1,4 @@
-README for GluCat 0.98a0+ with PyClical
+README for GluCat 0.98a0 with PyClical
 ======================================
 
 GluCat is a library of C++ template classes for calculations with the universal
@@ -417,9 +417,11 @@ parameters.
 Recent Changes
 ==============
 
-As of GluCat 0.98a0+, the following changes have been made:
+As of GluCat 0.98a0, the following changes have been made:
+* **Coverage Infrastructure Hardening**: Resolved a critical bug where legacy test binaries were deleted before analysis. Implemented a binary backup strategy and isolated profiling flags from library detection probes, restoring full coverage visibility for QD and Armadillo.
+* **Non-Complex Scalar_T Assertion**: Enforced non-complex `Scalar_T` requirements using `static_assert` in `clifford_algebra.h` and `scalar.h` to ensure template robustness and library-wide compatibility.
 * **Sparse Diagonal Optimization**: Optimization of sparse matrix `unit()` and `trace()` operations in Eigen and Armadillo backends to avoid slow manual diagonal write loops.
-* **Return Type Modernization**: Refactored the public API across all core classes and matrix wrappers to use standard return types (e.g., `T func()`) instead of trailing return types (`auto func() -> T`). This improves stability and matches modern C++ practices.
+* **Return Type Modernization**: Refactored the public API across all core classes and matrix wrappers to use standard return types (e.g., `T func()`) instead of trailing return types (`auto func() -> T`).
 * **Deprecated Function Removal**: The following deprecated functions have been removed:
     * `elliptic`: Use `complexifier` instead.
     * `imag`: This function was deprecated and always returned 0.

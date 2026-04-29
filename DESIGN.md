@@ -1,4 +1,4 @@
-GluCat design notes 2016-07-10, updated 2026-04-25
+GluCat design notes 2016-07-10, updated 2026-04-29
 ==================================================
 
 This document describes some of the decisions that underly the design of GluCat,
@@ -129,6 +129,10 @@ while maintaining the stability of template instantiations. Where
 necessary for sparse matrix proxy objects (e.g., in Armadillo), 
 `decltype(auto)` is used to preserve reference semantics without trailing 
 syntax.
+
+10. **Coverage and High-Precision Reliability**: Integration of advanced LLVM-based coverage tools with a robust binary preservation strategy. This ensures that high-precision paths (QD) and specialized backends (Armadillo) are reliably verified across the library's entire template space.
+
+11. **Strict Scalar Type Safety**: Compile-time enforcement of real-valued scalars via `static_assert`. This solidifies the library's foundational assumption of real Clifford algebra scalars, preventing subtle bugs in transcendental functions that rely on complexifier-based branches.
 
 
 Split of code between glucat/matrix_imp.h and glucat/matrix_multi_imp.h
