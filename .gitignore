@@ -1,0 +1,68 @@
+# Build artifacts
+Makefile
+Makefile.in
+/Makefile.am
+/configure
+/configure.ac
+/aclocal.m4
+/autom4te.cache/
+/config.h
+/config.h.in
+/config.h.in~
+/config.log
+/config.status
+/config.status.lineno
+/stamp-h.in
+libtool
+.libs/
+.deps/
+*.o
+*.lo
+*.la
+
+# Coverage and profiling
+.coverage
+*.profraw
+*.profdata
+test_coverage/results/
+pyclical.profdata
+glucat_doctest.profdata
+
+# Test binaries and output
+test_doctest/test_doctest
+test_doctest/test_doctest.out
+test*/test[0-9][0-9]
+test*/test[0-9][0-9].out
+test_move/test_move
+test_move/test_move.out
+test_runtime/test.out
+test11/*.log
+
+# Project specific generated files
+AUTHORS
+INSTALL
+README
+TODO
+subdirs
+configure.files
+glucat/glucat_config.h
+Doxyfile
+
+# Logs and backups
+*.log
+*.txt
+configure~
+configure.ac.in.fopenmp
+a-conftest.gcno
+
+# Runtime directories
+test_runtime.clang/
+test_runtime.gcc.arma/
+test_runtime.gcc.eigen/
+test_runtime.icpx/
+
+# Test specific data
+test03/eg3.res
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/

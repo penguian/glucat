@@ -44,7 +44,7 @@ namespace glucat
   static const long double l_ln2 = 0.6931471805599453094172321214581766L;
 #endif
 
-  /// Pi for long double
+  // Pi for long double
   template<>
   inline
   auto
@@ -52,7 +52,7 @@ namespace glucat
   pi() -> long double
   { return l_pi; }
 
-  /// log(2) for long double
+  // log(2) for long double
   template<>
   inline
   auto

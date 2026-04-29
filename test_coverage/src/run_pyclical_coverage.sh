@@ -1,0 +1,54 @@
+#!/bin/bash
+set -e
+
+# Move to the project root directory
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd "$ROOT_DIR"
+
+echo "=== Bootstrapping ==="
+make -f admin/Makefile.common bootstrap || true
+
+echo "=== Configuring for PyClical Coverage ==="
+export CXX="clang++"
+export CXXFLAGS="-O0 -g -fprofile-instr-generate -fcoverage-mapping"
+
+# Make sure we have Cython and Python headers
+./configure --enable-pyclical
+
+echo "=== Cleaning and Building ==="
+make clean || true
+find . -name "*.profraw" -delete
+find . -name "*.profdata" -delete
+make -j$(( $(nproc) / 2 ))
+
+echo "=== Running PyClical tests ==="
+export LLVM_PROFILE_FILE="$(pwd)/%p.profraw"
+# This builds PyClical and runs the python tests
+make -C pyclical check -j$(( $(nproc) / 2 ))
+
+echo "=== Merging profiling data ==="
+profraw_files=$(find . -name "*.profraw")
+if [ -n "$profraw_files" ]; then
+    llvm-profdata merge -sparse $profraw_files -o pyclical.profdata
+else
+    echo "No .profraw files found. Exiting."
+    exit 1
+fi
+
+echo "=== Generating llvm-cov report for PyClical ==="
+SO_FILE=$(find pyclical -name "PyClical.*.so" | head -n 1)
+
+if [ -z "$SO_FILE" ]; then
+    echo "PyClical extension not found."
+    exit 1
+fi
+
+OUTPUT_DIR="test_coverage/results/coverage_html_pyclical"
+mkdir -p "$OUTPUT_DIR"
+
+llvm-cov show -format=html -output-dir="$OUTPUT_DIR" \
+    -instr-profile=pyclical.profdata "$SO_FILE" -- glucat/
+
+llvm-cov report -instr-profile=pyclical.profdata "$SO_FILE" -- glucat/
+
+echo "Coverage report generated in $OUTPUT_DIR/index.html"

@@ -1,6 +1,6 @@
 #ifndef _GLUCAT_GLUCAT_IMP_H
 #define _GLUCAT_GLUCAT_IMP_H
-/***************************************************************************
+/**************************************************************************
     GluCat : Generic library of universal Clifford algebra templates
     glucat_imp.h : Organize GluCat template definitions which cannot be compiled separately
                              -------------------
@@ -29,6 +29,7 @@
  "Clifford algebras with numeric and symbolic computations", Birkhauser, 1996.
  ***************************************************************************
      For Arvind Raja's original header comments, see glucat.h
+ ***************************************************************************
  ***************************************************************************/
 
 // Template definitions which cannot be compiled separately

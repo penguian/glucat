@@ -1,5 +1,27 @@
-NEWS for GluCat 0.13.0 with PyClical
-====================================
+2026-04-27: 0.98a0+
+Hardening the Clifford algebra abstraction.
+
+o Optimized sparse matrix unit() and trace() operations in Eigen and 
+  Armadillo backends to avoid slow manual diagonal write loops.
+o Modernized the public API across all core classes and matrix wrappers 
+  by replacing trailing return types (auto func() -> T) with standard 
+  return types (T func()).
+o Implemented decltype(auto) for Armadillo sparse matrix element access 
+  to correctly handle proxy objects while removing trailing returns.
+
+2026-04-25: 0.98a0+
+GluCat modernization phase (2024-2026) has reached a major milestone.
+
+o Refactored the linear algebra architecture to use Eigen and Armadillo wrappers.
+o Decoupled the library from its hard dependency on uBLAS.
+o Upgraded the required C++ standard to C++23.
+o Integrated the new Doctest-based unit testing suite in test_doctest.
+o Added comprehensive unit tests for matrix backends in test_doctest.
+o Enhanced code coverage infrastructure in test_coverage, including
+  support for selective and combined backend reports.
+o Hardened the matrix backend abstraction with explicit return types for
+  better template robustness and fewer compilation issues.
+o Modernized the project documentation (README, INSTALL, DESIGN).
 
 2025-03-02: 0.13.0
 GluCat 0.13.0 has improved configuration and testing.

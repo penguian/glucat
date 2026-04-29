@@ -4,8 +4,9 @@ debug-yes:                   --enable-debug=yes
 disable-dependency:          --disable-dependency-tracking
 disable-pyclical:            --disable-pyclical
 prefix-home-opt:             --prefix=$HOME/opt
+armadillo:                   --with-armadillo
+armadillo-debug-yes:         --with-armadillo --enable-debug=yes
+armadillo-openmp:            --with-armadillo --with-openmp
+armadillo-qd-std:            --with-armadillo --with-qd --with-unordered-map=std
 qd:                          --with-qd
-eig-blaze:                   --with-eig=blaze
-eig-blaze-debug-full:        --with-eig=blaze --enable-debug=full
-eig-blaze-debug-yes:         --with-eig=blaze --enable-debug=yes
-eig-blaze-qd:                --with-eig=blaze --with-qd
+std:                         --with-unordered-map=std

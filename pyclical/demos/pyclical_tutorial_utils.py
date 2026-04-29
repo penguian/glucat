@@ -5,7 +5,7 @@
 #
 # pyclical_tutorial_utils.py: This file contains utilities for use with PyClical tutorials.
 #
-#    copyright            : (C) 2012-2020 by Paul C. Leopardi
+#    copyright            : (C) 2012-2026 by Paul C. Leopardi
 #
 #    This library is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Lesser General Public License as published
@@ -26,6 +26,93 @@ from builtins import object
 import sys
 import numbers
 from PyClical import *
+import PyClical
+import math
+
+# Allowed builtins
+allowed_builtins = {
+    'False': False,
+    'None': None,
+    'True': True,
+    'abs': abs,
+    'bool': bool,
+    'complex': complex,
+    'dict': dict,
+    'divmod': divmod,
+    'enumerate': enumerate,
+    'filter': filter,
+    'float': float,
+    'format': format,
+    'int': int,
+    'len': len,
+    'list': list,
+    'map': map,
+    'math': math,
+    'max': max,
+    'min': min,
+    'pow': pow,
+    'print': print,
+    'range': range,
+    'repr': repr,
+    'reversed': reversed,
+    'round': round,
+    'set': set,
+    'sorted': sorted,
+    'str': str,
+    'sum': sum,
+    'tuple': tuple,
+    'type': type,
+    'zip': zip,
+}
+
+def allowed_import(name, globals=None, locals=None, fromlist=(), level=0):
+    """
+    Restricted __import__ function that only allows importing PyClical.
+
+    Note: this is not a security measure and assumes a non-malicious user.
+    It is intended to prevent accidental execution of arbitrary code.
+    """
+    if name == 'PyClical':
+        return PyClical
+    raise ImportError(f"Import of '{name}' is not allowed in tutorial sandbox.")
+
+allowed_builtins['__import__'] = allowed_import
+
+def get_allowed_scope():
+    """
+    Return a dictionary suitable for use as a restricted execution namespace.
+    This includes allowed builtins and all public symbols from PyClical.
+
+    Note: this is not a security measure and assumes a non-malicious user.
+    It is intended to prevent accidental execution of arbitrary code.
+    """
+    scope = {'__builtins__': allowed_builtins}
+    for name in dir(PyClical):
+        if not name.startswith('_'):
+            scope[name] = getattr(PyClical, name)
+    return scope
+
+def allowed_exec(command_str, scope=None):
+    """
+    Restricted exec function that executes within an allowed scope.
+
+    Note: this is not a security measure and assumes a non-malicious user.
+    It is intended to prevent accidental execution of arbitrary code.
+    """
+    if scope is None:
+        scope = get_allowed_scope()
+    exec(command_str, scope)
+
+def allowed_eval(expression_str, scope=None):
+    """
+    Restricted eval function that evaluates within an allowed scope.
+
+    Note: this is not a security measure and assumes a non-malicious user.
+    It is intended to prevent accidental execution of arbitrary code.
+    """
+    if scope is None:
+        scope = get_allowed_scope()
+    return eval(expression_str, scope)
 
 def get_console_width():
     import os
@@ -108,8 +195,9 @@ class interaction_context(object):
         print("check_exec: ", prompt, value_str, command_str)
 
 class tutorial_context(interaction_context):
-    def __init__(self, dictionary):
-        self.object_names = dictionary
+    def __init__(self, dictionary=None):
+        # We ignore the passed dictionary to enforce the allowed scope
+        self.object_names = get_allowed_scope()
 
     def pause(self):
         if sys.stdin.isatty() and sys.stdout.isatty():
@@ -126,15 +214,15 @@ class tutorial_context(interaction_context):
 
     def print_exec(self, command_str):
         print(">>>", command_str)
-        exec(command_str, self.object_names)
+        allowed_exec(command_str, self.object_names)
 
     def input_exec(self, prompt, sandbox):
         input_str = input(prompt + "\n>>> ")
-        exec(input_str, sandbox)
+        allowed_exec(input_str, sandbox)
 
     def input_eval(self, prompt):
         input_str = input(prompt + "\n>>> ")
-        return eval(input_str, self.object_names)
+        return allowed_eval(input_str, self.object_names)
 
     def check_exec(self, prompt, var_name, value_str):
         try:
@@ -142,7 +230,7 @@ class tutorial_context(interaction_context):
             filled_prompt = fill("Exercise: Enter a Python statement to " + prompt, "")
             print("")
             self.input_exec(filled_prompt, sandbox)
-            value = eval(value_str, self.object_names)
+            value = allowed_eval(value_str, self.object_names)
         except KeyboardInterrupt:
             raise
         except:
@@ -156,7 +244,7 @@ class tutorial_context(interaction_context):
 
     def check_eval(self, prompt, value_str, command_str):
         try:
-            value = eval(value_str, self.object_names)
+            value = allowed_eval(value_str, self.object_names)
         except:
             value = None
         try:

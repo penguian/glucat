@@ -34,45 +34,10 @@
 
 int test13()
 {
-  using namespace glucat;
   using namespace std;
-  cout << "Programming example 13 : Multiplication and division" << endl;
-  using cm = matrix_multi<long double>;
-  using cf = framed_multi<long double>;
-  const cf a("{-3}+{-2}+{-1}");
-  const cf b("{-2}+1.e-8{1}+{2}+1.e8{3}");
-
-  const cf::index_set_t sub = a.frame() | b.frame();
-  const cm A( a, sub );
-  const cm B( b, sub );
-  cout << "a: "           << endl << a << endl;
-  cout << "A = cm(a): "   << endl << A << endl;
-  cout << "b: "           << endl << b << endl;
-  cout << "B = cm(b): "   << endl << B << endl;
-
-  // Multiplication
-  const cf c = a*b;
-  cout << "a*b: "         << endl << c << endl;
-  const cm C = A * B;
-  cout << "A*B: "         << endl << C << endl;
-
-  // Division
-  cout << "B/B: "         << endl << (B / B) << endl;
-  cout << "(B/B)*B: "     << endl << (B / B) * B << endl;
-  cout << "(A*B)/(A*B): " << endl << (C / C) << endl;
-  cout << "inv(A): "      << endl << inv(A) << endl;
-
-  // Truncate
-  const streamsize prec = cout.precision(9);
-  cout << "(b/b).truncated(): " << endl
-       <<  (b/b).truncated()    << endl;
-  cout << "((b/b)*b).truncated(): " << endl
-       <<  ((b/b)*b).truncated()    << endl;
-  cout << "((a*b)/(a*b)).truncated(): " << endl
-       << (c/c).truncated() << endl;
-  cout << "inv(a).truncated(): " << endl
-       <<  inv(a).truncated()    << endl;
-  cout.precision(prec);
+  cout << "Programming example 13 : Multiplication and division" << endl;  do_test13<float>("float");
+  do_test13<double>("double");
+  do_test13<long double>("long double");
   return 0;
 }
 

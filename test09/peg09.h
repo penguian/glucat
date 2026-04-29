@@ -39,7 +39,7 @@ namespace peg09
   using namespace std;
   template< class Multivector_T >
   static
-  void 
+  void
   do_test9()
   {
     typedef Multivector_T number;

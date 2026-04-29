@@ -1,6 +1,6 @@
 #ifndef _GLUCAT_GENERATION_IMP_H
 #define _GLUCAT_GENERATION_IMP_H
-/***************************************************************************
+/**************************************************************************
 	  GluCat : Generic library of universal Clifford algebra templates
     generation_imp.h : Implement functions for generation of the matrix representation
                              -------------------
@@ -29,6 +29,7 @@
  "Clifford algebras with numeric and symbolic computations", Birkhauser, 1996.
  ***************************************************************************
      See also Arvind Raja's original header comments in glucat.h
+ ***************************************************************************
  ***************************************************************************/
 
 #include "glucat/global.h"
@@ -42,16 +43,32 @@ namespace glucat { namespace gen
   // [P]: Ian R. Porteous, "Clifford algebras and the classical groups", Cambridge UP, 1995.
   // [L]: Pertti Lounesto, "Clifford algebras and spinors", Cambridge UP, 1997.
 
-  /// Single instance of generator table
-  // Reference: [M] Item 47
+  /*
+   * @brief Single instance of generator table
+   * @details
+   * Reference: [M] Item 47
+   *
+   * Usage example:
+   * Location: glucat/matrix_multi_imp.h:1208
+   *
+   * @code
+   *
+   * generator_table<matrix_t>::generator()(p, q);
+   * @endcode
+   *
+   * @return Result
+   */
   template< class Matrix_T >
   auto
   generator_table<Matrix_T>::
   generator() -> generator_table<Matrix_T>&
   { static generator_table<Matrix_T> g; return g;}
 
-  /// Pointer to generators for a specific signature
-  // Reference: [P] Table 15.27, p 133
+  /*
+   * @brief Pointer to generators for a specific signature
+   * @details
+   * Reference: [P] Table 15.27, p 133
+   */
   template< class Matrix_T >
   inline
   auto
@@ -73,7 +90,14 @@ namespace glucat { namespace gen
     }
   }
 
-  /// Construct a vector of generators for a specific signature
+  /*
+   * @brief Construct a vector of generators for a specific signature
+   * @details
+   * @tparam Matrix_T
+   * @param p First index
+   * @param q Second index
+   * @return Result
+   */
   template< class Matrix_T >
   auto
   generator_table<Matrix_T>::
@@ -120,8 +144,13 @@ namespace glucat { namespace gen
     return (*this)[sig];
   }
 
-  /// Construct generators for p,q given generators for p-1,q-1
-  // Reference: [P] Proposition 15.17, p 131
+  /*
+   * @brief Construct generators for p,q given generators for p-1,q-1
+   * @details
+   * Reference: [P] Proposition 15.17, p 131
+   * @param old Old signature
+   * @param sig New signature
+   */
   template< class Matrix_T >
   void
   generator_table<Matrix_T>::
@@ -132,7 +161,7 @@ namespace glucat { namespace gen
     using result_t = std::vector<Matrix_T>;
     auto result = result_t(new_size);
 
-    const auto old_dim = old[0].size1();
+    const auto old_dim = matrix::nbr_rows(old[0]);
     const auto& eye = matrix::unit<Matrix_T>(old_dim);
 
     auto neg = Matrix_T(2,2,2);
@@ -146,20 +175,25 @@ namespace glucat { namespace gen
     dup(0,0) = 1;
     dup(1,1) =    -1;
 
-    result[0] = matrix::mono_kron(neg, eye);
+    result[0] = neg.kron(eye);
     for (auto
         k = size_t(1);
         k != new_size-1;
         ++k)
-      result[k] = matrix::mono_kron(dup, old[k-1]);
-    result[new_size-1] = matrix::mono_kron(pos, eye);
+      result[k] = dup.kron(old[k-1]);
+    result[new_size-1] = pos.kron(eye);
 
     // Save the resulting generator array.
     this->insert(make_pair(sig, result));
   }
 
-  /// Construct generators for p,q given generators for p-4,q+4
-  // Reference: [L] 16.4 Periodicity of 8, p216
+  /*
+   * @brief Construct generators for p,q given generators for p-4,q+4
+   * @details
+   * Reference: [L] 16.4 Periodicity of 8, p216
+   * @param old Old signature
+   * @param sig New signature
+   */
   template< class Matrix_T >
   void
   generator_table<Matrix_T>::
@@ -175,7 +209,7 @@ namespace glucat { namespace gen
         k = size_t(1);
         k != size_t(4);
         ++k)
-      h = matrix::mono_prod(old[k], h);
+      h = old[k] * h;
 
     for (auto
         k = size_t(0);
@@ -186,13 +220,18 @@ namespace glucat { namespace gen
         k = old_size-4;
         k != old_size;
         ++k)
-      result[k] = matrix::mono_prod(old[k+4-old_size], h);
+      result[k] = old[k+4-old_size] * h;
     // Save the resulting generator array.
     this->insert(make_pair(sig, result));
   }
 
-  /// Construct generators for p,q given generators for p+4,q-4
-  // Reference: [L] 16.4 Periodicity of 8, p216
+  /*
+   * @brief Construct generators for p,q given generators for p+4,q-4
+   * @details
+   * Reference: [L] 16.4 Periodicity of 8, p216
+   * @param old Old signature
+   * @param sig New signature
+   */
   template< class Matrix_T >
   void
   generator_table<Matrix_T>::
@@ -208,13 +247,13 @@ namespace glucat { namespace gen
         k = size_t(1);
         k != size_t(4);
         ++k)
-      h = matrix::mono_prod(old[old_size-1-k], h);
+      h = old[old_size-1-k] * h;
 
     for (auto
         k = size_t(0);
         k != size_t(4);
         ++k)
-      result[k] = matrix::mono_prod(old[k+old_size-4], h);
+      result[k] = old[k+old_size-4] * h;
     for (auto
         k = size_t(4);
         k != old_size;
@@ -224,8 +263,13 @@ namespace glucat { namespace gen
     this->insert(make_pair(sig, result));
   }
 
-  /// Construct generators for p,q given generators for q+1,p-1
-  // Reference: [P] Proposition 15.20, p 131
+  /*
+   * @brief Construct generators for p,q given generators for q+1,p-1
+   * @details
+   * Reference: [P] Proposition 15.20, p 131
+   * @param old Old signature
+   * @param sig New signature
+   */
   template< class Matrix_T >
   void
   generator_table<Matrix_T>::
@@ -241,7 +285,7 @@ namespace glucat { namespace gen
         k = size_t(0);
         k != old_size-1;
         ++k)
-      result[k] = matrix::mono_prod(old[old_size-2-k], h);
+      result[k] = old[old_size-2-k] * h;
     result[old_size-1] = h;
 
     // Save the resulting generator array.

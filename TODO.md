@@ -1,28 +1,33 @@
-TODO for GluCat 0.13.0 with PyClical
+TODO for GluCat 0.98a0+ with PyClical
 ====================================
+
+## Likely
 
 Documentation:
 * Write a programmer's guide with descriptions of usage via use cases.
 * Provide better user documentation for PyClical.
 
+Testing:
+* [x] Increase code coverage for `framed_multi_imp.h` and `matrix_multi_imp.h` beyond 85%. (Achieved 87.5% and 91.3% respectively)
+* Further harden the stochastic identity tests in `test_doctest`.
+* Complete the transition of all legacy tests to the modern unit testing
+  framework.
+
+Abstraction:
+* [x] Reinforce representation-independence by defining `nbr_rows()` and `nbr_cols()` as protected in `matrix_multi`.
+
 Packaging:
 * Improve the packaging of the example and test programs.
+* Finalize the transition to a modern build system that minimizes dependency on
+  legacy autotools.
 
-Portability:
-* Build and test GluCat and PyClical using Cygwin on Windows
-  (requested by Alan Bromborsky).
-* Port to other architectures and compilers which support template template
-  parameters.
+
+## Unlikely
 
 Interfaces:
-
-*  Downwards:
-   * Try using Blaze, Eigen or Armadillo as a replacement for uBLAS.
-
-*  Upwards:
-   * Expand the Cython-based Python extension module PyClical into a Sage interface.
-   * Try defining concepts and more numeric traits so that GluCat can
-     eventually become a Boost library.
+* Expand the Cython-based Python extension module PyClical into a Sage interface.
+* Try defining concepts and more numeric traits so that GluCat can
+  eventually become a Boost library.
 
 Transcendental functions:
 * Devise better algorithms and better implementations of existing algorithms for
@@ -35,13 +40,10 @@ Transcendental functions:
 Experimental:
 * Expand the use of numeric type promotion and demotion from transcendental
   functions to operations such as division.
-* Port to C++17 to take maximum advantage of C++17 semantics and idioms.
 * Investigate the use of expression templates.
 * Try refactoring the relationship between `matrix_multi`, `framed_multi` and
   `clifford_algebra` to allow more flexibility with template parameters.
   Possibly use enable_if and SFINAE to do this.
-* Try adding a `Matrix_Tag` template parameter to `framed_multi` and `matrix_multi`,
-  to determine if `matrix_t` is `compressed`, `dense`, etc.
 * Try removing the template parameters `LO` and `HI` from `framed_multi` and
   `matrix_multi`, and using `DEFAULT_LO` and `DEFAULT_HI` where these are needed in
   `framed_multi.h`, `matrix_multi.h`, etc.

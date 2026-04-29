@@ -1,12 +1,12 @@
-import PyClical; print(PyClical.__version__)
-print(PyClical._test())
-quit()
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#
 # PyClical: Python interface to GluCat:
 #           Generic library of universal Clifford algebra templates
 #
 # test.py : Test PyClical using doctests
 #
-#    copyright            : (C) 2008-2016 by Paul C. Leopardi
+#    copyright            : (C) 2008-2026 by Paul C. Leopardi
 #
 #    This library is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Lesser General Public License as published
@@ -21,4 +21,9 @@ quit()
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
+import PyClical
 
+print(PyClical.__version__)
+test_result = PyClical._test()
+print(test_result)
+exit(test_result.failed > 0)

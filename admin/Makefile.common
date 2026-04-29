@@ -2,29 +2,29 @@
 ###
 ### Copyright (C) 2002 by the KDE developers
 
-### All the real work is done by the shellscript cvs.sh
+### All the real work is done by the shellscript bootstrap.sh
 
 SHELL=/bin/sh
 
-cvs dist cvs-clean configure.ac configure.files subdirs package-messages:
+bootstrap dist bootstrap-clean configure.ac configure.files subdirs package-messages:
 	@admindir=$(admindir); \
 	if test "x$$admindir" = x; then \
-	  admindir=.; until test -f $$admindir/admin/cvs.sh; do \
+	  admindir=.; until test -f $$admindir/admin/bootstrap.sh; do \
 	    admindir=$$admindir/..; \
 	    if test `cd $$admindir && pwd` = / ; then break; fi; \
 	  done; \
 	  admindir=$$admindir/admin; \
-	  if test -f $$admindir/cvs.sh; then :; else \
+	  if test -f $$admindir/bootstrap.sh; then :; else \
 	    echo "Can't find the admin/ directory in any parent of the"; \
 	    echo "current directory.  Please set it with admindir=..."; \
 	    exit 1; \
 	  fi; \
 	fi; \
-	MAKE=$(MAKE) $(SHELL) $$admindir/cvs.sh $@
+	MAKE=$(MAKE) $(SHELL) $$admindir/bootstrap.sh $@
 
 package-merge:
 	@MAKE=$(MAKE) POFILES=$(POFILES) PACKAGE=$(PACKAGE) \
-	  $(SHELL) admin/cvs.sh package-merge
+	  $(SHELL) admin/bootstrap.sh package-merge
 
 configure.ac: configure.files $(shell test -f configure.files && cat configure.files) subdirs
 
@@ -32,4 +32,4 @@ configure.files: subdirs
 
 .SILENT:
 
-.PHONY: cvs dist cvs-clean package-merge package-messages
+.PHONY: bootstrap dist bootstrap-clean package-merge package-messages

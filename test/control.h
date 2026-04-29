@@ -51,7 +51,7 @@ namespace glucat
 
     /// Produce more detailed output from tests
     static bool m_verbose_output;
-    
+
     /// Constructor from program arguments
     control_t(int argc, char ** argv);
     // Enforce singleton
@@ -70,7 +70,7 @@ namespace glucat
     /// Ref: Scott Meyers, "Effective C++" Second Edition, Addison-Wesley, 1998.
     static const control_t& control(int argc, char ** argv)
     { static const control_t c(argc, argv); return c; }
-    
+
     /// Call a function that returns int
     int call(intfn f) const;
     /// Call a function of int that returns int
@@ -83,7 +83,7 @@ namespace glucat
 
   /// Produce more detailed output from tests
   bool control_t::m_verbose_output = false;
-  
+
   /// Test control constructor from program arguments
   control_t::
   control_t(int argc, char ** argv)
@@ -132,7 +132,7 @@ namespace glucat
 
   /// Call a function that returns int
   inline
-  int 
+  int
   control_t::
   call(intfn f) const
   {
@@ -143,10 +143,10 @@ namespace glucat
     else
       return 1;
   }
-      
+
   /// Call a function of int that returns int
   inline
-  int 
+  int
   control_t::
   call(intintfn f, int arg) const
   {

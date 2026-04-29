@@ -38,7 +38,7 @@ namespace peg12
 
   template< class Multivector_T >
   static
-  void 
+  void
   mult_table(const Multivector_T& e1, const Multivector_T& e2)
   {
     typedef Multivector_T e;
@@ -67,7 +67,7 @@ namespace peg12
 
   template< class Multivector_T >
   static
-  void 
+  void
   do_test12()
   {
     typedef Multivector_T e;

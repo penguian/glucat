@@ -38,20 +38,20 @@ namespace peg16
 
   template< class Multivector_T >
   static
-  void 
+  void
   do_test16()
   {
     typedef Multivector_T number;
     typedef typename number::index_set_t index_set_t;
     const index_t hi = index_set_t::v_hi;
-    typedef ublas::matrix<number> matrix_of_mv;
+    typedef glucat::matrix::matrix_t<number> matrix_of_mv;
     const int dim = 5;
     matrix_of_mv a(dim,dim);
     for (int i = 0; i != dim; ++i)
       for (int j = 0; j != dim; ++j)
         a(i,j) = number("0");
     a(1,1) = number("1");
-    std::cout << a << std::endl;
+    std::cout << std::endl << a << std::endl;
     matrix_of_mv b(dim,dim);
     for (int i = 0; i != dim; ++i)
     {
@@ -59,12 +59,12 @@ namespace peg16
         b(i,j) = number("0");
       b(i,i) = number(index_set_t((i % hi) +1),1.0);
     }
-    std::cout << b << std::endl;
+    std::cout << std::endl << b << std::endl;
     matrix_of_mv c(dim,dim);
-    c = ublas::prod(a, b);
-    std::cout << c << std::endl;
+    c = a * b;
+    std::cout << std::endl << c << std::endl;
     c += b;
-    std::cout << c << std::endl;
+    std::cout << std::endl << c << std::endl;
   }
 }
 

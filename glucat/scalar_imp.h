@@ -1,6 +1,6 @@
 #ifndef _GLUCAT_SCALAR_IMP_H
 #define _GLUCAT_SCALAR_IMP_H
-/***************************************************************************
+/**************************************************************************
     GluCat : Generic library of universal Clifford algebra templates
     scalar_imp.h : Define functions for scalar_t
                              -------------------
@@ -29,22 +29,31 @@
  "Clifford algebras with numeric and symbolic computations, Birkhauser, 1996."
  ***************************************************************************
  See also Arvind Raja's original header comments and references in glucat.h
+ ***************************************************************************
  ***************************************************************************/
 
 #include "glucat/scalar.h"
 #include "glucat/qd.h"
 
-#include <boost/numeric/ublas/traits.hpp>
+
 
 #include <cmath>
 #include <limits>
 
 namespace glucat
 {
-  /// Extra traits which extend numeric limits
+  /*
+   * @brief Extra traits which extend numeric limits
+   * @details
+   */
   // Reference: [AA], 2.4, p. 30-31
 
-  /// Cast to float
+  /*
+   * @brief Cast to float
+   * @details
+   * @param val Value
+   * @return Converted value
+   */
   template< >
   template< typename Other_Scalar_T >
   inline
@@ -53,7 +62,22 @@ namespace glucat
   to_scalar_t(const Other_Scalar_T& val) -> float
   { return static_cast<float>(numeric_traits<Other_Scalar_T>::to_double(val)); }
 
-  /// Cast to double
+  /*
+   * @brief to_scalar_t
+   * @details
+   *
+   * Usage example:
+   * Location: glucat/framed_multi_imp.h:125
+   *
+   * @code
+   *
+   * this->insert(term_t(val_term.first, numeric_traits<Scalar_T>::to_scalar_t(val_term.second)));
+   * @endcode
+   *
+   * @tparam Other_Scalar_T
+   * @param val Value
+   * @return Converted value
+   */
   template< >
   template< typename Other_Scalar_T >
   inline
@@ -63,7 +87,12 @@ namespace glucat
   { return numeric_traits<Other_Scalar_T>::to_double(val); }
 
 #if defined(_GLUCAT_USE_QD)
-  /// Cast to long double
+  /*
+   * @brief Cast to long double
+   * @details
+   * @param val Value
+   * @return Converted value
+   */
   template< >
   template< >
   inline
@@ -72,7 +101,12 @@ namespace glucat
   to_scalar_t(const dd_real& val) -> long double
   { return static_cast<long double>(val.x[0]) + static_cast<long double>(val.x[1]); }
 
-  /// Cast to long double
+  /*
+   * @brief Cast to long double
+   * @details
+   * @param val Value
+   * @return Converted value
+   */
   template< >
   template< >
   inline
@@ -81,7 +115,12 @@ namespace glucat
   to_scalar_t(const qd_real& val) -> long double
   { return static_cast<long double>(val.x[0]) + static_cast<long double>(val.x[1]); }
 
-  /// Cast to dd_real
+  /*
+   * @brief Cast to dd_real
+   * @details
+   * @param val Value
+   * @return Converted value
+   */
   template< >
   template< >
   inline
@@ -90,7 +129,12 @@ namespace glucat
   to_scalar_t(const long double& val) -> dd_real
   { return {double(val),double(val - static_cast<long double>(double(val)))}; }
 
-  /// Cast to dd_real
+  /*
+   * @brief Cast to dd_real
+   * @details
+   * @param val Value
+   * @return Converted value
+   */
   template< >
   template< >
   inline
@@ -99,7 +143,12 @@ namespace glucat
   to_scalar_t(const qd_real& val) -> dd_real
   { return {val.x[0],val.x[1]}; }
 
-  /// Cast to qd_real
+  /*
+   * @brief Cast to qd_real
+   * @details
+   * @param val Value
+   * @return Converted value
+   */
   template< >
   template< >
   inline
@@ -108,7 +157,12 @@ namespace glucat
   to_scalar_t(const long double& val) -> qd_real
   { return {double(val),double(val - static_cast<long double>(double(val))),0.0,0.0}; }
 
-  /// Cast to qd_real
+  /*
+   * @brief Cast to qd_real
+   * @details
+   * @param val Value
+   * @return Converted value
+   */
   template< >
   template< >
   inline
@@ -118,7 +172,33 @@ namespace glucat
   { return {val.x[0],val.x[1],0.0,0.0}; }
 #endif
 
-  /// Cast to promote
+#if defined(_GLUCAT_USE_QD) && defined(EIGEN_MAJOR_VERSION)
+  // disambiguate for Eigen::Index (typically long or ptrdiff_t)
+  // qd_real has constructors for int, double, but not long/long long, causing ambiguity.
+  // We can inject a cast or a conversion helper if this file is included before the error site.
+  // However, the error is inside Eigen code calling qd_real(Index).
+  // The only way to fix that without editing Eigen or QD is if *we* control the trait that Eigen uses
+  // OR if we can add a constructor to qd_real (we can't easily, library code).
+  // Actually, Eigen uses RealScalar(index) cast.
+  // If we specialize Eigen::NumTraits<qd_real>, we might control this.
+#endif
+
+  /*
+   * @brief Cast to promote
+   * @details
+   * 
+   * Usage example:
+   * Location: glucat/framed_multi_imp.h:2327
+   * 
+   * @code
+   *
+   * return to_promote(val);
+   * @endcode
+   * 
+   * @tparam Scalar_T
+   * @param val Value
+   * @return Result
+   */
   template< typename Scalar_T >
   inline
   auto
@@ -128,7 +208,22 @@ namespace glucat
     return numeric_traits<promoted_scalar_t>::to_scalar_t(val);
   }
 
-  /// Cast to demote
+  /*
+   * @brief Cast to demote
+   * @details
+   * 
+   * Usage example:
+   * Location: glucat/framed_multi_imp.h:2310
+   * 
+   * @code
+   *
+   * return to_demote(val);
+   * @endcode
+   * 
+   * @tparam Scalar_T
+   * @param val Value
+   * @return Result
+   */
   template< typename Scalar_T >
   inline
   auto

@@ -142,10 +142,10 @@ namespace cga3
 using namespace glucat;
 const index_t lo_ndx = DEFAULT_LO;
 const index_t hi_ndx = DEFAULT_HI;
-using IndexSet = index_set<lo_ndx, hi_ndx>;
+using IndexSet = index_set<lo_ndx,hi_ndx>;
 
 using scalar_t = double;
-using Clifford = matrix_multi<scalar_t,lo_ndx, hi_ndx,tuning_promoted>;
+using Clifford = matrix_multi<scalar_t,lo_ndx,hi_ndx,default_tuning_promoted_p>;
 
 const scalar_t epsilon = std::numeric_limits<scalar_t>::epsilon();
 

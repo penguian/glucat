@@ -45,7 +45,8 @@ cdef inline IndexSet toIndexSet(obj):
 
 cdef class index_set:
     """
-    Python class index_set wraps C++ class IndexSet.
+    Implement a class for a set of non-zero integer indices.
+    Wrapper for C++ `glucat::index_set`.
     """
     cdef IndexSet *instance # Wrapped instance of C++ class IndexSet.
 
@@ -75,6 +76,18 @@ cdef class index_set:
         """
         Construct an object of type index_set.
 
+        Parameters
+        ----------
+        other : int, set, frozenset, str, or index_set, optional
+            The value to initialize the set with.
+
+        Returns
+        -------
+        index_set
+            The constructed index set.
+
+        Examples
+        --------
         >>> print(index_set(1))
         {1}
         >>> print(index_set({1,2}))
@@ -241,6 +254,13 @@ cdef class index_set:
         """
         Set complement: not.
 
+        Returns
+        -------
+        index_set
+            The complement set.
+
+        Examples
+        --------
         >>> print(~index_set({-16,-15,-14,-13,-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16}))
         {-32,-31,-30,-29,-28,-27,-26,-25,-24,-23,-22,-21,-20,-19,-18,-17,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32}
         """
@@ -250,6 +270,18 @@ cdef class index_set:
         """
         Symmetric set difference: exclusive or.
 
+        parameters
+        ----------
+        rhs : index_set
+            The other index set.
+
+        Returns
+        -------
+        index_set
+            The symmetric difference.
+
+        Examples
+        --------
         >>> print(index_set({1}) ^ index_set({2}))
         {1,2}
         >>> print(index_set({1,2}) ^ index_set({2}))
@@ -261,6 +293,18 @@ cdef class index_set:
         """
         Symmetric set difference: exclusive or.
 
+        Parameters
+        ----------
+        rhs : index_set
+            The other index set.
+
+        Returns
+        -------
+        index_set
+            The symmetric difference (in-place).
+
+        Examples
+        --------
         >>> x = index_set({1}); x ^= index_set({2}); print(x)
         {1,2}
         >>> x = index_set({1,2}); x ^= index_set({2}); print(x)
@@ -268,10 +312,23 @@ cdef class index_set:
         """
         return self.wrap( self.unwrap() ^ toIndexSet(rhs) )
 
+
     def __and__(lhs, rhs):
         """
         Set intersection: and.
 
+        Parameters
+        ----------
+        rhs : index_set
+            The other index set.
+
+        Returns
+        -------
+        index_set
+            The intersection.
+
+        Examples
+        --------
         >>> print(index_set({1}) & index_set({2}))
         {}
         >>> print(index_set({1,2}) & index_set({2}))
@@ -283,6 +340,18 @@ cdef class index_set:
         """
         Set intersection: and.
 
+        Parameters
+        ----------
+        rhs : index_set
+            The other index set.
+
+        Returns
+        -------
+        index_set
+            The intersection (in-place).
+
+        Examples
+        --------
         >>> x = index_set({1}); x &= index_set({2}); print(x)
         {}
         >>> x = index_set({1,2}); x &= index_set({2}); print(x)
@@ -290,10 +359,23 @@ cdef class index_set:
         """
         return self.wrap( self.unwrap() & toIndexSet(rhs) )
 
+
     def __or__(lhs, rhs):
         """
         Set union: or.
 
+        Parameters
+        ----------
+        rhs : index_set
+            The other index set.
+
+        Returns
+        -------
+        index_set
+            The union.
+
+        Examples
+        --------
         >>> print(index_set({1}) | index_set({2}))
         {1,2}
         >>> print(index_set({1,2}) | index_set({2}))
@@ -305,6 +387,18 @@ cdef class index_set:
         """
         Set union: or.
 
+        Parameters
+        ----------
+        rhs : index_set
+            The other index set.
+
+        Returns
+        -------
+        index_set
+            The union (in-place).
+
+        Examples
+        --------
         >>> x = index_set({1}); x |= index_set({2}); print(x)
         {1,2}
         >>> x = index_set({1,2}); x |= index_set({2}); print(x)
@@ -316,6 +410,13 @@ cdef class index_set:
         """
         Cardinality: Number of indices included in set.
 
+        Returns
+        -------
+        int
+            The number of indices.
+
+        Examples
+        --------
         >>> index_set({-1,1,2}).count()
         3
         """
@@ -325,6 +426,13 @@ cdef class index_set:
         """
         Number of negative indices included in set.
 
+        Returns
+        -------
+        int
+            The number of negative indices.
+
+        Examples
+        --------
         >>> index_set({-1,1,2}).count_neg()
         1
         """
@@ -334,6 +442,13 @@ cdef class index_set:
         """
         Number of positive indices included in set.
 
+        Returns
+        -------
+        int
+            The number of positive indices.
+
+        Examples
+        --------
         >>> index_set({-1,1,2}).count_pos()
         2
         """
@@ -341,8 +456,15 @@ cdef class index_set:
 
     def min(self):
         """
-        Minimum member.
+        Minimum member, or 0 if none.
 
+        Returns
+        -------
+        int
+            The minimum index, or 0.
+
+        Examples
+        --------
         >>> index_set({-1,1,2}).min()
         -1
         """
@@ -350,8 +472,15 @@ cdef class index_set:
 
     def max(self):
         """
-        Maximum member.
+        Maximum member, or 0 if none.
 
+        Returns
+        -------
+        int
+            The maximum index, or 0.
+
+        Examples
+        --------
         >>> index_set({-1,1,2}).max()
         2
         """
@@ -367,6 +496,18 @@ cdef class index_set:
         """
         Sign of geometric product of two Clifford basis elements.
 
+        Parameters
+        ----------
+        rhs : index_set
+            The other basis element.
+
+        Returns
+        -------
+        int
+            The sign (+1 or -1).
+
+        Examples
+        --------
         >>> s = index_set({1,2}); t=index_set({-1}); s.sign_of_mult(t)
         1
         """
@@ -376,6 +517,13 @@ cdef class index_set:
         """
         Sign of geometric square of a Clifford basis element.
 
+        Returns
+        -------
+        int
+            The sign (+1 or -1).
+
+        Examples
+        --------
         >>> s = index_set({1,2}); s.sign_of_square()
         -1
         """
@@ -403,7 +551,7 @@ cdef class index_set:
         """
         return index_set_to_str( self.unwrap() ).decode()
 
-def index_set_hidden_doctests():
+def _index_set_hidden_doctests():
     """
     Tests for functions that Doctest cannot see.
 
@@ -536,7 +684,8 @@ cdef inline Clifford toClifford(obj):
 
 cdef class clifford:
     """
-    Python class clifford wraps C++ class Clifford.
+    Matrix representation of a Clifford algebra multivector.
+    Wrapper for C++ `glucat::matrix_multi`.
     """
     cdef Clifford *instance # Wrapped instance of C++ class Clifford.
 
@@ -566,6 +715,23 @@ cdef class clifford:
         """
         Construct an object of type clifford.
 
+        Parameters
+        ----------
+        other : int, float, str, list, index_set, or clifford, optional
+            The value to initialize the multivector from.
+            Can be a scalar, a string representation, a list of coefficients,
+            an index_set (creates a basis blade), or another clifford object.
+        ixt : index_set, optional
+            The frame (index set) for the multivector. Used if other is a list or scalar.
+            If None, the frame is inferred from `other` or defaults to empty.
+
+        Returns
+        -------
+        clifford
+            The constructed multivector.
+
+        Examples
+        --------
         >>> print(clifford(2))
         2
         >>> print(clifford(2.0))
@@ -741,6 +907,18 @@ cdef class clifford:
         """
         Geometric sum.
 
+        Parameters
+        ----------
+        rhs : clifford
+            The other multivector.
+
+        Returns
+        -------
+        clifford
+            The sum.
+
+        Examples
+        --------
         >>> print(clifford(1) + clifford("{2}"))
         1+{2}
         >>> print(clifford("{1}") + clifford("{2}"))
@@ -770,6 +948,18 @@ cdef class clifford:
         """
         Geometric difference.
 
+        Parameters
+        ----------
+        rhs : clifford
+            The other multivector.
+
+        Returns
+        -------
+        clifford
+            The difference.
+
+        Examples
+        --------
         >>> print(clifford(1) - clifford("{2}"))
         1-{2}
         >>> print(clifford("{1}") - clifford("{2}"))
@@ -799,6 +989,18 @@ cdef class clifford:
         """
         Geometric product.
 
+        Parameters
+        ----------
+        rhs : clifford
+            The other multivector.
+
+        Returns
+        -------
+        clifford
+            The product.
+
+        Examples
+        --------
         >>> print(clifford("{1}") * clifford("{2}"))
         {1,2}
         >>> print(clifford(2) * clifford("{2}"))
@@ -832,8 +1034,20 @@ cdef class clifford:
 
     def __mod__(lhs, rhs):
         """
-        Contraction.
+        Left contraction.
 
+        Parameters
+        ----------
+        rhs : clifford
+            The other multivector.
+
+        Returns
+        -------
+        clifford
+            The contraction result.
+
+        Examples
+        --------
         >>> print(clifford("{1}") % clifford("{2}"))
         0
         >>> print(clifford(2) % clifford("{2}"))
@@ -873,6 +1087,18 @@ cdef class clifford:
         """
         Inner product.
 
+        Parameters
+        ----------
+        rhs : clifford
+            The other multivector.
+
+        Returns
+        -------
+        clifford
+            The inner product.
+
+        Examples
+        --------
         >>> print(clifford("{1}") & clifford("{2}"))
         0
         >>> print(clifford(2) & clifford("{2}"))
@@ -912,6 +1138,18 @@ cdef class clifford:
         """
         Outer product.
 
+        Parameters
+        ----------
+        rhs : clifford
+            The other multivector.
+
+        Returns
+        -------
+        clifford
+            The outer product.
+
+        Examples
+        --------
         >>> print(clifford("{1}") ^ clifford("{2}"))
         {1,2}
         >>> print(clifford(2) ^ clifford("{2}"))
@@ -951,6 +1189,18 @@ cdef class clifford:
         """
         Geometric quotient.
 
+        Parameters
+        ----------
+        rhs : clifford
+            The denominator.
+
+        Returns
+        -------
+        clifford
+            The quotient.
+
+        Examples
+        --------
         >>> print(clifford("{1}") / clifford("{2}"))
         {1,2}
         >>> print(clifford(2) / clifford("{2}"))
@@ -990,6 +1240,13 @@ cdef class clifford:
         """
         Geometric multiplicative inverse.
 
+        Returns
+        -------
+        clifford
+            The inverse.
+
+        Examples
+        --------
         >>> x = clifford("{1}"); print(x.inv())
         {1}
         >>> x = clifford(2); print(x.inv())
@@ -1001,8 +1258,20 @@ cdef class clifford:
 
     def __or__(lhs, rhs):
         """
-        Transform left hand side, using right hand side as a transformation.
+        Transformation via twisted adjoint action (sandwich product).
 
+        Parameters
+        ----------
+        rhs : clifford
+            The transformation multivector.
+
+        Returns
+        -------
+        clifford
+            The transformed multivector.
+
+        Examples
+        --------
         >>> x=clifford("{1,2}") * pi/2; y=clifford("{1}"); print(y|x)
         -{1}
         >>> x=clifford("{1,2}") * pi/2; y=clifford("{1}"); print(y|exp(x))
@@ -1025,6 +1294,20 @@ cdef class clifford:
         """
         Power: self to the m.
 
+        Parameters
+        ----------
+        m : int
+            The exponent.
+        dummy : object
+            Ignored (required by Python power operator signature).
+
+        Returns
+        -------
+        clifford
+             The result of exponentiation.
+
+        Examples
+        --------
         >>> x=clifford("{1}"); print(x ** 2)
         1
         >>> x=clifford("2"); print(x ** 2)
@@ -1044,6 +1327,18 @@ cdef class clifford:
         """
         Power: self to the m.
 
+        Parameters
+        ----------
+        m : int, float, or clifford
+            The exponent.
+
+        Returns
+        -------
+        clifford
+             The result of exponentiation.
+
+        Examples
+        --------
         >>> x=clifford("{1}"); print(x.pow(2))
         1
         >>> x=clifford("2"); print(x.pow(2))
@@ -1068,6 +1363,18 @@ cdef class clifford:
         """
         Outer product power.
 
+        Parameters
+        ----------
+        m : int
+            The exponent.
+
+        Returns
+        -------
+        clifford
+            The outer power result.
+
+        Examples
+        --------
         >>> x=clifford("2+{1}"); print(x.outer_pow(0))
         1
         >>> x=clifford("2+{1}"); print(x.outer_pow(1))
@@ -1076,9 +1383,30 @@ cdef class clifford:
         4+4{1}
         >>> print(clifford("1+{1}+{1,2}").outer_pow(3))
         1+3{1}+3{1,2}
-
         """
         return clifford().wrap( self.instance.outer_pow(m) )
+
+    def nbr_terms(self):
+        """
+        Number of terms in the multivector.
+
+        Returns
+        -------
+        int
+            The number of terms.
+
+        Examples
+        --------
+        >>> clifford(2.0).nbr_terms()
+        1
+        >>> clifford("2{1}").nbr_terms()
+        1
+        >>> clifford(0.0).nbr_terms()
+        0
+        >>> clifford("1+2{1}+3{1,2}").nbr_terms()
+        3
+        """
+        return self.instance.nbr_terms()
 
     def __call__(self, grade):
         """
@@ -1099,10 +1427,35 @@ cdef class clifford:
         """
         return clifford().wrap( self.instance.call(grade) )
 
+    def grade(self):
+        """
+        Maximum of the grades of each term.
+
+        Returns
+        -------
+        int
+            The maximum grade.
+
+        Examples
+        --------
+        >>> clifford(0).grade()
+        0
+        >>> clifford(index_set({-1,1})).grade()
+        2
+        """
+        return self.instance.grade()
+
     def scalar(self):
         """
         Scalar part.
 
+        Returns
+        -------
+        float
+            The scalar part.
+
+        Examples
+        --------
         >>> clifford("1+{1}+{1,2}").scalar()
         1.0
         >>> clifford("{1,2}").scalar()
@@ -1114,6 +1467,13 @@ cdef class clifford:
         """
         Pure part.
 
+        Returns
+        -------
+        clifford
+            The pure part (multivector without scalar term).
+
+        Examples
+        --------
         >>> print(clifford("1+{1}+{1,2}").pure())
         {1}+{1,2}
         >>> print(clifford("{1,2}").pure())
@@ -1125,6 +1485,13 @@ cdef class clifford:
         """
         Even part of multivector, sum of even grade terms.
 
+        Returns
+        -------
+        clifford
+            The even part.
+
+        Examples
+        --------
         >>> print(clifford("1+{1}+{1,2}").even())
         1+{1,2}
         """
@@ -1134,6 +1501,13 @@ cdef class clifford:
         """
         Odd part of multivector, sum of odd grade terms.
 
+        Returns
+        -------
+        clifford
+            The odd part.
+
+        Examples
+        --------
         >>> print(clifford("1+{1}+{1,2}").odd())
         {1}
         """
@@ -1141,8 +1515,21 @@ cdef class clifford:
 
     def vector_part(self, frm = None):
         """
-        Vector part of multivector, as a Python list, with respect to frm.
+        Vector part of multivector, as a Python list.
 
+        Parameters
+        ----------
+        frm : index_set, optional
+            The frame with respect to which the vector part is taken.
+            If None, the frame of the multivector itself is used.
+
+        Returns
+        -------
+        list of float
+            The vector part coefficients.
+
+        Examples
+        --------
         >>> print(clifford("1+2{1}+3{2}+4{1,2}").vector_part())
         [2.0, 3.0]
         >>> print(clifford("1+2{1}+3{2}+4{1,2}").vector_part(index_set({-1,1,2})))
@@ -1169,9 +1556,16 @@ cdef class clifford:
 
     def involute(self):
         """
-        Main involution, each {i} is replaced by -{i} in each term,
-        eg. clifford("{1}") -> -clifford("{1}").
+        Main involution, each {i} is replaced by -{i} in each term.
+        E.g. clifford("{1}") -> -clifford("{1}").
 
+        Returns
+        -------
+        clifford
+            The involute.
+
+        Examples
+        --------
         >>> print(clifford("{1}").involute())
         -{1}
         >>> print((clifford("{2}") * clifford("{1}")).involute())
@@ -1185,8 +1579,16 @@ cdef class clifford:
 
     def reverse(self):
         """
-        Reversion, eg. clifford("{1}")*clifford("{2}") -> clifford("{2}")*clifford("{1}").
+        Reversion. Returns the multivector with the order of all products reversed.
+        E.g. clifford("{1}")*clifford("{2}") -> clifford("{2}")*clifford("{1}").
 
+        Returns
+        -------
+        clifford
+            The reverse.
+
+        Examples
+        --------
         >>> print(clifford("{1}").reverse())
         {1}
         >>> print((clifford("{2}") * clifford("{1}")).reverse())
@@ -1202,6 +1604,13 @@ cdef class clifford:
         """
         Conjugation, reverse o involute == involute o reverse.
 
+        Returns
+        -------
+        clifford
+            The conjugate.
+
+        Examples
+        --------
         >>> print((clifford("{1}")).conj())
         -{1}
         >>> print((clifford("{2}") * clifford("{1}")).conj())
@@ -1217,6 +1626,13 @@ cdef class clifford:
         """
         Quadratic form == (rev(x)*x)(0).
 
+        Returns
+        -------
+        float
+            The quadratic form (scalar).
+
+        Examples
+        --------
         >>> print(clifford("1+{1}+{1,2}").quad())
         3.0
         >>> print(clifford("1+{-1}+{1,2}+{1,2,3}").quad())
@@ -1228,6 +1644,13 @@ cdef class clifford:
         """
         Norm == sum of squares of coordinates.
 
+        Returns
+        -------
+        float
+            The norm.
+
+        Examples
+        --------
         >>> clifford("1+{1}+{1,2}").norm()
         3.0
         >>> clifford("1+{-1}+{1,2}+{1,2,3}").norm()
@@ -1239,6 +1662,13 @@ cdef class clifford:
         """
         Absolute value: square root of norm.
 
+        Returns
+        -------
+        float
+            The absolute value.
+
+        Examples
+        --------
         >>> clifford("1+{-1}+{1,2}+{1,2,3}").abs()
         2.0
         """
@@ -1248,6 +1678,13 @@ cdef class clifford:
         """
         Maximum of absolute values of components of multivector: multivector infinity norm.
 
+        Returns
+        -------
+        float
+            The maximum absolute value.
+
+        Examples
+        --------
         >>> clifford("1+{-1}+{1,2}+{1,2,3}").max_abs()
         1.0
         >>> clifford("3+2{1}+{1,2}").max_abs()
@@ -1259,6 +1696,18 @@ cdef class clifford:
         """
         Remove all terms of self with relative size smaller than limit.
 
+        Parameters
+        ----------
+        limit : float
+            The threshold for truncation.
+
+        Returns
+        -------
+        clifford
+            The truncated multivector.
+
+        Examples
+        --------
         >>> clifford("1e8+{1}+1e-8{1,2}").truncated(1.0e-6)
         clifford("100000000")
         >>> clifford("1e4+{1}+1e-4{1,2}").truncated(1.0e-6)
@@ -1270,16 +1719,38 @@ cdef class clifford:
         """
         Check if a multivector contains any infinite values.
 
+        Returns
+        -------
+        bool
+            True if any coordinate is infinite.
+
+        Examples
+        --------
         >>> clifford().isinf()
         False
+        >>> clifford(math.inf).isinf()
+        True
+        >>> clifford(math.nan).isinf()
+        False
         """
-        return self.instance.isnan()
+        return self.instance.isinf()
 
     def isnan(self):
         """
         Check if a multivector contains any IEEE NaN values.
 
+        Returns
+        -------
+        bool
+            True if any coordinate is NaN.
+
+        Examples
+        --------
         >>> clifford().isnan()
+        False
+        >>> clifford(math.nan).isnan()
+        True
+        >>> clifford(math.inf).isnan()
         False
         """
         return self.instance.isnan()
@@ -1288,6 +1759,13 @@ cdef class clifford:
         """
         Subalgebra generated by all generators of terms of given multivector.
 
+        Returns
+        -------
+        index_set
+            The frame of the multivector.
+
+        Examples
+        --------
         >>> print(clifford("1+3{-1}+2{1,2}+4{-2,7}").frame())
         {-2,-1,1,2,7}
         >>> s=clifford("1+3{-1}+2{1,2}+4{-2,7}").frame(); type(s)
@@ -1299,6 +1777,13 @@ cdef class clifford:
         """
         The “official” string representation of self.
 
+        Returns
+        -------
+        str
+            The representation.
+
+        Examples
+        --------
         >>> clifford("1+3{-1}+2{1,2}+4{-2,7}").__repr__()
         'clifford("1+3{-1}+2{1,2}+4{-2,7}")'
         """
@@ -1308,12 +1793,19 @@ cdef class clifford:
         """
         The “informal” string representation of self.
 
+        Returns
+        -------
+        str
+            The string representation.
+
+        Examples
+        --------
         >>> clifford("1+3{-1}+2{1,2}+4{-2,7}").__str__()
         '1+3{-1}+2{1,2}+4{-2,7}'
         """
         return clifford_to_str( self.unwrap() ).decode()
 
-def clifford_hidden_doctests():
+def _clifford_hidden_doctests():
     """
     Tests for functions that Doctest cannot see.
 
@@ -1401,6 +1893,18 @@ cpdef inline error_squared_tol(obj):
     """
     Quadratic norm error tolerance relative to a specific multivector.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+        The multivector reference.
+
+    Returns
+    -------
+    float
+        The error tolerance.
+
+    Examples
+    --------
     >>> print(error_squared_tol(clifford("{1}")) * 3.0 - error_squared_tol(clifford("1{1}-2{2}+3{3}")))
     0.0
     """
@@ -1410,6 +1914,22 @@ cpdef inline error_squared(lhs, rhs, threshold):
     """
     Relative or absolute error using the quadratic norm.
 
+    Parameters
+    ----------
+    lhs : clifford
+        Left hand side.
+    rhs : clifford
+        Right hand side.
+    threshold : float
+        Tolerance threshold.
+
+    Returns
+    -------
+    float
+        The calculated error.
+
+    Examples
+    --------
     >>> err2=scalar_epsilon*scalar_epsilon
 
     >>> print(error_squared(clifford("{1}"), clifford("1{1}"), err2))
@@ -1423,6 +1943,24 @@ cpdef inline approx_equal(lhs, rhs, threshold=None, tol=None):
     """
     Test for approximate equality of multivectors.
 
+    Parameters
+    ----------
+    lhs : clifford
+        Left hand side.
+    rhs : clifford
+        Right hand side.
+    threshold : float, optional
+         Error threshold. If None, inferred from rhs.
+    tol : float, optional
+         Tolerance. If None, inferred from rhs.
+
+    Returns
+    -------
+    bool
+        True if approximately equal.
+
+    Examples
+    --------
     >>> err2=scalar_epsilon*scalar_epsilon
 
     >>> print(approx_equal(clifford("{1}"), clifford("1{1}")))
@@ -1442,6 +1980,18 @@ cpdef inline inv(obj):
     """
     Geometric multiplicative inverse.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+        The multivector to invert.
+
+    Returns
+    -------
+    clifford
+        The inverse.
+
+    Examples
+    --------
     >>> print(inv(clifford("{1}")))
     {1}
     >>> print(inv(clifford("{-1}")))
@@ -1457,6 +2007,18 @@ cpdef inline scalar(obj):
     """
     Scalar part.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+        The multivector.
+
+    Returns
+    -------
+    float
+        The scalar part.
+
+    Examples
+    --------
     >>> scalar(clifford("1+{1}+{1,2}"))
     1.0
     >>> scalar(clifford("{1,2}"))
@@ -1468,6 +2030,18 @@ cpdef inline real(obj):
     """
     Real part: synonym for scalar part.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+        The multivector.
+
+    Returns
+    -------
+    float
+        The real part (scalar).
+
+    Examples
+    --------
     >>> real(clifford("1+{1}+{1,2}"))
     1.0
     >>> real(clifford("{1,2}"))
@@ -1475,21 +2049,23 @@ cpdef inline real(obj):
     """
     return clifford(obj).scalar()
 
-cpdef inline imag(obj):
-    """
-    Imaginary part: deprecated (always 0).
-
-    >>> imag(clifford("1+{1}+{1,2}"))
-    0.0
-    >>> imag(clifford("{1,2}"))
-    0.0
-    """
-    return 0.0
 
 cpdef inline pure(obj):
     """
-    Pure part
+    Pure part.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+        The multivector.
+
+    Returns
+    -------
+    clifford
+         The pure part.
+
+    Examples
+    --------
     >>> print(pure(clifford("1+{1}+{1,2}")))
     {1}+{1,2}
     >>> print(pure(clifford("{1,2}")))
@@ -1501,6 +2077,18 @@ cpdef inline even(obj):
     """
     Even part of multivector, sum of even grade terms.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+        The multivector.
+
+    Returns
+    -------
+    clifford
+         The even part.
+
+    Examples
+    --------
     >>> print(even(clifford("1+{1}+{1,2}")))
     1+{1,2}
     """
@@ -1510,6 +2098,18 @@ cpdef inline odd(obj):
     """
     Odd part of multivector, sum of odd grade terms.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+        The multivector.
+
+    Returns
+    -------
+    clifford
+         The odd part.
+
+    Examples
+    --------
     >>> print(odd(clifford("1+{1}+{1,2}")))
     {1}
     """
@@ -1517,8 +2117,21 @@ cpdef inline odd(obj):
 
 cpdef inline involute(obj):
     """
-    Main involution, each {i} is replaced by -{i} in each term, eg. {1}*{2} -> (-{2})*(-{1})
+    Main involution, each {i} is replaced by -{i} in each term.
+    E.g. {1}*{2} -> (-{2})*(-{1}).
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+        The multivector.
+
+    Returns
+    -------
+    clifford
+         The involute.
+
+    Examples
+    --------
     >>> print(involute(clifford("{1}")))
     -{1}
     >>> print(involute(clifford("{2}") * clifford("{1}")))
@@ -1532,8 +2145,21 @@ cpdef inline involute(obj):
 
 cpdef inline reverse(obj):
     """
-    Reversion, eg. {1}*{2} -> {2}*{1}
+    Reversion. Returns the multivector with the order of all products reversed.
+    E.g. {1}*{2} -> {2}*{1}.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+        The multivector.
+
+    Returns
+    -------
+    clifford
+         The reverse.
+
+    Examples
+    --------
     >>> print(reverse(clifford("{1}")))
     {1}
     >>> print(reverse(clifford("{2}") * clifford("{1}")))
@@ -1549,6 +2175,18 @@ cpdef inline conj(obj):
     """
     Conjugation, reverse o involute == involute o reverse.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+        The multivector.
+
+    Returns
+    -------
+    clifford
+         The conjugate.
+
+    Examples
+    --------
     >>> print(conj(clifford("{1}")))
     -{1}
     >>> print(conj(clifford("{2}") * clifford("{1}")))
@@ -1564,6 +2202,18 @@ cpdef inline quad(obj):
     """
     Quadratic form == (rev(x)*x)(0).
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+        The multivector.
+
+    Returns
+    -------
+    float
+        The quadratic form.
+
+    Examples
+    --------
     >>> print(quad(clifford("1+{1}+{1,2}")))
     3.0
     >>> print(quad(clifford("1+{-1}+{1,2}+{1,2,3}")))
@@ -1573,8 +2223,20 @@ cpdef inline quad(obj):
 
 cpdef inline norm(obj):
     """
-    norm == sum of squares of coordinates.
+    Norm == sum of squares of coordinates.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+        The multivector.
+
+    Returns
+    -------
+    float
+        The norm.
+
+    Examples
+    --------
     >>> norm(clifford("1+{1}+{1,2}"))
     3.0
     >>> norm(clifford("1+{-1}+{1,2}+{1,2,3}"))
@@ -1586,6 +2248,18 @@ cpdef inline abs(obj):
     """
     Absolute value of multivector: multivector 2-norm.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+        The multivector.
+
+    Returns
+    -------
+    float
+        The absolute value.
+
+    Examples
+    --------
     >>> abs(clifford("1+{-1}+{1,2}+{1,2,3}"))
     2.0
     """
@@ -1595,6 +2269,18 @@ cpdef inline max_abs(obj):
     """
     Maximum absolute value of coordinates multivector: multivector infinity-norm.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+        The multivector.
+
+    Returns
+    -------
+    float
+        The maximum absolute value.
+
+    Examples
+    --------
     >>> max_abs(clifford("1+{-1}+{1,2}+{1,2,3}"))
     1.0
     >>> max_abs(clifford("3+2{1}+{1,2}"))
@@ -1607,6 +2293,20 @@ cpdef inline pow(obj, m):
     """
     Integer power of multivector: obj to the m.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+        The multivector base.
+    m : int
+        The exponent.
+
+    Returns
+    -------
+    clifford
+         The result.
+
+    Examples
+    --------
     >>> x=clifford("{1}"); print(pow(x,2))
     1
     >>> x=clifford("2"); print(pow(x,2))
@@ -1631,6 +2331,20 @@ cpdef inline outer_pow(obj, m):
     """
     Outer product power of multivector.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+        The multivector.
+    m : int
+        The exponent.
+
+    Returns
+    -------
+    clifford
+         The outer power result.
+
+    Examples
+    --------
     >>> print(outer_pow(clifford("1+{1}+{1,2}"),3))
     1+3{1}+3{1,2}
     """
@@ -1640,6 +2354,18 @@ cpdef inline complexifier(obj):
     """
     Square root of -1 which commutes with all members of the frame of the given multivector.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+        The reference multivector or frame.
+
+    Returns
+    -------
+    clifford
+         The complexifier/pseudoscalar.
+
+    Examples
+    --------
     >>> print(complexifier(clifford(index_set({1}))))
     {1,2,3}
     >>> print(complexifier(clifford(index_set({-1}))))
@@ -1655,6 +2381,20 @@ cpdef inline sqrt(obj, i = None):
     """
     Square root of multivector with optional complexifier.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+         The multivector.
+    i : clifford or index_set, optional
+         The complexifier (imaginary unit). If None, inferred or standard.
+
+    Returns
+    -------
+    clifford
+         The square root.
+
+    Examples
+    --------
     >>> print(sqrt(-1))
     {-1}
     >>> print(sqrt(clifford("2{-1}")))
@@ -1678,6 +2418,18 @@ cpdef inline exp(obj):
     """
     Exponential of multivector.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+         The multivector.
+
+    Returns
+    -------
+    clifford
+         The exponential.
+
+    Examples
+    --------
     >>> x=clifford("{1,2}") * pi/4; print(exp(x))
     0.7071+0.7071{1,2}
     >>> x=clifford("{1,2}") * pi/2; print(exp(x))
@@ -1692,6 +2444,20 @@ cpdef inline log(obj,i = None):
     """
     Natural logarithm of multivector with optional complexifier.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+         The multivector.
+    i : clifford or index_set, optional
+         The complexifier.
+
+    Returns
+    -------
+    clifford
+         The logarithm.
+
+    Examples
+    --------
     >>> x=clifford("{-1}"); print((log(x,"{-1}") * 2/pi))
     {-1}
     >>> x=clifford("{1,2}"); print((log(x,"{1,2,3}") * 2/pi))
@@ -1715,7 +2481,21 @@ cpdef inline cos(obj,i = None):
     """
     Cosine of multivector with optional complexifier.
 
-    >>> x=clifford("{1,2}"); print(cos(acos(x),"{1,2,3}"))
+    Parameters
+    ----------
+    obj : clifford or index_set
+         The multivector.
+    i : clifford or index_set, optional
+         The complexifier.
+
+    Returns
+    -------
+    clifford
+         The cosine.
+
+    Examples
+    --------
+    >>> x=clifford("{1,2}"); i=complexifier(acos(x)); print(cos(acos(x),i))
     {1,2}
     >>> x=clifford("{1,2}"); print(cos(acos(x)))
     {1,2}
@@ -1732,7 +2512,21 @@ cpdef inline acos(obj,i = None):
     """
     Inverse cosine of multivector with optional complexifier.
 
-    >>> x=clifford("{1,2}"); print(cos(acos(x),"{1,2,3}"))
+    Parameters
+    ----------
+    obj : clifford or index_set
+         The multivector.
+    i : clifford or index_set, optional
+         The complexifier.
+
+    Returns
+    -------
+    clifford
+         The inverse cosine.
+
+    Examples
+    --------
+    >>> x=clifford("{1,2}"); i=complexifier(acos(x)); print(cos(acos(x),i))
     {1,2}
     >>> x=clifford("{1,2}"); print(cos(acos(x),"{-1,1,2,3,4}"))
     {1,2}
@@ -1753,6 +2547,18 @@ cpdef inline cosh(obj):
     """
     Hyperbolic cosine of multivector.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+         The multivector.
+
+    Returns
+    -------
+    clifford
+         The hyperbolic cosine.
+
+    Examples
+    --------
     >>> x=clifford("{1,2}") * pi; print(cosh(x))
     -1
     >>> x=clifford("{1,2,3}"); print(cosh(acosh(x)))
@@ -1769,6 +2575,20 @@ cpdef inline acosh(obj,i = None):
     """
     Inverse hyperbolic cosine of multivector with optional complexifier.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+         The multivector.
+    i : clifford or index_set, optional
+         The complexifier.
+
+    Returns
+    -------
+    clifford
+         The inverse hyperbolic cosine.
+
+    Examples
+    --------
     >>> print(acosh(0,"{-2,-1,1}"))
     1.571{-2,-1,1}
     >>> x=clifford("{1,2,3}"); print(cosh(acosh(x,"{-1,1,2,3,4}")))
@@ -1792,6 +2612,20 @@ cpdef inline sin(obj,i = None):
     """
     Sine of multivector with optional complexifier.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+         The multivector.
+    i : clifford or index_set, optional
+         The complexifier.
+
+    Returns
+    -------
+    clifford
+         The sine.
+
+    Examples
+    --------
     >>> s="{-1}"; x=clifford(s); print(asin(sin(x,s),s))
     {-1}
     >>> s="{-1}"; x=clifford(s); print(asin(sin(x,s),"{-2,-1,1}"))
@@ -1811,6 +2645,20 @@ cpdef inline asin(obj,i = None):
     """
     Inverse sine of multivector with optional complexifier.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+         The multivector.
+    i : clifford or index_set, optional
+         The complexifier.
+
+    Returns
+    -------
+    clifford
+         The inverse sine.
+
+    Examples
+    --------
     >>> s="{-1}"; x=clifford(s); print(asin(sin(x,s),s))
     {-1}
     >>> s="{-1}"; x=clifford(s); print(asin(sin(x,s),"{-2,-1,1}"))
@@ -1832,6 +2680,18 @@ cpdef inline sinh(obj):
     """
     Hyperbolic sine of multivector.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+         The multivector.
+
+    Returns
+    -------
+    clifford
+         The hyperbolic sine.
+
+    Examples
+    --------
     >>> x=clifford("{1,2}") * pi/2; print(sinh(x))
     {1,2}
     >>> x=clifford("{1,2}") * pi/6; print(sinh(x))
@@ -1846,6 +2706,20 @@ cpdef inline asinh(obj,i = None):
     """
     Inverse hyperbolic sine of multivector with optional complexifier.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+         The multivector.
+    i : clifford or index_set, optional
+         The complexifier.
+
+    Returns
+    -------
+    clifford
+         The inverse hyperbolic sine.
+
+    Examples
+    --------
     >>> x=clifford("{1,2}"); print(asinh(x,"{1,2,3}") * 2/pi)
     {1,2}
     >>> x=clifford("{1,2}"); print(asinh(x) * 2/pi)
@@ -1865,6 +2739,20 @@ cpdef inline tan(obj,i = None):
     """
     Tangent of multivector with optional complexifier.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+         The multivector.
+    i : clifford or index_set, optional
+         The complexifier.
+
+    Returns
+    -------
+    clifford
+         The tangent.
+
+    Examples
+    --------
     >>> x=clifford("{1,2}"); print(tan(x,"{1,2,3}"))
     0.7616{1,2}
     >>> x=clifford("{1,2}"); print(tan(x))
@@ -1882,6 +2770,20 @@ cpdef inline atan(obj,i = None):
     """
     Inverse tangent of multivector with optional complexifier.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+         The multivector.
+    i : clifford or index_set, optional
+         The complexifier.
+
+    Returns
+    -------
+    clifford
+         The inverse tangent.
+
+    Examples
+    --------
     >>> s=index_set({1,2,3}); x=clifford("{1}"); print(tan(atan(x,s),s))
     {1}
     >>> x=clifford("{1}"); print(tan(atan(x)))
@@ -1899,6 +2801,18 @@ cpdef inline tanh(obj):
     """
     Hyperbolic tangent of multivector.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+         The multivector.
+
+    Returns
+    -------
+    clifford
+         The hyperbolic tangent.
+
+    Examples
+    --------
     >>> x=clifford("{1,2}") * pi/4; print(tanh(x))
     {1,2}
     """
@@ -1911,6 +2825,20 @@ cpdef inline atanh(obj,i = None):
     """
     Inverse hyperbolic tangent of multivector with optional complexifier.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+         The multivector.
+    i : clifford or index_set, optional
+         The complexifier.
+
+    Returns
+    -------
+    clifford
+         The inverse hyperbolic tangent.
+
+    Examples
+    --------
     >>> s=index_set({1,2,3}); x=clifford("{1,2}"); print(tanh(atanh(x,s)))
     {1,2}
     >>> x=clifford("{1,2}"); print(tanh(atanh(x)))
@@ -1928,6 +2856,20 @@ cpdef inline random_clifford(index_set ixt, fill = 1.0):
     """
     Random multivector within a frame.
 
+    Parameters
+    ----------
+    ixt : index_set
+        The frame.
+    fill : float, optional
+        The fill density (0.0 to 1.0).
+
+    Returns
+    -------
+    clifford
+         The random multivector.
+
+    Examples
+    --------
     >>> print(random_clifford(index_set({-3,-1,2})).frame())
     {-3,-1,2}
     """
@@ -1937,6 +2879,18 @@ cpdef inline cga3(obj):
     """
     Convert Euclidean 3D multivector to Conformal Geometric Algebra using Doran and Lasenby definition.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+        The Euclidean 3D multivector.
+
+    Returns
+    -------
+    clifford
+         The CGA3 multivector.
+
+    Examples
+    --------
     >>> x=clifford("2{1}+9{2}+{3}"); print(cga3(x))
     87{-1}+4{1}+18{2}+2{3}+85{4}
     """
@@ -1946,6 +2900,18 @@ cpdef inline cga3std(obj):
     """
     Convert CGA3 null vector to standard conformal null vector using Doran and Lasenby definition.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+        The CGA3 null vector.
+
+    Returns
+    -------
+    clifford
+         The standard conformal null vector.
+
+    Examples
+    --------
     >>> x=clifford("2{1}+9{2}+{3}"); print(cga3std(cga3(x)))
     87{-1}+4{1}+18{2}+2{3}+85{4}
     >>> x=clifford("2{1}+9{2}+{3}"); print(cga3std(cga3(x))-cga3(x))
@@ -1957,6 +2923,18 @@ cpdef inline agc3(obj):
     """
     Convert CGA3 null vector to Euclidean 3D vector using Doran and Lasenby definition.
 
+    Parameters
+    ----------
+    obj : clifford or index_set
+        The CGA3 null vector.
+
+    Returns
+    -------
+    clifford
+         The Euclidean 3D vector.
+
+    Examples
+    --------
     >>> x=clifford("2{1}+9{2}+{3}"); print(agc3(cga3(x)))
     2{1}+9{2}+{3}
     >>> x=clifford("2{1}+9{2}+{3}"); print(agc3(cga3(x))-x)

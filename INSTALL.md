@@ -1,19 +1,26 @@
-INSTALL for GluCat 0.13.0 with PyClical
+INSTALL for GluCat 0.98a0 with PyClical
 ========================================
 
 Prerequisites: Before You Begin
 ===============================
 
-GluCat uses the C++ Standard Library and the Boost Library. The PyClical Python
-extension module is built using Cython and Python. Make sure that you have all
-of these installed and working before attempting to use GluCat with PyClical.
+GluCat uses the C++ Standard Library, the Boost Library, and either Eigen or 
+Armadillo for linear algebra. The PyClical Python extension module is built 
+using Cython and Python. Make sure that you have all of these installed and 
+working before attempting to use GluCat with PyClical.
+
 Use the instructions at http://www.boost.org/more/download.html to obtain
 the Boost Library. Make sure that you are able to build the Boost library with
 the same C++ compiler version as you will be using to build programs that will
 use the GluCat library.
 
+GluCat uses the Eigen C++ library by default for its linear algebra backend.
+You can obtain Eigen from http://eigen.tuxfamily.org/. Alternatively, you can 
+configure GluCat to use the Armadillo C++ library, available from 
+http://arma.sourceforge.net/.
+
 The default configuration of GluCat, as well as most combinations of
-configuration options, require a compiler that supports the C++ 2011 standard.
+configuration options, require a compiler that supports the C++ 2023 standard.
 
 Scroll to the end of these instructions to see a list of successful builds,
 including version numbers of various software components, and notes on software
@@ -31,13 +38,13 @@ To install the first way, from (e.g.) GitHub, run the following commands on a
 Linux machine or equivalent Posix environment connected to the Internet:
 
 ```
-> git clone git@github.com:penguian/glucat.git glucat-0.13.0
-> cd glucat-0.13.0
-> make -f admin/Makefile.common cvs
+> git clone git@github.com:penguian/glucat.git glucat-0.98a0
+> cd glucat-0.98a0
+> make -f admin/Makefile.common bootstrap
 ```
-This results in a directory structure that includes glucat-0.13.0/configure,
+This results in a directory structure that includes glucat-0.98a0/configure,
 allowing you to make and install GluCat in the same way as if you had downloaded
-and unzipped the tarball glucat-0.13.0.tar.gz.
+and unzipped the tarball glucat-0.98a0.tar.gz.
 
 
 Directory Structure
@@ -45,12 +52,12 @@ Directory Structure
 
 Once you have downloaded, unzipped and untarred the source code, or followed
 the instructions above to install from Git clone, you should have a directory,
-glucat-0.13.0. Under this directory you should see a number of subdirectories,
+glucat-0.98a0. Under this directory you should see a number of subdirectories,
 including `./admin`, `./doc`, `./glucat`, `./gfft_test`, `./products`,
-`./pyclical`, `./squaring`, `./test`, `./test_runtime`, `./testxx`, and
-`./transforms`.
+`./pyclical`, `./squaring`, `./test`, `./test_coverage`, `./test_doctest`,
+`./test_move`, `./test_runtime`, `./testxx`, and `./transforms`.
 
-The following instructions are meant to be used with `glucat-0.13.0` as the
+The following instructions are meant to be used with `glucat-0.98a0` as the
 current directory.
 
 
@@ -62,8 +69,9 @@ library with PyClical. These are:
 
  1. The PyClical Python extension module.
  2. The timing test programs.
- 3. The regression test programs.
- 4. Your own programs, written in C++.
+ 3. The legacy regression test programs.
+ 4. The new doctest-based unit tests.
+ 5. Your own programs, written in C++.
 
 There are four different things to install. These are:
 
@@ -135,10 +143,23 @@ Pay special attention to the `-D` flags described in the configuration section
 below, as these control optional parts of the compilation of the GluCat library.
 In particular, if you compile your own programs without setting any of these
 `-D` flags, please be aware that the default random number generator used by
-GluCat requires the use of the C++ 2011 standard. See details below.
+GluCat requires the use of the C++ 2023 standard. See details below.
 
 To automate the build process, you should use GNU make with your own Makefile.
 For very elaborate software, you may also want to consider using GNU Autotools.
+
+Code Coverage and Unit Tests
+----------------------------
+
+GluCat now includes a modern unit testing suite based on `doctest`, and
+infrastructure for generating code coverage reports.
+
+The `./test_doctest` directory contains the build system for the doctest-based
+unit tests. These tests are integrated directly into the header files and can
+be enabled by defining `GLUCAT_DOCTEST`.
+
+The `./test_coverage` directory contains shell scripts for generating code
+coverage reports using Clang/LLVM. See "Running Coverage Tests" below.
 
 
 To Configure
@@ -150,7 +171,7 @@ subdirectories.
 
 As briefly described above, the simplest way to install this package is:
 
- 1. `cd` to the `glucat-0.13.0` directory containing the source code and type
+ 1. `cd` to the `glucat-0.98a0` directory containing the source code and type
     `./configure` to configure GluCat with PyClical for your system.
     If you are using `csh` on an old version of System V, you might need to type
     `sh ./configure` instead to prevent `csh` from trying to execute
@@ -179,6 +200,13 @@ shell script `./config.status` that you can run in the future to recreate the
 current configuration, a file `./config.cache` that saves the results of its
 tests to speed up reconfiguring, and a file `./config.log` containing compiler
 output (useful mainly for debugging `./configure`).
+
+The following additional options are recognized by `./configure`:
+
+  `--with-doctest`: Enables the modern unit testing suite in `test_doctest`.
+  
+  `--with-unordered-map=boost|std`: Chooses the implementation of the hash
+  map used in `framed_multi`. The default is `boost` (requires Boost 1.83.0+).
 
 If you need to do unusual things to compile GluCat with PyClical, please try to
 figure out how `./configure` could check whether to do them, and email diffs or
@@ -253,10 +281,13 @@ The option `--enable-debug=full` turns on full debugging, by adding the compiler
 flags `-O0 -g3` to `CXXFLAGS` in the Makefiles, and does not add the compiler flag
 `-DNDEBUG` to `CXXFLAGS` in the Makefiles.
 
-The preprocessor symbol `NDEBUG` is used by Boost uBLAS to control debugging.
-If NDEBUG is defined, then uBLAS compiles in release mode, including the use of
-expression templates. If `NDEBUG` is not defined, then uBLAS compiles in debug
-mode.
+The preprocessor symbol `NDEBUG` is used to control debugging in the C++ 
+Standard Library and the linear algebra backends (Eigen or Armadillo).
+
+If `NDEBUG` is defined, the library compiles in release mode, which typically 
+disables runtime assertions and enables optimizations. If `NDEBUG` is not 
+defined, the library compiles in debug mode, providing more extensive runtime 
+checks at the cost of performance.
 
 
 If you are compiling your own programs using the GluCat library, to control
@@ -269,7 +300,7 @@ the C++ compiler.
  For testing with some debugging capability:
   `-DNDEBUG -O1 -g`
 
- For full debugging capability, including the use of debug code in uBLAS:
+ For full debugging capability:
   `-O0 -g3`
 
 ```
@@ -277,6 +308,24 @@ the C++ compiler.
 ```
 Since the default for `--enable-debug` is `no`, the option `--disable-debug`
 does nothing.
+
+```
+  --enable-strict         compile with strict compiler options (may not work!)
+```
+This option adds strict compiler flags to `CXXFLAGS`, such as `-pedantic`. Use this
+with caution as it may cause the build to fail on warnings.
+
+```
+  --disable-warnings      disable compilation with -Wall and similar
+```
+By default, the compiler flag `-Wall` is added to `CXXFLAGS`. This option prevents
+`-Wall` from being added.
+
+```
+  --enable-profile        create profiling infos [default=no]
+```
+This option adds profiling flags (e.g. `-pg`) to `CXXFLAGS` and `LDFLAGS` to
+enable performance profiling with tools like `gprof`.
 
 ```
   --enable-pyclical       uses Cython to build PyClical Python extension module
@@ -335,48 +384,44 @@ You will also need to ensure that the include path used by the compiler sees
 `<qd/qd_real.h>` and the library path sees `libqd.*`.
 
 ```
-  --with-eig[=ARG]        library to use for eigenvalues
-                          (no|blaze) [default=no]
+  --with-armadillo        use Armadillo library [default=no]
 ```
-This option is used to control `_GLUCAT_USE_EIGENVALUES` and determine which
-libraries to use. ARG can be `no` or `blaze`. The default is `no`.
+This option controls the use of the Armadillo C++ linear algebra library.
 
-The option `--with-eig=blaze` adds `-D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BLAZE`
-to `CXXFLAGS` and adds the flags `-llapack -lblas` to the list of libraries,
-`LIBS` in the Makefiles, if the header file `<blaze/Math.h>` and the libraries
-`liblapack` and `libblas` are usable. To accomplish this, the configure script
-uses the `AX_LAPACK` and `AX_BLAS macros`, as mentioned above.
+The option `--with-armadillo` adds `-D_GLUCAT_USE_ARMADILLO` to `CXXFLAGS` and 
+adds the flag `-larmadillo` to the list of libraries, `LIBS` in the Makefiles.
 
-The preprocessor symbol `_GLUCAT_USE_EIGENVALUES` controls whether the `sqrt()`
-and `log()` functions in `glucat/matrix_multi_imp.h`  detect and handle negative
-real eigenvalues and imaginary eigenvalues correctly. If `_GLUCAT_USE_EIGENVALUES`
-is defined, then `sqrt()` and `log()` call the function `classify_eigenvalues()`,
-defined in `glucat/matrix_imp.h`, to detect negative real eigenvalues and imaginary
-eigenvalues, and handle negative real eigenvalues by expanding the algebra.
-Otherwise, `sqrt()` and `log()` operate as per GluCat 0.5.0 and earlier, which gives
-incorrect results in the case of negative real eigenvalues.
 
-The function `eigenvalues()` in `glucat/matrix_imp.h` calls an external function
-to obtain the eigenvalues of a matrix. Which function is used depends on one of
-a number of preprocessor symbols:
+To compile your own programs using the GluCat library with Armadillo, your 
+Makefile needs to pass the flags `-D_GLUCAT_USE_ARMADILLO` and `-larmadillo` to 
+the C++ compiler. You will also need to ensure that the include path used by the 
+compiler sees `<armadillo>` and the library path sees `libarmadillo.*`.
 
-If `_GLUCAT_USE_BLAZE` is defined, `glucat/matrix_imp.h` includes
-`<blaze/Math.h>` and related Blaze include files, as per the Blaze template
-library. To use this library, you will need to install it yourself, preferably
-from https://bitbucket.org/blaze-lib/blaze/src/master/
+```
+  --with-openmp           use OpenMP (requires Armadillo) [default=no]
+```
+This option controls the use of OpenMP for parallel processing. This option 
+requires that the Armadillo library is also used.
 
-To compile your own programs using the GluCat library, to detect and correctly
-handle negative real eigenvalues in the `sqrt()` and `log()` functions, your
-Makefile needs to pass the flag `-D_GLUCAT_USE_EIGENVALUES` to the C++ compiler,
-as well as one of the following choices of flags, and the corresponding header
-files and libraries must be usable.
+The option `--with-openmp` adds `-D_GLUCAT_USE_OPENMP` and OpenMP compiler flags
+(e.g. `-fopenmp` or `-qopenmp`) to `CXXFLAGS` in the Makefiles.
 
-* For Blaze:
-  `-D_GLUCAT_USE_BLAZE -llapack -lblas`
-  You will also need to ensure that the include path used by the compiler sees
-  `<blaze/Math.h>` etc. and the library path sees `liblapack.*` and `libblas.*`.
-  Blaze also requires C++14, so your Makefile needs to use `-std=c++14` or the
-  equivalent for your C++ compiler.
+
+To compile your own programs using the GluCat library with OpenMP, your Makefile
+needs to pass the flags `-D_GLUCAT_USE_OPENMP` and the OpenMP compiler flags
+to the C++ compiler.
+
+Note: If you are using the clang++ compiler you will need to ensure that libomp
+is installed.
+
+```
+  --with-unordered-map=boost|std
+                          use specified map implementation [default=boost]
+```
+This option chooses the implementation of the hash map used in `framed_multi`.
+The default is `boost`, which uses `boost::unordered_flat_map` (requires
+`Boost 1.83.0` or later). The value `std` uses `std::unordered_map`.
+Use `boost` for potentially better performance.
 
 
 Operation Controls
@@ -440,8 +485,9 @@ with `EXTCXXFLAGS = $(glucat_extra_cxxflags_pyclical) $(CXXFLAGS)`,
 `EXTAM_CPPFLAGS=$(all_includes)`, and the values of the other environment variables
 set by `./configure`.
 
-You can run `pyclical/setup.py` yourself, but you must set the environment variables
-to appropriate values. See `To Configure` above to determine these values.
+You can run `pyclical/setup.py` yourself, but you must set the environment 
+variables to appropriate values. See `To Configure` above to determine these 
+values.
 
 Alternatively, if you have Python installed but do not have Cython, then
 `./configure` will recognize this, and make will build PyClical via the command
@@ -472,14 +518,61 @@ Building and running the regression test programs
 To build and run the regression test programs, set the environment variable `CXX`
 to indicate your C++ compiler, eg. `g++` for GNU C++, `icpc` or `icpx` for Intel
 C++, then run `./configure` as above, and then run `make check`. This builds and
-runs the executable files `./test00/test00` to `./test17/test17`. This produces
-the intermediate output files `./test00/test00.out` to `./test17/test17.out`,
-and the final test output file `./test_runtime/test.out`. You can use a parallel
-make for `make check` , e.g. `make check -j 4`. This is especially useful on
-modern multicore machines.
+runs the executable files `./test_move/test_move` and `./test00/test00` to
+`./test17/test17`. This produces the intermediate output files
+`./test_move/test_move.out` and `./test00/test00.out` to `./test17/test17.out`,
+and the final test output file `./test_runtime/test.out`. 
+
+Note the difference between `make check` and `make check-local`:
+* `make check` is a standard recursive Automake target. It first enters each 
+  subdirectory in the `SUBDIRS` list (including timing tests like `gfft_test`) 
+  and runs `make check` there, before running the legacy regression tests.
+* `make check-local` is a faster alternative that skips the recursive pass 
+  through `SUBDIRS` and only runs the legacy functionality tests.
+
+When you want to generate `test_runtime/test.out` to compare with the existing 
+sample files in `test_runtime`, you should use parallel make with the 
+`check-local` target:
+```
+  make -j${NPROCS} check-local
+```
+where `${NPROCS}` is the number of processes you want to use (e.g. `make -j4 check-local`).
 
 Warning: If you use too many jobs with parallel make, the compiler will have
 problems obtaining enough memory to run efficiently.
+
+
+Building and running the doctest unit tests
+-------------------------------------------
+
+To build and run the modern unit tests, you must configure with the
+`--with-doctest` option. Then run:
+
+```
+ make -C test_doctest check
+```
+
+This will compile and run the unit tests integrated into the library headers.
+The output will be written to `test_doctest/test_doctest.out`.
+
+
+Running Coverage Tests
+----------------------
+
+If you have Clang and LLVM installed, you can generate code coverage reports
+using the scripts in `test_coverage/src/`.
+
+To run the coverage tests for the doctest suite:
+```
+ bash test_coverage/src/run_clang_doctest_coverage.sh [--backend=eigen|arma|both]
+```
+
+By default, the script tests both backends and combines their results into a 
+unified report. You can use the `--backend` argument to select a specific 
+backend.
+
+The resulting HTML report will be available in
+`test_coverage/results/coverage_html_doctest/index.html`.
 
 
 To Test
@@ -491,7 +584,7 @@ The test_runtime directory
 The test runtime directory `./test_runtime` contains sample test output files.
 
 The sample test output files include `eg3.res`, `gfft_test-11.out`, `products-8.out`,
-`squaring-11.out` and `transforms-8.out`. There are also 20 versions of the output
+`squaring-11.out` and `transforms-8.out`. There are also 24 versions of the output
 of the regression tests. These are described below.
 
 `./test_runtime` also contains the test input file `eg8.txt`. This file is needed
@@ -515,10 +608,11 @@ order. With zero parameters, all examples from `00` to `17` are run in order.
 Many of the examples are run twice - once with `framed_multi<Scalar_T>` and once
 with `matrix_multi<Scalar_T>`.
 
-The `./test_runtime` directory contains 22 sample versions of the regression test
-results, corresponding to 11 different combinations of configuration parameters,
+The `./test_runtime` directory contains 24 sample versions of the regression test
+results, corresponding to 12 different combinations of configuration parameters,
 for two different sets of tests: the complete set of 18 tests, and a subset of 3
-tests. The tests were all run on an 8 core `AMD Ryzen 7 8840HS w/ Radeon 780M Graphics` @ 3.3 GHz with
+tests. The tests were all run on an 8 core 
+`AMD Ryzen 7 8840HS w/ Radeon 780M Graphics` @ 3.3 GHz with
 ```
     Linux 6.11.0-14-generic #15-Ubuntu SMP 2025
     Kubuntu 24.10
@@ -563,59 +657,56 @@ in `./test/config-options.txt` and are:
 ```
 ./configure --prefix=$HOME/opt
 ```
-  7. `test.configure.qd.out`:
+
+  7. `test.configure.armadillo.out`:
+
+```
+./configure --with-armadillo
+```
+  7. `test.configure.armadillo-debug-yes.out`:
+
+```
+./configure --with-armadillo --enable-debug=yes
+```
+  9. `test.configure.armadillo-openmp.out`:
+
+```
+./configure --with-armadillo --with-openmp
+```
+ 10. `test.configure.armadillo-qd-std.out`:
+
+```
+./configure --with-armadillo --with-qd --with-unordered-map=std
+```
+ 11. `test.configure.qd.out`:
 
 ```
 ./configure --with-qd
 ```
-  8. `test.configure.eig-blaze.out`:
+ 12. `test.configure.armadillo-qd.out`:
 
 ```
-./configure --with-eig=blaze
+./configure --with-unordered-map=std
 ```
-  9. `test.configure.eig-blaze-debug-full.out`:
-
-```
-./configure --with-eig=blaze --enable-debug=full
-```
- 10. `test.configure.eig-blaze-debug-yes.out`:
-
-```
-./configure --with-eig=blaze --enable-debug=yes
-```
- 11. `test.configure.eig-blaze-qd.out`:
-
-```
-./configure --with-eig=blaze --with-qd
-```
-For each of the 11 `test.configure.*.out` files, there is a corresponding
-`fast-test.configure.*.out` file, making a total of 22 files.
+For each of the 12 `test.configure.*.out` files, there is a corresponding
+`fast-test.configure.*.out` file, making a total of 24 files.
 
 When you run your own test using `./test/test.sh`, you should compare its output
 to the output file corresponding to the closest match to the configuration
 options you used to build your copy of the GluCat library.
 
-The reason why sample test results corresponding to 11 different combinations
+The reason why sample test results corresponding to 12 different combinations
 of configuration parameters are included in `test_runtime` is that the test output
 strongly depends on the configuration options chosen. In particular:
 
 * If `--with-qd` is chosen, extra tests in `./test00/test00` and `./test11/test11`
   are done using the `dd_real` and `qd_real` scalar types.
 
-* If `--with-eig=blaze` is chosen the algorithms used for the square root,
-  logarithm and inverse trig functions will become much more accurate, and most
-  tests in `./test11/test11` will succeed. Even if this option is chosen, some
-  tests in `./test11/test11` fail due to insufficient accuracy. This is most
-  likely caused by a combination of excessive round off and truncation error
-  with respect to the condition numbers of the matrices used in calculating
-  these functions.
-
 The tests typically use floating point arithmetic, and `./test00/test00` and
 `./test11/test11` in particular also use random number generators. Therefore if
 you run the tests using different architecture, compilers or random number
 generators, you should expect to have different floating point arithmetic
-results, but generally, still within acceptable error tolerances, except as
-noted for `./test11/test11` above.
+results, but generally, still within acceptable error tolerances.
 
 The regression tests `./test00/test00` to `./test17/test17` recognize the program
 arguments `--help`, `--no-catch`, and `--verbose`. The `--no-catch` argument
@@ -685,8 +776,8 @@ for example, `some-other-file.txt`, and invoke your tests with the command
 ```
 config_options_file=some-other-file.txt ./test/test-all-config-options.sh
 ```
-You can also give parameters to `./test/test-all-config-options.sh` and these
-are passed to the make command. In particular, invoking (e.g.)
+You can also give parameters to `./test/test-all-config-options.sh` and these are
+passed to the make command. In particular, invoking (e.g.)
 
 ```
 ./test/test-all-config-options.sh -j 4
@@ -696,9 +787,9 @@ speeding up the entire testing process.
 
 Rather than running the regression tests in-place and copying the output
 directly into `./test_runtime`, the script `./test/test-all-config-options.sh`
-produces as many copies of the whole directory `glucat-0.13.0` as there are lines
-in `./test/config-options.txt`, naming them `glucat-0.13.0.1` to `glucat-0.13.0.11`,
-in the parent directory of `glucat-0.13.0`. This allows the effect of each set
+produces as many copies of the whole directory `glucat-0.98a0` as there are lines
+in `./test/config-options.txt`, naming them `glucat-0.98a0.1` to `glucat-0.98a0.12`,
+in the parent directory of `glucat-0.98a0`. This allows the effect of each set
 of configuration options to be directly compared, and also ensures that any
 side-effect of a configuration does not affect the test results of another
 configuration.
@@ -711,12 +802,12 @@ line 4 of `./test/config-options.txt`
 disable-dependency:          --disable-dependency-tracking
 ```
 causes `./test/diff-all-config-outputs.sh` to use diff to compare
-`glucat-0.13.0.4/test_runtime/test.configure.disable-dependency.out` to
-`glucat-0.13.0/test_runtime/test.configure.disable-dependency.out`, and compare
-`glucat-0.13.0.4/pyclical/test.out` to `glucat-0.13.0/pyclical/test.out`.
+`glucat-0.98a0.4/test_runtime/test.configure.disable-dependency.out` to
+`glucat-0.98a0/test_runtime/test.configure.disable-dependency.out`, and compare
+`glucat-0.98a0.4/pyclical/test.out` to `glucat-0.98a0/pyclical/test.out`.
 
 Each comparison should only produce a line containing the line number of
-the configuration being compared: 1 to 11.
+the configuration being compared: 1 to 12.
 
 The exceptional cases are:
 
@@ -788,15 +879,15 @@ The sample timing test results in `./test_runtime` are from programs
 built and run using the configure command:
 
 ```
-./configure --with-eig=blaze --with-qd
+./configure
 ```
 on an 8 core `AMD Ryzen 7 8840HS w/ Radeon 780M Graphics` @ 3.3 GHz with
 ```
-    Linux 6.11.0-14-generic #15-Ubuntu SMP 2025
-    Kubuntu 24.10
-    g++ 14.2.0 (Ubuntu 14.2.0-4ubuntu2)
-    Blaze 3.9.0
-    Boost 1.83.0
+    Linux 6.17.0-12-generic #12-Ubuntu SMP UTC
+    Kubuntu 25.10
+    g++ 15.2.0 (Ubuntu 15.2.0-4ubuntu4)
+    Boost 1.88.0
+    Eigen 3.4.0
     GSL 2.8
     QD 2.3.23
 ```
@@ -808,7 +899,7 @@ Once you have built PyClical, run the doctests. In `python3` or `ipython3`, etc.
 ```
  >>> import PyClical
  >>> PyClical._test()
- TestResults(failed=0, attempted=647)
+ TestResults(failed=0, attempted=661)
  >>> quit()
 ```
 Alternatively, in the directory `pyclical`, run the script `test.py` using:
@@ -851,35 +942,39 @@ to use `sudo`, login as `root`, or `su` to `root` before you run `make install`.
 List of Successful Builds
 =========================
 
-GluCat 0.13.0 with PyClical has so far been built and tested using:
+GluCat 0.98a0 with PyClical has so far been built and tested using:
 
  1) Tempesta:
     8 core `AMD Ryzen 7 8840HS w/ Radeon 780M Graphics` @ 3.3 GHz with
 
     ```
-    Linux 6.11.0-14-generic #15-Ubuntu SMP 2025
-    Kubuntu 24.10
-    Boost 1.83.0
+    Linux 6.17.0-12-generic #12-Ubuntu SMP UTC
+    Kubuntu 25.10
+    g++ 15.2.0 (Ubuntu 15.2.0-4ubuntu4)
+    Armadillo 14.2.3
+    Boost 1.88.0
+    Eigen 3.4.0
     GSL 2.8
     QD 2.3.23
     Cython 3.0.11
-    Python 3.12.7
+    Python 3.13
 
-    Numpy 1.21.5
-    Matplotlib 3.5.1
-    Mayavi2 4.8.1
-    VTK 9.1.0
+    Numpy 2.2.4
+    Matplotlib 3.10.1
+    Mayavi2 4.8.3
+    VTK 9.3.0
     Doxygen 1.9.8
-    pdfTeX 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian)
+    pdfTeX 3.141592653-2.6-1.40.26 (TeX Live 2025/dev/Debian)
     ```
 
     `./test/test-all-config-options.sh`:
-    All 11 configuration commands corresponding to each of the 11
+    All 12 configuration commands corresponding to each of the 12
     `test.configure*.out` files in `./test_runtime`
     tested with the following compiler versions:
 
-    1) `g++ 14.2.0 (Ubuntu 14.2.0-4ubuntu2)`
-    2) `Ubuntu clang version 19.1.1 (1ubuntu1)`
+    1) `g++ 15.2.0 (Ubuntu 15.2.0-4ubuntu4)`
+    2) `Ubuntu clang version 20.1.8 (0ubuntu4)`
+    3) `Intel(R) oneAPI DPC++/C++ Compiler 2025.3.2 (2025.3.2.20260112)`
 
  2) Pensieri:
     4 core `Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz` with
@@ -903,7 +998,7 @@ GluCat 0.13.0 with PyClical has so far been built and tested using:
     ```
 
     `./test/fast-test-all-config-options.sh`:
-    All 11 configuration commands corresponding to each of the 11
+    All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`
     tested with the following compiler versions:
 
@@ -936,7 +1031,7 @@ GluCat 0.13.0 with PyClical has so far been built and tested using:
     pdfTeX 3.141592653-2.6-1.40.26 (TeX Live 2024/TeX Live for SUSE Linux)
     ```
     `./test/fast-test-all-config-options.sh`
-    All 11 configuration commands corresponding to each of the 11
+    All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`
 
     Note: One test in test_runtime/fast-test.configure.eig-blaze-qd.out
@@ -958,7 +1053,7 @@ GluCat 0.13.0 with PyClical has so far been built and tested using:
     Python 3.8.10
     ```
     `./test/fast-test-all-config-options.sh`
-    All 11 configuration commands corresponding to each of the 11
+    All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`.
     Note: All tests involving `long double` give different answers
     from the same tests on x86-64 hardware, because `long double` is
@@ -982,7 +1077,7 @@ GluCat 0.13.0 with PyClical has so far been built and tested using:
     LD_LIBRARY_PATH=`/home/user/lib`
     ```
     `./test/fast-test-all-config-options.sh`
-    All 11 configuration commands corresponding to each of the 11
+    All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`
 
     Note: One test in test_runtime/fast-test.configure.eig-blaze-qd.out
@@ -1004,7 +1099,7 @@ GluCat 0.13.0 with PyClical has so far been built and tested using:
     Python 3.12.1
     ```
     `./test/fast-test-all-config-options.sh`
-    All 11 configuration commands corresponding to each of the 11
+    All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`.
 
      Note: all configuration commands other than

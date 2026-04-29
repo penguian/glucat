@@ -38,7 +38,7 @@ namespace peg06
 
   template< class Multivector_T >
   static
-  Multivector_T 
+  Multivector_T
   expo(const Multivector_T& f)
   {
     typedef Multivector_T number;
@@ -48,7 +48,7 @@ namespace peg06
 
   template< class Multivector_T >
   static
-  void 
+  void
   do_test6()
   {
     typedef Multivector_T number;

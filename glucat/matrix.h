@@ -2,11 +2,10 @@
 #define _GLUCAT_MATRIX_H
 /***************************************************************************
     GluCat : Generic library of universal Clifford algebra templates
-    matrix.h : Declare common matrix functions
+    matrix.h : Declare common matrix classes and functions
                              -------------------
     begin                : Sun 2001-12-09
-    copyright            : (C) 2001-2012 by Paul C. Leopardi
-                         : uBLAS interface contributed by Joerg Walter
+    copyright            : (C) 2001-2026 by Paul C. Leopardi
  ***************************************************************************
 
     This library is free software: you can redistribute it and/or modify
@@ -32,127 +31,134 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
-#include <boost/numeric/ublas/fwd.hpp>
+#include "glucat/matrix_base.h"
 
-#include <complex>
-#include <vector>
+#include "glucat/matrix_eigen.h"
+#if defined(_GLUCAT_USE_ARMADILLO)
+#include "glucat/matrix_arma.h"
+#endif
 
-namespace glucat
+#include <type_traits>
+
+namespace glucat { namespace matrix
 {
-  namespace ublas = boost::numeric::ublas;
+  // Traits Specializations
 
-  namespace matrix
+  /// Trait to determine if Scalar_T is natively supported by Armadillo
+  template< typename Scalar_T >
+  struct is_arma_supported : std::false_type {};
+
+  /// Declarations to satisfy the compiler
+  /// Matrix wrapper for Eigen (forward)
+  template< typename Scalar_T > class eigen_matrix_wrapper;
+  /// Sparse matrix wrapper for Eigen (forward)
+  template< typename Scalar_T > class eigen_sparse_wrapper;
+
+  /// Dense Selector
+  /// Dense matrix type selector
+  template< typename Scalar_T, bool UseArma = is_arma_supported<Scalar_T>::value >
+  struct matrix_type_selector
   {
-    /// Kronecker tensor product of matrices - as per Matlab kron
-    template< typename LHS_T, typename RHS_T >
-    auto
-    kron(const LHS_T& lhs, const RHS_T& rhs) -> const
-    RHS_T;
+    using type = eigen_matrix_wrapper<Scalar_T>;
+  };
 
-    /// Sparse Kronecker tensor product of monomial matrices
-    template< typename LHS_T, typename RHS_T >
-    auto
-    mono_kron(const LHS_T& lhs, const RHS_T& rhs) -> const
-    RHS_T;
+  // Dense matrix type selector
+  template< typename Scalar_T >
+  using matrix_t = typename matrix_type_selector<Scalar_T>::type;
 
-    /// Left inverse of Kronecker product
-    template< typename LHS_T, typename RHS_T >
-    auto
-    nork(const LHS_T& lhs, const RHS_T& rhs, const bool mono = true) -> const
-    RHS_T;
+  /// Sparse matrix type selector
+  template< typename Scalar_T, bool UseArma = is_arma_supported<Scalar_T>::value >
+  struct sparse_matrix_type_selector
+  {
+    using type = eigen_sparse_wrapper<Scalar_T>;
+  };
 
-    /// Left inverse of Kronecker product where lhs is a signed permutation matrix
-    template< typename LHS_T, typename RHS_T >
-    auto
-    signed_perm_nork(const LHS_T& lhs, const RHS_T& rhs) -> const
-    RHS_T;
+  // Sparse matrix type selector
+  template< typename Scalar_T >
+  using sparse_matrix_t = typename sparse_matrix_type_selector<Scalar_T>::type;
 
-    /// Number of non-zeros
-    template< typename Matrix_T >
-    auto
-    nnz(const Matrix_T& m) -> typename Matrix_T::size_type;
+#if defined(_GLUCAT_USE_ARMADILLO)
+  /// Armadillo support for float
+  template<> struct is_arma_supported<float> : std::true_type {};
+  /// Armadillo support for double
+  template<> struct is_arma_supported<double> : std::true_type {};
+  /// Armadillo support for complex float
+  template<> struct is_arma_supported<std::complex<float>> : std::true_type {};
+  /// Armadillo support for complex double
+  template<> struct is_arma_supported<std::complex<double>> : std::true_type {};
 
-    /// Infinite
-    template< typename Matrix_T >
-    auto
-    isinf(const Matrix_T& m) -> bool;
+  /// Matrix type selector specialization for Armadillo
+  template< typename Scalar_T >
+  struct matrix_type_selector<Scalar_T, true>
+  {
+    using type = arma_matrix_wrapper<Scalar_T>;
+  };
 
-    /// Not a Number
-    template< typename Matrix_T >
-    auto
-    isnan(const Matrix_T& m) -> bool;
+  /// Sparse matrix type selector specialization for Armadillo
+  template< typename Scalar_T >
+  struct sparse_matrix_type_selector<Scalar_T, true>
+  {
+    using type = arma_sparse_wrapper<Scalar_T>;
+  };
+#endif
 
-    /// Unit matrix - as per Matlab eye
-    template< typename Matrix_T >
-    auto
-    unit(const typename Matrix_T::size_type n) -> const
-    Matrix_T;
+  // ===========================================================
+  // Matrix Template Classes (Facade)
+  // Named dense_matrix to avoid collision with namespace matrix
+  // ===========================================================
 
-    /// Product of monomial matrices
-    template< typename LHS_T, typename RHS_T >
-    auto
-    mono_prod(const ublas::matrix_expression<LHS_T>& lhs,
-              const ublas::matrix_expression<RHS_T>& rhs) -> const
-    typename RHS_T::expression_type;
+  /// Dense matrix class
+  template< typename Scalar_T >
+  class dense_matrix :
+  public matrix_type_selector<Scalar_T>::type
+  {
+  public:
+    using Base = typename matrix_type_selector<Scalar_T>::type;
+    using Base::Base; // Inherit constructors
+    using Base::operator=;
 
-    /// Product of sparse matrices
-    template< typename LHS_T, typename RHS_T >
-    auto
-    sparse_prod(const ublas::matrix_expression<LHS_T>& lhs,
-                const ublas::matrix_expression<RHS_T>& rhs) -> const
-    typename RHS_T::expression_type;
+    /// Default constructor
+    dense_matrix() = default;
+    /// Copy constructor
+    dense_matrix(const dense_matrix&) = default;
+    /// Move constructor
+    dense_matrix(dense_matrix&&) = default;
+    /// Copy assignment
+    auto operator= (const dense_matrix&) -> dense_matrix& = default;
+    /// Move assignment
+    auto operator= (dense_matrix&&) -> dense_matrix& = default;
 
-    /// Product of matrices
-    template< typename LHS_T, typename RHS_T >
-    auto
-    prod(const ublas::matrix_expression<LHS_T>& lhs,
-         const ublas::matrix_expression<RHS_T>& rhs) -> const
-    typename RHS_T::expression_type;
+    /// Constructor from other matrix type
+    template< typename Other_Matrix_T >
+    explicit dense_matrix(const Other_Matrix_T& other);
+  };
 
-    /// Inner product: sum(x(i,j)*y(i,j))/x.nrows()
-    template< typename Scalar_T, typename LHS_T, typename RHS_T >
-    auto
-    inner(const LHS_T& lhs, const RHS_T& rhs) -> Scalar_T;
+  /// Sparse matrix class
+  template< typename Scalar_T >
+  class sparse_matrix :
+  public sparse_matrix_type_selector<Scalar_T>::type
+  {
+  public:
+    using Base = typename sparse_matrix_type_selector<Scalar_T>::type;
+    using Base::Base; // Inherit constructors
+    using Base::operator=;
 
-    /// Square of Frobenius norm
-    template< typename Matrix_T >
-    auto
-    norm_frob2(const Matrix_T& val) -> typename Matrix_T::value_type;
+    /// Default constructor
+    sparse_matrix() = default;
+    /// Copy constructor
+    sparse_matrix(const sparse_matrix&) = default;
+    /// Move constructor
+    sparse_matrix(sparse_matrix&&) = default;
+    /// Copy assignment
+    auto operator= (const sparse_matrix&) -> sparse_matrix& = default;
+    /// Move assignment
+    auto operator= (sparse_matrix&&) -> sparse_matrix& = default;
 
-    /// Matrix trace
-    template< typename Matrix_T >
-    auto
-    trace(const Matrix_T& val) -> typename Matrix_T::value_type;
+    // Constructor from other matrix type
+    template< typename Other_Matrix_T >
+    explicit sparse_matrix(const Other_Matrix_T& other);
+  };
 
-    /// Eigenvalues of a matrix
-    template< typename Matrix_T >
-    auto
-    eigenvalues(const Matrix_T& val) -> std::vector< std::complex<double> >;
-
-    /// Classification of eigenvalues of a matrix
-    using eig_case_t = enum {
-      safe_eigs,
-      neg_real_eigs,
-      both_eigs};
-
-    ///  Structure containing classification of eigenvalues
-    template< typename Matrix_T >
-    struct eig_genus
-    {
-      using Scalar_T = typename Matrix_T::value_type;
-      /// Is the matrix singular?
-      bool m_is_singular = false;
-      /// What kind of eigenvalues does the matrix contain?
-      eig_case_t m_eig_case = safe_eigs;
-      /// Argument such that exp(pi-m_safe_arg) lies between arguments of eigenvalues
-      Scalar_T   m_safe_arg = Scalar_T(0);
-    };
-
-    /// Classify the eigenvalues of a matrix
-    template< typename Matrix_T >
-    auto
-    classify_eigenvalues(const Matrix_T& val) -> eig_genus<Matrix_T>;
-  }
-}
+} }
 
 #endif  // _GLUCAT_MATRIX_H

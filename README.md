@@ -1,4 +1,4 @@
-README for GluCat 0.13.0 with PyClical
+README for GluCat 0.98a0+ with PyClical
 ======================================
 
 GluCat is a library of C++ template classes for calculations with the universal
@@ -84,8 +84,8 @@ For more on installing from Git, see `INSTALL.md`.
 2 Understanding the source code directory structure
 ---------------------------------------------------
 
-GluCat is a C++ template library, similar to the C++ Standard Library or the
-Boost uBLAS Library (uBLAS). It consists of source code header files, a
+GluCat is a C++ template library, similar to the C++ Standard Library,
+Eigen, or Armadillo. It consists of source code header files, a
 suite of test routines, and the PyClical Python extension module and associated
 files.
 
@@ -93,7 +93,8 @@ Once you have downloaded, unzipped and untarred the GluCat source code,
 you should have a directory, `glucat-xxx`, where `xxx` is the version number.
 Under `glucat-xxx` you should see a number of directories, including `./admin`,
 `./doc`, `./gfft_test`, `./glucat`, `./m4`, `./products`, `./pyclical`,
-`./squaring`, `./test`, `./test_runtime`, `./testxx`,  and `./transforms`.
+`./squaring`, `./test`, `./test_coverage`, `./test_doctest`, `./test_runtime`,
+`./testxx`, and `./transforms`.
 
 The `./glucat` directory contains all the header files that define the GluCat C++
 template library.
@@ -113,7 +114,15 @@ The `./gfft_test`, `./products`, `./squaring` and `./transform` directories
 contain the C++ source code for timing tests for GluCat.
 
 The `./test` and `./testxx` directories contain the C++ source code for
-programming examples and regression tests for GluCat.
+programming examples and legacy regression tests for GluCat.
+
+The `./test_doctest` directory contains modern unit tests using the `doctest`
+framework, integrated directly into the library headers.
+
+The `./test_coverage` directory contains scripts for generating code coverage
+reports for the various test suites. The `doctest` coverage script supports
+selective testing of the Eigen and Armadillo backends, as well as combined 
+reports.
 
 The `./test_runtime` directory contains regression test input and sample output
 for the GluCat timing and regression tests.
@@ -260,8 +269,8 @@ click on the corresponding name in the list.
 ----------------------------------------------
 
 Once you have familiarized yourself with Clifford algebras and have tried using
-PyClical, take a good look at the test C++ code in `./test00` to `./test17` and the
-test output in `./test_runtime`.
+PyClical, take a good look at the test C++ code in `./test_doctest` and
+`./test00` to `./test17`, and the test output in `./test_runtime`.
 
 A good way to begin writing your own C++ code using GluCat is to start with the
 programming example code in `./test01`. The file `test01/peg01.cpp` includes
@@ -403,3 +412,15 @@ Some code conventions are:
 * `Other_Sentence_Case`: Other template parameters, including template template
 parameters.
 * `ALL_CAPS_WITH_UNDERSCORES`: A global constant defined in `<glucat/global.h>`
+
+
+Recent Changes
+==============
+
+As of GluCat 0.98a0+, the following changes have been made:
+* **Sparse Diagonal Optimization**: Optimization of sparse matrix `unit()` and `trace()` operations in Eigen and Armadillo backends to avoid slow manual diagonal write loops.
+* **Return Type Modernization**: Refactored the public API across all core classes and matrix wrappers to use standard return types (e.g., `T func()`) instead of trailing return types (`auto func() -> T`). This improves stability and matches modern C++ practices.
+* **Deprecated Function Removal**: The following deprecated functions have been removed:
+    * `elliptic`: Use `complexifier` instead.
+    * `imag`: This function was deprecated and always returned 0.
+    * `MS_PER_S`: Defined in `glucat/global.h`, deprecated and unused. Use `MS_PER_SEC` in `test/timing.h` instead.

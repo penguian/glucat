@@ -44,10 +44,9 @@ namespace glucat
   const unsigned int Tuning_Slow_Inv_Fast_Dim_Threshold  = Tuning_Max_Threshold;
   const unsigned int Tuning_Slow_Products_Size_Threshold = Tuning_Max_Threshold;
 
-  using tuning_slow = tuning
+  using tuning_values_slow_p = tuning_values
     <
       Tuning_Slow_Mult_Matrix_Threshold,
-      Tuning_Default_Div_Max_Steps,
       Tuning_Default_CR_Sqrt_Max_Steps,
       Tuning_Default_DB_Sqrt_Max_Steps,
       Tuning_Default_Log_Max_Outer_Steps,
@@ -57,19 +56,19 @@ namespace glucat
       Tuning_Slow_Inv_Fast_Dim_Threshold,
       Tuning_Slow_Products_Size_Threshold,
       Tuning_Default_Denom_Different_Bits,
-      Tuning_Default_Extra_Different_Bits,
-      Tuning_Default_Function_Precision
+      Tuning_Default_Extra_Different_Bits
     >;
+
+  using tuning_slow_p = tuning<tuning_values_slow_p, precision_same>;
 
   const unsigned int Tuning_Naive_Mult_Matrix_Threshold   =       0;
   const unsigned int Tuning_Naive_Basis_Max_Count         = Tuning_Max_Threshold;
   const unsigned int Tuning_Naive_Fast_Size_Threshold     = Tuning_Max_Threshold;
   const unsigned int Tuning_Naive_Inv_Fast_Dim_Threshold  = Tuning_Max_Threshold;
 
-  using tuning_naive = tuning
+  using tuning_values_naive_p = tuning_values
     <
       Tuning_Naive_Mult_Matrix_Threshold,
-      Tuning_Default_Div_Max_Steps,
       Tuning_Default_CR_Sqrt_Max_Steps,
       Tuning_Default_DB_Sqrt_Max_Steps,
       Tuning_Default_Log_Max_Outer_Steps,
@@ -79,12 +78,12 @@ namespace glucat
       Tuning_Naive_Inv_Fast_Dim_Threshold,
       Tuning_Default_Products_Size_Threshold,
       Tuning_Default_Denom_Different_Bits,
-      Tuning_Default_Extra_Different_Bits,
-      Tuning_Default_Function_Precision
+      Tuning_Default_Extra_Different_Bits
     >;
 
+  using tuning_naive_p = tuning<tuning_values_naive_p, precision_same>;
+
   const unsigned int Tuning_Fast_Mult_Matrix_Threshold   =       0;
-  const unsigned int Tuning_Fast_Div_Max_Steps           =       0;
   const unsigned int Tuning_Fast_CR_Sqrt_Max_Steps       =     256;
   const unsigned int Tuning_Fast_DB_Sqrt_Max_Steps       =     256;
   const unsigned int Tuning_Fast_Log_Max_Outer_Steps     =      16;
@@ -94,10 +93,9 @@ namespace glucat
   const unsigned int Tuning_Fast_Inv_Fast_Dim_Threshold  =       0;
   const unsigned int Tuning_Fast_Products_Size_Threshold =       0;
 
-  using tuning_fast = tuning
+  using tuning_values_fast_p = tuning_values
     <
       Tuning_Fast_Mult_Matrix_Threshold,
-      Tuning_Fast_Div_Max_Steps,
       Tuning_Fast_CR_Sqrt_Max_Steps,
       Tuning_Fast_DB_Sqrt_Max_Steps,
       Tuning_Fast_Log_Max_Outer_Steps,
@@ -107,8 +105,10 @@ namespace glucat
       Tuning_Fast_Inv_Fast_Dim_Threshold,
       Tuning_Fast_Products_Size_Threshold,
       Tuning_Default_Denom_Different_Bits,
-      Tuning_Default_Extra_Different_Bits,
-      Tuning_Default_Function_Precision
+      Tuning_Default_Extra_Different_Bits
     >;
+
+  using tuning_fast_p = tuning<tuning_values_fast_p, precision_same>;
+
 }
 #endif // GLUCAT_TEST_TUNING_H

@@ -1,3 +1,20 @@
+Move semantics test:
+
+Checking index_set<DEFAULT_LO,DEFAULT_HI>:
+  is_move_constructible: 1
+  is_move_assignable:    1
+  [PASS] Move semantics enabled.
+----------------------------------------
+Checking framed_multi<double>:
+  is_move_constructible: 1
+  is_move_assignable:    1
+  [PASS] Move semantics enabled.
+----------------------------------------
+Checking matrix_multi<double>:
+  is_move_constructible: 1
+  is_move_assignable:    1
+  [PASS] Move semantics enabled.
+----------------------------------------
 
 Test 00:
 Programming example 0 : Geometric algebra identities
@@ -545,19 +562,22 @@ involute(b)involute(a)=     8634343348 47829+52300{-3}-43530{-2}+41053{-1}+3830{
 Test 11:
 Programming example 11 : Square root and transcendental functions
 
-framed_multi<float,DEFAULT_LO,DEFAULT_HI,tuning_promoted>
 Promoted:
 
 framed_multi<float,-32,32>
-Epsilon ==1.19209e-07
+Epsilon == 1.19209e-07
 A
   0
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   1
+Note: atanh(A) == nan
 
 A
   -1
+Note: atanh(A) == nan
 
 A
   2
@@ -609,64 +629,77 @@ A
 
 A
   314.159{-1}
-Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
-lhs == nan
-Test failed: cos(A)*tan(A) != sin(A)
-lhs == nan
+Note: cos(A) == inf
+Note: sin(A) == inf
+Note: tan(A) == nan
 
 A
   -314.159{-1}
-Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
-Relative error == -nan
-lhs == inf
-rhs == inf
-Test failed: cos(A)*tan(A) != sin(A)
-lhs == nan
+Note: cos(A) == inf
+Note: sin(A) == inf
+Note: tan(A) == nan
 
 A
   {1}
+Note: atanh(A) == nan
 
 A
   -{1}
+Note: atanh(A) == nan
 
 A
   {-1,1}
+Note: atanh(A) == nan
 
 A
   -{-1,1}
+Note: atanh(A) == nan
 
 A
   1+{-1,1}
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   1-{-1,1}
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {-1}+{1,2}
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {-1}-{1,2}
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {1}+{1,2}
-Test failed: sqrt(A)*sqrt(A) != A
-lhs == nan
+Note: sqrt(A) == nan
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {1}-{1,2}
-Test failed: sqrt(A)*sqrt(A) != A
-lhs == nan
+Note: sqrt(A) == nan
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {-2,-1,1,2}
+Note: atanh(A) == nan
 
 A
   -{-2,-1,1,2}
+Note: atanh(A) == nan
 
 A
   {-1}+{1}
-Test failed: sqrt(A)*sqrt(A) != A
-lhs == nan
+Note: sqrt(A) == nan
+Note: inv(A) == nan
+Note: log(A) == nan
 
 Random A in {}
 
@@ -706,15 +739,19 @@ Random A in {-3,-2,-1,1,2,3}
 
 
 matrix_multi<float,-32,32>
-Epsilon ==1.19209e-07
+Epsilon == 1.19209e-07
 A
   0
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   1
+Note: atanh(A) == nan
 
 A
   -1
+Note: atanh(A) == nan
 
 A
   2
@@ -766,66 +803,77 @@ A
 
 A
   314.159{-1}
-Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
-lhs == nan
-Test failed: cos(A)*tan(A) != sin(A)
-Absolute error == nan
-lhs == nan
-rhs == nan
+Note: cos(A) == inf
+Note: sin(A) == nan
+Note: tan(A) == nan
 
 A
   -314.159{-1}
-Test failed: cos(A)+complexifier(A)*sin(A) != exp(complexifier(A)*A)
-lhs == nan
-Test failed: cos(A)*tan(A) != sin(A)
-Absolute error == nan
-lhs == nan
-rhs == nan
+Note: cos(A) == inf
+Note: sin(A) == nan
+Note: tan(A) == nan
 
 A
   {1}
+Note: atanh(A) == nan
 
 A
   -{1}
+Note: atanh(A) == nan
 
 A
   {-1,1}
+Note: atanh(A) == nan
 
 A
   -{-1,1}
+Note: atanh(A) == nan
 
 A
   1+{-1,1}
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   1-{-1,1}
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {-1}+{1,2}
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {-1}-{1,2}
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {1}+{1,2}
-Test failed: sqrt(A)*sqrt(A) != A
-lhs == nan
+Note: sqrt(A) == nan
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {1}-{1,2}
-Test failed: sqrt(A)*sqrt(A) != A
-lhs == nan
+Note: sqrt(A) == nan
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {-2,-1,1,2}
+Note: atanh(A) == nan
 
 A
   -{-2,-1,1,2}
+Note: atanh(A) == nan
 
 A
   {-1}+{1}
-Test failed: sqrt(A)*sqrt(A) != A
-lhs == nan
+Note: sqrt(A) == nan
+Note: inv(A) == nan
+Note: log(A) == nan
 
 Random A in {}
 
@@ -844,12 +892,8 @@ Random A in {1,2}
 Random A in {1,2}
 
 Random A in {-1,1,2}
-Test failed: sin(asin(A)) != A
-lhs == nan
 
 Random A in {-1,1,2}
-Test failed: sin(asin(A)) != A
-lhs == nan
 
 Random A in {-2,-1,1,2}
 
@@ -860,20 +904,8 @@ Random A in {-1,1,2,3}
 Random A in {-1,1,2,3}
 
 Random A in {-2,-1,1,2,3}
-Test failed: cos(acos(A)) != A
-lhs == nan
-Test failed: cosh(acosh(A)) != A
-lhs == nan
-Test failed: sin(asin(A)) != A
-lhs == nan
 
 Random A in {-2,-1,1,2,3}
-Test failed: cos(acos(A)) != A
-lhs == nan
-Test failed: cosh(acosh(A)) != A
-lhs == nan
-Test failed: sin(asin(A)) != A
-lhs == nan
 
 Random A in {-3,-2,-1,1,2,3}
 
@@ -882,15 +914,19 @@ Random A in {-3,-2,-1,1,2,3}
 Promoted:
 
 framed_multi<double,-32,32>
-Epsilon ==2.22045e-16
+Epsilon == 2.22045e-16
 A
   0
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   1
+Note: atanh(A) == nan
 
 A
   -1
+Note: atanh(A) == nan
 
 A
   2
@@ -948,48 +984,65 @@ A
 
 A
   {1}
+Note: atanh(A) == nan
 
 A
   -{1}
+Note: atanh(A) == nan
 
 A
   {-1,1}
+Note: atanh(A) == nan
 
 A
   -{-1,1}
+Note: atanh(A) == nan
 
 A
   1+{-1,1}
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   1-{-1,1}
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {-1}+{1,2}
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {-1}-{1,2}
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {1}+{1,2}
-Test failed: sqrt(A)*sqrt(A) != A
-lhs == nan
+Note: sqrt(A) == nan
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {1}-{1,2}
-Test failed: sqrt(A)*sqrt(A) != A
-lhs == nan
+Note: sqrt(A) == nan
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {-2,-1,1,2}
+Note: atanh(A) == nan
 
 A
   -{-2,-1,1,2}
+Note: atanh(A) == nan
 
 A
   {-1}+{1}
-Test failed: sqrt(A)*sqrt(A) != A
-lhs == nan
+Note: sqrt(A) == nan
+Note: inv(A) == nan
+Note: log(A) == nan
 
 Random A in {}
 
@@ -1029,15 +1082,19 @@ Random A in {-3,-2,-1,1,2,3}
 
 
 matrix_multi<double,-32,32>
-Epsilon ==2.22045e-16
+Epsilon == 2.22045e-16
 A
   0
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   1
+Note: atanh(A) == nan
 
 A
   -1
+Note: atanh(A) == nan
 
 A
   2
@@ -1095,48 +1152,65 @@ A
 
 A
   {1}
+Note: atanh(A) == nan
 
 A
   -{1}
+Note: atanh(A) == nan
 
 A
   {-1,1}
+Note: atanh(A) == nan
 
 A
   -{-1,1}
+Note: atanh(A) == nan
 
 A
   1+{-1,1}
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   1-{-1,1}
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {-1}+{1,2}
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {-1}-{1,2}
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {1}+{1,2}
-Test failed: sqrt(A)*sqrt(A) != A
-lhs == nan
+Note: sqrt(A) == nan
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {1}-{1,2}
-Test failed: sqrt(A)*sqrt(A) != A
-lhs == nan
+Note: sqrt(A) == nan
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {-2,-1,1,2}
+Note: atanh(A) == nan
 
 A
   -{-2,-1,1,2}
+Note: atanh(A) == nan
 
 A
   {-1}+{1}
-Test failed: sqrt(A)*sqrt(A) != A
-lhs == nan
+Note: sqrt(A) == nan
+Note: inv(A) == nan
+Note: log(A) == nan
 
 Random A in {}
 
@@ -1177,15 +1251,19 @@ Random A in {-3,-2,-1,1,2,3}
 Promoted:
 
 framed_multi<long double,-32,32>
-Epsilon ==1.0842e-19
+Epsilon == 1.0842e-19
 A
   0
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   1
+Note: atanh(A) == nan
 
 A
   -1
+Note: atanh(A) == nan
 
 A
   2
@@ -1235,13 +1313,11 @@ A
 
 A
   1.57079632679489662{-1}
-Test failed: cosh(A)*tanh(A) != sinh(A)
-lhs == nan
+Note: tanh(A) == nan
 
 A
   -1.57079632679489662{-1}
-Test failed: cosh(A)*tanh(A) != sinh(A)
-lhs == nan
+Note: tanh(A) == nan
 
 A
   314.159265358979324{-1}
@@ -1251,48 +1327,65 @@ A
 
 A
   {1}
+Note: atanh(A) == nan
 
 A
   -{1}
+Note: atanh(A) == nan
 
 A
   {-1,1}
+Note: atanh(A) == nan
 
 A
   -{-1,1}
+Note: atanh(A) == nan
 
 A
   1+{-1,1}
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   1-{-1,1}
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {-1}+{1,2}
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {-1}-{1,2}
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {1}+{1,2}
-Test failed: sqrt(A)*sqrt(A) != A
-lhs == nan
+Note: sqrt(A) == nan
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {1}-{1,2}
-Test failed: sqrt(A)*sqrt(A) != A
-lhs == nan
+Note: sqrt(A) == nan
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {-2,-1,1,2}
+Note: atanh(A) == nan
 
 A
   -{-2,-1,1,2}
+Note: atanh(A) == nan
 
 A
   {-1}+{1}
-Test failed: sqrt(A)*sqrt(A) != A
-lhs == nan
+Note: sqrt(A) == nan
+Note: inv(A) == nan
+Note: log(A) == nan
 
 Random A in {}
 
@@ -1332,15 +1425,19 @@ Random A in {-3,-2,-1,1,2,3}
 
 
 matrix_multi<long double,-32,32>
-Epsilon ==1.0842e-19
+Epsilon == 1.0842e-19
 A
   0
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   1
+Note: atanh(A) == nan
 
 A
   -1
+Note: atanh(A) == nan
 
 A
   2
@@ -1390,13 +1487,11 @@ A
 
 A
   1.57079632679489662{-1}
-Test failed: cosh(A)*tanh(A) != sinh(A)
-lhs == nan
+Note: tanh(A) == nan
 
 A
   -1.57079632679489662{-1}
-Test failed: cosh(A)*tanh(A) != sinh(A)
-lhs == nan
+Note: tanh(A) == nan
 
 A
   314.159265358979324{-1}
@@ -1406,48 +1501,65 @@ A
 
 A
   {1}
+Note: atanh(A) == nan
 
 A
   -{1}
+Note: atanh(A) == nan
 
 A
   {-1,1}
+Note: atanh(A) == nan
 
 A
   -{-1,1}
+Note: atanh(A) == nan
 
 A
   1+{-1,1}
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   1-{-1,1}
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {-1}+{1,2}
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {-1}-{1,2}
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {1}+{1,2}
-Test failed: sqrt(A)*sqrt(A) != A
-lhs == nan
+Note: sqrt(A) == nan
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {1}-{1,2}
-Test failed: sqrt(A)*sqrt(A) != A
-lhs == nan
+Note: sqrt(A) == nan
+Note: inv(A) == nan
+Note: log(A) == nan
 
 A
   {-2,-1,1,2}
+Note: atanh(A) == nan
 
 A
   -{-2,-1,1,2}
+Note: atanh(A) == nan
 
 A
   {-1}+{1}
-Test failed: sqrt(A)*sqrt(A) != A
-lhs == nan
+Note: sqrt(A) == nan
+Note: inv(A) == nan
+Note: log(A) == nan
 
 Random A in {}
 
@@ -1552,6 +1664,68 @@ matrix_multi<float,-2,2>
 
 Test 13:
 Programming example 13 : Multiplication and division
+
+float:
+a: 
+{-3}+{-2}+{-1}
+A = cm(a): 
+{-3}+{-2}+{-1}
+b: 
+1e+08{3}
+B = cm(b): 
+1e+08{3}
+a*b: 
+1e+08{-3,3}+1e+08{-2,3}+1e+08{-1,3}
+A*B: 
+1e+08{-3,3}+1e+08{-2,3}+1e+08{-1,3}
+B/B: 
+1
+(B/B)*B: 
+1e+08{3}
+(A*B)/(A*B): 
+1
+inv(A): 
+-0.333333{-3}-0.333333{-2}-0.333333{-1}
+(b/b).truncated(): 
+1
+((b/b)*b).truncated(): 
+100000000{3}
+((a*b)/(a*b)).truncated(): 
+1
+inv(a).truncated(): 
+-0.333333343{-3}-0.333333313{-2}-0.333333313{-1}
+
+double:
+a: 
+{-3}+{-2}+{-1}
+A = cm(a): 
+{-3}+{-2}+{-1}
+b: 
+1e+08{3}
+B = cm(b): 
+1e+08{3}
+a*b: 
+1e+08{-3,3}+1e+08{-2,3}+1e+08{-1,3}
+A*B: 
+1e+08{-3,3}+1e+08{-2,3}+1e+08{-1,3}
+B/B: 
+1
+(B/B)*B: 
+1e+08{3}
+(A*B)/(A*B): 
+1
+inv(A): 
+-0.333333{-3}-0.333333{-2}-0.333333{-1}
+(b/b).truncated(): 
+1
+((b/b)*b).truncated(): 
+{-2}+{2}+100000000{3}
+((a*b)/(a*b)).truncated(): 
+1
+inv(a).truncated(): 
+-0.333333333{-3}-0.333333333{-2}-0.333333333{-1}
+
+long double:
 a: 
 {-3}+{-2}+{-1}
 A = cm(a): 
@@ -1583,6 +1757,80 @@ inv(a).truncated():
 
 Test 14:
 Programming example 14 : framed_multi <-> matrix_multi
+
+float:
+a =
+  {-3}+{-2}+{-1}
+A =
+  {-3}+{-2}+{-1}
+b =
+  10000{-1}
+B =
+  10000{-1}
+B.truncated()
+  10000{-1}
+B - b =
+  0
+b - B =
+  0.0001{-2}
+c = (a * b) / b =
+  {-3}+{-2}+{-1}
+C = c =
+  {-3}+{-2}+{-1}
+C - c =
+  0
+c - C =
+  0
+star(a, b)    = -10000
+scalar(a * b) = -10000
+star(b, a)    = -10000
+scalar(b * a) = -10000
+star(A, B)    = -10000
+scalar(A * B) = -10000
+star(B, A)    = -10000
+scalar(B * A) = -10000
+d == 2.0; d == 2.0; 2.0 == d
+d != 4.0; d != 4.0; 4.0 != d
+D == 2.0; D == 2.0; 2.0 == D
+D != 4.0; D != 4.0; 4.0 != D
+
+double:
+a =
+  {-3}+{-2}+{-1}
+A =
+  {-3}+{-2}+{-1}
+b =
+  10000{-1}
+B =
+  10000{-1}
+B.truncated()
+  10000{-1}
+B - b =
+  0
+b - B =
+  0
+c = (a * b) / b =
+  {-3}+{-2}+{-1}
+C = c =
+  {-3}+{-2}+{-1}
+C - c =
+  0
+c - C =
+  0
+star(a, b)    = -10000
+scalar(a * b) = -10000
+star(b, a)    = -10000
+scalar(b * a) = -10000
+star(A, B)    = -10000
+scalar(A * B) = -10000
+star(B, A)    = -10000
+scalar(B * A) = -10000
+d == 2.0; d == 2.0; 2.0 == d
+d != 4.0; d != 4.0; 4.0 != d
+D == 2.0; D == 2.0; 2.0 == D
+D != 4.0; D != 4.0; 4.0 != D
+
+long double:
 a =
   {-3}+{-2}+{-1}
 A =
@@ -1656,21 +1904,60 @@ even(c): -1e+08+1e+08{-3,-1}+1e+08{-2,-1}-2e+08{-1,1,2,3}
 scalar(c): -1e+08
 pure(c): 1e+08{-3,-1}+1e+08{-2,-1}-2e+08{-1,1,2,3}
 real(c): -1e+08
-imag(c): 0
 
 Test 16:
 Programming example 16 : Matrices of multivectors
 
 framed_multi<double,-3,3>
-[5,5]((0,0,0,0,0),(0,1,0,0,0),(0,0,0,0,0),(0,0,0,0,0),(0,0,0,0,0))
-[5,5](({1},0,0,0,0),(0,{2},0,0,0),(0,0,{3},0,0),(0,0,0,{1},0),(0,0,0,0,{2}))
-[5,5]((0,0,0,0,0),(0,{2},0,0,0),(0,0,0,0,0),(0,0,0,0,0),(0,0,0,0,0))
-[5,5](({1},0,0,0,0),(0,2{2},0,0,0),(0,0,{3},0,0),(0,0,0,{1},0),(0,0,0,0,{2}))
+
+0 0 0 0 0
+0 1 0 0 0
+0 0 0 0 0
+0 0 0 0 0
+0 0 0 0 0
+
+  {1}   0   0   0   0
+  0   {2}   0   0   0
+  0   0   {3}   0   0
+  0   0   0   {1}   0
+  0   0   0   0   {2}
+
+  0   0   0   0   0
+  0   {2}   0   0   0
+  0   0   0   0   0
+  0   0   0   0   0
+  0   0   0   0   0
+
+   {1}    0    0    0    0
+   0    2{2}    0    0    0
+   0    0    {3}    0    0
+   0    0    0    {1}    0
+   0    0    0    0    {2}
 matrix_multi<double,-3,3>
-[5,5]((0,0,0,0,0),(0,1,0,0,0),(0,0,0,0,0),(0,0,0,0,0),(0,0,0,0,0))
-[5,5](({1},0,0,0,0),(0,{2},0,0,0),(0,0,{3},0,0),(0,0,0,{1},0),(0,0,0,0,{2}))
-[5,5]((0,0,0,0,0),(0,{2},0,0,0),(0,0,0,0,0),(0,0,0,0,0),(0,0,0,0,0))
-[5,5](({1},0,0,0,0),(0,2{2},0,0,0),(0,0,{3},0,0),(0,0,0,{1},0),(0,0,0,0,{2}))
+
+0 0 0 0 0
+0 1 0 0 0
+0 0 0 0 0
+0 0 0 0 0
+0 0 0 0 0
+
+  {1}   0   0   0   0
+  0   {2}   0   0   0
+  0   0   {3}   0   0
+  0   0   0   {1}   0
+  0   0   0   0   {2}
+
+  0   0   0   0   0
+  0   {2}   0   0   0
+  0   0   0   0   0
+  0   0   0   0   0
+  0   0   0   0   0
+
+   {1}    0    0    0    0
+   0    2{2}    0    0    0
+   0    0    {3}    0    0
+   0    0    0    {1}    0
+   0    0    0    0    {2}
 
 Test 17:
 Programming example 17 : Truncation and printing

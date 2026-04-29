@@ -44,7 +44,7 @@
 
 namespace glucat
 {
-  /// Extra traits which extend numeric limits
+  // Extra traits which extend numeric limits
   // Reference: [AA], 2.4, p. 30-31
 
 #if !defined(_GLUCAT_USE_QD) || !defined(QD_API)

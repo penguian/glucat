@@ -17,4 +17,4 @@ AM_CPPFLAGS = $(all_includes)
 # the library search path.
 test07_LDFLAGS = $(USER_LDFLAGS)
 
-CLEANFILES = test07.out
+CLEANFILES = test07.out *.gcno *.gcda

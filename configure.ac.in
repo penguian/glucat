@@ -32,7 +32,7 @@ dnl    Boston, MA 02111-1307, USA.
 
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([glucat],[0.13.0])
+AC_INIT([glucat],[0.98a0])
 AC_CONFIG_MACRO_DIR([m4])
 m4_include([m4/m4_ax_cxx_compile_stdcxx.m4])
 m4_include([m4/m4_ax_blas.m4])
@@ -66,8 +66,10 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
 
   dnl process the command line arguments
 
-
-  AC_ARG_ENABLE([debug],      [[  --enable-debug[=ARG]    enable debug symbols (yes|no|full) [default=no]]],
+  AC_ARG_ENABLE([debug],
+    AS_HELP_STRING(
+      [--enable-debug[=ARG]],
+      [enable debug symbols (yes|no|full) [default=no]]),
   [
     case "$enableval" in
       yes)
@@ -88,14 +90,17 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
         ;;
     esac
   ],
-    [glucat_use_debug_code="no"
+  [  glucat_use_debug_code="no"
      glucat_use_ndebug_define="yes"
   ])
 
   dnl Just for configure --help
-  AC_ARG_ENABLE([dummyoption],[[  --disable-debug         disable debug output and debug symbols [default=yes]]],[],[])
+  dnl AC_ARG_ENABLE([dummyoption],[[  --disable-debug         disable debug output and debug symbols [default=yes]]],[],[])
 
-  AC_ARG_ENABLE([strict],     [[  --enable-strict         compile with strict compiler options (may not work!)]],
+  AC_ARG_ENABLE([strict],
+    AS_HELP_STRING(
+      [--enable-strict],
+      [compile with strict compiler options (may not work!)]),
   [
     if [[[ "$enableval" == "no" ]]]; then
       glucat_use_strict_options="no"
@@ -104,7 +109,10 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     fi
   ],[glucat_use_strict_options="no"])
 
-  AC_ARG_ENABLE([warnings],   [[  --disable-warnings      disable compilation with -Wall and similiar]],
+  AC_ARG_ENABLE([warnings],
+    AS_HELP_STRING(
+      [--disable-warnings],
+      [disable compilation with -Wall and similar]),
   [
     if [[[ "$enableval" == "no" ]]]; then
       glucat_use_warnings="no"
@@ -113,50 +121,200 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     fi
   ],[glucat_use_warnings="yes"])
 
+  AC_ARG_ENABLE([profile],
+    AS_HELP_STRING(
+      [--enable-profile],
+      [create profiling infos [default=no]]),
+    [glucat_use_profiling="$enableval"],
+    [glucat_use_profiling="no"])
+
+  AC_ARG_ENABLE([pyclical],
+    AS_HELP_STRING(
+      [--enable-pyclical],
+      [use Cython to build the PyClical Python extension module [default=yes]]),
+    [glucat_use_pyclical="$enableval"],
+    [glucat_use_pyclical="yes"])
+
+  AC_ARG_WITH([demo-dir],
+    AS_HELP_STRING(
+      [--with-demo-dir=DIR],
+      [define the installation directory for the PyClical demos [default=$DATAROOTDIR/pyclical/demos]]),,
+    [with_demo_dir="${datarootdir}/pyclical/demos"])
+  demodir="$with_demo_dir"
+  AC_SUBST([demodir])
+
+  AC_ARG_WITH([armadillo],
+    AS_HELP_STRING(
+      [--with-armadillo],
+      [use Armadillo library [default=no]]),
+    [glucat_use_armadillo="$withval"],
+    [glucat_use_armadillo="no"])
+
+  AC_ARG_WITH([openmp],
+    AS_HELP_STRING(
+      [--with-openmp],
+      [use OpenMP (requires Armadillo) [default=no]]),
+    [glucat_use_openmp="$withval"],
+    [glucat_use_openmp="no"])
+
+  AC_ARG_WITH([qd],
+    AS_HELP_STRING(
+      [--with-qd],
+      [use dd_real and qd_real [default=no]]),
+    [glucat_use_qd="$withval"],
+    [glucat_use_qd="no"])
+
+  AC_ARG_WITH([unordered-map],
+    AS_HELP_STRING(
+      [--with-unordered-map=ARG],
+      [use specified map implementation (boost|std) [default=boost]]),
+    [glucat_use_unordered_map="$withval"],
+    [glucat_use_unordered_map="boost"])
+
+  AC_ARG_WITH([doctest],
+    AS_HELP_STRING(
+      [--with-doctest],
+      [use doctest [default=no]]),
+    [glucat_use_doctest="$withval"],
+    [glucat_use_doctest="no"])
+
+  dnl Check for Boost version
+  GLUCAT_CHECK_HEADERS([boost/version.hpp], [], [])
+
+  if [[[ "$glucat_use_doctest" == "yes" ]]]; then
+     dnl Try default include
+     doctest_found=no
+     GLUCAT_CHECK_HEADERS([doctest.h], [doctest_found=yes], [])
+     if [[[ "$doctest_found" == "no" ]]]; then
+        dnl Try adding /usr/include/doctest
+        saved_CPPFLAGS="$CPPFLAGS"
+        CPPFLAGS="$CPPFLAGS -isystem /usr/include/doctest"
+        unset ac_cv_header_doctest_h
+        GLUCAT_CHECK_HEADERS([doctest.h],
+        [
+           doctest_found=yes
+           all_includes="$all_includes -isystem /usr/include/doctest"
+           AC_MSG_NOTICE([Found doctest.h in /usr/include/doctest. Added to all_includes.])
+        ], [])
+        CPPFLAGS="$saved_CPPFLAGS"
+     fi
+     if [[[ "$doctest_found" == "no" ]]]; then
+        AC_MSG_WARN([doctest.h not found.])
+        glucat_use_doctest="no"
+     fi
+  fi
+
+  if [[[ "$glucat_use_doctest" == "no" ]]]; then
+    DO_NOT_COMPILE="$DO_NOT_COMPILE test_doctest"
+  fi
+
   dnl enable warnings for debug build
   if [[[ "$glucat_use_debug_code" != "no" ]]]; then
     glucat_use_warnings="yes"
   fi
 
-  AC_ARG_ENABLE([profile],    [[  --enable-profile        create profiling infos [default=no]]],
-    [glucat_use_profiling="$enableval"],
-    [glucat_use_profiling="no"])
+  if [[[ "$glucat_use_armadillo" == "yes" ]]]; then
+    glucat_have_libarmadillo="no"
+    GLUCAT_CHECK_LIB([armadillo],[main],
+    [glucat_have_libarmadillo="yes"],
+    [])
+    if [[[ "$glucat_have_libarmadillo" == "yes" ]]]; then
+      GLUCAT_CHECK_HEADERS([armadillo],
+      [
+        CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_ARMADILLO -DARMA_WARN_LEVEL=1"
+        all_libraries="$all_libraries -larmadillo"
+      ],[],[])
+    fi
+     if [[[ "$glucat_have_libarmadillo" == "no" ]]]; then
+       AC_MSG_WARN([Cannot build using Armadillo.])
+    fi
+  fi
 
-  AC_ARG_ENABLE([pyclical],   [[  --enable-pyclical       use Cython to build the PyClical Python extension module [default=yes]]],
-    [glucat_use_pyclical="$enableval"],
-    [glucat_use_pyclical="yes"])
+  if [[[ "$glucat_use_openmp" == "yes" ]]]; then
+     if [[[ "$glucat_use_armadillo" == "yes" ]]]; then
+         dnl Check for OpenMP flag
+         glucat_have_openmp="no"
+         glucat_openmp_flag=""
 
-  AC_ARG_WITH([demo-dir],
-    AS_HELP_STRING([--with-demo-dir=DIR],                [define the installation directory for the PyClical demos [default=$DATAROOTDIR/pyclical/demos]]),,
-    [with_demo_dir="${datarootdir}/pyclical/demos"])
-  demodir="$with_demo_dir"
-  AC_SUBST([demodir])
+         dnl Try -fopenmp (GCC, Clang)
+         GLUCAT_CHECK_COMPILER_FLAG([fopenmp],
+            [
+               glucat_have_openmp="yes"
+               glucat_openmp_flag="-fopenmp"
+            ],
+            [])
 
-  AC_ARG_WITH([qd],           [[  --with-qd               use dd_real and qd_real [default=no]]],
-    [glucat_use_qd="$withval"],
-    [glucat_use_qd="no"])
+         dnl If not found, try -qopenmp (Intel icpx)
+         if [[[ "$glucat_have_openmp" == "no" ]]]; then
+            GLUCAT_CHECK_COMPILER_FLAG([qopenmp],
+               [
+                  glucat_have_openmp="yes"
+                  glucat_openmp_flag="-qopenmp"
+               ],
+               [])
+         fi
 
-  AC_ARG_WITH([eig],          [[  --with-eig[=ARG]        library to use for eigenvalues (no|blaze) [default=no]]],
-  [
-    case "$withval" in
-      no)
-        glucat_use_eigenvalues="no"
-        ;;
-      blaze)
-        glucat_use_eigenvalues="blaze"
-        ;;
-      *)
-        AC_MSG_ERROR([Unknown option for --with-eig])
-        ;;
-    esac
-  ],[glucat_use_eigenvalues="no"])
+         dnl Check for -lopenblas
+         glucat_have_openblas="no"
+         GLUCAT_CHECK_LIB([openblas],[cblas_dgemm],
+            [glucat_have_openblas="yes"],
+            [])
+
+         if [[[ "$glucat_have_openmp" == "yes" ]]] && [[[ "$glucat_have_openblas" == "yes" ]]]; then
+            CXXFLAGS="$CXXFLAGS $glucat_openmp_flag -D_GLUCAT_USE_OPENMP -DARMA_USE_OPENMP"
+            all_libraries="$all_libraries -lopenblas"
+            AC_MSG_NOTICE([OpenMP support enabled with $glucat_openmp_flag and -lopenblas])
+         else
+            AC_MSG_WARN([OpenMP support requested but prerequisites (OpenMP flag and -lopenblas) were not found.])
+         fi
+
+     else
+        AC_MSG_WARN([--with-openmp ignored because --with-armadillo is not enabled.])
+     fi
+  fi
+
+  if [[[ "$glucat_use_unordered_map" == "boost" ]]]; then
+    GLUCAT_CHECK_HEADERS([boost/unordered/unordered_flat_map.hpp],
+    [
+      CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_BOOST_UNORDERED_FLAT_MAP"
+      AC_MSG_NOTICE([boost::unordered_flat_map support enabled.])
+    ],
+    [
+      AC_MSG_WARN([boost/unordered/unordered_flat_map.hpp not found. Defaulting to std::unordered_map.])
+      glucat_use_unordered_map="std"
+    ],[])
+  elif [[[ "$glucat_use_unordered_map" != "std" ]]]; then
+     AC_MSG_WARN([Unknown map implementation "$glucat_use_unordered_map". Defaulting to std.])
+     glucat_use_unordered_map="std"
+  fi
+
+  dnl Check for Eigen
+  have_eigen=no
+  GLUCAT_CHECK_HEADERS([Eigen/Dense], [have_eigen=yes], [])
+
+  if [[[ "$have_eigen" == "no" ]]]; then
+     dnl Try adding -I/usr/include/eigen3
+     saved_CPPFLAGS="$CPPFLAGS"
+     CPPFLAGS="$CPPFLAGS -I/usr/include/eigen3"
+     unset ac_cv_header_Eigen_Dense
+     GLUCAT_CHECK_HEADERS([Eigen/Dense],
+     [
+        have_eigen=yes
+        all_includes="$all_includes -I/usr/include/eigen3"
+        AC_MSG_NOTICE([Found Eigen/Dense in /usr/include/eigen3. Added to all_includes.])
+     ], [])
+     CPPFLAGS="$saved_CPPFLAGS"
+  fi
+
+  if [[[ "$have_eigen" == "no" ]]]; then
+    AC_MSG_WARN([Eigen/Dense not found. PyClical might fail to build.])
+  fi
 
   dnl Check for a C++ compiler
   AC_LANG([C]++)
 
   dnl Set the language standard
-  saved_CXX=$CXX
-  AX_CXX_COMPILE_STDCXX(11, noext, mandatory)
+  AX_CXX_COMPILE_STDCXX(23, noext, mandatory)
 
   basename_cxx=[$(basename $(cut -d' ' -f1 <<<$CXX))]
 
@@ -227,14 +385,16 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
                 [CXXFLAGS="$CXXFLAGS --param max-inline-insns-auto=8000"])
           GLUCAT_CHECK_COMPILER_FLAG([-param max-inline-insns-single=8000],
                 [CXXFLAGS="$CXXFLAGS --param max-inline-insns-single=8000"])
-          GLUCAT_CHECK_COMPILER_FLAG([-param inline-unit-growth=200],
-                [CXXFLAGS="$CXXFLAGS --param inline-unit-growth=200"])
-          GLUCAT_CHECK_COMPILER_FLAG([-param large-function-growth=200],
-                [CXXFLAGS="$CXXFLAGS --param large-function-growth=200"])
+          GLUCAT_CHECK_COMPILER_FLAG([-param inline-unit-growth=1000],
+                [CXXFLAGS="$CXXFLAGS --param inline-unit-growth=1000"])
+          GLUCAT_CHECK_COMPILER_FLAG([-param large-function-growth=1000],
+                [CXXFLAGS="$CXXFLAGS --param large-function-growth=1000"])
           GLUCAT_CHECK_COMPILER_FLAG([funroll-loops],
                 [CXXFLAGS="$CXXFLAGS -funroll-loops"])
           GLUCAT_CHECK_COMPILER_FLAG([fvariable-expansion-in-unroller],
                 [CXXFLAGS="$CXXFLAGS -fvariable-expansion-in-unroller"])
+          GLUCAT_CHECK_COMPILER_FLAG([fno-var-tracking-assignments],
+                [CXXFLAGS="$CXXFLAGS -fno-var-tracking-assignments"])
           GLUCAT_CHECK_COMPILER_FLAG([flto=auto],
                 [CXXFLAGS="$CXXFLAGS -flto=auto"])
           GLUCAT_CHECK_COMPILER_FLAG([fuse-linker-plugin],
@@ -270,40 +430,38 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       AC_MSG_RESULT([$cythonversion])
       glucat_use_cython="yes"
     fi
-    case "$basename_cxx" in
-      "clang++"*)
-        ;;
-      "g++"*)
-        GLUCAT_CHECK_COMPILER_FLAG([fno-strict-aliasing],
-        [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -fno-strict-aliasing"])
-        GLUCAT_CHECK_COMPILER_FLAG([Wno-unused],
-        [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-unused"])
-        ;;
-      icpc|icpx)
-        case "$basename_cxx" in
-          icpc)
-            GLUCAT_CHECK_COMPILER_FLAG([diag-disable=1292],
-            [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -diag-disable=1292"])
-            ;;
-          icpx)
-            GLUCAT_CHECK_COMPILER_FLAG([Wno-deprecated],
-            [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-deprecated"])
-            ;;
-        esac
-        GLUCAT_CHECK_LIB([imf],[cos],
-        [],
-        [glucat_use_pyclical="no"])
-        ;;
-      *)
-        ;;
-    esac
-
     if [[[ "$glucat_use_cython" == "no" ]]]; then
       AC_MSG_WARN([Cannot build using Cython.])
-      AC_CHECK_FILE([pyclical/PyClical_nocython.cpp],
-      [
-        AC_MSG_WARN([The ability to build PyClical without Cython $glucat_deprecated_warning])
-      ],[glucat_use_pyclical="no"])
+      glucat_use_pyclical="no"
+    fi
+    if [[[ "$glucat_use_pyclical" != "no" ]]]; then
+      case "$basename_cxx" in
+        "clang++"*)
+          ;;
+        "g++"*)
+          GLUCAT_CHECK_COMPILER_FLAG([fno-strict-aliasing],
+          [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -fno-strict-aliasing"])
+          GLUCAT_CHECK_COMPILER_FLAG([Wno-unused],
+          [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-unused"])
+          ;;
+        icpc|icpx)
+          case "$basename_cxx" in
+            icpc)
+              GLUCAT_CHECK_COMPILER_FLAG([diag-disable=1292],
+              [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -diag-disable=1292"])
+              ;;
+            icpx)
+              GLUCAT_CHECK_COMPILER_FLAG([Wno-deprecated],
+              [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-deprecated"])
+              ;;
+          esac
+          GLUCAT_CHECK_LIB([imf],[cos],
+          [],
+          [glucat_use_pyclical="no"])
+          ;;
+        *)
+          ;;
+      esac
     fi
     if [[[ "$glucat_use_pyclical" == "no" ]]]; then
       AC_MSG_WARN([Cannot build PyClical.])
@@ -335,59 +493,11 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     fi
   fi
 
-  dnl Handle $glucat_use_eigenvalues: library to use for eigenvalues
-  case "$glucat_use_eigenvalues" in
-    blaze)
-      glucat_have_lapack="yes"
-      glucat_add_libs=""
-      case "$basename_cxx" in
-        "g++"*)
-          ac_cv_fc_compiler_gnu="yes"
-          ;;
-        *)
-          ;;
-      esac
-      AX_BLAS(
-      [glucat_add_libs="$BLAS_LIBS $glucat_add_libs"],
-      [glucat_have_lapack="no"])
-      AX_LAPACK(
-      [glucat_add_libs="$LAPACK_LIBS $glucat_add_libs"],
-      [glucat_have_lapack="no"])
-      if [[[ "$glucat_have_lapack" == "no" ]]]; then
-        AC_MSG_WARN([Cannot build using LAPACK.])
-      fi
-      ;;
-    *)
-      ;;
-  esac
-  case "$glucat_use_eigenvalues" in
-    blaze)
-      if [[[ "$glucat_have_lapack" != "no" ]]]; then
-        glucat_have_blaze="yes"
-        CXX=$saved_CXX
-        AX_CXX_COMPILE_STDCXX(14, noext, mandatory)
-        GLUCAT_CHECK_HEADERS([blaze/Math.h],
-        [
-          CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_EIGENVALUES -D_GLUCAT_USE_BLAZE"
-          all_libraries="$all_libraries $glucat_add_libs"
-        ],
-        [glucat_have_blaze="no"],[])
-      fi
-      if [[[ "$glucat_have_blaze" == "no" ]]]; then
-        AC_MSG_WARN([Cannot build using Blaze library.])
-        CXX=$saved_CXX
-        AX_CXX_COMPILE_STDCXX(11, noext, mandatory)
-      fi
-      ;;
-    *)
-      ;;
-  esac
-
-  dnl Handle $glucat_use_warnings: enable compilation with -Wall and similiar
+  dnl Handle $glucat_use_warnings: enable compilation with -Wall and similar
   if [[[ "$glucat_use_warnings" == "yes" ]]]; then
       CXXFLAGS="-Wall $CXXFLAGS"
       case "$basename_cxx" in
-        "clang++"*|"g++"*|icpx)
+        "clang++"*|icpx)
           GLUCAT_CHECK_COMPILER_FLAG([Wno-deprecated-register],
                 [CXXFLAGS="$CXXFLAGS -Wno-deprecated-register"])
           ;;
@@ -427,21 +537,19 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       [all_libraries="$all_libraries -limf"],
       [],
       [glucat_have_gsl="no"])
-      GLUCAT_CHECK_COMPILER_FLAG([fp-model source], 
+      GLUCAT_CHECK_COMPILER_FLAG([fp-model source],
                       [CXXFLAGS="-fp-model source $CXXFLAGS"])
       GLUCAT_CHECK_COMPILER_FLAG([fp-model precise],
                       [CXXFLAGS="-fp-model precise $CXXFLAGS"])
-      GLUCAT_CHECK_COMPILER_FLAG([xHost],
-            [CXXFLAGS="$CXXFLAGS -xHost"])
-      CXXFLAGS="$CXXFLAGS -DBOOST_UBLAS_USE_LONG_DOUBLE"
+
+      GLUCAT_CHECK_COMPILER_FLAG([march=native],
+            [CXXFLAGS="$CXXFLAGS -march=native"])
       ;;
     *)
       ;;
   esac
 
-  dnl To work around backwards incompatibility of boost::serialization changes
-  GLUCAT_CHECK_HEADERS([boost/serialization/array_wrapper.hpp],
-    [CXXFLAGS="$CXXFLAGS -D_GLUCAT_HAVE_BOOST_SERIALIZATION_ARRAY_WRAPPER_H"],[],[])
+
 
   GLUCAT_CHECK_COMPILER_FLAG([fexceptions],
             [USE_EXCEPTIONS="-fexceptions"],
@@ -496,7 +604,7 @@ AC_CONFIG_HEADERS([config.h])
 AX_PREFIX_CONFIG_H([glucat/glucat_config.h])
 
 GLUCAT_CHECK_EXTRA_LIBS
-all_includes="-I. -I.. $all_includes $USER_INCLUDES"
+all_includes="-I. -I\$(srcdir) -I\$(top_srcdir) -I\$(top_builddir) $all_includes $USER_INCLUDES"
 
 dnl checks for programs.
 dnl first check for C++ compilers
@@ -519,6 +627,11 @@ AC_SUBST([all_includes])
 AC_SUBST([LIBS])
 AC_SUBST([AUTODIRS])
 
-AM_CONDITIONAL([make_pyclical],[test "$glucat_use_pyclical" == "yes"])
-AM_CONDITIONAL([use_cython],[test "$glucat_use_cython" == "yes"])
+  AC_CHECK_PROGS([SPHINXBUILD], [sphinx-build])
+  if [[[ -z "$SPHINXBUILD" ]]]; then
+     AC_MSG_WARN([sphinx-build not found - continuing without Sphinx support])
+  fi
+  AM_CONDITIONAL([HAVE_SPHINX], [test -n "$SPHINXBUILD"])
 
+  AM_CONDITIONAL([make_pyclical],[test "$glucat_use_pyclical" == "yes"])
+AM_CONDITIONAL([use_cython],[test "$glucat_use_cython" == "yes"])
