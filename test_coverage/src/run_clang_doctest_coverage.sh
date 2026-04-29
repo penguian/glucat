@@ -27,7 +27,7 @@ if ! command -v llvm-profdata &> /dev/null || ! command -v llvm-cov &> /dev/null
 fi
 
 echo "=== Bootstrapping ==="
-./admin/Makefile.common bootstrap || true
+make -f admin/Makefile.common bootstrap || true
 
 # Prepare for coverage
 export CXX="clang++"

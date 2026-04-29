@@ -6,7 +6,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT_DIR"
 
 echo "=== Bootstrapping ==="
-./admin/Makefile.common bootstrap || true
+make -f admin/Makefile.common bootstrap || true
 
 echo "=== Configuring for Full Coverage (Clang) ==="
 export CXX="clang++"

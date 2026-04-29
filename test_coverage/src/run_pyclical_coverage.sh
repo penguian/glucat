@@ -5,6 +5,9 @@ set -e
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT_DIR"
 
+echo "=== Bootstrapping ==="
+make -f admin/Makefile.common bootstrap || true
+
 echo "=== Configuring for PyClical Coverage ==="
 export CXX="clang++"
 export CXXFLAGS="-O0 -g -fprofile-instr-generate -fcoverage-mapping"
