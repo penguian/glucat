@@ -8,3 +8,18 @@
 #include <glucat/clifford_algebra.h>
 #include <glucat/matrix_multi.h>
 #include <glucat/glucat_imp.h>
+#include "math_identities.h"
+
+TEST_CASE("math::identities") {
+  using namespace glucat;
+  
+  SUBCASE("matrix_multi<double>") {
+    run_peg00_test<matrix_multi<double, -8, 8>>(2);
+    run_peg11_test<matrix_multi<double, -8, 8>>();
+  }
+
+  SUBCASE("framed_multi<double>") {
+    run_peg00_test<framed_multi<double, -8, 8>>(2);
+    run_peg11_test<framed_multi<double, -8, 8>>();
+  }
+}

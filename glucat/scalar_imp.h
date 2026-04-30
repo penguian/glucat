@@ -234,4 +234,82 @@ namespace glucat
   }
 }
 
+#ifdef GLUCAT_DOCTEST
+#include <doctest.h>
+
+namespace glucat {
+
+  template <typename T>
+  void test_scalar_traits() {
+    using traits = numeric_traits<T>;
+    
+    T zero(0);
+    T one(1);
+
+    SUBCASE("Constants") {
+      CHECK(traits::pi() > T(3));
+      CHECK(traits::pi() < T(4));
+      CHECK(traits::ln_2() > T(0.6));
+      CHECK(traits::ln_2() < T(0.7));
+    }
+
+    SUBCASE("Classification") {
+      CHECK_FALSE(traits::isNaN_or_isInf(zero));
+      CHECK_FALSE(traits::isNaN_or_isInf(one));
+      CHECK_FALSE(traits::isNaN(zero));
+      CHECK_FALSE(traits::isInf(zero));
+      
+      T nan_val = traits::NaN();
+      CHECK(traits::isNaN(nan_val));
+    }
+
+    SUBCASE("Math Functions") {
+      T val = T(4);
+      CHECK(traits::sqrt(val) == doctest::Approx(T(2)));
+      
+      T e = T(1);
+      CHECK(traits::exp(e) == doctest::Approx(T(std::exp(1.0))));
+      
+      CHECK(traits::log(traits::exp(one)) == doctest::Approx(one));
+      
+      T pi_val = traits::pi();
+      CHECK(traits::sin(pi_val/T(2)) == doctest::Approx(one));
+      CHECK(traits::cos(pi_val) == doctest::Approx(T(-1)));
+    }
+
+    SUBCASE("Promote and Demote") {
+      T val(2);
+      auto p = to_promote(val);
+      static_assert(std::is_same_v<decltype(p), typename traits::promoted::type>);
+      
+      auto d = to_demote(val);
+      static_assert(std::is_same_v<decltype(d), typename traits::demoted::type>);
+    }
+  }
+
+} // namespace glucat
+
+TEST_CASE("scalar::traits_and_math") {
+  SUBCASE("float")       { glucat::test_scalar_traits<float>(); }
+  SUBCASE("double")      { glucat::test_scalar_traits<double>(); }
+  SUBCASE("long double") { glucat::test_scalar_traits<long double>(); }
+#ifdef _GLUCAT_USE_QD
+  SUBCASE("dd_real")     { glucat::test_scalar_traits<dd_real>(); }
+  SUBCASE("qd_real")     { glucat::test_scalar_traits<qd_real>(); }
+#endif
+  
+  SUBCASE("is_complex trait") {
+    using namespace glucat;
+    CHECK_FALSE(is_complex_v<float>);
+    CHECK_FALSE(is_complex_v<double>);
+    CHECK_FALSE(is_complex_v<long double>);
+#ifdef _GLUCAT_USE_QD
+    CHECK_FALSE(is_complex_v<dd_real>);
+    CHECK_FALSE(is_complex_v<qd_real>);
+#endif
+    CHECK(is_complex_v<std::complex<double>>);
+  }
+}
+#endif
+
 #endif // _GLUCAT_SCALAR_IMP_H
