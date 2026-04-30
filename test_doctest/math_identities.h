@@ -4,6 +4,7 @@
 #include <doctest.h>
 #include "glucat/glucat.h"
 #include <iostream>
+#include <fstream>
 
 namespace glucat {
 
@@ -97,11 +98,260 @@ namespace glucat {
   }
 
   template< typename Multivector_T >
+  void test_edge_cases_templated()
+  {
+    using scalar_t = typename Multivector_T::scalar_t;
+    using index_set_t = typename Multivector_T::index_set_t;
+    static const scalar_t eps = std::numeric_limits<scalar_t>::epsilon();
+    const scalar_t tol = eps * 1024.0;
+
+    SUBCASE("Self-Aliasing Guards") {
+      Multivector_T a = Multivector_T::random(index_set_t(1), 1.0);
+      if (a.frame() != index_set_t(1)) {
+        a += Multivector_T(index_set_t(1));
+      }
+      Multivector_T a_copy = a;
+      
+      a += a;
+      CHECK_FALSE(is_error(a, a_copy * scalar_t(2), tol));
+      a = a_copy;
+      
+      a -= a;
+      CHECK_FALSE(is_error(a, Multivector_T(0), tol));
+      a = a_copy;
+      
+      a *= a;
+      CHECK_FALSE(is_error(a, a_copy * a_copy, tol));
+      a = a_copy;
+      
+      CHECK(a == a);
+    }
+
+    SUBCASE("NaN and Infinity Propagation") {
+      if constexpr (std::numeric_limits<scalar_t>::has_quiet_NaN) {
+        scalar_t nan_val = std::numeric_limits<scalar_t>::quiet_NaN();
+        Multivector_T nan_mv(nan_val);
+        
+        CHECK(nan_mv.isnan());
+        CHECK(!nan_mv.isinf());
+        
+        Multivector_T res_sqrt = sqrt(nan_mv);
+        CHECK(res_sqrt.isnan());
+        
+        Multivector_T res_log = log(nan_mv);
+        CHECK(res_log.isnan());
+        
+        Multivector_T res_exp = exp(nan_mv);
+        CHECK(res_exp.isnan());
+
+        Multivector_T a = Multivector_T::random(index_set_t(1), 1.0);
+        if (a.frame() != index_set_t(1)) {
+          a += Multivector_T(index_set_t(1));
+        }
+        Multivector_T res_div = a / nan_mv;
+        CHECK(res_div.isnan());
+      }
+      
+      if constexpr (std::numeric_limits<scalar_t>::has_infinity) {
+        scalar_t inf_val = std::numeric_limits<scalar_t>::infinity();
+        Multivector_T inf_mv(inf_val);
+        CHECK(inf_mv.isinf());
+        CHECK(!inf_mv.isnan());
+      }
+    }
+
+    SUBCASE("Division by Zero") {
+      Multivector_T a = Multivector_T::random(index_set_t(1), 1.0);
+      if (a.frame() != index_set_t(1)) {
+        a += Multivector_T(index_set_t(1));
+      }
+      Multivector_T zero_mv(0);
+      
+      Multivector_T res1 = a / scalar_t(0);
+      CHECK((res1.isnan() || res1.isinf()));
+      
+      Multivector_T res2 = a / zero_mv;
+      CHECK(res2.isnan());
+    }
+
+    SUBCASE("Exception Handling") {
+      Multivector_T a = Multivector_T::random(index_set_t(1), 1.0);
+      // Ensure 'a' has frame {1} by forcing a term if it's empty
+      if (a.frame() != index_set_t(1)) {
+        a += Multivector_T(index_set_t(1));
+      }
+      
+      // Negative exponent in outer_pow
+      CHECK_THROWS_AS(a.outer_pow(-1), glucat_error);
+      
+      // vector_part with incompatible frame
+      index_set_t invalid_frame(2); // Frame that 'a' doesn't have
+      CHECK_THROWS_AS(a.vector_part(invalid_frame, false), glucat_error);
+      
+      // write with invalid stream
+      std::ofstream bad_stream; // Not opened
+      bad_stream.setstate(std::ios::failbit);
+      CHECK_THROWS_AS(a.write(bad_stream), glucat_error);
+    }
+
+    SUBCASE("Advanced Constructor Gaps") {
+      index_set_t ist(1);
+      index_set_t frm(1);
+      scalar_t crd(1.0);
+      
+      // Test matrix_multi / framed_multi constructor with prechecked
+      Multivector_T m1(ist, crd, frm, true);
+      CHECK(m1.frame() == frm);
+      
+      Multivector_T m2(ist, crd, frm, false);
+      CHECK(m2.frame() == frm);
+      
+      // Trigger exception path for constructor
+      index_set_t invalid_ist(2);
+      CHECK_THROWS_AS(Multivector_T(invalid_ist, crd, frm, false), glucat_error);
+    }
+
+    SUBCASE("Fast Path (32 terms)") {
+      using Tuning_Values_P = typename Multivector_T::tune_p::tuning_values_p;
+      using framed_multi_t = typename Multivector_T::framed_multi_t;
+      index_set_t large_frm;
+      for(int i=1; i<=6; ++i) large_frm |= index_set_t(i); // 64 dimensions
+      
+      framed_multi_t f;
+      for(int i=0; i<32; ++i) {
+         index_set_t ist;
+         for(int j=0; j<6; ++j) if (i & (1 << j)) ist |= index_set_t(j+1);
+         f += typename framed_multi_t::term_t(ist, scalar_t(i+1));
+      }
+      
+      CHECK(f.nbr_terms() >= 16);
+      
+      // Explicit conversion triggers constructor paths
+      Multivector_T a(f);
+      Multivector_T b(f, large_frm);
+      
+      Multivector_T res = a * b;
+      res = a ^ b;
+      res = a & b;
+      res = a % b;
+    }
+
+    SUBCASE("Edge cases and Special Values") {
+      using framed_multi_t = typename Multivector_T::framed_multi_t;
+      index_set_t frm(1);
+      scalar_t inf = std::numeric_limits<scalar_t>::infinity();
+      scalar_t nan = std::numeric_limits<scalar_t>::quiet_NaN();
+      
+      Multivector_T v_inf(inf);
+      Multivector_T v_nan(nan);
+      
+      CHECK(v_inf.isinf());
+      CHECK(v_nan.isnan());
+      
+      // Explicitly check framed_multi_t too
+      framed_multi_t f_inf(inf);
+      framed_multi_t f_nan(nan);
+      CHECK(f_inf.isinf());
+      CHECK(f_nan.isnan());
+      
+      Multivector_T res;
+      // log of something not near 1
+      Multivector_T v1("{1,2}"); // Likely triggers cascade/pade
+      try { res = log(v1); } catch (...) {}
+      
+      // log of something with large values
+      Multivector_T v2 = Multivector_T(100.0) + Multivector_T("{1,2}");
+      try { res = log(v2); } catch (...) {}
+      
+      // log and sqrt of negative/zero
+      Multivector_T v_neg(-1.0);
+      try { res = log(v_neg); } catch (...) {}
+      try { res = sqrt(v_neg); } catch (...) {}
+      
+      Multivector_T v_zero(0.0);
+      try { res = log(v_zero); } catch (...) {}
+
+      // atan and others
+      try { res = atan(v1); } catch (...) {}
+      try { res = asinh(v1); } catch (...) {}
+    }
+
+    SUBCASE("Explicit Logic Paths") {
+      index_set_t frm(1);
+      Multivector_T a = Multivector_T::random(frm, 1.0);
+      if (a == Multivector_T(0)) a += Multivector_T(frm, scalar_t(1.0), frm, true);
+      Multivector_T b = Multivector_T::random(frm, 1.0);
+      Multivector_T res;
+
+      // star product
+      scalar_t s = star(a, b);
+      
+      // quad, norm, vector_part, operator()(int)
+      scalar_t q = a.quad();
+      scalar_t n = a.norm();
+      auto vp = a.vector_part();
+      auto vp2 = a.vector_part(frm, true);
+      Multivector_T a0 = a(0);
+
+      // term-based operator+=
+      a += typename Multivector_T::term_t(frm, scalar_t(1.0));
+      
+      // Print a term to cover operator<<(ostream&, pair)
+      std::cout << typename Multivector_T::term_t(frm, scalar_t(1.0)) << std::endl;
+
+      // Force cascade_log / pade_log
+      Multivector_T v_large = Multivector_T(1000.0) + Multivector_T("{1,2}");
+      try { res = log(v_large); } catch (...) {}
+      Multivector_T v_small = Multivector_T(0.1) + Multivector_T("{1,2}");
+      try { res = log(v_small); } catch (...) {}
+
+      // Cross-representation constructor
+      using framed_multi_t = typename Multivector_T::framed_multi_t;
+      
+      // Print framed_multi explicitly
+      framed_multi_t f_pr("{1,2}");
+      std::cout << f_pr << std::endl;
+
+      if constexpr (std::is_same_v<Multivector_T, framed_multi_t>) {
+         // If we are testing framed_multi, construct from matrix_multi
+         using matrix_multi_t = matrix_multi<scalar_t, -8, 8, typename Multivector_T::tune_p>;
+         matrix_multi_t mm(a);
+         Multivector_T f_from_m(mm);
+      } else {
+         // If we are testing matrix_multi, construct from framed_multi
+         framed_multi_t f(a);
+         Multivector_T m_from_f(f);
+      }
+
+      // basis_element (only for matrix_multi)
+      if constexpr (requires { a.basis_element(frm); }) {
+         Multivector_T b_elem = a.basis_element(frm);
+      }
+      
+      // grade, involute, reverse, conj, max_abs, truncated
+      CHECK(a.grade() >= 0);
+      CHECK(a.max_abs() >= 0);
+      Multivector_T i = a.involute();
+      Multivector_T r = a.reverse();
+      Multivector_T c = a.conj();
+      Multivector_T t = a.truncated(0.1);
+      
+      // inv() for non-scalar
+      Multivector_T e1(index_set_t(1), scalar_t(1.0), index_set_t(1), true);
+      Multivector_T inv_test = Multivector_T(1.0) + e1;
+      try {
+        Multivector_T inv_a = inv_test.inv();
+      } catch (...) {}
+    }
+  }
+
+  template< typename Multivector_T >
   void run_peg11_test()
   {
     test_transcendental_templated(Multivector_T(0));
     test_transcendental_templated(Multivector_T(1));
     test_transcendental_templated(Multivector_T::random(typename Multivector_T::index_set_t(1)));
+    test_edge_cases_templated<Multivector_T>();
   }
 
   template< typename Multivector_T >

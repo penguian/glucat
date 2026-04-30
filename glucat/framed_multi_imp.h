@@ -2741,6 +2741,23 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     // HS (1.31): a_1 * b == (a_1 & b) + (a_1 ^ b)
     fm_t b = fm_t("1+{1}+{2}+{1,2}");
     CHECK((e1 * b) == ((e1 & b) + (e1 ^ b)));
+
+    // HS (1.44): star(a, b) == scalar(a * b)
+    CHECK(star(e1, e2) == scalar(e1 * e2));
+    CHECK(star(e1, e1) == scalar(e1 * e1));
+  }
+
+  SUBCASE("Arithmetic and approximate equality") {
+    fm_t m1(1.0);
+    fm_t m2("{1}");
+    CHECK((m1 + m2) == fm_t("1+{1}"));
+    CHECK((m1 - m2) == fm_t("1-{1}"));
+    CHECK((m1 * 2.0) == fm_t(2.0));
+    CHECK((2.0 * m1) == fm_t(2.0));
+    CHECK(approx_equal(m1, fm_t(1.0 + 1e-15)));
+    CHECK(m1 != m2);
+    CHECK(m1 != 0.0);
+    CHECK(0.0 != m1);
   }
 
   SUBCASE("Transcendental functions") {
@@ -2760,11 +2777,24 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK(approx_equal(s_x*s_x + c_x*c_x, fm_t(1.0)));
     CHECK(approx_equal(cos(acos(fm_t(0.5))), fm_t(0.5)));
 
+    // sinh and cosh
+    fm_t sh_x = sinh(x);
+    fm_t ch_x = cosh(x);
+    // cosh^2 - sinh^2 = 1
+    CHECK(approx_equal(ch_x*ch_x - sh_x*sh_x, fm_t(1.0)));
+    CHECK(approx_equal(cosh(acosh(fm_t(2.0))), fm_t(2.0)));
+
+    // tan and tanh
+    CHECK(approx_equal(tan(atan(fm_t(0.5))), fm_t(0.5)));
+    CHECK(approx_equal(tanh(atanh(fm_t(0.5))), fm_t(0.5)));
+
     // peg11.h identities
     fm_t A = fm_t("0.5{1}+0.5{1,2}");
     CHECK(approx_equal(exp(A) * exp(-A), fm_t(1.0)));
     CHECK(approx_equal(cosh(A) + sinh(A), exp(A)));
     CHECK(approx_equal(cos(A) + complexifier(A)*sin(A), exp(complexifier(A)*A)));
+    CHECK(approx_equal(cos(A)*tan(A), sin(A)));
+    CHECK(approx_equal(cosh(A)*tanh(A), sinh(A)));
     CHECK(approx_equal(sqrt(fm_t(4.0)), fm_t(2.0)));
   }
 
@@ -2773,14 +2803,22 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     fm_t n(glucat::numeric_traits<double>::NaN());
     CHECK(n.isnan());
     CHECK(exp(n).isnan());
+    CHECK(log(n).isnan());
     CHECK(log(n, fm_t(glucat::numeric_traits<double>::NaN()), false).isnan());
 
     // Purely scalar multivector
     fm_t s(2.0);
     CHECK(approx_equal(exp(s), fm_t(std::exp(2.0))));
+    CHECK(approx_equal(log(s), fm_t(std::log(2.0))));
+    CHECK(approx_equal(sqrt(s), fm_t(std::sqrt(2.0))));
     // For log of scalar, we need a valid complexifier
     fm_t i("{-1}");
     CHECK(approx_equal(log(s, i, false), fm_t(std::log(2.0))));
+
+    // Zero
+    fm_t zero(0.0);
+    // Log of zero returns NaN in GluCat
+    CHECK(log(zero).isnan());
 
     // Large multivector to trigger matrix-based exp
     fm_t large = fm_t("1+{1}+{2}+{3}+{4}+{5}+{1,2}+{1,3}+{1,4}+{1,5}+{2,3}+{2,4}+{2,5}+{3,4}+{3,5}+{4,5}");

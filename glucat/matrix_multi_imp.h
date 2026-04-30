@@ -3099,6 +3099,7 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK(n.isnan());
     CHECK(exp(n).isnan());
     CHECK(log(n).isnan());
+    CHECK(log(n, mm_t(glucat::numeric_traits<double>::NaN()), false).isnan());
 
     // Purely scalar multivector in transcendental functions
     mm_t s(2.0);
