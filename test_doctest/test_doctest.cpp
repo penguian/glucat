@@ -8,7 +8,7 @@
 #include <glucat/clifford_algebra.h>
 #include <glucat/matrix_multi.h>
 #include <glucat/glucat_imp.h>
-#include "math_identities.h"
+#include "test_doctest.h"
 
 TEST_CASE("math::identities") {
   using namespace glucat;
