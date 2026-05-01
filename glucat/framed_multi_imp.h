@@ -42,6 +42,8 @@
 
 #include <sstream>
 #include <fstream>
+#include <filesystem>
+#include <limits>
 
 namespace glucat
 {
@@ -2700,7 +2702,9 @@ namespace glucat
 
 TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
   using namespace glucat;
-  using fm_t = glucat::framed_multi<double, -32, 32>;
+  using fm_t = glucat::framed_multi<double, -8, 8>;
+  using T = double;
+  using is_t = fm_t::index_set_t;
 
   SUBCASE("Metadata") {
     CHECK(fm_t::classname() == "framed_multi");
@@ -2807,7 +2811,7 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK(log(n, fm_t(glucat::numeric_traits<double>::NaN()), false).isnan());
 
     // Purely scalar multivector
-    fm_t s(2.0);
+    fm_t s(T(2.0), is_t());
     CHECK(approx_equal(exp(s), fm_t(std::exp(2.0))));
     CHECK(approx_equal(log(s), fm_t(std::log(2.0))));
     CHECK(approx_equal(sqrt(s), fm_t(std::sqrt(2.0))));
@@ -2816,21 +2820,21 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK(approx_equal(log(s, i, false), fm_t(std::log(2.0))));
 
     // Zero
-    fm_t zero(0.0);
+    fm_t zero(T(0.0), is_t());
     // Log of zero returns NaN in GluCat
     CHECK(log(zero).isnan());
 
     // Large multivector to trigger matrix-based exp
     fm_t large = fm_t("1+{1}+{2}+{3}+{4}+{5}+{1,2}+{1,3}+{1,4}+{1,5}+{2,3}+{2,4}+{2,5}+{3,4}+{3,5}+{4,5}");
-    CHECK(approx_equal(exp(large), exp(glucat::matrix_multi<double, -32, 32>(large))));
+    CHECK(approx_equal(exp(large), exp(glucat::matrix_multi<double, -8, 8>(large))));
 
     // Negative log for framed_multi
-    fm_t neg(-1.0);
-    CHECK(approx_equal(log(neg, fm_t("{-1}"), false), fm_t("{-1}") * std::numbers::pi));
+    fm_t neg(T(-1.0), is_t());
+    CHECK(approx_equal(log(neg, fm_t("{-1}"), false), fm_t("{-1}") * T(std::numbers::pi)));
   }
   SUBCASE("Transcendental identities (random)") {
     using namespace glucat;
-    using index_set_t = fm_t::index_set_t; index_set_t frm = index_set_t();
+    using index_set_t = fm_t::index_set_t; using is_t = fm_t::index_set_t; index_set_t frm = index_set_t();
     const double fill = 0.5;
     for (index_t i = 1; i <= 7; ++i) {
       frm |= index_set_t(i);
@@ -2839,7 +2843,7 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
       fm_t a = fm_t::random(frm, fill);
       
       // exp(a) * exp(-a) == 1
-      CHECK(approx_equal(exp(a) * exp(-a), fm_t(1.0)));
+      CHECK(approx_equal(exp(a) * exp(-a), fm_t(T(1.0), is_t())));
       
       // cosh(a) + sinh(a) == exp(a)
       CHECK(approx_equal(cosh(a) + sinh(a), exp(a)));
@@ -2884,8 +2888,8 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
   }
 
   SUBCASE("Mixed-precision and assignment interchangeability") {
-    using fm_f_t = glucat::framed_multi<float, -32, 32>;
-    using fm_d_t = glucat::framed_multi<double, -32, 32>;
+    using fm_f_t = glucat::framed_multi<float, -8, 8>;
+    using fm_d_t = glucat::framed_multi<double, -8, 8>;
 
     fm_f_t f_f1("{1}");
     fm_f_t f_f2("{2}");
@@ -2939,7 +2943,7 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
   }
 
   SUBCASE("Mixed-representation assignment") {
-    using mm_d_t = glucat::matrix_multi<double, -32, 32>;
+    using mm_d_t = glucat::matrix_multi<double, -8, 8>;
     fm_t f("{1,2}");
     mm_d_t m("{1,2}");
     
@@ -3003,7 +3007,7 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
 
     // Construction with value outside of frame
     using is_t = fm_t::index_set_t;
-    CHECK_THROWS(fm_t(is_t(33), 1.0, is_t(), false));
+    CHECK_THROWS(fm_t(is_t(9), T(1.0), is_t(), false));
   }
 
   SUBCASE("I/O and Formatting") {
@@ -3020,15 +3024,107 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
 
   SUBCASE("Complexifier and Log") {
     using index_set_t = fm_t::index_set_t;
-    fm_t f(1.0);
+    fm_t f(T(1.0), is_t());
     // Log of a scalar doesn't need a complexifier if scalar > 0
-    CHECK(log(f) == fm_t(0.0));
+    CHECK(log(f) == fm_t(T(0.0), is_t()));
     
     // Log of -1 needs a complexifier
-    fm_t f_neg(-1.0);
+    fm_t f_neg(T(-1.0));
     fm_t complexifier = glucat::complexifier(f_neg);
     // We expect this to work if i*j squares to -1
     CHECK_NOTHROW(log(f_neg, complexifier));
+  }
+
+  SUBCASE("Clifford Algebra Operations") {
+    fm_t f1("{1}");
+    fm_t f2("{2}");
+    fm_t f12 = f1 * f2;
+    fm_t f_mix("1+{1}+{1,2}");
+
+    // Involute
+    CHECK(f1.involute() == -f1);
+    CHECK(f12.involute() == f12); // (-e1)*(-e2) = e12
+    CHECK(f_mix.involute() == fm_t("1-{1}+{1,2}"));
+
+    // Reverse
+    CHECK(f1.reverse() == f1);
+    CHECK(f12.reverse() == -f12); // e2*e1 = -e12
+    CHECK(f_mix.reverse() == fm_t("1+{1}-{1,2}"));
+
+    // Conjugate
+    CHECK(f_mix.conj() == fm_t("1-{1}-{1,2}"));
+
+    // Norm and Quad
+    CHECK(f_mix.quad() == doctest::Approx(T(3.0)));
+    CHECK(f_mix.norm() == doctest::Approx(T(3.0)));
+    CHECK(f_mix.max_abs() == doctest::Approx(T(1.0)));
+  }
+
+  SUBCASE("Projections and Parts") {
+    fm_t f_mix("1+{1}+{1,2}");
+    
+    CHECK(f_mix.pure() == fm_t("{1}+{1,2}"));
+    CHECK(f_mix.even() == fm_t("1+{1,2}"));
+    CHECK(f_mix.odd() == fm_t("{1}"));
+    
+    fm_t f_vec("1+2{1}+3{2}+4{1,2}");
+    auto v = f_vec.vector_part();
+    CHECK(v.size() == 2);
+    CHECK(v[0] == doctest::Approx(T(2.0)));
+    CHECK(v[1] == doctest::Approx(T(3.0)));
+
+    using is_t = fm_t::index_set_t;
+    auto v2 = f_vec.vector_part(is_t("{-1,1,2}"));
+    CHECK(v2.size() == 3);
+    CHECK(v2[0] == doctest::Approx(T(0.0)));
+    CHECK(v2[1] == doctest::Approx(T(2.0)));
+    CHECK(v2[2] == doctest::Approx(T(3.0)));
+  }
+
+  SUBCASE("Numerical Stability and Truncation") {
+    using is_t = fm_t::index_set_t;
+    fm_t f_small("1e8+{1}+1e-8{1,2}");
+    CHECK(f_small.truncated(T(1.0e-6)) == fm_t(T(1.0e8), is_t()));
+    
+    fm_t f_nan(std::numeric_limits<T>::quiet_NaN(), is_t());
+    fm_t f_inf(std::numeric_limits<T>::infinity(), is_t());
+    
+    CHECK(f_nan.isnan());
+    CHECK(!f_nan.isinf());
+    CHECK(f_inf.isinf());
+    CHECK(!f_inf.isnan());
+  }
+
+  SUBCASE("Extended I/O") {
+    fm_t f("1+{1}");
+    f.write("Test prefix"); // Mostly for coverage
+    
+    std::ofstream ofs("test_io.txt");
+    f.write(ofs, "File prefix");
+    ofs.close();
+    CHECK(std::filesystem::exists("test_io.txt"));
+    std::filesystem::remove("test_io.txt");
+  }
+
+  SUBCASE("More Clifford Operations") {
+    fm_t f1("{1}");
+    fm_t f_mix("1+{1}+{1,2}");
+    using is_t = fm_t::index_set_t;
+
+    // Grade and Frame
+    CHECK(f_mix.grade() == 2);
+    CHECK(f_mix.frame() == is_t("{1,2}"));
+    
+    // Subscripting
+    CHECK(f_mix[is_t("{1,2}")] == doctest::Approx(T(1.0)));
+    
+    // Pow and Inv
+    fm_t f_inv = f1.inv();
+    CHECK(f_inv == f1);
+    CHECK(f1.pow(2) == fm_t(T(1.0), is_t()));
+    
+    // Outer power
+    CHECK(f1.outer_pow(2) == fm_t(T(0.0), is_t()));
   }
 }
 #endif

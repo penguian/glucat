@@ -1716,7 +1716,7 @@ namespace glucat
 #include "glucat/matrix_multi.h"
 
 TEST_CASE("clifford_algebra_imp (generic templates)") {
-  using mm_t = glucat::matrix_multi<double, -32, 32>;
+  using mm_t = glucat::matrix_multi<double, -8, 8>;
   using ca_t = glucat::clifford_algebra<double, mm_t::index_set_t, mm_t>;
 
   SUBCASE("Metadata") {
