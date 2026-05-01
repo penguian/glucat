@@ -3241,6 +3241,33 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK(f2 == f);
   }
 
+  SUBCASE("Advanced Constructor Gaps") {
+    using index_set_t = mm_t::index_set_t;
+    using scalar_t = mm_t::scalar_t;
+    index_set_t ist(1);
+    index_set_t frm(1);
+    scalar_t crd(1.0);
+    
+    // Test matrix_multi constructor with prechecked
+    mm_t m1(ist, crd, frm, true);
+    CHECK(m1.frame() == frm);
+    
+    mm_t m2(ist, crd, frm, false);
+    CHECK(m2.frame() == frm);
+    
+    // Trigger exception path for constructor
+    index_set_t invalid_ist(2);
+    CHECK_THROWS_AS(mm_t(invalid_ist, crd, frm, false), glucat_error);
+  }
+
+  SUBCASE("Basis element and specialized members") {
+    using index_set_t = mm_t::index_set_t;
+    index_set_t frm(1);
+    mm_t a("{1}");
+    mm_t b_elem(frm);
+    CHECK(b_elem == a);
+  }
+
   SUBCASE("Exceptions") {
     mm_t m1(1.0);
     // Negative exponent in outer_pow
@@ -3250,6 +3277,28 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
     // mm_t is <-32, 32>, index_set_t(33) is out of frame
     using is_t = mm_t::index_set_t;
     CHECK_THROWS(mm_t(is_t(33), 1.0, is_t(), false));
+  }
+
+  SUBCASE("Move Semantics and Reframing") {
+    mm_t a(1.0);
+    mm_t b(std::move(a));
+    CHECK(b == mm_t(1.0));
+    
+    mm_t c;
+    c = std::move(b);
+    CHECK(c == mm_t(1.0));
+    
+    c = c; // Self-assignment
+    CHECK(c == mm_t(1.0));
+
+    // Reframing overlap
+    using is_t = mm_t::index_set_t;
+    mm_t m1(1.0);
+    mm_t m2(is_t("{1}"), 1.0);
+    mm_t sum = m1 + m2; // Triggers reframe
+    CHECK(sum.frame() == is_t("{1}"));
+    CHECK(sum.scalar() == doctest::Approx(1.0));
+    CHECK(sum[is_t("{1}")] == doctest::Approx(1.0));
   }
 }
 #endif

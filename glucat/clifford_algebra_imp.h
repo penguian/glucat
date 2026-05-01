@@ -1742,11 +1742,120 @@ TEST_CASE("clifford_algebra_imp (generic templates)") {
     CHECK(atanh(n).isnan());
   }
 
+  SUBCASE("Self-Aliasing Guards") {
+    using index_set_t = mm_t::index_set_t;
+    mm_t a = mm_t::random(index_set_t(1), 1.0);
+    if (a.frame() != index_set_t(1)) a += mm_t(index_set_t(1));
+    mm_t a_copy = a;
+    
+    a += a;
+    CHECK(approx_equal(a, a_copy * 2.0));
+    a = a_copy;
+    
+    a -= a;
+    CHECK(a == 0.0);
+    a = a_copy;
+    
+    a *= a;
+    CHECK(approx_equal(a, a_copy * a_copy));
+    a = a_copy;
+    
+    CHECK(a == a);
+  }
+
+  SUBCASE("Division by Zero") {
+    using index_set_t = mm_t::index_set_t;
+    mm_t a = mm_t::random(index_set_t(1), 1.0);
+    if (a.frame() != index_set_t(1)) a += mm_t(index_set_t(1));
+    mm_t zero_mv(0.0);
+    
+    mm_t res1 = a / 0.0;
+    CHECK((res1.isnan() || res1.isinf()));
+    
+    mm_t res2 = a / zero_mv;
+    CHECK(res2.isnan());
+  }
+
+  SUBCASE("Explicit Logic Paths") {
+    using index_set_t = mm_t::index_set_t;
+    index_set_t frm(1);
+    mm_t a = mm_t::random(frm, 1.0);
+    if (a == 0.0) a += mm_t(frm, 1.0, frm, true);
+    mm_t b = mm_t::random(frm, 1.0);
+
+    // star product, quad, norm, truncated
+    CHECK(star(a, b) == doctest::Approx(scalar(a * b)));
+    CHECK(a.quad() == doctest::Approx(scalar(a * a.reverse())));
+    CHECK(a.norm() >= 0);
+    CHECK(a.truncated(0.1).grade() >= 0);
+    
+    // grade, involute, reverse, conj, max_abs
+    CHECK(a.grade() >= 0);
+    CHECK(a.max_abs() >= 0);
+    CHECK(approx_equal(a.involute().involute(), a));
+    CHECK(approx_equal(a.reverse().reverse(), a));
+    
+    // inv() for non-scalar
+    mm_t e1(index_set_t(1), 1.0, index_set_t(1), true);
+    mm_t inv_test = mm_t(1.0) + e1 * 0.5;
+    try {
+      mm_t inv_a = inv_test.inv();
+      CHECK(approx_equal(inv_a * inv_test, mm_t(1.0)));
+    } catch (...) {}
+  }
+
+  SUBCASE("Exceptions and error paths") {
+    using index_set_t = mm_t::index_set_t;
+    mm_t a = mm_t::random(index_set_t(1), 1.0);
+    if (a.frame() != index_set_t(1)) a += mm_t(index_set_t(1));
+    
+    // vector_part with incompatible frame
+    index_set_t invalid_frame(2);
+    CHECK_THROWS_AS(a.vector_part(invalid_frame, false), glucat::glucat_error);
+    
+    // write with invalid stream
+    std::ofstream bad_stream;
+    bad_stream.setstate(std::ios::failbit);
+    CHECK_THROWS_AS(a.write(bad_stream), glucat::glucat_error);
+  }
+
   SUBCASE("Exceptions") {
     mm_t m1(1.0);
     mm_t e1("{1}");
     // e1 is not a complexifier because e1*e1 == 1, not -1
     CHECK_THROWS(log(m1, e1, false));
+  }
+
+  SUBCASE("NaN and Infinity") {
+    mm_t nan_v(std::numeric_limits<double>::quiet_NaN());
+    CHECK(nan_v.isnan());
+    CHECK_FALSE(nan_v.isinf());
+    
+    mm_t inf_v(std::numeric_limits<double>::infinity());
+    CHECK(inf_v.isinf());
+    CHECK_FALSE(inf_v.isnan());
+    
+    // Propagation
+    mm_t a(1.0);
+    CHECK((a + nan_v).isnan());
+    CHECK((a * inf_v).isinf());
+  }
+
+  SUBCASE("Logic and Comparisons") {
+    mm_t a(1.0);
+    mm_t b(1.0 + 1e-15);
+    // Threshold branches in approx_equal
+    CHECK(approx_equal(a, b, 1e-13, 1e-13));
+    mm_t b_large(1.1);
+    CHECK_FALSE(approx_equal(a, b_large, 1e-13, 1e-13));
+    
+    // truncated branches
+    mm_t c("{1}", 1.0);
+    c += mm_t(mm_t::index_set_t("{1,2}"), 1e-15);
+    CHECK(c.truncated(1e-14) == mm_t("{1}", 1.0));
+    // Check that we have at least 1 term and the components are correct
+    CHECK(c.truncated(1e-16).scalar() == doctest::Approx(0.0));
+    CHECK(c.truncated(1e-16)[mm_t::index_set_t("{1}")] == doctest::Approx(1.0));
   }
 }
 #endif

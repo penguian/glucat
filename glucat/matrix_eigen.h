@@ -109,7 +109,7 @@ namespace glucat { namespace matrix
 
     // Constructor from eigen_sparse_wrapper
     template< typename Other_Scalar_T >
-    explicit eigen_matrix_wrapper(const eigen_sparse_wrapper<Other_Scalar_T>& other);
+    eigen_matrix_wrapper(const eigen_sparse_wrapper<Other_Scalar_T>& other);
 
     // Copy constructor
     eigen_matrix_wrapper(const eigen_matrix_wrapper& other);
@@ -317,6 +317,8 @@ namespace glucat { namespace matrix
 
       // Inequality comparison
       bool operator!= (const const_iterator& other) const;
+      // Equality comparison
+      bool operator== (const const_iterator& other) const;
 
       // Row index
       matrix_index_t row() const;

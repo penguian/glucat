@@ -2949,6 +2949,50 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK(f2 == f);
   }
 
+  SUBCASE("Advanced Constructor Gaps") {
+    using index_set_t = fm_t::index_set_t;
+    using scalar_t = fm_t::scalar_t;
+    index_set_t ist(1);
+    index_set_t frm(1);
+    scalar_t crd(1.0);
+    
+    // Test framed_multi constructor with prechecked
+    fm_t m1(ist, crd, frm, true);
+    CHECK(m1.frame() == frm);
+    
+    fm_t m2(ist, crd, frm, false);
+    CHECK(m2.frame() == frm);
+    
+    // Trigger exception path for constructor
+    index_set_t invalid_ist(2);
+    CHECK_THROWS_AS(fm_t(invalid_ist, crd, frm, false), glucat_error);
+  }
+
+  SUBCASE("Fast Path (32 terms)") {
+    using index_set_t = fm_t::index_set_t;
+    using scalar_t = fm_t::scalar_t;
+    index_set_t large_frm;
+    for(int i=1; i<=6; ++i) large_frm |= index_set_t(i); // 64 dimensions
+    
+    fm_t f;
+    for(int i=0; i<32; ++i) {
+       index_set_t ist;
+       for(int j=0; j<6; ++j) if (i & (1 << j)) ist |= index_set_t(j+1);
+       f += typename fm_t::term_t(ist, scalar_t(i+1));
+    }
+    
+    CHECK(f.nbr_terms() >= 16);
+    
+    // Explicit conversion triggers constructor paths
+    fm_t a(f);
+    fm_t b(f, large_frm);
+    
+    fm_t res = a * b;
+    res = a ^ b;
+    res = a & b;
+    res = a % b;
+  }
+
   SUBCASE("Exceptions") {
     fm_t f1(1.0);
     // Parsing errors
@@ -2960,6 +3004,31 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     // Construction with value outside of frame
     using is_t = fm_t::index_set_t;
     CHECK_THROWS(fm_t(is_t(33), 1.0, is_t(), false));
+  }
+
+  SUBCASE("I/O and Formatting") {
+    fm_t f(1.23456789);
+    std::ostringstream oss;
+    oss << std::setprecision(4) << std::fixed << f;
+    CHECK(oss.str().find("1.2346") != std::string::npos);
+    
+    oss.str("");
+    oss << std::scientific << f;
+    CHECK(oss.str().find("1.234") != std::string::npos);
+    CHECK(oss.str().find("e+00") != std::string::npos);
+  }
+
+  SUBCASE("Complexifier and Log") {
+    using index_set_t = fm_t::index_set_t;
+    fm_t f(1.0);
+    // Log of a scalar doesn't need a complexifier if scalar > 0
+    CHECK(log(f) == fm_t(0.0));
+    
+    // Log of -1 needs a complexifier
+    fm_t f_neg(-1.0);
+    fm_t complexifier = glucat::complexifier(f_neg);
+    // We expect this to work if i*j squares to -1
+    CHECK_NOTHROW(log(f_neg, complexifier));
   }
 }
 #endif

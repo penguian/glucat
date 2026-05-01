@@ -8,7 +8,7 @@ check: test_doctest.out
 test_doctest.out: test_doctest
 	./test_doctest > test_doctest.out
 
-test_doctest_SOURCES = main.cpp
+test_doctest_SOURCES = test_doctest.cpp
 test_doctest_LDADD = $(LDADD)
 
 # set the include path found by configure

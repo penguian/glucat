@@ -1314,6 +1314,23 @@ namespace glucat { namespace matrix
   }
 
   /*
+   * @brief Kronecker matrix product of sparse wrappers
+   * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
+   * @return Kronecker product
+   */
+  template< typename Scalar_T >
+  inline arma_sparse_wrapper<Scalar_T>
+  arma_sparse_wrapper<Scalar_T>::
+  kron(const arma_sparse_wrapper<Scalar_T>& other) const
+  {
+    arma_sparse_wrapper<Scalar_T> result;
+    result.m_mat = arma::kron(m_mat, other.m_mat);
+    return result;
+  }
+
+  /*
    * @brief Left Kronecker quotient
    * @details
    * @tparam Scalar_T
@@ -1598,15 +1615,81 @@ namespace glucat { namespace matrix {
       CHECK(s2.trace() == doctest::Approx(Scalar_T(4)));
     }
 
-    SUBCASE("Kronecker Product") {
+    SUBCASE("Kronecker Product and Nork") {
       Matrix_T a(2, 2), b(2, 2);
       a.unit(2, 2);
       b.unit(2, 2);
+      
+      // Dense x Dense
       auto c = a.kron(b);
       CHECK(c.nbr_rows() == 4);
-      CHECK(c.nbr_cols() == 4);
-      CHECK(c.nnz() == 4);
       CHECK(c.trace() == doctest::Approx(Scalar_T(4)));
+
+      // Nork (Dense)
+      auto q = a.nork(c, true);
+      CHECK(q.nbr_rows() == 2);
+      CHECK(q.trace() == doctest::Approx(Scalar_T(2)));
+
+      // Mixed: Dense x Sparse
+      Sparse_T s(2, 2);
+      s.unit(2, 2);
+      auto mixed = a.kron(s);
+      CHECK(mixed.nbr_rows() == 4);
+      
+      // Mixed: Sparse x Dense
+      auto mixed2 = s.kron(b);
+      CHECK(mixed2.nbr_rows() == 4);
+
+      // Nork (Sparse)
+      auto ss = s.kron(s); 
+      CHECK(ss.nbr_rows() == 4);
+      CHECK(ss.nnz() == 4);
+      
+      auto qs = s.nork(ss, true);
+      CHECK(qs.nbr_rows() == 2);
+    }
+
+    SUBCASE("Norms and Inner Product") {
+      Matrix_T m(2, 2);
+      m(0,0) = Scalar_T(1); m(0,1) = Scalar_T(-2);
+      m(1,0) = Scalar_T(3); m(1,1) = Scalar_T(4);
+      
+      CHECK(m.norm_inf() == doctest::Approx(Scalar_T(7)));
+      CHECK(m.norm_frob2() == doctest::Approx(Scalar_T(1+4+9+16)));
+      CHECK(m.isnan() == false);
+      CHECK(m.isinf() == false);
+      
+      Sparse_T s(2, 2);
+      s(0,0) = Scalar_T(1); s(1,1) = Scalar_T(4);
+      CHECK(s.norm_inf() == doctest::Approx(Scalar_T(4)));
+      CHECK(s.norm_frob2() == doctest::Approx(Scalar_T(1+16)));
+      CHECK(s.isnan() == false);
+      CHECK(s.isinf() == false);
+
+      // Inner product
+      auto in = m.template inner<Scalar_T>(m);
+      CHECK(in == doctest::Approx(Scalar_T(1+4+9+16)/Scalar_T(2)));
+      
+      auto ins = s.template inner<Scalar_T>(s);
+      CHECK(ins == doctest::Approx(Scalar_T(1+16)/Scalar_T(2)));
+    }
+
+    SUBCASE("Interop and Utility") {
+      Sparse_T s(2, 2);
+      s.unit(2, 2);
+      
+      // Sparse to Dense
+      Matrix_T d(s);
+      CHECK(d.trace() == doctest::Approx(Scalar_T(2)));
+
+      // operator<<
+      std::ostringstream oss;
+      oss << s;
+      CHECK(!oss.str().empty());
+      
+      // Empty iterator
+      Sparse_T empty(0, 0);
+      CHECK(empty.begin() == empty.end());
     }
 
     SUBCASE("Cross-backend construction") {

@@ -270,4 +270,49 @@ namespace glucat { namespace matrix
 
 } }
 
+#ifdef GLUCAT_DOCTEST
+#include <doctest.h>
+#include "glucat/matrix.h"
+
+TEST_CASE("matrix::matrix_base") {
+  using namespace glucat;
+
+  SUBCASE("Matrix Base Edge Cases") {
+    using MatrixDbl_T = glucat::matrix::dense_matrix<double>;
+    
+    // Target classify_eigenvalues branches: both_eigs
+    // Use rotation blocks and a negative entry to get:
+    // - imaginary eigenvalues (via pi/2 rotation)
+    // - negative real eigenvalue (-1.0)
+    // - a gap distribution where the wrap-around gap is strictly largest
+    MatrixDbl_T m(5, 5);
+    m.zeros();
+    // Block 1: rot by pi/2 -> eigenvalues {i, -i}
+    m(0,1) = -1.0;
+    m(1,0) = 1.0;
+    // Block 2: rot by 0.6*pi -> eigenvalues {e^i0.6pi, e^-i0.6pi}
+    double theta = 0.6 * 3.14159265358979323846;
+    m(2,2) = std::cos(theta); m(2,3) = -std::sin(theta);
+    m(3,2) = std::sin(theta); m(3,3) = std::cos(theta);
+    // Negative real
+    m(4,4) = -1.0;
+    
+    auto genus = m.classify_eigenvalues();
+    CHECK(genus.m_eig_case == glucat::matrix::both_eigs);
+    
+    // Target classify_eigenvalues branches: singular
+    MatrixDbl_T ms(1, 1);
+    ms.zeros();
+    auto genus_s = ms.classify_eigenvalues();
+    CHECK(genus_s.m_is_singular == true);
+    
+    // Target unit() for float
+    using MatrixFlt_T = glucat::matrix::dense_matrix<float>;
+    MatrixFlt_T mf = glucat::matrix::unit<MatrixFlt_T>(2);
+    CHECK(glucat::matrix::nbr_rows(mf) == 2);
+    CHECK(glucat::matrix::nbr_cols(mf) == 2);
+  }
+}
+#endif
+
 #endif // _GLUCAT_MATRIX_BASE_IMP_H

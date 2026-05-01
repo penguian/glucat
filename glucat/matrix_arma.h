@@ -295,6 +295,8 @@ namespace glucat { namespace matrix
     // Mixed Kronecker matrix product: Sparse x Dense -> Dense (wrapper)
     template< typename Other_Scalar_T >
     arma_matrix_wrapper<Other_Scalar_T> kron(const arma_matrix_wrapper<Other_Scalar_T>& other) const;
+    // Kronecker matrix product of sparse wrappers
+    arma_sparse_wrapper kron(const arma_sparse_wrapper& other) const;
 
     // Left Kronecker quotient
     template< typename RHS_T >

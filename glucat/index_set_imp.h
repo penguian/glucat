@@ -1577,6 +1577,29 @@ TEST_CASE("index_set<LO,HI>") {
     // The constructor index_set(index_t val) uses prechecked=false by default, which should throw if out of bounds.
     CHECK_THROWS(is_t(33));
     CHECK_THROWS(is_t(-33));
+    CHECK_THROWS(is_t("{1} garbage"));
+  }
+
+  SUBCASE("Static Factory and Bit-Wizardry") {
+    // Static factory methods (verified at compile-time, runtime check for consistency)
+    CHECK(is_t::from_index<1>() == is_t(1));
+    CHECK(is_t::from_range<-1, 1>() == is_t(typename is_t::index_pair_t(-1, 1)));
+
+    // Bit-wizardry coverage for 64-bit paths (requires LO <= -32, HI >= 32)
+    using large_is_t = glucat::index_set<-32, 32>;
+    large_is_t s_large;
+    s_large.set(32);
+    CHECK(s_large.max() == 32);
+    CHECK(s_large.min() == 32);
+    s_large.set(-32);
+    CHECK(s_large.min() == -32);
+    CHECK(s_large.max() == 32);
+    
+    large_is_t s_mid;
+    s_mid.set(16);
+    CHECK(s_mid.max() == 16);
+    s_mid.set(8);
+    CHECK(s_mid.min() == 8);
   }
 }
 #endif

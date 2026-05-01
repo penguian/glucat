@@ -104,6 +104,24 @@ namespace glucat
     // Constructor from string
     index_set    (const std::string& str);
 
+    /// Create index set from a single index at compile-time
+    template<const index_t IDX>
+    static auto from_index() -> index_set_t
+    {
+      static_assert(IDX != 0, "index_set::from_index: index cannot be zero");
+      static_assert(IDX >= LO && IDX <= HI, "index_set::from_index: index out of bounds");
+      return index_set_t(IDX);
+    }
+
+    /// Create index set from a range of indices at compile-time
+    template<const index_t BEGIN, const index_t END>
+    static auto from_range() -> index_set_t
+    {
+      static_assert(BEGIN <= END, "index_set::from_range: invalid range [BEGIN, END]");
+      static_assert(BEGIN >= LO && END <= HI, "index_set::from_range: range out of bounds");
+      return index_set_t(index_pair_t(BEGIN, END), true);
+    }
+
     /// Default move assignment
     auto operator= (index_set&&) -> index_set& = default;
     /// Default copy assignment
