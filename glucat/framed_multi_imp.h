@@ -3164,6 +3164,33 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     mm_t m_8x8 = mm_t::random(is_t("{1,2,3,4}"), 1.0);
     fm_t f_fast(m_8x8);
     CHECK(f_fast.frame() == is_t("{1,2,3,4}"));
+
+    // Equality and Comparison Edge Cases (Lines 419, 425, 449)
+    fm_t f_a("{1}");
+    fm_t f_b("{2}");
+    fm_t f_empty;
+    CHECK_FALSE(f_a == f_b);      // Different terms, same size
+    CHECK_FALSE(f_a == f_empty);  // Different sizes
+    CHECK(f_empty == T(0.0));     // Scalar zero equality (Line 449)
+    CHECK_FALSE(f_a == T(0.0));   // Scalar zero inequality (Line 456)
+
+    // Arithmetic Edge Cases (Lines 598, 601, 644)
+    T nan = std::numeric_limits<T>::quiet_NaN();
+    fm_t f_val("{1}");
+
+    // operator*= with NaN (Line 598)
+    fm_t f_nan_res = f_val;
+    f_nan_res *= nan;
+    CHECK(f_nan_res.isnan());
+
+    // operator*= 0.0 with NaN (Line 601)
+    fm_t f_nan_val(nan, is_t());
+    f_nan_val *= T(0.0);
+    CHECK(f_nan_val.isnan());
+
+    // operator* with NaN (Line 644)
+    CHECK((f_nan_val * f_val).isnan());
+    CHECK((f_val * f_nan_val).isnan());
   }
 }
 #endif
