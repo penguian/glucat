@@ -1798,10 +1798,9 @@ TEST_CASE("clifford_algebra_imp (generic templates)") {
     // inv() for non-scalar
     mm_t e1(index_set_t(1), 1.0, index_set_t(1), true);
     mm_t inv_test = mm_t(1.0) + e1 * 0.5;
-    try {
-      mm_t inv_a = inv_test.inv();
-      CHECK(approx_equal(inv_a * inv_test, mm_t(1.0)));
-    } catch (...) {}
+    CHECK_NOTHROW(inv_test.inv());
+    mm_t inv_a = inv_test.inv();
+    CHECK(approx_equal(inv_a * inv_test, mm_t(1.0)));
   }
 
   SUBCASE("Exceptions and error paths") {
