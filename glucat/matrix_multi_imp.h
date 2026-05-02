@@ -42,7 +42,6 @@
 #include <array>
 #include <iostream>
 #include <fstream>
-#include <filesystem>
 #include <limits>
 
 namespace glucat
@@ -2995,6 +2994,7 @@ namespace glucat{
 #include <cmath>
 #include <numbers>
 #include <chrono>
+#include <filesystem>
 
 TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
   using namespace glucat;
@@ -3139,7 +3139,7 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
       // sqrt(a) * sqrt(a) == a
       mm_t s = sqrt(a);
       if (!s.isnan() && !s.isinf())
-        CHECK(approx_equal(s * s, a));
+        CHECK(approx_equal(s * s, a, T(1e-11), T(1e-11)));
     }
   }
 

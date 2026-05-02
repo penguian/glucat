@@ -42,7 +42,6 @@
 
 #include <sstream>
 #include <fstream>
-#include <filesystem>
 #include <limits>
 
 namespace glucat
@@ -2699,6 +2698,7 @@ namespace glucat
 #include <sstream>
 #include <cmath>
 #include <numbers>
+#include <filesystem>
 #include <chrono>
 
 TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
@@ -2859,7 +2859,7 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
   }
 
   SUBCASE("Geometric algebra identities (random)") {
-    using index_set_t = fm_t::index_set_t; using index_set_t = fm_t::index_set_t; index_set_t frm = index_set_t();
+    using index_set_t = fm_t::index_set_t; index_set_t frm = index_set_t();
     const double fill = 0.5;
     for (index_t i = 1; i <= 7; ++i) {
       frm |= index_set_t(i);
@@ -2977,7 +2977,7 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     using index_set_t = fm_t::index_set_t;
     using scalar_t = fm_t::scalar_t;
     index_set_t large_frm;
-    for(int i=1; i<=6; ++i) large_frm |= index_set_t(i); // 64 dimensions
+    for(int i=1; i<=6; ++i) large_frm |= index_set_t(i); // 6 generators
     
     fm_t f;
     for(int i=0; i<32; ++i) {
@@ -3128,6 +3128,41 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     
     // Outer power
     CHECK(f1.outer_pow(2) == fm_t(T(0.0), is_t()));
+  }
+
+  SUBCASE("Defensive and Edge Case Coverage") {
+    using is_t = fm_t::index_set_t;
+    using mm_t = matrix_multi<T, -8, 8>;
+    
+    // Outside-frame initialization (Line 181)
+    CHECK_THROWS_AS(fm_t(fm_t("{1,2}"), is_t("{1}"), false), glucat_error);
+    
+    // Malformed string parsing (Line 320)
+    CHECK_THROWS_AS(fm_t("1.0{1} garbage"), glucat_error);
+    
+    // NaN propagation from matrix (Lines 381-385)
+    // Use a 2x2 matrix (dim=2) to avoid the "dim == 1" fast return at line 367
+    // but stay below the default fast-path threshold of 4.
+    mm_t m_nan_multi = mm_t(std::numeric_limits<T>::quiet_NaN(), is_t()) * mm_t(is_t("{1}"), 1.0);
+    fm_t f_nan(m_nan_multi);
+    CHECK(f_nan.isnan());
+    
+    // Zero matrix conversion (Line 361)
+    mm_t m_zero = mm_t(T(0.0), is_t());
+    fm_t f_zero(m_zero);
+    CHECK(f_zero.nbr_terms() == 0);
+    
+    // 1x1 matrix conversion (Lines 366-369)
+    mm_t m_1x1(T(3.14), is_t()); // scalar is effectively 1x1 matrix
+    fm_t f_1x1(m_1x1);
+    CHECK(f_1x1[is_t()] == doctest::Approx(T(3.14)));
+
+    // Fast Path Conversion (Line 372)
+    // Default tuning policy has threshold = 4. 
+    // 4 generators -> 8x8 matrix (dim=8), which triggers the fast path.
+    mm_t m_8x8 = mm_t::random(is_t("{1,2,3,4}"), 1.0); 
+    fm_t f_fast(m_8x8);
+    CHECK(f_fast.frame() == is_t("{1,2,3,4}"));
   }
 }
 #endif
