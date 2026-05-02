@@ -5,6 +5,7 @@
 #include "glucat/glucat.h"
 #include <iostream>
 #include <fstream>
+#include <limits>
 
 namespace glucat {
 
