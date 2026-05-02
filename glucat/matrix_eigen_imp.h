@@ -1213,7 +1213,7 @@ namespace glucat { namespace matrix
       return false;
     return m_inner.index() != other.m_inner.index();
   }
-  
+
   /*
    * @brief Equality comparison
    * @details
@@ -1613,7 +1613,6 @@ namespace glucat { namespace matrix
 #include <doctest.h>
 #include <iostream>
 #include <sstream>
-#include <sstream>
 
 namespace glucat { namespace matrix {
 
@@ -1632,7 +1631,7 @@ namespace glucat { namespace matrix {
 
       m1(0, 0) = Scalar_T(1);
       m1(1, 1) = Scalar_T(2);
-      
+
       // Copy constructor
       Matrix_T m2(m1);
       CHECK(m2(0, 0) == Scalar_T(1));
@@ -1641,7 +1640,7 @@ namespace glucat { namespace matrix {
       // Move constructor
       Matrix_T m3(std::move(m2));
       CHECK(m3(0, 0) == Scalar_T(1));
-      
+
       // Assignment
       Matrix_T m4;
       m4 = m3;
@@ -1657,13 +1656,13 @@ namespace glucat { namespace matrix {
       Matrix_T a(2, 2), b(2, 2);
       a.unit(2, 2);
       b.unit(2, 2);
-      
+
       auto c = a + b;
       CHECK(c(0, 0) == Scalar_T(2));
-      
+
       auto d = a - b;
       CHECK(d(0, 0) == Scalar_T(0));
-      
+
       auto e = a * Scalar_T(3);
       CHECK(e(0, 0) == Scalar_T(3));
 
@@ -1704,15 +1703,15 @@ namespace glucat { namespace matrix {
       Matrix_T m(2, 2);
       m(0, 0) = Scalar_T(2); m(0, 1) = Scalar_T(1);
       m(1, 0) = Scalar_T(1); m(1, 1) = Scalar_T(2);
-      
+
       CHECK(m.is_finite());
       CHECK_FALSE(m.isnan());
       CHECK_FALSE(m.isinf());
-      
+
       Matrix_T rhs(2, 1);
       rhs(0, 0) = Scalar_T(3);
       rhs(1, 0) = Scalar_T(3);
-      
+
       Matrix_T x(2, 1);
       bool success = solve(x, m, rhs);
       CHECK(success);
@@ -1728,10 +1727,10 @@ namespace glucat { namespace matrix {
       s.zeros();
       s(0, 0) = Scalar_T(5);
       s(3, 3) = Scalar_T(-2);
-      
+
       CHECK(s.nnz() == 2);
       CHECK(s.trace() == doctest::Approx(Scalar_T(3)));
-      
+
       Sparse_T s2;
       s2.unit(4, 4);
       CHECK(s2.nnz() == 4);
@@ -1751,7 +1750,7 @@ namespace glucat { namespace matrix {
       Matrix_T a(2, 2), b(2, 2);
       a.unit(2, 2);
       b.unit(2, 2);
-      
+
       // Dense x Dense
       auto c = a.kron(b);
       CHECK(c.nbr_rows() == 4);
@@ -1767,7 +1766,7 @@ namespace glucat { namespace matrix {
       s.unit(2, 2);
       auto mixed = a.kron(s);
       CHECK(mixed.nbr_rows() == 4);
-      
+
       // Mixed: Sparse x Dense
       auto mixed2 = s.kron(b);
       CHECK(mixed2.nbr_rows() == 4);
@@ -1786,10 +1785,10 @@ namespace glucat { namespace matrix {
       Matrix_T m(2, 2);
       m(0,0) = Scalar_T(1); m(0,1) = Scalar_T(-2);
       m(1,0) = Scalar_T(3); m(1,1) = Scalar_T(4);
-      
+
       CHECK(m.norm_inf() == doctest::Approx(Scalar_T(7))); // max(1+2, 3+4)
       CHECK(m.norm_frob2() == doctest::Approx(Scalar_T(1+4+9+16)));
-      
+
       Sparse_T s(2, 2);
       s(0,0) = Scalar_T(1); s(1,1) = Scalar_T(4);
       CHECK(s.norm_inf() == doctest::Approx(Scalar_T(4)));
@@ -1798,7 +1797,7 @@ namespace glucat { namespace matrix {
       // Inner product
       auto in = m.template inner<Scalar_T>(m);
       CHECK(in == doctest::Approx(Scalar_T(1+4+9+16)/Scalar_T(2)));
-      
+
       auto ins = s.template inner<Scalar_T>(s);
       CHECK(ins == doctest::Approx(Scalar_T(1+16)/Scalar_T(2)));
     }
@@ -1806,19 +1805,19 @@ namespace glucat { namespace matrix {
     SUBCASE("Interop and Conversion") {
       Sparse_T s(2, 2);
       s.unit(2, 2);
-      
+
       // Sparse to Dense
       Matrix_T d;
       d = s; // Assignment
       CHECK(d.trace() == doctest::Approx(Scalar_T(2)));
-      
+
       Matrix_T d2(s); // Constructor
       CHECK(d2.trace() == doctest::Approx(Scalar_T(2)));
-      
+
       // Dense to Sparse? (Need to check if constructor exists)
-      // eigen_sparse_wrapper doesn't have a direct constructor from dense wrapper in the code I saw, 
+      // eigen_sparse_wrapper doesn't have a direct constructor from dense wrapper in the code I saw,
       // but it might have via Eigen interop.
-      
+
       // operator<< (mostly for coverage)
       std::ostringstream oss;
       oss << s;
@@ -1828,7 +1827,7 @@ namespace glucat { namespace matrix {
     SUBCASE("Iterator and Edge Cases") {
       Sparse_T empty(0, 0);
       CHECK(empty.begin() == empty.end());
-      
+
       Sparse_T s(2, 2);
       s(1, 1) = Scalar_T(5);
       auto it = s.begin();
