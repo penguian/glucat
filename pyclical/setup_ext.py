@@ -51,7 +51,7 @@ def filtered_libraries():
 
 def setup_ext(ext_name, source):
     all_includes_list = os.environ["all_includes"].replace("-I", "").split()
-    
+
     define_macros = []
     if os.environ.get("GLUCAT_PYCLICAL_TRACE"):
         define_macros.append(('CYTHON_TRACE', '1'))
