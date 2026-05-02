@@ -1513,8 +1513,8 @@ namespace glucat { namespace matrix
 } }
 #ifdef GLUCAT_DOCTEST
 #include <doctest.h>
-#include <iostream>
 #include <sstream>
+#include <utility>
 
 namespace glucat { namespace matrix {
 

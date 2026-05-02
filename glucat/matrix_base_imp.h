@@ -272,6 +272,7 @@ namespace glucat { namespace matrix
 
 #ifdef GLUCAT_DOCTEST
 #include <doctest.h>
+#include <cmath>
 #include "glucat/matrix.h"
 
 TEST_CASE("matrix::matrix_base") {

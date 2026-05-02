@@ -1713,6 +1713,9 @@ namespace glucat
 
 }
 #ifdef GLUCAT_DOCTEST
+#include <fstream>
+#include <limits>
+#include <cmath>
 #include "glucat/matrix_multi.h"
 
 TEST_CASE("clifford_algebra_imp (generic templates)") {

@@ -34,6 +34,7 @@
 #include "glucat/index_set.h"
 
 #include <string>
+#include <string_view>
 #include <sstream>
 
 namespace glucat
@@ -1466,7 +1467,6 @@ namespace glucat
 }
 #ifdef GLUCAT_DOCTEST
 #include <iostream>
-#include <sstream>
 
 TEST_CASE("index_set<LO,HI>") {
   using is_t = glucat::index_set<-32, 32>;

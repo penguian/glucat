@@ -43,6 +43,7 @@
 #include <sstream>
 #include <fstream>
 #include <limits>
+#include <cmath>
 
 namespace glucat
 {
@@ -2696,8 +2697,6 @@ namespace glucat
 #ifdef GLUCAT_DOCTEST
 #include <iostream>
 #include <iomanip>
-#include <sstream>
-#include <cmath>
 #include <numbers>
 #include <filesystem>
 #include <chrono>

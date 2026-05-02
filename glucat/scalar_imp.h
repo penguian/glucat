@@ -236,6 +236,7 @@ namespace glucat
 
 #ifdef GLUCAT_DOCTEST
 #include <doctest.h>
+#include <complex>
 
 namespace glucat {
 
