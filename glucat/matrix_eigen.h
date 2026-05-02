@@ -109,7 +109,7 @@ namespace glucat { namespace matrix
 
     // Constructor from eigen_sparse_wrapper
     template< typename Other_Scalar_T >
-    eigen_matrix_wrapper(const eigen_sparse_wrapper<Other_Scalar_T>& other);
+    explicit eigen_matrix_wrapper(const eigen_sparse_wrapper<Other_Scalar_T>& other);
 
     // Copy constructor
     eigen_matrix_wrapper(const eigen_matrix_wrapper& other);
