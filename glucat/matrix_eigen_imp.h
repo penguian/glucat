@@ -1613,6 +1613,7 @@ namespace glucat { namespace matrix
 #include <doctest.h>
 #include <iostream>
 #include <sstream>
+#include <sstream>
 
 namespace glucat { namespace matrix {
 
