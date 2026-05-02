@@ -311,6 +311,26 @@ TEST_CASE("matrix::matrix_base") {
     MatrixFlt_T mf = glucat::matrix::unit<MatrixFlt_T>(2);
     CHECK(glucat::matrix::nbr_rows(mf) == 2);
     CHECK(glucat::matrix::nbr_cols(mf) == 2);
+
+    // Target classify_eigenvalues branches: neg_real_eigs only
+    MatrixDbl_T mn(1, 1);
+    mn(0, 0) = -1.0;
+    auto genus_n = mn.classify_eigenvalues();
+    CHECK(genus_n.m_eig_case == glucat::matrix::neg_real_eigs);
+
+    // Target wrap-around gap logic in classify_eigenvalues
+    // Use eigenvalues e^i0.2pi and e^-i0.2pi. 
+    // Args: 0.2pi, -0.2pi. Sorted: -0.2pi, 0.2pi.
+    // Gap 1: 0.4pi
+    // Wrap gap: -0.2pi + 2pi - 0.2pi = 1.6pi (Largest)
+    MatrixDbl_T mw(3, 3);
+    mw.zeros();
+    // Purely imaginary: i, -i
+    mw(0,1) = -1.0; mw(1,0) = 1.0;
+    // Negative real: -1.0
+    mw(2,2) = -1.0;
+    auto genus_w = mw.classify_eigenvalues();
+    CHECK(genus_w.m_eig_case == glucat::matrix::both_eigs);
   }
 }
 #endif

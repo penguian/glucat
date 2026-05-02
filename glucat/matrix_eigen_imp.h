@@ -1211,7 +1211,7 @@ namespace glucat { namespace matrix
       return true;
     if (m_outer >= static_cast<matrix_index_t>(mp_mat->outerSize()))
       return false;
-    return m_inner != other.m_inner;
+    return m_inner.index() != other.m_inner.index();
   }
   
   /*
@@ -1612,6 +1612,7 @@ namespace glucat { namespace matrix
 #ifdef GLUCAT_DOCTEST
 #include <doctest.h>
 #include <iostream>
+#include <sstream>
 
 namespace glucat { namespace matrix {
 
@@ -1674,6 +1675,28 @@ namespace glucat { namespace matrix {
       auto h = g.t();
       CHECK(h(0, 1) == Scalar_T(3));
       CHECK(h(1, 0) == Scalar_T(2));
+
+      // Dense-Dense product
+      Matrix_T i = g * h;
+      CHECK(i(0, 0) == doctest::Approx(Scalar_T(5)));
+
+      // Compound assignment
+      g += a;
+      CHECK(g(0, 0) == Scalar_T(2));
+      g -= a;
+      CHECK(g(0, 0) == Scalar_T(1));
+      g *= Scalar_T(2);
+      CHECK(g(0, 0) == Scalar_T(2));
+
+      // unit_helper::apply
+      auto u = matrix::unit<Matrix_T>(3);
+      CHECK(u.nbr_rows() == 3);
+      CHECK(u.trace() == doctest::Approx(Scalar_T(3)));
+
+      a.zeros(3, 3);
+      CHECK(a.nbr_rows() == 3);
+      a.clear();
+      CHECK(a.is_finite());
     }
 
     SUBCASE("Dense Matrix: Analysis and Solve") {
@@ -1682,7 +1705,8 @@ namespace glucat { namespace matrix {
       m(1, 0) = Scalar_T(1); m(1, 1) = Scalar_T(2);
       
       CHECK(m.is_finite());
-      CHECK_FALSE(m.has_nan());
+      CHECK_FALSE(m.isnan());
+      CHECK_FALSE(m.isinf());
       
       Matrix_T rhs(2, 1);
       rhs(0, 0) = Scalar_T(3);
@@ -1711,6 +1735,15 @@ namespace glucat { namespace matrix {
       s2.unit(4, 4);
       CHECK(s2.nnz() == 4);
       CHECK(s2.trace() == doctest::Approx(Scalar_T(4)));
+
+      // Sparse iterator operator!=
+      Sparse_T s3(2, 2);
+      s3(0, 0) = Scalar_T(1);
+      s3(1, 0) = Scalar_T(2); // Two elements in first column (if ColMajor)
+      auto it1 = s3.begin();
+      auto it2 = s3.begin();
+      ++it2;
+      CHECK(it1 != it2);
     }
 
     SUBCASE("Kronecker Product and Nork") {

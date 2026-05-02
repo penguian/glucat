@@ -1514,6 +1514,7 @@ namespace glucat { namespace matrix
 #ifdef GLUCAT_DOCTEST
 #include <doctest.h>
 #include <iostream>
+#include <sstream>
 
 namespace glucat { namespace matrix {
 
@@ -1576,6 +1577,28 @@ namespace glucat { namespace matrix {
       auto h = g.t();
       CHECK(h(0, 1) == Scalar_T(3));
       CHECK(h(1, 0) == Scalar_T(2));
+
+      // Dense-Dense product
+      Matrix_T i = g * h;
+      CHECK(i(0, 0) == doctest::Approx(Scalar_T(5)));
+
+      // Compound assignment
+      g += a;
+      CHECK(g(0, 0) == Scalar_T(2));
+      g -= a;
+      CHECK(g(0, 0) == Scalar_T(1));
+      g *= Scalar_T(2);
+      CHECK(g(0, 0) == Scalar_T(2));
+
+      // unit_helper::apply
+      auto u = matrix::unit<Matrix_T>(3);
+      CHECK(u.nbr_rows() == 3);
+      CHECK(u.trace() == doctest::Approx(Scalar_T(3)));
+
+      a.zeros(3, 3);
+      CHECK(a.nbr_rows() == 3);
+      a.clear();
+      CHECK(a.is_finite());
     }
 
     SUBCASE("Dense Matrix: Analysis and Solve") {
@@ -1666,6 +1689,14 @@ namespace glucat { namespace matrix {
       CHECK(s.isnan() == false);
       CHECK(s.isinf() == false);
 
+      // Sparse iterator operator!=
+      Sparse_T s3(2, 2);
+      s3(0, 0) = Scalar_T(1);
+      s3(1, 0) = Scalar_T(2); 
+      auto it1 = s3.begin();
+      auto it2 = s3.begin();
+      ++it2;
+      CHECK(it1 != it2);
       // Inner product
       auto in = m.template inner<Scalar_T>(m);
       CHECK(in == doctest::Approx(Scalar_T(1+4+9+16)/Scalar_T(2)));
