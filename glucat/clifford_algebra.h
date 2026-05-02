@@ -145,47 +145,47 @@ namespace glucat
 
 #ifndef _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
 #define _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS \
-    auto operator==  (const multivector_t& val) const  -> bool                ;\
-    auto operator==  (const Scalar_T& scr) const       -> bool                ;\
-    auto operator+=  (const multivector_t& rhs)        -> multivector_t&      ;\
-    auto operator+=  (const Scalar_T& scr)             -> multivector_t&      ;\
-    auto operator-=  (const multivector_t& rhs)        -> multivector_t&      ;\
-    auto operator-=  (const Scalar_T& scr)             -> multivector_t&      ;\
-    auto operator-   () const                          -> multivector_t ;\
-    auto operator*=  (const Scalar_T& scr)             -> multivector_t&      ;\
-    auto operator*=  (const multivector_t& rhs)        -> multivector_t&      ;\
-    auto operator%=  (const multivector_t& rhs)        -> multivector_t&      ;\
-    auto operator&=  (const multivector_t& rhs)        -> multivector_t&      ;\
-    auto operator^=  (const multivector_t& rhs)        -> multivector_t&      ;\
-    auto operator/=  (const Scalar_T& scr)             -> multivector_t&      ;\
-    auto operator/=  (const multivector_t& rhs)        -> multivector_t&      ;\
-    auto operator|=  (const multivector_t& rhs)        -> multivector_t&      ;\
-    auto inv         () const                          -> multivector_t ;\
-    auto pow         (int m) const                     -> multivector_t ;\
-    auto outer_pow   (int m) const                     -> multivector_t ;\
-    auto frame       () const                          -> index_set_t   ;\
-    auto grade       () const                          -> index_t             ;\
-    auto operator[]  (const index_set_t ist) const     -> Scalar_T            ;\
-    auto operator()  (index_t grade) const             -> multivector_t ;\
-    auto scalar      () const                          -> Scalar_T            ;\
-    auto pure        () const                          -> multivector_t ;\
-    auto even        () const                          -> multivector_t ;\
-    auto odd         () const                          -> multivector_t ;\
-    auto vector_part () const                          -> vector_t      ;\
+    auto operator==  (const multivector_t& val) const  -> bool               override ;\
+    auto operator==  (const Scalar_T& scr) const       -> bool               override ;\
+    auto operator+=  (const multivector_t& rhs)        -> multivector_t&     override ;\
+    auto operator+=  (const Scalar_T& scr)             -> multivector_t&     override ;\
+    auto operator-=  (const multivector_t& rhs)        -> multivector_t&     override ;\
+    auto operator-=  (const Scalar_T& scr)             -> multivector_t&     override ;\
+    auto operator-   () const                          -> multivector_t      override ;\
+    auto operator*=  (const Scalar_T& scr)             -> multivector_t&     override ;\
+    auto operator*=  (const multivector_t& rhs)        -> multivector_t&     override ;\
+    auto operator%=  (const multivector_t& rhs)        -> multivector_t&     override ;\
+    auto operator&=  (const multivector_t& rhs)        -> multivector_t&     override ;\
+    auto operator^=  (const multivector_t& rhs)        -> multivector_t&     override ;\
+    auto operator/=  (const Scalar_T& scr)             -> multivector_t&     override ;\
+    auto operator/=  (const multivector_t& rhs)        -> multivector_t&     override ;\
+    auto operator|=  (const multivector_t& rhs)        -> multivector_t&     override ;\
+    auto inv         () const                          -> multivector_t      override ;\
+    auto pow         (int m) const                     -> multivector_t      override ;\
+    auto outer_pow   (int m) const                     -> multivector_t      override ;\
+    auto frame       () const                          -> index_set_t        override ;\
+    auto grade       () const                          -> index_t            override ;\
+    auto operator[]  (const index_set_t ist) const     -> Scalar_T           override ;\
+    auto operator()  (index_t grade) const             -> multivector_t      override ;\
+    auto scalar      () const                          -> Scalar_T           override ;\
+    auto pure        () const                          -> multivector_t      override ;\
+    auto even        () const                          -> multivector_t      override ;\
+    auto odd         () const                          -> multivector_t      override ;\
+    auto vector_part () const                          -> vector_t           override ;\
     auto vector_part (const index_set_t frm, const bool prechecked = false) const      \
-                                                       -> vector_t      ;\
-    auto involute    () const                          -> multivector_t ;\
-    auto reverse     () const                          -> multivector_t ;\
-    auto conj        () const                          -> multivector_t ;\
-    auto quad        () const                          -> Scalar_T            ;\
-    auto norm        () const                          -> Scalar_T            ;\
-    auto max_abs     () const                          -> Scalar_T            ;\
+                                                       -> vector_t           override ;\
+    auto involute    () const                          -> multivector_t      override ;\
+    auto reverse     () const                          -> multivector_t      override ;\
+    auto conj        () const                          -> multivector_t      override ;\
+    auto quad        () const                          -> Scalar_T           override ;\
+    auto norm        () const                          -> Scalar_T           override ;\
+    auto max_abs     () const                          -> Scalar_T           override ;\
     auto truncated   (const Scalar_T& limit = multivector_t::default_truncation) const \
-                                                       -> multivector_t ;\
-    auto isinf       () const                          -> bool                ;\
-    auto isnan       () const                          -> bool                ;\
-    void write       (const std::string& msg="") const                        ;\
-    void write       (std::ofstream& ofile, const std::string& msg="") const  ;
+                                                       -> multivector_t      override ;\
+    auto isinf       () const                          -> bool               override ;\
+    auto isnan       () const                          -> bool               override ;\
+    void write       (const std::string& msg="") const                       override ;\
+    void write       (std::ofstream& ofile, const std::string& msg="") const override ;
 #endif // _GLUCAT_CLIFFORD_ALGEBRA_OPERATIONS
 
 #ifndef _GLUCAT_CLIFFORD_ALGEBRA_ASSIGNMENT_OPERATIONS
