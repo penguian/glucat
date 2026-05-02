@@ -2699,6 +2699,7 @@ namespace glucat
 #include <sstream>
 #include <cmath>
 #include <numbers>
+#include <chrono>
 
 TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
   using namespace glucat;
@@ -3099,11 +3100,13 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     fm_t f("1+{1}");
     f.write("Test prefix"); // Mostly for coverage
     
-    std::ofstream ofs("test_io.txt");
+    auto temp_path = std::filesystem::temp_directory_path() / ("test_io_" + std::to_string(std::chrono::system_clock::now().time_since_epoch().count()) + ".txt");
+    struct Cleanup { std::filesystem::path p; ~Cleanup() { if(std::filesystem::exists(p)) std::filesystem::remove(p); } } cleanup{temp_path};
+
+    std::ofstream ofs(temp_path);
     f.write(ofs, "File prefix");
     ofs.close();
-    CHECK(std::filesystem::exists("test_io.txt"));
-    std::filesystem::remove("test_io.txt");
+    CHECK(std::filesystem::exists(temp_path));
   }
 
   SUBCASE("More Clifford Operations") {
