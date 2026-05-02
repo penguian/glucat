@@ -192,7 +192,7 @@ namespace glucat
 /**
  * @brief Macro defining templated assignment and compound assignment operators for Clifford algebras.
  *
- * These operators allow for mixed-representation operations (e.g. framed = matrix) 
+ * These operators allow for mixed-representation operations (e.g. framed = matrix)
  * provided that the scalar type, limits (LO, HI), and tuning parameters match.
  */
 #define _GLUCAT_CLIFFORD_ALGEBRA_ASSIGNMENT_OPERATIONS \

@@ -79,14 +79,14 @@ namespace glucat
 #ifdef GLUCAT_DOCTEST
 #include <sstream>
 #include <string_view>
-struct dummy_class { 
+struct dummy_class {
   static constexpr std::string_view name = "dummy_class";
-  static std::string_view classname() { return name; } 
+  static std::string_view classname() { return name; }
 };
 
 TEST_CASE("errors") {
   using namespace glucat;
-  
+
   SUBCASE("Two-argument constructor") {
     error<dummy_class> e("test_context", "test_message");
     CHECK(e.heading() == "Error in glucat::");
@@ -102,16 +102,16 @@ TEST_CASE("errors") {
 
   SUBCASE("Output verification (std::cerr redirection)") {
     error<dummy_class> e("context", "message");
-    
+
     // Redirect cerr to a stringstream
     std::stringstream buffer;
     std::streambuf* old_cerr = std::cerr.rdbuf(buffer.rdbuf());
-    
+
     e.print_error_msg();
-    
+
     // Restore cerr
     std::cerr.rdbuf(old_cerr);
-    
+
     std::string output = buffer.str();
     CHECK(output.find("Error in glucat::") != std::string::npos);
     CHECK(output.find("context") != std::string::npos);

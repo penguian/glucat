@@ -1553,7 +1553,7 @@ TEST_CASE("index_set<LO,HI>") {
     CHECK_FALSE(s3[2]);
     CHECK((~s3).test(1) == false);
     CHECK((~s3).test(2) == true);
-    
+
     // reference operators
     is_t s_ref;
     s_ref[1] = true;
@@ -1594,7 +1594,7 @@ TEST_CASE("index_set<LO,HI>") {
     s_large.set(-32);
     CHECK(s_large.min() == -32);
     CHECK(s_large.max() == 32);
-    
+
     large_is_t s_mid;
     s_mid.set(16);
     CHECK(s_mid.max() == 16);

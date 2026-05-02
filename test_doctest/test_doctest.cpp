@@ -12,7 +12,7 @@
 
 TEST_CASE("math::identities") {
   using namespace glucat;
-  
+
   SUBCASE("matrix_multi<double>") {
     run_peg00_test<matrix_multi<double, -8, 8>>(2);
     run_peg11_test<matrix_multi<double, -8, 8>>();

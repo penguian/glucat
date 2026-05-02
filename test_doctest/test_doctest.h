@@ -111,7 +111,7 @@ namespace glucat {
   {
     using index_set_t = typename Multivector_T::index_set_t;
     using scalar_t = typename Multivector_T::scalar_t;
-    
+
     scalar_t fill = 0.5;
     index_set_t frm = index_set_t();
     for (index_t i = 1; i != max_index+1; i++)
@@ -121,7 +121,7 @@ namespace glucat {
       Multivector_T b = Multivector_T::random(frm, fill);
       Multivector_T c = Multivector_T::random(frm, fill);
       test_idents_templated(a, b, c);
-      
+
       frm |= index_set_t(-i);
       a = Multivector_T::random(frm, fill);
       b = Multivector_T::random(frm, fill);

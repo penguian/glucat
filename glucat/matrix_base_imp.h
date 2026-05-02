@@ -279,7 +279,7 @@ TEST_CASE("matrix::matrix_base") {
 
   SUBCASE("Matrix Base Edge Cases") {
     using MatrixDbl_T = glucat::matrix::dense_matrix<double>;
-    
+
     // Target classify_eigenvalues branches: both_eigs
     // Use rotation blocks and a negative entry to get:
     // - imaginary eigenvalues (via pi/2 rotation)
@@ -296,16 +296,16 @@ TEST_CASE("matrix::matrix_base") {
     m(3,2) = std::sin(theta); m(3,3) = std::cos(theta);
     // Negative real
     m(4,4) = -1.0;
-    
+
     auto genus = m.classify_eigenvalues();
     CHECK(genus.m_eig_case == glucat::matrix::both_eigs);
-    
+
     // Target classify_eigenvalues branches: singular
     MatrixDbl_T ms(1, 1);
     ms.zeros();
     auto genus_s = ms.classify_eigenvalues();
     CHECK(genus_s.m_is_singular == true);
-    
+
     // Target unit() for float
     using MatrixFlt_T = glucat::matrix::dense_matrix<float>;
     MatrixFlt_T mf = glucat::matrix::unit<MatrixFlt_T>(2);
@@ -319,7 +319,7 @@ TEST_CASE("matrix::matrix_base") {
     CHECK(genus_n.m_eig_case == glucat::matrix::neg_real_eigs);
 
     // Target wrap-around gap logic in classify_eigenvalues
-    // Use eigenvalues e^i0.2pi and e^-i0.2pi. 
+    // Use eigenvalues e^i0.2pi and e^-i0.2pi.
     // Args: 0.2pi, -0.2pi. Sorted: -0.2pi, 0.2pi.
     // Gap 1: 0.4pi
     // Wrap gap: -0.2pi + 2pi - 0.2pi = 1.6pi (Largest)

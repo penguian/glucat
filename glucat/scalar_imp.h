@@ -186,15 +186,15 @@ namespace glucat
   /*
    * @brief Cast to promote
    * @details
-   * 
+   *
    * Usage example:
    * Location: glucat/framed_multi_imp.h:2327
-   * 
+   *
    * @code
    *
    * return to_promote(val);
    * @endcode
-   * 
+   *
    * @tparam Scalar_T
    * @param val Value
    * @return Result
@@ -211,15 +211,15 @@ namespace glucat
   /*
    * @brief Cast to demote
    * @details
-   * 
+   *
    * Usage example:
    * Location: glucat/framed_multi_imp.h:2310
-   * 
+   *
    * @code
    *
    * return to_demote(val);
    * @endcode
-   * 
+   *
    * @tparam Scalar_T
    * @param val Value
    * @return Result
@@ -242,7 +242,7 @@ namespace glucat {
   template <typename T>
   void test_scalar_traits() {
     using traits = numeric_traits<T>;
-    
+
     T zero(0);
     T one(1);
 
@@ -258,7 +258,7 @@ namespace glucat {
       CHECK_FALSE(traits::isNaN_or_isInf(one));
       CHECK_FALSE(traits::isNaN(zero));
       CHECK_FALSE(traits::isInf(zero));
-      
+
       T nan_val = traits::NaN();
       CHECK(traits::isNaN(nan_val));
     }
@@ -266,12 +266,12 @@ namespace glucat {
     SUBCASE("Math Functions") {
       T val = T(4);
       CHECK(traits::sqrt(val) == doctest::Approx(T(2)));
-      
+
       T e = T(1);
       CHECK(traits::exp(e) == doctest::Approx(T(std::exp(1.0))));
-      
+
       CHECK(traits::log(traits::exp(one)) == doctest::Approx(one));
-      
+
       T pi_val = traits::pi();
       CHECK(traits::sin(pi_val/T(2)) == doctest::Approx(one));
       CHECK(traits::cos(pi_val) == doctest::Approx(T(-1)));
@@ -281,7 +281,7 @@ namespace glucat {
       T val(2);
       auto p = to_promote(val);
       static_assert(std::is_same_v<decltype(p), typename traits::promoted::type>);
-      
+
       auto d = to_demote(val);
       static_assert(std::is_same_v<decltype(d), typename traits::demoted::type>);
     }
@@ -297,7 +297,7 @@ TEST_CASE("scalar::traits_and_math") {
   SUBCASE("dd_real")     { glucat::test_scalar_traits<dd_real>(); }
   SUBCASE("qd_real")     { glucat::test_scalar_traits<qd_real>(); }
 #endif
-  
+
   SUBCASE("is_complex trait") {
     using namespace glucat;
     CHECK_FALSE(is_complex_v<float>);

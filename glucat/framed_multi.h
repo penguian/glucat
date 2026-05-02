@@ -132,7 +132,7 @@ namespace glucat
 #endif
   {
     static_assert(HI - LO >= 1, "framed_multi: HI - LO must be at least 1");
-    // Note: Some periodicity transforms (e.g. centre_pm4_qp4) require 
+    // Note: Some periodicity transforms (e.g. centre_pm4_qp4) require
     // a larger range, but this is checked at runtime if q+4 > -LO.
 
   public:

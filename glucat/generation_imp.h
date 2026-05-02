@@ -304,33 +304,33 @@ TEST_CASE("gen::generator_table") {
     using WideMultivector_T = glucat::matrix_multi<double, -16, 16>;
     using wide_index_set_t = typename WideMultivector_T::index_set_t;
     using wide_scalar_t = typename WideMultivector_T::scalar_t;
-    
+
     wide_index_set_t p8;
     for(int i=1; i<=8; ++i) p8 |= wide_index_set_t(i);
     wide_index_set_t n8;
     for(int i=1; i<=8; ++i) n8 |= wide_index_set_t(-i);
-    
+
     // Signature (8, 0) -> triggers gen_from_pm4_qp4
     WideMultivector_T v_p8(p8, wide_scalar_t(1.0), p8, true);
     // Signature (0, 8) -> triggers gen_from_pp4_qm4
     WideMultivector_T v_n8(n8, wide_scalar_t(1.0), n8, true);
-    
+
     // Signature (2, 0) -> triggers gen_from_qp1_pm1
     wide_index_set_t p2;
     for(int i=1; i<=2; ++i) p2 |= wide_index_set_t(i);
     WideMultivector_T v_p2(p2, wide_scalar_t(1.0), p2, true);
-    
+
     // Signature (1, 7) -> triggers gen_from_pp4_qm4 (via bott=2 path)
     wide_index_set_t p1, n7;
     p1 |= wide_index_set_t(1);
     for(int i=1; i<=7; ++i) n7 |= wide_index_set_t(-i);
     WideMultivector_T v_p1n7(p1 | n7, wide_scalar_t(1.0), p1 | n7, true);
-    
+
     // Signature (10, 0) -> triggers gen_from_pm4_qp4 (via bott=2 path)
     wide_index_set_t p10;
     for(int i=1; i<=10; ++i) p10 |= wide_index_set_t(i);
     WideMultivector_T v_p10(p10, wide_scalar_t(1.0), p10, true);
-    
+
     // Direct call to operator() with bott=1 to hit default branch
     using gen_matrix_t = glucat::matrix::sparse_matrix_t<int>;
     glucat::gen::generator_table<gen_matrix_t>::generator()(1, 0);

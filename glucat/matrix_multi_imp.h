@@ -3127,15 +3127,15 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
     for (index_t i = 1; i <= 7; ++i) {
       frm |= index_set_t(i);
       frm |= index_set_t(-i);
-      
+
       mm_t a = mm_t::random(frm, fill);
-      
+
       // exp(a) * exp(-a) == 1
       CHECK(approx_equal(exp(a) * exp(-a), mm_t(T(1.0), mm_t::index_set_t())));
-      
+
       // cosh(a) + sinh(a) == exp(a)
       CHECK(approx_equal(cosh(a) + sinh(a), exp(a)));
-      
+
       // sqrt(a) * sqrt(a) == a
       mm_t s = sqrt(a);
       if (!s.isnan() && !s.isinf())
@@ -3149,21 +3149,21 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
     for (index_t i = 1; i <= 7; ++i) {
       frm |= index_set_t(i);
       frm |= index_set_t(-i);
-      
+
       mm_t a = mm_t::random(frm, fill);
       mm_t b = mm_t::random(frm, fill);
       mm_t c = mm_t::random(frm, fill);
-      
+
       // [HS] (1.25a): (a ^ b) ^ c == a ^ (b ^ c)
       CHECK(approx_equal((a ^ b) ^ c, a ^ (b ^ c)));
-      
+
       // [HS] (1.31): a_1 * b == (a_1 & b) + (a_1 ^ b)
       mm_t a_1 = a(1);
       CHECK(approx_equal(a_1 * b, (a_1 & b) + (a_1 ^ b)));
-      
+
       // [HS] (1.44): star(a, b) == scalar(a * b)
       CHECK(star(a, b) == doctest::Approx(scalar(a * b)));
-      
+
       // [HS] (1.21a): (a_r * b_s)(|r-s|) == a_r & b_s (sampled)
       index_t r = frm.count() / 2;
       index_t s = frm.count() / 2;
@@ -3232,7 +3232,7 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
     using fm_d_t = glucat::framed_multi<double, -8, 8>;
     mm_t m("{1,2}");
     fm_d_t f("{1,2}");
-    
+
     // Framed to Matrix (matching scalar)
     mm_t m2;
     m2 = f;
@@ -3250,14 +3250,14 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
     index_set_t ist(1);
     index_set_t frm(1);
     scalar_t crd(1.0);
-    
+
     // Test matrix_multi constructor with prechecked
     mm_t m1(ist, crd, frm, true);
     CHECK(m1.frame() == frm);
-    
+
     mm_t m2(ist, crd, frm, false);
     CHECK(m2.frame() == frm);
-    
+
     // Trigger exception path for constructor
     index_set_t invalid_ist(2);
     CHECK_THROWS_AS(mm_t(invalid_ist, crd, frm, false), glucat_error);
@@ -3286,11 +3286,11 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
     mm_t a(T(1.0), mm_t::index_set_t());
     mm_t b(std::move(a));
     CHECK(b == mm_t(T(1.0)));
-    
+
     mm_t c;
     c = std::move(b);
     CHECK(c == mm_t(T(1.0)));
-    
+
     c = c; // Self-assignment
     CHECK(c == mm_t(T(1.0)));
 
@@ -3307,12 +3307,12 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
   SUBCASE("Advanced Matrix Algorithms") {
     mm_t m1(T(1.0), mm_t::index_set_t());
     mm_t m2 = m1.outer_pow(2);
-    
+
     // Test refined_newton_schulz vs newton_schulz
     mm_t a("1+0.1{1}");
     mm_t s1 = glucat::newton_schulz(a, T(1.0));
     mm_t s2 = glucat::refined_newton_schulz(a, T(1.0));
-    
+
     // They should be approximately equal for small perturbations
     CHECK(s1.scalar() == doctest::Approx(s2.scalar()));
   }
@@ -3320,18 +3320,18 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
   SUBCASE("Numerical Analysis") {
     mm_t f_small("1e8+{1}+1e-8{1,2}");
     CHECK(f_small.truncated(T(1.0e-6)) == mm_t(T(1.0e8), mm_t::index_set_t()));
-    
+
     mm_t f_nan(std::numeric_limits<T>::quiet_NaN());
     mm_t f_inf(std::numeric_limits<T>::infinity());
-    
+
     CHECK(f_nan.isnan());
     CHECK(f_inf.isinf());
   }
 
   SUBCASE("File I/O") {
     mm_t f("1+{1}");
-    f.write("Test prefix"); 
-    
+    f.write("Test prefix");
+
     auto temp_path = std::filesystem::temp_directory_path() / ("test_io_mm_" + std::to_string(std::chrono::system_clock::now().time_since_epoch().count()) + ".txt");
     struct Cleanup { std::filesystem::path p; ~Cleanup() { if(std::filesystem::exists(p)) std::filesystem::remove(p); } } cleanup{temp_path};
 
@@ -3372,14 +3372,14 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
     using is_t = mm_t::index_set_t;
     auto v2 = m_vec.vector_part(is_t("{-1,1,2}"));
     CHECK(v2.size() == 3);
-    
+
     // Grade and Frame
     CHECK(m_mix.grade() == 2);
     CHECK(m_mix.frame() == is_t("{1,2}"));
-    
+
     // Subscripting
     CHECK(m_mix[is_t("{1,2}")] == doctest::Approx(1.0));
-    
+
     // Pow and Inv
     mm_t m_inv = m1.inv();
     CHECK(m_inv == m1);
