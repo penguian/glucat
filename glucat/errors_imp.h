@@ -103,14 +103,15 @@ TEST_CASE("errors") {
   SUBCASE("Output verification (std::cerr redirection)") {
     error<dummy_class> e("context", "message");
 
-    // Redirect cerr to a stringstream
+    // Redirect cerr to a stringstream using RAII
     std::stringstream buffer;
-    std::streambuf* old_cerr = std::cerr.rdbuf(buffer.rdbuf());
+    struct CerrRedirect {
+      std::streambuf* old;
+      CerrRedirect(std::streambuf* new_buf) : old(std::cerr.rdbuf(new_buf)) {}
+      ~CerrRedirect() { std::cerr.rdbuf(old); }
+    } redirect(buffer.rdbuf());
 
     e.print_error_msg();
-
-    // Restore cerr
-    std::cerr.rdbuf(old_cerr);
 
     std::string output = buffer.str();
     CHECK(output.find("Error in glucat::") != std::string::npos);

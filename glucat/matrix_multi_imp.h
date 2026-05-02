@@ -2994,6 +2994,7 @@ namespace glucat{
 #include <numbers>
 #include <chrono>
 #include <filesystem>
+#include <system_error>
 
 TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
   using namespace glucat;
@@ -3332,7 +3333,7 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
     f.write("Test prefix");
 
     auto temp_path = std::filesystem::temp_directory_path() / ("test_io_mm_" + std::to_string(std::chrono::system_clock::now().time_since_epoch().count()) + ".txt");
-    struct Cleanup { std::filesystem::path p; ~Cleanup() { if(std::filesystem::exists(p)) std::filesystem::remove(p); } } cleanup{temp_path};
+    struct Cleanup { std::filesystem::path p; ~Cleanup() { std::error_code ec; if(std::filesystem::exists(p, ec)) std::filesystem::remove(p, ec); } } cleanup{temp_path};
 
     std::ofstream ofs(temp_path);
     f.write(ofs, "File prefix");
