@@ -2994,6 +2994,7 @@ namespace glucat{
 #include <sstream>
 #include <cmath>
 #include <numbers>
+#include <chrono>
 
 TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
   using namespace glucat;
@@ -3143,7 +3144,7 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
   }
 
   SUBCASE("Geometric algebra identities (random)") {
-    using index_set_t = mm_t::index_set_t; using index_set_t = mm_t::index_set_t; index_set_t frm = index_set_t();
+    using index_set_t = mm_t::index_set_t; index_set_t frm = index_set_t();
     const T fill = T(0.5);
     for (index_t i = 1; i <= 7; ++i) {
       frm |= index_set_t(i);
@@ -3331,11 +3332,13 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
     mm_t f("1+{1}");
     f.write("Test prefix"); 
     
-    std::ofstream ofs("test_io_mm.txt");
+    auto temp_path = std::filesystem::temp_directory_path() / ("test_io_mm_" + std::to_string(std::chrono::system_clock::now().time_since_epoch().count()) + ".txt");
+    struct Cleanup { std::filesystem::path p; ~Cleanup() { if(std::filesystem::exists(p)) std::filesystem::remove(p); } } cleanup{temp_path};
+
+    std::ofstream ofs(temp_path);
     f.write(ofs, "File prefix");
     ofs.close();
-    CHECK(std::filesystem::exists("test_io_mm.txt"));
-    std::filesystem::remove("test_io_mm.txt");
+    CHECK(std::filesystem::exists(temp_path));
   }
 
   SUBCASE("Clifford Algebra Operations") {
