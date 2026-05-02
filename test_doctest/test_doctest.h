@@ -3,8 +3,7 @@
 
 #include <doctest.h>
 #include "glucat/glucat.h"
-#include <iostream>
-#include <fstream>
+#include <cmath>
 #include <limits>
 
 namespace glucat {
