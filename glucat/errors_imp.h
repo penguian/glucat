@@ -78,6 +78,7 @@ namespace glucat
 
 #ifdef GLUCAT_DOCTEST
 #include <sstream>
+#include <string_view>
 struct dummy_class { 
   static constexpr std::string_view name = "dummy_class";
   static std::string_view classname() { return name; } 
