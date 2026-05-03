@@ -3009,7 +3009,7 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
 
     // Construction with value outside of frame
     using is_t = fm_t::index_set_t;
-    CHECK_THROWS(fm_t(is_t(9), T(1.0), is_t(), false));
+    CHECK_THROWS(fm_t(is_t(1), T(1.0), is_t(), false));
   }
 
   SUBCASE("I/O and Formatting") {

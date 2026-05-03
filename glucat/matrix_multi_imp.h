@@ -3276,9 +3276,9 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK_THROWS(m1.outer_pow(-1));
 
     // Construction with value outside of frame
-    // mm_t is <-8, 8>, index_set_t(9) is out of frame
+    // mm_t is <-8, 8>, index_set_t(1) is out of empty frame is_t()
     using is_t = mm_t::index_set_t;
-    CHECK_THROWS(mm_t(is_t(9), 1.0, is_t(), false));
+    CHECK_THROWS(mm_t(is_t(1), 1.0, is_t(), false));
   }
 
   SUBCASE("Move Semantics and Reframing") {
