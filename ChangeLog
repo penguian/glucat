@@ -1,3 +1,273 @@
+2026-05-03  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* DESIGN.md, NEWS, README.md: Bump the release date
+
+2026-05-03  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h, glucat/matrix_multi_imp.h: Correctly
+	check value outside of frame
+
+2026-05-03  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/index_set.h, glucat/index_set_imp.h: Use constexpr
+
+2026-05-03  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_eigen_imp.h: Fix iterator comparison
+
+2026-05-03  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/generation_imp.h, glucat/matrix_multi_imp.h: Check results
+	of assignments
+
+2026-05-03  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h: Remove unused type
+
+2026-05-03  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra.h, glucat/framed_multi.h,
+	glucat/matrix_multi.h: Correct default destructors
+
+2026-05-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/errors_imp.h, glucat/framed_multi_imp.h,
+	glucat/matrix_multi_imp.h: Use RAII correctly
+
+2026-05-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_doctest/test_doctest.cpp, test_doctest/test_doctest.h: 
+	Correct the include directives
+
+2026-05-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra_imp.h, glucat/framed_multi_imp.h,
+	glucat/index_set_imp.h, glucat/matrix_arma_imp.h,
+	glucat/matrix_base_imp.h, glucat/matrix_eigen_imp.h,
+	glucat/matrix_multi_imp.h, glucat/scalar_imp.h: Correct the include
+	directives
+
+2026-05-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h: Improve test coverage
+
+2026-05-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/setup_ext.py: Remove trailling spaces
+
+2026-05-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra.h, glucat/clifford_algebra_imp.h,
+	glucat/errors_imp.h, glucat/framed_multi.h,
+	glucat/generation_imp.h, glucat/index_set_imp.h,
+	glucat/matrix_base_imp.h, glucat/matrix_multi_imp.h,
+	glucat/scalar_imp.h, test_doctest/test_doctest.cpp,
+	test_doctest/test_doctest.h: Remove trailling spaces
+
+2026-05-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h, glucat/matrix_arma_imp.h,
+	glucat/matrix_eigen_imp.h: Fix includes
+
+2026-05-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h, glucat/matrix_multi_imp.h: Improve
+	doctests
+
+2026-05-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_arma_imp.h, glucat/matrix_eigen_imp.h: Added include
+	sstream
+
+2026-05-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra.h: Readded override
+
+2026-05-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/errors_imp.h: Add include string_view
+
+2026-05-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_arma_imp.h, glucat/matrix_base_imp.h,
+	glucat/matrix_eigen_imp.h: Improve coverage
+
+2026-05-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/errors_imp.h, test_doctest/test_doctest.h: Add include
+	limits. Add include sstream
+
+2026-05-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra_imp.h: Correctly flag unexpected
+	exceptions
+
+2026-05-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_eigen.h: Restore the explicit keyword
+
+2026-05-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h: Use a unique temporary path
+
+2026-05-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_multi_imp.h: Delete a duplicated definition. Use a
+	unique temporary path
+
+2026-05-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* AUTHORS.md, INSTALL.md, NEWS, README.md, configure.ac.in,
+	pyclical/test.out: Bump version to 0.98a1
+
+2026-05-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra_imp.h, glucat/framed_multi_imp.h,
+	glucat/matrix_multi_imp.h: Increase coverage
+
+2026-05-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra_imp.h, glucat/framed_multi.h,
+	glucat/framed_multi_imp.h, glucat/generation_imp.h,
+	glucat/index_set.h, glucat/index_set_imp.h, glucat/matrix_arma.h,
+	glucat/matrix_arma_imp.h, glucat/matrix_base_imp.h,
+	glucat/matrix_eigen.h, glucat/matrix_eigen_imp.h,
+	glucat/matrix_multi_imp.h, test_doctest/Makefile.am: Refactor,
+	increase and improve tests
+
+2026-05-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_doctest/math_identities.h, test_doctest/{main.cpp =>
+	test_doctest.cpp}, test_doctest/test_doctest.h: Rename and refactor
+	test_doctest sources
+
+2026-05-01  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_doctest/math_identities.h: Increase coverage of generation
+
+2026-05-01  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_doctest/math_identities.h: Increase coverage of matrrix_base
+
+2026-05-01  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h, glucat/matrix_multi_imp.h,
+	test_doctest/math_identities.h: Add tests to improve coverage
+
+2026-04-30  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_doctest/math_identities.h: Add identities
+
+2026-04-30  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra.h, glucat/errors_imp.h,
+	glucat/framed_multi.h, glucat/matrix_arma_imp.h,
+	glucat/matrix_eigen_imp.h, glucat/matrix_multi.h,
+	glucat/scalar_imp.h, test_doctest/main.cpp: Increase doctest
+	coverage
+
+2026-04-29  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* DESIGN.md, INSTALL.md, NEWS, README.md: Finalize documentation for
+	0.98a0 release
+
+2026-04-29  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #73 from penguian/matrix-backends-improved Improve the matrix backend
+
+2026-04-29  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_coverage/src/run_clang_doctest_coverage.sh,
+	test_coverage/src/run_full_coverage.sh,
+	test_coverage/src/run_pyclical_coverage.sh: Do not export LDFLAGS
+
+2026-04-29  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_coverage/src/run_clang_coverage.sh,
+	test_coverage/src/run_clang_doctest_coverage.sh,
+	test_coverage/src/run_full_coverage.sh,
+	test_coverage/src/run_pyclical_coverage.sh: Bootstrap correctly
+
+2026-04-29  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/gfft_test-11.out, test_runtime/products-8.out,
+	test_runtime/squaring-11.out, test_runtime/transforms-8.out: Update
+	timing test results
+
+2026-04-28  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in: Make out-of-tree builds possible
+
+2026-04-28  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra_imp.h, glucat/framed_multi_imp.h,
+	glucat/index_set_imp.h, glucat/matrix_arma_imp.h,
+	glucat/matrix_eigen_imp.h, glucat/matrix_multi_imp.h: Test
+	exceptions
+
+2026-04-28  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi.h, glucat/framed_multi_imp.h,
+	glucat/matrix_arma.h, glucat/matrix_arma_imp.h,
+	glucat/matrix_eigen.h, glucat/matrix_eigen_imp.h,
+	glucat/matrix_multi.h, glucat/matrix_multi_imp.h: Refine noexcept
+
+2026-04-28  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra.h, glucat/clifford_algebra_imp.h,
+	glucat/errors.h, glucat/errors_imp.h, glucat/framed_multi.h,
+	glucat/framed_multi_imp.h, glucat/global.h, glucat/index_set.h,
+	glucat/index_set_imp.h, glucat/matrix_multi.h,
+	glucat/matrix_multi_imp.h: Use string_view
+
+2026-04-28  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_coverage/src/run_clang_coverage.sh,
+	test_coverage/src/run_clang_doctest_coverage.sh,
+	test_coverage/src/run_full_coverage.sh,
+	test_coverage/src/run_pyclical_coverage.sh: Use only nproc/2
+	processes for Make
+
+2026-04-28  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra.h, glucat/scalar.h: Assert that Scalar_T
+	is not complex
+
+2026-04-28  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/gfft_test-11.out, test_runtime/products-8.out,
+	test_runtime/squaring-11.out, test_runtime/transforms-8.out: Update
+	timing test results
+
+2026-04-27  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/Makefile.am: Add include paths
+
+2026-04-27  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* DESIGN.md, NEWS, README.md, glucat/matrix_arma.h,
+	glucat/matrix_arma_imp.h, glucat/matrix_base.h,
+	glucat/matrix_base_imp.h, glucat/matrix_eigen.h,
+	glucat/matrix_eigen_imp.h, glucat/matrix_multi.h,
+	glucat/matrix_multi_imp.h: Use definite return types
+
+2026-04-27  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* DESIGN.md, README.md, glucat/matrix_arma.h,
+	glucat/matrix_arma_imp.h, glucat/matrix_eigen.h,
+	glucat/matrix_eigen_imp.h: Optimize sparse matrix unit and trace
+	functions
+
+2026-04-27  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime/gfft_test-11.out, test_runtime/products-8.out,
+	test_runtime/squaring-11.out, test_runtime/transforms-8.out: Update
+	timing test results
+
+2026-04-27  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* ChangeLog: Update ChangeLog
+
 2026-04-27  Paul Leopardi <paul.leopardi@anu.edu.au>
 
 	* DESIGN.md, INSTALL.md, NEWS, TODO.md: Update the documentation
