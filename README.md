@@ -425,6 +425,7 @@ As of GluCat 0.98a1, the following changes have been made:
 
 As of GluCat 0.98a0, the following changes have been made:
 * **Non-Complex Scalar_T Assertion**: Enforced non-complex `Scalar_T` requirements using `static_assert` in `clifford_algebra.h` and `scalar.h` to ensure template robustness and library-wide compatibility.
+* **Coverage Infrastructure Hardening**: Hardened the build system and coverage reporting by implementing binary backup sequences and isolating profiling flags from autotools library probes.
 * **Sparse Diagonal Optimization**: Optimization of sparse matrix `unit()` and `trace()` operations in Eigen and Armadillo backends to avoid slow manual diagonal write loops.
 * **Return Type Modernization**: Refactored the public API across all core classes and matrix wrappers to use standard return types (e.g., `T func()`) instead of trailing return types (`auto func() -> T`).
 * **Deprecated Function Removal**: The following deprecated functions have been removed:
