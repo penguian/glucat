@@ -3000,7 +3000,6 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
   using namespace glucat;
   using mm_t = glucat::matrix_multi<double, -8, 8>;
   using T = double;
-  using is_t = mm_t::index_set_t;
 
   SUBCASE("Metadata") {
     CHECK(mm_t::classname() == "matrix_multi");
@@ -3307,6 +3306,7 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
   SUBCASE("Advanced Matrix Algorithms") {
     mm_t m1(T(1.0), mm_t::index_set_t());
     mm_t m2 = m1.outer_pow(2);
+    CHECK_FALSE(m2.isnan());
 
     // Test refined_newton_schulz vs newton_schulz
     mm_t a("1+0.1{1}");
