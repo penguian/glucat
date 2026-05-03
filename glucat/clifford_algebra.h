@@ -60,7 +60,7 @@ namespace glucat
     // Default for truncation
     static const Scalar_T default_truncation;
 
-    virtual ~clifford_algebra() = default;
+    virtual ~clifford_algebra() noexcept = default;
 
   // clifford_algebra operations
     // Test for equality of multivectors

@@ -159,7 +159,7 @@ namespace glucat
     // Class name used in messages
     static std::string_view classname();
     /// Destructor
-    ~matrix_multi() = default;
+    ~matrix_multi() noexcept override = default;
     // Default constructor
     matrix_multi();
     // Move constructor

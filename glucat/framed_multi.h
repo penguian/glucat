@@ -186,7 +186,7 @@ namespace glucat
     // Class name used in messages
     static auto classname() -> std::string_view;
     /// Destructor
-    ~framed_multi() = default;
+    ~framed_multi() noexcept override = default;
     // Default constructor
     framed_multi();
     // Move constructor
