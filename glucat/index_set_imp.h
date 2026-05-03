@@ -59,6 +59,7 @@ namespace glucat
    * @param idx Value
    */
   template<const index_t LO, const index_t HI>
+  inline constexpr
   index_set<LO,HI>::
   index_set(const index_t idx)
   { this->set(idx); }
@@ -71,6 +72,7 @@ namespace glucat
    * @param bst Value
    */
   template<const index_t LO, const index_t HI>
+  inline constexpr
   index_set<LO,HI>::
   index_set(const bitset_t bst):
   bitset_t(bst)
@@ -86,6 +88,7 @@ namespace glucat
    * @param prechecked Already checked?
    */
   template<const index_t LO, const index_t HI>
+  inline constexpr
   index_set<LO,HI>::
   index_set(const set_value_t folded_val, const index_set_t frm, const bool prechecked)
   {
@@ -107,6 +110,7 @@ namespace glucat
    * @param prechecked Already checked?
    */
   template<const index_t LO, const index_t HI>
+  inline constexpr
   index_set<LO,HI>::
   index_set(const index_pair_t& range, const bool prechecked)
   {
@@ -155,7 +159,7 @@ namespace glucat
    * @return True if equal
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::
   operator== (const index_set_t& rhs) const -> bool
@@ -173,7 +177,7 @@ namespace glucat
    * @return True if not equal
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::
   operator!= (const index_set_t& rhs) const -> bool
@@ -190,7 +194,7 @@ namespace glucat
    * @return Result
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::
   operator~ () const -> index_set_t
@@ -201,11 +205,10 @@ namespace glucat
    * @details
    * @tparam LO
    * @tparam HI
-   * @param rhs Right hand side
    * @return Reference to this
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::
   operator^= (const index_set_t rhs) -> index_set_t&
@@ -240,7 +243,7 @@ namespace glucat
    * @return Outer product
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   operator^ (const index_set<LO,HI>& lhs,
              const index_set<LO,HI>& rhs) -> index_set<LO,HI>
@@ -259,7 +262,7 @@ namespace glucat
    * @return Reference to this
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::
   operator&= (const index_set_t rhs) -> index_set_t&
@@ -285,7 +288,7 @@ namespace glucat
    * @return Inner product
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   operator& (const index_set<LO,HI>& lhs,
              const index_set<LO,HI>& rhs) -> index_set<LO,HI>
@@ -304,7 +307,7 @@ namespace glucat
    * @return Reference to this
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::
   operator|= (const index_set_t rhs) -> index_set_t&
@@ -330,7 +333,7 @@ namespace glucat
    * @return Bitwise OR
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   operator| (const index_set<LO,HI>& lhs,
              const index_set<LO,HI>& rhs) -> index_set<LO,HI>
@@ -349,7 +352,7 @@ namespace glucat
    * @return Element reference
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::
   operator[] (const index_t idx) -> reference
@@ -364,7 +367,7 @@ namespace glucat
    * @return Element reference
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::
   operator[] (const index_t idx) const -> bool
@@ -379,7 +382,7 @@ namespace glucat
    * @return True if successful or condition met
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::
   test(const index_t idx) const -> bool
@@ -400,7 +403,7 @@ namespace glucat
    * @return Result
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::
   set() -> index_set_t&
@@ -418,7 +421,7 @@ namespace glucat
    * @return Result
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::
   set(index_t idx) -> index_set_t&
@@ -440,7 +443,7 @@ namespace glucat
    * @return Result
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::
   set(const index_t idx, const int val) -> index_set_t&
@@ -460,7 +463,7 @@ namespace glucat
    * @return Result
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::
   reset() -> index_set_t&
@@ -478,7 +481,7 @@ namespace glucat
    * @return Result
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::
   reset(const index_t idx) -> index_set_t&
@@ -498,7 +501,7 @@ namespace glucat
    * @return Result
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::
   flip() -> index_set<LO,HI>&
@@ -516,7 +519,7 @@ namespace glucat
    * @return Result
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::
   flip(const index_t idx) -> index_set_t&
@@ -536,7 +539,7 @@ namespace glucat
    * @return Result
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::
   count() const -> index_t
@@ -562,7 +565,7 @@ namespace glucat
    * @return Result
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::
   count_neg() const -> index_t
@@ -580,7 +583,7 @@ namespace glucat
    * @return Result
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::
   count_pos() const -> index_t
@@ -599,7 +602,7 @@ namespace glucat
    * @return Result
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::
   min() const -> index_t
@@ -643,7 +646,7 @@ namespace glucat
    * @return Result
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   index_t
   index_set<LO,HI>::
   min() const
@@ -684,7 +687,7 @@ namespace glucat
    * @return Result
    */
   template<const index_t LO, const index_t HI>
-  auto
+inline constexpr auto
   index_set<LO,HI>::
   min() const -> index_t
   {
@@ -713,7 +716,7 @@ namespace glucat
    * @return Result
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::
   max() const -> index_t
@@ -753,7 +756,7 @@ namespace glucat
    * @return Result
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::
   max() const -> index_t
@@ -791,7 +794,7 @@ namespace glucat
    * @return Result
    */
   template<const index_t LO, const index_t HI>
-  auto
+inline constexpr auto
   index_set<LO,HI>::
   max() const -> index_t
   {
@@ -820,7 +823,7 @@ namespace glucat
    */
   //  eg. {3,4,5} is less than {3,7,8}
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   compare(const index_set<LO,HI>& a, const index_set<LO,HI>& b) -> int
   {
@@ -839,7 +842,7 @@ namespace glucat
    */
   //  eg. {3,4,5} is less than {3,7,8}
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::
   lex_less_than(const index_set_t& rhs) const -> bool
@@ -852,7 +855,7 @@ namespace glucat
    */
   // Order by count, then order lexicographically within the equivalence class of count.
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::
   operator< (const index_set_t& rhs) const -> bool
@@ -1009,7 +1012,7 @@ namespace glucat
    * @return True if is contiguous
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::
   is_contiguous () const -> bool
@@ -1030,7 +1033,7 @@ namespace glucat
    * @return Result
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::
   fold() const -> index_set<LO,HI>
@@ -1046,7 +1049,7 @@ namespace glucat
    * @return True if successful or condition met
    */
   template<const index_t LO, const index_t HI>
-  auto
+inline constexpr auto
   index_set<LO,HI>::
   fold(const index_set_t frm, const bool prechecked) const -> index_set<LO,HI>
   {
@@ -1092,7 +1095,7 @@ namespace glucat
    * @return True if successful or condition met
    */
   template<const index_t LO, const index_t HI>
-  auto
+inline constexpr auto
   index_set<LO,HI>::
   unfold(const index_set_t frm, const bool prechecked) const -> index_set_t
   {
@@ -1133,7 +1136,7 @@ namespace glucat
    * @return Result
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::
   value_of_fold(const index_set_t frm) const -> set_value_t
@@ -1155,7 +1158,7 @@ namespace glucat
    * @param x Value
    * @return Inverse
    */
-  inline
+  inline constexpr
   static
   auto inverse_reversed_gray(unsigned long x) -> unsigned long
   {
@@ -1177,7 +1180,7 @@ namespace glucat
    * @param x Value
    * @return Inverse
    */
-  inline
+  inline constexpr
   static
   auto inverse_gray(unsigned long x) -> unsigned long
   {
@@ -1211,7 +1214,7 @@ namespace glucat
    * @return Result
    */
   template<const index_t LO, const index_t HI>
-  auto
+inline constexpr auto
   index_set<LO,HI>::
   sign_of_mult(const index_set_t& rhs) const -> int
   {
@@ -1266,7 +1269,7 @@ namespace glucat
    * @return Result
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::
   sign_of_square() const -> int
@@ -1292,7 +1295,7 @@ namespace glucat
    * @return Size
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::
   hash_fn() const -> size_t
@@ -1310,7 +1313,7 @@ namespace glucat
    * @param j Column index
    * @return Result
    */
-  inline
+  inline constexpr
   auto
   sign_of_square(index_t j) -> int
   { return (j < 0) ? -1 : 1; }
@@ -1324,7 +1327,7 @@ namespace glucat
    * @return Result
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   min_neg(const index_set<LO,HI>& ist) -> index_t
   { return std::min(ist.min(), 0); }
@@ -1338,7 +1341,7 @@ namespace glucat
    * @return Result
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   max_pos(const index_set<LO,HI>& ist) -> index_t
   { return std::max(ist.max(), 0); }
@@ -1354,7 +1357,7 @@ namespace glucat
    * @param idx Value
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   index_set<LO,HI>::reference::
   reference( index_set_t& ist, index_t idx ) :
     m_pst(&ist),
@@ -1370,7 +1373,7 @@ namespace glucat
    * @return True if equal
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::reference::
   operator== (const reference& c_j) const -> bool
@@ -1385,7 +1388,7 @@ namespace glucat
    * @return Reference to this
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::reference::
   operator= (bool x) -> reference&
@@ -1406,7 +1409,7 @@ namespace glucat
    * @return Reference to this
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::reference::
   operator= (const reference& c_j) -> reference&
@@ -1429,7 +1432,7 @@ namespace glucat
    * @return True if successful or condition met
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::reference::
   operator~ () const -> bool
@@ -1443,7 +1446,7 @@ namespace glucat
    * @return True if successful or condition met
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   index_set<LO,HI>::reference::
   operator bool () const
   { return m_pst->test(m_idx); }
@@ -1456,7 +1459,7 @@ namespace glucat
    * @return Result
    */
   template<const index_t LO, const index_t HI>
-  inline
+  inline constexpr
   auto
   index_set<LO,HI>::reference::
   flip() -> reference&
@@ -1466,6 +1469,7 @@ namespace glucat
   }
 }
 #ifdef GLUCAT_DOCTEST
+#include <doctest.h>
 #include <iostream>
 
 TEST_CASE("index_set<LO,HI>") {
@@ -1582,6 +1586,9 @@ TEST_CASE("index_set<LO,HI>") {
 
   SUBCASE("Static Factory and Bit-Wizardry") {
     // Static factory methods (verified at compile-time, runtime check for consistency)
+    static_assert(is_t::from_index<1>().test(1));
+    static_assert(!is_t::from_index<1>().test(2));
+    static_assert(is_t::from_range<1, 3>().count() == 3);
     CHECK(is_t::from_index<1>() == is_t(1));
     CHECK(is_t::from_range<-1, 1>() == is_t(typename is_t::index_pair_t(-1, 1)));
 
