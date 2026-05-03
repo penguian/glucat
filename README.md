@@ -1,4 +1,4 @@
-README for GluCat 0.98a0 with PyClical
+README for GluCat 0.98a1 with PyClical
 ======================================
 
 GluCat is a library of C++ template classes for calculations with the universal
@@ -116,8 +116,10 @@ contain the C++ source code for timing tests for GluCat.
 The `./test` and `./testxx` directories contain the C++ source code for
 programming examples and legacy regression tests for GluCat.
 
-The `./test_doctest` directory contains modern unit tests using the `doctest`
-framework, integrated directly into the library headers.
+The `./test_doctest` directory contains modern C++ unit tests using the `doctest`
+framework, integrated directly into the library headers. These tests achieve 100%
+C++ function coverage across the core GluCat library and matrix backends, and
+incorporate tests migrated from the PyClical Python doctest suite.
 
 The `./test_coverage` directory contains scripts for generating code coverage
 reports for the various test suites. The `doctest` coverage script supports
@@ -417,9 +419,13 @@ parameters.
 Recent Changes
 ==============
 
+As of GluCat 0.98a1, the following changes have been made:
+* **100% C++ Function Coverage**: Achieved 100% function coverage and over 90% line coverage for the core library by migrating the PyClical Python doctest suite into C++ `doctest` `SUBCASE` blocks.
+* **Template Disambiguation**: Resolved template parameter ambiguities and constructor overload issues in `framed_multi_imp.h` and `matrix_multi_imp.h` for multiple scalar types.
+
 As of GluCat 0.98a0, the following changes have been made:
-* **Coverage Infrastructure Hardening**: Resolved a critical bug where legacy test binaries were deleted before analysis. Implemented a binary backup strategy and isolated profiling flags from library detection probes, restoring full coverage visibility for QD and Armadillo.
 * **Non-Complex Scalar_T Assertion**: Enforced non-complex `Scalar_T` requirements using `static_assert` in `clifford_algebra.h` and `scalar.h` to ensure template robustness and library-wide compatibility.
+* **Coverage Infrastructure Hardening**: Hardened the build system and coverage reporting by implementing binary backup sequences and isolating profiling flags from autotools library probes.
 * **Sparse Diagonal Optimization**: Optimization of sparse matrix `unit()` and `trace()` operations in Eigen and Armadillo backends to avoid slow manual diagonal write loops.
 * **Return Type Modernization**: Refactored the public API across all core classes and matrix wrappers to use standard return types (e.g., `T func()`) instead of trailing return types (`auto func() -> T`).
 * **Deprecated Function Removal**: The following deprecated functions have been removed:

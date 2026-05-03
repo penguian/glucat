@@ -42,6 +42,8 @@
 
 #include <sstream>
 #include <fstream>
+#include <limits>
+#include <cmath>
 
 namespace glucat
 {
@@ -2694,13 +2696,17 @@ namespace glucat
 }
 #ifdef GLUCAT_DOCTEST
 #include <iostream>
-#include <sstream>
-#include <cmath>
+#include <iomanip>
 #include <numbers>
+#include <filesystem>
+#include <system_error>
+#include <chrono>
 
 TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
   using namespace glucat;
-  using fm_t = glucat::framed_multi<double, -32, 32>;
+  using fm_t = glucat::framed_multi<double, -8, 8>;
+  using T = double;
+  using is_t = fm_t::index_set_t;
 
   SUBCASE("Metadata") {
     CHECK(fm_t::classname() == "framed_multi");
@@ -2741,6 +2747,23 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     // HS (1.31): a_1 * b == (a_1 & b) + (a_1 ^ b)
     fm_t b = fm_t("1+{1}+{2}+{1,2}");
     CHECK((e1 * b) == ((e1 & b) + (e1 ^ b)));
+
+    // HS (1.44): star(a, b) == scalar(a * b)
+    CHECK(star(e1, e2) == scalar(e1 * e2));
+    CHECK(star(e1, e1) == scalar(e1 * e1));
+  }
+
+  SUBCASE("Arithmetic and approximate equality") {
+    fm_t m1(1.0);
+    fm_t m2("{1}");
+    CHECK((m1 + m2) == fm_t("1+{1}"));
+    CHECK((m1 - m2) == fm_t("1-{1}"));
+    CHECK((m1 * 2.0) == fm_t(2.0));
+    CHECK((2.0 * m1) == fm_t(2.0));
+    CHECK(approx_equal(m1, fm_t(1.0 + 1e-15)));
+    CHECK(m1 != m2);
+    CHECK(m1 != 0.0);
+    CHECK(0.0 != m1);
   }
 
   SUBCASE("Transcendental functions") {
@@ -2760,11 +2783,24 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK(approx_equal(s_x*s_x + c_x*c_x, fm_t(1.0)));
     CHECK(approx_equal(cos(acos(fm_t(0.5))), fm_t(0.5)));
 
+    // sinh and cosh
+    fm_t sh_x = sinh(x);
+    fm_t ch_x = cosh(x);
+    // cosh^2 - sinh^2 = 1
+    CHECK(approx_equal(ch_x*ch_x - sh_x*sh_x, fm_t(1.0)));
+    CHECK(approx_equal(cosh(acosh(fm_t(2.0))), fm_t(2.0)));
+
+    // tan and tanh
+    CHECK(approx_equal(tan(atan(fm_t(0.5))), fm_t(0.5)));
+    CHECK(approx_equal(tanh(atanh(fm_t(0.5))), fm_t(0.5)));
+
     // peg11.h identities
     fm_t A = fm_t("0.5{1}+0.5{1,2}");
     CHECK(approx_equal(exp(A) * exp(-A), fm_t(1.0)));
     CHECK(approx_equal(cosh(A) + sinh(A), exp(A)));
     CHECK(approx_equal(cos(A) + complexifier(A)*sin(A), exp(complexifier(A)*A)));
+    CHECK(approx_equal(cos(A)*tan(A), sin(A)));
+    CHECK(approx_equal(cosh(A)*tanh(A), sinh(A)));
     CHECK(approx_equal(sqrt(fm_t(4.0)), fm_t(2.0)));
   }
 
@@ -2773,39 +2809,47 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     fm_t n(glucat::numeric_traits<double>::NaN());
     CHECK(n.isnan());
     CHECK(exp(n).isnan());
+    CHECK(log(n).isnan());
     CHECK(log(n, fm_t(glucat::numeric_traits<double>::NaN()), false).isnan());
 
     // Purely scalar multivector
-    fm_t s(2.0);
+    fm_t s(T(2.0), is_t());
     CHECK(approx_equal(exp(s), fm_t(std::exp(2.0))));
+    CHECK(approx_equal(log(s), fm_t(std::log(2.0))));
+    CHECK(approx_equal(sqrt(s), fm_t(std::sqrt(2.0))));
     // For log of scalar, we need a valid complexifier
     fm_t i("{-1}");
     CHECK(approx_equal(log(s, i, false), fm_t(std::log(2.0))));
 
+    // Zero
+    fm_t zero(T(0.0), is_t());
+    // Log of zero returns NaN in GluCat
+    CHECK(log(zero).isnan());
+
     // Large multivector to trigger matrix-based exp
     fm_t large = fm_t("1+{1}+{2}+{3}+{4}+{5}+{1,2}+{1,3}+{1,4}+{1,5}+{2,3}+{2,4}+{2,5}+{3,4}+{3,5}+{4,5}");
-    CHECK(approx_equal(exp(large), exp(glucat::matrix_multi<double, -32, 32>(large))));
+    CHECK(approx_equal(exp(large), exp(glucat::matrix_multi<double, -8, 8>(large))));
 
     // Negative log for framed_multi
-    fm_t neg(-1.0);
-    CHECK(approx_equal(log(neg, fm_t("{-1}"), false), fm_t("{-1}") * std::numbers::pi));
+    fm_t neg(T(-1.0), is_t());
+    CHECK(approx_equal(log(neg, fm_t("{-1}"), false), fm_t("{-1}") * T(std::numbers::pi)));
   }
   SUBCASE("Transcendental identities (random)") {
     using namespace glucat;
-    using index_set_t = fm_t::index_set_t; index_set_t frm = index_set_t();
+    using index_set_t = fm_t::index_set_t; using is_t = fm_t::index_set_t; index_set_t frm = index_set_t();
     const double fill = 0.5;
     for (index_t i = 1; i <= 7; ++i) {
       frm |= index_set_t(i);
       frm |= index_set_t(-i);
-      
+
       fm_t a = fm_t::random(frm, fill);
-      
+
       // exp(a) * exp(-a) == 1
-      CHECK(approx_equal(exp(a) * exp(-a), fm_t(1.0)));
-      
+      CHECK(approx_equal(exp(a) * exp(-a), fm_t(T(1.0), is_t())));
+
       // cosh(a) + sinh(a) == exp(a)
       CHECK(approx_equal(cosh(a) + sinh(a), exp(a)));
-      
+
       // sqrt(a) * sqrt(a) == a
       // Note: sqrt might not always return a value that squares back to a due to branch cuts,
       // but for many random a it should work or be close.
@@ -2816,26 +2860,26 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
   }
 
   SUBCASE("Geometric algebra identities (random)") {
-    using index_set_t = fm_t::index_set_t; using index_set_t = fm_t::index_set_t; index_set_t frm = index_set_t();
+    using index_set_t = fm_t::index_set_t; index_set_t frm = index_set_t();
     const double fill = 0.5;
     for (index_t i = 1; i <= 7; ++i) {
       frm |= index_set_t(i);
       frm |= index_set_t(-i);
-      
+
       fm_t a = fm_t::random(frm, fill);
       fm_t b = fm_t::random(frm, fill);
       fm_t c = fm_t::random(frm, fill);
-      
+
       // [HS] (1.25a): (a ^ b) ^ c == a ^ (b ^ c)
       CHECK(approx_equal((a ^ b) ^ c, a ^ (b ^ c)));
-      
+
       // [HS] (1.31): a_1 * b == (a_1 & b) + (a_1 ^ b)
       fm_t a_1 = a(1);
       CHECK(approx_equal(a_1 * b, (a_1 & b) + (a_1 ^ b)));
-      
+
       // [HS] (1.44): star(a, b) == scalar(a * b)
       CHECK(star(a, b) == doctest::Approx(scalar(a * b)));
-      
+
       // [HS] (1.21a): (a_r * b_s)(|r-s|) == a_r & b_s (sampled)
       index_t r = frm.count() / 2;
       index_t s = frm.count() / 2;
@@ -2846,8 +2890,8 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
   }
 
   SUBCASE("Mixed-precision and assignment interchangeability") {
-    using fm_f_t = glucat::framed_multi<float, -32, 32>;
-    using fm_d_t = glucat::framed_multi<double, -32, 32>;
+    using fm_f_t = glucat::framed_multi<float, -8, 8>;
+    using fm_d_t = glucat::framed_multi<double, -8, 8>;
 
     fm_f_t f_f1("{1}");
     fm_f_t f_f2("{2}");
@@ -2901,27 +2945,251 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
   }
 
   SUBCASE("Mixed-representation assignment") {
-    using mm_d_t = glucat::matrix_multi<double, -32, 32>;
+    using mm_d_t = glucat::matrix_multi<double, -8, 8>;
     fm_t f("{1,2}");
     mm_d_t m("{1,2}");
-    
+
     // Matrix to Framed (matching scalar)
     fm_t f2;
     f2 = m;
     CHECK(f2 == f);
   }
 
+  SUBCASE("Advanced Constructor Gaps") {
+    using index_set_t = fm_t::index_set_t;
+    using scalar_t = fm_t::scalar_t;
+    index_set_t ist(1);
+    index_set_t frm(1);
+    scalar_t crd(1.0);
+
+    // Test framed_multi constructor with prechecked
+    fm_t m1(ist, crd, frm, true);
+    CHECK(m1.frame() == frm);
+
+    fm_t m2(ist, crd, frm, false);
+    CHECK(m2.frame() == frm);
+
+    // Trigger exception path for constructor
+    index_set_t invalid_ist(2);
+    CHECK_THROWS_AS(fm_t(invalid_ist, crd, frm, false), glucat_error);
+  }
+
+  SUBCASE("Fast Path (32 terms)") {
+    using index_set_t = fm_t::index_set_t;
+    using scalar_t = fm_t::scalar_t;
+    index_set_t large_frm;
+    for(int i=1; i<=6; ++i) large_frm |= index_set_t(i); // 6 generators
+
+    fm_t f;
+    for(int i=0; i<32; ++i) {
+       index_set_t ist;
+       for(int j=0; j<6; ++j) if (i & (1 << j)) ist |= index_set_t(j+1);
+       f += typename fm_t::term_t(ist, scalar_t(i+1));
+    }
+
+    CHECK(f.nbr_terms() >= 16);
+
+    // Explicit conversion triggers constructor paths
+    fm_t a(f);
+    fm_t b(f, large_frm);
+
+    fm_t res = a * b;
+    res = a ^ b;
+    res = a & b;
+    res = a % b;
+  }
+
   SUBCASE("Exceptions") {
     fm_t f1(1.0);
     // Parsing errors
     CHECK_THROWS(fm_t("{invalid}"));
-    
+
     // Negative exponent
     CHECK_THROWS(f1.outer_pow(-1));
 
     // Construction with value outside of frame
     using is_t = fm_t::index_set_t;
-    CHECK_THROWS(fm_t(is_t(33), 1.0, is_t(), false));
+    CHECK_THROWS(fm_t(is_t(1), T(1.0), is_t(), false));
+  }
+
+  SUBCASE("I/O and Formatting") {
+    fm_t f(1.23456789);
+    std::ostringstream oss;
+    oss << std::setprecision(4) << std::fixed << f;
+    CHECK(oss.str().find("1.2346") != std::string::npos);
+
+    oss.str("");
+    oss << std::scientific << f;
+    CHECK(oss.str().find("1.234") != std::string::npos);
+    CHECK(oss.str().find("e+00") != std::string::npos);
+  }
+
+  SUBCASE("Complexifier and Log") {
+    fm_t f(T(1.0), is_t());
+    // Log of a scalar doesn't need a complexifier if scalar > 0
+    CHECK(log(f) == fm_t(T(0.0), is_t()));
+
+    // Log of -1 needs a complexifier
+    fm_t f_neg(T(-1.0));
+    fm_t complexifier = glucat::complexifier(f_neg);
+    // We expect this to work if i*j squares to -1
+    CHECK_NOTHROW(log(f_neg, complexifier));
+  }
+
+  SUBCASE("Clifford Algebra Operations") {
+    fm_t f1("{1}");
+    fm_t f2("{2}");
+    fm_t f12 = f1 * f2;
+    fm_t f_mix("1+{1}+{1,2}");
+
+    // Involute
+    CHECK(f1.involute() == -f1);
+    CHECK(f12.involute() == f12); // (-e1)*(-e2) = e12
+    CHECK(f_mix.involute() == fm_t("1-{1}+{1,2}"));
+
+    // Reverse
+    CHECK(f1.reverse() == f1);
+    CHECK(f12.reverse() == -f12); // e2*e1 = -e12
+    CHECK(f_mix.reverse() == fm_t("1+{1}-{1,2}"));
+
+    // Conjugate
+    CHECK(f_mix.conj() == fm_t("1-{1}-{1,2}"));
+
+    // Norm and Quad
+    CHECK(f_mix.quad() == doctest::Approx(T(3.0)));
+    CHECK(f_mix.norm() == doctest::Approx(T(3.0)));
+    CHECK(f_mix.max_abs() == doctest::Approx(T(1.0)));
+  }
+
+  SUBCASE("Projections and Parts") {
+    fm_t f_mix("1+{1}+{1,2}");
+
+    CHECK(f_mix.pure() == fm_t("{1}+{1,2}"));
+    CHECK(f_mix.even() == fm_t("1+{1,2}"));
+    CHECK(f_mix.odd() == fm_t("{1}"));
+
+    fm_t f_vec("1+2{1}+3{2}+4{1,2}");
+    auto v = f_vec.vector_part();
+    CHECK(v.size() == 2);
+    CHECK(v[0] == doctest::Approx(T(2.0)));
+    CHECK(v[1] == doctest::Approx(T(3.0)));
+
+    using is_t = fm_t::index_set_t;
+    auto v2 = f_vec.vector_part(is_t("{-1,1,2}"));
+    CHECK(v2.size() == 3);
+    CHECK(v2[0] == doctest::Approx(T(0.0)));
+    CHECK(v2[1] == doctest::Approx(T(2.0)));
+    CHECK(v2[2] == doctest::Approx(T(3.0)));
+  }
+
+  SUBCASE("Numerical Stability and Truncation") {
+    using is_t = fm_t::index_set_t;
+    fm_t f_small("1e8+{1}+1e-8{1,2}");
+    CHECK(f_small.truncated(T(1.0e-6)) == fm_t(T(1.0e8), is_t()));
+
+    fm_t f_nan(std::numeric_limits<T>::quiet_NaN(), is_t());
+    fm_t f_inf(std::numeric_limits<T>::infinity(), is_t());
+
+    CHECK(f_nan.isnan());
+    CHECK(!f_nan.isinf());
+    CHECK(f_inf.isinf());
+    CHECK(!f_inf.isnan());
+  }
+
+  SUBCASE("Extended I/O") {
+    fm_t f("1+{1}");
+    f.write("Test prefix"); // Mostly for coverage
+
+    auto temp_path = std::filesystem::temp_directory_path() / ("test_io_" + std::to_string(std::chrono::system_clock::now().time_since_epoch().count()) + ".txt");
+    struct Cleanup { std::filesystem::path p; ~Cleanup() { std::error_code ec; if(std::filesystem::exists(p, ec)) std::filesystem::remove(p, ec); } } cleanup{temp_path};
+
+    std::ofstream ofs(temp_path);
+    f.write(ofs, "File prefix");
+    ofs.close();
+    CHECK(std::filesystem::exists(temp_path));
+  }
+
+  SUBCASE("More Clifford Operations") {
+    fm_t f1("{1}");
+    fm_t f_mix("1+{1}+{1,2}");
+    using is_t = fm_t::index_set_t;
+
+    // Grade and Frame
+    CHECK(f_mix.grade() == 2);
+    CHECK(f_mix.frame() == is_t("{1,2}"));
+
+    // Subscripting
+    CHECK(f_mix[is_t("{1,2}")] == doctest::Approx(T(1.0)));
+
+    // Pow and Inv
+    fm_t f_inv = f1.inv();
+    CHECK(f_inv == f1);
+    CHECK(f1.pow(2) == fm_t(T(1.0), is_t()));
+
+    // Outer power
+    CHECK(f1.outer_pow(2) == fm_t(T(0.0), is_t()));
+  }
+
+  SUBCASE("Defensive and Edge Case Coverage") {
+    using is_t = fm_t::index_set_t;
+    using mm_t = matrix_multi<T, -8, 8>;
+
+    // Outside-frame initialization (Line 181)
+    CHECK_THROWS_AS(fm_t(fm_t("{1,2}"), is_t("{1}"), false), glucat_error);
+
+    // Malformed string parsing (Line 320)
+    CHECK_THROWS_AS(fm_t("1.0{1} garbage"), glucat_error);
+
+    // NaN propagation from matrix (Lines 381-385)
+    // Use a 2x2 matrix (dim=2) to avoid the "dim == 1" fast return at line 367
+    // but stay below the default fast-path threshold of 4.
+    mm_t m_nan_multi = mm_t(std::numeric_limits<T>::quiet_NaN(), is_t()) * mm_t(is_t("{1}"), 1.0);
+    fm_t f_nan(m_nan_multi);
+    CHECK(f_nan.isnan());
+
+    // Zero matrix conversion (Line 361)
+    mm_t m_zero = mm_t(T(0.0), is_t());
+    fm_t f_zero(m_zero);
+    CHECK(f_zero.nbr_terms() == 0);
+
+    // 1x1 matrix conversion (Lines 366-369)
+    mm_t m_1x1(T(3.14), is_t()); // scalar is effectively 1x1 matrix
+    fm_t f_1x1(m_1x1);
+    CHECK(f_1x1[is_t()] == doctest::Approx(T(3.14)));
+
+    // Fast Path Conversion (Line 372)
+    // Default tuning policy has threshold = 4.
+    // 4 generators -> 8x8 matrix (dim=8), which triggers the fast path.
+    mm_t m_8x8 = mm_t::random(is_t("{1,2,3,4}"), 1.0);
+    fm_t f_fast(m_8x8);
+    CHECK(f_fast.frame() == is_t("{1,2,3,4}"));
+
+    // Equality and Comparison Edge Cases (Lines 419, 425, 449)
+    fm_t f_a("{1}");
+    fm_t f_b("{2}");
+    fm_t f_empty;
+    CHECK_FALSE(f_a == f_b);      // Different terms, same size
+    CHECK_FALSE(f_a == f_empty);  // Different sizes
+    CHECK(f_empty == T(0.0));     // Scalar zero equality (Line 449)
+    CHECK_FALSE(f_a == T(0.0));   // Scalar zero inequality (Line 456)
+
+    // Arithmetic Edge Cases (Lines 598, 601, 644)
+    T nan = std::numeric_limits<T>::quiet_NaN();
+    fm_t f_val("{1}");
+
+    // operator*= with NaN (Line 598)
+    fm_t f_nan_res = f_val;
+    f_nan_res *= nan;
+    CHECK(f_nan_res.isnan());
+
+    // operator*= 0.0 with NaN (Line 601)
+    fm_t f_nan_val(nan, is_t());
+    f_nan_val *= T(0.0);
+    CHECK(f_nan_val.isnan());
+
+    // operator* with NaN (Line 644)
+    CHECK((f_nan_val * f_val).isnan());
+    CHECK((f_val * f_nan_val).isnan());
   }
 }
 #endif

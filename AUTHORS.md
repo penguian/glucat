@@ -1,4 +1,4 @@
-AUTHORS for GluCat 0.98a0+ with PyClical
+AUTHORS for GluCat 0.98a1+ with PyClical
 =======================================
 
 Paul C. Leopardi <paul.leopardi@gmail.com>

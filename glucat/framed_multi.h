@@ -131,6 +131,9 @@ namespace glucat
   private std::unordered_map< index_set<LO,HI>, Scalar_T, index_set_hash<LO,HI> >
 #endif
   {
+    static_assert(HI - LO >= 1, "framed_multi: HI - LO must be at least 1");
+    // Note: Some periodicity transforms (e.g. centre_pm4_qp4) require
+    // a larger range, but this is checked at runtime if q+4 > -LO.
 
   public:
     using size_type = std::size_t;
@@ -183,7 +186,7 @@ namespace glucat
     // Class name used in messages
     static auto classname() -> std::string_view;
     /// Destructor
-    ~framed_multi() override = default;
+    ~framed_multi() noexcept override = default;
     // Default constructor
     framed_multi();
     // Move constructor

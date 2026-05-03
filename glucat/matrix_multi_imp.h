@@ -42,6 +42,8 @@
 #include <array>
 #include <iostream>
 #include <fstream>
+#include <limits>
+#include <cmath>
 
 namespace glucat
 {
@@ -2988,21 +2990,23 @@ namespace glucat{
   }
 }
 #ifdef GLUCAT_DOCTEST
-#include <iostream>
 #include <sstream>
-#include <cmath>
 #include <numbers>
+#include <chrono>
+#include <filesystem>
+#include <system_error>
 
 TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
   using namespace glucat;
-  using mm_t = glucat::matrix_multi<double, -32, 32>;
+  using mm_t = glucat::matrix_multi<double, -8, 8>;
+  using T = double;
 
   SUBCASE("Metadata") {
     CHECK(mm_t::classname() == "matrix_multi");
   }
 
   SUBCASE("Constructor and string representation") {
-    mm_t m1(2.0);
+    mm_t m1(T(2.0), mm_t::index_set_t());
     std::ostringstream oss1;
     oss1 << m1;
     CHECK(oss1.str() == "2");
@@ -3024,11 +3028,9 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
     mm_t e3("{3}");
     CHECK((e1 * e2) == mm_t("{1,2}"));
     CHECK((e2 * e1) == mm_t("-{1,2}"));
-    CHECK((e1 * e1) == mm_t(1.0));
-
-    // HS (1.21a): (a_r * b_s)(|r-s|) == a_r & b_s
-    CHECK(scalar(e1 * e2) == 0.0);
-    CHECK(scalar(e1 * e1) == 1.0);
+    CHECK((e1 * e1) == mm_t(T(1.0), mm_t::index_set_t()));
+    CHECK(scalar(e1 * e2) == T(0.0));
+    CHECK(scalar(e1 * e1) == T(1.0));
 
     // HS (1.25a): (a ^ b) ^ c == a ^ (b ^ c)
     CHECK(((e1 ^ e2) ^ e3) == (e1 ^ (e2 ^ e3)));
@@ -3043,13 +3045,13 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
   }
 
   SUBCASE("Arithmetic and approximate equality") {
-    mm_t m1(1.0);
+    mm_t m1(T(1.0));
     mm_t m2("{1}");
     CHECK((m1 + m2) == mm_t("1+{1}"));
     CHECK((m1 - m2) == mm_t("1-{1}"));
-    CHECK((m1 * 2.0) == mm_t(2.0));
-    CHECK((2.0 * m1) == mm_t(2.0));
-    CHECK(approx_equal(m1, mm_t(1.0 + 1e-15)));
+    CHECK((m1 * T(2.0)) == mm_t(T(2.0)));
+    CHECK((T(2.0) * m1) == mm_t(T(2.0)));
+    CHECK(approx_equal(m1, mm_t(T(1.0) + T(1e-15))));
     CHECK(m1 != m2);
     CHECK(m1 != 0.0);
     CHECK(0.0 != m1);
@@ -3057,7 +3059,7 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
 
   SUBCASE("Transcendental functions") {
     mm_t x("{1,2}");
-    const double pi = std::numbers::pi;
+    const T pi = T(std::numbers::pi);
 
     // exp and log
     mm_t e_x = exp(x * (pi/4.0));
@@ -3085,81 +3087,82 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
 
     // peg11.h identities
     mm_t A = mm_t("0.5{1}+0.5{1,2}");
-    CHECK(approx_equal(exp(A) * exp(-A), mm_t(1.0)));
+    CHECK(approx_equal(exp(A) * exp(-A), mm_t(T(1.0), mm_t::index_set_t())));
     CHECK(approx_equal(cosh(A) + sinh(A), exp(A)));
     CHECK(approx_equal(cos(A) + complexifier(A)*sin(A), exp(complexifier(A)*A)));
     CHECK(approx_equal(cos(A)*tan(A), sin(A)));
     CHECK(approx_equal(cosh(A)*tanh(A), sinh(A)));
-    CHECK(approx_equal(sqrt(mm_t(4.0)), mm_t(2.0)));
+    CHECK(approx_equal(sqrt(mm_t(T(4.0))), mm_t(T(2.0))));
   }
 
   SUBCASE("Adversarial and edge cases") {
     // NaN handling
-    mm_t n(glucat::numeric_traits<double>::NaN());
+    mm_t n(glucat::numeric_traits<T>::NaN());
     CHECK(n.isnan());
     CHECK(exp(n).isnan());
     CHECK(log(n).isnan());
+    CHECK(log(n, mm_t(glucat::numeric_traits<T>::NaN()), false).isnan());
 
     // Purely scalar multivector in transcendental functions
-    mm_t s(2.0);
-    CHECK(approx_equal(exp(s), mm_t(std::exp(2.0))));
-    CHECK(approx_equal(log(s), mm_t(std::log(2.0))));
-    CHECK(approx_equal(sqrt(s), mm_t(std::sqrt(2.0))));
+    mm_t s(T(2.0), mm_t::index_set_t());
+    CHECK(approx_equal(exp(s), mm_t(T(std::exp(2.0)))));
+    CHECK(approx_equal(log(s), mm_t(T(std::log(2.0)))));
+    CHECK(approx_equal(sqrt(s), mm_t(T(std::sqrt(2.0)))));
 
     // Zero
-    mm_t zero(0.0);
+    mm_t zero(T(0.0), mm_t::index_set_t());
     // Log of zero returns NaN in GluCat
     CHECK(log(zero).isnan());
 
     // Negative log with complexifier
-    mm_t neg(-1.0);
+    mm_t neg(T(-1.0), mm_t::index_set_t());
     mm_t i("{-1}");
-    CHECK(approx_equal(log(neg, i, false), i * std::numbers::pi));
+    CHECK(approx_equal(log(neg, i, false), i * T(std::numbers::pi)));
   }
   SUBCASE("Transcendental identities (random)") {
     using namespace glucat;
     using index_set_t = mm_t::index_set_t; index_set_t frm = index_set_t();
-    const double fill = 0.5;
+    const T fill = T(0.5);
     for (index_t i = 1; i <= 7; ++i) {
       frm |= index_set_t(i);
       frm |= index_set_t(-i);
-      
+
       mm_t a = mm_t::random(frm, fill);
-      
+
       // exp(a) * exp(-a) == 1
-      CHECK(approx_equal(exp(a) * exp(-a), mm_t(1.0)));
-      
+      CHECK(approx_equal(exp(a) * exp(-a), mm_t(T(1.0), mm_t::index_set_t())));
+
       // cosh(a) + sinh(a) == exp(a)
       CHECK(approx_equal(cosh(a) + sinh(a), exp(a)));
-      
+
       // sqrt(a) * sqrt(a) == a
       mm_t s = sqrt(a);
       if (!s.isnan() && !s.isinf())
-        CHECK(approx_equal(s * s, a));
+        CHECK(approx_equal(s * s, a, T(1e-11), T(1e-11)));
     }
   }
 
   SUBCASE("Geometric algebra identities (random)") {
-    using index_set_t = mm_t::index_set_t; using index_set_t = mm_t::index_set_t; index_set_t frm = index_set_t();
-    const double fill = 0.5;
+    using index_set_t = mm_t::index_set_t; index_set_t frm = index_set_t();
+    const T fill = T(0.5);
     for (index_t i = 1; i <= 7; ++i) {
       frm |= index_set_t(i);
       frm |= index_set_t(-i);
-      
+
       mm_t a = mm_t::random(frm, fill);
       mm_t b = mm_t::random(frm, fill);
       mm_t c = mm_t::random(frm, fill);
-      
+
       // [HS] (1.25a): (a ^ b) ^ c == a ^ (b ^ c)
       CHECK(approx_equal((a ^ b) ^ c, a ^ (b ^ c)));
-      
+
       // [HS] (1.31): a_1 * b == (a_1 & b) + (a_1 ^ b)
       mm_t a_1 = a(1);
       CHECK(approx_equal(a_1 * b, (a_1 & b) + (a_1 ^ b)));
-      
+
       // [HS] (1.44): star(a, b) == scalar(a * b)
       CHECK(star(a, b) == doctest::Approx(scalar(a * b)));
-      
+
       // [HS] (1.21a): (a_r * b_s)(|r-s|) == a_r & b_s (sampled)
       index_t r = frm.count() / 2;
       index_t s = frm.count() / 2;
@@ -3170,8 +3173,8 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
   }
 
   SUBCASE("Mixed-precision and assignment interchangeability") {
-    using mm_f_t = glucat::matrix_multi<float, -32, 32>;
-    using mm_d_t = glucat::matrix_multi<double, -32, 32>;
+    using mm_f_t = glucat::matrix_multi<float, -8, 8>;
+    using mm_d_t = glucat::matrix_multi<double, -8, 8>;
 
     mm_f_t m_f1("{1}");
     mm_f_t m_f2("{2}");
@@ -3225,10 +3228,10 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
   }
 
   SUBCASE("Mixed-representation assignment") {
-    using fm_d_t = glucat::framed_multi<double, -32, 32>;
+    using fm_d_t = glucat::framed_multi<double, -8, 8>;
     mm_t m("{1,2}");
     fm_d_t f("{1,2}");
-    
+
     // Framed to Matrix (matching scalar)
     mm_t m2;
     m2 = f;
@@ -3240,15 +3243,147 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK(f2 == f);
   }
 
+  SUBCASE("Advanced Constructor Gaps") {
+    using index_set_t = mm_t::index_set_t;
+    using scalar_t = mm_t::scalar_t;
+    index_set_t ist(1);
+    index_set_t frm(1);
+    scalar_t crd(1.0);
+
+    // Test matrix_multi constructor with prechecked
+    mm_t m1(ist, crd, frm, true);
+    CHECK(m1.frame() == frm);
+
+    mm_t m2(ist, crd, frm, false);
+    CHECK(m2.frame() == frm);
+
+    // Trigger exception path for constructor
+    index_set_t invalid_ist(2);
+    CHECK_THROWS_AS(mm_t(invalid_ist, crd, frm, false), glucat_error);
+  }
+
+  SUBCASE("Basis element and specialized members") {
+    using index_set_t = mm_t::index_set_t;
+    index_set_t frm(1);
+    mm_t a("{1}");
+    mm_t b_elem(frm);
+    CHECK(b_elem == a);
+  }
+
   SUBCASE("Exceptions") {
     mm_t m1(1.0);
     // Negative exponent in outer_pow
     CHECK_THROWS(m1.outer_pow(-1));
 
     // Construction with value outside of frame
-    // mm_t is <-32, 32>, index_set_t(33) is out of frame
+    // mm_t is <-8, 8>, index_set_t(1) is out of empty frame is_t()
     using is_t = mm_t::index_set_t;
-    CHECK_THROWS(mm_t(is_t(33), 1.0, is_t(), false));
+    CHECK_THROWS(mm_t(is_t(1), 1.0, is_t(), false));
+  }
+
+  SUBCASE("Move Semantics and Reframing") {
+    mm_t a(T(1.0), mm_t::index_set_t());
+    mm_t b(std::move(a));
+    CHECK(b == mm_t(T(1.0)));
+
+    mm_t c;
+    c = std::move(b);
+    CHECK(c == mm_t(T(1.0)));
+
+    c = c; // Self-assignment
+    CHECK(c == mm_t(T(1.0)));
+
+    // Reframing overlap
+    using is_t = mm_t::index_set_t;
+    mm_t m1(T(1.0), is_t());
+    mm_t m2(is_t("{1}"), T(1.0));
+    mm_t sum = m1 + m2; // Triggers reframe
+    CHECK(sum.frame() == is_t("{1}"));
+    CHECK(sum.scalar() == doctest::Approx(T(1.0)));
+    CHECK(sum[is_t("{1}")] == doctest::Approx(T(1.0)));
+  }
+
+  SUBCASE("Advanced Matrix Algorithms") {
+    mm_t m1(T(1.0), mm_t::index_set_t());
+    mm_t m2 = m1.outer_pow(2);
+    CHECK_FALSE(m2.isnan());
+
+    // Test refined_newton_schulz vs newton_schulz
+    mm_t a("1+0.1{1}");
+    mm_t s1 = glucat::newton_schulz(a, T(1.0));
+    mm_t s2 = glucat::refined_newton_schulz(a, T(1.0));
+
+    // They should be approximately equal for small perturbations
+    CHECK(s1.scalar() == doctest::Approx(s2.scalar()));
+  }
+
+  SUBCASE("Numerical Analysis") {
+    mm_t f_small("1e8+{1}+1e-8{1,2}");
+    CHECK(f_small.truncated(T(1.0e-6)) == mm_t(T(1.0e8), mm_t::index_set_t()));
+
+    mm_t f_nan(std::numeric_limits<T>::quiet_NaN());
+    mm_t f_inf(std::numeric_limits<T>::infinity());
+
+    CHECK(f_nan.isnan());
+    CHECK(f_inf.isinf());
+  }
+
+  SUBCASE("File I/O") {
+    mm_t f("1+{1}");
+    f.write("Test prefix");
+
+    auto temp_path = std::filesystem::temp_directory_path() / ("test_io_mm_" + std::to_string(std::chrono::system_clock::now().time_since_epoch().count()) + ".txt");
+    struct Cleanup { std::filesystem::path p; ~Cleanup() { std::error_code ec; if(std::filesystem::exists(p, ec)) std::filesystem::remove(p, ec); } } cleanup{temp_path};
+
+    std::ofstream ofs(temp_path);
+    f.write(ofs, "File prefix");
+    ofs.close();
+    CHECK(std::filesystem::exists(temp_path));
+  }
+
+  SUBCASE("Clifford Algebra Operations") {
+    mm_t m1("{1}");
+    mm_t m2("{2}");
+    mm_t m12 = m1 * m2;
+    mm_t m_mix("1+{1}+{1,2}");
+
+    // Involute, Reverse, Conjugate
+    CHECK(m1.involute() == -m1);
+    CHECK(m12.reverse() == -m12);
+    CHECK(m_mix.conj() == mm_t("1-{1}-{1,2}"));
+
+    // Norm, Quad, MaxAbs
+    CHECK(m_mix.quad() == doctest::Approx(3.0));
+    CHECK(m_mix.norm() == doctest::Approx(3.0));
+    CHECK(m_mix.max_abs() == doctest::Approx(1.0));
+
+    // Projections
+    CHECK(m_mix.pure() == mm_t("{1}+{1,2}"));
+    CHECK(m_mix.even() == mm_t("1+{1,2}"));
+    CHECK(m_mix.odd() == mm_t("{1}"));
+
+    // Vector part
+    mm_t m_vec("1+2{1}+3{2}+4{1,2}");
+    auto v = m_vec.vector_part();
+    CHECK(v.size() == 2);
+    CHECK(v[0] == doctest::Approx(2.0));
+    CHECK(v[1] == doctest::Approx(3.0));
+
+    using is_t = mm_t::index_set_t;
+    auto v2 = m_vec.vector_part(is_t("{-1,1,2}"));
+    CHECK(v2.size() == 3);
+
+    // Grade and Frame
+    CHECK(m_mix.grade() == 2);
+    CHECK(m_mix.frame() == is_t("{1,2}"));
+
+    // Subscripting
+    CHECK(m_mix[is_t("{1,2}")] == doctest::Approx(1.0));
+
+    // Pow and Inv
+    mm_t m_inv = m1.inv();
+    CHECK(m_inv == m1);
+    CHECK(m1.pow(2) == mm_t(1.0));
   }
 }
 #endif

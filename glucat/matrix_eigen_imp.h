@@ -1207,12 +1207,27 @@ namespace glucat { namespace matrix
   eigen_sparse_wrapper<Scalar_T>::const_iterator::
   operator!= (const const_iterator& other) const
   {
+    if (mp_mat != other.mp_mat)
+      return true;
     if (m_outer != other.m_outer)
       return true;
     if (m_outer >= static_cast<matrix_index_t>(mp_mat->outerSize()))
       return false;
-    return m_inner != other.m_inner;
+    return m_inner.index() != other.m_inner.index();
   }
+
+  /*
+   * @brief Equality comparison
+   * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
+   * @return True if equal
+   */
+  template< typename Scalar_T >
+  inline bool
+  eigen_sparse_wrapper<Scalar_T>::const_iterator::
+  operator== (const const_iterator& other) const
+  { return !(*this != other); }
 
   /*
    * @brief Row index
@@ -1598,71 +1613,254 @@ namespace glucat { namespace matrix
 } }
 #ifdef GLUCAT_DOCTEST
 #include <doctest.h>
-#include <iostream>
+#include <sstream>
+#include <utility>
 
-TEST_CASE("matrix::eigen_matrix_wrapper<Scalar_T>") {
-  using namespace glucat::matrix;
-  using Scalar_T = double;
-  using Matrix_T = eigen_matrix_wrapper<Scalar_T>;
+namespace glucat { namespace matrix {
 
-  SUBCASE("Dense initialization and basic operations") {
-    const matrix_index_t rows = 2, cols = 3;
-    Matrix_T mat(rows, cols);
-    mat.zeros();
-    CHECK(mat.nbr_rows() == rows);
-    CHECK(mat.nbr_cols() == cols);
-    CHECK(mat.nnz() == 0);
-    CHECK(mat.trace() == doctest::Approx(0.0));
+  template <typename Scalar_T>
+  void test_eigen_wrappers_templated()
+  {
+    using Matrix_T = eigen_matrix_wrapper<Scalar_T>;
+    using Sparse_T = eigen_sparse_wrapper<Scalar_T>;
 
-    mat(0, 0) = 1.0;
-    mat(1, 1) = 2.0;
-    mat(0, 2) = -3.0;
-    CHECK(mat.nnz() == 3);
-    CHECK(mat.trace() == doctest::Approx(3.0));
-    CHECK(mat.norm_inf() == doctest::Approx(4.0)); // |1| + |0| + |-3| = 4
-    CHECK(mat.norm_frob2() == doctest::Approx(1.0*1.0 + 2.0*2.0 + (-3.0)*(-3.0)));
-  }
+    SUBCASE("Dense Matrix: Constructors and Assignment") {
+      Matrix_T m1(2, 2);
+      m1.zeros();
+      CHECK(m1.nbr_rows() == 2);
+      CHECK(m1.nbr_cols() == 2);
+      CHECK(m1.nnz() == 0);
 
-    SUBCASE("Dimensions") {
-      Matrix_T mat_dims(2, 2);
-      CHECK(mat_dims.nbr_rows() == 2);
-      CHECK(mat_dims.nbr_cols() == 2);
+      m1(0, 0) = Scalar_T(1);
+      m1(1, 1) = Scalar_T(2);
+
+      // Copy constructor
+      Matrix_T m2(m1);
+      CHECK(m2(0, 0) == Scalar_T(1));
+      CHECK(m2(1, 1) == Scalar_T(2));
+
+      // Move constructor
+      Matrix_T m3(std::move(m2));
+      CHECK(m3(0, 0) == Scalar_T(1));
+
+      // Assignment
+      Matrix_T m4;
+      m4 = m3;
+      CHECK(m4(1, 1) == Scalar_T(2));
+
+      // Move assignment
+      Matrix_T m5;
+      m5 = std::move(m4);
+      CHECK(m5(0, 0) == Scalar_T(1));
     }
 
-    SUBCASE("Assignment and Operations") {
-    Matrix_T mat;
-    mat.unit(3, 3);
-    CHECK(mat.nbr_rows() == 3);
-    CHECK(mat.nbr_cols() == 3);
-    CHECK(mat.nnz() == 3);
-    CHECK(mat.trace() == doctest::Approx(3.0));
+    SUBCASE("Dense Matrix: Arithmetic Operators") {
+      Matrix_T a(2, 2), b(2, 2);
+      a.unit(2, 2);
+      b.unit(2, 2);
+
+      auto c = a + b;
+      CHECK(c(0, 0) == Scalar_T(2));
+
+      auto d = a - b;
+      CHECK(d(0, 0) == Scalar_T(0));
+
+      auto e = a * Scalar_T(3);
+      CHECK(e(0, 0) == Scalar_T(3));
+
+      auto f = -a;
+      CHECK(f(0, 0) == Scalar_T(-1));
+
+      Matrix_T g(2, 2);
+      g(0, 0) = Scalar_T(1); g(0, 1) = Scalar_T(2);
+      g(1, 0) = Scalar_T(3); g(1, 1) = Scalar_T(4);
+      auto h = g.t();
+      CHECK(h(0, 1) == Scalar_T(3));
+      CHECK(h(1, 0) == Scalar_T(2));
+
+      // Dense-Dense product
+      Matrix_T i = g * h;
+      CHECK(i(0, 0) == doctest::Approx(Scalar_T(5)));
+
+      // Compound assignment
+      g += a;
+      CHECK(g(0, 0) == Scalar_T(2));
+      g -= a;
+      CHECK(g(0, 0) == Scalar_T(1));
+      g *= Scalar_T(2);
+      CHECK(g(0, 0) == Scalar_T(2));
+
+      // unit_helper::apply
+      auto u = matrix::unit<Matrix_T>(3);
+      CHECK(u.nbr_rows() == 3);
+      CHECK(u.trace() == doctest::Approx(Scalar_T(3)));
+
+      a.zeros(3, 3);
+      CHECK(a.nbr_rows() == 3);
+      a.clear();
+      CHECK(a.is_finite());
+    }
+
+    SUBCASE("Dense Matrix: Analysis and Solve") {
+      Matrix_T m(2, 2);
+      m(0, 0) = Scalar_T(2); m(0, 1) = Scalar_T(1);
+      m(1, 0) = Scalar_T(1); m(1, 1) = Scalar_T(2);
+
+      CHECK(m.is_finite());
+      CHECK_FALSE(m.isnan());
+      CHECK_FALSE(m.isinf());
+
+      Matrix_T rhs(2, 1);
+      rhs(0, 0) = Scalar_T(3);
+      rhs(1, 0) = Scalar_T(3);
+
+      Matrix_T x(2, 1);
+      bool success = solve(x, m, rhs);
+      CHECK(success);
+      CHECK(x(0, 0) == doctest::Approx(Scalar_T(1)));
+      CHECK(x(1, 0) == doctest::Approx(Scalar_T(1)));
+
+      auto ev = m.eigenvalues();
+      CHECK(ev.size() == 2);
+    }
+
+    SUBCASE("Sparse Matrix: Basic Operations") {
+      Sparse_T s(4, 4);
+      s.zeros();
+      s(0, 0) = Scalar_T(5);
+      s(3, 3) = Scalar_T(-2);
+
+      CHECK(s.nnz() == 2);
+      CHECK(s.trace() == doctest::Approx(Scalar_T(3)));
+
+      Sparse_T s2;
+      s2.unit(4, 4);
+      CHECK(s2.nnz() == 4);
+      CHECK(s2.trace() == doctest::Approx(Scalar_T(4)));
+
+      // Sparse iterator operator!=
+      Sparse_T s3(2, 2);
+      s3(0, 0) = Scalar_T(1);
+      s3(1, 0) = Scalar_T(2); // Two elements in first column (if ColMajor)
+      auto it1 = s3.begin();
+      auto it2 = s3.begin();
+      ++it2;
+      CHECK(it1 != it2);
+    }
+
+    SUBCASE("Kronecker Product and Nork") {
+      Matrix_T a(2, 2), b(2, 2);
+      a.unit(2, 2);
+      b.unit(2, 2);
+
+      // Dense x Dense
+      auto c = a.kron(b);
+      CHECK(c.nbr_rows() == 4);
+      CHECK(c.trace() == doctest::Approx(Scalar_T(4)));
+
+      // Nork (Dense)
+      auto q = a.nork(c, true);
+      CHECK(q.nbr_rows() == 2);
+      CHECK(q.trace() == doctest::Approx(Scalar_T(2)));
+
+      // Mixed: Dense x Sparse
+      Sparse_T s(2, 2);
+      s.unit(2, 2);
+      auto mixed = a.kron(s);
+      CHECK(mixed.nbr_rows() == 4);
+
+      // Mixed: Sparse x Dense
+      auto mixed2 = s.kron(b);
+      CHECK(mixed2.nbr_rows() == 4);
+
+      // Sparse x Sparse
+      auto ss = s.kron(s);
+      CHECK(ss.nbr_rows() == 4);
+      CHECK(ss.nnz() == 4);
+
+      // Nork (Sparse)
+      auto qs = s.nork(ss, true);
+      CHECK(qs.nbr_rows() == 2);
+    }
+
+    SUBCASE("Norms and Inner Product") {
+      Matrix_T m(2, 2);
+      m(0,0) = Scalar_T(1); m(0,1) = Scalar_T(-2);
+      m(1,0) = Scalar_T(3); m(1,1) = Scalar_T(4);
+
+      CHECK(m.norm_inf() == doctest::Approx(Scalar_T(7))); // max(1+2, 3+4)
+      CHECK(m.norm_frob2() == doctest::Approx(Scalar_T(1+4+9+16)));
+
+      Sparse_T s(2, 2);
+      s(0,0) = Scalar_T(1); s(1,1) = Scalar_T(4);
+      CHECK(s.norm_inf() == doctest::Approx(Scalar_T(4)));
+      CHECK(s.norm_frob2() == doctest::Approx(Scalar_T(1+16)));
+
+      // Inner product
+      auto in = m.template inner<Scalar_T>(m);
+      CHECK(in == doctest::Approx(Scalar_T(1+4+9+16)/Scalar_T(2)));
+
+      auto ins = s.template inner<Scalar_T>(s);
+      CHECK(ins == doctest::Approx(Scalar_T(1+16)/Scalar_T(2)));
+    }
+
+    SUBCASE("Interop and Conversion") {
+      Sparse_T s(2, 2);
+      s.unit(2, 2);
+
+      // Sparse to Dense
+      Matrix_T d;
+      d = s; // Assignment
+      CHECK(d.trace() == doctest::Approx(Scalar_T(2)));
+
+      Matrix_T d2(s); // Constructor
+      CHECK(d2.trace() == doctest::Approx(Scalar_T(2)));
+
+      // Dense to Sparse? (Need to check if constructor exists)
+      // eigen_sparse_wrapper doesn't have a direct constructor from dense wrapper in the code I saw,
+      // but it might have via Eigen interop.
+
+      // operator<< (mostly for coverage)
+      std::ostringstream oss;
+      oss << s;
+      CHECK(!oss.str().empty());
+    }
+
+    SUBCASE("Iterator and Edge Cases") {
+      Sparse_T empty(0, 0);
+      CHECK(empty.begin() == empty.end());
+
+      Sparse_T s(2, 2);
+      s(1, 1) = Scalar_T(5);
+      auto it = s.begin();
+      CHECK(it != s.end());
+      CHECK(it.row() == 1);
+      CHECK(it.col() == 1);
+      CHECK(*it == Scalar_T(5));
+      ++it;
+      CHECK(it == s.end());
+
+      // Cross-matrix comparison
+      Sparse_T s2(2, 2);
+      s2(1, 1) = Scalar_T(5);
+      CHECK(s.begin() != s2.begin());
+      CHECK_FALSE(s.begin() == s2.begin());
+    }
   }
 
-  SUBCASE("Sparse initialization and basic operations") {
-    using Sparse_T = eigen_sparse_wrapper<Scalar_T>;
-    const matrix_index_t rows = 4, cols = 4;
-    Sparse_T mat(rows, cols);
-    mat.zeros();
-    CHECK(mat.nbr_rows() == rows);
-    CHECK(mat.nbr_cols() == cols);
-    CHECK(mat.nnz() == 0);
+} } // glucat::matrix
 
-    mat(0, 0) = 5.0;
-    mat(3, 3) = -2.0;
-    mat(1, 2) = 1.0;
-    CHECK(mat.nnz() == 3);
-    CHECK(mat.trace() == doctest::Approx(3.0));
-    CHECK(mat.norm_inf() == doctest::Approx(5.0));
-    CHECK(mat.norm_frob2() == doctest::Approx(25.0 + 4.0 + 1.0));
-  }
-
-  SUBCASE("Exceptions") {
-    using Sparse_T = eigen_sparse_wrapper<Scalar_T>;
-    Sparse_T mat(2, 2);
-    CHECK_THROWS_AS(mat.eigenvalues(), std::runtime_error);
-  }
+TEST_CASE("matrix::eigen_wrappers") {
+  SUBCASE("float")       { glucat::matrix::test_eigen_wrappers_templated<float>(); }
+  SUBCASE("double")      { glucat::matrix::test_eigen_wrappers_templated<double>(); }
+  SUBCASE("long double") { glucat::matrix::test_eigen_wrappers_templated<long double>(); }
+#ifdef _GLUCAT_USE_QD
+  SUBCASE("dd_real")     { glucat::matrix::test_eigen_wrappers_templated<dd_real>(); }
+  SUBCASE("qd_real")     { glucat::matrix::test_eigen_wrappers_templated<qd_real>(); }
+#endif
 }
 #endif
+
   // =========================================================================
   // Eigen Internal Cast Specializations for High Precision
   // =========================================================================

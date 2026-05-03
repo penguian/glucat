@@ -77,17 +77,47 @@ namespace glucat
 }
 
 #ifdef GLUCAT_DOCTEST
+#include <sstream>
+#include <string_view>
+struct dummy_class {
+  static constexpr std::string_view name = "dummy_class";
+  static std::string_view classname() { return name; }
+};
+
 TEST_CASE("errors") {
   using namespace glucat;
-  struct dummy { static std::string_view classname() { return "dummy"; } };
-  error<dummy> e("context", "message");
 
-  CHECK(e.heading() == "Error in glucat::");
-  CHECK(e.classname() == "context");
-  CHECK(std::string(e.what()) == "message");
+  SUBCASE("Two-argument constructor") {
+    error<dummy_class> e("test_context", "test_message");
+    CHECK(e.heading() == "Error in glucat::");
+    CHECK(e.classname() == "test_context");
+    CHECK(std::string(e.what()) == "test_message");
+  }
 
-  error<dummy> e2("message2");
-  CHECK(e2.classname() == "dummy");
+  SUBCASE("One-argument constructor") {
+    error<dummy_class> e("test_message_only");
+    CHECK(e.classname() == "dummy_class");
+    CHECK(std::string(e.what()) == "test_message_only");
+  }
+
+  SUBCASE("Output verification (std::cerr redirection)") {
+    error<dummy_class> e("context", "message");
+
+    // Redirect cerr to a stringstream using RAII
+    std::stringstream buffer;
+    struct CerrRedirect {
+      std::streambuf* old;
+      CerrRedirect(std::streambuf* new_buf) : old(std::cerr.rdbuf(new_buf)) {}
+      ~CerrRedirect() { std::cerr.rdbuf(old); }
+    } redirect(buffer.rdbuf());
+
+    e.print_error_msg();
+
+    std::string output = buffer.str();
+    CHECK(output.find("Error in glucat::") != std::string::npos);
+    CHECK(output.find("context") != std::string::npos);
+    CHECK(output.find("message") != std::string::npos);
+  }
 }
 #endif
 

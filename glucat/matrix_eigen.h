@@ -317,6 +317,8 @@ namespace glucat { namespace matrix
 
       // Inequality comparison
       bool operator!= (const const_iterator& other) const;
+      // Equality comparison
+      bool operator== (const const_iterator& other) const;
 
       // Row index
       matrix_index_t row() const;
