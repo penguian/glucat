@@ -1207,6 +1207,8 @@ namespace glucat { namespace matrix
   eigen_sparse_wrapper<Scalar_T>::const_iterator::
   operator!= (const const_iterator& other) const
   {
+    if (mp_mat != other.mp_mat)
+      return true;
     if (m_outer != other.m_outer)
       return true;
     if (m_outer >= static_cast<matrix_index_t>(mp_mat->outerSize()))
@@ -1837,6 +1839,12 @@ namespace glucat { namespace matrix {
       CHECK(*it == Scalar_T(5));
       ++it;
       CHECK(it == s.end());
+
+      // Cross-matrix comparison
+      Sparse_T s2(2, 2);
+      s2(1, 1) = Scalar_T(5);
+      CHECK(s.begin() != s2.begin());
+      CHECK_FALSE(s.begin() == s2.begin());
     }
   }
 
