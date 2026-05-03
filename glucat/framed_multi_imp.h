@@ -3025,7 +3025,6 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
   }
 
   SUBCASE("Complexifier and Log") {
-    using index_set_t = fm_t::index_set_t;
     fm_t f(T(1.0), is_t());
     // Log of a scalar doesn't need a complexifier if scalar > 0
     CHECK(log(f) == fm_t(T(0.0), is_t()));
