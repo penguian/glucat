@@ -377,9 +377,14 @@ namespace Eigen {
     operator const ::qd_real&() const { return val; }
 
     qd_real_eigen operator-() const { return qd_real_eigen(-val); }
+    qd_real_eigen& operator+=(const qd_real_eigen& other) { val += other.val; return *this; }
+    qd_real_eigen& operator-=(const qd_real_eigen& other) { val -= other.val; return *this; }
+    qd_real_eigen& operator*=(const qd_real_eigen& other) { val *= other.val; return *this; }
+    qd_real_eigen& operator/=(const qd_real_eigen& other) { val /= other.val; return *this; }
     friend qd_real_eigen operator*(const qd_real_eigen& a, const qd_real_eigen& b) { return qd_real_eigen(a.val * b.val); }
     friend qd_real_eigen operator+(const qd_real_eigen& a, const qd_real_eigen& b) { return qd_real_eigen(a.val + b.val); }
     friend qd_real_eigen operator-(const qd_real_eigen& a, const qd_real_eigen& b) { return qd_real_eigen(a.val - b.val); }
+    friend qd_real_eigen operator/(const qd_real_eigen& a, const qd_real_eigen& b) { return qd_real_eigen(a.val / b.val); }
     friend bool operator<(const qd_real_eigen& a, const qd_real_eigen& b) { return a.val < b.val; }
     friend bool operator==(const qd_real_eigen& a, const qd_real_eigen& b) { return a.val == b.val; }
     friend bool operator!=(const qd_real_eigen& a, const qd_real_eigen& b) { return a.val != b.val; }
@@ -402,9 +407,14 @@ namespace Eigen {
     operator const ::dd_real&() const { return val; }
 
     dd_real_eigen operator-() const { return dd_real_eigen(-val); }
+    dd_real_eigen& operator+=(const dd_real_eigen& other) { val += other.val; return *this; }
+    dd_real_eigen& operator-=(const dd_real_eigen& other) { val -= other.val; return *this; }
+    dd_real_eigen& operator*=(const dd_real_eigen& other) { val *= other.val; return *this; }
+    dd_real_eigen& operator/=(const dd_real_eigen& other) { val /= other.val; return *this; }
     friend dd_real_eigen operator*(const dd_real_eigen& a, const dd_real_eigen& b) { return dd_real_eigen(a.val * b.val); }
     friend dd_real_eigen operator+(const dd_real_eigen& a, const dd_real_eigen& b) { return dd_real_eigen(a.val + b.val); }
     friend dd_real_eigen operator-(const dd_real_eigen& a, const dd_real_eigen& b) { return dd_real_eigen(a.val - b.val); }
+    friend dd_real_eigen operator/(const dd_real_eigen& a, const dd_real_eigen& b) { return dd_real_eigen(a.val / b.val); }
     friend bool operator<(const dd_real_eigen& a, const dd_real_eigen& b) { return a.val < b.val; }
     friend bool operator==(const dd_real_eigen& a, const dd_real_eigen& b) { return a.val == b.val; }
     friend bool operator!=(const dd_real_eigen& a, const dd_real_eigen& b) { return a.val != b.val; }
@@ -453,6 +463,24 @@ namespace Eigen {
   inline dd_real_eigen real(const dd_real_eigen& x) { return x.val; }
   inline qd_real_eigen imag(const qd_real_eigen&) { return 0.0; }
   inline dd_real_eigen imag(const dd_real_eigen&) { return 0.0; }
+}
+#endif
+
+#if defined(_GLUCAT_USE_QD) && defined(GLUCAT_DOCTEST)
+#include <doctest.h>
+namespace doctest {
+  inline bool operator==(const dd_real& lhs, const Approx& rhs) {
+    return operator==(to_double(lhs), rhs);
+  }
+  inline bool operator==(const qd_real& lhs, const Approx& rhs) {
+    return operator==(to_double(lhs), rhs);
+  }
+  inline bool operator==(const Approx& lhs, const dd_real& rhs) {
+    return operator==(lhs, to_double(rhs));
+  }
+  inline bool operator==(const Approx& lhs, const qd_real& rhs) {
+    return operator==(lhs, to_double(rhs));
+  }
 }
 #endif
 

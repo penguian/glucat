@@ -218,6 +218,9 @@ in Applications of Geometric Algebra in Computer Science and Engineering
 
 3. D. Hestenes, G. Sobczyk, Clifford Algebra to Geometric Calculus, D. Reidel, 1984.
 
+4. D. Hestenes, "Multivector Calculus",
+in J. Math. Anal. and Appl., Vol. 24, No. 2, Academic Press, 1968, pp. 313-325.
+
 ### References for generalized FFTs on finite groups
 
 1. L. Babai, L. Ronyai, "Computing irreducible representations of finite groups",

@@ -266,16 +266,16 @@ namespace glucat {
 
     SUBCASE("Math Functions") {
       T val = T(4);
-      CHECK(traits::sqrt(val) == doctest::Approx(T(2)));
+      CHECK(numeric_traits<T>::to_double(traits::sqrt(val)) == doctest::Approx(2.0));
 
       T e = T(1);
-      CHECK(traits::exp(e) == doctest::Approx(T(std::exp(1.0))));
+      CHECK(numeric_traits<T>::to_double(traits::exp(e)) == doctest::Approx(std::exp(1.0)));
 
-      CHECK(traits::log(traits::exp(one)) == doctest::Approx(one));
+      CHECK(numeric_traits<T>::to_double(traits::log(traits::exp(one))) == doctest::Approx(1.0));
 
       T pi_val = traits::pi();
-      CHECK(traits::sin(pi_val/T(2)) == doctest::Approx(one));
-      CHECK(traits::cos(pi_val) == doctest::Approx(T(-1)));
+      CHECK(numeric_traits<T>::to_double(traits::sin(pi_val/T(2))) == doctest::Approx(1.0));
+      CHECK(numeric_traits<T>::to_double(traits::cos(pi_val)) == doctest::Approx(-1.0));
     }
 
     SUBCASE("Promote and Demote") {

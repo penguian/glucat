@@ -1060,7 +1060,7 @@ namespace glucat
   { return *this = *this % rhs; }
 
   /*
-   * @brief Hestenes scalar product
+   * @brief Scalar product: [HS] (1.44) star(a, b) = scalar(a * b) = <ab>_0
    * @details
    *
    * Usage example:
@@ -1102,6 +1102,24 @@ namespace glucat
         result += small_ist.sign_of_square() * small_term.second * large_crd;
     }
     return result;
+  }
+ 
+  /*
+   * @brief Hestenes inner product: [H] (1.10) hstar(a, b) = scalar(reverse(a) * b) = <a†b>_0
+   * @details
+   * @tparam Scalar_T Scalar type
+   * @tparam LO Low index limit
+   * @tparam HI High index limit
+   * @tparam Tune_P Tuning policy
+   * @param lhs Left hand side
+   * @param rhs Right hand side
+   * @return Result
+   */
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  auto
+  hstar(const framed_multi<Scalar_T,LO,HI,Tune_P>& lhs, const framed_multi<Scalar_T,LO,HI,Tune_P>& rhs) -> Scalar_T
+  {
+    return scalar(lhs.reverse() * rhs);
   }
 
   /*
@@ -2878,7 +2896,7 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
       CHECK(approx_equal(a_1 * b, (a_1 & b) + (a_1 ^ b)));
 
       // [HS] (1.44): star(a, b) == scalar(a * b)
-      CHECK(star(a, b) == doctest::Approx(scalar(a * b)));
+      CHECK(star(a, b) == doctest::Approx(numeric_traits<T>::to_double(scalar(a * b))));
 
       // [HS] (1.21a): (a_r * b_s)(|r-s|) == a_r & b_s (sampled)
       index_t r = frm.count() / 2;
@@ -3056,9 +3074,9 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK(f_mix.conj() == fm_t("1-{1}-{1,2}"));
 
     // Norm and Quad
-    CHECK(f_mix.quad() == doctest::Approx(T(3.0)));
-    CHECK(f_mix.norm() == doctest::Approx(T(3.0)));
-    CHECK(f_mix.max_abs() == doctest::Approx(T(1.0)));
+    CHECK(f_mix.quad() == doctest::Approx(numeric_traits<T>::to_double(T(3.0))));
+    CHECK(f_mix.norm() == doctest::Approx(numeric_traits<T>::to_double(T(3.0))));
+    CHECK(f_mix.max_abs() == doctest::Approx(numeric_traits<T>::to_double(T(1.0))));
   }
 
   SUBCASE("Projections and Parts") {
@@ -3071,15 +3089,15 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     fm_t f_vec("1+2{1}+3{2}+4{1,2}");
     auto v = f_vec.vector_part();
     CHECK(v.size() == 2);
-    CHECK(v[0] == doctest::Approx(T(2.0)));
-    CHECK(v[1] == doctest::Approx(T(3.0)));
+    CHECK(v[0] == doctest::Approx(numeric_traits<T>::to_double(T(2.0))));
+    CHECK(v[1] == doctest::Approx(numeric_traits<T>::to_double(T(3.0))));
 
     using is_t = fm_t::index_set_t;
     auto v2 = f_vec.vector_part(is_t("{-1,1,2}"));
     CHECK(v2.size() == 3);
-    CHECK(v2[0] == doctest::Approx(T(0.0)));
-    CHECK(v2[1] == doctest::Approx(T(2.0)));
-    CHECK(v2[2] == doctest::Approx(T(3.0)));
+    CHECK(v2[0] == doctest::Approx(numeric_traits<T>::to_double(T(0.0))));
+    CHECK(v2[1] == doctest::Approx(numeric_traits<T>::to_double(T(2.0))));
+    CHECK(v2[2] == doctest::Approx(numeric_traits<T>::to_double(T(3.0))));
   }
 
   SUBCASE("Numerical Stability and Truncation") {
@@ -3119,7 +3137,7 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK(f_mix.frame() == is_t("{1,2}"));
 
     // Subscripting
-    CHECK(f_mix[is_t("{1,2}")] == doctest::Approx(T(1.0)));
+    CHECK(f_mix[is_t("{1,2}")] == doctest::Approx(numeric_traits<T>::to_double(T(1.0))));
 
     // Pow and Inv
     fm_t f_inv = f1.inv();
@@ -3155,7 +3173,7 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     // 1x1 matrix conversion (Lines 366-369)
     mm_t m_1x1(T(3.14), is_t()); // scalar is effectively 1x1 matrix
     fm_t f_1x1(m_1x1);
-    CHECK(f_1x1[is_t()] == doctest::Approx(T(3.14)));
+    CHECK(f_1x1[is_t()] == doctest::Approx(numeric_traits<T>::to_double(T(3.14))));
 
     // Fast Path Conversion (Line 372)
     // Default tuning policy has threshold = 4.

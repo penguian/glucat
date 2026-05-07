@@ -29,6 +29,7 @@
  "Clifford algebras with numeric and symbolic computations", Birkhauser, 1996.
  ***************************************************************************
      See also Arvind Raja's original header comments in glucat.h
+ ***************************************************************************
  ***************************************************************************/
 
 #include "glucat/matrix_base.h"

@@ -194,19 +194,33 @@ namespace glucat { namespace matrix
     // Eigenvalues
     std::vector<std::complex<double>> eigenvalues() const;
     // Infinity norm
-    typename Eigen::NumTraits<Scalar_T>::Real norm_inf() const;
+    Scalar_T norm_inf() const;
     // Squared Frobenius norm
-    typename Eigen::NumTraits<Scalar_T>::Real norm_frob2() const;
+    Scalar_T norm_frob2() const;
     // Is NaN?
     bool isnan() const;
     // Is infinite?
     bool isinf() const;
     // Number of non-zeros
     matrix_index_t nnz() const;
+    bool is_zero() const;
+    bool operator==(const eigen_matrix_wrapper& other) const;
+    bool operator!=(const eigen_matrix_wrapper& other) const { return !(*this == other); }
 
     // Inner product
     template< typename Result_Scalar_T, typename Other >
     Result_Scalar_T inner(const Other& other) const;
+    // Trace of product: Trace(A*B) / Dim
+    template< typename Other >
+    Scalar_T trace_product(const Other& other) const;
+
+    // Unary multivector mappings
+    void involute();
+    void reverse(index_t p, index_t q);
+    // Similarity transform: result = S * M(perm, perm) * S
+    void similarity_transform(const std::vector<matrix_index_t>& perm, const std::vector<Scalar_T>& signs);
+    // Transpose similarity transform: result = S * M(perm, perm)^T * S
+    void transpose_similarity_transform(const std::vector<matrix_index_t>& perm, const std::vector<Scalar_T>& signs);
 
     // Kronecker matrix product
     eigen_matrix_wrapper kron(const eigen_matrix_wrapper& other) const;
@@ -317,7 +331,6 @@ namespace glucat { namespace matrix
 
       // Inequality comparison
       bool operator!= (const const_iterator& other) const;
-      // Equality comparison
       bool operator== (const const_iterator& other) const;
 
       // Row index
@@ -361,19 +374,33 @@ namespace glucat { namespace matrix
     // Eigenvalues
     std::vector<std::complex<double>> eigenvalues() const;
     // Infinity norm
-    typename Eigen::NumTraits<Scalar_T>::Real norm_inf() const;
+    Scalar_T norm_inf() const;
     // Squared Frobenius norm
-    typename Eigen::NumTraits<Scalar_T>::Real norm_frob2() const;
+    Scalar_T norm_frob2() const;
     // Is NaN?
     bool isnan() const;
     // Is infinite?
     bool isinf() const;
     // Number of non-zeros
-    matrix_index_t nnz() const;
+        matrix_index_t nnz() const;
+    bool is_zero() const;
+    bool operator==(const eigen_sparse_wrapper& other) const;
+    bool operator!=(const eigen_sparse_wrapper& other) const { return !(*this == other); }
 
     // Inner product
     template< typename Result_Scalar_T, typename Other >
     Result_Scalar_T inner(const Other& other) const;
+    // Trace of product: Trace(A*B) / Dim
+    template< typename Other >
+    Scalar_T trace_product(const Other& other) const;
+
+    // Unary multivector mappings
+    void involute();
+    void reverse(index_t p, index_t q);
+    // Similarity transform: result = S * M(perm, perm) * S
+    void similarity_transform(const std::vector<matrix_index_t>& perm, const std::vector<Scalar_T>& signs);
+    // Transpose similarity transform: result = S * M(perm, perm)^T * S
+    void transpose_similarity_transform(const std::vector<matrix_index_t>& perm, const std::vector<Scalar_T>& signs);
 
     // Mixed Kronecker matrix product: Sparse x Dense -> Dense (wrapper)
     template< typename Other_Scalar_T >

@@ -743,10 +743,10 @@ namespace glucat { namespace matrix
    * @return Inf norm
    */
   template< typename Scalar_T >
-  inline typename arma::get_pod_type<Scalar_T>::result
+  inline Scalar_T
   arma_matrix_wrapper<Scalar_T>::
   norm_inf() const
-  { return arma::norm(m_mat, "inf"); }
+  { return static_cast<Scalar_T>(arma::norm(m_mat, "inf")); }
 
   /*
    * @brief Squared Frobenius norm
@@ -755,10 +755,10 @@ namespace glucat { namespace matrix
    * @return Frob2 norm
    */
   template< typename Scalar_T >
-  inline typename arma::get_pod_type<Scalar_T>::result
+  inline Scalar_T
   arma_matrix_wrapper<Scalar_T>::
   norm_frob2() const
-  { return arma::accu(arma::square(m_mat)); }
+  { return static_cast<Scalar_T>(arma::accu(arma::square(m_mat))); }
 
   /*
    * @brief Number of non-zeros
@@ -798,6 +798,27 @@ namespace glucat { namespace matrix
   { }
 
   /*
+   * @brief Trace of product
+   * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
+   * @return Trace(A*B) / Dim
+   */
+  template< typename Scalar_T >
+  template< typename Other >
+  inline Scalar_T
+  arma_matrix_wrapper<Scalar_T>::
+  trace_product(const Other& other) const
+  {
+    using traits_t = numeric_traits<Scalar_T>;
+    const auto dim = matrix_index_t(m_mat.n_rows);
+    if (dim == 0) return Scalar_T(0);
+    // Trace(AB) = accu(A % B.t())
+    Scalar_T tr = arma::accu(m_mat % other.m_mat.t());
+    return tr / traits_t::to_scalar_t(dim);
+  }
+
+  /*
    * @brief Inner product
    * @details
    * @tparam Scalar_T
@@ -817,6 +838,71 @@ namespace glucat { namespace matrix
 
     if (nbr_rows() == 0) return Result_Scalar_T(0);
     return sum / Result_Scalar_T(static_cast<double>(nbr_rows()));
+  }
+
+  template< typename Scalar_T >
+  inline void
+  arma_matrix_wrapper<Scalar_T>::
+  similarity_transform(const std::vector<matrix_index_t>& perm, const std::vector<Scalar_T>& signs)
+  {
+    const matrix_index_t n = nbr_rows();
+    std::vector<matrix_index_t> inv_perm(n);
+    for (matrix_index_t i = 0; i < n; ++i) inv_perm[perm[i]] = i;
+    MatrixType tmp = arma::zeros<MatrixType>(n, n);
+    for (matrix_index_t k = 0; k < n; ++k)
+      for (matrix_index_t l = 0; l < n; ++l)
+      {
+        const Scalar_T val = m_mat(k, l);
+        if (val == Scalar_T(0)) continue;
+        const matrix_index_t i = inv_perm[k];
+        const matrix_index_t j = inv_perm[l];
+        tmp(i, j) = signs[i] * val * signs[j];
+      }
+    m_mat = std::move(tmp);
+  }
+
+  template< typename Scalar_T >
+  inline void
+  arma_matrix_wrapper<Scalar_T>::
+  transpose_similarity_transform(const std::vector<matrix_index_t>& perm, const std::vector<Scalar_T>& signs)
+  {
+    const matrix_index_t n = nbr_rows();
+    std::vector<matrix_index_t> inv_perm(n);
+    for (matrix_index_t i = 0; i < n; ++i) inv_perm[perm[i]] = i;
+    MatrixType tmp = arma::zeros<MatrixType>(n, n);
+    for (matrix_index_t k = 0; k < n; ++k)
+      for (matrix_index_t l = 0; l < n; ++l)
+      {
+        const Scalar_T val = m_mat(k, l);
+        if (val == Scalar_T(0)) continue;
+        const matrix_index_t i = inv_perm[l];
+        const matrix_index_t j = inv_perm[k];
+        tmp(i, j) = signs[i] * val * signs[j];
+      }
+    m_mat = std::move(tmp);
+  }
+
+  template< typename Scalar_T >
+  inline void
+  arma_matrix_wrapper<Scalar_T>::
+  involute()
+  {
+    for (matrix_index_t r = 0; r < m_mat.n_rows; ++r)
+      for (matrix_index_t c = 0; c < m_mat.n_cols; ++c)
+      {
+        const Scalar_T val = m_mat(r, c);
+        if (val == Scalar_T(0)) continue;
+        if (std::popcount((unsigned int)(r ^ c)) % 2 != 0)
+          m_mat(r, c) = -val;
+      }
+  }
+
+  template< typename Scalar_T >
+  inline void
+  arma_matrix_wrapper<Scalar_T>::
+  reverse(index_t p, index_t q)
+  {
+    m_mat = m_mat.t();
   }
 
   /*
@@ -1219,10 +1305,10 @@ namespace glucat { namespace matrix
    * @return Inf norm
    */
   template< typename Scalar_T >
-  inline typename arma::get_pod_type<Scalar_T>::result
+  inline Scalar_T
   arma_sparse_wrapper<Scalar_T>::
   norm_inf() const
-  { return arma::norm(m_mat, "inf"); }
+  { return static_cast<Scalar_T>(arma::norm(m_mat, "inf")); }
 
   /*
    * @brief Squared Frobenius norm
@@ -1231,10 +1317,10 @@ namespace glucat { namespace matrix
    * @return Frob2 norm
    */
   template< typename Scalar_T >
-  inline typename arma::get_pod_type<Scalar_T>::result
+  inline Scalar_T
   arma_sparse_wrapper<Scalar_T>::
   norm_frob2() const
-  { return arma::accu(arma::square(m_mat)); }
+  { return static_cast<Scalar_T>(arma::accu(arma::square(m_mat))); }
 
   /*
    * @brief Trace
@@ -1261,6 +1347,29 @@ namespace glucat { namespace matrix
   { throw std::runtime_error("Not implemented for sparse"); }
 
   /*
+   * @brief Trace of product
+   * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
+   * @return Trace(A*B) / Dim
+   */
+  template< typename Scalar_T >
+  template< typename Other >
+  inline Scalar_T
+  arma_sparse_wrapper<Scalar_T>::
+  trace_product(const Other& other) const
+  {
+    using traits_t = numeric_traits<Scalar_T>;
+    const auto dim = matrix_index_t(m_mat.n_rows);
+    if (dim == 0) return Scalar_T(0);
+    // Trace(AB) = sum_i sum_j A_ij * B_ji
+    Scalar_T tr = Scalar_T(0);
+    for (auto it = m_mat.begin(); it != m_mat.end(); ++it)
+      tr += (*it) * other(it.col(), it.row());
+    return tr / traits_t::to_scalar_t(dim);
+  }
+
+  /*
    * @brief Inner product
    * @details
    * @tparam Scalar_T
@@ -1279,6 +1388,74 @@ namespace glucat { namespace matrix
     if (nbr_rows() == 0)
       return Result_Scalar_T(0);
     return sum / Result_Scalar_T(static_cast<double>(nbr_rows()));
+  }
+
+  template< typename Scalar_T >
+  inline void
+  arma_sparse_wrapper<Scalar_T>::
+  similarity_transform(const std::vector<matrix_index_t>& perm, const std::vector<Scalar_T>& signs)
+  {
+    const matrix_index_t n = nbr_rows();
+    std::vector<matrix_index_t> inv_perm(n);
+    for (matrix_index_t i = 0; i < n; ++i) inv_perm[perm[i]] = i;
+
+    arma::umat locations(2, m_mat.n_nonzero);
+    arma::Col<Scalar_T> values(m_mat.n_nonzero);
+    matrix_index_t count = 0;
+
+    for (auto it = m_mat.begin(); it != m_mat.end(); ++it)
+    {
+      const matrix_index_t i = inv_perm[it.row()];
+      const matrix_index_t j = inv_perm[it.col()];
+      locations(0, count) = i;
+      locations(1, count) = j;
+      values[count] = signs[i] * (*it) * signs[j];
+      count++;
+    }
+    m_mat = MatrixType(locations, values, n, n);
+  }
+
+  template< typename Scalar_T >
+  inline void
+  arma_sparse_wrapper<Scalar_T>::
+  transpose_similarity_transform(const std::vector<matrix_index_t>& perm, const std::vector<Scalar_T>& signs)
+  {
+    const matrix_index_t n = nbr_rows();
+    std::vector<matrix_index_t> inv_perm(n);
+    for (matrix_index_t i = 0; i < n; ++i) inv_perm[perm[i]] = i;
+
+    arma::umat locations(2, m_mat.n_nonzero);
+    arma::Col<Scalar_T> values(m_mat.n_nonzero);
+    matrix_index_t count = 0;
+
+    for (auto it = m_mat.begin(); it != m_mat.end(); ++it)
+    {
+      const matrix_index_t i = inv_perm[it.col()];
+      const matrix_index_t j = inv_perm[it.row()];
+      locations(0, count) = i;
+      locations(1, count) = j;
+      values[count] = signs[i] * (*it) * signs[j];
+      count++;
+    }
+    m_mat = MatrixType(locations, values, n, n);
+  }
+
+  template< typename Scalar_T >
+  inline void
+  arma_sparse_wrapper<Scalar_T>::
+  involute()
+  {
+    for (auto it = m_mat.begin(); it != m_mat.end(); ++it)
+      if (std::popcount((unsigned int)(it.row() ^ it.col())) % 2 != 0)
+        (*it) *= -1.0;
+  }
+
+  template< typename Scalar_T >
+  inline void
+  arma_sparse_wrapper<Scalar_T>::
+  reverse(index_t p, index_t q)
+  {
+    m_mat = m_mat.t();
   }
   /*
    * @brief Mixed Kronecker matrix product: Sparse x Dense -> Dense (wrapper)
@@ -1580,7 +1757,7 @@ namespace glucat { namespace matrix {
 
       // Dense-Dense product
       Matrix_T i = g * h;
-      CHECK(i(0, 0) == doctest::Approx(Scalar_T(5)));
+      CHECK(i(0, 0) == doctest::Approx(numeric_traits<Scalar_T>::to_double(Scalar_T(5))));
 
       // Compound assignment
       g += a;
@@ -1593,7 +1770,7 @@ namespace glucat { namespace matrix {
       // unit_helper::apply
       auto u = matrix::unit<Matrix_T>(3);
       CHECK(u.nbr_rows() == 3);
-      CHECK(u.trace() == doctest::Approx(Scalar_T(3)));
+      CHECK(u.trace() == doctest::Approx(numeric_traits<Scalar_T>::to_double(Scalar_T(3))));
 
       a.zeros(3, 3);
       CHECK(a.nbr_rows() == 3);
@@ -1616,8 +1793,8 @@ namespace glucat { namespace matrix {
       Matrix_T x(2, 1);
       bool success = solve(x, m, rhs);
       CHECK(success);
-      CHECK(x(0, 0) == doctest::Approx(Scalar_T(1)));
-      CHECK(x(1, 0) == doctest::Approx(Scalar_T(1)));
+      CHECK(x(0, 0) == doctest::Approx(numeric_traits<Scalar_T>::to_double(Scalar_T(1))));
+      CHECK(x(1, 0) == doctest::Approx(numeric_traits<Scalar_T>::to_double(Scalar_T(1))));
 
       auto ev = m.eigenvalues();
       CHECK(ev.size() == 2);
@@ -1630,12 +1807,12 @@ namespace glucat { namespace matrix {
       s(3, 3) = Scalar_T(-2);
 
       CHECK(s.nnz() == 2);
-      CHECK(s.trace() == doctest::Approx(Scalar_T(3)));
+      CHECK(s.trace() == doctest::Approx(numeric_traits<Scalar_T>::to_double(Scalar_T(3))));
 
       Sparse_T s2;
       s2.unit(4, 4);
       CHECK(s2.nnz() == 4);
-      CHECK(s2.trace() == doctest::Approx(Scalar_T(4)));
+      CHECK(s2.trace() == doctest::Approx(numeric_traits<Scalar_T>::to_double(Scalar_T(4))));
     }
 
     SUBCASE("Kronecker Product and Nork") {
@@ -1646,12 +1823,12 @@ namespace glucat { namespace matrix {
       // Dense x Dense
       auto c = a.kron(b);
       CHECK(c.nbr_rows() == 4);
-      CHECK(c.trace() == doctest::Approx(Scalar_T(4)));
+      CHECK(c.trace() == doctest::Approx(numeric_traits<Scalar_T>::to_double(Scalar_T(4))));
 
       // Nork (Dense)
       auto q = a.nork(c, true);
       CHECK(q.nbr_rows() == 2);
-      CHECK(q.trace() == doctest::Approx(Scalar_T(2)));
+      CHECK(q.trace() == doctest::Approx(numeric_traits<Scalar_T>::to_double(Scalar_T(2))));
 
       // Mixed: Dense x Sparse
       Sparse_T s(2, 2);
@@ -1677,15 +1854,15 @@ namespace glucat { namespace matrix {
       m(0,0) = Scalar_T(1); m(0,1) = Scalar_T(-2);
       m(1,0) = Scalar_T(3); m(1,1) = Scalar_T(4);
 
-      CHECK(m.norm_inf() == doctest::Approx(Scalar_T(7)));
-      CHECK(m.norm_frob2() == doctest::Approx(Scalar_T(1+4+9+16)));
+      CHECK(m.norm_inf() == doctest::Approx(numeric_traits<Scalar_T>::to_double(Scalar_T(7))));
+      CHECK(m.norm_frob2() == doctest::Approx(numeric_traits<Scalar_T>::to_double(Scalar_T(1+4+9+16))));
       CHECK(m.isnan() == false);
       CHECK(m.isinf() == false);
 
       Sparse_T s(2, 2);
       s(0,0) = Scalar_T(1); s(1,1) = Scalar_T(4);
-      CHECK(s.norm_inf() == doctest::Approx(Scalar_T(4)));
-      CHECK(s.norm_frob2() == doctest::Approx(Scalar_T(1+16)));
+      CHECK(s.norm_inf() == doctest::Approx(numeric_traits<Scalar_T>::to_double(Scalar_T(4))));
+      CHECK(s.norm_frob2() == doctest::Approx(numeric_traits<Scalar_T>::to_double(Scalar_T(1+16))));
       CHECK(s.isnan() == false);
       CHECK(s.isinf() == false);
 
@@ -1699,10 +1876,10 @@ namespace glucat { namespace matrix {
       CHECK(it1 != it2);
       // Inner product
       auto in = m.template inner<Scalar_T>(m);
-      CHECK(in == doctest::Approx(Scalar_T(1+4+9+16)/Scalar_T(2)));
+      CHECK(in == doctest::Approx(numeric_traits<Scalar_T>::to_double(Scalar_T(1+4+9+16)/Scalar_T(2))));
 
       auto ins = s.template inner<Scalar_T>(s);
-      CHECK(ins == doctest::Approx(Scalar_T(1+16)/Scalar_T(2)));
+      CHECK(ins == doctest::Approx(numeric_traits<Scalar_T>::to_double(Scalar_T(1+16)/Scalar_T(2))));
     }
 
     SUBCASE("Interop and Utility") {
@@ -1711,7 +1888,7 @@ namespace glucat { namespace matrix {
 
       // Sparse to Dense
       Matrix_T d(s);
-      CHECK(d.trace() == doctest::Approx(Scalar_T(2)));
+      CHECK(d.trace() == doctest::Approx(numeric_traits<Scalar_T>::to_double(Scalar_T(2))));
 
       // operator<<
       std::ostringstream oss;
@@ -1733,8 +1910,8 @@ namespace glucat { namespace matrix {
       Matrix_T a_mat(e_mat);
       CHECK(a_mat.nbr_rows() == 2);
       CHECK(a_mat.nbr_cols() == 2);
-      CHECK(a_mat(0, 0) == doctest::Approx(Scalar_T(1)));
-      CHECK(a_mat(1, 1) == doctest::Approx(Scalar_T(2)));
+      CHECK(a_mat(0, 0) == doctest::Approx(numeric_traits<Scalar_T>::to_double(Scalar_T(1))));
+      CHECK(a_mat(1, 1) == doctest::Approx(numeric_traits<Scalar_T>::to_double(Scalar_T(2))));
       CHECK(a_mat.nnz() == 2);
     }
   }

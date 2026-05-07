@@ -60,6 +60,7 @@ namespace glucat
   const unsigned int Tuning_Default_Products_Size_Threshold = 1 << 22;
   const unsigned int Tuning_Default_Denom_Different_Bits    =       8;
   const unsigned int Tuning_Default_Extra_Different_Bits    =       8;
+  const unsigned int Tuning_Default_Matrix_Op_Threshold_Factor =    4;
 
   /// Tuning policy values
   template
@@ -74,7 +75,8 @@ namespace glucat
   unsigned int Inv_Fast_Dim_Threshold  = Tuning_Default_Inv_Fast_Dim_Threshold,
   unsigned int Products_Size_Threshold = Tuning_Default_Products_Size_Threshold,
   unsigned int Denom_Different_Bits    = Tuning_Default_Denom_Different_Bits,
-  unsigned int Extra_Different_Bits    = Tuning_Default_Extra_Different_Bits
+  unsigned int Extra_Different_Bits    = Tuning_Default_Extra_Different_Bits,
+  unsigned int Matrix_Op_Threshold_Factor = Tuning_Default_Matrix_Op_Threshold_Factor
   >
   struct tuning_values : policy
   {
@@ -90,7 +92,8 @@ namespace glucat
     Inv_Fast_Dim_Threshold,
     Products_Size_Threshold,
     Denom_Different_Bits,
-    Extra_Different_Bits
+    Extra_Different_Bits,
+    Matrix_Op_Threshold_Factor
     >;
     // Tuning for multiplication
     // Minimum index count needed to invoke matrix multiplication algorithm
@@ -121,6 +124,8 @@ namespace glucat
     enum { denom_different_bits = Denom_Different_Bits };
     // Extra number of different bits allowed in approximate equality
     enum { extra_different_bits = Extra_Different_Bits };
+    // Tuning for matrix operators pruning threshold factor
+    enum { matrix_op_threshold_factor = Matrix_Op_Threshold_Factor };
   };
 
   using default_tuning_values_p = tuning_values<>;

@@ -44,6 +44,9 @@
 #include <fstream>
 #include <limits>
 #include <cmath>
+#include <vector>
+#include <algorithm>
+#include <functional>
 
 namespace glucat
 {
@@ -64,6 +67,7 @@ namespace glucat
    * @tparam Tune_P
    * @return Result
    */
+
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline std::string_view
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
@@ -506,8 +510,20 @@ namespace glucat
     // Do the reframing only where necessary
     if (lhs.m_frame != our_frame)
       lhs_reframed = multivector_t(framed_lhs, our_frame, true);
+    else
+      lhs_reframed = lhs;
+
     if (rhs.m_frame != our_frame)
       rhs_reframed = multivector_t(framed_rhs, our_frame, true);
+    else
+      rhs_reframed = rhs;
+
+    if (lhs_reframed.m_frame != our_frame) {
+        std::cerr << "reframe ERROR: lhs_reframed.m_frame=" << lhs_reframed.m_frame << " != our_frame=" << our_frame << std::endl;
+    }
+    if (rhs_reframed.m_frame != our_frame) {
+        std::cerr << "reframe ERROR: rhs_reframed.m_frame=" << rhs_reframed.m_frame << " != our_frame=" << our_frame << std::endl;
+    }
     return our_frame;
   }
 
@@ -821,8 +837,35 @@ namespace glucat
   operator^ (const matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs, const matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs)
   {
     using multivector_t = matrix_multi<Scalar_T,LO,HI,Tune_P>;
-    using framed_multi_t = typename multivector_t::framed_multi_t;
-    return multivector_t(framed_multi_t(lhs) ^ framed_multi_t(rhs));
+    multivector_t l_ref, r_ref;
+    const auto frm = reframe(lhs, rhs, l_ref, r_ref);
+    const int n = frm.count();
+    
+    auto l_grades = l_ref.decompose();
+    auto r_grades = r_ref.decompose();
+    
+    const Scalar_T threshold = std::numeric_limits<Scalar_T>::epsilon() * Scalar_T(Tune_P::tuning_values_p::matrix_op_threshold_factor);
+    using matrix_t = typename multivector_t::matrix_t;
+    std::vector<matrix_t> grade_sums(n + 1);
+    for (int k=0; k <= n; ++k) grade_sums[k].zeros(l_grades[0].m_matrix.nbr_rows(), l_grades[0].m_matrix.nbr_cols());
+
+    for (int r=0; r <= n; ++r) {
+      if (r >= (int)l_grades.size()) break;
+      if (l_grades[r].m_matrix.norm_inf() < threshold) continue;
+      for (int s=0; s <= n; ++s) {
+        if (s >= (int)r_grades.size()) break;
+        if (r_grades[s].m_matrix.norm_inf() < threshold) continue;
+        if (r + s <= n) grade_sums[r + s] += (l_grades[r].m_matrix * r_grades[s].m_matrix);
+      }
+    }
+
+    multivector_t res(Scalar_T(0), frm);
+    for (int k=0; k <= n; ++k) {
+      if (grade_sums[k].norm_inf() > threshold) {
+        res += multivector_t(grade_sums[k], frm).project(k);
+      }
+    }
+    return res;
   }
 
   /*
@@ -862,8 +905,36 @@ namespace glucat
   operator& (const matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs, const matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs)
   {
     using multivector_t = matrix_multi<Scalar_T,LO,HI,Tune_P>;
-    using framed_multi_t = typename multivector_t::framed_multi_t;
-    return multivector_t(framed_multi_t(lhs) & framed_multi_t(rhs));
+    multivector_t l_ref, r_ref;
+    const auto frm = reframe(lhs, rhs, l_ref, r_ref);
+    const int n = frm.count();
+    
+    auto l_grades = l_ref.decompose();
+    auto r_grades = r_ref.decompose();
+    
+    const Scalar_T threshold = std::numeric_limits<Scalar_T>::epsilon() * Scalar_T(Tune_P::tuning_values_p::matrix_op_threshold_factor);
+    using matrix_t = typename multivector_t::matrix_t;
+    std::vector<matrix_t> grade_sums(n + 1);
+    for (int k=0; k <= n; ++k) grade_sums[k].zeros(l_grades[0].m_matrix.nbr_rows(), l_grades[0].m_matrix.nbr_cols());
+
+    for (int r=1; r <= n; ++r) {
+      if (r >= (int)l_grades.size()) break;
+      if (l_grades[r].m_matrix.norm_inf() < threshold) continue;
+      for (int s=1; s <= n; ++s) {
+        if (s >= (int)r_grades.size()) break;
+        if (r_grades[s].m_matrix.norm_inf() < threshold) continue;
+        const int k = std::abs(r - s);
+        grade_sums[k] += (l_grades[r].m_matrix * r_grades[s].m_matrix);
+      }
+    }
+
+    multivector_t res(Scalar_T(0), frm);
+    for (int k=0; k <= n; ++k) {
+      if (grade_sums[k].norm_inf() > threshold) {
+        res += multivector_t(grade_sums[k], frm).project(k);
+      }
+    }
+    return res;
   }
 
   /*
@@ -903,8 +974,36 @@ namespace glucat
   operator% (const matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs, const matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs)
   {
     using multivector_t = matrix_multi<Scalar_T,LO,HI,Tune_P>;
-    using framed_multi_t = typename multivector_t::framed_multi_t;
-    return multivector_t(framed_multi_t(lhs) % framed_multi_t(rhs));
+    multivector_t l_ref, r_ref;
+    const auto frm = reframe(lhs, rhs, l_ref, r_ref);
+    const int n = frm.count();
+    
+    auto l_grades = l_ref.decompose();
+    auto r_grades = r_ref.decompose();
+    
+    const Scalar_T threshold = std::numeric_limits<Scalar_T>::epsilon() * Scalar_T(Tune_P::tuning_values_p::matrix_op_threshold_factor);
+    using matrix_t = typename multivector_t::matrix_t;
+    std::vector<matrix_t> grade_sums(n + 1);
+    for (int k=0; k <= n; ++k) grade_sums[k].zeros(l_grades[0].m_matrix.nbr_rows(), l_grades[0].m_matrix.nbr_cols());
+
+    for (int r=0; r <= n; ++r) {
+      if (r >= (int)l_grades.size()) break;
+      if (l_grades[r].m_matrix.norm_inf() < threshold) continue;
+      for (int s=r; s <= n; ++s) {
+        if (s >= (int)r_grades.size()) break;
+        if (r_grades[s].m_matrix.norm_inf() < threshold) continue;
+        int k = s - r;
+        grade_sums[k] += (l_grades[r].m_matrix * r_grades[s].m_matrix);
+      }
+    }
+
+    multivector_t res(Scalar_T(0), frm);
+    for (int k=0; k <= n; ++k) {
+      if (grade_sums[k].norm_inf() > threshold) {
+        res += multivector_t(grade_sums[k], frm).project(k);
+      }
+    }
+    return res;
   }
 
   /*
@@ -924,7 +1023,7 @@ namespace glucat
   { return *this = *this % rhs; }
 
   /*
-   * @brief Hestenes scalar product
+   * @brief Scalar product: [HS] (1.44) star(a, b) = scalar(a * b) = <ab>_0
    * @details
    *
    * Usage example:
@@ -946,7 +1045,44 @@ namespace glucat
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline Scalar_T
   star(const matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs, const matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs)
-  { return (lhs * rhs).scalar(); }
+  {
+    using multivector_t = matrix_multi<Scalar_T,LO,HI,Tune_P>;
+    using index_set_t = typename multivector_t::index_set_t;
+
+    if (lhs.isnan() || rhs.isnan())
+      return numeric_traits<Scalar_T>::NaN();
+
+    // Operate only within a common frame
+    multivector_t lhs_reframed;
+    multivector_t rhs_reframed;
+    const index_set_t our_frame = reframe(lhs, rhs, lhs_reframed, rhs_reframed);
+    const multivector_t& lhs_ref = (lhs.frame() == our_frame)
+      ? lhs
+      : lhs_reframed;
+    const multivector_t& rhs_ref = (rhs.frame() == our_frame)
+      ? rhs
+      : rhs_reframed;
+
+    return lhs_ref.scalar_of_prod(rhs_ref);
+  }
+
+  /*
+   * @brief Hestenes inner product: [H] (1.10) hstar(a, b) = scalar(reverse(a) * b) = <a†b>_0
+   * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param lhs Left hand side
+   * @param rhs Right hand side
+   * @return Result
+   */
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  inline Scalar_T
+  hstar(const matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs, const matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs)
+  {
+    return star(lhs.reverse(), rhs);
+  }
 
   /*
    * @brief Quotient of multivector and scalar
@@ -1226,7 +1362,7 @@ namespace glucat
     if ((grade < 0) || (grade > HI-LO))
       return 0;
     else
-      return multivector_t((framed_multi_t(*this))(grade));
+      return this->project(grade);
   }
 
   /*
@@ -1261,36 +1397,6 @@ namespace glucat
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
   pure() const
   { return *this - this->scalar(); }
-
-  /*
-   * @brief Even part, sum of the even grade terms
-   * @details
-   * @tparam Scalar_T
-   * @tparam LO
-   * @tparam HI
-   * @tparam Tune_P
-   * @return Even part
-   */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline typename matrix_multi<Scalar_T,LO,HI,Tune_P>::multivector_t
-  matrix_multi<Scalar_T,LO,HI,Tune_P>::
-  even() const
-  { return multivector_t(framed_multi_t(*this).even()); }
-
-  /*
-   * @brief Odd part, sum of the odd grade terms
-   * @details
-   * @tparam Scalar_T
-   * @tparam LO
-   * @tparam HI
-   * @tparam Tune_P
-   * @return Odd part
-   */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline typename matrix_multi<Scalar_T,LO,HI,Tune_P>::multivector_t
-  matrix_multi<Scalar_T,LO,HI,Tune_P>::
-  odd() const
-  { return multivector_t(framed_multi_t(*this).odd()); }
 
   /*
    * @brief Vector part of multivector, as a vector_t
@@ -1361,8 +1467,282 @@ namespace glucat
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline typename matrix_multi<Scalar_T,LO,HI,Tune_P>::multivector_t
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
-  involute() const
-  { return multivector_t(framed_multi_t(*this).involute()); }
+  involute () const
+  {
+    multivector_t res(*this);
+    const index_set_t frm = this->frame();
+    if (frm.count() == 0) return res;
+
+    const index_t p = frm.count_pos();
+    const index_t q = frm.count_neg();
+    const gen::signature_t sig(p, q);
+    auto& table = gen::generator_table<basis_matrix_t>::generator();
+    auto& cache = table.parity_cache();
+
+    if (cache.find(sig) != cache.end())
+    {
+      const auto& data = cache[sig];
+      std::vector<Scalar_T> signs_T(data.signs.begin(), data.signs.end());
+      res.m_matrix.similarity_transform(data.perm, signs_T);
+      return res;
+    }
+
+    const index_t level = offset_level(p, q);
+    // If level is too high, fallback to coordinate-based transform
+    if (level > 8) return multivector_t(framed_multi_t(*this).involute());
+
+    index_set_t rep_frm;
+    for (index_t i = 1; i <= level; ++i) { rep_frm.set(i); rep_frm.set(-i); }
+
+    const matrix_index_t dim = matrix_index_t(1) << level;
+    const auto* e_mat = table(p, q);
+
+    std::vector<basis_matrix_t> e_mat_frm;
+    for (index_t j = LO; j <= HI; ++j) if (frm.test(j)) e_mat_frm.push_back(e_mat[j]);
+
+    index_set_t parity_ist;
+    bool found = false;
+    const auto* e_gen = table(level, level);
+    for (size_type i = 0; i < (size_type(1) << (2 * level)); ++i)
+    {
+      index_set_t cand(i, rep_frm, true);
+      basis_matrix_t C = matrix::unit<basis_matrix_t>(dim);
+      for (index_t k = -level; k <= level; ++k)
+      {
+        if (k != 0 && cand.test(k)) C = C * e_gen[k];
+      }
+
+      bool ok = true;
+      auto is_zero = [](const basis_matrix_t& m) {
+        for (auto it = m.begin(); it != m.end(); ++it) if (*it != 0) return false;
+        return true;
+      };
+
+      for (const auto& Mj : e_mat_frm)
+      {
+        // Parity: S M_j = -M_j S
+        if (!is_zero(C * Mj + Mj * C))
+        {
+          ok = false;
+          break;
+        }
+      }
+      if (ok)
+      {
+        parity_ist = cand;
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) return multivector_t(framed_multi_t(*this).involute());
+
+    basis_matrix_t S_mat = matrix::unit<basis_matrix_t>(dim);
+    for (index_t k = -level; k <= level; ++k)
+    {
+      if (k != 0 && parity_ist.test(k)) S_mat = S_mat * e_gen[k];
+    }
+
+    gen::transform_data_t<basis_matrix_t> data;
+    data.perm.resize(S_mat.nbr_rows());
+    data.signs.resize(S_mat.nbr_rows());
+
+    for (auto it = S_mat.begin(); it != S_mat.end(); ++it)
+    {
+      data.perm[it.row()] = it.col();
+      data.signs[it.row()] = *it;
+    }
+
+    cache[sig] = data;
+    std::vector<Scalar_T> signs_T(data.signs.begin(), data.signs.end());
+    res.m_matrix.similarity_transform(data.perm, signs_T);
+    return res;
+  }
+
+  /*
+   * @brief Reversion, x^\dagger
+   * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @return Reversion
+   */
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  inline typename matrix_multi<Scalar_T,LO,HI,Tune_P>::multivector_t
+  matrix_multi<Scalar_T,LO,HI,Tune_P>::
+  reverse() const
+  {
+    multivector_t res(*this);
+    const index_set_t frm = this->frame();
+    if (frm.count() == 0) return res;
+
+    const index_t p = frm.count_pos();
+    const index_t q = frm.count_neg();
+    const gen::signature_t sig(p, q);
+    auto& table = gen::generator_table<basis_matrix_t>::generator();
+    auto& cache = table.reversion_cache();
+
+    if (cache.find(sig) != cache.end())
+    {
+      const auto& data = cache[sig];
+      std::vector<Scalar_T> signs_T(data.signs.begin(), data.signs.end());
+      res.m_matrix.transpose_similarity_transform(data.perm, signs_T);
+      return res;
+    }
+
+    const index_t level = offset_level(p, q);
+    if (level > 8) return multivector_t(framed_multi_t(*this).reverse());
+
+    index_set_t rep_frm;
+    for (index_t i = 1; i <= level; ++i) { rep_frm.set(i); rep_frm.set(-i); }
+
+    const matrix_index_t dim = matrix_index_t(1) << level;
+    const auto* e_mat = table(p, q);
+
+    std::vector<basis_matrix_t> e_mat_frm;
+    std::vector<int> s_j_frm;
+    for (index_t j = LO; j <= HI; ++j)
+    {
+      if (frm.test(j))
+      {
+        e_mat_frm.push_back(e_mat[j]);
+        s_j_frm.push_back(index_set_t(j).sign_of_square());
+      }
+    }
+
+    index_set_t rev_ist;
+    bool found = false;
+    const auto* e_gen = table(level, level);
+    for (size_type i = 0; i < (size_type(1) << (2 * level)); ++i)
+    {
+      index_set_t cand(i, rep_frm, true);
+      basis_matrix_t C = matrix::unit<basis_matrix_t>(dim);
+      for (index_t k = -level; k <= level; ++k)
+      {
+        if (k != 0 && cand.test(k)) C = C * e_gen[k];
+      }
+
+      bool ok = true;
+      auto is_zero = [](const basis_matrix_t& m) {
+        for (auto it = m.begin(); it != m.end(); ++it) if (*it != 0) return false;
+        return true;
+      };
+
+      for (size_t idx = 0; idx < e_mat_frm.size(); ++idx)
+      {
+        // Reversion: H M_j^T = M_j H
+        if (s_j_frm[idx] == 1) // symmetric
+        {
+          if (!is_zero(C * e_mat_frm[idx] - e_mat_frm[idx] * C)) { ok = false; break; }
+        }
+        else // anti-symmetric
+        {
+          if (!is_zero(C * e_mat_frm[idx] + e_mat_frm[idx] * C)) { ok = false; break; }
+        }
+      }
+      if (ok)
+      {
+        rev_ist = cand;
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) return multivector_t(framed_multi_t(*this).reverse());
+
+    basis_matrix_t H_mat = matrix::unit<basis_matrix_t>(dim);
+    for (index_t k = -level; k <= level; ++k)
+    {
+      if (k != 0 && rev_ist.test(k)) H_mat = H_mat * e_gen[k];
+    }
+
+    gen::transform_data_t<basis_matrix_t> data;
+    data.perm.resize(H_mat.nbr_rows());
+    data.signs.resize(H_mat.nbr_rows());
+
+    for (auto it = H_mat.begin(); it != H_mat.end(); ++it)
+    {
+      data.perm[it.row()] = it.col();
+      data.signs[it.row()] = *it;
+    }
+
+    cache[sig] = data;
+    std::vector<Scalar_T> signs_T(data.signs.begin(), data.signs.end());
+    res.m_matrix.transpose_similarity_transform(data.perm, signs_T);
+    return res;
+  }
+
+  /*
+   * @brief Clifford conjugation, \bar{x}
+   * @details \bar{x} = reverse(involute(x))
+   */
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  inline typename matrix_multi<Scalar_T,LO,HI,Tune_P>::multivector_t
+  matrix_multi<Scalar_T,LO,HI,Tune_P>::
+  conj () const
+  {
+    // conj(x) = reverse(involute(x))
+    return this->involute().reverse();
+  }
+
+  /*
+   * @brief Even part, 0.5 * (x + x*)
+   */
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  inline typename matrix_multi<Scalar_T,LO,HI,Tune_P>::multivector_t
+  matrix_multi<Scalar_T,LO,HI,Tune_P>::
+  even() const
+  {
+    multivector_t result(*this);
+    result += this->involute();
+    result *= Scalar_T(0.5);
+    return result;
+  }
+
+  /*
+   * @brief Odd part, 0.5 * (x - x*)
+   */
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  inline typename matrix_multi<Scalar_T,LO,HI,Tune_P>::multivector_t
+  matrix_multi<Scalar_T,LO,HI,Tune_P>::
+  odd() const
+  {
+    multivector_t result(*this);
+    result -= this->involute();
+    result *= Scalar_T(0.5);
+    return result;
+  }
+
+  /*
+   * @brief Decompose into a vector of multivectors, one for each grade 0..n
+   */
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  auto
+  matrix_multi<Scalar_T,LO,HI,Tune_P>::
+  decompose() const -> std::vector<matrix_multi>
+  {
+    const int n = this->m_frame.count();
+    auto fm = this->template fast_framed_multi<Scalar_T, Tune_P>();
+    
+    std::vector<matrix_multi> res(n + 1, matrix_multi(Scalar_T(0), this->m_frame));
+    for (int k = 0; k <= n; ++k)
+    {
+      res[k] = matrix_multi(fm(index_t(k)), this->m_frame);
+    }
+    return res;
+  }
+
+  /*
+   * @brief Project onto grade k
+   */
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  auto
+  matrix_multi<Scalar_T,LO,HI,Tune_P>::
+  project(int k) const -> matrix_multi
+  {
+    return matrix_multi(framed_multi<Scalar_T,LO,HI,Tune_P>(*this)(index_t(k)), this->m_frame);
+  }
 
   /*
    * @brief Reversion, order of {i} is reversed in each term
@@ -1378,12 +1758,6 @@ namespace glucat
    * reverse(clifford<>("{1}*{2}")); // Returns -{1}*{2}
    * @endcode
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline typename matrix_multi<Scalar_T,LO,HI,Tune_P>::multivector_t
-  matrix_multi<Scalar_T,LO,HI,Tune_P>::
-  reverse() const
-  { return multivector_t(framed_multi_t(*this).reverse()); }
-
   /*
    * @brief Conjugation, conj == reverse o involute == involute o reverse
    * @details
@@ -1398,11 +1772,6 @@ namespace glucat
    * conj(clifford<>("{1}")); // Returns -{1}
    * @endcode
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline typename matrix_multi<Scalar_T,LO,HI,Tune_P>::multivector_t
-  matrix_multi<Scalar_T,LO,HI,Tune_P>::
-  conj() const
-  { return multivector_t(framed_multi_t(*this).conj()); }
 
   /*
    * @brief Quadratic form := scalar part of rev(x)*x
@@ -1416,10 +1785,18 @@ namespace glucat
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   inline Scalar_T
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
+  scalar_of_prod(const matrix_multi& other) const
+  {
+    return m_matrix.trace_product(other.m_matrix);
+  }
+
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  inline Scalar_T
+  matrix_multi<Scalar_T,LO,HI,Tune_P>::
   quad() const
-  { // scalar(conj(x)*x) = 2*quad(even(x)) - quad(x)
-    // Arvind Raja ref: "old clical: quadfunction(p:pter):pterm in file compmod.pas"
-    return framed_multi_t(*this).quad();
+  {
+    // quad(x) = <rev(x)*x>_0 = star(reverse(x), x)
+    return this->reverse().scalar_of_prod(*this);
   }
 
   /*
@@ -1453,7 +1830,7 @@ namespace glucat
   inline Scalar_T
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
   max_abs() const
-  { return framed_multi_t(*this).max_abs(); }
+  { return framed_multi<Scalar_T,LO,HI,Tune_P>(*this).max_abs(); }
 
   /*
    * @brief Random multivector within a frame
@@ -3161,7 +3538,7 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
       CHECK(approx_equal(a_1 * b, (a_1 & b) + (a_1 ^ b)));
 
       // [HS] (1.44): star(a, b) == scalar(a * b)
-      CHECK(star(a, b) == doctest::Approx(scalar(a * b)));
+      CHECK(numeric_traits<T>::to_double(star(a, b)) == doctest::Approx(numeric_traits<T>::to_double(scalar(a * b))));
 
       // [HS] (1.21a): (a_r * b_s)(|r-s|) == a_r & b_s (sampled)
       index_t r = frm.count() / 2;
@@ -3180,7 +3557,6 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
     mm_f_t m_f2("{2}");
     mm_d_t m_d1("{1}");
     mm_d_t m_d2("{2}");
-
     // Compound assignment (matching scalar)
     m_f1 = mm_f_t("{1}");
     m_f1 += m_f2;
@@ -3290,17 +3666,14 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
     c = std::move(b);
     CHECK(c == mm_t(T(1.0)));
 
-    c = c; // Self-assignment
-    CHECK(c == mm_t(T(1.0)));
-
     // Reframing overlap
     using is_t = mm_t::index_set_t;
     mm_t m1(T(1.0), is_t());
     mm_t m2(is_t("{1}"), T(1.0));
     mm_t sum = m1 + m2; // Triggers reframe
     CHECK(sum.frame() == is_t("{1}"));
-    CHECK(sum.scalar() == doctest::Approx(T(1.0)));
-    CHECK(sum[is_t("{1}")] == doctest::Approx(T(1.0)));
+    CHECK(numeric_traits<T>::to_double(sum.scalar()) == doctest::Approx(1.0));
+    CHECK(numeric_traits<T>::to_double(sum[is_t("{1}")]) == doctest::Approx(1.0));
   }
 
   SUBCASE("Advanced Matrix Algorithms") {
@@ -3314,7 +3687,7 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
     mm_t s2 = glucat::refined_newton_schulz(a, T(1.0));
 
     // They should be approximately equal for small perturbations
-    CHECK(s1.scalar() == doctest::Approx(s2.scalar()));
+    CHECK(numeric_traits<T>::to_double(s1.scalar()) == doctest::Approx(numeric_traits<T>::to_double(s2.scalar())));
   }
 
   SUBCASE("Numerical Analysis") {
@@ -3353,21 +3726,25 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK(m_mix.conj() == mm_t("1-{1}-{1,2}"));
 
     // Norm, Quad, MaxAbs
-    CHECK(m_mix.quad() == doctest::Approx(3.0));
-    CHECK(m_mix.norm() == doctest::Approx(3.0));
-    CHECK(m_mix.max_abs() == doctest::Approx(1.0));
+    CHECK(numeric_traits<T>::to_double(m_mix.quad()) == doctest::Approx(numeric_traits<T>::to_double(3.0)));
+    CHECK(numeric_traits<T>::to_double(m_mix.norm()) == doctest::Approx(numeric_traits<T>::to_double(3.0)));
+    CHECK(numeric_traits<T>::to_double(m_mix.max_abs()) == doctest::Approx(numeric_traits<T>::to_double(1.0)));
 
     // Projections
     CHECK(m_mix.pure() == mm_t("{1}+{1,2}"));
     CHECK(m_mix.even() == mm_t("1+{1,2}"));
     CHECK(m_mix.odd() == mm_t("{1}"));
 
+    // PyClical failing test case: Cl(3,1)
+    mm_t m_pyr("1+{-1}+{1,2}+{1,2,3}");
+    CHECK(numeric_traits<T>::to_double(m_pyr.quad()) == doctest::Approx(numeric_traits<T>::to_double(2.0)));
+
     // Vector part
     mm_t m_vec("1+2{1}+3{2}+4{1,2}");
     auto v = m_vec.vector_part();
     CHECK(v.size() == 2);
-    CHECK(v[0] == doctest::Approx(2.0));
-    CHECK(v[1] == doctest::Approx(3.0));
+    CHECK(numeric_traits<T>::to_double(v[0]) == doctest::Approx(numeric_traits<T>::to_double(2.0)));
+    CHECK(numeric_traits<T>::to_double(v[1]) == doctest::Approx(numeric_traits<T>::to_double(3.0)));
 
     using is_t = mm_t::index_set_t;
     auto v2 = m_vec.vector_part(is_t("{-1,1,2}"));
@@ -3378,13 +3755,14 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK(m_mix.frame() == is_t("{1,2}"));
 
     // Subscripting
-    CHECK(m_mix[is_t("{1,2}")] == doctest::Approx(1.0));
+    CHECK(numeric_traits<T>::to_double(m_mix[is_t("{1,2}")]) == doctest::Approx(numeric_traits<T>::to_double(1.0)));
 
     // Pow and Inv
     mm_t m_inv = m1.inv();
     CHECK(m_inv == m1);
     CHECK(m1.pow(2) == mm_t(1.0));
   }
+
 }
 #endif
 

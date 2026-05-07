@@ -74,10 +74,15 @@ namespace glucat
   matrix_multi<Scalar_T,LO,HI,Tune_P>
   operator% (const matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs, const matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs);
 
-  // Hestenes scalar product
+  // Scalar product: [HS] (1.44) star(a, b) = scalar(a * b) = <ab>_0
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   Scalar_T
   star(const matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs, const matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs);
+
+  // Hestenes inner product: [H] (1.10) hstar(a, b) = scalar(reverse(a) * b) = <a†b>_0
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  Scalar_T
+  hstar(const matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs, const matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs);
 
   // Geometric quotient
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -150,7 +155,7 @@ namespace glucat
     template< typename Other_Scalar_T, const index_t Other_LO, const index_t Other_HI, typename Other_Tune_P >
     friend class matrix_multi;
 
-  private:
+  public:
     using basis_matrix_t = matrix::sparse_matrix_t<int>;
     using matrix_t = matrix::matrix_t<Scalar_T>;
     using matrix_index_t = matrix::matrix_index_t;
@@ -213,12 +218,18 @@ namespace glucat
     template< typename Other_Scalar_T, typename Other_Tune_P >
     framed_multi<Other_Scalar_T,LO,HI,Other_Tune_P> fast_framed_multi() const;
 
+    /// Project onto grade k
+    matrix_multi project(int k) const;
+    /// Decompose into a vector of multivectors, one for each grade 0..n
+    std::vector<matrix_multi> decompose() const;
+
   private:
     /// Construct a multivector within a given frame from a given matrix
     template< typename Matrix_T >
     matrix_multi(const Matrix_T& mtx, const index_set_t frm);
     // Construct a multivector within a given frame from a given matrix
     matrix_multi(const matrix_t& mtx, const index_set_t frm);
+  public:
     // Create a basis element matrix within the current frame
     basis_matrix_t basis_element(const index_set<LO,HI>& ist) const;
 
@@ -228,6 +239,8 @@ namespace glucat
 
     // Number of terms
     size_type nbr_terms() const;
+    // Get the underlying matrix
+    const matrix_t& get_matrix() const { return m_matrix; }
   protected:
     // Number of rows
     matrix_index_t nbr_rows() const;
@@ -291,6 +304,9 @@ namespace glucat
     index_set_t        m_frame;
     // Matrix value representing the multivector within the folded frame
     matrix_t           m_matrix;
+    // Scalar part of geometric product: Trace(A*B) / Dim
+    Scalar_T scalar_of_prod(const matrix_multi& other) const;
+
   };
 
   // Non-members
