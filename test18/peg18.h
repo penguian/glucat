@@ -18,29 +18,31 @@ using namespace std;
 using namespace glucat;
 
 template<typename fm_t, typename mm_t>
-bool check_scalar(const string& name, typename mm_t::scalar_t A, typename fm_t::scalar_t a) {
+bool check_scalar(const string& name, typename mm_t::scalar_t A, typename fm_t::scalar_t a, bool verbose) {
     auto diff = std::abs(A - a);
-    if (diff < 1e-12) {
+    bool passed = (diff < 1e-12);
+    if (verbose && passed) {
         cout << "  " << name << ": OK" << endl;
-        return true;
-    } else {
+    } else if (!passed) {
+        if (!verbose) cout << endl;
         cout << "  " << name << ": FAILED (val1: " << A << ", val2: " << a << ", diff: " << diff << ")" << endl;
-        return false;
     }
+    return passed;
 }
 
 template<typename fm_t, typename mm_t>
-bool check_mv(const string& name, const mm_t& A, const fm_t& a) {
+bool check_mv(const string& name, const mm_t& A, const fm_t& a, bool verbose) {
     mm_t B(a, A.frame());
     auto diff = A - B;
     auto n = diff.norm();
-    if (n < 1e-12) {
+    bool passed = (n < 1e-12);
+    if (verbose && passed) {
         cout << "  " << name << ": OK" << endl;
-        return true;
-    } else {
+    } else if (!passed) {
+        if (!verbose) cout << endl;
         cout << "  " << name << ": FAILED (norm of diff: " << n << ")" << endl;
-        return false;
     }
+    return passed;
 }
 
 template<typename Scalar_T>
@@ -49,6 +51,7 @@ void consistency_test() {
     using mm_t = matrix_multi<Scalar_T, -16, 16>;
     using index_set_t = typename fm_t::index_set_t;
 
+    bool verbose = control_t::verbose();
     std::vector<std::pair<int, int>> signatures;
     // (0,2), (1,1), (2,0)
     for (int p=0; p<=2; ++p) signatures.push_back({p, 2-p});
@@ -58,7 +61,11 @@ void consistency_test() {
     for (int p=8; p>=0; --p) signatures.push_back({p, 8-p});
 
     for (const auto& sig : signatures) {
-        cout << "Testing signature (" << sig.first << "," << sig.second << ")" << endl;
+        if (verbose) {
+          cout << "Testing signature (" << sig.first << "," << sig.second << ")" << endl;
+        } else {
+          cout << "Testing signature (" << sig.first << "," << sig.second << ") : " << flush;
+        }
         index_set_t frm;
         for (int i=1; i<=sig.first; ++i) frm.set(i);
         for (int i=1; i<=sig.second; ++i) frm.set(-i);
@@ -68,30 +75,36 @@ void consistency_test() {
         mm_t A(a, frm);
         mm_t B(b, frm);
 
+        bool all_passed = true;
         // Scalar-yielding operators
-        check_scalar<fm_t, mm_t>("norm()", A.norm(), a.norm());
-        check_scalar<fm_t, mm_t>("quad()", A.quad(), a.quad());
-        check_scalar<fm_t, mm_t>("max_abs()",  A.max_abs(),  a.max_abs());
-        check_scalar<fm_t, mm_t>("scalar()", A.scalar(), a.scalar());
-        check_scalar<fm_t, mm_t>("star()", star(A, B), star(a, b));
-        check_scalar<fm_t, mm_t>("hstar()", hstar(A, B), hstar(a, b));
+        all_passed &= check_scalar<fm_t, mm_t>("norm()", A.norm(), a.norm(), verbose);
+        all_passed &= check_scalar<fm_t, mm_t>("quad()", A.quad(), a.quad(), verbose);
+        all_passed &= check_scalar<fm_t, mm_t>("max_abs()",  A.max_abs(),  a.max_abs(), verbose);
+        all_passed &= check_scalar<fm_t, mm_t>("scalar()", A.scalar(), a.scalar(), verbose);
+        all_passed &= check_scalar<fm_t, mm_t>("star()", star(A, B), star(a, b), verbose);
+        all_passed &= check_scalar<fm_t, mm_t>("hstar()", hstar(A, B), hstar(a, b), verbose);
 
         // Multivector-yielding operators (Unary)
-        check_mv<fm_t, mm_t>("operator-", -A, -a);
-        check_mv<fm_t, mm_t>("inv()",      A.inv(), a.inv());
-        check_mv<fm_t, mm_t>("involute()", A.involute(), a.involute());
-        check_mv<fm_t, mm_t>("reverse()",  A.reverse(), a.reverse());
-        check_mv<fm_t, mm_t>("conj()",     A.conj(), a.conj());
+        all_passed &= check_mv<fm_t, mm_t>("operator-", -A, -a, verbose);
+        all_passed &= check_mv<fm_t, mm_t>("inv()",      A.inv(), a.inv(), verbose);
+        all_passed &= check_mv<fm_t, mm_t>("involute()", A.involute(), a.involute(), verbose);
+        all_passed &= check_mv<fm_t, mm_t>("reverse()",  A.reverse(), a.reverse(), verbose);
+        all_passed &= check_mv<fm_t, mm_t>("conj()",     A.conj(), a.conj(), verbose);
 
         // Multivector-yielding operators (Binary)
-        check_mv<fm_t, mm_t>("operator+", A + B, a + b);
-        check_mv<fm_t, mm_t>("operator-", A - B, a - b);
-        check_mv<fm_t, mm_t>("operator*", A * B, a * b);
-        check_mv<fm_t, mm_t>("operator/", A / B, a / b);
-        check_mv<fm_t, mm_t>("operator^", A ^ B, a ^ b);
-        check_mv<fm_t, mm_t>("operator&", A & B, a & b);
-        check_mv<fm_t, mm_t>("operator%", A % B, a % b);
-        check_mv<fm_t, mm_t>("operator|", A | B, a | b);
+        all_passed &= check_mv<fm_t, mm_t>("operator+", A + B, a + b, verbose);
+        all_passed &= check_mv<fm_t, mm_t>("operator-", A - B, a - b, verbose);
+        all_passed &= check_mv<fm_t, mm_t>("operator*", A * B, a * b, verbose);
+        all_passed &= check_mv<fm_t, mm_t>("operator/", A / B, a / b, verbose);
+        all_passed &= check_mv<fm_t, mm_t>("operator^", A ^ B, a ^ b, verbose);
+        all_passed &= check_mv<fm_t, mm_t>("operator&", A & B, a & b, verbose);
+        all_passed &= check_mv<fm_t, mm_t>("operator%", A % B, a % b, verbose);
+        all_passed &= check_mv<fm_t, mm_t>("operator|", A | B, a | b, verbose);
+
+        if (!verbose) {
+          if (all_passed) cout << "PASSED" << endl;
+          else cout << "FAILED" << endl;
+        }
     }
 }
 
