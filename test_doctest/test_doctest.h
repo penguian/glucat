@@ -55,9 +55,29 @@ namespace glucat {
       }
     }
 
+    // Identity for Left Contraction (%)
+    for (index_t r = 0; r <= a_grade; ++r) {
+      const Multivector_T a_r = a(r);
+      for (index_t s = 0; s <= b_grade; ++s) {
+        const Multivector_T b_s = b(s);
+        lhs = a_r % b_s;
+        if (s >= r) {
+          rhs = (a_r * b_s)(s - r);
+        } else {
+          rhs = Multivector_T(0);
+        }
+        CHECK_FALSE(is_error(lhs, rhs, tol));
+      }
+    }
+
     // Identity [HS] (1.25a)
     lhs = (a ^ b) ^ c;
     rhs = a ^ (b ^ c);
+    CHECK_FALSE(is_error(lhs, rhs, tol));
+
+    // Left Contraction Identity for full multivectors: a % (b % c) == (a ^ b) % c
+    lhs = a % (b % c);
+    rhs = (a ^ b) % c;
     CHECK_FALSE(is_error(lhs, rhs, tol));
 
 
