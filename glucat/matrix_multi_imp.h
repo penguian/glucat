@@ -844,7 +844,8 @@ namespace glucat
     auto l_grades = l_ref.decompose();
     auto r_grades = r_ref.decompose();
     
-    const Scalar_T threshold = std::numeric_limits<Scalar_T>::epsilon() * numeric_traits<Scalar_T>::to_scalar_t(Tune_P::tuning_values_p::matrix_op_threshold_factor);
+    const Scalar_T threshold = std::numeric_limits<Scalar_T>::epsilon() * 
+                               numeric_traits<Scalar_T>::pow(Scalar_T(2), Tune_P::tuning_values_p::products_different_bits);
     using matrix_t = typename multivector_t::matrix_t;
     std::vector<matrix_t> grade_sums(n + 1);
     for (int k=0; k <= n; ++k) grade_sums[k].zeros(l_grades[0].m_matrix.nbr_rows(), l_grades[0].m_matrix.nbr_cols());
@@ -912,7 +913,8 @@ namespace glucat
     auto l_grades = l_ref.decompose();
     auto r_grades = r_ref.decompose();
     
-    const Scalar_T threshold = std::numeric_limits<Scalar_T>::epsilon() * numeric_traits<Scalar_T>::to_scalar_t(Tune_P::tuning_values_p::matrix_op_threshold_factor);
+    const Scalar_T threshold = std::numeric_limits<Scalar_T>::epsilon() * 
+                               numeric_traits<Scalar_T>::pow(Scalar_T(2), Tune_P::tuning_values_p::products_different_bits);
     using matrix_t = typename multivector_t::matrix_t;
     std::vector<matrix_t> grade_sums(n + 1);
     for (int k=0; k <= n; ++k) grade_sums[k].zeros(l_grades[0].m_matrix.nbr_rows(), l_grades[0].m_matrix.nbr_cols());
@@ -981,7 +983,8 @@ namespace glucat
     auto l_grades = l_ref.decompose();
     auto r_grades = r_ref.decompose();
     
-    const Scalar_T threshold = std::numeric_limits<Scalar_T>::epsilon() * numeric_traits<Scalar_T>::to_scalar_t(Tune_P::tuning_values_p::matrix_op_threshold_factor);
+    const Scalar_T threshold = std::numeric_limits<Scalar_T>::epsilon() * 
+                               numeric_traits<Scalar_T>::pow(Scalar_T(2), Tune_P::tuning_values_p::products_different_bits);
     using matrix_t = typename multivector_t::matrix_t;
     std::vector<matrix_t> grade_sums(n + 1);
     for (int k=0; k <= n; ++k) grade_sums[k].zeros(l_grades[0].m_matrix.nbr_rows(), l_grades[0].m_matrix.nbr_cols());

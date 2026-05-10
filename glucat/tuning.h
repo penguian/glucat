@@ -59,7 +59,8 @@ namespace glucat
   const unsigned int Tuning_Default_Inv_Fast_Dim_Threshold  =       3;
   const unsigned int Tuning_Default_Denom_Different_Bits    =       8;
   const unsigned int Tuning_Default_Extra_Different_Bits    =       8;
-  const unsigned int Tuning_Default_Matrix_Op_Threshold_Factor =    4;
+  const unsigned int Tuning_Default_Products_Different_Bits   =     2;
+  const unsigned int Tuning_Default_Products_Matrix_Threshold =    14;
 
   /// Tuning policy values
   template
@@ -74,7 +75,8 @@ namespace glucat
   unsigned int Inv_Fast_Dim_Threshold  = Tuning_Default_Inv_Fast_Dim_Threshold,
   unsigned int Denom_Different_Bits    = Tuning_Default_Denom_Different_Bits,
   unsigned int Extra_Different_Bits    = Tuning_Default_Extra_Different_Bits,
-  unsigned int Matrix_Op_Threshold_Factor = Tuning_Default_Matrix_Op_Threshold_Factor
+  unsigned int Products_Different_Bits = Tuning_Default_Products_Different_Bits,
+  unsigned int Products_Matrix_Threshold = Tuning_Default_Products_Matrix_Threshold
   >
   struct tuning_values : policy
   {
@@ -90,7 +92,8 @@ namespace glucat
     Inv_Fast_Dim_Threshold,
     Denom_Different_Bits,
     Extra_Different_Bits,
-    Matrix_Op_Threshold_Factor
+    Products_Different_Bits,
+    Products_Matrix_Threshold
     >;
     // Tuning for multiplication
     // Minimum index count needed to invoke matrix multiplication algorithm
@@ -118,8 +121,10 @@ namespace glucat
     static constexpr unsigned int denom_different_bits = Denom_Different_Bits;
     // Extra number of different bits allowed in approximate equality
     static constexpr unsigned int extra_different_bits = Extra_Different_Bits;
-    // Tuning for matrix operators pruning threshold factor
-    static constexpr unsigned int matrix_op_threshold_factor = Matrix_Op_Threshold_Factor;
+    // Tuning for matrix operators pruning threshold: number of different bits allowed
+    static constexpr unsigned int products_different_bits = Products_Different_Bits;
+    // Minimum index count needed to invoke matrix non-geometric multiplication algorithm
+    static constexpr unsigned int products_matrix_threshold = Products_Matrix_Threshold;
   };
 
   using default_tuning_values_p = tuning_values<>;

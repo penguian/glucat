@@ -729,7 +729,7 @@ namespace glucat
     const double rhs_size = rhs.size();
     using Tuning_Values_P = typename Tune_P::tuning_values_p;
     if ((lhs_size * rhs_size > double(algebra_dim)) && 
-        (our_frame.count() >= index_t(Tuning_Values_P::mult_matrix_threshold)))
+        (our_frame.count() >= index_t(Tuning_Values_P::products_matrix_threshold)))
     {
       using matrix_multi_t = typename multivector_t::matrix_multi_t;
       return multivector_t(matrix_multi_t(lhs, our_frame, true) ^
@@ -814,7 +814,7 @@ namespace glucat
     const double rhs_size = rhs.size();
     using Tuning_Values_P = typename Tune_P::tuning_values_p;
     if ((lhs_size * rhs_size > double(algebra_dim)) && 
-        (our_frame.count() >= index_t(Tuning_Values_P::mult_matrix_threshold)))
+        (our_frame.count() >= index_t(Tuning_Values_P::products_matrix_threshold)))
     {
       using matrix_multi_t = typename multivector_t::matrix_multi_t;
       return multivector_t(matrix_multi_t(lhs, our_frame, true) &
@@ -908,7 +908,7 @@ namespace glucat
     const double rhs_size = rhs.size();
     using Tuning_Values_P = typename Tune_P::tuning_values_p;
     if ((lhs_size * rhs_size > double(algebra_dim)) && 
-        (our_frame.count() >= index_t(Tuning_Values_P::mult_matrix_threshold)))
+        (our_frame.count() >= index_t(Tuning_Values_P::products_matrix_threshold)))
     {
       using matrix_multi_t = typename multivector_t::matrix_multi_t;
       return multivector_t(matrix_multi_t(lhs, our_frame, true) %

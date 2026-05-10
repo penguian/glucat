@@ -55,7 +55,8 @@ namespace glucat
       Tuning_Slow_Inv_Fast_Dim_Threshold,
       Tuning_Default_Denom_Different_Bits,
       Tuning_Default_Extra_Different_Bits,
-      Tuning_Default_Matrix_Op_Threshold_Factor
+      Tuning_Default_Products_Different_Bits,
+      Tuning_Default_Products_Matrix_Threshold
     >;
 
   using tuning_slow_p = tuning<tuning_values_slow_p, precision_same>;
@@ -77,7 +78,8 @@ namespace glucat
       Tuning_Naive_Inv_Fast_Dim_Threshold,
       Tuning_Default_Denom_Different_Bits,
       Tuning_Default_Extra_Different_Bits,
-      Tuning_Default_Matrix_Op_Threshold_Factor
+      Tuning_Default_Products_Different_Bits,
+      Tuning_Default_Products_Matrix_Threshold
     >;
 
   using tuning_naive_p = tuning<tuning_values_naive_p, precision_same>;
@@ -103,7 +105,8 @@ namespace glucat
       Tuning_Fast_Inv_Fast_Dim_Threshold,
       Tuning_Default_Denom_Different_Bits,
       Tuning_Default_Extra_Different_Bits,
-      Tuning_Default_Matrix_Op_Threshold_Factor
+      Tuning_Default_Products_Different_Bits,
+      Tuning_Default_Products_Matrix_Threshold
     >;
 
   using tuning_fast_p = tuning<tuning_values_fast_p, precision_same>;
