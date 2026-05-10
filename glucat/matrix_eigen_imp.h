@@ -818,6 +818,17 @@ namespace glucat { namespace matrix
   kron(const eigen_matrix_wrapper<Scalar_T>& other) const
   {
     using namespace Eigen;
+    if (nbr_rows() == 2 && nbr_cols() == 2)
+    {
+      eigen_matrix_wrapper result(2 * other.nbr_rows(), 2 * other.nbr_cols());
+      matrix_index_t br = other.nbr_rows();
+      matrix_index_t bc = other.nbr_cols();
+      result.m_mat.block(0,  0,  br, bc) = (*this)(0,0) * other.m_mat;
+      result.m_mat.block(0,  bc, br, bc) = (*this)(0,1) * other.m_mat;
+      result.m_mat.block(br, 0,  br, bc) = (*this)(1,0) * other.m_mat;
+      result.m_mat.block(br, bc, br, bc) = (*this)(1,1) * other.m_mat;
+      return result;
+    }
     return eigen_matrix_wrapper<Scalar_T>(kroneckerProduct(m_mat, other.m_mat).eval());
   }
 
@@ -834,6 +845,18 @@ namespace glucat { namespace matrix
   eigen_matrix_wrapper<Scalar_T>::
   kron(const eigen_sparse_wrapper<Other_Scalar_T>& other) const
   {
+    if (nbr_rows() == 2 && nbr_cols() == 2)
+    {
+      eigen_matrix_wrapper<Other_Scalar_T> result(2 * other.nbr_rows(), 2 * other.nbr_cols());
+      matrix_index_t br = other.nbr_rows();
+      matrix_index_t bc = other.nbr_cols();
+      result.m_mat.block(0,  0,  br, bc) = static_cast<Other_Scalar_T>((*this)(0,0)) * other.m_mat;
+      result.m_mat.block(0,  bc, br, bc) = static_cast<Other_Scalar_T>((*this)(0,1)) * other.m_mat;
+      result.m_mat.block(br, 0,  br, bc) = static_cast<Other_Scalar_T>((*this)(1,0)) * other.m_mat;
+      result.m_mat.block(br, bc, br, bc) = static_cast<Other_Scalar_T>((*this)(1,1)) * other.m_mat;
+      return result;
+    }
+
     eigen_matrix_wrapper<Other_Scalar_T> result(nbr_rows() * other.nbr_rows(), nbr_cols() * other.nbr_cols());
     result.zeros();
 
@@ -894,9 +917,16 @@ namespace glucat { namespace matrix
           {
             matrix_index_t start_row = r * blk_rows;
             matrix_index_t start_col = c * blk_cols;
-            for (matrix_index_t i = 0; i < blk_rows; ++i)
-              for (matrix_index_t j = 0; j < blk_cols; ++j)
-                result(i, j) += static_cast<typename RHS_T::value_type>(val) * static_cast<typename RHS_T::value_type>(rhs(start_row + i, start_col + j));
+            if constexpr (requires { result.m_mat; rhs.m_mat; })
+            {
+              result.m_mat += static_cast<typename RHS_T::value_type>(val) * rhs.m_mat.block(start_row, start_col, blk_rows, blk_cols);
+            }
+            else
+            {
+              for (matrix_index_t i = 0; i < blk_rows; ++i)
+                for (matrix_index_t j = 0; j < blk_cols; ++j)
+                  result(i, j) += static_cast<typename RHS_T::value_type>(val) * static_cast<typename RHS_T::value_type>(rhs(start_row + i, start_col + j));
+            }
           }
         }
       }
@@ -905,11 +935,9 @@ namespace glucat { namespace matrix
       auto norm_sq = numeric_traits<typename RHS_T::value_type>::to_scalar_t(nbr_rows());
       if (norm_sq != numeric_traits<typename RHS_T::value_type>::to_scalar_t(1))
       {
-        // We can use generic iteration or dense access depending on RHS_T
-        // Assuming RHS_T supports (i,j) access or we should optimize if sparse
-        // But result is typically dense if RHS is dense-ish or small.
-        // Usually RHS_T is same as LHS_T (wrapper).
-         if constexpr (requires { result(0, 0); })
+        if constexpr (requires { result.m_mat /= norm_sq; })
+          result.m_mat /= norm_sq;
+        else if constexpr (requires { result(0, 0); })
           for (matrix_index_t i = 0; i < result.nbr_rows(); ++i)
             for (matrix_index_t j = 0; j < result.nbr_cols(); ++j)
               result(i, j) /= norm_sq;
@@ -1725,9 +1753,16 @@ namespace glucat { namespace matrix
 
          matrix_index_t start_row = r * blk_rows;
          matrix_index_t start_col = c * blk_cols;
-         for (matrix_index_t i = 0; i < blk_rows; ++i)
-           for (matrix_index_t j = 0; j < blk_cols; ++j)
-             result(i, j) += static_cast<typename RHS_T::value_type>(val) * static_cast<typename RHS_T::value_type>(rhs(start_row + i, start_col + j));
+         if constexpr (requires { result.m_mat; rhs.m_mat; })
+         {
+           result.m_mat += static_cast<typename RHS_T::value_type>(val) * rhs.m_mat.block(start_row, start_col, blk_rows, blk_cols);
+         }
+         else
+         {
+           for (matrix_index_t i = 0; i < blk_rows; ++i)
+             for (matrix_index_t j = 0; j < blk_cols; ++j)
+               result(i, j) += static_cast<typename RHS_T::value_type>(val) * static_cast<typename RHS_T::value_type>(rhs(start_row + i, start_col + j));
+         }
        }
      }
 
@@ -1735,7 +1770,9 @@ namespace glucat { namespace matrix
      auto norm_sq = numeric_traits<typename RHS_T::value_type>::to_scalar_t(nbr_rows());
      if (norm_sq != numeric_traits<typename RHS_T::value_type>::to_scalar_t(1))
      {
-       if constexpr (requires { result(0, 0); })
+       if constexpr (requires { result.m_mat /= norm_sq; })
+         result.m_mat /= norm_sq;
+       else if constexpr (requires { result(0, 0); })
          for (matrix_index_t i = 0; i < result.nbr_rows(); ++i)
            for (matrix_index_t j = 0; j < result.nbr_cols(); ++j)
              result(i, j) /= norm_sq;

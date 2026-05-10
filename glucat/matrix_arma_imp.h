@@ -123,6 +123,7 @@ namespace glucat { namespace matrix
    * @tparam Other_Scalar_T
    * @param other Other matrix
    */
+  // Constructor from eigen_matrix_wrapper
   template< typename Scalar_T >
   template< typename Other_Scalar_T >
   inline
@@ -130,18 +131,12 @@ namespace glucat { namespace matrix
   arma_matrix_wrapper(const eigen_matrix_wrapper<Other_Scalar_T>& other)
   {
     set_size(other.nbr_rows(), other.nbr_cols());
-    for (matrix_index_t i = 0; i < nbr_rows(); ++i)
-      for (matrix_index_t j = 0; j < nbr_cols(); ++j)
-        (*this)(i, j) = static_cast<Scalar_T>(other(i, j));
+    for (matrix_index_t i = 0; i < other.nbr_rows(); ++i)
+      for (matrix_index_t j = 0; j < other.nbr_cols(); ++j)
+        m_mat(i, j) = static_cast<Scalar_T>(other(i, j));
   }
 
-  /*
-   * @brief Constructor from eigen_sparse_wrapper
-   * @details
-   * @tparam Scalar_T
-   * @tparam Other_Scalar_T
-   * @param other Other matrix
-   */
+  // Constructor from eigen_sparse_wrapper
   template< typename Scalar_T >
   template< typename Other_Scalar_T >
   inline
@@ -667,12 +662,7 @@ namespace glucat { namespace matrix
          auto val = static_cast<Other_Scalar_T>((*this)(i, j));
          if (val != Other_Scalar_T(0))
          {
-           matrix_index_t r_offset = i * other.nbr_rows();
-           matrix_index_t c_offset = j * other.nbr_cols();
-           for (auto it = other.begin(); it != other.end(); ++it)
-           {
-             result(r_offset + it.row(), c_offset + it.col()) = val * static_cast<Other_Scalar_T>(*it);
-           }
+           result.m_mat.submat(i * other.nbr_rows(), j * other.nbr_cols(), (i+1) * other.nbr_rows() - 1, (j+1) * other.nbr_cols() - 1) = val * other.m_mat;
          }
       }
     }
@@ -943,11 +933,7 @@ namespace glucat { namespace matrix
           auto val = (*this)(r, c);
           if (val != Scalar_T(0))
           {
-            matrix_index_t start_row = r * blk_rows;
-            matrix_index_t start_col = c * blk_cols;
-            for (matrix_index_t i = 0; i < blk_rows; ++i)
-              for (matrix_index_t j = 0; j < blk_cols; ++j)
-                result(i, j) += static_cast<typename RHS_T::value_type>(val) * static_cast<typename RHS_T::value_type>(rhs(start_row + i, start_col + j));
+            result.m_mat += static_cast<typename RHS_T::value_type>(val) * rhs.m_mat.submat(r * blk_rows, c * blk_cols, (r+1) * blk_rows - 1, (c+1) * blk_cols - 1);
           }
         }
       }
@@ -1473,19 +1459,10 @@ namespace glucat { namespace matrix
     arma_matrix_wrapper<Other_Scalar_T> result(nbr_rows() * other.nbr_rows(), nbr_cols() * other.nbr_cols());
     result.zeros();
 
-    for (auto it = begin(); it != end(); ++it)
+    for (auto it = this->begin(); it != this->end(); ++it)
     {
        auto val = static_cast<Other_Scalar_T>(*it);
-       matrix_index_t r_offset = it.row() * other.nbr_rows();
-       matrix_index_t c_offset = it.col() * other.nbr_cols();
-
-       for (matrix_index_t i = 0; i < other.nbr_rows(); ++i)
-       {
-         for (matrix_index_t j = 0; j < other.nbr_cols(); ++j)
-         {
-           result(r_offset + i, c_offset + j) = val * static_cast<Other_Scalar_T>(other(i, j));
-         }
-       }
+       result.m_mat.submat(it.row() * other.nbr_rows(), it.col() * other.nbr_cols(), (it.row()+1) * other.nbr_rows() - 1, (it.col()+1) * other.nbr_cols() - 1) = val * other.m_mat;
     }
     return result;
   }
@@ -1538,20 +1515,10 @@ namespace glucat { namespace matrix
      result.zeros();
 
      // Sparse iterator optimization
-     for (auto it = begin(); it != end(); ++it)
+     for (auto it = this->begin(); it != this->end(); ++it)
      {
-       auto val = *it; // Value
-       if (val != Scalar_T(0))
-       {
-         matrix_index_t r = it.row();
-         matrix_index_t c = it.col();
-
-         matrix_index_t start_row = r * blk_rows;
-         matrix_index_t start_col = c * blk_cols;
-         for (matrix_index_t i = 0; i < blk_rows; ++i)
-           for (matrix_index_t j = 0; j < blk_cols; ++j)
-             result(i, j) += static_cast<typename RHS_T::value_type>(val) * static_cast<typename RHS_T::value_type>(rhs(start_row + i, start_col + j));
-       }
+       auto val = *it;
+       result.m_mat += static_cast<typename RHS_T::value_type>(val) * rhs.m_mat.submat(it.row() * blk_rows, it.col() * blk_cols, (it.row()+1) * blk_rows - 1, (it.col()+1) * blk_cols - 1);
      }
 
      // Normalize

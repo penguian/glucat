@@ -56,8 +56,7 @@ namespace glucat
   const unsigned int Tuning_Default_Log_Max_Inner_Steps     =      32;
   const unsigned int Tuning_Default_Basis_Max_Count         =      12;
   const unsigned int Tuning_Default_Fast_Size_Threshold     =      16;
-  const unsigned int Tuning_Default_Inv_Fast_Dim_Threshold  =       0;
-  const unsigned int Tuning_Default_Products_Size_Threshold = 1 << 22;
+  const unsigned int Tuning_Default_Inv_Fast_Dim_Threshold  =       3;
   const unsigned int Tuning_Default_Denom_Different_Bits    =       8;
   const unsigned int Tuning_Default_Extra_Different_Bits    =       8;
   const unsigned int Tuning_Default_Matrix_Op_Threshold_Factor =    4;
@@ -73,7 +72,6 @@ namespace glucat
   unsigned int Basis_Max_Count         = Tuning_Default_Basis_Max_Count,
   unsigned int Fast_Size_Threshold     = Tuning_Default_Fast_Size_Threshold,
   unsigned int Inv_Fast_Dim_Threshold  = Tuning_Default_Inv_Fast_Dim_Threshold,
-  unsigned int Products_Size_Threshold = Tuning_Default_Products_Size_Threshold,
   unsigned int Denom_Different_Bits    = Tuning_Default_Denom_Different_Bits,
   unsigned int Extra_Different_Bits    = Tuning_Default_Extra_Different_Bits,
   unsigned int Matrix_Op_Threshold_Factor = Tuning_Default_Matrix_Op_Threshold_Factor
@@ -90,42 +88,38 @@ namespace glucat
     Basis_Max_Count,
     Fast_Size_Threshold,
     Inv_Fast_Dim_Threshold,
-    Products_Size_Threshold,
     Denom_Different_Bits,
     Extra_Different_Bits,
     Matrix_Op_Threshold_Factor
     >;
     // Tuning for multiplication
     // Minimum index count needed to invoke matrix multiplication algorithm
-    enum { mult_matrix_threshold = Mult_Matrix_Threshold };
+    static constexpr unsigned int mult_matrix_threshold = Mult_Matrix_Threshold;
     // Tuning for sqrt
     // Maximum number of steps in cyclic reduction square root iteration
-    enum { cr_sqrt_max_steps = CR_Sqrt_Max_Steps };
+    static constexpr unsigned int cr_sqrt_max_steps = CR_Sqrt_Max_Steps;
     // Maximum number of steps in Denman-Beavers square root iteration
-    enum { db_sqrt_max_steps = DB_Sqrt_Max_Steps };
+    static constexpr unsigned int db_sqrt_max_steps = DB_Sqrt_Max_Steps;
     // Tuning for log
     // Maximum number of incomplete square roots in cascade log algorithm
-    enum { log_max_outer_steps = Log_Max_Outer_Steps };
+    static constexpr unsigned int log_max_outer_steps = Log_Max_Outer_Steps;
     // Maximum number of steps in incomplete square root within cascade log algorithm
-    enum { log_max_inner_steps = Log_Max_Inner_Steps };
+    static constexpr unsigned int log_max_inner_steps = Log_Max_Inner_Steps;
     // Tuning for basis cache
     // Maximum index count of folded frames in basis cache
-    enum { basis_max_count = Basis_Max_Count };
+    static constexpr unsigned int basis_max_count = Basis_Max_Count;
     // Tuning for FFT
     // Minimum map size needed to invoke generalized FFT
-    enum { fast_size_threshold = Fast_Size_Threshold };
+    static constexpr unsigned int fast_size_threshold = Fast_Size_Threshold;
     // Minimum matrix dimension needed to invoke inverse generalized FFT
-    enum { inv_fast_dim_threshold = Inv_Fast_Dim_Threshold };
-    // Tuning for products (other than geometric product)
-    // Minimum size needed for to invoke faster products algorithms
-    enum { products_size_threshold = Products_Size_Threshold };
+    static constexpr unsigned int inv_fast_dim_threshold = Inv_Fast_Dim_Threshold;
     // Tuning for precision of exp, log and sqrt functions
     // Denominator of proportion of different bits allowed in approximate equality
-    enum { denom_different_bits = Denom_Different_Bits };
+    static constexpr unsigned int denom_different_bits = Denom_Different_Bits;
     // Extra number of different bits allowed in approximate equality
-    enum { extra_different_bits = Extra_Different_Bits };
+    static constexpr unsigned int extra_different_bits = Extra_Different_Bits;
     // Tuning for matrix operators pruning threshold factor
-    enum { matrix_op_threshold_factor = Matrix_Op_Threshold_Factor };
+    static constexpr unsigned int matrix_op_threshold_factor = Matrix_Op_Threshold_Factor;
   };
 
   using default_tuning_values_p = tuning_values<>;

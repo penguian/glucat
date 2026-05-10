@@ -723,56 +723,23 @@ namespace glucat
     using index_set_t = typename multivector_t::index_set_t;
     using term_t = typename multivector_t::term_t;
 
-    const auto empty_set = index_set_t();
-
+    const auto our_frame = lhs.frame() | rhs.frame();
+    const auto algebra_dim = set_value_t(1) << our_frame.count();
     const double lhs_size = lhs.size();
     const double rhs_size = rhs.size();
-    const auto lhs_frame = lhs.frame();
-    const auto rhs_frame = rhs.frame();
-    const auto our_frame = lhs_frame | rhs_frame;
-    const auto algebra_dim = set_value_t(1) << our_frame.count();
-    auto result = multivector_t(
-      _GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
-    const auto lhs_end = lhs.end();
-    const auto rhs_end = rhs.end();
-
     using Tuning_Values_P = typename Tune_P::tuning_values_p;
-    if (lhs_size * rhs_size > double(Tuning_Values_P::products_size_threshold))
+    if ((lhs_size * rhs_size > double(algebra_dim)) && 
+        (our_frame.count() >= index_t(Tuning_Values_P::mult_matrix_threshold)))
     {
-      for (auto
-          result_stv = set_value_t(0);
-          result_stv != algebra_dim;
-          ++result_stv)
-      {
-        const auto result_ist = index_set_t(result_stv, our_frame, true);
-        const auto lhs_result_frame = lhs_frame & result_ist;
-        const auto lhs_result_dim = set_value_t(1) << lhs_result_frame.count();
-        auto result_crd = Scalar_T(0);
-        for (auto
-            lhs_stv = set_value_t(0);
-            lhs_stv != lhs_result_dim;
-            ++lhs_stv)
-        {
-          const auto lhs_ist = index_set_t(lhs_stv, lhs_result_frame, true);
-          const auto rhs_ist = result_ist ^ lhs_ist;
-          if ((rhs_ist | rhs_frame) == rhs_frame)
-          {
-            const auto lhs_it = lhs.find(lhs_ist);
-            if (lhs_it != lhs_end)
-            {
-              const auto rhs_it = rhs.find(rhs_ist);
-              if (rhs_it != rhs_end)
-                result_crd += crd_of_mult(term_t(*lhs_it), term_t(*rhs_it));
-            }
-          }
-        }
-        if (result_crd != Scalar_T(0))
-          result.insert(term_t(result_ist, result_crd));
-      }
-      return result;
+      using matrix_multi_t = typename multivector_t::matrix_multi_t;
+      return multivector_t(matrix_multi_t(lhs, our_frame, true) ^
+                           matrix_multi_t(rhs, our_frame, true));
     }
     else
     {
+      const auto empty_set = index_set_t();
+      auto result = multivector_t(
+        _GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
       for (auto& lhs_term : lhs)
         for (auto& rhs_term : rhs)
           if ((lhs_term.first & rhs_term.first) == empty_set)
@@ -841,67 +808,22 @@ namespace glucat
     using index_set_t = typename multivector_t::index_set_t;
     using term_t = typename multivector_t::term_t;
 
-    const auto lhs_end = lhs.end();
-    const auto rhs_end = rhs.end();
+    const auto our_frame = lhs.frame() | rhs.frame();
+    const auto algebra_dim = set_value_t(1) << our_frame.count();
     const double lhs_size = lhs.size();
     const double rhs_size = rhs.size();
-
-    const auto lhs_frame = lhs.frame();
-    const auto rhs_frame = rhs.frame();
-
-    const auto our_frame = lhs_frame | rhs_frame;
-    const auto algebra_dim = set_value_t(1) << our_frame.count();
-    auto result = multivector_t(
-      _GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
     using Tuning_Values_P = typename Tune_P::tuning_values_p;
-    if (lhs_size * rhs_size > double(Tuning_Values_P::products_size_threshold))
+    if ((lhs_size * rhs_size > double(algebra_dim)) && 
+        (our_frame.count() >= index_t(Tuning_Values_P::mult_matrix_threshold)))
     {
-      for (auto
-          result_stv = set_value_t(0);
-          result_stv != algebra_dim;
-          ++result_stv)
-      {
-        const auto result_ist = index_set_t(result_stv, our_frame, true);
-        const auto comp_frame = our_frame & ~result_ist;
-        const auto comp_dim = set_value_t(1) << comp_frame.count();
-        auto result_crd = Scalar_T(0);
-        for (auto
-            comp_stv = set_value_t(1);
-            comp_stv != comp_dim;
-            ++comp_stv)
-        {
-          const auto comp_ist = index_set_t(comp_stv, comp_frame, true);
-          const auto our_ist = result_ist ^ comp_ist;
-          if ((our_ist | lhs_frame) == lhs_frame)
-          {
-            const auto lhs_it = lhs.find(our_ist);
-            if (lhs_it != lhs_end)
-            {
-              const auto rhs_it = rhs.find(comp_ist);
-              if (rhs_it != rhs_end)
-                result_crd += crd_of_mult(term_t(*lhs_it), term_t(*rhs_it));
-            }
-          }
-          if (result_stv != 0)
-          {
-            if ((our_ist | rhs_frame) == rhs_frame)
-            {
-              const auto rhs_it = rhs.find(our_ist);
-              if (rhs_it != rhs_end)
-              {
-                const auto lhs_it = lhs.find(comp_ist);
-                if (lhs_it != lhs_end)
-                  result_crd += crd_of_mult(term_t(*lhs_it), term_t(*rhs_it));
-              }
-            }
-          }
-        }
-        if (result_crd != Scalar_T(0))
-          result.insert(term_t(result_ist, result_crd));
-      }
+      using matrix_multi_t = typename multivector_t::matrix_multi_t;
+      return multivector_t(matrix_multi_t(lhs, our_frame, true) &
+                           matrix_multi_t(rhs, our_frame, true));
     }
     else
     {
+      auto result = multivector_t(
+        _GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
       const auto empty_set = index_set_t();
       for (auto& lhs_term : lhs)
       {
@@ -918,8 +840,8 @@ namespace glucat
             }
           }
       }
+      return result;
     }
-    return result;
   }
 
   /*
@@ -980,54 +902,22 @@ namespace glucat
     using index_set_t = typename multivector_t::index_set_t;
     using term_t = typename multivector_t::term_t;
 
-    const auto lhs_end   = lhs.end();
-    const auto rhs_end   = rhs.end();
+    const auto our_frame = lhs.frame() | rhs.frame();
+    const auto algebra_dim = set_value_t(1) << our_frame.count();
     const double lhs_size = lhs.size();
     const double rhs_size = rhs.size();
-    const auto lhs_frame = lhs.frame();
-    const auto rhs_frame = rhs.frame();
-
-    const auto our_frame = lhs_frame | rhs_frame;
-    const auto algebra_dim = set_value_t(1) << our_frame.count();
-    auto result = multivector_t(
-      _GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
-
     using Tuning_Values_P = typename Tune_P::tuning_values_p;
-    if (lhs_size * rhs_size > double(Tuning_Values_P::products_size_threshold))
+    if ((lhs_size * rhs_size > double(algebra_dim)) && 
+        (our_frame.count() >= index_t(Tuning_Values_P::mult_matrix_threshold)))
     {
-      for (auto
-          result_stv = set_value_t(0);
-          result_stv != algebra_dim;
-          ++result_stv)
-      {
-        const auto result_ist = index_set_t(result_stv, our_frame, true);
-        const auto comp_frame = lhs_frame & ~result_ist;
-        const auto comp_dim = set_value_t(1) << comp_frame.count();
-        auto result_crd = Scalar_T(0);
-        for (auto
-            comp_stv = set_value_t(0);
-            comp_stv != comp_dim;
-            ++comp_stv)
-        {
-          const auto comp_ist = index_set_t(comp_stv, comp_frame, true);
-          const auto rhs_ist = result_ist ^ comp_ist;
-          if ((rhs_ist | rhs_frame) == rhs_frame)
-          {
-            const auto rhs_it = rhs.find(rhs_ist);
-            if (rhs_it != rhs_end)
-            {
-              const auto lhs_it = lhs.find(comp_ist);
-              if (lhs_it != lhs_end)
-                result_crd += crd_of_mult(term_t(*lhs_it), term_t(*rhs_it));
-            }
-          }
-        }
-        if (result_crd != Scalar_T(0))
-          result.insert(term_t(result_ist, result_crd));
-      }
+      using matrix_multi_t = typename multivector_t::matrix_multi_t;
+      return multivector_t(matrix_multi_t(lhs, our_frame, true) %
+                           matrix_multi_t(rhs, our_frame, true));
     }
     else
     {
+      auto result = multivector_t(
+        _GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
       for (auto& rhs_term : rhs)
       {
         const auto rhs_ist = rhs_term.first;
@@ -1038,8 +928,8 @@ namespace glucat
             result += term_t(lhs_term) * term_t(rhs_term);
         }
       }
+      return result;
     }
-    return result;
   }
 
   /*
@@ -2646,7 +2536,7 @@ namespace glucat
 
     using multivector_t = framed_multi<Scalar_T,LO,HI,Tune_P>;
 
-    if( (size * size <= double(algebra_dim)) || (frm_count < Tuning_Values_P::mult_matrix_threshold))
+    if( (size * size <= double(algebra_dim)) || (frm_count < index_t(Tuning_Values_P::mult_matrix_threshold)))
     {
       using tune_same_p = typename Tune_P::tuning_same_p;
       const precision_t function_precision = Tune_P::function_precision;
