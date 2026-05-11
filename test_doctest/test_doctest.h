@@ -1,7 +1,7 @@
 #ifndef _GLUCAT_TEST_DOCTEST_TEST_DOCTEST_H
 #define _GLUCAT_TEST_DOCTEST_TEST_DOCTEST_H
 
-#include <doctest.h>
+#include <doctest/doctest.h>
 #include "glucat/glucat.h"
 #include <cmath>
 #include <limits>

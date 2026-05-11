@@ -42,6 +42,7 @@ namespace glucat
   template<const index_t LO, const index_t HI>
   class index_set; // forward
 
+
   // Symmetric set difference: exclusive or
   template<const index_t LO, const index_t HI>
   constexpr auto
@@ -178,7 +179,8 @@ namespace glucat
     constexpr auto min() const -> index_t;
     // Maximum member
     constexpr auto max() const -> index_t;
-
+    // Underling bitset value
+    constexpr auto to_set_value() const -> set_value_t { return bitset_t::to_ulong(); }
   // Functions which support Clifford algebra operations
 
     // Determine if the index set is contiguous, ie. has no gaps
@@ -203,7 +205,7 @@ namespace glucat
     friend auto operator^<> (const index_set_t& lhs, const index_set_t& rhs) -> index_set_t;
     friend auto operator&<> (const index_set_t& lhs, const index_set_t& rhs) -> index_set_t;
     friend auto operator|<> (const index_set_t& lhs, const index_set_t& rhs) -> index_set_t;
-    friend auto compare<>                 (const index_set_t& lhs, const index_set_t& rhs) -> int;
+    friend auto compare<>   (const index_set_t& lhs, const index_set_t& rhs) -> int;
 
   // Member reference:
     class reference;
@@ -238,6 +240,7 @@ namespace glucat
     // Subscripting: Element access
     constexpr auto operator[](index_t idx) -> reference;
   private:
+
     // Lexicographic ordering of two sets: *this < rhs
     constexpr auto lex_less_than (const index_set_t& rhs) const -> bool;
   };

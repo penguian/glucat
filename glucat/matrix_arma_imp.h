@@ -1656,7 +1656,7 @@ namespace glucat { namespace matrix
 
 } }
 #ifdef GLUCAT_DOCTEST
-#include <doctest.h>
+#include <doctest/doctest.h>
 #include <sstream>
 #include <utility>
 

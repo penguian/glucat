@@ -728,14 +728,8 @@ namespace glucat
     const double lhs_size = lhs.size();
     const double rhs_size = rhs.size();
     using Tuning_Values_P = typename Tune_P::tuning_values_p;
-    if ((lhs_size * rhs_size > double(algebra_dim)) && 
-        (our_frame.count() >= index_t(Tuning_Values_P::products_matrix_threshold)))
-    {
-      using matrix_multi_t = typename multivector_t::matrix_multi_t;
-      return multivector_t(matrix_multi_t(lhs, our_frame, true) ^
-                           matrix_multi_t(rhs, our_frame, true));
-    }
-    else
+    const auto frm_count = our_frame.count();
+    if (lhs_size * rhs_size <= double(algebra_dim))
     {
       const auto empty_set = index_set_t();
       auto result = multivector_t(
@@ -745,6 +739,51 @@ namespace glucat
           if ((lhs_term.first & rhs_term.first) == empty_set)
             result += term_t(lhs_term) * term_t(rhs_term);
       return result;
+    }
+    else if (frm_count < index_t(Tuning_Values_P::products_matrix_threshold))
+    {
+      const set_value_t dim = algebra_dim;
+      std::vector<Scalar_T> l_vec(dim, Scalar_T(0));
+      for (auto& term : lhs) l_vec[term.first.value_of_fold(our_frame)] = term.second;
+      std::vector<Scalar_T> r_vec(dim, Scalar_T(0));
+      for (auto& term : rhs) r_vec[term.first.value_of_fold(our_frame)] = term.second;
+
+      std::vector<set_value_t> unfolded_bits(dim);
+      std::vector<unsigned long> h_vals(dim);
+      for (set_value_t k = 0; k < dim; ++k)
+      {
+        unfolded_bits[k] = index_set_t(k, our_frame, true).to_set_value();
+        h_vals[k] = inverse_reversed_gray(unfolded_bits[k]);
+      }
+
+      std::vector<Scalar_T> res_vec(dim, Scalar_T(0));
+      for (set_value_t k = 0; k < dim; ++k)
+      {
+        for (set_value_t i = k; ; i = (i - 1) & k)
+        {
+          set_value_t j = k ^ i;
+          if (l_vec[i] != Scalar_T(0) && r_vec[j] != Scalar_T(0))
+          {
+            unsigned long uthis = unfolded_bits[i];
+            unsigned long h = h_vals[j];
+            unsigned long neg = inverse_gray(uthis & h);
+            Scalar_T sign = (neg & 1) ? Scalar_T(-1) : Scalar_T(1);
+            res_vec[k] += sign * l_vec[i] * r_vec[j];
+          }
+          if (i == 0) break;
+        }
+      }
+      auto result = multivector_t(_GLUCAT_HASH_SIZE_T(dim));
+      for (set_value_t k = 0; k < dim; ++k)
+        if (res_vec[k] != Scalar_T(0))
+          result.insert(term_t(index_set_t(k, our_frame, true), res_vec[k]));
+      return result;
+    }
+    else
+    {
+      using matrix_multi_t = typename multivector_t::matrix_multi_t;
+      return multivector_t(matrix_multi_t(lhs, our_frame, true) ^
+                           matrix_multi_t(rhs, our_frame, true));
     }
   }
 
@@ -813,14 +852,8 @@ namespace glucat
     const double lhs_size = lhs.size();
     const double rhs_size = rhs.size();
     using Tuning_Values_P = typename Tune_P::tuning_values_p;
-    if ((lhs_size * rhs_size > double(algebra_dim)) && 
-        (our_frame.count() >= index_t(Tuning_Values_P::products_matrix_threshold)))
-    {
-      using matrix_multi_t = typename multivector_t::matrix_multi_t;
-      return multivector_t(matrix_multi_t(lhs, our_frame, true) &
-                           matrix_multi_t(rhs, our_frame, true));
-    }
-    else
+    const auto frm_count = our_frame.count();
+    if (lhs_size * rhs_size <= double(algebra_dim))
     {
       auto result = multivector_t(
         _GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
@@ -841,6 +874,70 @@ namespace glucat
           }
       }
       return result;
+    }
+    else if (frm_count < index_t(Tuning_Values_P::products_matrix_threshold))
+    {
+      const set_value_t dim = algebra_dim;
+      std::vector<Scalar_T> l_vec(dim, Scalar_T(0));
+      for (auto& term : lhs) l_vec[term.first.value_of_fold(our_frame)] = term.second;
+      std::vector<Scalar_T> r_vec(dim, Scalar_T(0));
+      for (auto& term : rhs) r_vec[term.first.value_of_fold(our_frame)] = term.second;
+
+      std::vector<set_value_t> unfolded_bits(dim);
+      std::vector<unsigned long> h_vals(dim);
+      for (set_value_t k = 0; k < dim; ++k)
+      {
+        unfolded_bits[k] = index_set_t(k, our_frame, true).to_set_value();
+        h_vals[k] = inverse_reversed_gray(unfolded_bits[k]);
+      }
+
+      std::vector<Scalar_T> res_vec(dim, Scalar_T(0));
+      for (set_value_t i = 1; i < dim; ++i)
+      {
+        if (l_vec[i] == Scalar_T(0)) continue;
+        unsigned long uthis = unfolded_bits[i];
+        // j is submask of i
+        for (set_value_t j = i; ; j = (j - 1) & i)
+        {
+          if (j == 0) break;
+          if (r_vec[j] != Scalar_T(0))
+          {
+            unsigned long urhs = unfolded_bits[j];
+            unsigned long h = h_vals[j];
+            unsigned long k_val = inverse_gray(uthis & h);
+            unsigned long q_val = inverse_gray((uthis & urhs) >> -index_set_t::v_lo);
+            unsigned long neg = k_val ^ q_val;
+            Scalar_T sign = (neg & 1) ? Scalar_T(-1) : Scalar_T(1);
+            res_vec[i ^ j] += sign * l_vec[i] * r_vec[j];
+          }
+          if (i == 0) break;
+        }
+        // j is strict superset of i
+        for (set_value_t j = (i + 1) | i; j < dim; j = (j + 1) | i)
+        {
+          if (r_vec[j] != Scalar_T(0))
+          {
+            unsigned long urhs = unfolded_bits[j];
+            unsigned long h = h_vals[j];
+            unsigned long k_val = inverse_gray(uthis & h);
+            unsigned long q_val = inverse_gray((uthis & urhs) >> -index_set_t::v_lo);
+            unsigned long neg = k_val ^ q_val;
+            Scalar_T sign = (neg & 1) ? Scalar_T(-1) : Scalar_T(1);
+            res_vec[i ^ j] += sign * l_vec[i] * r_vec[j];
+          }
+        }
+      }
+      auto result = multivector_t(_GLUCAT_HASH_SIZE_T(dim));
+      for (set_value_t k = 0; k < dim; ++k)
+        if (res_vec[k] != Scalar_T(0))
+          result.insert(term_t(index_set_t(k, our_frame, true), res_vec[k]));
+      return result;
+    }
+    else
+    {
+      using matrix_multi_t = typename multivector_t::matrix_multi_t;
+      return multivector_t(matrix_multi_t(lhs, our_frame, true) &
+                           matrix_multi_t(rhs, our_frame, true));
     }
   }
 
@@ -907,14 +1004,8 @@ namespace glucat
     const double lhs_size = lhs.size();
     const double rhs_size = rhs.size();
     using Tuning_Values_P = typename Tune_P::tuning_values_p;
-    if ((lhs_size * rhs_size > double(algebra_dim)) && 
-        (our_frame.count() >= index_t(Tuning_Values_P::products_matrix_threshold)))
-    {
-      using matrix_multi_t = typename multivector_t::matrix_multi_t;
-      return multivector_t(matrix_multi_t(lhs, our_frame, true) %
-                           matrix_multi_t(rhs, our_frame, true));
-    }
-    else
+    const auto frm_count = our_frame.count();
+    if (lhs_size * rhs_size <= double(algebra_dim))
     {
       auto result = multivector_t(
         _GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
@@ -929,6 +1020,54 @@ namespace glucat
         }
       }
       return result;
+    }
+    else if (frm_count < index_t(Tuning_Values_P::products_matrix_threshold))
+    {
+      const set_value_t dim = algebra_dim;
+      std::vector<Scalar_T> l_vec(dim, Scalar_T(0));
+      for (auto& term : lhs) l_vec[term.first.value_of_fold(our_frame)] = term.second;
+      std::vector<Scalar_T> r_vec(dim, Scalar_T(0));
+      for (auto& term : rhs) r_vec[term.first.value_of_fold(our_frame)] = term.second;
+
+      std::vector<set_value_t> unfolded_bits(dim);
+      std::vector<unsigned long> h_vals(dim);
+      for (set_value_t k = 0; k < dim; ++k)
+      {
+        unfolded_bits[k] = index_set_t(k, our_frame, true).to_set_value();
+        h_vals[k] = inverse_reversed_gray(unfolded_bits[k]);
+      }
+
+      std::vector<Scalar_T> res_vec(dim, Scalar_T(0));
+      for (set_value_t i = 0; i < dim; ++i)
+      {
+        if (l_vec[i] == Scalar_T(0)) continue;
+        unsigned long uthis = unfolded_bits[i];
+        // j is superset of i
+        for (set_value_t j = i; j < dim; j = (j + 1) | i)
+        {
+          if (r_vec[j] != Scalar_T(0))
+          {
+            unsigned long urhs = unfolded_bits[j];
+            unsigned long h = h_vals[j];
+            unsigned long k_val = inverse_gray(uthis & h);
+            unsigned long q_val = inverse_gray((uthis & urhs) >> -index_set_t::v_lo);
+            unsigned long neg = k_val ^ q_val;
+            Scalar_T sign = (neg & 1) ? Scalar_T(-1) : Scalar_T(1);
+            res_vec[i ^ j] += sign * l_vec[i] * r_vec[j];
+          }
+        }
+      }
+      auto result = multivector_t(_GLUCAT_HASH_SIZE_T(dim));
+      for (set_value_t k = 0; k < dim; ++k)
+        if (res_vec[k] != Scalar_T(0))
+          result.insert(term_t(index_set_t(k, our_frame, true), res_vec[k]));
+      return result;
+    }
+    else
+    {
+      using matrix_multi_t = typename multivector_t::matrix_multi_t;
+      return multivector_t(matrix_multi_t(lhs, our_frame, true) %
+                           matrix_multi_t(rhs, our_frame, true));
     }
   }
 

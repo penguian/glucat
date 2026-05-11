@@ -467,7 +467,7 @@ namespace Eigen {
 #endif
 
 #if defined(_GLUCAT_USE_QD) && defined(GLUCAT_DOCTEST)
-#include <doctest.h>
+#include <doctest/doctest.h>
 namespace doctest {
   inline bool operator==(const dd_real& lhs, const Approx& rhs) {
     return operator==(to_double(lhs), rhs);

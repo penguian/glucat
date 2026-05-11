@@ -389,9 +389,9 @@ namespace glucat
   {
     // Reference: [JA], 1.2.1
     return (idx < 0)
-           ?   bool(bitset_t::to_ulong() & (1UL << (idx - LO)))
+           ?   bool(to_set_value() & (1UL << (idx - LO)))
            : (idx > 0)
-             ? bool(bitset_t::to_ulong() & (1UL << (idx - LO - 1)))
+             ? bool(to_set_value() & (1UL << (idx - LO - 1)))
              : false;
   }
 
@@ -544,7 +544,7 @@ namespace glucat
   index_set<LO,HI>::
   count() const -> index_t
   {
-    unsigned long val = bitset_t::to_ulong();
+    set_value_t val = to_set_value();
     // Reference: [JA], 1.3
     if (val == 0)
       return 0;
@@ -608,7 +608,7 @@ namespace glucat
   min() const -> index_t
   {
     // Reference: [JA], 1.3
-    unsigned long val = bitset_t::to_ulong();
+    set_value_t val = to_set_value();
     if (val == 0)
       return 0;
     else
@@ -652,7 +652,7 @@ namespace glucat
   min() const
   {
     // Reference: [JA], 1.3
-    unsigned long val = bitset_t::to_ulong();
+    set_value_t val = to_set_value();
     if (val == 0)
       return 0;
     else
@@ -722,7 +722,7 @@ inline constexpr auto
   max() const -> index_t
   {
     // Reference: [JA], 1.6
-    auto val = bitset_t::to_ulong();
+    auto val = to_set_value();
     if (val == 0)
       return 0;
     else
@@ -762,7 +762,7 @@ inline constexpr auto
   max() const -> index_t
   {
     // Reference: [JA], 1.6
-    auto val = bitset_t::to_ulong();
+    auto val = to_set_value();
     if (val == 0)
       return 0;
     else
@@ -846,7 +846,7 @@ inline constexpr auto
   auto
   index_set<LO,HI>::
   lex_less_than(const index_set_t& rhs) const -> bool
-  { return bitset_t::to_ulong() < rhs.bitset_t::to_ulong(); }
+  { return to_set_value() < rhs.to_set_value(); }
 
   /*
    * @brief Less than operator used for comparisons, map, etc.
@@ -1148,7 +1148,7 @@ inline constexpr auto
     {
       const auto folded_set = this->fold(frm);
       const auto skip = min_index > 0 ? index_t(1) : index_t(0);
-      return folded_set.bitset_t::to_ulong() >> (min_index-LO-skip);
+      return folded_set.to_set_value() >> (min_index-LO-skip);
     }
   }
 
@@ -1221,8 +1221,8 @@ inline constexpr auto
     // Implemented using Walsh functions and Gray codes.
     // Reference: [L] Chapter 21, 21.3
     // Reference: [JA]
-    const auto uthis = this->bitset_t::to_ulong();
-    const auto urhs  =   rhs.bitset_t::to_ulong();
+    const auto uthis = this->to_set_value();
+    const auto urhs  =   rhs.to_set_value();
     const auto nbits = HI - LO;
     auto negative = 0UL;
     if (nbits > 8)
@@ -1301,7 +1301,7 @@ inline constexpr auto
   hash_fn() const -> size_t
   {
     static const auto lo_mask = (1UL << -LO) - 1UL;
-    const auto uthis = bitset_t::to_ulong();
+    const auto uthis = to_set_value();
     const auto neg_part = uthis & lo_mask;
     const auto pos_part = uthis >> -LO;
     return size_t(neg_part ^ pos_part);
@@ -1469,7 +1469,7 @@ inline constexpr auto
   }
 }
 #ifdef GLUCAT_DOCTEST
-#include <doctest.h>
+#include <doctest/doctest.h>
 #include <iostream>
 
 TEST_CASE("index_set<LO,HI>") {

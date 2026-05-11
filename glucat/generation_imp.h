@@ -294,7 +294,7 @@ namespace glucat { namespace gen
 
 } }
 #ifdef GLUCAT_DOCTEST
-#include <doctest.h>
+#include <doctest/doctest.h>
 #include "glucat/matrix_multi.h"
 
 TEST_CASE("gen::generator_table") {

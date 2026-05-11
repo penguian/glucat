@@ -60,7 +60,7 @@ namespace glucat
   const unsigned int Tuning_Default_Denom_Different_Bits    =       8;
   const unsigned int Tuning_Default_Extra_Different_Bits    =       8;
   const unsigned int Tuning_Default_Products_Different_Bits   =     2;
-  const unsigned int Tuning_Default_Products_Matrix_Threshold =    14;
+  const unsigned int Tuning_Default_Products_Matrix_Threshold =    22;
 
   /// Tuning policy values
   template
