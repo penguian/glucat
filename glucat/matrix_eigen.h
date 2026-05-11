@@ -48,12 +48,12 @@
 #endif
 
 #if defined(_GLUCAT_USE_QD)
-#include <Eigen/Core>
+#include <eigen3/Eigen/Core>
 #endif
 
-#include <Eigen/Dense>
-#include <Eigen/Sparse>
-#include <unsupported/Eigen/KroneckerProduct>
+#include <eigen3/Eigen/Dense>
+#include <eigen3/Eigen/Sparse>
+#include <eigen3/unsupported/Eigen/KroneckerProduct>
 #ifdef _GLUCAT_USE_GCC_PRAGMAS
 #pragma GCC diagnostic pop
 #endif

@@ -182,26 +182,10 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   GLUCAT_CHECK_HEADERS([boost/version.hpp], [], [])
 
   if [[[ "$glucat_use_doctest" == "yes" ]]]; then
-     dnl Try default include
-     doctest_found=no
-     GLUCAT_CHECK_HEADERS([doctest.h], [doctest_found=yes], [])
-     if [[[ "$doctest_found" == "no" ]]]; then
-        dnl Try adding /usr/include/doctest
-        saved_CPPFLAGS="$CPPFLAGS"
-        CPPFLAGS="$CPPFLAGS -isystem /usr/include/doctest"
-        unset ac_cv_header_doctest_h
-        GLUCAT_CHECK_HEADERS([doctest.h],
-        [
-           doctest_found=yes
-           all_includes="$all_includes -isystem /usr/include/doctest"
-           AC_MSG_NOTICE([Found doctest.h in /usr/include/doctest. Added to all_includes.])
-        ], [])
-        CPPFLAGS="$saved_CPPFLAGS"
-     fi
-     if [[[ "$doctest_found" == "no" ]]]; then
-        AC_MSG_WARN([doctest.h not found.])
+     GLUCAT_CHECK_HEADERS([doctest/doctest.h], [], [
+        AC_MSG_WARN([doctest/doctest.h not found.])
         glucat_use_doctest="no"
-     fi
+     ])
   fi
 
   if [[[ "$glucat_use_doctest" == "no" ]]]; then
@@ -289,26 +273,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   fi
 
   dnl Check for Eigen
-  have_eigen=no
-  GLUCAT_CHECK_HEADERS([Eigen/Dense], [have_eigen=yes], [])
-
-  if [[[ "$have_eigen" == "no" ]]]; then
-     dnl Try adding -I/usr/include/eigen3
-     saved_CPPFLAGS="$CPPFLAGS"
-     CPPFLAGS="$CPPFLAGS -I/usr/include/eigen3"
-     unset ac_cv_header_Eigen_Dense
-     GLUCAT_CHECK_HEADERS([Eigen/Dense],
-     [
-        have_eigen=yes
-        all_includes="$all_includes -I/usr/include/eigen3"
-        AC_MSG_NOTICE([Found Eigen/Dense in /usr/include/eigen3. Added to all_includes.])
-     ], [])
-     CPPFLAGS="$saved_CPPFLAGS"
-  fi
-
-  if [[[ "$have_eigen" == "no" ]]]; then
-    AC_MSG_WARN([Eigen/Dense not found. PyClical might fail to build.])
-  fi
+  GLUCAT_CHECK_HEADERS([eigen3/Eigen/Dense], [], [
+    AC_MSG_WARN([eigen3/Eigen/Dense not found. PyClical might fail to build.])
+  ])
 
   dnl Check for a C++ compiler
   AC_LANG([C]++)
