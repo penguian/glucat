@@ -49,14 +49,14 @@ namespace glucat
   const precision_t  Tuning_Default_Function_Precision      = precision_same;
 
   // Tuning policy default constants
-  const unsigned int Tuning_Default_Mult_Matrix_Threshold   =       4;
+  const unsigned int Tuning_Default_Mult_Matrix_Threshold   =       8;
   const unsigned int Tuning_Default_CR_Sqrt_Max_Steps       =     256;
   const unsigned int Tuning_Default_DB_Sqrt_Max_Steps       =     256;
   const unsigned int Tuning_Default_Log_Max_Outer_Steps     =     256;
   const unsigned int Tuning_Default_Log_Max_Inner_Steps     =      32;
   const unsigned int Tuning_Default_Basis_Max_Count         =      12;
   const unsigned int Tuning_Default_Fast_Size_Threshold     =      16;
-  const unsigned int Tuning_Default_Inv_Fast_Dim_Threshold  =       3;
+  const unsigned int Tuning_Default_Inv_Fast_Dim_Threshold  =       2;
   const unsigned int Tuning_Default_Denom_Different_Bits    =       8;
   const unsigned int Tuning_Default_Extra_Different_Bits    =       8;
   const unsigned int Tuning_Default_Products_Different_Bits   =     2;

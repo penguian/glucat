@@ -641,6 +641,7 @@ namespace glucat
     using multivector_t = framed_multi<Scalar_T,LO,HI,Tune_P>;
     using traits_t = numeric_traits<Scalar_T>;
     using term_t = typename multivector_t::term_t;
+    using index_set_t = typename multivector_t::index_set_t;
 
     if (lhs.isnan() || rhs.isnan())
       return traits_t::NaN();
@@ -650,6 +651,7 @@ namespace glucat
     const auto our_frame = lhs.frame() | rhs.frame();
     const auto frm_count = our_frame.count();
     const auto algebra_dim = set_value_t(1) << frm_count;
+    using Tuning_Values_P = typename Tune_P::tuning_values_p;
     const auto direct_mult = lhs_size * rhs_size <= double(algebra_dim);
     if (direct_mult)
     { // If we have a sparse multiply, store the result directly
@@ -659,6 +661,40 @@ namespace glucat
         for (auto& rhs_term : rhs)
           result += term_t(lhs_term) * term_t(rhs_term);
       return result;
+    }
+    else if (frm_count < index_t(Tuning_Values_P::mult_matrix_threshold))
+    {
+      const set_value_t dim = algebra_dim;
+      std::vector<Scalar_T> l_vec(dim, Scalar_T(0));
+      for (auto& term : lhs) l_vec[term.first.value_of_fold(our_frame)] = term.second;
+      std::vector<Scalar_T> r_vec(dim, Scalar_T(0));
+      for (auto& term : rhs) r_vec[term.first.value_of_fold(our_frame)] = term.second;
+
+      std::vector<index_set_t> ists(dim);
+      std::vector<set_value_t> l_indices, r_indices;
+      for (set_value_t k = 0; k < dim; ++k)
+      {
+        ists[k] = index_set_t(k, our_frame, true);
+        if (l_vec[k] != Scalar_T(0)) l_indices.push_back(k);
+        if (r_vec[k] != Scalar_T(0)) r_indices.push_back(k);
+      }
+
+      std::vector<Scalar_T> res_vec(dim, Scalar_T(0));
+      for (auto i : l_indices)
+      {
+        const auto& ist_i = ists[i];
+        for (auto j : r_indices)
+        {
+          const auto& ist_j = ists[j];
+          Scalar_T sign = traits_t::to_scalar_t(ist_i.sign_of_mult(ist_j));
+          res_vec[i ^ j] += sign * l_vec[i] * r_vec[j];
+        }
+      }
+      auto result = multivector_t(_GLUCAT_HASH_SIZE_T(dim));
+      for (set_value_t k = 0; k < dim; ++k)
+        if (res_vec[k] != Scalar_T(0))
+          result.insert(term_t(index_set_t(k, our_frame, true), res_vec[k]));
+      return result.truncated();
     }
     else
     { // Past a certain threshold, the matrix algorithm is fastest
