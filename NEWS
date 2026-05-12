@@ -1,12 +1,11 @@
-2026-05-03: 0.98a1
-GluCat 0.98a1 achieves 100% C++ doctest function coverage.
+2026-05-12: 0.98a1
+GluCat 0.98a1 achieves 100% C++ function coverage.
 
-o Achieved 100% function coverage and over 90% line coverage for the core library by
-  fully migrating the PyClical Python doctests into C++ doctest SUBCASE blocks.
-o Resolved template parameter ambiguities and constructor overload issues in
-  framed_multi_imp.h and matrix_multi_imp.h for multiple scalar types.
-o Updated documentation to reflect the completion of the C++ doctest migration
-  and the new 100% coverage milestone.
+o Achievement of 100% C++ function coverage via test_doctest.
+o Integration of Eigen and Armadillo linear algebra backends.
+o Optimization of Clifford product operators using a 3-way dispatch strategy.
+o Standardization of include paths and return types across the library.
+o Transition to set_value_t for index_set value retrieval.
 
 2026-04-29: 0.98a0
 GluCat modernization phase (2024-2026) has reached the Alpha release.

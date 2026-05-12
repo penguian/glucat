@@ -8,7 +8,7 @@ Documentation:
 * Provide better user documentation for PyClical.
 
 Testing:
-* [x] Increase code coverage for `framed_multi_imp.h` and `matrix_multi_imp.h` beyond 85%. (Achieved 87.5% and 91.3% respectively)
+* [x] Achieve 100% C++ function coverage across the core library via `test_doctest`.
 * Further harden the stochastic identity tests in `test_doctest`.
 * Complete the transition of all legacy tests to the modern unit testing
   framework.

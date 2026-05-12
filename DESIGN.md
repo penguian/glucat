@@ -1,4 +1,4 @@
-GluCat design notes 2016-07-10, updated 2026-05-03
+GluCat design notes 2016-07-10, updated 2026-05-12
 ==================================================
 
 This document describes some of the decisions that underly the design of GluCat,
@@ -133,6 +133,43 @@ syntax.
 10. **Coverage and High-Precision Reliability**: Integration of advanced LLVM-based coverage tools with a robust binary preservation strategy. This ensures that high-precision paths (QD) and specialized backends (Armadillo) are reliably verified across the library's entire template space.
 
 11. **Strict Scalar Type Safety**: Compile-time enforcement of real-valued scalars via `static_assert`. This solidifies the library's foundational assumption of real Clifford algebra scalars, preventing subtle bugs in transcendental functions that rely on complexifier-based branches.
+
+Refinement of Modernization Phase (0.98a0 to 0.98a1)
+--------------------------------------------------
+
+Following the initial Alpha release (0.98a0), the library underwent further 
+refinement to improve performance parity with legacy uBLAS and ensure 
+100% test reliability.
+
+### Linear Algebra Backend Refinement
+While 0.98a0 introduced the Eigen and Armadillo wrappers, 0.98a1 focused on 
+optimizing these backends:
+- **Armadillo Optimization**: Refactored Kronecker products (`kron`) and 
+  quotients (`nork`) in the Armadillo backend to utilize high-performance 
+  block operations (`submat`), significantly reducing temporary object creation.
+- **Backend Dispatch**: Consolidated the product operators (`*`, `^`, `%`, `&`) 
+  in `framed_multi_imp.h` into a unified 3-way dispatch strategy. This allows 
+  the library to dynamically choose between sparse term-loops, dense 
+  basis-loops, or matrix-based algorithms based on dimensions and 
+  thresholds (`Inv_Fast_Dim_Threshold`, `Products_Matrix_Threshold`).
+
+### Testing and Reliability
+- **100% C++ Function Coverage**: A major milestone in 0.98a1 was the 
+  achievement of 100% C++ function coverage across the core library. This was 
+  accomplished by migrating the extensive PyClical Python doctest suite into 
+  the C++ `test_doctest` framework using `SUBCASE` blocks.
+- **Include Path Standardization**: To align with modern Linux distribution 
+  standards and simplify build system configuration, include paths were 
+  refactored to use standard prefixes (e.g., `<doctest/doctest.h>` and 
+  `<eigen3/Eigen/...>`).
+
+### Type Safety and API Modernization
+- **Set Value Standardization**: Transitioned all local variables receiving 
+  `to_set_value()` results to use the `set_value_t` type, ensuring 
+  consistency across different `index_set` implementations.
+- **Return Type Consolidation**: Completed the modernization of the public 
+  API by replacing legacy trailing return types with standard return types, 
+  improving readability and compatibility with standard C++ tooling.
 
 
 Split of code between glucat/matrix_imp.h and glucat/matrix_multi_imp.h

@@ -420,15 +420,5 @@ Recent Changes
 ==============
 
 As of GluCat 0.98a1, the following changes have been made:
-* **100% C++ Function Coverage**: Achieved 100% function coverage and over 90% line coverage for the core library by migrating the PyClical Python doctest suite into C++ `doctest` `SUBCASE` blocks.
-* **Template Disambiguation**: Resolved template parameter ambiguities and constructor overload issues in `framed_multi_imp.h` and `matrix_multi_imp.h` for multiple scalar types.
-
-As of GluCat 0.98a0, the following changes have been made:
-* **Non-Complex Scalar_T Assertion**: Enforced non-complex `Scalar_T` requirements using `static_assert` in `clifford_algebra.h` and `scalar.h` to ensure template robustness and library-wide compatibility.
-* **Coverage Infrastructure Hardening**: Hardened the build system and coverage reporting by implementing binary backup sequences and isolating profiling flags from autotools library probes.
-* **Sparse Diagonal Optimization**: Optimization of sparse matrix `unit()` and `trace()` operations in Eigen and Armadillo backends to avoid slow manual diagonal write loops.
-* **Return Type Modernization**: Refactored the public API across all core classes and matrix wrappers to use standard return types (e.g., `T func()`) instead of trailing return types (`auto func() -> T`).
-* **Deprecated Function Removal**: The following deprecated functions have been removed:
-    * `elliptic`: Use `complexifier` instead.
-    * `imag`: This function was deprecated and always returned 0.
-    * `MS_PER_S`: Defined in `glucat/global.h`, deprecated and unused. Use `MS_PER_SEC` in `test/timing.h` instead.
+GluCat 0.98a1 includes a major rewrite of the matrix_multi linear algebra backends to use Eigen and Armadillo. 
+The Clifford algebra multiplication operators in framed_multi have been refactored for improved performance and reliability.
