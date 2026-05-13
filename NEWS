@@ -1,3 +1,11 @@
+2026-05-13: 0.98a2
+GluCat 0.98a2 optimizes Clifford product performance and standardizes build paths.
+
+o Implementation of 3-way dispatch (sparse, dense basis, matrix) for geometric products.
+o Performance tuning of framed_multi and matrix_multi multiplication operators.
+o Standardization of include paths for Eigen and Doctest.
+o Updated timing results and regression tests (added test18).
+
 2026-05-12: 0.98a1
 GluCat 0.98a1 achieves 100% C++ function coverage.
 

@@ -1,4 +1,4 @@
-README for GluCat 0.98a1 with PyClical
+README for GluCat 0.98a2 with PyClical
 ======================================
 
 GluCat is a library of C++ template classes for calculations with the universal
@@ -416,9 +416,3 @@ parameters.
 * `ALL_CAPS_WITH_UNDERSCORES`: A global constant defined in `<glucat/global.h>`
 
 
-Recent Changes
-==============
-
-As of GluCat 0.98a1, the following changes have been made:
-GluCat 0.98a1 includes a major rewrite of the matrix_multi linear algebra backends to use Eigen and Armadillo. 
-The Clifford algebra multiplication operators in framed_multi have been refactored for improved performance and reliability.

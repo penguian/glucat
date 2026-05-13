@@ -1,4 +1,4 @@
-GluCat design notes 2016-07-10, updated 2026-05-12
+GluCat design notes 2016-07-10, updated 2026-05-13
 ==================================================
 
 This document describes some of the decisions that underly the design of GluCat,
@@ -134,7 +134,7 @@ syntax.
 
 11. **Strict Scalar Type Safety**: Compile-time enforcement of real-valued scalars via `static_assert`. This solidifies the library's foundational assumption of real Clifford algebra scalars, preventing subtle bugs in transcendental functions that rely on complexifier-based branches.
 
-Refinement of Modernization Phase (0.98a0 to 0.98a1)
+Refinement of Modernization Phase (0.98a0 to 0.98a2)
 --------------------------------------------------
 
 Following the initial Alpha release (0.98a0), the library underwent further 
@@ -170,6 +170,17 @@ optimizing these backends:
 - **Return Type Consolidation**: Completed the modernization of the public 
   API by replacing legacy trailing return types with standard return types, 
   improving readability and compatibility with standard C++ tooling.
+
+### Product Optimization (0.98a1 to 0.98a2)
+The 0.98a2 release focuses on maximizing the performance of Clifford products and further standardizing the build environment.
+
+- **3-Way Dispatch Implementation**: Finalized the implementation of a 3-way dispatch strategy for the geometric product (`*`) in `framed_multi_imp.h`. The operator now dynamically selects between:
+  1. Sparse term-loop (for low-fill multivectors).
+  2. Dense basis-loop (for small-to-mid dimensions).
+  3. Matrix-based algorithm (for high dimensions/fill factors).
+- **Threshold Tuning**: Restored the `Inv_Fast_Dim_Threshold` to ensure efficient matrix-to-framed conversion and restored parity with the legacy performance baseline.
+- **Include Path Standardization**: Completed the migration to prefix-based include paths (`<doctest/doctest.h>`, `<eigen3/Eigen/...>`) to align with modern Linux distribution layouts.
+- **Coverage Expansion**: Added `test18` to the regression suite and verified performance and numerical correctness across all dispatch paths.
 
 
 Split of code between glucat/matrix_imp.h and glucat/matrix_multi_imp.h
