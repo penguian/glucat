@@ -64,6 +64,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   dnl Use all_libraries as a local variable to track which libraries to add.
   all_libraries=""
 
+  dnl Use GLUCAT_CPPFLAGS to accumulate compilation-only flags (defines and -mllvm).
+  GLUCAT_CPPFLAGS=""
+
   dnl process the command line arguments
 
   AC_ARG_ENABLE([debug],
@@ -205,7 +208,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     if [[[ "$glucat_have_libarmadillo" == "yes" ]]]; then
       GLUCAT_CHECK_HEADERS([armadillo],
       [
-        CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_ARMADILLO -DARMA_WARN_LEVEL=1"
+        GLUCAT_CPPFLAGS="$GLUCAT_CPPFLAGS -D_GLUCAT_USE_ARMADILLO -DARMA_WARN_LEVEL=1"
         all_libraries="$all_libraries -larmadillo"
       ],[],[])
     fi
@@ -245,7 +248,8 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
             [])
 
          if [[[ "$glucat_have_openmp" == "yes" ]]] && [[[ "$glucat_have_openblas" == "yes" ]]]; then
-            CXXFLAGS="$CXXFLAGS $glucat_openmp_flag -D_GLUCAT_USE_OPENMP -DARMA_USE_OPENMP"
+            CXXFLAGS="$CXXFLAGS $glucat_openmp_flag"
+            GLUCAT_CPPFLAGS="$GLUCAT_CPPFLAGS -D_GLUCAT_USE_OPENMP -DARMA_USE_OPENMP"
             all_libraries="$all_libraries -lopenblas"
             AC_MSG_NOTICE([OpenMP support enabled with $glucat_openmp_flag and -lopenblas])
          else
@@ -260,7 +264,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   if [[[ "$glucat_use_unordered_map" == "boost" ]]]; then
     GLUCAT_CHECK_HEADERS([boost/unordered/unordered_flat_map.hpp],
     [
-      CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_BOOST_UNORDERED_FLAT_MAP"
+      GLUCAT_CPPFLAGS="$GLUCAT_CPPFLAGS -D_GLUCAT_USE_BOOST_UNORDERED_FLAT_MAP"
       AC_MSG_NOTICE([boost::unordered_flat_map support enabled.])
     ],
     [
@@ -339,7 +343,19 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     no)
       CXXFLAGS="-O3 $CXXFLAGS"
       case "$basename_cxx" in
-        "clang++"*|icpc|icpx)
+        "clang++"*|icpx)
+          GLUCAT_CHECK_COMPILER_FLAG([march=native],
+                [CXXFLAGS="$CXXFLAGS -march=native"])
+          GLUCAT_CHECK_COMPILER_FLAG([flto=thin],
+                [CXXFLAGS="$CXXFLAGS -flto=thin"])
+          GLUCAT_CHECK_COMPILER_FLAG_COMPILE_ONLY([mllvm -inline-threshold=1000],
+                [GLUCAT_CPPFLAGS="$GLUCAT_CPPFLAGS -mllvm -inline-threshold=1000"])
+          GLUCAT_CHECK_COMPILER_FLAG_COMPILE_ONLY([mllvm -inlinehint-threshold=1000],
+                [GLUCAT_CPPFLAGS="$GLUCAT_CPPFLAGS -mllvm -inlinehint-threshold=1000"])
+          GLUCAT_CHECK_COMPILER_FLAG([funroll-loops],
+                [CXXFLAGS="$CXXFLAGS -funroll-loops"])
+          ;;
+        icpc)
           ;;
         "g++"*)
           GLUCAT_CHECK_COMPILER_FLAG([march=native],
@@ -376,7 +392,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
 
   dnl Handle $glucat_use_ndebug_define: NDEBUG definition used by uBLAS
   if [[[ "$glucat_use_ndebug_define" == "yes" ]]]; then
-    CXXFLAGS="$CXXFLAGS -DNDEBUG"
+    GLUCAT_CPPFLAGS="$GLUCAT_CPPFLAGS -DNDEBUG"
   fi
 
   if [[[ "$glucat_use_profiling" == "yes" ]]]; then
@@ -451,7 +467,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       GLUCAT_CHECK_HEADERS([qd/qd_real.h],
       [
         glucat_build_using_qd="yes"
-        CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_QD";
+        GLUCAT_CPPFLAGS="$GLUCAT_CPPFLAGS -D_GLUCAT_USE_QD";
         all_libraries="$all_libraries -lqd"
       ],[],[])
     fi
@@ -491,7 +507,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       GLUCAT_CHECK_COMPILER_FLAG([fno-check-new],
             [CXXFLAGS="$CXXFLAGS -fno-check-new"])
       dnl For compatibility with Cygwin gcc
-      GLUCAT_CHECK_HEADERS([bits/wordsize.h],[CXXFLAGS="$CXXFLAGS -DHAVE_BITS_WORDSIZE_H"],[],[])
+      GLUCAT_CHECK_HEADERS([bits/wordsize.h],[GLUCAT_CPPFLAGS="$GLUCAT_CPPFLAGS -DHAVE_BITS_WORDSIZE_H"],[],[])
       if [[[ "$glucat_build_using_qd" == "yes" ]]]; then
         dnl Avoid wrong code with QD and AVX512 by using FMA consistently
         dnl https://gcc.gnu.org/bugzilla/show_bug.cgi?id=106902
@@ -526,6 +542,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
        [WOVERLOADED_VIRTUAL="-Woverloaded-virtual"],
        [WOVERLOADED_VIRTUAL=""])
   AC_SUBST([WOVERLOADED_VIRTUAL])
+  AC_SUBST([GLUCAT_CPPFLAGS])
 
   AC_PROG_CXXCPP
 

@@ -13,7 +13,7 @@ test11_SOURCES = peg11.cpp
 test11_LDADD = $(LDADD)
 
 # set the include path found by configure
-AM_CPPFLAGS = $(all_includes)
+AM_CPPFLAGS = $(all_includes) $(GLUCAT_CPPFLAGS)
 # the library search path.
 test11_LDFLAGS = $(USER_LDFLAGS)
 

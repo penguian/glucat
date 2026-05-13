@@ -13,7 +13,7 @@ test14_SOURCES = peg14.cpp
 test14_LDADD = $(LDADD)
 
 # set the include path found by configure
-AM_CPPFLAGS = $(all_includes)
+AM_CPPFLAGS = $(all_includes) $(GLUCAT_CPPFLAGS)
 # the library search path.
 test14_LDFLAGS = $(USER_LDFLAGS)
 

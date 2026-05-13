@@ -13,7 +13,7 @@ test05_SOURCES = peg05.cpp
 test05_LDADD = $(LDADD)
 
 # set the include path found by configure
-AM_CPPFLAGS = $(all_includes)
+AM_CPPFLAGS = $(all_includes) $(GLUCAT_CPPFLAGS)
 # the library search path.
 test05_LDFLAGS = $(USER_LDFLAGS)
 

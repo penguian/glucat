@@ -17,7 +17,7 @@ SETUP = setup
 # C++ compiler flags
 EXTCXXFLAGS = $(glucat_extra_cxxflags_pyclical) $(CXXFLAGS)
 # set the include path found by configure
-EXTAM_CPPFLAGS = $(all_includes)
+EXTAM_CPPFLAGS = $(all_includes) $(GLUCAT_CPPFLAGS)
 
 pyexec_DATA = $(ext_name).*.so
 
@@ -28,7 +28,7 @@ all: $(pyexec_DATA)
 $(pyexec_DATA): $(SETUP_SOURCE_LIST) $(SETUP).py setup_ext.py
 	ext_name="$(ext_name)" $(SETUP_SOURCE_PARAM) \
 	CXX="$(CXX)" CXXVERSION="$(CXXVERSION)" CFLAGS="" CXXFLAGS="$(EXTCXXFLAGS)" AM_CPPFLAGS="$(EXTAM_CPPFLAGS)" \
-	all_includes="$(all_includes) -I. -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)" LDFLAGS="$(USER_LDFLAGS)" LIBRARIES="$(LIBS)" \
+	all_includes="$(all_includes) $(GLUCAT_CPPFLAGS) -I. -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)" LDFLAGS="$(USER_LDFLAGS)" LIBRARIES="$(LIBS)" \
 	$(PYTHON) $(SETUP).py build_ext --inplace
 
 check: $(CHECK_OUT)
