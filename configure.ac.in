@@ -320,7 +320,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   case "$glucat_use_debug_code" in
     full|yes)
       case "$basename_cxx" in
-        "clang++"*|icpc|icpx)
+        "clang++"*|icpx)
+          ;;
+        icpc)
           ;;
         "g++"*)
           GLUCAT_CHECK_COMPILER_FLAG([finline-limit=400],
@@ -427,20 +429,16 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
           GLUCAT_CHECK_COMPILER_FLAG([Wno-unused],
           [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-unused"])
           ;;
-        icpc|icpx)
-          case "$basename_cxx" in
-            icpc)
-              GLUCAT_CHECK_COMPILER_FLAG([diag-disable=1292],
-              [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -diag-disable=1292"])
-              ;;
-            icpx)
-              GLUCAT_CHECK_COMPILER_FLAG([Wno-deprecated],
-              [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-deprecated"])
-              ;;
-          esac
+        icpc)
+          GLUCAT_CHECK_COMPILER_FLAG([diag-disable=1292],
+          [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -diag-disable=1292"])
           GLUCAT_CHECK_LIB([imf],[cos],
           [],
           [glucat_use_pyclical="no"])
+          ;;
+        icpx)
+          GLUCAT_CHECK_COMPILER_FLAG([Wno-deprecated],
+          [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-deprecated"])
           ;;
         *)
           ;;
@@ -515,11 +513,20 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
               [CXXFLAGS="$CXXFLAGS -ffp-contract=on"])
       fi
       ;;
-    icpc|icpx)
+    icpc)
       GLUCAT_CHECK_LIB([imf],[cos],
       [all_libraries="$all_libraries -limf"],
       [],
       [glucat_have_gsl="no"])
+      GLUCAT_CHECK_COMPILER_FLAG([fp-model source],
+                      [CXXFLAGS="-fp-model source $CXXFLAGS"])
+      GLUCAT_CHECK_COMPILER_FLAG([fp-model precise],
+                      [CXXFLAGS="-fp-model precise $CXXFLAGS"])
+
+      GLUCAT_CHECK_COMPILER_FLAG([march=native],
+            [CXXFLAGS="$CXXFLAGS -march=native"])
+      ;;
+    icpx)
       GLUCAT_CHECK_COMPILER_FLAG([fp-model source],
                       [CXXFLAGS="-fp-model source $CXXFLAGS"])
       GLUCAT_CHECK_COMPILER_FLAG([fp-model precise],
