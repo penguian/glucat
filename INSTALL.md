@@ -948,23 +948,26 @@ GluCat 0.98a2 with PyClical has so far been built and tested using:
     8 core `AMD Ryzen 7 8840HS w/ Radeon 780M Graphics` @ 3.3 GHz with
 
     ```
-    Linux 6.17.0-12-generic #12-Ubuntu SMP UTC
-    Kubuntu 25.10
-    g++ 15.2.0 (Ubuntu 15.2.0-4ubuntu4)
-    Armadillo 14.2.3
-    Boost 1.88.0
-    Eigen 3.4.0
+    Linux 7.0.0-15-generic #15-Ubuntu SMP 2026
+    Kubuntu 26.04 LTS
+    Armadillo 15.2.1
+    Doxygen 1.15.0
+    Eigen3 3.4.0
     GSL 2.8
     QD 2.3.23
-    Cython 3.0.11
-    Python 3.13
+    TeXLive 2025.20260124
 
-    Numpy 2.2.4
-    Matplotlib 3.10.1
+    Conda 26.3.2 env containing:
+    Boost 1.88.0
+    Cython 3.1.6
+    Jupyter Server 2.18.2
+    Matplotlib 3.10.9
     Mayavi2 4.8.3
-    VTK 9.3.0
-    Doxygen 1.9.8
-    pdfTeX 3.141592653-2.6-1.40.26 (TeX Live 2025/dev/Debian)
+    Notebook 7.5.6
+    Numpy 1.26.4
+    PyQT 5.15.11
+    Python 3.12.13
+    VTK 9.4.2
     ```
 
     `./test/test-all-config-options.sh`:
@@ -972,9 +975,8 @@ GluCat 0.98a2 with PyClical has so far been built and tested using:
     `test.configure*.out` files in `./test_runtime`
     tested with the following compiler versions:
 
-    1) `g++ 15.2.0 (Ubuntu 15.2.0-4ubuntu4)`
-    2) `Ubuntu clang version 20.1.8 (0ubuntu4)`
-    3) `Intel(R) oneAPI DPC++/C++ Compiler 2025.3.2 (2025.3.2.20260112)`
+    1) `g++ (Ubuntu 15.2.0-16ubuntu1) 15.2.0`
+    2) `Ubuntu clang version 21.1.8 (6ubuntu1)`
 
  2) Pensieri:
     4 core `Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz` with
@@ -996,7 +998,6 @@ GluCat 0.98a2 with PyClical has so far been built and tested using:
     Doxygen 1.9.8
     pdfTeX 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian)
     ```
-
     `./test/fast-test-all-config-options.sh`:
     All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`
@@ -1064,25 +1065,19 @@ GluCat 0.98a2 with PyClical has so far been built and tested using:
     Virtual 2 core `Intel(R) Xeon(R) CPU @ 2.80GHz` with
 
     ```
-    Linux 5.15.0-1046-gcp #54~20.04.1-Ubuntu SMP x86 64
-    Ubuntu 22.04.4 LTS
-    g++ (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
-    Blaze 3.9.0
-    Boost 1.74.0
-    Cython 0.29.30
-    Python 3.10.12
-    Numpy 1.23.5
-    CXXFLAGS=`-I/home/user/include`
-    USER_LDFLAGS=`-L/home/user/lib`
-    LD_LIBRARY_PATH=`/home/user/lib`
+    Linux 5.15.0-1074-gcp #83~20.04.1-Ubuntu SMP x86 64
+    Ubuntu 24.04.4 LTS
+    clang++ Ubuntu clang version 18.1.3 (1ubuntu1)
+    Armadillo 12.6.7
+    Boost 1.83.0
+    Cython 3.0.8
+    Eigen 3.4.0
+    Python 3.12.10
+    Numpy 1.26.4
     ```
     `./test/fast-test-all-config-options.sh`
     All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`
-
-    Note: One test in test_runtime/fast-test.configure.eig-blaze-qd.out
-    fails due to a difference between Intel and AMD x86-64 floating
-    point arithmetic.
 
  6) GitHub codespaces:
     AMD EPYC 7763 64-Core Processor with
