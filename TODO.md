@@ -1,35 +1,36 @@
 TODO for GluCat 0.98a2 with PyClical
 ====================================
 
-## Likely
+## Roadmap
 
-Documentation:
-* Write a programmer's guide with descriptions of usage via use cases.
-* Provide better user documentation for PyClical.
-
-Testing:
+### 0.98a2 (Current)
 * [x] Achieve 100% C++ function coverage across the core library via `test_doctest`.
-* Further harden the stochastic identity tests in `test_doctest`.
-* Complete the transition of all legacy tests to the modern unit testing
-  framework.
-
-Abstraction:
 * [x] Reinforce representation-independence by defining `nbr_rows()` and `nbr_cols()` as protected in `matrix_multi`.
-
-Packaging:
+* Further harden the stochastic identity tests in `test_doctest`.
+* Complete the transition of all legacy tests to the modern unit testing framework.
 * Improve the packaging of the example and test programs.
-* Finalize the transition to a modern build system that minimizes dependency on
-  legacy autotools.
 
+### 0.98a3: Defense in Depth
+* **C++ Quality**: Implement `clang-format` and `cppcheck` linting.
+* **Cython/Python Quality**: Implement `ruff` and `pylint` for PyClical.
+* **Automation**: Integrate `pre-commit` hooks for all quality checks.
+* **CI/CD**: Establish GitHub Actions matrix builds (GCC/Clang, multiple Boost versions).
+* **Environment Automation**: Automate Jupyter and Mayavi setup as much as possible; fully document manual steps for non-automatable constraints.
 
-## Unlikely
+### 0.98a4: Documentation
+* **ReadTheDocs**: Set up RTD formatting and automated deployment.
+* **User Guide**: Develop a comprehensive User Guide using Sphinx + MyST.
+* **Maintenance Guide**: Develop a technical Maintenance Guide using Doxygen + Sphinx (Breathe).
+* **Case Studies**: Write a programmer's guide with descriptions of usage via use cases.
 
-Interfaces:
+## Future Stabilisation (0.99bx series)
 * Expand the Cython-based Python extension module PyClical into a Sage interface.
 * Try defining concepts and more numeric traits so that GluCat can
   eventually become a Boost library.
 
-Transcendental functions:
+## Post-1.0 Possibilities
+
+### Transcendental functions
 * Devise better algorithms and better implementations of existing algorithms for
   the transcendental functions. In particular, pay more attention to radius of
   convergence, condition number of matrices and poking out of the subalgebra.
@@ -37,7 +38,7 @@ Transcendental functions:
   transcendental functions. See N. J. Higham, Functions of Matrices: Theory and
   Computation, 2008.
 
-Experimental:
+### Experimental investigations
 * Expand the use of numeric type promotion and demotion from transcendental
   functions to operations such as division.
 * Investigate the use of expression templates.
