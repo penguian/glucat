@@ -22,6 +22,8 @@ http://arma.sourceforge.net/.
 The default configuration of GluCat, as well as most combinations of
 configuration options, require a compiler that supports the C++ 2023 standard.
 
+Note: The legacy Intel Classic C++ compilers (`icc`/`icpc`) are deprecated and will be removed in a future release. Users in Intel hardware environments should compile using the modern oneAPI LLVM-based C++ compilers (`icx`/`icpx`) instead.
+
 Scroll to the end of these instructions to see a list of successful builds,
 including version numbers of various software components, and notes on software
 versions.
@@ -461,7 +463,7 @@ Building PyClical and the timing test programs
 ----------------------------------------------
 
 To build PyClical and the timing test programs, set the environment variable
-CXX to indicate your C++ compiler, eg. `g++` for GNU C++, `icpc` or `icpx`
+CXX to indicate your C++ compiler, eg. `g++` for GNU C++, `icpx`
 for Intel C++, then run `./configure` as above, and then run `make`.
 
 Make uses the headers in `./glucat` and `./test` and the source in `./pyclical`,
@@ -516,7 +518,7 @@ Building and running the regression test programs
 -------------------------------------------------
 
 To build and run the regression test programs, set the environment variable `CXX`
-to indicate your C++ compiler, eg. `g++` for GNU C++, `icpc` or `icpx` for Intel
+to indicate your C++ compiler, eg. `g++` for GNU C++, `icpx` for Intel
 C++, then run `./configure` as above, and then run `make check`. This builds and
 runs the executable files `./test_move/test_move` and `./test00/test00` to
 `./test17/test17`. This produces the intermediate output files

@@ -24,6 +24,7 @@ TODO for GluCat 0.98a2 with PyClical
 * **Case Studies**: Write a programmer's guide with descriptions of usage via use cases.
 
 ## Future Stabilisation (0.99bx series)
+* Completely remove legacy `icc`/`icpc` compile flags, quirks, and workarounds in the next major version release.
 * Expand the Cython-based Python extension module PyClical into a Sage interface.
 * Try defining concepts and more numeric traits so that GluCat can
   eventually become a Boost library.

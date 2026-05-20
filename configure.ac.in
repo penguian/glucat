@@ -315,6 +315,10 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   esac
   AC_SUBST([CXXVERSION])
 
+  if test "$basename_cxx" = "icpc"; then
+     AC_MSG_WARN([The Intel Classic icpc compiler is deprecated and will be removed in a future release. Use the Intel oneAPI icpx compiler instead.])
+  fi
+
   dnl Handle $glucat_use_debug_code: debug symbols and debug level
   GLUCAT_CXX_DEBUG_FLAG=""
   case "$glucat_use_debug_code" in
