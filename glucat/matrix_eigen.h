@@ -224,6 +224,9 @@ namespace glucat { namespace matrix
 
     // Kronecker matrix product
     eigen_matrix_wrapper kron(const eigen_matrix_wrapper& other) const;
+    eigen_matrix_wrapper mono_kron(const eigen_matrix_wrapper& other) const;
+    // Monomial matrix product
+    eigen_matrix_wrapper mono_prod(const eigen_matrix_wrapper& other) const;
     // Mixed Kronecker matrix product: Dense x Sparse -> Dense (wrapper)
     template< typename Other_Scalar_T >
     eigen_matrix_wrapper<Other_Scalar_T> kron(const eigen_sparse_wrapper<Other_Scalar_T>& other) const;
@@ -407,6 +410,9 @@ namespace glucat { namespace matrix
     eigen_matrix_wrapper<Other_Scalar_T> kron(const eigen_matrix_wrapper<Other_Scalar_T>& other) const;
     // Kronecker matrix product of sparse wrappers
     eigen_sparse_wrapper kron(const eigen_sparse_wrapper& other) const;
+    eigen_sparse_wrapper mono_kron(const eigen_sparse_wrapper& other) const;
+    // Monomial matrix product of sparse wrappers
+    eigen_sparse_wrapper mono_prod(const eigen_sparse_wrapper& other) const;
 
     // Left Kronecker quotient
     template< typename RHS_T >

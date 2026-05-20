@@ -832,6 +832,22 @@ namespace glucat { namespace matrix
     return eigen_matrix_wrapper<Scalar_T>(kroneckerProduct(m_mat, other.m_mat).eval());
   }
 
+  template< typename Scalar_T >
+  inline eigen_matrix_wrapper<Scalar_T>
+  eigen_matrix_wrapper<Scalar_T>::
+  mono_kron(const eigen_matrix_wrapper<Scalar_T>& other) const
+  {
+    return kron(other);
+  }
+
+  template< typename Scalar_T >
+  inline eigen_matrix_wrapper<Scalar_T>
+  eigen_matrix_wrapper<Scalar_T>::
+  mono_prod(const eigen_matrix_wrapper<Scalar_T>& other) const
+  {
+    return eigen_matrix_wrapper<Scalar_T>(m_mat * other.m_mat);
+  }
+
   /*
    * @brief Mixed Kronecker matrix product: Dense x Sparse -> Dense (wrapper)
    * @details
@@ -1501,6 +1517,7 @@ namespace glucat { namespace matrix
   {
     eigen_sparse_wrapper<Scalar_T> result(nbr_rows() * other.nbr_rows(), nbr_cols() * other.nbr_cols());
     std::vector<Eigen::Triplet<Scalar_T>> triplets;
+    triplets.reserve(nnz() * other.nnz());
     // Iterate lhs
     for (matrix_index_t k = 0; k < static_cast<matrix_index_t>(m_mat.outerSize()); ++k)
     {
@@ -1514,6 +1531,85 @@ namespace glucat { namespace matrix
         for (matrix_index_t l = 0; l < static_cast<matrix_index_t>(other.m_mat.outerSize()); ++l)
           for (typename MatrixType::InnerIterator itB(other.m_mat, l); itB; ++itB)
             triplets.emplace_back(rA * other.nbr_rows() + itB.row(), cA * other.nbr_cols() + itB.col(), vA * itB.value());
+      }
+    }
+    result.m_mat.setFromTriplets(triplets.begin(), triplets.end());
+
+    return result;
+  }
+
+  /*
+   * @brief Monomial Kronecker matrix product of sparse wrappers
+   * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
+   * @return Kronecker product
+   */
+  template< typename Scalar_T >
+  inline eigen_sparse_wrapper<Scalar_T>
+  eigen_sparse_wrapper<Scalar_T>::
+  mono_kron(const eigen_sparse_wrapper<Scalar_T>& other) const
+  {
+    eigen_sparse_wrapper<Scalar_T> result(nbr_rows() * other.nbr_rows(), nbr_cols() * other.nbr_cols());
+    std::vector<Eigen::Triplet<Scalar_T>> triplets;
+    triplets.reserve(nnz() * other.nnz());
+    
+    const matrix_index_t other_rows = other.nbr_rows();
+    const matrix_index_t other_cols = other.nbr_cols();
+
+    for (matrix_index_t k = 0; k < static_cast<matrix_index_t>(m_mat.outerSize()); ++k)
+    {
+      typename MatrixType::InnerIterator itA(m_mat, k);
+      if (itA)
+      {
+        auto rA = itA.row();
+        auto cA = itA.col();
+        auto vA = itA.value();
+
+        for (matrix_index_t l = 0; l < static_cast<matrix_index_t>(other.m_mat.outerSize()); ++l)
+        {
+          typename MatrixType::InnerIterator itB(other.m_mat, l);
+          if (itB)
+          {
+            triplets.emplace_back(rA * other_rows + itB.row(), cA * other_cols + itB.col(), vA * itB.value());
+          }
+        }
+      }
+    }
+    result.m_mat.setFromTriplets(triplets.begin(), triplets.end());
+
+    return result;
+  }
+
+  /*
+   * @brief Monomial product of sparse wrappers
+   * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
+   * @return Product
+   */
+  template< typename Scalar_T >
+  inline eigen_sparse_wrapper<Scalar_T>
+  eigen_sparse_wrapper<Scalar_T>::
+  mono_prod(const eigen_sparse_wrapper<Scalar_T>& other) const
+  {
+    eigen_sparse_wrapper<Scalar_T> result(nbr_rows(), nbr_cols());
+    std::vector<Eigen::Triplet<Scalar_T>> triplets;
+    triplets.reserve(nnz());
+
+    for (matrix_index_t cB = 0; cB < static_cast<matrix_index_t>(other.m_mat.outerSize()); ++cB)
+    {
+      typename MatrixType::InnerIterator itB(other.m_mat, cB);
+      if (itB)
+      {
+        auto rB = itB.row();
+        auto vB = itB.value();
+
+        typename MatrixType::InnerIterator itA(m_mat, rB);
+        if (itA)
+        {
+          triplets.emplace_back(itA.row(), cB, itA.value() * vB);
+        }
       }
     }
     result.m_mat.setFromTriplets(triplets.begin(), triplets.end());

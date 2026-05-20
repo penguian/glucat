@@ -175,13 +175,13 @@ namespace glucat { namespace gen
     dup(0,0) = 1;
     dup(1,1) =    -1;
 
-    result[0] = neg.kron(eye);
+    result[0] = neg.mono_kron(eye);
     for (auto
         k = size_t(1);
         k != new_size-1;
         ++k)
-      result[k] = dup.kron(old[k-1]);
-    result[new_size-1] = pos.kron(eye);
+      result[k] = dup.mono_kron(old[k-1]);
+    result[new_size-1] = pos.mono_kron(eye);
 
     // Save the resulting generator array.
     this->insert(make_pair(sig, result));

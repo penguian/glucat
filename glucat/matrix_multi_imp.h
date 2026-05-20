@@ -2303,7 +2303,7 @@ namespace glucat
         k <= folded_max;
         ++k)
       if (folded_set[k])
-        result = result * e[k];
+        result = result.mono_prod(e[k]);
     if (use_cache)
     {
       auto* result_ptr = new basis_matrix_t(result);

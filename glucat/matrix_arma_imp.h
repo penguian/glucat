@@ -639,6 +639,24 @@ namespace glucat { namespace matrix
     return result;
   }
 
+  template< typename Scalar_T >
+  inline arma_matrix_wrapper<Scalar_T>
+  arma_matrix_wrapper<Scalar_T>::
+  mono_kron(const arma_matrix_wrapper<Scalar_T>& other) const
+  {
+    return kron(other);
+  }
+
+  template< typename Scalar_T >
+  inline arma_matrix_wrapper<Scalar_T>
+  arma_matrix_wrapper<Scalar_T>::
+  mono_prod(const arma_matrix_wrapper<Scalar_T>& other) const
+  {
+    arma_matrix_wrapper<Scalar_T> result;
+    result.m_mat = m_mat * other.m_mat;
+    return result;
+  }
+
   /*
    * @brief Mixed Kronecker matrix product: Dense x Sparse -> Dense (wrapper)
    * @details
@@ -1481,6 +1499,89 @@ namespace glucat { namespace matrix
   {
     arma_sparse_wrapper<Scalar_T> result;
     result.m_mat = arma::kron(m_mat, other.m_mat);
+    return result;
+  }
+
+  /*
+   * @brief Monomial Kronecker matrix product of sparse wrappers
+   * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
+   * @return Kronecker product
+   */
+  template< typename Scalar_T >
+  inline arma_sparse_wrapper<Scalar_T>
+  arma_sparse_wrapper<Scalar_T>::
+  mono_kron(const arma_sparse_wrapper<Scalar_T>& other) const
+  {
+    const matrix_index_t other_rows = other.nbr_rows();
+    const matrix_index_t other_cols = other.nbr_cols();
+    const matrix_index_t n_nz = m_mat.n_nonzero * other.m_mat.n_nonzero;
+
+    arma::umat locations(2, n_nz);
+    arma::Col<Scalar_T> values(n_nz);
+    matrix_index_t count = 0;
+
+    for (auto itA = m_mat.begin(); itA != m_mat.end(); ++itA)
+    {
+      auto rA = itA.row();
+      auto cA = itA.col();
+      auto vA = *itA;
+      for (auto itB = other.m_mat.begin(); itB != other.m_mat.end(); ++itB)
+      {
+        locations(0, count) = rA * other_rows + itB.row();
+        locations(1, count) = cA * other_cols + itB.col();
+        values[count] = vA * (*itB);
+        count++;
+      }
+    }
+    arma_sparse_wrapper<Scalar_T> result;
+    result.m_mat = MatrixType(locations, values, nbr_rows() * other_rows, nbr_cols() * other_cols);
+    return result;
+  }
+
+  /*
+   * @brief Monomial product of sparse wrappers
+   * @details
+   * @tparam Scalar_T
+   * @param other Other matrix
+   * @return Product
+   */
+  template< typename Scalar_T >
+  inline arma_sparse_wrapper<Scalar_T>
+  arma_sparse_wrapper<Scalar_T>::
+  mono_prod(const arma_sparse_wrapper<Scalar_T>& other) const
+  {
+    const matrix_index_t n_nz = other.m_mat.n_nonzero;
+
+    arma::umat locations(2, n_nz);
+    arma::Col<Scalar_T> values(n_nz);
+    matrix_index_t count = 0;
+
+    for (auto itB = other.m_mat.begin(); itB != other.m_mat.end(); ++itB)
+    {
+      auto rB = itB.row();
+      auto cB = itB.col();
+      auto vB = *itB;
+
+      arma::uword col_start = m_mat.col_ptrs[rB];
+      arma::uword col_end = m_mat.col_ptrs[rB + 1];
+      if (col_start < col_end)
+      {
+        locations(0, count) = m_mat.row_indices[col_start];
+        locations(1, count) = cB;
+        values[count] = m_mat.values[col_start] * vB;
+        count++;
+      }
+    }
+    if (count < n_nz)
+    {
+      locations.resize(2, count);
+      values.resize(count);
+    }
+
+    arma_sparse_wrapper<Scalar_T> result;
+    result.m_mat = MatrixType(locations, values, nbr_rows(), nbr_cols());
     return result;
   }
 
