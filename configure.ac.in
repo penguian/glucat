@@ -58,6 +58,8 @@ AC_DEFUN([GLUCAT_MSG_WARN_DEPRECATED_VAL],
 
 AC_DEFUN([GLUCAT_CHECK_COMPILERS],
 [
+  AC_LANG([C]++)
+
   dnl As a side effect of testing introduced by autoconf, CXXFLAGS has been changed. Restore it.
   CXXFLAGS="$saved_CXXFLAGS"
 
