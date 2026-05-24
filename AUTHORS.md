@@ -293,8 +293,8 @@ Recommended general references
 "Clifford Algebras with Numeric and Symbolic Computations", Birkhauser, 1996.
 
 2. Chris Doran and Anthony Lasenby,
-["Geometric Algebra for Physicists",  Cambridge University Press, 2003, 2007.
-](http://geometry.mrao.cam.ac.uk/2007/01/geometric-algebra-for-physicists/)
+["Geometric Algebra for Physicists",  Cambridge University Press, 2003, 2007, 2013.
+](https://doi.org/10.1017/CBO9780511807497)
 
 3. David Hestenes, Garret Sobczyk, "Clifford Algebra to Geometric Calculus",
 Kluwer, first published in 1984; reprinted with corrections in 1992.
