@@ -155,6 +155,13 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     [glucat_use_armadillo="$withval"],
     [glucat_use_armadillo="no"])
 
+  AC_ARG_WITH([flexiblas],
+    AS_HELP_STRING(
+      [--with-flexiblas],
+      [use FlexiBLAS library (requires Armadillo) [default=no]]),
+     [glucat_use_flexiblas="$withval"],
+     [glucat_use_flexiblas="no"])
+
   AC_ARG_WITH([openmp],
     AS_HELP_STRING(
       [--with-openmp],
@@ -219,6 +226,17 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     fi
   fi
 
+  if test "$glucat_use_flexiblas" = "yes"; then
+     if test "$glucat_use_armadillo" != "yes"; then
+        AC_MSG_WARN([--with-flexiblas ignored because --with-armadillo is not enabled.])
+     else
+        GLUCAT_CHECK_LIB([flexiblas],[flexiblas_init],
+           [all_libraries="$all_libraries -lflexiblas"
+            AC_MSG_NOTICE([FlexiBLAS support enabled])],
+           [AC_MSG_WARN([FlexiBLAS support requested but libflexiblas was not found.])])
+     fi
+  fi
+
   if [[[ "$glucat_use_openmp" == "yes" ]]]; then
      if [[[ "$glucat_use_armadillo" == "yes" ]]]; then
          dnl Check for OpenMP flag
@@ -243,20 +261,26 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
                [])
          fi
 
-         dnl Check for -lopenblas
-         glucat_have_openblas="no"
-         GLUCAT_CHECK_LIB([openblas],[cblas_dgemm],
-            [glucat_have_openblas="yes"],
-            [])
+         dnl Resolve the BLAS engine to couple with OpenMP
+         glucat_have_blas_for_omp="no"
+         if test "$glucat_use_flexiblas" = "yes"; then
+            glucat_have_blas_for_omp="yes"
+            omp_blas_lib="-lflexiblas"
+         else
+            GLUCAT_CHECK_LIB([openblas],[cblas_dgemm],
+               [glucat_have_blas_for_omp="yes"
+                omp_blas_lib="-lopenblas"],
+               [])
+         fi
 
-         if [[[ "$glucat_have_openmp" == "yes" ]]] && [[[ "$glucat_have_openblas" == "yes" ]]]; then
+         if test "$glucat_have_openmp" = "yes" && test "$glucat_have_blas_for_omp" = "yes"; then
             CXXFLAGS="$CXXFLAGS $glucat_openmp_flag"
             GLUCAT_CPPFLAGS="$GLUCAT_CPPFLAGS -D_GLUCAT_USE_OPENMP -DARMA_USE_OPENMP"
-            all_libraries="$all_libraries -lopenblas"
-            AC_MSG_NOTICE([OpenMP support enabled with $glucat_openmp_flag and -lopenblas])
-         else
-            AC_MSG_WARN([OpenMP support requested but prerequisites (OpenMP flag and -lopenblas) were not found.])
-         fi
+            test "$glucat_use_flexiblas" != "yes" && all_libraries="$all_libraries -lopenblas"
+            AC_MSG_NOTICE([OpenMP support enabled with $glucat_openmp_flag and $omp_blas_lib])
+          else
+             AC_MSG_WARN([OpenMP support requested but prerequisites (OpenMP flag and -lopenblas or -lflexiblas) were not found.])
+          fi
 
      else
         AC_MSG_WARN([--with-openmp ignored because --with-armadillo is not enabled.])
