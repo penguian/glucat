@@ -400,6 +400,18 @@ the C++ compiler. You will also need to ensure that the include path used by the
 compiler sees `<armadillo>` and the library path sees `libarmadillo.*`.
 
 ```
+  --with-openblas         use OpenBLAS library (requires Armadillo) [default=no]
+```
+This option controls the use of the OpenBLAS C++ linear algebra library. This option
+requires that the Armadillo library is also used.
+
+The option `--with-openblas` adds the flag `-lopenblas` to the list of libraries, 
+`LIBS` in the Makefiles.
+
+To compile your own programs using the GluCat library with OpenBLAS, your Makefile
+needs to pass the flag `-lopenblas` to the C++ compiler.
+
+```
   --with-openmp           use OpenMP (requires Armadillo) [default=no]
 ```
 This option controls the use of OpenMP for parallel processing. This option 
