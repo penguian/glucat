@@ -386,18 +386,20 @@ You will also need to ensure that the include path used by the compiler sees
 `<qd/qd_real.h>` and the library path sees `libqd.*`.
 
 ```
-  --with-armadillo        use Armadillo library [default=no]
+  --with-armadillo=yes|no|auto
+                          use Armadillo library (auto tries FlexiBLAS then
+                          OpenBLAS) [default=no]
 ```
 This option controls the use of the Armadillo C++ linear algebra library.
 
-The option `--with-armadillo` adds `-D_GLUCAT_USE_ARMADILLO` to `CXXFLAGS` and 
-adds the flag `-larmadillo` to the list of libraries, `LIBS` in the Makefiles.
+The value `yes` (or `--with-armadillo` without an explicit value) adds `-D_GLUCAT_USE_ARMADILLO` to `CXXFLAGS` and the flag `-larmadillo` to the list of libraries, `LIBS` in the Makefiles.
 
+The value `auto` automatically probes the host system's optimized backends:
+1. It checks for the `flexiblas` library. If found, it automatically enables FlexiBLAS (`--with-flexiblas=yes`), which appends `-lflexiblas` to the libraries.
+2. If `flexiblas` is not found, it checks for the `openblas` library. If found, it automatically enables OpenBLAS (`--with-openblas=yes`), which appends `-lopenblas` to the libraries.
+3. If both are absent, it defaults to standard dynamic linkage with `-larmadillo`.
 
-To compile your own programs using the GluCat library with Armadillo, your 
-Makefile needs to pass the flags `-D_GLUCAT_USE_ARMADILLO` and `-larmadillo` to 
-the C++ compiler. You will also need to ensure that the include path used by the 
-compiler sees `<armadillo>` and the library path sees `libarmadillo.*`.
+To compile your own programs using GluCat headers with Armadillo, your Makefile needs to pass the flags `-D_GLUCAT_USE_ARMADILLO` and `-larmadillo` (along with `-lflexiblas` or `-lopenblas` if you want to use those backends) to the C++ compiler. You will also need to ensure that the include path used by the compiler sees `<armadillo>` and the library path sees `libarmadillo.*`.
 
 ```
   --with-openblas         use OpenBLAS library (requires Armadillo) [default=no]
