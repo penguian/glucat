@@ -317,6 +317,12 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
           fi
 
           if test "$glucat_have_openmp" = "yes" && test "$glucat_have_blas_for_omp" = "yes"; then
+             glucat_save_cxxflags="$CXXFLAGS"
+             CXXFLAGS="$CXXFLAGS $glucat_openmp_flag"
+             AC_CHECK_HEADERS([omp.h], [], [
+                AC_MSG_ERROR([OpenMP support requested but omp.h is missing. Please install the appropriate libomp-dev package for your compiler.])
+             ])
+             CXXFLAGS="$glucat_save_cxxflags"
              CXXFLAGS="$CXXFLAGS $glucat_openmp_flag"
              GLUCAT_CPPFLAGS="$GLUCAT_CPPFLAGS -D_GLUCAT_USE_OPENMP -DARMA_USE_OPENMP"
              test "$glucat_use_flexiblas" != "yes" && test "$glucat_use_openblas" != "yes" && all_libraries="$all_libraries -lopenblas"
@@ -424,9 +430,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
           GLUCAT_CHECK_COMPILER_FLAG([flto=thin],
                 [CXXFLAGS="$CXXFLAGS -flto=thin"])
           GLUCAT_CHECK_COMPILER_FLAG_COMPILE_ONLY([mllvm -inline-threshold=1000],
-                [GLUCAT_CPPFLAGS="$GLUCAT_CPPFLAGS -mllvm -inline-threshold=1000"])
+                [CXXFLAGS="$CXXFLAGS -mllvm -inline-threshold=1000"])
           GLUCAT_CHECK_COMPILER_FLAG_COMPILE_ONLY([mllvm -inlinehint-threshold=1000],
-                [GLUCAT_CPPFLAGS="$GLUCAT_CPPFLAGS -mllvm -inlinehint-threshold=1000"])
+                [CXXFLAGS="$CXXFLAGS -mllvm -inlinehint-threshold=1000"])
           GLUCAT_CHECK_COMPILER_FLAG([funroll-loops],
                 [CXXFLAGS="$CXXFLAGS -funroll-loops"])
           ;;
@@ -554,6 +560,8 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
         "clang++"*|icpx)
           GLUCAT_CHECK_COMPILER_FLAG([Wno-deprecated-register],
                 [CXXFLAGS="$CXXFLAGS -Wno-deprecated-register"])
+          GLUCAT_CHECK_COMPILER_FLAG([Wno-unused-command-line-argument],
+                [CXXFLAGS="$CXXFLAGS -Wno-unused-command-line-argument"])
           ;;
         *)
           ;;

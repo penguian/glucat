@@ -25,7 +25,7 @@ import os
 
 
 def filtered_libraries():
-    libraries_list = os.environ["LIBRARIES"].replace("-l", "").split()
+    libraries_list = os.environ.get("LIBRARIES", "").replace("-l", "").split()
     filtered_libraries_list = []
     mkl_libraries = [
         "mkl_core",
@@ -50,8 +50,6 @@ def filtered_libraries():
 
 
 def setup_ext(ext_name, source):
-    all_includes_list = os.environ["all_includes"].replace("-I", "").split()
-
     define_macros = []
     if os.environ.get("GLUCAT_PYCLICAL_TRACE"):
         define_macros.append(('CYTHON_TRACE', '1'))
@@ -59,7 +57,6 @@ def setup_ext(ext_name, source):
     ext = Extension(
         ext_name,
         sources=[source],
-        include_dirs=all_includes_list,
         libraries=filtered_libraries(),
         define_macros=define_macros)
     return ext
