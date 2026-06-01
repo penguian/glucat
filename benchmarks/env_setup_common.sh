@@ -88,7 +88,7 @@ if [ "$IS_OPENMP" -eq 1 ]; then
     export OMP_NUM_THREADS=$RESOLVED_THREADS
     export OPENBLAS_NUM_THREADS=1
     
-    if [ "$IS_FLEXIBLAS" -eq 1 ]; then
+    if [ "$IS_FLEXIBLAS" -eq 1 ] || [ "$IS_BLAS" -eq 1 ]; then
         export FLEXIBLAS=OPENBLASSERIAL
     else
         unset FLEXIBLAS
@@ -112,7 +112,7 @@ else
         export OMP_NUM_THREADS=$RESOLVED_THREADS
         export OPENBLAS_NUM_THREADS=$RESOLVED_THREADS
         
-        if [ "$IS_FLEXIBLAS" -eq 1 ]; then
+        if [ "$IS_FLEXIBLAS" -eq 1 ] || [ "$IS_BLAS" -eq 1 ]; then
             export FLEXIBLAS=OPENBLASOPENMP
         fi
 
