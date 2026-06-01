@@ -150,24 +150,17 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
 
   AC_ARG_WITH([armadillo],
     AS_HELP_STRING(
-      [--with-armadillo=yes|no|auto],
-      [use Armadillo library (auto tries FlexiBLAS then OpenBLAS) [default=no]]),
+      [--with-armadillo],
+      [use Armadillo library [default=no]]),
     [glucat_use_armadillo="$withval"],
     [glucat_use_armadillo="no"])
 
-  AC_ARG_WITH([flexiblas],
+  AC_ARG_WITH([blas],
     AS_HELP_STRING(
-      [--with-flexiblas],
-      [use FlexiBLAS library (requires Armadillo) [default=no]]),
-     [glucat_use_flexiblas="$withval"],
-     [glucat_use_flexiblas="no"])
-
-  AC_ARG_WITH([openblas],
-    AS_HELP_STRING(
-      [--with-openblas],
-      [use OpenBLAS library (requires Armadillo) [default=no]]),
-     [glucat_use_openblas="$withval"],
-     [glucat_use_openblas="no"])
+      [--with-blas=yes|no|flexiblas|openblas],
+      [use specified BLAS/LAPACK library backend [default=no]]),
+    [glucat_use_blas="$withval"],
+    [glucat_use_blas="no"])
 
   AC_ARG_WITH([openmp],
     AS_HELP_STRING(
@@ -216,124 +209,124 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     glucat_use_warnings="yes"
   fi
 
-  glucat_armadillo_auto="no"
-  if test "$glucat_use_armadillo" = "auto"; then
-     glucat_armadillo_auto="yes"
-     glucat_use_armadillo="yes"
+  if test "$glucat_use_armadillo" != "yes" && test "$glucat_use_armadillo" != "no"; then
+     AC_MSG_ERROR([Invalid value for --with-armadillo. Please specify only yes or no.])
   fi
 
-  if [[[ "$glucat_use_armadillo" == "yes" ]]]; then
+  if test "$glucat_use_blas" != "yes" && \
+     test "$glucat_use_blas" != "no" && \
+     test "$glucat_use_blas" != "flexiblas" && \
+     test "$glucat_use_blas" != "openblas"; then
+     AC_MSG_ERROR([Invalid value for --with-blas. Supported values are: yes, no, flexiblas, openblas.])
+  fi
+
+  if test "$glucat_use_armadillo" = "yes"; then
     glucat_have_libarmadillo="no"
     GLUCAT_CHECK_LIB([armadillo],[main],
     [glucat_have_libarmadillo="yes"],
     [])
-    if [[[ "$glucat_have_libarmadillo" == "yes" ]]]; then
+    if test "$glucat_have_libarmadillo" = "yes"; then
       GLUCAT_CHECK_HEADERS([armadillo],
       [
         GLUCAT_CPPFLAGS="$GLUCAT_CPPFLAGS -D_GLUCAT_USE_ARMADILLO -DARMA_WARN_LEVEL=1"
         all_libraries="$all_libraries -larmadillo"
       ],[],[])
-    fi
-     if [[[ "$glucat_have_libarmadillo" == "no" ]]]; then
+    else
        AC_MSG_WARN([Cannot build using Armadillo.])
     fi
   fi
 
-  if test "$glucat_armadillo_auto" = "yes"; then
+  glucat_use_flexiblas="no"
+  glucat_use_openblas="no"
+
+  if test "$glucat_use_blas" = "flexiblas"; then
+     glucat_use_flexiblas="yes"
+  elif test "$glucat_use_blas" = "openblas"; then
+     glucat_use_openblas="yes"
+  elif test "$glucat_use_blas" = "yes"; then
      GLUCAT_CHECK_LIB([flexiblas],[flexiblas_init],
         [glucat_use_flexiblas="yes"
+         glucat_use_blas="flexiblas"
          AC_MSG_NOTICE([Auto-selected FlexiBLAS backend])],
         [
            GLUCAT_CHECK_LIB([openblas],[cblas_dgemm],
               [glucat_use_openblas="yes"
+               glucat_use_blas="openblas"
                AC_MSG_NOTICE([Auto-selected OpenBLAS backend])],
-              [AC_MSG_NOTICE([Auto-selected default Armadillo backend])])
+              [
+                 AC_MSG_WARN([Neither FlexiBLAS nor OpenBLAS was found. Falling back to default system BLAS/LAPACK implementations.])
+                 glucat_use_blas="no"
+              ])
         ])
   fi
 
-  if test "$glucat_use_openblas" = "yes" && test "$glucat_use_flexiblas" = "yes"; then
-     AC_MSG_ERROR([Cannot combine --with-openblas and --with-flexiblas. Please select only one BLAS backend interface.])
-  fi
-
   if test "$glucat_use_openblas" = "yes"; then
-     if test "$glucat_use_armadillo" != "yes"; then
-        AC_MSG_WARN([--with-openblas ignored because --with-armadillo is not enabled.])
-     else
-        GLUCAT_CHECK_LIB([openblas],[cblas_dgemm],
-           [all_libraries="$all_libraries -lopenblas"
-            AC_MSG_NOTICE([OpenBLAS support enabled])],
-           [AC_MSG_ERROR([OpenBLAS support requested but libopenblas was not found.])])
-     fi
+     GLUCAT_CHECK_LIB([openblas],[cblas_dgemm],
+        [all_libraries="$all_libraries -lopenblas"
+         AC_MSG_NOTICE([OpenBLAS support enabled])],
+        [AC_MSG_ERROR([OpenBLAS support requested but libopenblas was not found.])])
   fi
 
   if test "$glucat_use_flexiblas" = "yes"; then
+     GLUCAT_CHECK_LIB([flexiblas],[flexiblas_init],
+        [all_libraries="$all_libraries -lflexiblas"
+         AC_MSG_NOTICE([FlexiBLAS support enabled])],
+        [AC_MSG_ERROR([FlexiBLAS support requested but libflexiblas was not found.])])
+  fi
+
+  if test "$glucat_use_blas" = "openblas" || test "$glucat_use_blas" = "flexiblas"; then
      if test "$glucat_use_armadillo" != "yes"; then
-        AC_MSG_WARN([--with-flexiblas ignored because --with-armadillo is not enabled.])
-     else
-        GLUCAT_CHECK_LIB([flexiblas],[flexiblas_init],
-           [all_libraries="$all_libraries -lflexiblas"
-            AC_MSG_NOTICE([FlexiBLAS support enabled])],
-           [AC_MSG_WARN([FlexiBLAS support requested but libflexiblas was not found.])])
+        GLUCAT_CPPFLAGS="$GLUCAT_CPPFLAGS -DEIGEN_USE_BLAS -DEIGEN_USE_LAPACKE"
      fi
   fi
 
-  if [[[ "$glucat_use_openmp" == "yes" ]]]; then
-     if [[[ "$glucat_use_armadillo" == "yes" ]]]; then
-          dnl Check for OpenMP flag
-          glucat_have_openmp="no"
-          glucat_openmp_flag=""
+  if test "$glucat_use_openmp" = "yes"; then
+      dnl Check for OpenMP flag
+      glucat_have_openmp="no"
+      glucat_openmp_flag=""
 
-          dnl Try -fopenmp (GCC, Clang)
-          GLUCAT_CHECK_COMPILER_FLAG([fopenmp],
-             [
-                glucat_have_openmp="yes"
-                glucat_openmp_flag="-fopenmp"
-             ],
-             [])
+      dnl Try -fopenmp (GCC, Clang)
+      GLUCAT_CHECK_COMPILER_FLAG([fopenmp],
+         [
+            glucat_have_openmp="yes"
+            glucat_openmp_flag="-fopenmp"
+         ],
+         [])
 
-          dnl If not found, try -qopenmp (Intel icpx)
-          if [[[ "$glucat_have_openmp" == "no" ]]]; then
-             GLUCAT_CHECK_COMPILER_FLAG([qopenmp],
-                [
-                   glucat_have_openmp="yes"
-                   glucat_openmp_flag="-qopenmp"
-                ],
-                [])
-          fi
+      dnl If not found, try -qopenmp (Intel icpx)
+      if test "$glucat_have_openmp" = "no"; then
+         GLUCAT_CHECK_COMPILER_FLAG([qopenmp],
+            [
+               glucat_have_openmp="yes"
+               glucat_openmp_flag="-qopenmp"
+            ],
+            [])
+      fi
 
-          dnl Resolve the BLAS engine to couple with OpenMP
-          glucat_have_blas_for_omp="no"
-          if test "$glucat_use_flexiblas" = "yes"; then
-             glucat_have_blas_for_omp="yes"
-             omp_blas_lib="-lflexiblas"
-          elif test "$glucat_use_openblas" = "yes"; then
-             glucat_have_blas_for_omp="yes"
-             omp_blas_lib="-lopenblas"
-          else
-             GLUCAT_CHECK_LIB([openblas],[cblas_dgemm],
-                [glucat_have_blas_for_omp="yes"
-                 omp_blas_lib="-lopenblas"],
-                [])
-          fi
-
-          if test "$glucat_have_openmp" = "yes" && test "$glucat_have_blas_for_omp" = "yes"; then
-             glucat_save_cxxflags="$CXXFLAGS"
-             CXXFLAGS="$CXXFLAGS $glucat_openmp_flag"
-             AC_CHECK_HEADERS([omp.h], [], [
-                AC_MSG_ERROR([OpenMP support requested but omp.h is missing. Please install the appropriate libomp-dev package for your compiler.])
-             ])
-             CXXFLAGS="$glucat_save_cxxflags"
-             CXXFLAGS="$CXXFLAGS $glucat_openmp_flag"
-             GLUCAT_CPPFLAGS="$GLUCAT_CPPFLAGS -D_GLUCAT_USE_OPENMP -DARMA_USE_OPENMP"
-             test "$glucat_use_flexiblas" != "yes" && test "$glucat_use_openblas" != "yes" && all_libraries="$all_libraries -lopenblas"
-             AC_MSG_NOTICE([OpenMP support enabled with $glucat_openmp_flag and $omp_blas_lib])
-           else
-              AC_MSG_WARN([OpenMP support requested but prerequisites (OpenMP flag and -lopenblas or -lflexiblas) were not found.])
-           fi
-
-     else
-        AC_MSG_WARN([--with-openmp ignored because --with-armadillo is not enabled.])
-     fi
+      if test "$glucat_have_openmp" = "yes"; then
+         glucat_save_cxxflags="$CXXFLAGS"
+         CXXFLAGS="$CXXFLAGS $glucat_openmp_flag"
+         AC_CHECK_HEADERS([omp.h], [], [
+            AC_MSG_ERROR([OpenMP support requested but omp.h is missing. Please install the appropriate libomp-dev package for your compiler.])
+         ])
+         CXXFLAGS="$glucat_save_cxxflags"
+         CXXFLAGS="$CXXFLAGS $glucat_openmp_flag"
+         
+         if test "$glucat_use_armadillo" = "yes"; then
+            GLUCAT_CPPFLAGS="$GLUCAT_CPPFLAGS -D_GLUCAT_USE_OPENMP -DARMA_USE_OPENMP"
+         fi
+         
+         if test "$glucat_use_blas" = "no"; then
+            GLUCAT_CHECK_LIB([openblas],[cblas_dgemm],
+               [all_libraries="$all_libraries -lopenblas"
+                AC_MSG_NOTICE([OpenBLAS support automatically enabled for OpenMP])],
+               [])
+         fi
+         
+         AC_MSG_NOTICE([OpenMP support enabled with $glucat_openmp_flag])
+      else
+         AC_MSG_WARN([OpenMP support requested but compiler flag was not found.])
+      fi
   fi
 
   if [[[ "$glucat_use_unordered_map" == "boost" ]]]; then
