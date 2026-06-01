@@ -1,0 +1,16 @@
+armadillo:                   --disable-pyclical --with-armadillo
+armadillo-openmp:            --disable-pyclical --with-armadillo --with-openmp
+armadillo-blas:              --disable-pyclical --with-armadillo --with-blas
+armadillo-blas-openmp:       --disable-pyclical --with-armadillo --with-blas --with-openmp
+armadillo-flexiblas:         --disable-pyclical --with-armadillo --with-blas=flexiblas
+armadillo-flexiblas-openmp:  --disable-pyclical --with-armadillo --with-blas=flexiblas --with-openmp
+armadillo-openblas:          --disable-pyclical --with-armadillo --with-blas=openblas
+armadillo-openblas-openmp:   --disable-pyclical --with-armadillo --with-blas=openblas --with-openmp
+eigen:                       --disable-pyclical
+eigen-openmp:                --disable-pyclical --with-openmp
+eigen-blas:                  --disable-pyclical --with-blas
+eigen-blas-openmp:           --disable-pyclical --with-blas --with-openmp
+eigen-flexiblas:             --disable-pyclical --with-blas=flexiblas
+eigen-flexiblas-openmp:      --disable-pyclical --with-blas=flexiblas --with-openmp
+eigen-openblas:              --disable-pyclical --with-blas=openblas
+eigen-openblas-openmp:       --disable-pyclical --with-blas=openblas --with-openmp
