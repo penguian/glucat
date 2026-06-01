@@ -49,8 +49,8 @@ glucat/glucat_config.h
 Doxyfile
 
 # Logs and backups
-*.log
-*.txt
+# *.log
+# *.txt
 configure~
 configure.ac.in.fopenmp
 a-conftest.gcno
