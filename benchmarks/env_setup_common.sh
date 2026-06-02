@@ -6,13 +6,68 @@ OS_TYPE=$(uname -s)
 PHYSICAL_CORES=""
 
 if [ "$OS_TYPE" = "Linux" ]; then
-    # Dynamic detection for hybrid architectures (e.g. big.LITTLE or Apple Silicon under Asahi Linux)
-    if ls /sys/devices/system/cpu/cpu*/cpu_capacity >/dev/null 2>&1; then
-        # Find maximum core capacity reported by the kernel (Performance cores)
-        MAX_CAP=$(cat /sys/devices/system/cpu/cpu*/cpu_capacity 2>/dev/null | sort -nr | head -n 1)
-        if [ -n "$MAX_CAP" ]; then
-            PHYSICAL_CORES=$(cat /sys/devices/system/cpu/cpu*/cpu_capacity 2>/dev/null | grep -c "^$MAX_CAP$")
+    P_CORE_LIST=""
+    P_CORE_PLACES=""
+
+    # Helper function to filter out SMT hyperthreads and keep only the primary thread of each core
+    filter_smt_and_add() {
+        local cpu_id=$1
+        local cpu_dir="/sys/devices/system/cpu/cpu$cpu_id"
+        if [ -d "$cpu_dir" ]; then
+            local siblings
+            siblings=$(cat "$cpu_dir/topology/thread_siblings_list" 2>/dev/null)
+            local first_sibling
+            first_sibling=$(echo "$siblings" | cut -d',' -f1 | cut -d'-' -f1)
+            if [ "$cpu_id" = "$first_sibling" ]; then
+                P_CORE_LIST="${P_CORE_LIST:+$P_CORE_LIST,}${cpu_id}"
+                P_CORE_PLACES="${P_CORE_PLACES:+$P_CORE_PLACES,}{${cpu_id}}"
+            fi
         fi
+    }
+
+    # 1. Option A: Intel Hybrid CPU Types API (recent Linux kernels)
+    if [ -d "/sys/devices/system/cpu/types" ]; then
+        for type_dir in /sys/devices/system/cpu/types/*core*; do
+            if [ -f "$type_dir/cpulist" ]; then
+                cpulist=$(cat "$type_dir/cpulist")
+                expanded_cpus=$(python3 -c "
+import sys
+res = []
+for part in sys.argv[1].split(','):
+    if '-' in part:
+        s, e = map(int, part.split('-'))
+        res.extend(range(s, e+1))
+    else:
+        res.append(int(part))
+print(' '.join(map(str, res)))
+" "$cpulist" 2>/dev/null)
+                for cpu_id in $expanded_cpus; do
+                    filter_smt_and_add "$cpu_id"
+                done
+            fi
+        done
+    fi
+
+    # 2. Option B: cpu_capacity Fallback (Apple Silicon, ARM64 big.LITTLE)
+    if [ -z "$P_CORE_LIST" ] && ls /sys/devices/system/cpu/cpu*/cpu_capacity >/dev/null 2>&1; then
+        MAX_CAP=$(cat /sys/devices/system/cpu/cpu*/cpu_capacity 2>/dev/null | sort -nr | head -n 1)
+        MIN_CAP=$(cat /sys/devices/system/cpu/cpu*/cpu_capacity 2>/dev/null | sort -n | head -n 1)
+        if [ -n "$MAX_CAP" ] && [ -n "$MIN_CAP" ] && [ "$MIN_CAP" -lt "$MAX_CAP" ]; then
+            for cpu_dir in /sys/devices/system/cpu/cpu[0-9]*; do
+                cap=$(cat "$cpu_dir/cpu_capacity" 2>/dev/null)
+                if [ "$cap" = "$MAX_CAP" ]; then
+                    cpu_id=$(basename "$cpu_dir" | sed 's/cpu//')
+                    filter_smt_and_add "$cpu_id"
+                fi
+            done
+        fi
+    fi
+
+    # Set PHYSICAL_CORES if asymmetric P-cores were successfully isolated
+    if [ -n "$P_CORE_LIST" ]; then
+        PHYSICAL_CORES=$(echo "$P_CORE_LIST" | tr ',' '\n' | wc -l)
+        export GLUCAT_P_CORE_PLACES="$P_CORE_PLACES"
+        export GLUCAT_P_CORE_MASK="$P_CORE_LIST"
     fi
 
     # Fallback to standard homogeneous x86-64 socket/core extraction
@@ -121,8 +176,12 @@ if [ "$IS_OPENMP" -eq 1 ]; then
         unset FLEXIBLAS
     fi
 
-    # Pin threads to hardware cores
-    export OMP_PLACES=cores
+    # Pin threads to hardware cores (preferring performance cores on hybrid systems)
+    if [ -n "$GLUCAT_P_CORE_PLACES" ]; then
+        export OMP_PLACES="$GLUCAT_P_CORE_PLACES"
+    else
+        export OMP_PLACES=cores
+    fi
     export OMP_PROC_BIND=close
 
     # Serial math environment overrides for nested loops
@@ -145,7 +204,11 @@ else
 
         # Pin threads if utilizing multiple threads
         if [ "$RESOLVED_THREADS" -gt 1 ]; then
-            export OMP_PLACES=cores
+            if [ -n "$GLUCAT_P_CORE_PLACES" ]; then
+                export OMP_PLACES="$GLUCAT_P_CORE_PLACES"
+            else
+                export OMP_PLACES=cores
+            fi
             export OMP_PROC_BIND=close
         else
             unset OMP_PLACES
