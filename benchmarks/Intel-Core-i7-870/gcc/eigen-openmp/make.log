@@ -1,0 +1,35 @@
+make  all-recursive
+make[1]: Entering directory '/home/leopardi/sync/src/penguian/glucat.10'
+Making all in glucat
+make[2]: Entering directory '/home/leopardi/sync/src/penguian/glucat.10/glucat'
+make[3]: Entering directory '/home/leopardi/sync/src/penguian/glucat.10/glucat'
+make[3]: Nothing to be done for 'all-am'.
+make[3]: Leaving directory '/home/leopardi/sync/src/penguian/glucat.10/glucat'
+make[2]: Leaving directory '/home/leopardi/sync/src/penguian/glucat.10/glucat'
+Making all in gfft_test
+make[2]: Entering directory '/home/leopardi/sync/src/penguian/glucat.10/gfft_test'
+g++ -std=c++23 -DHAVE_CONFIG_H -I. -I..  -I. -I. -I.. -I..   -D_GLUCAT_USE_BOOST_UNORDERED_FLAT_MAP -DNDEBUG -DHAVE_BITS_WORDSIZE_H   -Wall -g -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 --param large-function-growth=1000 -funroll-loops -fvariable-expansion-in-unroller -fno-var-tracking-assignments -flto=auto -fuse-linker-plugin -fno-check-new -fexceptions -MT gfft_test.o -MD -MP -MF .deps/gfft_test.Tpo -c -o gfft_test.o gfft_test.cpp
+mv -f .deps/gfft_test.Tpo .deps/gfft_test.Po
+g++ -std=c++23  -Wall -g -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 --param large-function-growth=1000 -funroll-loops -fvariable-expansion-in-unroller -fno-var-tracking-assignments -flto=auto -fuse-linker-plugin -fno-check-new -fexceptions   -o gfft_test gfft_test.o  -lopenblas
+make[2]: Leaving directory '/home/leopardi/sync/src/penguian/glucat.10/gfft_test'
+Making all in products
+make[2]: Entering directory '/home/leopardi/sync/src/penguian/glucat.10/products'
+g++ -std=c++23 -DHAVE_CONFIG_H -I. -I..  -I. -I. -I.. -I..   -D_GLUCAT_USE_BOOST_UNORDERED_FLAT_MAP -DNDEBUG -DHAVE_BITS_WORDSIZE_H   -Wall -g -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 --param large-function-growth=1000 -funroll-loops -fvariable-expansion-in-unroller -fno-var-tracking-assignments -flto=auto -fuse-linker-plugin -fno-check-new -fexceptions -MT products.o -MD -MP -MF .deps/products.Tpo -c -o products.o products.cpp
+mv -f .deps/products.Tpo .deps/products.Po
+g++ -std=c++23  -Wall -g -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 --param large-function-growth=1000 -funroll-loops -fvariable-expansion-in-unroller -fno-var-tracking-assignments -flto=auto -fuse-linker-plugin -fno-check-new -fexceptions   -o products products.o  -lopenblas
+make[2]: Leaving directory '/home/leopardi/sync/src/penguian/glucat.10/products'
+Making all in squaring
+make[2]: Entering directory '/home/leopardi/sync/src/penguian/glucat.10/squaring'
+g++ -std=c++23 -DHAVE_CONFIG_H -I. -I..  -I. -I. -I.. -I..   -D_GLUCAT_USE_BOOST_UNORDERED_FLAT_MAP -DNDEBUG -DHAVE_BITS_WORDSIZE_H   -Wall -g -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 --param large-function-growth=1000 -funroll-loops -fvariable-expansion-in-unroller -fno-var-tracking-assignments -flto=auto -fuse-linker-plugin -fno-check-new -fexceptions -MT squaring.o -MD -MP -MF .deps/squaring.Tpo -c -o squaring.o squaring.cpp
+mv -f .deps/squaring.Tpo .deps/squaring.Po
+g++ -std=c++23  -Wall -g -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 --param large-function-growth=1000 -funroll-loops -fvariable-expansion-in-unroller -fno-var-tracking-assignments -flto=auto -fuse-linker-plugin -fno-check-new -fexceptions   -o squaring squaring.o  -lopenblas
+make[2]: Leaving directory '/home/leopardi/sync/src/penguian/glucat.10/squaring'
+Making all in transforms
+make[2]: Entering directory '/home/leopardi/sync/src/penguian/glucat.10/transforms'
+g++ -std=c++23 -DHAVE_CONFIG_H -I. -I..  -I. -I. -I.. -I..   -D_GLUCAT_USE_BOOST_UNORDERED_FLAT_MAP -DNDEBUG -DHAVE_BITS_WORDSIZE_H   -Wall -g -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 --param large-function-growth=1000 -funroll-loops -fvariable-expansion-in-unroller -fno-var-tracking-assignments -flto=auto -fuse-linker-plugin -fno-check-new -fexceptions -MT transforms.o -MD -MP -MF .deps/transforms.Tpo -c -o transforms.o transforms.cpp
+mv -f .deps/transforms.Tpo .deps/transforms.Po
+g++ -std=c++23  -Wall -g -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 --param large-function-growth=1000 -funroll-loops -fvariable-expansion-in-unroller -fno-var-tracking-assignments -flto=auto -fuse-linker-plugin -fno-check-new -fexceptions   -o transforms transforms.o  -lopenblas
+make[2]: Leaving directory '/home/leopardi/sync/src/penguian/glucat.10/transforms'
+make[2]: Entering directory '/home/leopardi/sync/src/penguian/glucat.10'
+make[2]: Leaving directory '/home/leopardi/sync/src/penguian/glucat.10'
+make[1]: Leaving directory '/home/leopardi/sync/src/penguian/glucat.10'
