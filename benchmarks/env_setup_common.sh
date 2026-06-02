@@ -145,8 +145,8 @@ if [ -x "$(which flexiblas)" ]; then
         # Generic upstream Linux
         OPENBLAS_SERIAL="OPENBLASSERIAL"
     else
-        # Universal upstream keyword
-        OPENBLAS_SERIAL="SERIAL"
+        # Reference BLAS/LAPACK
+        OPENBLAS_SERIAL="NETLIB"
     fi
     if flexiblas list | grep -q "OPENBLAS-OPENMP"; then
         # Fedora / Red Hat
@@ -155,12 +155,12 @@ if [ -x "$(which flexiblas)" ]; then
         # Generic upstream Linux
         OPENBLAS_OPENMP="OPENBLASOPENMP"
     else
-        # Universal upstream keyword
-        OPENBLAS_OPENMP="DEFAULT"
+        # Reference BLAS/LAPACK
+        OPENBLAS_SERIAL="NETLIB"
     fi
 else
-    OPENBLAS_SERIAL="SERIAL"
-    OPENBLAS_OPENMP="DEFAULT"
+    OPENBLAS_SERIAL="NETLIB"
+    OPENBLAS_OPENMP="NETLIB"
 fi
 
 # Execute variable mapping
@@ -195,7 +195,7 @@ else
         # Backends are parallelized up to the resolved thread count.
         export OMP_NUM_THREADS=$RESOLVED_THREADS
         export OPENBLAS_NUM_THREADS=$RESOLVED_THREADS
-        
+
         if [ "$IS_FLEXIBLAS" -eq 1 ] || [ "$IS_BLAS" -eq 1 ]; then
             export FLEXIBLAS="${OPENBLAS_OPENMP}"
         else
