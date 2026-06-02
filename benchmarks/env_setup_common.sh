@@ -81,15 +81,42 @@ case "$GLUCAT_BENCHMARKS_CONFIG" in
         ;;
 esac
 
+# Set OPENBLAS alternatives for FlexiBLAS
+if [ -x "$(which flexiblas)" ]; then
+    if flexiblas list | grep -q "OPENBLAS-SERIAL"; then
+        # Fedora / Red Hat
+        OPENBLAS_SERIAL="OPENBLAS-SERIAL"
+    elif flexiblas list | grep -q "OPENBLASSERIAL"; then
+        # Generic upstream Linux
+        OPENBLAS_SERIAL="OPENBLASSERIAL"
+    else
+        # Universal upstream keyword
+        OPENBLAS_SERIAL="SERIAL"
+    fi
+    if flexiblas list | grep -q "OPENBLAS-OPENMP"; then
+        # Fedora / Red Hat
+        OPENBLAS_OPENMP="OPENBLAS-OPENMP"
+    elif flexiblas list | grep -q "OPENBLASOPENMP"; then
+        # Generic upstream Linux
+        OPENBLAS_OPENMP="OPENBLASOPENMP"
+    else
+        # Universal upstream keyword
+        OPENBLAS_OPENMP="DEFAULT"
+    fi
+else
+    OPENBLAS_SERIAL="SERIAL"
+    OPENBLAS_OPENMP="DEFAULT"
+fi
+
 # Execute variable mapping
 if [ "$IS_OPENMP" -eq 1 ]; then
     # OpenMP application profile: Armadillo or Eigen runs multithreaded.
     # We must restrict BLAS/OpenBLAS to serial single-threaded mode to prevent context-switching storms.
     export OMP_NUM_THREADS=$RESOLVED_THREADS
     export OPENBLAS_NUM_THREADS=1
-    
+
     if [ "$IS_FLEXIBLAS" -eq 1 ] || [ "$IS_BLAS" -eq 1 ]; then
-        export FLEXIBLAS=OPENBLASSERIAL
+        export FLEXIBLAS="${OPENBLAS_SERIAL}"
     else
         unset FLEXIBLAS
     fi
@@ -105,15 +132,15 @@ if [ "$IS_OPENMP" -eq 1 ]; then
 
 else
     # Sequential application profile: Armadillo or Eigen runs strictly single-threaded.
-    unset FLEXIBLAS
-    
     if [ "$IS_BLAS" -eq 1 ] || [ "$IS_FLEXIBLAS" -eq 1 ] || [ "$IS_OPENBLAS" -eq 1 ]; then
         # Backends are parallelized up to the resolved thread count.
         export OMP_NUM_THREADS=$RESOLVED_THREADS
         export OPENBLAS_NUM_THREADS=$RESOLVED_THREADS
         
         if [ "$IS_FLEXIBLAS" -eq 1 ] || [ "$IS_BLAS" -eq 1 ]; then
-            export FLEXIBLAS=OPENBLASOPENMP
+            export FLEXIBLAS="${OPENBLAS_OPENMP}"
+        else
+            unset FLEXIBLAS
         fi
 
         # Pin threads if utilizing multiple threads
