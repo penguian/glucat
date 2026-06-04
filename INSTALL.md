@@ -1026,7 +1026,7 @@ GluCat 0.98a2 with PyClical has so far been built and tested using:
     Note: One test in test_runtime/fast-test.configure.eig-blaze-qd.out
     fails due to a difference between Intel and AMD x86-64 floating
     point arithmetic.
-
+    
  3) Vincitor (Pensieri running VirtualBox):
     Virtual 1 core `Intel(R) Core(TM) i7 CPU 870 @ 2.93GHz` with
 
@@ -1055,7 +1055,26 @@ GluCat 0.98a2 with PyClical has so far been built and tested using:
     fails due to a difference between Intel and AMD x86-64 floating
     point arithmetic.
 
- 4) AWS Graviton:
+ 4) Ginestra
+    Apple M2 Pro with 6 Avalanche performance cores and 4 Icestorm efficiency cores with
+    ```
+    Linux 6.19.14-400.asahi.fc43.aarch64+16k SMP aarch64
+    Fedora Linux Asahi Remix 43 (KDE Plasma Desktop Edition)
+    g++ 15.2.1 20260123 (Red Hat 15.2.1-7)
+    Armadillo 12.8.1
+    Doxygen 1.14.0
+    Eigen3 3.4.0
+    GSL 2.8
+    QD 2.3.24
+    Cython 3.1.3
+    Numpy 2.3.5
+    Python 3.14.5
+    ```
+    `./test/test-all-config-options.sh`
+    All 12 configuration commands corresponding to each of the 12
+    `test.configure*.out` files in `./test_runtime.aarch64`
+    
+ 5) AWS Graviton:
     Virtual 4 core `ARM Cortex-A72 Model 3 (AWS Graviton A1 image)` with
 
     ```
@@ -1077,7 +1096,7 @@ GluCat 0.98a2 with PyClical has so far been built and tested using:
     128 bits on ARM 64 hardware vs 80 bits on x86-64.
     https://github.com/ARM-software/abi-aa/blob/main/aapcs64/aapcs64.rst#arithmetic-types
 
- 5) CoCalc:
+ 6) CoCalc:
     Virtual 2 core `Intel(R) Xeon(R) CPU @ 2.80GHz` with
 
     ```
@@ -1095,7 +1114,7 @@ GluCat 0.98a2 with PyClical has so far been built and tested using:
     All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`
 
- 6) GitHub codespaces:
+ 7) GitHub codespaces:
     AMD EPYC 7763 64-Core Processor with
 
     ```
