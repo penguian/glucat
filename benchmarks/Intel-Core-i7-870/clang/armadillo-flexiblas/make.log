@@ -1,0 +1,35 @@
+make  all-recursive
+make[1]: Entering directory '/home/leopardi/sync/src/penguian/glucat.5'
+Making all in glucat
+make[2]: Entering directory '/home/leopardi/sync/src/penguian/glucat.5/glucat'
+make[3]: Entering directory '/home/leopardi/sync/src/penguian/glucat.5/glucat'
+make[3]: Nothing to be done for 'all-am'.
+make[3]: Leaving directory '/home/leopardi/sync/src/penguian/glucat.5/glucat'
+make[2]: Leaving directory '/home/leopardi/sync/src/penguian/glucat.5/glucat'
+Making all in gfft_test
+make[2]: Entering directory '/home/leopardi/sync/src/penguian/glucat.5/gfft_test'
+clang++ -std=c++23 -DHAVE_CONFIG_H -I. -I..  -I. -I. -I.. -I..   -D_GLUCAT_USE_ARMADILLO -DARMA_WARN_LEVEL=1 -D_GLUCAT_USE_BOOST_UNORDERED_FLAT_MAP -DNDEBUG   -Wall  -O3  -march=native -flto=thin -mllvm -inline-threshold=1000 -mllvm -inlinehint-threshold=1000 -funroll-loops -Wno-deprecated-register -Wno-unused-command-line-argument -fexceptions -MT gfft_test.o -MD -MP -MF .deps/gfft_test.Tpo -c -o gfft_test.o gfft_test.cpp
+mv -f .deps/gfft_test.Tpo .deps/gfft_test.Po
+clang++ -std=c++23  -Wall  -O3  -march=native -flto=thin -mllvm -inline-threshold=1000 -mllvm -inlinehint-threshold=1000 -funroll-loops -Wno-deprecated-register -Wno-unused-command-line-argument -fexceptions   -o gfft_test gfft_test.o  -larmadillo -lflexiblas
+make[2]: Leaving directory '/home/leopardi/sync/src/penguian/glucat.5/gfft_test'
+Making all in products
+make[2]: Entering directory '/home/leopardi/sync/src/penguian/glucat.5/products'
+clang++ -std=c++23 -DHAVE_CONFIG_H -I. -I..  -I. -I. -I.. -I..   -D_GLUCAT_USE_ARMADILLO -DARMA_WARN_LEVEL=1 -D_GLUCAT_USE_BOOST_UNORDERED_FLAT_MAP -DNDEBUG   -Wall  -O3  -march=native -flto=thin -mllvm -inline-threshold=1000 -mllvm -inlinehint-threshold=1000 -funroll-loops -Wno-deprecated-register -Wno-unused-command-line-argument -fexceptions -MT products.o -MD -MP -MF .deps/products.Tpo -c -o products.o products.cpp
+mv -f .deps/products.Tpo .deps/products.Po
+clang++ -std=c++23  -Wall  -O3  -march=native -flto=thin -mllvm -inline-threshold=1000 -mllvm -inlinehint-threshold=1000 -funroll-loops -Wno-deprecated-register -Wno-unused-command-line-argument -fexceptions   -o products products.o  -larmadillo -lflexiblas
+make[2]: Leaving directory '/home/leopardi/sync/src/penguian/glucat.5/products'
+Making all in squaring
+make[2]: Entering directory '/home/leopardi/sync/src/penguian/glucat.5/squaring'
+clang++ -std=c++23 -DHAVE_CONFIG_H -I. -I..  -I. -I. -I.. -I..   -D_GLUCAT_USE_ARMADILLO -DARMA_WARN_LEVEL=1 -D_GLUCAT_USE_BOOST_UNORDERED_FLAT_MAP -DNDEBUG   -Wall  -O3  -march=native -flto=thin -mllvm -inline-threshold=1000 -mllvm -inlinehint-threshold=1000 -funroll-loops -Wno-deprecated-register -Wno-unused-command-line-argument -fexceptions -MT squaring.o -MD -MP -MF .deps/squaring.Tpo -c -o squaring.o squaring.cpp
+mv -f .deps/squaring.Tpo .deps/squaring.Po
+clang++ -std=c++23  -Wall  -O3  -march=native -flto=thin -mllvm -inline-threshold=1000 -mllvm -inlinehint-threshold=1000 -funroll-loops -Wno-deprecated-register -Wno-unused-command-line-argument -fexceptions   -o squaring squaring.o  -larmadillo -lflexiblas
+make[2]: Leaving directory '/home/leopardi/sync/src/penguian/glucat.5/squaring'
+Making all in transforms
+make[2]: Entering directory '/home/leopardi/sync/src/penguian/glucat.5/transforms'
+clang++ -std=c++23 -DHAVE_CONFIG_H -I. -I..  -I. -I. -I.. -I..   -D_GLUCAT_USE_ARMADILLO -DARMA_WARN_LEVEL=1 -D_GLUCAT_USE_BOOST_UNORDERED_FLAT_MAP -DNDEBUG   -Wall  -O3  -march=native -flto=thin -mllvm -inline-threshold=1000 -mllvm -inlinehint-threshold=1000 -funroll-loops -Wno-deprecated-register -Wno-unused-command-line-argument -fexceptions -MT transforms.o -MD -MP -MF .deps/transforms.Tpo -c -o transforms.o transforms.cpp
+mv -f .deps/transforms.Tpo .deps/transforms.Po
+clang++ -std=c++23  -Wall  -O3  -march=native -flto=thin -mllvm -inline-threshold=1000 -mllvm -inlinehint-threshold=1000 -funroll-loops -Wno-deprecated-register -Wno-unused-command-line-argument -fexceptions   -o transforms transforms.o  -larmadillo -lflexiblas
+make[2]: Leaving directory '/home/leopardi/sync/src/penguian/glucat.5/transforms'
+make[2]: Entering directory '/home/leopardi/sync/src/penguian/glucat.5'
+make[2]: Leaving directory '/home/leopardi/sync/src/penguian/glucat.5'
+make[1]: Leaving directory '/home/leopardi/sync/src/penguian/glucat.5'
