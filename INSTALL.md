@@ -386,32 +386,28 @@ You will also need to ensure that the include path used by the compiler sees
 `<qd/qd_real.h>` and the library path sees `libqd.*`.
 
 ```
-  --with-armadillo=yes|no|auto
-                          use Armadillo library (auto tries FlexiBLAS then
-                          OpenBLAS) [default=no]
+  --with-armadillo        use Armadillo library [default=no]
 ```
-This option controls the use of the Armadillo C++ linear algebra library.
+This option controls the use of the Armadillo C++ linear algebra library. The only valid values are `yes` or `no`.
 
 The value `yes` (or `--with-armadillo` without an explicit value) adds `-D_GLUCAT_USE_ARMADILLO` to `CXXFLAGS` and the flag `-larmadillo` to the list of libraries, `LIBS` in the Makefiles.
 
-The value `auto` automatically probes the host system's optimized backends:
-1. It checks for the `flexiblas` library. If found, it automatically enables FlexiBLAS (`--with-flexiblas=yes`), which appends `-lflexiblas` to the libraries.
-2. If `flexiblas` is not found, it checks for the `openblas` library. If found, it automatically enables OpenBLAS (`--with-openblas=yes`), which appends `-lopenblas` to the libraries.
+To compile your own programs using GluCat headers with Armadillo, your Makefile needs to pass the flags `-D_GLUCAT_USE_ARMADILLO` and `-larmadillo` (along with `-lflexiblas` or `-lopenblas` if those backends are used) to the C++ compiler. You will also need to ensure that the include path used by the compiler sees `<armadillo>` and the library path sees `libarmadillo.*`.
+
+```
+  --with-blas=yes|no|flexiblas|openblas
+                          use specified BLAS/LAPACK library backend [default=no]
+```
+This option controls the BLAS/LAPACK library backend used in conjunction with Armadillo. This option requires that the Armadillo library is also used.
+
+The value `yes` automatically probes the host system's optimized backends:
+1. It checks for the `flexiblas` library. If found, it enables FlexiBLAS, which appends `-lflexiblas` to the libraries.
+2. If `flexiblas` is not found, it checks for the `openblas` library. If found, it enables OpenBLAS, which appends `-lopenblas` to the libraries.
 3. If both are absent, it defaults to standard dynamic linkage with `-larmadillo`.
 
-To compile your own programs using GluCat headers with Armadillo, your Makefile needs to pass the flags `-D_GLUCAT_USE_ARMADILLO` and `-larmadillo` (along with `-lflexiblas` or `-lopenblas` if you want to use those backends) to the C++ compiler. You will also need to ensure that the include path used by the compiler sees `<armadillo>` and the library path sees `libarmadillo.*`.
+Specifying `flexiblas` or `openblas` directly skips the auto-probing and forces the configuration to use the respective library.
 
-```
-  --with-openblas         use OpenBLAS library (requires Armadillo) [default=no]
-```
-This option controls the use of the OpenBLAS C++ linear algebra library. This option
-requires that the Armadillo library is also used.
-
-The option `--with-openblas` adds the flag `-lopenblas` to the list of libraries, 
-`LIBS` in the Makefiles.
-
-To compile your own programs using the GluCat library with OpenBLAS, your Makefile
-needs to pass the flag `-lopenblas` to the C++ compiler.
+To compile your own programs using the GluCat library with OpenBLAS or FlexiBLAS, your Makefile needs to pass the flag `-lopenblas` or `-lflexiblas` respectively to the C++ compiler.
 
 ```
   --with-openmp           use OpenMP (requires Armadillo) [default=no]
@@ -731,7 +727,7 @@ allow program crashes to be more easily debugged. For `./test00/test00` and
 `./test11/test11` the argument `--verbose` produces verbose output essentially by
 setting the error tolerance to zero. Verbose output can become quite large.
 
-The test script `./test/test_optional.sh` runs all examples 00 to 17 in order,
+The test script `./test/test_optional.sh` runs all examples 00 to 18 in order,
 with the given parameters as program arguments.
 
 
@@ -754,7 +750,9 @@ configure command
 ./configure $options
 ```
 then copying the output to `./test_runtime/test.configure.$abbreviation.out`
-or `./test_runtime/fast-test.configure.$abbreviation.out` respectively.
+or `./test_runtime/fast-test.configure.$abbreviation.out` respectively (where `./test_runtime`
+is a symlink pointing to `./test_runtime.x86-64` or `./test_runtime.aarch64` depending
+on the platform architecture).
 
 For example, for `./test/test-all-config-options.sh`
 
@@ -858,6 +856,8 @@ output of `./test/pyclical-test-all-config-options.sh` just examine all of the
 Running the timing (benchmark) tests
 ------------------------------------
 
+All timing test outputs report execution times in **milliseconds (ms)**.
+
 The test program `./gfft_test/gfft_test` takes a parameter `n`, and transforms
 larger and larger multivectors within the subalgebra defined by the frame of
 the index set `{-n, ..., -1, 1, ..., n}`.
@@ -891,8 +891,12 @@ The default is:
  ./gfft_test/gfft_test 11
  ./transforms/transforms 8
 ```
-The sample timing test results in `./test_runtime` are from programs
-built and run using the configure command:
+
+The sample timing test results are organized in target-specific directories:
+* `./test_runtime.x86-64` (for AMD/Intel x86-64 platforms)
+* `./test_runtime.aarch64` (for ARM64/Apple Silicon platforms)
+
+The directory `./test_runtime` is a symlink pointing to the appropriate architecture-specific directory. The sample outputs were generated using:
 
 ```
 ./configure
@@ -907,6 +911,20 @@ on an 8 core `AMD Ryzen 7 8840HS w/ Radeon 780M Graphics` @ 3.3 GHz with
     GSL 2.8
     QD 2.3.23
 ```
+
+Systematic Benchmarking
+-----------------------
+
+In addition to individual timing tests, the test suite includes scripts for systematic performance benchmarking across 16 different library configurations (varying backends such as Eigen/Armadillo, parallel and serial BLAS, and OpenMP settings).
+
+These benchmarks are driven by the following scripts in the `./test` directory:
+* `./test/benchmark-all-config-options.sh`: Builds and runs benchmarks for all 16 configurations specified in `./test/benchmark-config-options.txt`.
+* `./test/benchmark-one-config-option.sh`: Runs a single configuration by line number.
+* `./test/copy-all-benchmark-outputs.sh` / `./test/copy-one-benchmark-output.sh`: Copies benchmark results to the `./benchmarks` directory.
+
+To ensure consistent processor affinity, multithreading, and cache behavior, the benchmarks source configuration-specific environment scripts from the `./benchmarks` directory, which route environment variables (such as `OMP_NUM_THREADS` and `OPENBLAS_NUM_THREADS`) depending on the profile:
+* `env-*.sh`: A set of 16 wrappers corresponding to each configuration abbreviation.
+* `env_setup_common.sh`: A common script performing platform-independent CPU architecture probing (isolating Performance cores on hybrid Apple Silicon Asahi Linux platforms, and targeting physical cores on homogeneous AMD/Intel x86-64 Linux).
 
 Testing PyClical
 ----------------

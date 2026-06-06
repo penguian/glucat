@@ -94,7 +94,7 @@ you should have a directory, `glucat-xxx`, where `xxx` is the version number.
 Under `glucat-xxx` you should see a number of directories, including `./admin`,
 `benchmarks`, `./doc`, `./gfft_test`, `./glucat`, `./m4`, `./products`,
 `./pyclical`,`./squaring`, `./test`, `./test_coverage`, `./test_doctest`,
-`./test_move`,`./test_runtime`,`./test00` to `./test18`, and `./transforms`.
+`./test_move`, `./test_runtime.x86-64`, `./test_runtime.aarch64`, `./test00` to `./test18`, and `./transforms`.
 
 The `./glucat` directory contains all the header files that define the GluCat C++
 template library.
@@ -112,8 +112,8 @@ The `./doc` directory is the destination for generated documentation.
 The `./gfft_test`, `./products`, `./squaring` and `./transform` directories
 contain the C++ source code for timing tests for GluCat.
 
-The `./benchmarks` directory contains timing test results for various machines and
-compiler.
+The `./benchmarks` directory contains timing test results and environment configuration
+scripts for various machines and compilers.
 
 The `./test`, `./test_move` and `./test00` to `./test18` directories contain the
 C++ source code for programming examples and regression tests for GluCat.
@@ -126,8 +126,9 @@ reports for the various test suites. The `doctest` coverage script supports
 selective testing of the Eigen and Armadillo backends, as well as combined 
 reports.
 
-The `./test_runtime` directory contains regression test input and sample output
-for the GluCat timing and regression tests.
+The `./test_runtime.x86-64` and `./test_runtime.aarch64` directories contain
+regression test input and sample output for the GluCat timing and regression tests.
+The `./test_runtime` directory is a symlink pointing to the target-specific directory.
 
 
 3 Resolving dependencies, installing and testing the software
@@ -272,7 +273,7 @@ click on the corresponding name in the list.
 
 Once you have familiarized yourself with Clifford algebras and have tried using
 PyClical, take a good look at the test C++ code in `./test_doctest` and
-`./test00` to `./test18`, and the test output in `./test_runtime`.
+`./test00` to `./test18`, and the test output in `./test_runtime` (or `./test_runtime.x86-64` / `./test_runtime.aarch64`).
 
 A good way to begin writing your own C++ code using GluCat is to start with the
 programming example code in `./test01`. The file `test01/peg01.cpp` includes
