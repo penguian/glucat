@@ -26,7 +26,7 @@ DOC = doc
 
 doc_DATA = AUTHORS AUTHORS.md COPYING ChangeLog DESIGN.md glucat.lsm INSTALL INSTALL.md NEWS README README.md TODO TODO.md
 
-EXTRA_DIST = admin m4 test test_runtime test_runtime.aarch64 test_runtime.x86-64 test_doctest $(EXAMPLES) $(SEMANTICS) \
+EXTRA_DIST = admin m4 test test_runtime.aarch64 test_runtime.x86-64 test_doctest $(EXAMPLES) $(SEMANTICS) \
              subdirs configure.ac.in configure.ac configure Makefile.am $(doc_DATA) doc/Makefile.am doc/Makefile.in
 
 AUTHORS: AUTHORS.md
@@ -46,9 +46,11 @@ check-local: test-out $(PYCLICAL_CHECK_OUT)
 fast-check: fast-test-out $(PYCLICAL_CHECK_OUT)
 
 test-out: $(TESTOUT)
+	mkdir -p test_runtime
 	cat $(TESTOUT) > test_runtime/test.out
 
 fast-test-out: $(FAST_TESTOUT)
+	mkdir -p test_runtime
 	cat $(FAST_TESTOUT) > test_runtime/fast-test.out
 
 if make_pyclical
