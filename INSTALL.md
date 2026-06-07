@@ -937,7 +937,7 @@ on an 8 core `AMD Ryzen 7 8840HS w/ Radeon 780M Graphics` @ 3.3 GHz with
 Systematic Benchmarking
 -----------------------
 
-In addition to individual timing tests, the test suite includes scripts for systematic performance benchmarking across 16 different library configurations (varying backends such as Eigen/Armadillo, parallel and serial BLAS, and OpenMP settings).
+In addition to individual timing tests, the test suite includes scripts for systematic performance benchmarking across 16 different library configurations (varying backends such as Eigen/Armadillo, parallel and serial BLAS, and OpenMP settings). Note that these benchmarking directories and scripts are included in the Git repository but are deliberately excluded from the installation tarball to prevent bloat.
 
 These benchmarks are driven by the following scripts in the `./test` directory:
 * `./test/benchmark-all-config-options.sh`: Builds and runs benchmarks for all 16 configurations specified in `./test/benchmark-config-options.txt`.
