@@ -1,4 +1,4 @@
-INSTALL for GluCat 0.98a1 with PyClical
+INSTALL for GluCat 0.98a2 with PyClical
 ========================================
 
 Prerequisites: Before You Begin
@@ -22,6 +22,8 @@ http://arma.sourceforge.net/.
 The default configuration of GluCat, as well as most combinations of
 configuration options, require a compiler that supports the C++ 2023 standard.
 
+Note: The legacy Intel Classic C++ compilers (`icc`/`icpc`) are deprecated and will be removed in a future release. Users in Intel hardware environments should compile using the modern oneAPI LLVM-based C++ compilers (`icx`/`icpx`) instead.
+
 Scroll to the end of these instructions to see a list of successful builds,
 including version numbers of various software components, and notes on software
 versions.
@@ -38,13 +40,13 @@ To install the first way, from (e.g.) GitHub, run the following commands on a
 Linux machine or equivalent Posix environment connected to the Internet:
 
 ```
-> git clone git@github.com:penguian/glucat.git glucat-0.98a1
-> cd glucat-0.98a1
+> git clone git@github.com:penguian/glucat.git glucat-0.98a2
+> cd glucat-0.98a2
 > make -f admin/Makefile.common bootstrap
 ```
-This results in a directory structure that includes glucat-0.98a1/configure,
+This results in a directory structure that includes glucat-0.98a2/configure,
 allowing you to make and install GluCat in the same way as if you had downloaded
-and unzipped the tarball glucat-0.98a1.tar.gz.
+and unzipped the tarball glucat-0.98a2.tar.gz.
 
 
 Directory Structure
@@ -52,12 +54,12 @@ Directory Structure
 
 Once you have downloaded, unzipped and untarred the source code, or followed
 the instructions above to install from Git clone, you should have a directory,
-glucat-0.98a1. Under this directory you should see a number of subdirectories,
+glucat-0.98a2. Under this directory you should see a number of subdirectories,
 including `./admin`, `./doc`, `./glucat`, `./gfft_test`, `./products`,
 `./pyclical`, `./squaring`, `./test`, `./test_coverage`, `./test_doctest`,
-`./test_move`, `./test_runtime`, `./testxx`, and `./transforms`.
+`./test_move`, `./test_runtime.*`, `./testxx`, and `./transforms`.
 
-The following instructions are meant to be used with `glucat-0.98a1` as the
+The following instructions are meant to be used with `glucat-0.98a2` as the
 current directory.
 
 
@@ -171,7 +173,7 @@ subdirectories.
 
 As briefly described above, the simplest way to install this package is:
 
- 1. `cd` to the `glucat-0.98a1` directory containing the source code and type
+ 1. `cd` to the `glucat-0.98a2` directory containing the source code and type
     `./configure` to configure GluCat with PyClical for your system.
     If you are using `csh` on an old version of System V, you might need to type
     `sh ./configure` instead to prevent `csh` from trying to execute
@@ -386,16 +388,26 @@ You will also need to ensure that the include path used by the compiler sees
 ```
   --with-armadillo        use Armadillo library [default=no]
 ```
-This option controls the use of the Armadillo C++ linear algebra library.
+This option controls the use of the Armadillo C++ linear algebra library. The only valid values are `yes` or `no`.
 
-The option `--with-armadillo` adds `-D_GLUCAT_USE_ARMADILLO` to `CXXFLAGS` and 
-adds the flag `-larmadillo` to the list of libraries, `LIBS` in the Makefiles.
+The value `yes` (or `--with-armadillo` without an explicit value) adds `-D_GLUCAT_USE_ARMADILLO` to `CXXFLAGS` and the flag `-larmadillo` to the list of libraries, `LIBS` in the Makefiles.
 
+To compile your own programs using GluCat headers with Armadillo, your Makefile needs to pass the flags `-D_GLUCAT_USE_ARMADILLO` and `-larmadillo` (along with `-lflexiblas` or `-lopenblas` if those backends are used) to the C++ compiler. You will also need to ensure that the include path used by the compiler sees `<armadillo>` and the library path sees `libarmadillo.*`.
 
-To compile your own programs using the GluCat library with Armadillo, your 
-Makefile needs to pass the flags `-D_GLUCAT_USE_ARMADILLO` and `-larmadillo` to 
-the C++ compiler. You will also need to ensure that the include path used by the 
-compiler sees `<armadillo>` and the library path sees `libarmadillo.*`.
+```
+  --with-blas=yes|no|flexiblas|openblas
+                          use specified BLAS/LAPACK library backend [default=no]
+```
+This option controls the BLAS/LAPACK library backend used in conjunction with Armadillo. This option requires that the Armadillo library is also used.
+
+The value `yes` automatically probes the host system's optimized backends:
+1. It checks for the `flexiblas` library. If found, it enables FlexiBLAS, which appends `-lflexiblas` to the libraries.
+2. If `flexiblas` is not found, it checks for the `openblas` library. If found, it enables OpenBLAS, which appends `-lopenblas` to the libraries.
+3. If both are absent, it defaults to standard dynamic linkage with `-larmadillo`.
+
+Specifying `flexiblas` or `openblas` directly skips the auto-probing and forces the configuration to use the respective library.
+
+To compile your own programs using the GluCat library with OpenBLAS or FlexiBLAS, your Makefile needs to pass the flag `-lopenblas` or `-lflexiblas` respectively to the C++ compiler.
 
 ```
   --with-openmp           use OpenMP (requires Armadillo) [default=no]
@@ -461,7 +473,7 @@ Building PyClical and the timing test programs
 ----------------------------------------------
 
 To build PyClical and the timing test programs, set the environment variable
-CXX to indicate your C++ compiler, eg. `g++` for GNU C++, `icpc` or `icpx`
+CXX to indicate your C++ compiler, eg. `g++` for GNU C++, `icpx`
 for Intel C++, then run `./configure` as above, and then run `make`.
 
 Make uses the headers in `./glucat` and `./test` and the source in `./pyclical`,
@@ -516,7 +528,7 @@ Building and running the regression test programs
 -------------------------------------------------
 
 To build and run the regression test programs, set the environment variable `CXX`
-to indicate your C++ compiler, eg. `g++` for GNU C++, `icpc` or `icpx` for Intel
+to indicate your C++ compiler, eg. `g++` for GNU C++, `icpx` for Intel
 C++, then run `./configure` as above, and then run `make check`. This builds and
 runs the executable files `./test_move/test_move` and `./test00/test00` to
 `./test17/test17`. This produces the intermediate output files
@@ -531,7 +543,7 @@ Note the difference between `make check` and `make check-local`:
   through `SUBDIRS` and only runs the legacy functionality tests.
 
 When you want to generate `test_runtime/test.out` to compare with the existing 
-sample files in `test_runtime`, you should use parallel make with the 
+sample files in `test_runtime.*`, you should use parallel make with the 
 `check-local` target:
 ```
   make -j${NPROCS} check-local
@@ -578,17 +590,24 @@ The resulting HTML report will be available in
 To Test
 =======
 
-The test_runtime directory
---------------------------
+The test_runtime.* directories
+------------------------------
 
-The test runtime directory `./test_runtime` contains sample test output files.
+The static test runtime baseline directories `./test_runtime.x86-64` and
+`./test_runtime.aarch64` contain sample test output files.
 
-The sample test output files include `eg3.res`, `gfft_test-11.out`, `products-8.out`,
-`squaring-11.out` and `transforms-8.out`. There are also 24 versions of the output
-of the regression tests. These are described below.
+The sample test output files include `gfft_test-11.out`, `products-8.out`,
+`squaring-11.out` and `transforms-8.out`.
 
-`./test_runtime` also contains the test input file `eg8.txt`. This file is needed
-by programming example 8 (reading multivectors from input).
+The `./test_runtime.x86-64` directory contains 24 sample versions of the regression
+test results (corresponding to 12 different combinations of configuration
+parameters, for two different sets of tests: the complete set of 19 tests, and a
+subset of 3 tests), and also includes the sample output file `eg3.res` and the
+test input file `eg8.txt` (needed by programming example 8, reading multivectors from input).
+
+The `./test_runtime.aarch64` directory contains 12 sample versions of the full
+regression test results (corresponding to 12 different combinations of configuration
+parameters for the complete set of 19 tests).
 
 
 Re-running the regression tests
@@ -597,22 +616,36 @@ Re-running the regression tests
 The main regression test script is `./test/test.sh`. Once you have built and run
 the regression tests via `make check`, you can use this script to re-run the
 regression tests. The script `./test/test.sh` reruns tests `./test00/test00` to
-`./test17/test17`, using relative pathnames, so it is best to leave `test.sh`
+`./test18/test18`, using relative pathnames, so it is best to leave `test.sh`
 where it is and invoke it using its full path name. This allows it to find
-`test00` to `test17`.
+`test00` to `test18`.
 
 The test script `./test/test.sh` takes any number (including zero) of numeric
-parameters. Parameters in the range `00` to `17` correspond to coding examples
-`./test00/test00` to `./test17/test17`. These examples are run in numerical
-order. With zero parameters, all examples from `00` to `17` are run in order.
+parameters. Parameters in the range `00` to `18` correspond to coding examples
+`./test00/test00` to `./test18/test18`. These examples are run in numerical
+order. With zero parameters, all examples from `00` to `18` are run in order.
 Many of the examples are run twice - once with `framed_multi<Scalar_T>` and once
 with `matrix_multi<Scalar_T>`.
 
-The `./test_runtime` directory contains 24 sample versions of the regression test
-results, corresponding to 12 different combinations of configuration parameters,
-for two different sets of tests: the complete set of 18 tests, and a subset of 3
-tests. The tests were all run on an 8 core 
-`AMD Ryzen 7 8840HS w/ Radeon 780M Graphics` @ 3.3 GHz with
+The baseline test results are structured as follows: 
+
+The tests results in `./test_runtime.aarch64` come from runs on an Apple M2 Pro
+with 6 Avalanche performance cores and 4 Icestorm efficiency cores with
+    ```
+    Linux 6.19.14-400.asahi.fc43.aarch64+16k SMP aarch64
+    Fedora Linux Asahi Remix 43 (KDE Plasma Desktop Edition)
+    g++ 15.2.1 20260123 (Red Hat 15.2.1-7)
+    Armadillo 12.8.1
+    Doxygen 1.14.0
+    Eigen3 3.4.0
+    GSL 2.8
+    QD 2.3.24
+    Cython 3.1.3
+    Numpy 2.3.5
+    Python 3.14.5
+    ```
+The tests results in `./test_runtime.x86-64` come from runs on an 8 core 
+AMD Ryzen 7 8840HS w/ Radeon 780M Graphics` @ 3.3 GHz with
 ```
     Linux 6.11.0-14-generic #15-Ubuntu SMP 2025
     Kubuntu 24.10
@@ -708,14 +741,14 @@ you run the tests using different architecture, compilers or random number
 generators, you should expect to have different floating point arithmetic
 results, but generally, still within acceptable error tolerances.
 
-The regression tests `./test00/test00` to `./test17/test17` recognize the program
+The regression tests `./test00/test00` to `./test18/test18` recognize the program
 arguments `--help`, `--no-catch`, and `--verbose`. The `--no-catch` argument
 disables the default exception catching behaviour of a regression test, to
 allow program crashes to be more easily debugged. For `./test00/test00` and
 `./test11/test11` the argument `--verbose` produces verbose output essentially by
 setting the error tolerance to zero. Verbose output can become quite large.
 
-The test script `./test/test_optional.sh` runs all examples 00 to 17 in order,
+The test script `./test/test_optional.sh` runs all examples 00 to 18 in order,
 with the given parameters as program arguments.
 
 
@@ -738,7 +771,8 @@ configure command
 ./configure $options
 ```
 then copying the output to `./test_runtime/test.configure.$abbreviation.out`
-or `./test_runtime/fast-test.configure.$abbreviation.out` respectively.
+or `./test_runtime/fast-test.configure.$abbreviation.out` respectively where the
+directory `./test_runtime` is created if it does not already exist.
 
 For example, for `./test/test-all-config-options.sh`
 
@@ -787,24 +821,24 @@ speeding up the entire testing process.
 
 Rather than running the regression tests in-place and copying the output
 directly into `./test_runtime`, the script `./test/test-all-config-options.sh`
-produces as many copies of the whole directory `glucat-0.98a1` as there are lines
-in `./test/config-options.txt`, naming them `glucat-0.98a1.1` to `glucat-0.98a1.12`,
-in the parent directory of `glucat-0.98a1`. This allows the effect of each set
+produces as many copies of the whole directory `glucat-0.98a2` as there are lines
+in `./test/config-options.txt`, naming them `glucat-0.98a2.1` to `glucat-0.98a2.12`,
+in the parent directory of `glucat-0.98a2`. This allows the effect of each set
 of configuration options to be directly compared, and also ensures that any
 side-effect of a configuration does not affect the test results of another
 configuration.
 
-The script `./test/diff-all-config-outputs.sh` compares each relevant test output
-file with the corresponding file in `./test_runtime` or `./pyclical`. For example,
-line 4 of `./test/config-options.txt`
+The script `./test/diff-all-config-outputs.sh ${arch}` compares each relevant test
+output file with the corresponding file in `./test_runtime.${arch}` or `./pyclical`.
+For example, line 4 of `./test/config-options.txt`
 
 ```
 disable-dependency:          --disable-dependency-tracking
 ```
 causes `./test/diff-all-config-outputs.sh` to use diff to compare
-`glucat-0.98a1.4/test_runtime/test.configure.disable-dependency.out` to
-`glucat-0.98a1/test_runtime/test.configure.disable-dependency.out`, and compare
-`glucat-0.98a1.4/pyclical/test.out` to `glucat-0.98a1/pyclical/test.out`.
+`glucat-0.98a2.4/test_runtime/test.configure.disable-dependency.out` to
+`glucat-0.98a2/test_runtime.${arch}/test.configure.disable-dependency.out`, and
+compare `glucat-0.98a2.4/pyclical/test.out` to `glucat-0.98a2/pyclical/test.out`.
 
 Each comparison should only produce a line containing the line number of
 the configuration being compared: 1 to 12.
@@ -819,18 +853,20 @@ The exceptional cases are:
    update that fixes a problem with `tanh`.
 
 If the output of your systematic tests differs due to a difference in compilers
-or libraries, you may want to copy this output to `./test_runtime` to ease future
-comparisons. To do so, run the script `./test/copy-all-config-outputs.sh`.
+or libraries, you may want to copy this output to the staging `./test_runtime`
+directory to ease future comparisons without clobbering the baseline
+`./test_runtime.${arch}` directory directly. To do so, run the script
+`./test/copy-all-config-outputs.sh`.
 
 The difference between `./test/test-all-config-options.sh` and
 `./test/fast-test-all-config-options.sh` is that the former runs all of the tests
-`./test00` to `./test17`, whereas the latter runs only `./test00`, `./test10` and
+`./test00` to `./test18`, whereas the latter runs only `./test00`, `./test10` and
 `./test11`. Both scripts build and check `./pyclical`. More specifically, the
 `./test/test-one-config-option.sh` script runs `make check`, and the
 `./test/fast-test-one-config-option.sh` script runs `make fast-check`. For the
 definitions of these arguments to `make`, see the file `./Makefile.am.in`. To
 compare or copy the output of `./test/fast-test-all-config-options.sh`, use either
-`./test/fast-diff-all-config-outputs.sh` or `./test/fast-copy-all-config-outputs.sh`
+`./test/fast-diff-all-config-outputs.sh ${arch}` or `./test/fast-copy-all-config-outputs.sh`
 respectively.
 
 The script `./test/pyclical-test-all-config-options.sh` just builds and checks
@@ -841,6 +877,8 @@ output of `./test/pyclical-test-all-config-options.sh` just examine all of the
 
 Running the timing (benchmark) tests
 ------------------------------------
+
+All timing test outputs report execution times in milliseconds (ms).
 
 The test program `./gfft_test/gfft_test` takes a parameter `n`, and transforms
 larger and larger multivectors within the subalgebra defined by the frame of
@@ -875,8 +913,12 @@ The default is:
  ./gfft_test/gfft_test 11
  ./transforms/transforms 8
 ```
-The sample timing test results in `./test_runtime` are from programs
-built and run using the configure command:
+
+The sample timing test results are organized in target-specific baseline directories:
+* `./test_runtime.x86-64` (for AMD/Intel x86-64 platforms)
+* `./test_runtime.aarch64` (for ARM64/Apple Silicon platforms)
+
+The sample outputs were generated using:
 
 ```
 ./configure
@@ -891,6 +933,22 @@ on an 8 core `AMD Ryzen 7 8840HS w/ Radeon 780M Graphics` @ 3.3 GHz with
     GSL 2.8
     QD 2.3.23
 ```
+
+Systematic Benchmarking
+-----------------------
+
+In addition to individual timing tests, the test suite includes scripts for systematic performance benchmarking across 16 different library configurations (varying backends such as Eigen/Armadillo, parallel and serial BLAS, and OpenMP settings). Note that these benchmarking directories and scripts are included in the Git repository but are deliberately excluded from the installation tarball to prevent bloat.
+
+These benchmarks are driven by the following scripts in the `./test` directory:
+* `./test/benchmark-all-config-options.sh`: Builds and runs benchmarks for all 16 configurations specified in `./test/benchmark-config-options.txt`.
+* `./test/benchmark-one-config-option.sh`: Runs a single configuration by line number.
+* `./test/copy-all-benchmark-outputs.sh` / `./test/copy-one-benchmark-output.sh`: Copies benchmark results to the `./benchmarks` directory.
+
+To ensure consistent processor affinity, multithreading, and cache behavior, the benchmarks source configuration-specific environment scripts from the `./benchmarks` directory, which route environment variables (such as `OMP_NUM_THREADS` and `OPENBLAS_NUM_THREADS`) depending on the profile:
+* `env-*.sh`: A set of 16 wrappers corresponding to each configuration abbreviation.
+* `env_setup_common.sh`: A common script performing platform-independent CPU architecture probing (isolating Performance cores on hybrid Apple Silicon Asahi Linux platforms, and targeting physical cores on homogeneous AMD/Intel x86-64 Linux).
+
+Results and comparative reports from these systematic benchmarks are stored in the `./doc/benchmarks/` directory. In particular, the file `./doc/benchmarks/compiler_architecture_comparison_report.md` contains a comprehensive performance analysis across three hardware architectures (Intel Core i7-870, AMD Ryzen 7 8840HS, Apple Avalanche M2 Pro) and three compilers (GCC, Clang, Intel oneAPI), accompanied by performance scaling plots.
 
 Testing PyClical
 ----------------
@@ -942,29 +1000,32 @@ to use `sudo`, login as `root`, or `su` to `root` before you run `make install`.
 List of Successful Builds
 =========================
 
-GluCat 0.98a1 with PyClical has so far been built and tested using:
+GluCat 0.98a2 with PyClical has so far been built and tested using:
 
  1) Tempesta:
     8 core `AMD Ryzen 7 8840HS w/ Radeon 780M Graphics` @ 3.3 GHz with
 
     ```
-    Linux 6.17.0-12-generic #12-Ubuntu SMP UTC
-    Kubuntu 25.10
-    g++ 15.2.0 (Ubuntu 15.2.0-4ubuntu4)
-    Armadillo 14.2.3
-    Boost 1.88.0
-    Eigen 3.4.0
+    Linux 7.0.0-15-generic #15-Ubuntu SMP 2026
+    Kubuntu 26.04 LTS
+    Armadillo 15.2.1
+    Doxygen 1.15.0
+    Eigen3 3.4.0
     GSL 2.8
     QD 2.3.23
-    Cython 3.0.11
-    Python 3.13
+    TeXLive 2025.20260124
 
-    Numpy 2.2.4
-    Matplotlib 3.10.1
+    Conda 26.3.2 env containing:
+    Boost 1.88.0
+    Cython 3.1.6
+    Jupyter Server 2.18.2
+    Matplotlib 3.10.9
     Mayavi2 4.8.3
-    VTK 9.3.0
-    Doxygen 1.9.8
-    pdfTeX 3.141592653-2.6-1.40.26 (TeX Live 2025/dev/Debian)
+    Notebook 7.5.6
+    Numpy 1.26.4
+    PyQT 5.15.11
+    Python 3.12.13
+    VTK 9.4.2
     ```
 
     `./test/test-all-config-options.sh`:
@@ -972,9 +1033,8 @@ GluCat 0.98a1 with PyClical has so far been built and tested using:
     `test.configure*.out` files in `./test_runtime`
     tested with the following compiler versions:
 
-    1) `g++ 15.2.0 (Ubuntu 15.2.0-4ubuntu4)`
-    2) `Ubuntu clang version 20.1.8 (0ubuntu4)`
-    3) `Intel(R) oneAPI DPC++/C++ Compiler 2025.3.2 (2025.3.2.20260112)`
+    1) `g++ (Ubuntu 15.2.0-16ubuntu1) 15.2.0`
+    2) `Ubuntu clang version 21.1.8 (6ubuntu1)`
 
  2) Pensieri:
     4 core `Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz` with
@@ -996,7 +1056,6 @@ GluCat 0.98a1 with PyClical has so far been built and tested using:
     Doxygen 1.9.8
     pdfTeX 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian)
     ```
-
     `./test/fast-test-all-config-options.sh`:
     All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`
@@ -1010,35 +1069,26 @@ GluCat 0.98a1 with PyClical has so far been built and tested using:
     fails due to a difference between Intel and AMD x86-64 floating
     point arithmetic.
 
- 3) Vincitor (Pensieri running VirtualBox):
-    Virtual 1 core `Intel(R) Core(TM) i7 CPU 870 @ 2.93GHz` with
-
+ 3) Ginestra
+    Apple M2 Pro with 6 Avalanche performance cores and 4 Icestorm efficiency cores with
     ```
-    Linux 6.12.6-1-default #1 SMP 2024
-    openSUSE Tumbleweed Release 20241224
-    g++ (SUSE Linux) 14.2.1 20241007
-    Blaze 3.8.2 (blaze-devel cblas-devel libcblas3)
-    Boost 1.86.0
-    Cython version 3.0.12 (python313-Cython)
+    Linux 6.19.14-400.asahi.fc43.aarch64+16k SMP aarch64
+    Fedora Linux Asahi Remix 43 (KDE Plasma Desktop Edition)
+    g++ 15.2.1 20260123 (Red Hat 15.2.1-7)
+    Armadillo 12.8.1
+    Doxygen 1.14.0
+    Eigen3 3.4.0
     GSL 2.8
-    QD 2.3.24 (qd-devel libqd0)
-    Python 3.11.11
-    Numpy 2.1.3
-    Matplotlib 3.10.0
-    Mayavi2 4.8.2
-    VTK 9.4.1
-    Doxygen 1.12.0 (doxygen)
-    pdfTeX 3.141592653-2.6-1.40.26 (TeX Live 2024/TeX Live for SUSE Linux)
+    QD 2.3.24
+    Cython 3.1.3
+    Numpy 2.3.5
+    Python 3.14.5
     ```
-    `./test/fast-test-all-config-options.sh`
+    `./test/test-all-config-options.sh`
     All 12 configuration commands corresponding to each of the 12
-    `fast-test.configure*.out` files in `./test_runtime`
-
-    Note: One test in test_runtime/fast-test.configure.eig-blaze-qd.out
-    fails due to a difference between Intel and AMD x86-64 floating
-    point arithmetic.
-
- 4) AWS Graviton:
+    `test.configure*.out` files in `./test_runtime.aarch64`
+    
+ 5) AWS Graviton:
     Virtual 4 core `ARM Cortex-A72 Model 3 (AWS Graviton A1 image)` with
 
     ```
@@ -1060,31 +1110,25 @@ GluCat 0.98a1 with PyClical has so far been built and tested using:
     128 bits on ARM 64 hardware vs 80 bits on x86-64.
     https://github.com/ARM-software/abi-aa/blob/main/aapcs64/aapcs64.rst#arithmetic-types
 
- 5) CoCalc:
+ 6) CoCalc:
     Virtual 2 core `Intel(R) Xeon(R) CPU @ 2.80GHz` with
 
     ```
-    Linux 5.15.0-1046-gcp #54~20.04.1-Ubuntu SMP x86 64
-    Ubuntu 22.04.4 LTS
-    g++ (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
-    Blaze 3.9.0
-    Boost 1.74.0
-    Cython 0.29.30
-    Python 3.10.12
-    Numpy 1.23.5
-    CXXFLAGS=`-I/home/user/include`
-    USER_LDFLAGS=`-L/home/user/lib`
-    LD_LIBRARY_PATH=`/home/user/lib`
+    Linux 5.15.0-1074-gcp #83~20.04.1-Ubuntu SMP x86 64
+    Ubuntu 24.04.4 LTS
+    clang++ Ubuntu clang version 18.1.3 (1ubuntu1)
+    Armadillo 12.6.7
+    Boost 1.83.0
+    Cython 3.0.8
+    Eigen 3.4.0
+    Python 3.12.10
+    Numpy 1.26.4
     ```
     `./test/fast-test-all-config-options.sh`
     All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`
 
-    Note: One test in test_runtime/fast-test.configure.eig-blaze-qd.out
-    fails due to a difference between Intel and AMD x86-64 floating
-    point arithmetic.
-
- 6) GitHub codespaces:
+ 7) GitHub codespaces:
     AMD EPYC 7763 64-Core Processor with
 
     ```

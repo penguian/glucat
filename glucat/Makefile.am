@@ -3,7 +3,7 @@ AUTOMAKE_OPTIONS = foreign
 
 # Set the include path found by configure
 includedir = ${DESTDIR}${prefix}/include/glucat
-AM_CPPFLAGS = $(all_includes)
+AM_CPPFLAGS = $(all_includes) $(GLUCAT_CPPFLAGS)
 SUBDIRS =
 make-install-dirs:
 	-if test '!' -d $(includedir); then mkdir -p $(includedir); fi

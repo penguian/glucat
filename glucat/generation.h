@@ -39,6 +39,7 @@
 #include <array>
 #include <map>
 #include <vector>
+#include "glucat/matrix.h"
 
 namespace glucat { namespace gen
 {
@@ -46,6 +47,14 @@ namespace glucat { namespace gen
 
   /// A signature is a pair of indices, p, q, with p == frame.max(), q == -frame.min()
   using signature_t = std::pair<index_t, index_t>;
+
+  /// Signed permutation data for similarity transformations
+  template< class Matrix_T >
+  struct transform_data_t
+  {
+    std::vector<matrix::matrix_index_t> perm;
+    std::vector<typename Matrix_T::value_type> signs;
+  };
 
   /// Table of generators for specific signatures
   template< class Matrix_T >
@@ -57,7 +66,15 @@ namespace glucat { namespace gen
     auto operator() (const index_t p, const index_t q) -> const Matrix_T*;
     // Single instance of generator table
     static auto generator() -> generator_table<Matrix_T>&;
+
+    // Cache access
+    auto parity_cache() -> std::map< signature_t, transform_data_t<Matrix_T> >& { return m_parity_cache; }
+    auto reversion_cache() -> std::map< signature_t, transform_data_t<Matrix_T> >& { return m_reversion_cache; }
+
   private:
+    std::map< signature_t, transform_data_t<Matrix_T> > m_parity_cache;
+    std::map< signature_t, transform_data_t<Matrix_T> > m_reversion_cache;
+
     // Construct a vector of generators for a specific signature
     auto gen_vector(const index_t p, const index_t q) -> const std::vector<Matrix_T>&;
     // Construct generators for p,q given generators for p-1,q-1

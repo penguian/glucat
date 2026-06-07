@@ -12,7 +12,7 @@ test_move_SOURCES = test_move.cpp
 test_move_LDADD = $(LDADD)
 
 # set the include path found by configure
-AM_CPPFLAGS = $(all_includes)
+AM_CPPFLAGS = $(all_includes) $(GLUCAT_CPPFLAGS)
 # the library search path.
 test_move_LDFLAGS = $(USER_LDFLAGS)
 

@@ -4,7 +4,7 @@
 #   diff-one-config-output.sh : Find differences in test output for one configuration.
 #
 #   begin                : Sun 2016-04-03
-#   copyright            : (C) 2016-2020 by Paul C. Leopardi
+#   copyright            : (C) 2016-2026 by Paul C. Leopardi
 #
 #   This library is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU Lesser General Public License as published
@@ -19,6 +19,7 @@ here=$(cd $(dirname ${0})/;pwd)
 . ${here}/define-config-options.sh
 
 line=$1
+arch=${2:-"x86-64"}
 
 abbrev=$(eval echo $(match_option_pattern ${line} 1))
 
@@ -31,14 +32,14 @@ pushd ${package_dir}/.. \
     pushd test_runtime \
       > /dev/null
 
-      diff -ub ${package_dir}/test_runtime/test.configure.${abbrev}.out test.configure.${abbrev}.out \
-        > test.configure.diff
+      diff -ub ${package_dir}/test_runtime.${arch}/test.configure.${abbrev}.out test.configure.${abbrev}.out \
+        > test.out.diff
 
-      cat test.configure.diff
+      cat test.out.diff
 
     popd \
       > /dev/null
-      
+
     pushd pyclical \
       > /dev/null
       if [ -f test.check.out ]

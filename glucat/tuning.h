@@ -49,17 +49,18 @@ namespace glucat
   const precision_t  Tuning_Default_Function_Precision      = precision_same;
 
   // Tuning policy default constants
-  const unsigned int Tuning_Default_Mult_Matrix_Threshold   =       4;
+  const unsigned int Tuning_Default_Mult_Matrix_Threshold   =       8;
   const unsigned int Tuning_Default_CR_Sqrt_Max_Steps       =     256;
   const unsigned int Tuning_Default_DB_Sqrt_Max_Steps       =     256;
   const unsigned int Tuning_Default_Log_Max_Outer_Steps     =     256;
   const unsigned int Tuning_Default_Log_Max_Inner_Steps     =      32;
   const unsigned int Tuning_Default_Basis_Max_Count         =      12;
   const unsigned int Tuning_Default_Fast_Size_Threshold     =      16;
-  const unsigned int Tuning_Default_Inv_Fast_Dim_Threshold  =       4;
-  const unsigned int Tuning_Default_Products_Size_Threshold = 1 << 22;
+  const unsigned int Tuning_Default_Inv_Fast_Dim_Threshold  =       2;
   const unsigned int Tuning_Default_Denom_Different_Bits    =       8;
   const unsigned int Tuning_Default_Extra_Different_Bits    =       8;
+  const unsigned int Tuning_Default_Products_Different_Bits   =     2;
+  const unsigned int Tuning_Default_Products_Matrix_Threshold =    22;
 
   /// Tuning policy values
   template
@@ -72,9 +73,10 @@ namespace glucat
   unsigned int Basis_Max_Count         = Tuning_Default_Basis_Max_Count,
   unsigned int Fast_Size_Threshold     = Tuning_Default_Fast_Size_Threshold,
   unsigned int Inv_Fast_Dim_Threshold  = Tuning_Default_Inv_Fast_Dim_Threshold,
-  unsigned int Products_Size_Threshold = Tuning_Default_Products_Size_Threshold,
   unsigned int Denom_Different_Bits    = Tuning_Default_Denom_Different_Bits,
-  unsigned int Extra_Different_Bits    = Tuning_Default_Extra_Different_Bits
+  unsigned int Extra_Different_Bits    = Tuning_Default_Extra_Different_Bits,
+  unsigned int Products_Different_Bits = Tuning_Default_Products_Different_Bits,
+  unsigned int Products_Matrix_Threshold = Tuning_Default_Products_Matrix_Threshold
   >
   struct tuning_values : policy
   {
@@ -88,39 +90,41 @@ namespace glucat
     Basis_Max_Count,
     Fast_Size_Threshold,
     Inv_Fast_Dim_Threshold,
-    Products_Size_Threshold,
     Denom_Different_Bits,
-    Extra_Different_Bits
+    Extra_Different_Bits,
+    Products_Different_Bits,
+    Products_Matrix_Threshold
     >;
     // Tuning for multiplication
     // Minimum index count needed to invoke matrix multiplication algorithm
-    enum { mult_matrix_threshold = Mult_Matrix_Threshold };
+    static constexpr unsigned int mult_matrix_threshold = Mult_Matrix_Threshold;
     // Tuning for sqrt
     // Maximum number of steps in cyclic reduction square root iteration
-    enum { cr_sqrt_max_steps = CR_Sqrt_Max_Steps };
+    static constexpr unsigned int cr_sqrt_max_steps = CR_Sqrt_Max_Steps;
     // Maximum number of steps in Denman-Beavers square root iteration
-    enum { db_sqrt_max_steps = DB_Sqrt_Max_Steps };
+    static constexpr unsigned int db_sqrt_max_steps = DB_Sqrt_Max_Steps;
     // Tuning for log
     // Maximum number of incomplete square roots in cascade log algorithm
-    enum { log_max_outer_steps = Log_Max_Outer_Steps };
+    static constexpr unsigned int log_max_outer_steps = Log_Max_Outer_Steps;
     // Maximum number of steps in incomplete square root within cascade log algorithm
-    enum { log_max_inner_steps = Log_Max_Inner_Steps };
+    static constexpr unsigned int log_max_inner_steps = Log_Max_Inner_Steps;
     // Tuning for basis cache
     // Maximum index count of folded frames in basis cache
-    enum { basis_max_count = Basis_Max_Count };
+    static constexpr unsigned int basis_max_count = Basis_Max_Count;
     // Tuning for FFT
     // Minimum map size needed to invoke generalized FFT
-    enum { fast_size_threshold = Fast_Size_Threshold };
+    static constexpr unsigned int fast_size_threshold = Fast_Size_Threshold;
     // Minimum matrix dimension needed to invoke inverse generalized FFT
-    enum { inv_fast_dim_threshold = Inv_Fast_Dim_Threshold };
-    // Tuning for products (other than geometric product)
-    // Minimum size needed for to invoke faster products algorithms
-    enum { products_size_threshold = Products_Size_Threshold };
+    static constexpr unsigned int inv_fast_dim_threshold = Inv_Fast_Dim_Threshold;
     // Tuning for precision of exp, log and sqrt functions
     // Denominator of proportion of different bits allowed in approximate equality
-    enum { denom_different_bits = Denom_Different_Bits };
+    static constexpr unsigned int denom_different_bits = Denom_Different_Bits;
     // Extra number of different bits allowed in approximate equality
-    enum { extra_different_bits = Extra_Different_Bits };
+    static constexpr unsigned int extra_different_bits = Extra_Different_Bits;
+    // Tuning for matrix operators pruning threshold: number of different bits allowed
+    static constexpr unsigned int products_different_bits = Products_Different_Bits;
+    // Minimum index count needed to invoke matrix non-geometric multiplication algorithm
+    static constexpr unsigned int products_matrix_threshold = Products_Matrix_Threshold;
   };
 
   using default_tuning_values_p = tuning_values<>;

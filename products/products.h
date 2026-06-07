@@ -85,13 +85,16 @@ namespace glucat_prod_test
             const typename Multivector_T::scalar_t fill)
   {
     typedef Multivector_T multivector_t;
+    bool first_time;
 
     clock_t cpu_time = clock();
       multivector_t a = multivector_t(multivector_t::random(inner_frame, fill), outer_frame, true);
     double setup_cpu_time = elapsed(cpu_time);
 #ifdef _GLUCAT_TEST_REPEAT
-    for (int nbr_trials = EXTRA_TRIALS; setup_cpu_time == 0.0; nbr_trials *= EXTRA_TRIALS)
+    first_time = true;
+    for (int nbr_trials = EXTRA_TRIALS; first_time || setup_cpu_time == 0.0; nbr_trials *= EXTRA_TRIALS)
     {
+      first_time = false;
       cpu_time = clock();
         for (int trials = 0; trials != nbr_trials; ++trials)
           a = multivector_t(multivector_t::random(inner_frame, fill), outer_frame, true);
@@ -103,8 +106,10 @@ namespace glucat_prod_test
       c = a * a;
     double prod_cpu_time = elapsed(cpu_time);
 #ifdef _GLUCAT_TEST_REPEAT
-    for (int nbr_trials = EXTRA_TRIALS; prod_cpu_time == 0.0; nbr_trials *= EXTRA_TRIALS)
+    first_time = true;
+    for (int nbr_trials = EXTRA_TRIALS; first_time || prod_cpu_time == 0.0; nbr_trials *= EXTRA_TRIALS)
     {
+      first_time = false;
       cpu_time = clock();
         for (int trials = 0; trials != nbr_trials; ++trials)
           c = a * a;
@@ -115,8 +120,10 @@ namespace glucat_prod_test
       c = a ^ a;
     double outer_cpu_time = elapsed(cpu_time);
 #ifdef _GLUCAT_TEST_REPEAT
-    for (int nbr_trials = EXTRA_TRIALS; outer_cpu_time == 0.0; nbr_trials *= EXTRA_TRIALS)
+    first_time = true;
+    for (int nbr_trials = EXTRA_TRIALS; first_time || outer_cpu_time == 0.0; nbr_trials *= EXTRA_TRIALS)
     {
+      first_time = false;
       cpu_time = clock();
       for (int trials = 0; trials != nbr_trials; ++trials)
         c = a ^ a;
@@ -127,8 +134,10 @@ namespace glucat_prod_test
       c = a & a;
     double inner_cpu_time = elapsed(cpu_time);
 #ifdef _GLUCAT_TEST_REPEAT
-    for (int nbr_trials = EXTRA_TRIALS; inner_cpu_time == 0.0; nbr_trials *= EXTRA_TRIALS)
+    first_time = true;
+    for (int nbr_trials = EXTRA_TRIALS; first_time || inner_cpu_time == 0.0; nbr_trials *= EXTRA_TRIALS)
     {
+      first_time = false;
       cpu_time = clock();
         for (int trials = 0; trials != nbr_trials; ++trials)
           c = a & a;
@@ -139,8 +148,10 @@ namespace glucat_prod_test
       c = a % a;
     double contract_cpu_time = elapsed(cpu_time);
 #ifdef _GLUCAT_TEST_REPEAT
-    for (int nbr_trials = EXTRA_TRIALS; contract_cpu_time == 0.0; nbr_trials *= EXTRA_TRIALS)
+    first_time = true;
+    for (int nbr_trials = EXTRA_TRIALS; first_time || contract_cpu_time == 0.0; nbr_trials *= EXTRA_TRIALS)
     {
+      first_time = false;
       cpu_time = clock();
         for (int trials = 0; trials != nbr_trials; ++trials)
           c = a % a;

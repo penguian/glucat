@@ -30,6 +30,7 @@ pushd ${package_dir}/.. \
     pushd test_runtime \
       > /dev/null
 
+      mkdir -p ${package_dir}/test_runtime
       cp -a fast-test.configure.${abbrev}.out ${package_dir}/test_runtime/fast-test.configure.${abbrev}.out
 
     popd \

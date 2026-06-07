@@ -1,32 +1,40 @@
-2026-05-03: 0.98a1
-GluCat 0.98a1 achieves 100% C++ doctest function coverage.
+2026-06-07: 0.98a2
+GluCat 0.98a2 improves performance and adds configuration options and benchmarks.
 
-o Achieved 100% function coverage and over 90% line coverage for the core library by
-  fully migrating the PyClical Python doctests into C++ doctest SUBCASE blocks.
-o Resolved template parameter ambiguities and constructor overload issues in
-  framed_multi_imp.h and matrix_multi_imp.h for multiple scalar types.
-o Updated documentation to reflect the completion of the C++ doctest migration
-  and the new 100% coverage milestone.
+o Tuned and optimized framed_multi and matrix_multi geometric product algorithms.
+o Added the --with-blas option to configure.
+o Introduced a systematic benchmarking suite with cross-platform result logs.
+o Deprecated the Intel Classic C++ compiler and modernized Autotools build flags.
+o Added test18 and expanded C++ doctest coverage.
+
+2026-05-12: 0.98a1
+GluCat 0.98a1 achieves 100% C++ function coverage.
+
+o Achievement of 100% C++ function coverage via test_doctest.
+o Integration of Eigen and Armadillo linear algebra backends.
+o Optimization of Clifford product operators using a 3-way dispatch strategy.
+o Standardization of include paths and return types across the library.
+o Transition to set_value_t for index_set value retrieval.
 
 2026-04-29: 0.98a0
 GluCat modernization phase (2024-2026) has reached the Alpha release.
 
-o Refactored the linear algebra architecture to use Eigen and Armadillo 
+o Refactored the linear algebra architecture to use Eigen and Armadillo
   wrappers, decoupling the library from its hard dependency on uBLAS.
 o Upgraded the required C++ standard to C++23 across the entire library.
-o Modernized the public API by replacing trailing return types with standard 
+o Modernized the public API by replacing trailing return types with standard
   return types and using decltype(auto) to handle backend proxy objects.
-o Optimized sparse matrix unit() and trace() operations to utilize 
+o Optimized sparse matrix unit() and trace() operations to utilize
   backend-specific diagonal access, avoiding slow manual loops.
-o Integrated a new Doctest-based unit testing suite in test_doctest with 
+o Integrated a new Doctest-based unit testing suite in test_doctest with
   comprehensive coverage for all matrix backends.
-o Restored and verified high-fidelity coverage visibility for QD (quadruple 
+o Restored and verified high-fidelity coverage visibility for QD (quadruple
   precision) and Armadillo code paths.
-o Hardened the build system and coverage reporting by implementing binary 
+o Hardened the build system and coverage reporting by implementing binary
   backup sequences and isolating profiling flags from autotools library probes.
-o Enforced real-valued Scalar_T requirements via compile-time assertions 
+o Enforced real-valued Scalar_T requirements via compile-time assertions
   to ensure template robustness across all backends.
-o Updated project documentation and installation guides for the new 
+o Updated project documentation and installation guides for the new
   build requirements.
 
 

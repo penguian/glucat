@@ -52,6 +52,7 @@ pushd ${package_dir}/.. \
     popd \
       > /dev/null
 
+    mkdir -p test_runtime
     pushd test_runtime \
       > /dev/null
 

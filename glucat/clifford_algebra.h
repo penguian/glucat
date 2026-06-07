@@ -452,7 +452,7 @@ namespace glucat
   auto
   operator% (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> Multivector<Scalar_T,LO,HI,Tune_P>;
 
-  // Hestenes scalar product
+  // Scalar product: [HS] (1.44) star(a, b) = scalar(a * b) = <ab>_0
   template
   <
     template<typename, const index_t, const index_t, typename> class Multivector,

@@ -1719,6 +1719,7 @@ namespace glucat
 #include "glucat/matrix_multi.h"
 
 TEST_CASE("clifford_algebra_imp (generic templates)") {
+  using namespace glucat;
   using mm_t = glucat::matrix_multi<double, -8, 8>;
   using ca_t = glucat::clifford_algebra<double, mm_t::index_set_t, mm_t>;
 
@@ -1787,8 +1788,8 @@ TEST_CASE("clifford_algebra_imp (generic templates)") {
     mm_t b = mm_t::random(frm, 1.0);
 
     // star product, quad, norm, truncated
-    CHECK(star(a, b) == doctest::Approx(scalar(a * b)));
-    CHECK(a.quad() == doctest::Approx(scalar(a * a.reverse())));
+    CHECK(numeric_traits<double>::to_double(star(a, b)) == doctest::Approx(numeric_traits<double>::to_double(scalar(a * b))));
+    CHECK(numeric_traits<double>::to_double(a.quad()) == doctest::Approx(numeric_traits<double>::to_double(scalar(a * a.reverse()))));
     CHECK(a.norm() >= 0);
     CHECK(a.truncated(0.1).grade() >= 0);
 
@@ -1856,8 +1857,8 @@ TEST_CASE("clifford_algebra_imp (generic templates)") {
     c += mm_t(mm_t::index_set_t("{1,2}"), 1e-15);
     CHECK(c.truncated(1e-14) == mm_t("{1}", 1.0));
     // Check that we have at least 1 term and the components are correct
-    CHECK(c.truncated(1e-16).scalar() == doctest::Approx(0.0));
-    CHECK(c.truncated(1e-16)[mm_t::index_set_t("{1}")] == doctest::Approx(1.0));
+    CHECK(numeric_traits<double>::to_double(c.truncated(1e-16).scalar()) == doctest::Approx(0.0));
+    CHECK(numeric_traits<double>::to_double(c.truncated(1e-16)[mm_t::index_set_t("{1}")]) == doctest::Approx(1.0));
   }
 }
 #endif

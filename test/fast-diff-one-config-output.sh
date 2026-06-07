@@ -19,6 +19,7 @@ here=$(cd $(dirname ${0})/;pwd)
 . ${here}/define-config-options.sh
 
 line=$1
+arch=${2:-"x86-64"}
 
 abbrev=$(eval echo $(match_option_pattern ${line} 1))
 
@@ -31,14 +32,14 @@ pushd ${package_dir}/.. \
     pushd test_runtime \
       > /dev/null
 
-      diff -ub ${package_dir}/test_runtime/fast-test.configure.${abbrev}.out fast-test.configure.${abbrev}.out \
+      diff -ub ${package_dir}/test_runtime.${arch}/fast-test.configure.${abbrev}.out fast-test.configure.${abbrev}.out \
         > fast-test.configure.diff
 
       cat fast-test.configure.diff
 
     popd \
       > /dev/null
-      
+
     pushd pyclical \
       > /dev/null
       if [ -f fast-test-check.out ]

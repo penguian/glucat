@@ -42,25 +42,31 @@ dnl checks originally from acinclude.m4 for KDE:
 
 AC_DEFUN([GLUCAT_CHECK_LIB],
 [
-  glucat_saved_ldflags="$LDFLAGS"
-  LDFLAGS="$LDFLAGS $USER_LDFLAGS"
-  AC_CHECK_LIB($1, $2, $3, $4)
-  LDFLAGS="$glucat_saved_ldflags"
+AC_LANG_SAVE
+   AC_LANG([C++])
+   glucat_saved_ldflags="$LDFLAGS"
+   LDFLAGS="$LDFLAGS $USER_LDFLAGS"
+   AC_CHECK_LIB($1, $2, $3, $4)
+   LDFLAGS="$glucat_saved_ldflags"
+AC_LANG_POP([])
 ])
 
 AC_DEFUN([GLUCAT_CHECK_LIBS],
 [
-  glucat_saved_ldflags="$LDFLAGS"
-  LDFLAGS="$LDFLAGS $USER_LDFLAGS"
-  AC_CHECK_LIB($1, $2, $3, $4, $5)
-  LDFLAGS="$glucat_saved_ldflags"
+AC_LANG_SAVE
+   AC_LANG([C++])
+   glucat_saved_ldflags="$LDFLAGS"
+   LDFLAGS="$LDFLAGS $USER_LDFLAGS"
+   AC_CHECK_LIB($1, $2, $3, $4, $5)
+   LDFLAGS="$glucat_saved_ldflags"
+AC_LANG_POP([])
 ])
 
 AC_DEFUN([GLUCAT_CHECK_HEADER],
 [
 AC_LANG_SAVE
    glucat_safe_cppflags=$CPPFLAGS
-   CPPFLAGS="$CPPFLAGS $all_includes"
+   CPPFLAGS="$CPPFLAGS $all_includes $GLUCAT_CPPFLAGS"
    AC_LANG([C++])
    AC_CHECK_HEADER($1, $2, $3, [$4])
    CPPFLAGS=$glucat_safe_cppflags
@@ -71,7 +77,7 @@ AC_DEFUN([GLUCAT_CHECK_HEADERS],
 [
 AC_LANG_SAVE
    glucat_safe_cppflags=$CPPFLAGS
-   CPPFLAGS="$CPPFLAGS $all_includes"
+   CPPFLAGS="$CPPFLAGS $all_includes $GLUCAT_CPPFLAGS"
    AC_LANG([C++])
    for k_header in $1; do
       AC_CHECK_HEADER($k_header, $2, $3, [$4])
@@ -95,6 +101,31 @@ AC_LANG_SAVE
   AC_LANG_POP([])
 ])
 if eval "test \"`echo '$glucat_cv_prog_cxx_'$glucat_cache`\" = yes"; then
+ AC_MSG_RESULT(yes)
+ :
+ $2
+else
+ AC_MSG_RESULT(no)
+ :
+ $3
+fi
+])
+
+AC_DEFUN([GLUCAT_CHECK_COMPILER_FLAG_COMPILE_ONLY],
+[
+AC_MSG_CHECKING([whether $CXX supports -$1 (compile only)])
+glucat_cache=`echo $1 | sed 'y% .=/+-%____p_%'`
+AC_CACHE_VAL(glucat_cv_prog_cxx_co_$glucat_cache,
+[
+AC_LANG_SAVE
+  AC_LANG([C++])
+  save_CXXFLAGS="$CXXFLAGS"
+  CXXFLAGS="$CXXFLAGS -Werror -$1"
+  AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[ return 0; ]])],[eval "glucat_cv_prog_cxx_co_$glucat_cache=yes"],[])
+  CXXFLAGS="$save_CXXFLAGS"
+  AC_LANG_POP([])
+])
+if eval "test \"`echo '$glucat_cv_prog_cxx_co_'$glucat_cache`\" = yes"; then
  AC_MSG_RESULT(yes)
  :
  $2

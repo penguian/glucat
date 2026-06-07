@@ -42,7 +42,6 @@ namespace glucat
   const unsigned int Tuning_Slow_Basis_Max_Count         =       0;
   const unsigned int Tuning_Slow_Fast_Size_Threshold     = Tuning_Max_Threshold;
   const unsigned int Tuning_Slow_Inv_Fast_Dim_Threshold  = Tuning_Max_Threshold;
-  const unsigned int Tuning_Slow_Products_Size_Threshold = Tuning_Max_Threshold;
 
   using tuning_values_slow_p = tuning_values
     <
@@ -54,9 +53,10 @@ namespace glucat
       Tuning_Slow_Basis_Max_Count,
       Tuning_Slow_Fast_Size_Threshold,
       Tuning_Slow_Inv_Fast_Dim_Threshold,
-      Tuning_Slow_Products_Size_Threshold,
       Tuning_Default_Denom_Different_Bits,
-      Tuning_Default_Extra_Different_Bits
+      Tuning_Default_Extra_Different_Bits,
+      Tuning_Default_Products_Different_Bits,
+      Tuning_Default_Products_Matrix_Threshold
     >;
 
   using tuning_slow_p = tuning<tuning_values_slow_p, precision_same>;
@@ -76,9 +76,10 @@ namespace glucat
       Tuning_Naive_Basis_Max_Count,
       Tuning_Naive_Fast_Size_Threshold,
       Tuning_Naive_Inv_Fast_Dim_Threshold,
-      Tuning_Default_Products_Size_Threshold,
       Tuning_Default_Denom_Different_Bits,
-      Tuning_Default_Extra_Different_Bits
+      Tuning_Default_Extra_Different_Bits,
+      Tuning_Default_Products_Different_Bits,
+      Tuning_Default_Products_Matrix_Threshold
     >;
 
   using tuning_naive_p = tuning<tuning_values_naive_p, precision_same>;
@@ -91,7 +92,6 @@ namespace glucat
   const unsigned int Tuning_Fast_Basis_Max_Count         =       1;
   const unsigned int Tuning_Fast_Fast_Size_Threshold     =       0;
   const unsigned int Tuning_Fast_Inv_Fast_Dim_Threshold  =       0;
-  const unsigned int Tuning_Fast_Products_Size_Threshold =       0;
 
   using tuning_values_fast_p = tuning_values
     <
@@ -103,9 +103,10 @@ namespace glucat
       Tuning_Fast_Basis_Max_Count,
       Tuning_Fast_Fast_Size_Threshold,
       Tuning_Fast_Inv_Fast_Dim_Threshold,
-      Tuning_Fast_Products_Size_Threshold,
       Tuning_Default_Denom_Different_Bits,
-      Tuning_Default_Extra_Different_Bits
+      Tuning_Default_Extra_Different_Bits,
+      Tuning_Default_Products_Different_Bits,
+      Tuning_Default_Products_Matrix_Threshold
     >;
 
   using tuning_fast_p = tuning<tuning_values_fast_p, precision_same>;

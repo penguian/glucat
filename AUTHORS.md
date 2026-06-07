@@ -1,5 +1,5 @@
-AUTHORS for GluCat 0.98a1+ with PyClical
-=======================================
+AUTHORS for GluCat 0.98a2 with PyClical
+======================================
 
 Paul C. Leopardi <paul.leopardi@gmail.com>
 
@@ -218,6 +218,9 @@ in Applications of Geometric Algebra in Computer Science and Engineering
 
 3. D. Hestenes, G. Sobczyk, Clifford Algebra to Geometric Calculus, D. Reidel, 1984.
 
+4. D. Hestenes, "Multivector Calculus",
+in J. Math. Anal. and Appl., Vol. 24, No. 2, Academic Press, 1968, pp. 313-325.
+
 ### References for generalized FFTs on finite groups
 
 1. L. Babai, L. Ronyai, "Computing irreducible representations of finite groups",
@@ -290,8 +293,8 @@ Recommended general references
 "Clifford Algebras with Numeric and Symbolic Computations", Birkhauser, 1996.
 
 2. Chris Doran and Anthony Lasenby,
-["Geometric Algebra for Physicists",  Cambridge University Press, 2003, 2007.
-](http://geometry.mrao.cam.ac.uk/2007/01/geometric-algebra-for-physicists/)
+["Geometric Algebra for Physicists",  Cambridge University Press, 2003, 2007, 2013.
+](https://doi.org/10.1017/CBO9780511807497)
 
 3. David Hestenes, Garret Sobczyk, "Clifford Algebra to Geometric Calculus",
 Kluwer, first published in 1984; reprinted with corrections in 1992.

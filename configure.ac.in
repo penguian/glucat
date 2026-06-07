@@ -32,7 +32,7 @@ dnl    Boston, MA 02111-1307, USA.
 
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([glucat],[0.98a1])
+AC_INIT([glucat],[0.98a2])
 AC_CONFIG_MACRO_DIR([m4])
 m4_include([m4/m4_ax_cxx_compile_stdcxx.m4])
 m4_include([m4/m4_ax_blas.m4])
@@ -58,11 +58,16 @@ AC_DEFUN([GLUCAT_MSG_WARN_DEPRECATED_VAL],
 
 AC_DEFUN([GLUCAT_CHECK_COMPILERS],
 [
+  AC_LANG([C]++)
+
   dnl As a side effect of testing introduced by autoconf, CXXFLAGS has been changed. Restore it.
   CXXFLAGS="$saved_CXXFLAGS"
 
   dnl Use all_libraries as a local variable to track which libraries to add.
   all_libraries=""
+
+  dnl Use GLUCAT_CPPFLAGS to accumulate compilation-only flags (defines and -mllvm).
+  GLUCAT_CPPFLAGS=""
 
   dnl process the command line arguments
 
@@ -150,6 +155,13 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     [glucat_use_armadillo="$withval"],
     [glucat_use_armadillo="no"])
 
+  AC_ARG_WITH([blas],
+    AS_HELP_STRING(
+      [--with-blas=yes|no|flexiblas|openblas],
+      [use specified BLAS/LAPACK library backend [default=no]]),
+    [glucat_use_blas="$withval"],
+    [glucat_use_blas="no"])
+
   AC_ARG_WITH([openmp],
     AS_HELP_STRING(
       [--with-openmp],
@@ -182,26 +194,10 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   GLUCAT_CHECK_HEADERS([boost/version.hpp], [], [])
 
   if [[[ "$glucat_use_doctest" == "yes" ]]]; then
-     dnl Try default include
-     doctest_found=no
-     GLUCAT_CHECK_HEADERS([doctest.h], [doctest_found=yes], [])
-     if [[[ "$doctest_found" == "no" ]]]; then
-        dnl Try adding /usr/include/doctest
-        saved_CPPFLAGS="$CPPFLAGS"
-        CPPFLAGS="$CPPFLAGS -isystem /usr/include/doctest"
-        unset ac_cv_header_doctest_h
-        GLUCAT_CHECK_HEADERS([doctest.h],
-        [
-           doctest_found=yes
-           all_includes="$all_includes -isystem /usr/include/doctest"
-           AC_MSG_NOTICE([Found doctest.h in /usr/include/doctest. Added to all_includes.])
-        ], [])
-        CPPFLAGS="$saved_CPPFLAGS"
-     fi
-     if [[[ "$doctest_found" == "no" ]]]; then
-        AC_MSG_WARN([doctest.h not found.])
+     GLUCAT_CHECK_HEADERS([doctest/doctest.h], [], [
+        AC_MSG_WARN([doctest/doctest.h not found.])
         glucat_use_doctest="no"
-     fi
+     ])
   fi
 
   if [[[ "$glucat_use_doctest" == "no" ]]]; then
@@ -213,70 +209,130 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     glucat_use_warnings="yes"
   fi
 
-  if [[[ "$glucat_use_armadillo" == "yes" ]]]; then
+  if test "$glucat_use_armadillo" != "yes" && test "$glucat_use_armadillo" != "no"; then
+     AC_MSG_ERROR([Invalid value for --with-armadillo. Please specify only yes or no.])
+  fi
+
+  if test "$glucat_use_blas" != "yes" && \
+     test "$glucat_use_blas" != "no" && \
+     test "$glucat_use_blas" != "flexiblas" && \
+     test "$glucat_use_blas" != "openblas"; then
+     AC_MSG_ERROR([Invalid value for --with-blas. Supported values are: yes, no, flexiblas, openblas.])
+  fi
+
+  if test "$glucat_use_armadillo" = "yes"; then
     glucat_have_libarmadillo="no"
     GLUCAT_CHECK_LIB([armadillo],[main],
     [glucat_have_libarmadillo="yes"],
     [])
-    if [[[ "$glucat_have_libarmadillo" == "yes" ]]]; then
+    if test "$glucat_have_libarmadillo" = "yes"; then
       GLUCAT_CHECK_HEADERS([armadillo],
       [
-        CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_ARMADILLO -DARMA_WARN_LEVEL=1"
+        GLUCAT_CPPFLAGS="$GLUCAT_CPPFLAGS -D_GLUCAT_USE_ARMADILLO -DARMA_WARN_LEVEL=1"
         all_libraries="$all_libraries -larmadillo"
       ],[],[])
-    fi
-     if [[[ "$glucat_have_libarmadillo" == "no" ]]]; then
+    else
        AC_MSG_WARN([Cannot build using Armadillo.])
     fi
   fi
 
-  if [[[ "$glucat_use_openmp" == "yes" ]]]; then
-     if [[[ "$glucat_use_armadillo" == "yes" ]]]; then
-         dnl Check for OpenMP flag
-         glucat_have_openmp="no"
-         glucat_openmp_flag=""
+  glucat_use_flexiblas="no"
+  glucat_use_openblas="no"
 
-         dnl Try -fopenmp (GCC, Clang)
-         GLUCAT_CHECK_COMPILER_FLAG([fopenmp],
+  if test "$glucat_use_blas" = "flexiblas"; then
+     glucat_use_flexiblas="yes"
+  elif test "$glucat_use_blas" = "openblas"; then
+     glucat_use_openblas="yes"
+  elif test "$glucat_use_blas" = "yes"; then
+     GLUCAT_CHECK_LIB([flexiblas],[flexiblas_init],
+        [glucat_use_flexiblas="yes"
+         glucat_use_blas="flexiblas"
+         AC_MSG_NOTICE([Auto-selected FlexiBLAS backend])],
+        [
+           GLUCAT_CHECK_LIB([openblas],[cblas_dgemm],
+              [glucat_use_openblas="yes"
+               glucat_use_blas="openblas"
+               AC_MSG_NOTICE([Auto-selected OpenBLAS backend])],
+              [
+                 AC_MSG_WARN([Neither FlexiBLAS nor OpenBLAS was found. Falling back to default system BLAS/LAPACK implementations.])
+                 glucat_use_blas="no"
+              ])
+        ])
+  fi
+
+  if test "$glucat_use_openblas" = "yes"; then
+     GLUCAT_CHECK_LIB([openblas],[cblas_dgemm],
+        [all_libraries="$all_libraries -lopenblas"
+         AC_MSG_NOTICE([OpenBLAS support enabled])],
+        [AC_MSG_ERROR([OpenBLAS support requested but libopenblas was not found.])])
+  fi
+
+  if test "$glucat_use_flexiblas" = "yes"; then
+     GLUCAT_CHECK_LIB([flexiblas],[flexiblas_init],
+        [all_libraries="$all_libraries -lflexiblas"
+         AC_MSG_NOTICE([FlexiBLAS support enabled])],
+        [AC_MSG_ERROR([FlexiBLAS support requested but libflexiblas was not found.])])
+  fi
+
+  if test "$glucat_use_blas" = "openblas" || test "$glucat_use_blas" = "flexiblas"; then
+     if test "$glucat_use_armadillo" != "yes"; then
+        GLUCAT_CPPFLAGS="$GLUCAT_CPPFLAGS -DEIGEN_USE_BLAS -DEIGEN_USE_LAPACKE"
+     fi
+  fi
+
+  if test "$glucat_use_openmp" = "yes"; then
+      dnl Check for OpenMP flag
+      glucat_have_openmp="no"
+      glucat_openmp_flag=""
+
+      dnl Try -fopenmp (GCC, Clang)
+      GLUCAT_CHECK_COMPILER_FLAG([fopenmp],
+         [
+            glucat_have_openmp="yes"
+            glucat_openmp_flag="-fopenmp"
+         ],
+         [])
+
+      dnl If not found, try -qopenmp (Intel icpx)
+      if test "$glucat_have_openmp" = "no"; then
+         GLUCAT_CHECK_COMPILER_FLAG([qopenmp],
             [
                glucat_have_openmp="yes"
-               glucat_openmp_flag="-fopenmp"
+               glucat_openmp_flag="-qopenmp"
             ],
             [])
+      fi
 
-         dnl If not found, try -qopenmp (Intel icpx)
-         if [[[ "$glucat_have_openmp" == "no" ]]]; then
-            GLUCAT_CHECK_COMPILER_FLAG([qopenmp],
-               [
-                  glucat_have_openmp="yes"
-                  glucat_openmp_flag="-qopenmp"
-               ],
+      if test "$glucat_have_openmp" = "yes"; then
+         glucat_save_cxxflags="$CXXFLAGS"
+         CXXFLAGS="$CXXFLAGS $glucat_openmp_flag"
+         AC_CHECK_HEADERS([omp.h], [], [
+            AC_MSG_ERROR([OpenMP support requested but omp.h is missing. Please install the appropriate libomp-dev package for your compiler.])
+         ])
+         CXXFLAGS="$glucat_save_cxxflags"
+         CXXFLAGS="$CXXFLAGS $glucat_openmp_flag"
+         
+         if test "$glucat_use_armadillo" = "yes"; then
+            GLUCAT_CPPFLAGS="$GLUCAT_CPPFLAGS -D_GLUCAT_USE_OPENMP -DARMA_USE_OPENMP"
+         fi
+         
+         if test "$glucat_use_blas" = "no"; then
+            GLUCAT_CHECK_LIB([openblas],[cblas_dgemm],
+               [all_libraries="$all_libraries -lopenblas"
+                AC_MSG_NOTICE([OpenBLAS support automatically enabled for OpenMP])],
                [])
          fi
-
-         dnl Check for -lopenblas
-         glucat_have_openblas="no"
-         GLUCAT_CHECK_LIB([openblas],[cblas_dgemm],
-            [glucat_have_openblas="yes"],
-            [])
-
-         if [[[ "$glucat_have_openmp" == "yes" ]]] && [[[ "$glucat_have_openblas" == "yes" ]]]; then
-            CXXFLAGS="$CXXFLAGS $glucat_openmp_flag -D_GLUCAT_USE_OPENMP -DARMA_USE_OPENMP"
-            all_libraries="$all_libraries -lopenblas"
-            AC_MSG_NOTICE([OpenMP support enabled with $glucat_openmp_flag and -lopenblas])
-         else
-            AC_MSG_WARN([OpenMP support requested but prerequisites (OpenMP flag and -lopenblas) were not found.])
-         fi
-
-     else
-        AC_MSG_WARN([--with-openmp ignored because --with-armadillo is not enabled.])
-     fi
+         
+         AC_MSG_NOTICE([OpenMP support enabled with $glucat_openmp_flag])
+      else
+         AC_MSG_WARN([OpenMP support requested but compiler flag was not found.])
+      fi
   fi
 
   if [[[ "$glucat_use_unordered_map" == "boost" ]]]; then
     GLUCAT_CHECK_HEADERS([boost/unordered/unordered_flat_map.hpp],
     [
-      CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_BOOST_UNORDERED_FLAT_MAP"
+      GLUCAT_CPPFLAGS="$GLUCAT_CPPFLAGS -D_GLUCAT_USE_BOOST_UNORDERED_FLAT_MAP"
       AC_MSG_NOTICE([boost::unordered_flat_map support enabled.])
     ],
     [
@@ -289,26 +345,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   fi
 
   dnl Check for Eigen
-  have_eigen=no
-  GLUCAT_CHECK_HEADERS([Eigen/Dense], [have_eigen=yes], [])
-
-  if [[[ "$have_eigen" == "no" ]]]; then
-     dnl Try adding -I/usr/include/eigen3
-     saved_CPPFLAGS="$CPPFLAGS"
-     CPPFLAGS="$CPPFLAGS -I/usr/include/eigen3"
-     unset ac_cv_header_Eigen_Dense
-     GLUCAT_CHECK_HEADERS([Eigen/Dense],
-     [
-        have_eigen=yes
-        all_includes="$all_includes -I/usr/include/eigen3"
-        AC_MSG_NOTICE([Found Eigen/Dense in /usr/include/eigen3. Added to all_includes.])
-     ], [])
-     CPPFLAGS="$saved_CPPFLAGS"
-  fi
-
-  if [[[ "$have_eigen" == "no" ]]]; then
-    AC_MSG_WARN([Eigen/Dense not found. PyClical might fail to build.])
-  fi
+  GLUCAT_CHECK_HEADERS([eigen3/Eigen/Dense], [], [
+    AC_MSG_WARN([eigen3/Eigen/Dense not found. PyClical might fail to build.])
+  ])
 
   dnl Check for a C++ compiler
   AC_LANG([C]++)
@@ -344,12 +383,18 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   esac
   AC_SUBST([CXXVERSION])
 
+  if test "$basename_cxx" = "icpc"; then
+     AC_MSG_WARN([The Intel Classic icpc compiler is deprecated and will be removed in a future release. Use the Intel oneAPI icpx compiler instead.])
+  fi
+
   dnl Handle $glucat_use_debug_code: debug symbols and debug level
   GLUCAT_CXX_DEBUG_FLAG=""
   case "$glucat_use_debug_code" in
     full|yes)
       case "$basename_cxx" in
-        "clang++"*|icpc|icpx)
+        "clang++"*|icpx)
+          ;;
+        icpc)
           ;;
         "g++"*)
           GLUCAT_CHECK_COMPILER_FLAG([finline-limit=400],
@@ -372,7 +417,19 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     no)
       CXXFLAGS="-O3 $CXXFLAGS"
       case "$basename_cxx" in
-        "clang++"*|icpc|icpx)
+        "clang++"*|icpx)
+          GLUCAT_CHECK_COMPILER_FLAG([march=native],
+                [CXXFLAGS="$CXXFLAGS -march=native"])
+          GLUCAT_CHECK_COMPILER_FLAG([flto=thin],
+                [CXXFLAGS="$CXXFLAGS -flto=thin"])
+          GLUCAT_CHECK_COMPILER_FLAG_COMPILE_ONLY([mllvm -inline-threshold=1000],
+                [CXXFLAGS="$CXXFLAGS -mllvm -inline-threshold=1000"])
+          GLUCAT_CHECK_COMPILER_FLAG_COMPILE_ONLY([mllvm -inlinehint-threshold=1000],
+                [CXXFLAGS="$CXXFLAGS -mllvm -inlinehint-threshold=1000"])
+          GLUCAT_CHECK_COMPILER_FLAG([funroll-loops],
+                [CXXFLAGS="$CXXFLAGS -funroll-loops"])
+          ;;
+        icpc)
           ;;
         "g++"*)
           GLUCAT_CHECK_COMPILER_FLAG([march=native],
@@ -409,7 +466,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
 
   dnl Handle $glucat_use_ndebug_define: NDEBUG definition used by uBLAS
   if [[[ "$glucat_use_ndebug_define" == "yes" ]]]; then
-    CXXFLAGS="$CXXFLAGS -DNDEBUG"
+    GLUCAT_CPPFLAGS="$GLUCAT_CPPFLAGS -DNDEBUG"
   fi
 
   if [[[ "$glucat_use_profiling" == "yes" ]]]; then
@@ -444,20 +501,16 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
           GLUCAT_CHECK_COMPILER_FLAG([Wno-unused],
           [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-unused"])
           ;;
-        icpc|icpx)
-          case "$basename_cxx" in
-            icpc)
-              GLUCAT_CHECK_COMPILER_FLAG([diag-disable=1292],
-              [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -diag-disable=1292"])
-              ;;
-            icpx)
-              GLUCAT_CHECK_COMPILER_FLAG([Wno-deprecated],
-              [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-deprecated"])
-              ;;
-          esac
+        icpc)
+          GLUCAT_CHECK_COMPILER_FLAG([diag-disable=1292],
+          [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -diag-disable=1292"])
           GLUCAT_CHECK_LIB([imf],[cos],
           [],
           [glucat_use_pyclical="no"])
+          ;;
+        icpx)
+          GLUCAT_CHECK_COMPILER_FLAG([Wno-deprecated],
+          [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-deprecated"])
           ;;
         *)
           ;;
@@ -484,7 +537,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       GLUCAT_CHECK_HEADERS([qd/qd_real.h],
       [
         glucat_build_using_qd="yes"
-        CXXFLAGS="$CXXFLAGS -D_GLUCAT_USE_QD";
+        GLUCAT_CPPFLAGS="$GLUCAT_CPPFLAGS -D_GLUCAT_USE_QD";
         all_libraries="$all_libraries -lqd"
       ],[],[])
     fi
@@ -500,6 +553,8 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
         "clang++"*|icpx)
           GLUCAT_CHECK_COMPILER_FLAG([Wno-deprecated-register],
                 [CXXFLAGS="$CXXFLAGS -Wno-deprecated-register"])
+          GLUCAT_CHECK_COMPILER_FLAG([Wno-unused-command-line-argument],
+                [CXXFLAGS="$CXXFLAGS -Wno-unused-command-line-argument"])
           ;;
         *)
           ;;
@@ -524,7 +579,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       GLUCAT_CHECK_COMPILER_FLAG([fno-check-new],
             [CXXFLAGS="$CXXFLAGS -fno-check-new"])
       dnl For compatibility with Cygwin gcc
-      GLUCAT_CHECK_HEADERS([bits/wordsize.h],[CXXFLAGS="$CXXFLAGS -DHAVE_BITS_WORDSIZE_H"],[],[])
+      GLUCAT_CHECK_HEADERS([bits/wordsize.h],[GLUCAT_CPPFLAGS="$GLUCAT_CPPFLAGS -DHAVE_BITS_WORDSIZE_H"],[],[])
       if [[[ "$glucat_build_using_qd" == "yes" ]]]; then
         dnl Avoid wrong code with QD and AVX512 by using FMA consistently
         dnl https://gcc.gnu.org/bugzilla/show_bug.cgi?id=106902
@@ -532,11 +587,20 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
               [CXXFLAGS="$CXXFLAGS -ffp-contract=on"])
       fi
       ;;
-    icpc|icpx)
+    icpc)
       GLUCAT_CHECK_LIB([imf],[cos],
       [all_libraries="$all_libraries -limf"],
       [],
       [glucat_have_gsl="no"])
+      GLUCAT_CHECK_COMPILER_FLAG([fp-model source],
+                      [CXXFLAGS="-fp-model source $CXXFLAGS"])
+      GLUCAT_CHECK_COMPILER_FLAG([fp-model precise],
+                      [CXXFLAGS="-fp-model precise $CXXFLAGS"])
+
+      GLUCAT_CHECK_COMPILER_FLAG([march=native],
+            [CXXFLAGS="$CXXFLAGS -march=native"])
+      ;;
+    icpx)
       GLUCAT_CHECK_COMPILER_FLAG([fp-model source],
                       [CXXFLAGS="-fp-model source $CXXFLAGS"])
       GLUCAT_CHECK_COMPILER_FLAG([fp-model precise],
@@ -559,6 +623,7 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
        [WOVERLOADED_VIRTUAL="-Woverloaded-virtual"],
        [WOVERLOADED_VIRTUAL=""])
   AC_SUBST([WOVERLOADED_VIRTUAL])
+  AC_SUBST([GLUCAT_CPPFLAGS])
 
   AC_PROG_CXXCPP
 

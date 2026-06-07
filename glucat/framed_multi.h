@@ -78,10 +78,15 @@ namespace glucat
   auto
   operator% (const framed_multi<Scalar_T,LO,HI,Tune_P>& lhs, const framed_multi<Scalar_T,LO,HI,Tune_P>& rhs) -> framed_multi<Scalar_T,LO,HI,Tune_P>;
 
-  // Hestenes scalar product
+  // Scalar product: [HS] (1.44) star(a, b) = scalar(a * b) = <ab>_0
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   auto
   star(const framed_multi<Scalar_T,LO,HI,Tune_P>& lhs, const framed_multi<Scalar_T,LO,HI,Tune_P>& rhs) -> Scalar_T;
+ 
+  // Hestenes inner product: [H] (1.10) hstar(a, b) = scalar(reverse(a) * b) = <a†b>_0
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  auto
+  hstar(const framed_multi<Scalar_T,LO,HI,Tune_P>& lhs, const framed_multi<Scalar_T,LO,HI,Tune_P>& rhs) -> Scalar_T;
 
   // Geometric quotient
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >

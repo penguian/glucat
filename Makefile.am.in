@@ -9,12 +9,12 @@ SEMANTICS = test_move
 
 TOPSUBDIRS = glucat $(PYCLICALdir) $(PYCLICAL_DEMOSdir) $(TIMING)
 
-EXAMPLES = test00 test01 test02 test03 test04 test05 test06 test07 test08 test09 test10 test11 test12 test13 test14 test15 test16 test17
+EXAMPLES = test00 test01 test02 test03 test04 test05 test06 test07 test08 test09 test10 test11 test12 test13 test14 test15 test16 test17 test18
 
 TESTOUT = test_move/test_move.out \
           test00/test00.out test01/test01.out test02/test02.out test03/test03.out test04/test04.out test05/test05.out \
           test06/test06.out test07/test07.out test08/test08.out test09/test09.out test10/test10.out test11/test11.out \
-          test12/test12.out test13/test13.out test14/test14.out test15/test15.out test16/test16.out test17/test17.out
+          test12/test12.out test13/test13.out test14/test14.out test15/test15.out test16/test16.out test17/test17.out test18/test18.out
 
 if test_doctest_SUBDIR_included
 EXAMPLES += test_doctest
@@ -26,8 +26,8 @@ DOC = doc
 
 doc_DATA = AUTHORS AUTHORS.md COPYING ChangeLog DESIGN.md glucat.lsm INSTALL INSTALL.md NEWS README README.md TODO TODO.md
 
-EXTRA_DIST = admin m4 test test_runtime test_doctest $(EXAMPLES) $(SEMANTICS) subdirs configure.ac.in configure.ac configure Makefile.am \
-             $(doc_DATA) doc/Makefile.am doc/Makefile.in
+EXTRA_DIST = admin m4 test test_runtime.aarch64 test_runtime.x86-64 test_doctest $(EXAMPLES) $(SEMANTICS) \
+             subdirs configure.ac.in configure.ac configure Makefile.am $(doc_DATA) doc/Makefile.am doc/Makefile.in
 
 AUTHORS: AUTHORS.md
 	ln -sf AUTHORS.md AUTHORS
@@ -46,9 +46,11 @@ check-local: test-out $(PYCLICAL_CHECK_OUT)
 fast-check: fast-test-out $(PYCLICAL_CHECK_OUT)
 
 test-out: $(TESTOUT)
+	mkdir -p test_runtime
 	cat $(TESTOUT) > test_runtime/test.out
 
 fast-test-out: $(FAST_TESTOUT)
+	mkdir -p test_runtime
 	cat $(FAST_TESTOUT) > test_runtime/fast-test.out
 
 if make_pyclical

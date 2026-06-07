@@ -1,4 +1,4 @@
-README for GluCat 0.98a1 with PyClical
+README for GluCat 0.98a2 with PyClical
 ======================================
 
 GluCat is a library of C++ template classes for calculations with the universal
@@ -92,9 +92,9 @@ files.
 Once you have downloaded, unzipped and untarred the GluCat source code,
 you should have a directory, `glucat-xxx`, where `xxx` is the version number.
 Under `glucat-xxx` you should see a number of directories, including `./admin`,
-`./doc`, `./gfft_test`, `./glucat`, `./m4`, `./products`, `./pyclical`,
-`./squaring`, `./test`, `./test_coverage`, `./test_doctest`, `./test_runtime`,
-`./testxx`, and `./transforms`.
+`benchmarks`, `./doc`, `./gfft_test`, `./glucat`, `./m4`, `./products`,
+`./pyclical`,`./squaring`, `./test`, `./test_coverage`, `./test_doctest`,
+`./test_move`, `./test_runtime.x86-64`, `./test_runtime.aarch64`, `./test00` to `./test18`, and `./transforms`.
 
 The `./glucat` directory contains all the header files that define the GluCat C++
 template library.
@@ -107,27 +107,29 @@ demo output.
 The `./admin` and `./m4` directories are part of the `autotools` infrastructure for
 building GluCat, and should normally be left unchanged.
 
-The `./doc` directory contains documentation. Currently only the GluCat API
-Reference Manual can be found here, under `./doc/api`.
+The `./doc` directory is the destination for generated documentation, and contains the `./doc/benchmarks` subdirectory with cross-architecture performance comparison reports and visualization plots.
 
 The `./gfft_test`, `./products`, `./squaring` and `./transform` directories
 contain the C++ source code for timing tests for GluCat.
 
-The `./test` and `./testxx` directories contain the C++ source code for
-programming examples and legacy regression tests for GluCat.
+The `./benchmarks` directory contains timing test results and environment configuration
+scripts for various machines and compilers.
 
-The `./test_doctest` directory contains modern C++ unit tests using the `doctest`
-framework, integrated directly into the library headers. These tests achieve 100%
-C++ function coverage across the core GluCat library and matrix backends, and
-incorporate tests migrated from the PyClical Python doctest suite.
+The `./test`, `./test_move` and `./test00` to `./test18` directories contain the
+C++ source code for programming examples and regression tests for GluCat.
+
+The `./test_doctest` directory contains C++ unit tests using the `doctest`
+framework.
 
 The `./test_coverage` directory contains scripts for generating code coverage
 reports for the various test suites. The `doctest` coverage script supports
 selective testing of the Eigen and Armadillo backends, as well as combined 
 reports.
 
-The `./test_runtime` directory contains regression test input and sample output
-for the GluCat timing and regression tests.
+The `./test_runtime.x86-64` and `./test_runtime.aarch64` directories contain static
+baseline regression test input and sample output for the GluCat timing and regression tests.
+The `./test_runtime` directory is created dynamically during testing and used as a staging
+area for copying test outputs.
 
 
 3 Resolving dependencies, installing and testing the software
@@ -150,18 +152,18 @@ you have only run `make` within the PyClical directory, but have not yet
 installed PyClical, then, assuming you are using the `bash` interpreter on Linux,
 you will need to set the `PYTHONPATH` environment variable so that Python can
 find your newly built copy of PyClical. If the `make` has succeeded, you should
-have the file `./pyclical/PyClical.so`. Set `PYTHONPATH` to include the full
+have the file `./pyclical/PyClical.*.so`. Set `PYTHONPATH` to include the full
 `./pyclical` directory path name before any other path names. For example:
 ```
-  export PYTHONPATH=/home/leopardi/src/glucat/pyclical:$PYTHONPATH
+  export PYTHONPATH=~/src/glucat/pyclical:$PYTHONPATH
 ```
 or you can change the `PYTHONPATH` variable for just one command, e.g.
 ```
-  PYTHONPATH=/home/leopardi/src/glucat/pyclical:$PYTHONPATH python3
+  PYTHONPATH=~/src/glucat/pyclical:$PYTHONPATH python3
 ```
 PyClical is designed to be used within a Python environment. You will usually
-need to run a Python IDE or interpreter, such as IDLE, `ipython3` or `python3`. The
-following instructions use the standard `python3` interpreter.
+need to run a Python IDE or interpreter, such as IDLE, `ipython3` or `python3`.
+The following instructions use the standard `python3` interpreter.
 
 To use the capabilities of PyClical from within Python, you must either import
 the PyClical extension module or import objects from this module.  The simplest
@@ -176,7 +178,7 @@ Probably the easiest way to get familiar with PyClical is to make a copy of the
 For example, assuming you are using the Bash shell on Linux, and have installed
 PyClical, use the following commands:
 ```
-% cp /usr/local/share/pyclical/demos /path/to/my/demos
+% cp -a /usr/local/share/pyclical/demos /path/to/my/demos
 % cd /path/to/my/demos
 % python3 pyclical_tutorials.py
 ```
@@ -212,17 +214,18 @@ If you are running Linux or a Unix equivalent, the following should also work:
 ```
 
 For more usage examples, see the example Python files `clifford_demo.py`,
-`pyclical_demo.py`, `plotting_demo.py`, `plotting_demo_dialog.py`,
+`m_theory_demo.py`,`pyclical_demo.py`, `plotting_demo.py`, `plotting_demo_dialog.py`,
 `plotting_demo_mayavi.py`, and `sqrt_log_demo.py`, and the example output files
 `pyclical_demo.out` and `sqrt_log_demo.out`.
 
-To run `clifford_demo.py`, `pyclical_demo.py`, or `sqrt_log_demo.py`, use the
-following commands:
+To run `clifford_demo.py`, `m_theory_demo.py`, `pyclical_demo.py`, or
+`sqrt_log_demo.py`, use the following commands:
 ```
 % cd /path/to/my/demos
 % python3 $DEMO.py
 ```
-where `$DEMO` is one of `clifford_demo`, `pyclical_demo` or `sqrt_log_demo`.
+where `$DEMO` is one of `clifford_demo`, `m_theory_demo`, `pyclical_demo` or
+`sqrt_log_demo`.
 
 If you are running Linux or a Unix equivalent, the following should also work:
 ```
@@ -245,9 +248,8 @@ command at the `ipython3` prompt:
 ```
 In [1]: %run plotting_demo_mayavi
 ```
-This demo uses Matplotlib to produce a number of plots. With Mayavi and wxPython,
-these plots are displayed in interactive windows, you can rotate, zoom and pan
-them. See (e.g.) http://mayavi.sourceforge.net/docs/guide/ch03s04.html
+This demo uses Mayavi to produce a number of plots. These plots are displayed in
+interactive windows, and [you can rotate, zoom and pan them](https://docs.enthought.com/mayavi/mayavi/application.html#mouse-interaction).
 
 You can also run the Mayavi plotting demo from a graphical user interface.
 To do this, run `./plotting_demo_dialog.py`.
@@ -272,7 +274,7 @@ click on the corresponding name in the list.
 
 Once you have familiarized yourself with Clifford algebras and have tried using
 PyClical, take a good look at the test C++ code in `./test_doctest` and
-`./test00` to `./test17`, and the test output in `./test_runtime`.
+`./test00` to `./test18`, and the test output in `./test_runtime` (or `./test_runtime.x86-64` / `./test_runtime.aarch64`).
 
 A good way to begin writing your own C++ code using GluCat is to start with the
 programming example code in `./test01`. The file `test01/peg01.cpp` includes
@@ -306,8 +308,8 @@ namespace by using the `glucat::` prefix or by the `using` declaration above.
 
 
 To obtain detailed information on the GluCat namespaces, classes and functions,
-see the Doxygen documentation in `doc/api/GluCat-API-reference-manual.pdf` (PDF)
-and `doc/api/html/` (HTML). By default, this documentation is installed in
+see the Doxygen documentation in `./doc/api/GluCat-API-reference-manual.pdf` (PDF)
+and `./doc/api/html/` (HTML). By default, this documentation is installed in
 the directories `/usr/local/doc/glucat/api/pdf` and `/usr/local/doc/glucat/api/html`
 respectively.
 
@@ -416,19 +418,3 @@ parameters.
 * `ALL_CAPS_WITH_UNDERSCORES`: A global constant defined in `<glucat/global.h>`
 
 
-Recent Changes
-==============
-
-As of GluCat 0.98a1, the following changes have been made:
-* **100% C++ Function Coverage**: Achieved 100% function coverage and over 90% line coverage for the core library by migrating the PyClical Python doctest suite into C++ `doctest` `SUBCASE` blocks.
-* **Template Disambiguation**: Resolved template parameter ambiguities and constructor overload issues in `framed_multi_imp.h` and `matrix_multi_imp.h` for multiple scalar types.
-
-As of GluCat 0.98a0, the following changes have been made:
-* **Non-Complex Scalar_T Assertion**: Enforced non-complex `Scalar_T` requirements using `static_assert` in `clifford_algebra.h` and `scalar.h` to ensure template robustness and library-wide compatibility.
-* **Coverage Infrastructure Hardening**: Hardened the build system and coverage reporting by implementing binary backup sequences and isolating profiling flags from autotools library probes.
-* **Sparse Diagonal Optimization**: Optimization of sparse matrix `unit()` and `trace()` operations in Eigen and Armadillo backends to avoid slow manual diagonal write loops.
-* **Return Type Modernization**: Refactored the public API across all core classes and matrix wrappers to use standard return types (e.g., `T func()`) instead of trailing return types (`auto func() -> T`).
-* **Deprecated Function Removal**: The following deprecated functions have been removed:
-    * `elliptic`: Use `complexifier` instead.
-    * `imag`: This function was deprecated and always returned 0.
-    * `MS_PER_S`: Defined in `glucat/global.h`, deprecated and unused. Use `MS_PER_SEC` in `test/timing.h` instead.

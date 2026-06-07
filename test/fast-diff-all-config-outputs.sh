@@ -17,9 +17,11 @@
 
 here=$(cd $(dirname ${0})/ && pwd)
 . ${here}/define-config-options.sh
+arch=${1:-"x86-64"}
 
 for ((line=1;line<=${nbr_options_lines};line++))
 do
   echo ${line}
-  ${here}/fast-diff-one-config-output.sh ${line}
+  ${here}/fast-diff-one-config-output.sh ${line} ${arch}
 done
+echo "."

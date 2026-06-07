@@ -67,13 +67,16 @@ allowed_builtins = {
 
 def allowed_import(name, globals=None, locals=None, fromlist=(), level=0):
     """
-    Restricted __import__ function that only allows importing PyClical.
+    Restricted __import__ function that only allows importing PyClical and IPython.
 
     Note: this is not a security measure and assumes a non-malicious user.
     It is intended to prevent accidental execution of arbitrary code.
     """
     if name == 'PyClical':
         return PyClical
+    if name.startswith('IPython'):
+        import importlib
+        return importlib.import_module(name)
     raise ImportError(f"Import of '{name}' is not allowed in tutorial sandbox.")
 
 allowed_builtins['__import__'] = allowed_import

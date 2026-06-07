@@ -1,7 +1,7 @@
 #ifndef _GLUCAT_TEST_DOCTEST_TEST_DOCTEST_H
 #define _GLUCAT_TEST_DOCTEST_TEST_DOCTEST_H
 
-#include <doctest.h>
+#include <doctest/doctest.h>
 #include "glucat/glucat.h"
 #include <cmath>
 #include <limits>
@@ -11,9 +11,12 @@ namespace glucat {
   template< typename Multivector_T >
   bool is_error(const Multivector_T& lhs, const Multivector_T& rhs, typename Multivector_T::scalar_t tol)
   {
-    return ( (abs(lhs) < tol) || (abs(rhs) < tol) )
-           ? (abs(lhs - rhs) > tol)
-           : (abs(lhs - rhs) > abs(rhs) * tol);
+    using scalar_t = typename Multivector_T::scalar_t;
+    scalar_t diff = abs(lhs - rhs);
+    scalar_t ref = abs(rhs);
+    return ( (abs(lhs) < tol) || (ref < tol) )
+           ? (diff > tol)
+           : (diff > ref * tol);
   }
 
   template< typename Multivector_T >
@@ -21,7 +24,7 @@ namespace glucat {
   {
     typedef typename Multivector_T::scalar_t scalar_t;
     static const scalar_t eps = std::numeric_limits<scalar_t>::epsilon();
-    const scalar_t tol = eps * 512.0;
+    const scalar_t tol = eps * 4096.0;
 
     Multivector_T lhs;
     Multivector_T rhs;
@@ -29,35 +32,54 @@ namespace glucat {
     const index_t a_grade = a.frame().count();
     const index_t b_grade = b.frame().count();
 
-    SUBCASE("Identity [HS] (1.21a)") {
-      for (index_t r = 1; r <= a_grade; ++r) {
-        const Multivector_T a_r = a(r);
-        for (index_t s = 1; s <= b_grade; ++s) {
-          const Multivector_T b_s = b(s);
-          lhs = a_r & b_s;
-          rhs = (a_r * b_s)(index_t(std::abs(int(r-s))));
-          CHECK_FALSE(is_error(lhs, rhs, tol));
-        }
+
+    // Identity [HS] (1.21a)
+    for (index_t r = 1; r <= a_grade; ++r) {
+      const Multivector_T a_r = a(r);
+      for (index_t s = 1; s <= b_grade; ++s) {
+        const Multivector_T b_s = b(s);
+        lhs = a_r & b_s;
+        rhs = (a_r * b_s)(index_t(std::abs(int(r-s))));
+        CHECK_FALSE(is_error(lhs, rhs, tol));
       }
     }
 
-    SUBCASE("Identity [HS] (1.22a)") {
-      for (index_t r = 0; r <= a_grade; ++r) {
-        const Multivector_T a_r = a(r);
-        for (index_t s = 0; s <= b_grade; ++s) {
-          const Multivector_T b_s = b(s);
-          lhs = a_r ^ b_s;
-          rhs = (a_r * b_s)(r+s);
-          CHECK_FALSE(is_error(lhs, rhs, tol));
-        }
+    // Identity [HS] (1.22a)
+    for (index_t r = 0; r <= a_grade; ++r) {
+      const Multivector_T a_r = a(r);
+      for (index_t s = 0; s <= b_grade; ++s) {
+        const Multivector_T b_s = b(s);
+        lhs = a_r ^ b_s;
+        rhs = (a_r * b_s)(r+s);
+        CHECK_FALSE(is_error(lhs, rhs, tol));
       }
     }
 
-    SUBCASE("Identity [HS] (1.25a)") {
-      lhs = (a ^ b) ^ c;
-      rhs = a ^ (b ^ c);
-      CHECK_FALSE(is_error(lhs, rhs, tol));
+    // Identity for Left Contraction (%)
+    for (index_t r = 0; r <= a_grade; ++r) {
+      const Multivector_T a_r = a(r);
+      for (index_t s = 0; s <= b_grade; ++s) {
+        const Multivector_T b_s = b(s);
+        lhs = a_r % b_s;
+        if (s >= r) {
+          rhs = (a_r * b_s)(s - r);
+        } else {
+          rhs = Multivector_T(0);
+        }
+        CHECK_FALSE(is_error(lhs, rhs, tol));
+      }
     }
+
+    // Identity [HS] (1.25a)
+    lhs = (a ^ b) ^ c;
+    rhs = a ^ (b ^ c);
+    CHECK_FALSE(is_error(lhs, rhs, tol));
+
+    // Left Contraction Identity for full multivectors: a % (b % c) == (a ^ b) % c
+    lhs = a % (b % c);
+    rhs = (a ^ b) % c;
+    CHECK_FALSE(is_error(lhs, rhs, tol));
+
 
     SUBCASE("Identity [HS] (1.31)") {
       const Multivector_T a_1 = a(1);

@@ -1,0 +1,28 @@
+gfft_test/gfft_test
+	linux-vdso.so.1 (0x000075a3dcedd000)
+	libstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x000075a3dcc00000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x000075a3dcb09000)
+	libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x000075a3dcadc000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x000075a3dc800000)
+	/lib64/ld-linux-x86-64.so.2 (0x000075a3dcedf000)
+products/products
+	linux-vdso.so.1 (0x000077aa7dbb8000)
+	libstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x000077aa7d800000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x000077aa7d709000)
+	libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x000077aa7db4d000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x000077aa7d400000)
+	/lib64/ld-linux-x86-64.so.2 (0x000077aa7dbba000)
+squaring/squaring
+	linux-vdso.so.1 (0x00007fbf73367000)
+	libstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007fbf73000000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007fbf72f09000)
+	libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007fbf732fc000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fbf72c00000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007fbf73369000)
+transforms/transforms
+	linux-vdso.so.1 (0x000074b25c25c000)
+	libstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x000074b25be00000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x000074b25c127000)
+	libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x000074b25c0fa000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x000074b25ba00000)
+	/lib64/ld-linux-x86-64.so.2 (0x000074b25c25e000)

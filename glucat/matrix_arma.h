@@ -175,9 +175,9 @@ namespace glucat { namespace matrix
     // Eigenvalues
     std::vector<std::complex<double>> eigenvalues() const;
     // Infinity norm
-    typename arma::get_pod_type<Scalar_T>::result norm_inf() const;
+    Scalar_T norm_inf() const;
     // Squared Frobenius norm
-    typename arma::get_pod_type<Scalar_T>::result norm_frob2() const;
+    Scalar_T norm_frob2() const;
     // Is NaN?
     bool isnan() const;
     // Is infinite?
@@ -189,8 +189,21 @@ namespace glucat { namespace matrix
     template< typename Result_Scalar_T, typename Other >
     Result_Scalar_T inner(const Other& other) const;
 
+    // Trace of product: Trace(A*B) / Dim
+    template< typename Other >
+    Scalar_T trace_product(const Other& other) const;
+
+    // Unary multivector mappings
+    void similarity_transform(const std::vector<matrix_index_t>& perm, const std::vector<Scalar_T>& signs);
+    void transpose_similarity_transform(const std::vector<matrix_index_t>& perm, const std::vector<Scalar_T>& signs);
+    void involute();
+    void reverse(index_t p, index_t q);
+
     // Kronecker matrix product
     arma_matrix_wrapper kron(const arma_matrix_wrapper& other) const;
+    arma_matrix_wrapper mono_kron(const arma_matrix_wrapper& other) const;
+    // Monomial matrix product
+    arma_matrix_wrapper mono_prod(const arma_matrix_wrapper& other) const;
     // Mixed Kronecker matrix product: Dense x Sparse -> Dense (wrapper)
     template< typename Other_Scalar_T >
     arma_matrix_wrapper<Other_Scalar_T> kron(const arma_sparse_wrapper<Other_Scalar_T>& other) const;
@@ -297,6 +310,9 @@ namespace glucat { namespace matrix
     arma_matrix_wrapper<Other_Scalar_T> kron(const arma_matrix_wrapper<Other_Scalar_T>& other) const;
     // Kronecker matrix product of sparse wrappers
     arma_sparse_wrapper kron(const arma_sparse_wrapper& other) const;
+    arma_sparse_wrapper mono_kron(const arma_sparse_wrapper& other) const;
+    // Monomial matrix product of sparse wrappers
+    arma_sparse_wrapper mono_prod(const arma_sparse_wrapper& other) const;
 
     // Left Kronecker quotient
     template< typename RHS_T >
@@ -311,9 +327,9 @@ namespace glucat { namespace matrix
     // Eigenvalues
     std::vector<std::complex<double>> eigenvalues() const;
     // Infinity norm
-    typename arma::get_pod_type<Scalar_T>::result norm_inf() const;
+    Scalar_T norm_inf() const;
     // Squared Frobenius norm
-    typename arma::get_pod_type<Scalar_T>::result norm_frob2() const;
+    Scalar_T norm_frob2() const;
     // Is NaN?
     bool isnan() const;
     // Is infinite?
@@ -324,6 +340,16 @@ namespace glucat { namespace matrix
     // Inner product
     template< typename Result_Scalar_T, typename Other >
     Result_Scalar_T inner(const Other& other) const;
+
+    // Trace of product: Trace(A*B) / Dim
+    template< typename Other >
+    Scalar_T trace_product(const Other& other) const;
+
+    // Unary multivector mappings
+    void similarity_transform(const std::vector<matrix_index_t>& perm, const std::vector<Scalar_T>& signs);
+    void transpose_similarity_transform(const std::vector<matrix_index_t>& perm, const std::vector<Scalar_T>& signs);
+    void involute();
+    void reverse(index_t p, index_t q);
   };
 
   // Product of scalar and sparse wrapper
