@@ -57,7 +57,7 @@ the instructions above to install from Git clone, you should have a directory,
 glucat-0.98a2. Under this directory you should see a number of subdirectories,
 including `./admin`, `./doc`, `./glucat`, `./gfft_test`, `./products`,
 `./pyclical`, `./squaring`, `./test`, `./test_coverage`, `./test_doctest`,
-`./test_move`, `./test_runtime`, `./testxx`, and `./transforms`.
+`./test_move`, `./test_runtime.*`, `./testxx`, and `./transforms`.
 
 The following instructions are meant to be used with `glucat-0.98a2` as the
 current directory.
@@ -543,7 +543,7 @@ Note the difference between `make check` and `make check-local`:
   through `SUBDIRS` and only runs the legacy functionality tests.
 
 When you want to generate `test_runtime/test.out` to compare with the existing 
-sample files in `test_runtime`, you should use parallel make with the 
+sample files in `test_runtime.*`, you should use parallel make with the 
 `check-local` target:
 ```
   make -j${NPROCS} check-local
@@ -590,17 +590,24 @@ The resulting HTML report will be available in
 To Test
 =======
 
-The test_runtime directory
---------------------------
+The test_runtime.* directories
+------------------------------
 
-The test runtime directory `./test_runtime` contains sample test output files.
+The static test runtime baseline directories `./test_runtime.x86-64` and
+`./test_runtime.aarch64` contain sample test output files.
 
-The sample test output files include `eg3.res`, `gfft_test-11.out`, `products-8.out`,
-`squaring-11.out` and `transforms-8.out`. There are also 24 versions of the output
-of the regression tests. These are described below.
+The sample test output files include `gfft_test-11.out`, `products-8.out`,
+`squaring-11.out` and `transforms-8.out`.
 
-`./test_runtime` also contains the test input file `eg8.txt`. This file is needed
-by programming example 8 (reading multivectors from input).
+The `./test_runtime.x86-64` directory contains 24 sample versions of the regression
+test results (corresponding to 12 different combinations of configuration
+parameters, for two different sets of tests: the complete set of 19 tests, and a
+subset of 3 tests), and also includes the sample output file `eg3.res` and the
+test input file `eg8.txt` (needed by programming example 8, reading multivectors from input).
+
+The `./test_runtime.aarch64` directory contains 12 sample versions of the full
+regression test results (corresponding to 12 different combinations of configuration
+parameters for the complete set of 19 tests).
 
 
 Re-running the regression tests
@@ -609,22 +616,36 @@ Re-running the regression tests
 The main regression test script is `./test/test.sh`. Once you have built and run
 the regression tests via `make check`, you can use this script to re-run the
 regression tests. The script `./test/test.sh` reruns tests `./test00/test00` to
-`./test17/test17`, using relative pathnames, so it is best to leave `test.sh`
+`./test18/test18`, using relative pathnames, so it is best to leave `test.sh`
 where it is and invoke it using its full path name. This allows it to find
-`test00` to `test17`.
+`test00` to `test18`.
 
 The test script `./test/test.sh` takes any number (including zero) of numeric
-parameters. Parameters in the range `00` to `17` correspond to coding examples
-`./test00/test00` to `./test17/test17`. These examples are run in numerical
-order. With zero parameters, all examples from `00` to `17` are run in order.
+parameters. Parameters in the range `00` to `18` correspond to coding examples
+`./test00/test00` to `./test18/test18`. These examples are run in numerical
+order. With zero parameters, all examples from `00` to `18` are run in order.
 Many of the examples are run twice - once with `framed_multi<Scalar_T>` and once
 with `matrix_multi<Scalar_T>`.
 
-The `./test_runtime` directory contains 24 sample versions of the regression test
-results, corresponding to 12 different combinations of configuration parameters,
-for two different sets of tests: the complete set of 18 tests, and a subset of 3
-tests. The tests were all run on an 8 core 
-`AMD Ryzen 7 8840HS w/ Radeon 780M Graphics` @ 3.3 GHz with
+The baseline test results are structured as follows: 
+
+The tests results in `./test_runtime.aarch64` come from runs on an Apple M2 Pro
+with 6 Avalanche performance cores and 4 Icestorm efficiency cores with
+    ```
+    Linux 6.19.14-400.asahi.fc43.aarch64+16k SMP aarch64
+    Fedora Linux Asahi Remix 43 (KDE Plasma Desktop Edition)
+    g++ 15.2.1 20260123 (Red Hat 15.2.1-7)
+    Armadillo 12.8.1
+    Doxygen 1.14.0
+    Eigen3 3.4.0
+    GSL 2.8
+    QD 2.3.24
+    Cython 3.1.3
+    Numpy 2.3.5
+    Python 3.14.5
+    ```
+The tests results in `./test_runtime.x86-64` come from runs on an 8 core 
+AMD Ryzen 7 8840HS w/ Radeon 780M Graphics` @ 3.3 GHz with
 ```
     Linux 6.11.0-14-generic #15-Ubuntu SMP 2025
     Kubuntu 24.10
@@ -720,7 +741,7 @@ you run the tests using different architecture, compilers or random number
 generators, you should expect to have different floating point arithmetic
 results, but generally, still within acceptable error tolerances.
 
-The regression tests `./test00/test00` to `./test17/test17` recognize the program
+The regression tests `./test00/test00` to `./test18/test18` recognize the program
 arguments `--help`, `--no-catch`, and `--verbose`. The `--no-catch` argument
 disables the default exception catching behaviour of a regression test, to
 allow program crashes to be more easily debugged. For `./test00/test00` and
@@ -750,9 +771,8 @@ configure command
 ./configure $options
 ```
 then copying the output to `./test_runtime/test.configure.$abbreviation.out`
-or `./test_runtime/fast-test.configure.$abbreviation.out` respectively (where `./test_runtime`
-is a symlink pointing to `./test_runtime.x86-64` or `./test_runtime.aarch64` depending
-on the platform architecture).
+or `./test_runtime/fast-test.configure.$abbreviation.out` respectively where the
+directory `./test_runtime` is created if it does not already exist.
 
 For example, for `./test/test-all-config-options.sh`
 
@@ -808,17 +828,17 @@ of configuration options to be directly compared, and also ensures that any
 side-effect of a configuration does not affect the test results of another
 configuration.
 
-The script `./test/diff-all-config-outputs.sh` compares each relevant test output
-file with the corresponding file in `./test_runtime` or `./pyclical`. For example,
-line 4 of `./test/config-options.txt`
+The script `./test/diff-all-config-outputs.sh ${arch}` compares each relevant test
+output file with the corresponding file in `./test_runtime.${arch}` or `./pyclical`.
+For example, line 4 of `./test/config-options.txt`
 
 ```
 disable-dependency:          --disable-dependency-tracking
 ```
 causes `./test/diff-all-config-outputs.sh` to use diff to compare
 `glucat-0.98a2.4/test_runtime/test.configure.disable-dependency.out` to
-`glucat-0.98a2/test_runtime/test.configure.disable-dependency.out`, and compare
-`glucat-0.98a2.4/pyclical/test.out` to `glucat-0.98a2/pyclical/test.out`.
+`glucat-0.98a2/test_runtime.${arch}/test.configure.disable-dependency.out`, and
+compare `glucat-0.98a2.4/pyclical/test.out` to `glucat-0.98a2/pyclical/test.out`.
 
 Each comparison should only produce a line containing the line number of
 the configuration being compared: 1 to 12.
@@ -833,18 +853,20 @@ The exceptional cases are:
    update that fixes a problem with `tanh`.
 
 If the output of your systematic tests differs due to a difference in compilers
-or libraries, you may want to copy this output to `./test_runtime` to ease future
-comparisons. To do so, run the script `./test/copy-all-config-outputs.sh`.
+or libraries, you may want to copy this output to the staging `./test_runtime`
+directory to ease future comparisons without clobbering the baseline
+`./test_runtime.${arch}` directory directly. To do so, run the script
+`./test/copy-all-config-outputs.sh`.
 
 The difference between `./test/test-all-config-options.sh` and
 `./test/fast-test-all-config-options.sh` is that the former runs all of the tests
-`./test00` to `./test17`, whereas the latter runs only `./test00`, `./test10` and
+`./test00` to `./test18`, whereas the latter runs only `./test00`, `./test10` and
 `./test11`. Both scripts build and check `./pyclical`. More specifically, the
 `./test/test-one-config-option.sh` script runs `make check`, and the
 `./test/fast-test-one-config-option.sh` script runs `make fast-check`. For the
 definitions of these arguments to `make`, see the file `./Makefile.am.in`. To
 compare or copy the output of `./test/fast-test-all-config-options.sh`, use either
-`./test/fast-diff-all-config-outputs.sh` or `./test/fast-copy-all-config-outputs.sh`
+`./test/fast-diff-all-config-outputs.sh ${arch}` or `./test/fast-copy-all-config-outputs.sh`
 respectively.
 
 The script `./test/pyclical-test-all-config-options.sh` just builds and checks
@@ -856,7 +878,7 @@ output of `./test/pyclical-test-all-config-options.sh` just examine all of the
 Running the timing (benchmark) tests
 ------------------------------------
 
-All timing test outputs report execution times in **milliseconds (ms)**.
+All timing test outputs report execution times in milliseconds (ms).
 
 The test program `./gfft_test/gfft_test` takes a parameter `n`, and transforms
 larger and larger multivectors within the subalgebra defined by the frame of
@@ -892,11 +914,11 @@ The default is:
  ./transforms/transforms 8
 ```
 
-The sample timing test results are organized in target-specific directories:
+The sample timing test results are organized in target-specific baseline directories:
 * `./test_runtime.x86-64` (for AMD/Intel x86-64 platforms)
 * `./test_runtime.aarch64` (for ARM64/Apple Silicon platforms)
 
-The directory `./test_runtime` is a symlink pointing to the appropriate architecture-specific directory. The sample outputs were generated using:
+The sample outputs were generated using:
 
 ```
 ./configure
@@ -925,6 +947,8 @@ These benchmarks are driven by the following scripts in the `./test` directory:
 To ensure consistent processor affinity, multithreading, and cache behavior, the benchmarks source configuration-specific environment scripts from the `./benchmarks` directory, which route environment variables (such as `OMP_NUM_THREADS` and `OPENBLAS_NUM_THREADS`) depending on the profile:
 * `env-*.sh`: A set of 16 wrappers corresponding to each configuration abbreviation.
 * `env_setup_common.sh`: A common script performing platform-independent CPU architecture probing (isolating Performance cores on hybrid Apple Silicon Asahi Linux platforms, and targeting physical cores on homogeneous AMD/Intel x86-64 Linux).
+
+Results and comparative reports from these systematic benchmarks are stored in the `./doc/benchmarks/` directory. In particular, the file `./doc/benchmarks/compiler_architecture_comparison_report.md` contains a comprehensive performance analysis across three hardware architectures (Intel Core i7-870, AMD Ryzen 7 8840HS, Apple Avalanche M2 Pro) and three compilers (GCC, Clang, Intel oneAPI), accompanied by performance scaling plots.
 
 Testing PyClical
 ----------------
@@ -1044,36 +1068,8 @@ GluCat 0.98a2 with PyClical has so far been built and tested using:
     Note: One test in test_runtime/fast-test.configure.eig-blaze-qd.out
     fails due to a difference between Intel and AMD x86-64 floating
     point arithmetic.
-    
- 3) Vincitor (Pensieri running VirtualBox):
-    Virtual 1 core `Intel(R) Core(TM) i7 CPU 870 @ 2.93GHz` with
 
-    ```
-    Linux 6.12.6-1-default #1 SMP 2024
-    openSUSE Tumbleweed Release 20241224
-    g++ (SUSE Linux) 14.2.1 20241007
-    Blaze 3.8.2 (blaze-devel cblas-devel libcblas3)
-    Boost 1.86.0
-    Cython version 3.0.12 (python313-Cython)
-    GSL 2.8
-    QD 2.3.24 (qd-devel libqd0)
-    Python 3.11.11
-    Numpy 2.1.3
-    Matplotlib 3.10.0
-    Mayavi2 4.8.2
-    VTK 9.4.1
-    Doxygen 1.12.0 (doxygen)
-    pdfTeX 3.141592653-2.6-1.40.26 (TeX Live 2024/TeX Live for SUSE Linux)
-    ```
-    `./test/fast-test-all-config-options.sh`
-    All 12 configuration commands corresponding to each of the 12
-    `fast-test.configure*.out` files in `./test_runtime`
-
-    Note: One test in test_runtime/fast-test.configure.eig-blaze-qd.out
-    fails due to a difference between Intel and AMD x86-64 floating
-    point arithmetic.
-
- 4) Ginestra
+ 3) Ginestra
     Apple M2 Pro with 6 Avalanche performance cores and 4 Icestorm efficiency cores with
     ```
     Linux 6.19.14-400.asahi.fc43.aarch64+16k SMP aarch64

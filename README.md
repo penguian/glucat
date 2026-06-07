@@ -107,7 +107,7 @@ demo output.
 The `./admin` and `./m4` directories are part of the `autotools` infrastructure for
 building GluCat, and should normally be left unchanged.
 
-The `./doc` directory is the destination for generated documentation.
+The `./doc` directory is the destination for generated documentation, and contains the `./doc/benchmarks` subdirectory with cross-architecture performance comparison reports and visualization plots.
 
 The `./gfft_test`, `./products`, `./squaring` and `./transform` directories
 contain the C++ source code for timing tests for GluCat.
@@ -126,9 +126,10 @@ reports for the various test suites. The `doctest` coverage script supports
 selective testing of the Eigen and Armadillo backends, as well as combined 
 reports.
 
-The `./test_runtime.x86-64` and `./test_runtime.aarch64` directories contain
-regression test input and sample output for the GluCat timing and regression tests.
-The `./test_runtime` directory is a symlink pointing to the target-specific directory.
+The `./test_runtime.x86-64` and `./test_runtime.aarch64` directories contain static
+baseline regression test input and sample output for the GluCat timing and regression tests.
+The `./test_runtime` directory is created dynamically during testing and used as a staging
+area for copying test outputs.
 
 
 3 Resolving dependencies, installing and testing the software
