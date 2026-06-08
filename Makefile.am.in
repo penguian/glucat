@@ -4,7 +4,7 @@ if make_pyclical
   PYCLICAL_DEMOSdir = pyclical/demos
 endif
 
-TIMING = gfft_test products squaring transforms
+TIMING = expressions gfft_test products squaring transforms
 SEMANTICS = test_move
 
 TOPSUBDIRS = glucat $(PYCLICALdir) $(PYCLICAL_DEMOSdir) $(TIMING)

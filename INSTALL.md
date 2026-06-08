@@ -596,8 +596,8 @@ The test_runtime.* directories
 The static test runtime baseline directories `./test_runtime.x86-64` and
 `./test_runtime.aarch64` contain sample test output files.
 
-The sample test output files include `gfft_test-11.out`, `products-8.out`,
-`squaring-11.out` and `transforms-8.out`.
+The sample test output files include `expressions-8.out`, `gfft_test-11.out`,
+`products-8.out`, `squaring-11.out`, and `transforms-8.out`.
 
 The `./test_runtime.x86-64` directory contains 24 sample versions of the regression
 test results (corresponding to 12 different combinations of configuration
@@ -896,14 +896,15 @@ The test program `./transforms/transforms` takes a parameter `n`, and transforms
 larger and larger multivectors within the subalgebras defined by  frames
 limited by the value of `n`.
 
-The test script `./test/timing_tests.sh` takes up to 4 numeric parameters.
-The command `./test/timing_tests.sh $a $b $c $d` runs
+The test script `./test/timing_tests.sh` takes up to 5 numeric parameters.
+The command `./test/timing_tests.sh $a $b $c $d $e` runs
 
 ```
  ./products/products $a
  ./squaring/squaring $b
  ./gfft_test/gfft_test $c
  ./transforms/transforms $d
+ ./expressions/expressions $e
 ```
 The default is:
 
@@ -912,6 +913,7 @@ The default is:
  ./squaring/squaring 11
  ./gfft_test/gfft_test 11
  ./transforms/transforms 8
+ ./expressions/expressions 8
 ```
 
 The sample timing test results are organized in target-specific baseline directories:
