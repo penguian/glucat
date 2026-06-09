@@ -52,7 +52,8 @@ namespace glucat_expr_test
               const double comm_cpu_time,
               const double pade_cpu_time,
               const double series_cpu_time,
-              const double mix_cpu_time)
+              const double mix_cpu_time,
+              const double add_cpu_time)
   {
     const int index_width = 2;
     cout << "Cl(" << setw(index_width) <<  max_pos(frame1) << ","
@@ -72,6 +73,7 @@ namespace glucat_expr_test
          << setw(width) << pade_cpu_time << " (pade) "
          << setw(width) << series_cpu_time << " (series) "
          << setw(width) << mix_cpu_time  << " (mix) "
+         << setw(width) << add_cpu_time  << " (add) "
          << setprecision(old_prec)
          << endl;
     cout.flags(old_flags);
@@ -163,9 +165,23 @@ namespace glucat_expr_test
       mix_cpu_time = elapsed(cpu_time) / nbr_trials;
     }
 #endif
+    cpu_time = clock();
+      c = a + b - a + b - a + b - a + b;
+    double add_cpu_time = elapsed(cpu_time);
+#ifdef _GLUCAT_TEST_REPEAT
+    first_time = true;
+    for (int nbr_trials = EXTRA_TRIALS; first_time || add_cpu_time == 0.0; nbr_trials *= EXTRA_TRIALS)
+    {
+      first_time = false;
+      cpu_time = clock();
+        for (int trials = 0; trials != nbr_trials; ++trials)
+          c = a + b - a + b - a + b - a + b;
+      add_cpu_time = elapsed(cpu_time) / nbr_trials;
+    }
+#endif
     print_times(inner_frame, outer_frame,
                 setup_cpu_time, comm_cpu_time,
-                pade_cpu_time, series_cpu_time, mix_cpu_time);
+                pade_cpu_time, series_cpu_time, mix_cpu_time, add_cpu_time);
   }
 
   template< class Multivector_T >
