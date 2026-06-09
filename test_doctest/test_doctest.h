@@ -8,13 +8,15 @@
 
 namespace glucat {
 
-  template< typename Multivector_T >
-  bool is_error(const Multivector_T& lhs, const Multivector_T& rhs, typename Multivector_T::scalar_t tol)
+  template< typename LHS_T, typename RHS_T >
+  bool is_error(const LHS_T& lhs, const RHS_T& rhs, typename LHS_T::scalar_t tol)
   {
-    using scalar_t = typename Multivector_T::scalar_t;
-    scalar_t diff = abs(lhs - rhs);
-    scalar_t ref = abs(rhs);
-    return ( (abs(lhs) < tol) || (ref < tol) )
+    typename LHS_T::multivector_t eval_lhs(lhs);
+    typename RHS_T::multivector_t eval_rhs(rhs);
+    using scalar_t = typename LHS_T::scalar_t;
+    scalar_t diff = abs(eval_lhs - eval_rhs);
+    scalar_t ref = abs(eval_rhs);
+    return ( (abs(eval_lhs) < tol) || (ref < tol) )
            ? (diff > tol)
            : (diff > ref * tol);
   }
