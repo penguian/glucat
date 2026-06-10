@@ -40,12 +40,331 @@
 
 #include "glucat/matrix.h"
 
+#include <boost/yap/algorithm.hpp>
+#include <boost/yap/expression.hpp>
+
 #include <string>
 #include <utility>
 #include <vector>
 
 namespace glucat
 {
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  class matrix_multi;
+
+  template <boost::yap::expr_kind Kind, typename Tuple>
+  struct matrix_multi_expr;
+
+  namespace detail {
+    template <typename U>
+    struct identity_wrapper {
+        using type = U;
+    };
+
+    // --- find_scalar_type ---
+    template <typename T, typename = void>
+    struct find_scalar_type {
+        using type = T;
+    };
+
+    template <typename T>
+    struct find_scalar_type<T&> : find_scalar_type<T> {};
+
+    template <typename T>
+    struct find_scalar_type<const T&> : find_scalar_type<T> {};
+
+    template <typename T>
+    struct find_scalar_type<T*> : find_scalar_type<T> {};
+
+    template <typename T>
+    struct find_scalar_type<const T*> : find_scalar_type<T> {};
+
+    template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+    struct find_scalar_type<matrix_multi<Scalar_T, LO, HI, Tune_P>> {
+        using type = Scalar_T;
+    };
+
+    template <typename T, typename = void>
+    struct has_scalar_type : std::false_type {};
+
+    template <typename T>
+    struct has_scalar_type<T, std::void_t<typename find_scalar_type<T>::type>> : std::true_type {};
+
+    template <typename... Args>
+    struct find_scalar_in_list;
+
+    template <>
+    struct find_scalar_in_list<> {
+        using type = double;
+    };
+
+    template <typename First, typename... Rest>
+    struct find_scalar_in_list<First, Rest...> {
+        using type = typename std::conditional_t<
+            has_scalar_type<First>::value,
+            find_scalar_type<First>,
+            find_scalar_in_list<Rest...>
+        >::type;
+    };
+
+    template <typename Tuple>
+    struct find_scalar_in_tuple;
+
+    template <typename... Args>
+    struct find_scalar_in_tuple<boost::hana::tuple<Args...>> : find_scalar_in_list<Args...> {};
+
+    template <boost::yap::expr_kind Kind, typename Tuple>
+    struct find_scalar_type<matrix_multi_expr<Kind, Tuple>> : find_scalar_in_tuple<std::decay_t<Tuple>> {};
+
+    // --- find_matrix_multi ---
+    template <typename T, typename = void>
+    struct find_matrix_multi {};
+
+    template <typename T>
+    struct find_matrix_multi<T&> : find_matrix_multi<T> {};
+
+    template <typename T>
+    struct find_matrix_multi<const T&> : find_matrix_multi<T> {};
+
+    template <typename T>
+    struct find_matrix_multi<T*> : find_matrix_multi<T> {};
+
+    template <typename T>
+    struct find_matrix_multi<const T*> : find_matrix_multi<T> {};
+
+    template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+    struct find_matrix_multi<matrix_multi<Scalar_T, LO, HI, Tune_P>> {
+        using type = matrix_multi<Scalar_T, LO, HI, Tune_P>;
+    };
+
+    template <typename T, typename = void>
+    struct has_matrix_multi : std::false_type {};
+
+    template <typename T>
+    struct has_matrix_multi<T, std::void_t<typename find_matrix_multi<T>::type>> : std::true_type {};
+
+    template <typename... Args>
+    struct find_in_list;
+
+    template <>
+    struct find_in_list<> {};
+
+    template <typename First, typename... Rest>
+    struct find_in_list<First, Rest...> : std::conditional_t<
+        has_matrix_multi<First>::value,
+        find_matrix_multi<First>,
+        find_in_list<Rest...>
+    > {};
+
+    template <typename Tuple>
+    struct find_in_tuple;
+
+    template <typename... Args>
+    struct find_in_tuple<boost::hana::tuple<Args...>> : find_in_list<Args...> {};
+
+    template <boost::yap::expr_kind Kind, typename Tuple>
+    struct find_matrix_multi<matrix_multi_expr<Kind, Tuple>> : find_in_tuple<std::decay_t<Tuple>> {};
+
+    // --- get_terminal ---
+    template <typename T>
+    struct get_terminal {
+        using scalar_type = typename find_scalar_type<T>::type;
+        using type = typename std::conditional_t<
+            has_matrix_multi<T>::value,
+            find_matrix_multi<T>,
+            identity_wrapper<matrix_multi<std::decay_t<scalar_type>, DEFAULT_LO, DEFAULT_HI, tuning<>>>
+        >::type;
+    };
+  }
+
+  template <typename Expr>
+  auto evaluate_to_matrix_multi(const Expr& expr)
+  {
+      using mm_t = typename detail::get_terminal<Expr>::type;
+      mm_t result;
+      result = expr;
+      return result;
+  }
+
+  // Custom Boost.YAP expression template for matrix_multi AST nodes
+  template <boost::yap::expr_kind Kind, typename Tuple>
+  struct matrix_multi_expr {
+      static boost::yap::expr_kind const kind = Kind;
+      Tuple elements;
+
+      using mm_t = typename detail::get_terminal<matrix_multi_expr>::type;
+      using multivector_t = mm_t;
+      using scalar_t = typename mm_t::scalar_t;
+      using index_set_t = typename mm_t::index_set_t;
+
+      // Member functions
+      auto isnan() const { return evaluate_to_matrix_multi(*this).isnan(); }
+      auto isinf() const { return evaluate_to_matrix_multi(*this).isinf(); }
+      auto even() const { return evaluate_to_matrix_multi(*this).even(); }
+      auto odd() const { return evaluate_to_matrix_multi(*this).odd(); }
+      auto frame() const { return evaluate_to_matrix_multi(*this).frame(); }
+      auto grade() const { return evaluate_to_matrix_multi(*this).grade(); }
+      auto scalar() const { return evaluate_to_matrix_multi(*this).scalar(); }
+      auto norm() const { return evaluate_to_matrix_multi(*this).norm(); }
+      auto max_abs() const { return evaluate_to_matrix_multi(*this).max_abs(); }
+      template <typename... Args>
+      decltype(auto) write(Args&&... args) const {
+          return evaluate_to_matrix_multi(*this).write(std::forward<Args>(args)...);
+      }
+      auto get_matrix() const { return evaluate_to_matrix_multi(*this).get_matrix(); }
+  };
+
+  // Define binary operators plus/minus using Boost.YAP macros
+  BOOST_YAP_USER_BINARY_OPERATOR(plus, matrix_multi_expr, matrix_multi_expr)
+  BOOST_YAP_USER_BINARY_OPERATOR(minus, matrix_multi_expr, matrix_multi_expr)
+
+  template <typename T>
+  inline const T& eval_if_expr(const T& val) { return val; }
+
+  template <boost::yap::expr_kind Kind, typename Tuple>
+  inline auto eval_if_expr(const matrix_multi_expr<Kind, Tuple>& expr)
+  {
+      return evaluate_to_matrix_multi(expr);
+  }
+
+#define GLUCAT_EXPR_BINARY_OPERATOR(Op) \
+  template <boost::yap::expr_kind Kind, typename Tuple, typename RHS> \
+  inline auto operator Op (const matrix_multi_expr<Kind, Tuple>& lhs, const RHS& rhs) \
+  { \
+      return evaluate_to_matrix_multi(lhs) Op eval_if_expr(rhs); \
+  } \
+  template <typename LHS, boost::yap::expr_kind Kind, typename Tuple> \
+  inline auto operator Op (const LHS& lhs, const matrix_multi_expr<Kind, Tuple>& rhs) \
+  { \
+      return eval_if_expr(lhs) Op evaluate_to_matrix_multi(rhs); \
+  } \
+  template <boost::yap::expr_kind KindL, typename TupleL, boost::yap::expr_kind KindR, typename TupleR> \
+  inline auto operator Op (const matrix_multi_expr<KindL, TupleL>& lhs, const matrix_multi_expr<KindR, TupleR>& rhs) \
+  { \
+      return evaluate_to_matrix_multi(lhs) Op evaluate_to_matrix_multi(rhs); \
+  }
+
+  GLUCAT_EXPR_BINARY_OPERATOR(*)
+  GLUCAT_EXPR_BINARY_OPERATOR(/)
+  GLUCAT_EXPR_BINARY_OPERATOR(^)
+  GLUCAT_EXPR_BINARY_OPERATOR(&)
+  GLUCAT_EXPR_BINARY_OPERATOR(%)
+  GLUCAT_EXPR_BINARY_OPERATOR(|)
+  GLUCAT_EXPR_BINARY_OPERATOR(==)
+  GLUCAT_EXPR_BINARY_OPERATOR(!=)
+
+#undef GLUCAT_EXPR_BINARY_OPERATOR
+
+#define GLUCAT_EXPR_UNARY_FUNCTION(Fn) \
+  template <boost::yap::expr_kind Kind, typename Tuple> \
+  inline auto Fn(const matrix_multi_expr<Kind, Tuple>& expr) \
+  { \
+      return Fn(evaluate_to_matrix_multi(expr)); \
+  }
+
+  GLUCAT_EXPR_UNARY_FUNCTION(exp)
+  GLUCAT_EXPR_UNARY_FUNCTION(log)
+  GLUCAT_EXPR_UNARY_FUNCTION(sqrt)
+  GLUCAT_EXPR_UNARY_FUNCTION(cos)
+  GLUCAT_EXPR_UNARY_FUNCTION(sin)
+  GLUCAT_EXPR_UNARY_FUNCTION(cosh)
+  GLUCAT_EXPR_UNARY_FUNCTION(sinh)
+  GLUCAT_EXPR_UNARY_FUNCTION(tan)
+  GLUCAT_EXPR_UNARY_FUNCTION(atan)
+  GLUCAT_EXPR_UNARY_FUNCTION(acosh)
+  GLUCAT_EXPR_UNARY_FUNCTION(asinh)
+  GLUCAT_EXPR_UNARY_FUNCTION(atanh)
+  GLUCAT_EXPR_UNARY_FUNCTION(complexifier)
+
+#undef GLUCAT_EXPR_UNARY_FUNCTION
+
+  template <boost::yap::expr_kind Kind, typename Tuple, typename Arg2, typename Arg3>
+  inline auto log(const matrix_multi_expr<Kind, Tuple>& val, const Arg2& i, const Arg3& prechecked)
+  {
+      return log(evaluate_to_matrix_multi(val), eval_if_expr(i), prechecked);
+  }
+
+  template <
+    template<class, int, int, class> class Multivector,
+    typename Scalar_T, int LO, int HI, typename Tune_P,
+    boost::yap::expr_kind Kind, typename Tuple
+  >
+  inline bool approx_equal(const Multivector<Scalar_T,LO,HI,Tune_P>& lhs,
+                           const matrix_multi_expr<Kind, Tuple>& rhs)
+  {
+      return approx_equal(lhs, evaluate_to_matrix_multi(rhs));
+  }
+
+  template <
+    template<class, int, int, class> class RHS,
+    typename Scalar_T, int LO, int HI, typename Tune_P,
+    boost::yap::expr_kind Kind, typename Tuple
+  >
+  inline bool approx_equal(const matrix_multi_expr<Kind, Tuple>& lhs,
+                           const RHS<Scalar_T,LO,HI,Tune_P>& rhs)
+  {
+      return approx_equal(evaluate_to_matrix_multi(lhs), rhs);
+  }
+
+  template <
+    boost::yap::expr_kind KindL, typename TupleL,
+    boost::yap::expr_kind KindR, typename TupleR
+  >
+  inline bool approx_equal(const matrix_multi_expr<KindL, TupleL>& lhs,
+                           const matrix_multi_expr<KindR, TupleR>& rhs)
+  {
+      return approx_equal(evaluate_to_matrix_multi(lhs), evaluate_to_matrix_multi(rhs));
+  }
+
+  template <
+    template<class, int, int, class> class Multivector,
+    typename Scalar_T, int LO, int HI, typename Tune_P,
+    boost::yap::expr_kind Kind, typename Tuple
+  >
+  inline bool approx_equal(const Multivector<Scalar_T,LO,HI,Tune_P>& lhs,
+                           const matrix_multi_expr<Kind, Tuple>& rhs,
+                           Scalar_T threshold, Scalar_T tolerance)
+  {
+      return approx_equal(lhs, evaluate_to_matrix_multi(rhs), threshold, tolerance);
+  }
+
+  template <
+    template<class, int, int, class> class RHS,
+    typename Scalar_T, int LO, int HI, typename Tune_P,
+    boost::yap::expr_kind Kind, typename Tuple
+  >
+  inline bool approx_equal(const matrix_multi_expr<Kind, Tuple>& lhs,
+                           const RHS<Scalar_T,LO,HI,Tune_P>& rhs,
+                           Scalar_T threshold, Scalar_T tolerance)
+  {
+      return approx_equal(evaluate_to_matrix_multi(lhs), rhs, threshold, tolerance);
+  }
+
+  template <
+    boost::yap::expr_kind KindL, typename TupleL,
+    boost::yap::expr_kind KindR, typename TupleR,
+    typename Scalar_T
+  >
+  inline bool approx_equal(const matrix_multi_expr<KindL, TupleL>& lhs,
+                           const matrix_multi_expr<KindR, TupleR>& rhs,
+                           Scalar_T threshold, Scalar_T tolerance)
+  {
+      return approx_equal(evaluate_to_matrix_multi(lhs), evaluate_to_matrix_multi(rhs), threshold, tolerance);
+  }
+
+  template <boost::yap::expr_kind Kind, typename Tuple>
+  inline auto norm(const matrix_multi_expr<Kind, Tuple>& expr)
+  {
+      return norm(evaluate_to_matrix_multi(expr));
+  }
+
+  template <boost::yap::expr_kind Kind, typename Tuple>
+  inline auto abs(const matrix_multi_expr<Kind, Tuple>& expr)
+  {
+      return abs(evaluate_to_matrix_multi(expr));
+  }
+
+
   // Forward declarations for friends
 
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
@@ -94,7 +413,75 @@ namespace glucat
   matrix_multi<Scalar_T,LO,HI,Tune_P>
   operator| (const matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs, const matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs);
 
+  // Add two concrete matrix_multi instances, returning a Boost.YAP expression template
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  inline auto
+  operator+ (const matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs, const matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs)
+  {
+      return boost::yap::make_terminal<matrix_multi_expr>(lhs) +
+             boost::yap::make_terminal<matrix_multi_expr>(rhs);
+  }
+
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  inline auto
+  operator+ (matrix_multi<Scalar_T,LO,HI,Tune_P>&& lhs, const matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs)
+  {
+      return boost::yap::make_terminal<matrix_multi_expr>(std::move(lhs)) +
+             boost::yap::make_terminal<matrix_multi_expr>(rhs);
+  }
+
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  inline auto
+  operator+ (const matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs, matrix_multi<Scalar_T,LO,HI,Tune_P>&& rhs)
+  {
+      return boost::yap::make_terminal<matrix_multi_expr>(lhs) +
+             boost::yap::make_terminal<matrix_multi_expr>(std::move(rhs));
+  }
+
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  inline auto
+  operator+ (matrix_multi<Scalar_T,LO,HI,Tune_P>&& lhs, matrix_multi<Scalar_T,LO,HI,Tune_P>&& rhs)
+  {
+      return boost::yap::make_terminal<matrix_multi_expr>(std::move(lhs)) +
+             boost::yap::make_terminal<matrix_multi_expr>(std::move(rhs));
+  }
+
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  inline auto
+  operator- (const matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs, const matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs)
+  {
+      return boost::yap::make_terminal<matrix_multi_expr>(lhs) -
+             boost::yap::make_terminal<matrix_multi_expr>(rhs);
+  }
+
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  inline auto
+  operator- (matrix_multi<Scalar_T,LO,HI,Tune_P>&& lhs, const matrix_multi<Scalar_T,LO,HI,Tune_P>& rhs)
+  {
+      return boost::yap::make_terminal<matrix_multi_expr>(std::move(lhs)) -
+             boost::yap::make_terminal<matrix_multi_expr>(rhs);
+  }
+
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  inline auto
+  operator- (const matrix_multi<Scalar_T,LO,HI,Tune_P>& lhs, matrix_multi<Scalar_T,LO,HI,Tune_P>&& rhs)
+  {
+      return boost::yap::make_terminal<matrix_multi_expr>(lhs) -
+             boost::yap::make_terminal<matrix_multi_expr>(std::move(rhs));
+  }
+
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  inline auto
+  operator- (matrix_multi<Scalar_T,LO,HI,Tune_P>&& lhs, matrix_multi<Scalar_T,LO,HI,Tune_P>&& rhs)
+  {
+      return boost::yap::make_terminal<matrix_multi_expr>(std::move(lhs)) -
+             boost::yap::make_terminal<matrix_multi_expr>(std::move(rhs));
+  }
+
+
+
   // Read multivector from input
+
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   std::istream&
   operator>> (std::istream& s, matrix_multi<Scalar_T,LO,HI,Tune_P>& val);
@@ -212,6 +599,11 @@ namespace glucat
     template< typename Other_Scalar_T, typename Other_Tune_P >
     matrix_multi(const framed_multi<Other_Scalar_T,LO,HI,Other_Tune_P>& val,
                  const index_set_t frm, const bool prechecked = false);
+    // Constructor from a Boost.YAP expression template
+    template <typename Expr>
+      requires (boost::yap::is_expr<Expr>::value)
+    matrix_multi(const Expr& expr);
+
     // Use generalized FFT to construct a matrix_multi_t
     matrix_multi_t fast_matrix_multi(const index_set_t frm) const;
     // Use inverse generalized FFT to construct a framed_multi_t
@@ -226,9 +618,14 @@ namespace glucat
   private:
     /// Construct a multivector within a given frame from a given matrix
     template< typename Matrix_T >
+      requires (!boost::yap::is_expr<Matrix_T>::value)
     matrix_multi(const Matrix_T& mtx, const index_set_t frm);
     // Construct a multivector within a given frame from a given matrix
     matrix_multi(const matrix_t& mtx, const index_set_t frm);
+    // Construct a multivector within a given frame from a Boost.YAP expression
+    template <typename Expr>
+      requires (boost::yap::is_expr<Expr>::value)
+    matrix_multi(const Expr& expr, const index_set_t frm);
   public:
     // Create a basis element matrix within the current frame
     basis_matrix_t basis_element(const index_set<LO,HI>& ist) const;
@@ -253,6 +650,11 @@ namespace glucat
     matrix_multi&    operator= (matrix_multi&& other) noexcept(std::is_nothrow_move_assignable_v<Scalar_T>);
     /// Default copy assignment
     matrix_multi&    operator= (const matrix_multi&) = default;
+    // Assignment from a Boost.YAP expression template
+    template <typename Expr>
+      requires (boost::yap::is_expr<Expr>::value)
+    auto operator=(const Expr& expr) -> matrix_multi&;
+
 
     // Random multivector within a frame
     static matrix_multi_t random(const index_set_t frm, Scalar_T fill = Scalar_T(1));

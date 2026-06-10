@@ -193,6 +193,11 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   dnl Check for Boost version
   GLUCAT_CHECK_HEADERS([boost/version.hpp], [], [])
 
+  dnl Check for Boost.YAP headers
+  GLUCAT_CHECK_HEADERS([boost/yap/expression.hpp], [], [
+    AC_MSG_ERROR([Boost.YAP headers not found. Boost 1.66.0 or later with Boost.YAP is required.])
+  ])
+
   if [[[ "$glucat_use_doctest" == "yes" ]]]; then
      GLUCAT_CHECK_HEADERS([doctest/doctest.h], [], [
         AC_MSG_WARN([doctest/doctest.h not found.])
