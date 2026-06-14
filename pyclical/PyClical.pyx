@@ -1290,6 +1290,58 @@ cdef class clifford:
         """
         return self.wrap( self.unwrap() | toClifford(rhs) )
 
+    def versor(self, R, bint prechecked=False):
+        """
+        Transformation via twisted adjoint action (sandwich product).
+
+        Parameters
+        ----------
+        R : clifford
+            The transformation multivector.
+        prechecked : bool, optional
+            If True, skips the validation check. Default is False.
+
+        Returns
+        -------
+        clifford
+            The transformed multivector.
+
+        Examples
+        --------
+        >>> x = clifford("{1,2}") * pi/2; y = clifford("{1}"); print(y.versor(exp(x)))
+        -{1}
+        >>> print(y.versor(exp(x), prechecked=True))
+        -{1}
+        """
+        cdef Clifford R_c = toClifford(R)
+        return clifford().wrap( self.unwrap().versor(R_c, prechecked) )
+
+    def versor_exp(self, A, bint prechecked=False):
+        """
+        Transformation via exponentiated generator.
+
+        Parameters
+        ----------
+        A : clifford
+            The generator multivector.
+        prechecked : bool, optional
+            If True, skips the validation check. Default is False.
+
+        Returns
+        -------
+        clifford
+            The transformed multivector.
+
+        Examples
+        --------
+        >>> x = clifford("{1,2}") * pi/2; y = clifford("{1}"); print(y.versor_exp(x))
+        -{1}
+        >>> print(y.versor_exp(x, prechecked=True))
+        -{1}
+        """
+        cdef Clifford A_c = toClifford(A)
+        return clifford().wrap( self.unwrap().versor_exp(A_c, prechecked) )
+
     def __pow__(self, m, dummy):
         """
         Power: self to the m.

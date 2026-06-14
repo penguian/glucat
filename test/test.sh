@@ -3,7 +3,7 @@ dir=${0%/*}
 if [ $# -gt 0 ]; then
  tests=$*;
 else
- tests=$(echo {00..18});
+ tests=$(echo {00..19});
 fi
 for i in ${tests}
 do

@@ -841,11 +841,11 @@ namespace glucat
     multivector_t l_ref, r_ref;
     const auto frm = reframe(lhs, rhs, l_ref, r_ref);
     const int n = frm.count();
-    
+
     auto l_grades = l_ref.decompose();
     auto r_grades = r_ref.decompose();
-    
-    const Scalar_T threshold = std::numeric_limits<Scalar_T>::epsilon() * 
+
+    const Scalar_T threshold = std::numeric_limits<Scalar_T>::epsilon() *
                                numeric_traits<Scalar_T>::pow(Scalar_T(2), Tune_P::tuning_values_p::products_different_bits);
     using matrix_t = typename multivector_t::matrix_t;
     std::vector<matrix_t> grade_sums(n + 1);
@@ -910,11 +910,11 @@ namespace glucat
     multivector_t l_ref, r_ref;
     const auto frm = reframe(lhs, rhs, l_ref, r_ref);
     const int n = frm.count();
-    
+
     auto l_grades = l_ref.decompose();
     auto r_grades = r_ref.decompose();
-    
-    const Scalar_T threshold = std::numeric_limits<Scalar_T>::epsilon() * 
+
+    const Scalar_T threshold = std::numeric_limits<Scalar_T>::epsilon() *
                                numeric_traits<Scalar_T>::pow(Scalar_T(2), Tune_P::tuning_values_p::products_different_bits);
     using matrix_t = typename multivector_t::matrix_t;
     std::vector<matrix_t> grade_sums(n + 1);
@@ -980,11 +980,11 @@ namespace glucat
     multivector_t l_ref, r_ref;
     const auto frm = reframe(lhs, rhs, l_ref, r_ref);
     const int n = frm.count();
-    
+
     auto l_grades = l_ref.decompose();
     auto r_grades = r_ref.decompose();
-    
-    const Scalar_T threshold = std::numeric_limits<Scalar_T>::epsilon() * 
+
+    const Scalar_T threshold = std::numeric_limits<Scalar_T>::epsilon() *
                                numeric_traits<Scalar_T>::pow(Scalar_T(2), Tune_P::tuning_values_p::products_different_bits);
     using matrix_t = typename multivector_t::matrix_t;
     std::vector<matrix_t> grade_sums(n + 1);
@@ -1224,6 +1224,48 @@ namespace glucat
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
   operator|= (const multivector_t& rhs)
   { return *this = rhs * *this / rhs.involute(); }
+
+  /*
+   * @brief Transformation via twisted adjoint action (sandwich product)
+   * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param R The transformation operator
+   * @param prechecked Bypass validation check?
+   * @return Result
+   */
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  inline typename matrix_multi<Scalar_T,LO,HI,Tune_P>::multivector_t
+  matrix_multi<Scalar_T,LO,HI,Tune_P>::
+  versor (const multivector_t& R, const bool prechecked) const
+  {
+    if (prechecked)
+    {
+      multivector_t scale = R * R.conj();
+      return R * (*this) * R.conj() / scale.scalar();
+    }
+    else
+      return (*this) | R;
+  }
+
+  /*
+   * @brief Transformation via exponentiated generator
+   * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param A The generator multivector
+   * @param prechecked Bypass validation check?
+   * @return Result
+   */
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  inline typename matrix_multi<Scalar_T,LO,HI,Tune_P>::multivector_t
+  matrix_multi<Scalar_T,LO,HI,Tune_P>::
+  versor_exp (const multivector_t& A, const bool prechecked) const
+  { return this->versor(exp(A), prechecked); }
 
   /*
    * @brief Clifford multiplicative inverse
@@ -1760,7 +1802,7 @@ namespace glucat
   {
     const int n = this->m_frame.count();
     auto fm = this->template fast_framed_multi<Scalar_T, Tune_P>();
-    
+
     std::vector<matrix_multi> res(n + 1, matrix_multi(Scalar_T(0), this->m_frame));
     for (int k = 0; k <= n; ++k)
     {
@@ -3952,7 +3994,7 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
     mm_t a_ref(a, F_common);
     mm_t b_ref(b, F_common);
     mm_t c_ref(c, F_common);
-    
+
     mm_t temp1 = a_ref + b_ref;
     mm_t expected = temp1 - c_ref;
     CHECK(res == expected);

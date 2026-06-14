@@ -131,6 +131,10 @@ namespace glucat
     virtual auto norm        () const -> Scalar_T = 0;
     // Maximum of absolute values of components of multivector: multivector infinity norm
     virtual auto max_abs     () const -> Scalar_T = 0;
+    // Transformation via twisted adjoint action (sandwich product)
+    virtual auto versor      (const multivector_t& R, const bool prechecked = false) const -> multivector_t = 0;
+    // Transformation via exponentiated generator
+    virtual auto versor_exp  (const multivector_t& A, const bool prechecked = false) const -> multivector_t = 0;
     // Remove all terms with relative size smaller than limit
     virtual auto truncated   (const Scalar_T& limit = default_truncation) const -> multivector_t = 0;
     // Check if a multivector contains any infinite values
@@ -180,6 +184,10 @@ namespace glucat
     auto quad        () const                          -> Scalar_T           override ;\
     auto norm        () const                          -> Scalar_T           override ;\
     auto max_abs     () const                          -> Scalar_T           override ;\
+    auto versor      (const multivector_t& R, const bool prechecked = false) const \
+                                                       -> multivector_t      override ;\
+    auto versor_exp  (const multivector_t& A, const bool prechecked = false) const \
+                                                       -> multivector_t      override ;\
     auto truncated   (const Scalar_T& limit = multivector_t::default_truncation) const \
                                                        -> multivector_t      override ;\
     auto isinf       () const                          -> bool               override ;\

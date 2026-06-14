@@ -207,6 +207,14 @@ namespace glucat
       auto scalar() const { return evaluate_to_matrix_multi(*this).scalar(); }
       auto norm() const { return evaluate_to_matrix_multi(*this).norm(); }
       auto max_abs() const { return evaluate_to_matrix_multi(*this).max_abs(); }
+      template <typename RHS>
+      auto versor(const RHS& R, const bool prechecked = false) const {
+          return evaluate_to_matrix_multi(*this).versor(eval_if_expr(R), prechecked);
+      }
+      template <typename RHS>
+      auto versor_exp(const RHS& A, const bool prechecked = false) const {
+          return evaluate_to_matrix_multi(*this).versor_exp(eval_if_expr(A), prechecked);
+      }
       template <typename... Args>
       decltype(auto) write(Args&&... args) const {
           return evaluate_to_matrix_multi(*this).write(std::forward<Args>(args)...);

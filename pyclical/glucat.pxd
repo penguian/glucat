@@ -94,6 +94,8 @@ cdef extern from "PyClical.h":
         Clifford truncated(scalar_t limit)
         bint     isinf()
         bint     isnan()
+        Clifford versor(Clifford R, bint prechecked)
+        Clifford versor_exp(Clifford A, bint prechecked)
         void     write(char* msg)
         size_t   nbr_terms()
 

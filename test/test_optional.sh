@@ -1,6 +1,6 @@
 #!/bin/bash
 dir=${0%/*}
-tests=$(echo {00..18})
+tests=$(echo {00..19})
 for i in ${tests}
 do
 echo

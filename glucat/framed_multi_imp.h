@@ -1168,7 +1168,7 @@ namespace glucat
     }
     return result;
   }
- 
+
   /*
    * @brief Hestenes inner product: [H] (1.10) hstar(a, b) = scalar(reverse(a) * b) = <a†b>_0
    * @details
@@ -1309,6 +1309,50 @@ namespace glucat
   framed_multi<Scalar_T,LO,HI,Tune_P>::
   operator|= (const multivector_t& rhs) -> multivector_t&
   { return *this = *this | rhs; }
+
+  /*
+   * @brief Transformation via twisted adjoint action (sandwich product)
+   * @details
+   * @tparam Scalar_T Scalar type
+   * @tparam LO Low index limit
+   * @tparam HI High index limit
+   * @tparam Tune_P Tuning policy
+   * @param R The transformation operator
+   * @param prechecked Bypass validation check?
+   * @return Result
+   */
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  inline
+  auto
+  framed_multi<Scalar_T,LO,HI,Tune_P>::
+  versor (const multivector_t& R, const bool prechecked) const -> multivector_t
+  {
+    if (prechecked)
+    {
+      multivector_t scale = R * R.conj();
+      return R * (*this) * R.conj() / scale.scalar();
+    }
+    else
+      return (*this) | R;
+  }
+
+  /*
+   * @brief Transformation via exponentiated generator
+   * @details
+   * @tparam Scalar_T Scalar type
+   * @tparam LO Low index limit
+   * @tparam HI High index limit
+   * @tparam Tune_P Tuning policy
+   * @param A The generator multivector
+   * @param prechecked Bypass validation check?
+   * @return Result
+   */
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  inline
+  auto
+  framed_multi<Scalar_T,LO,HI,Tune_P>::
+  versor_exp (const multivector_t& A, const bool prechecked) const -> multivector_t
+  { return this->versor(exp(A), prechecked); }
 
   /*
    * @brief Clifford multiplicative inverse
