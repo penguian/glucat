@@ -45,6 +45,7 @@
 #include <limits>
 #include <cmath>
 #include <vector>
+#include <list>
 #include <algorithm>
 #include <functional>
 
@@ -3486,6 +3487,7 @@ namespace glucat{
   template <typename IndexSet, typename MatrixType>
   struct evaluator {
       IndexSet target_frame;
+      mutable std::list<MatrixType> temp_storage;
 
       evaluator(IndexSet tf) : target_frame(std::move(tf)) {}
 
@@ -3499,21 +3501,23 @@ namespace glucat{
       }
 
       template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
-      auto operator()(boost::yap::expr_tag<boost::yap::expr_kind::terminal>, const matrix_multi<Scalar_T, LO, HI, Tune_P>& leaf) const {
+      const MatrixType& operator()(boost::yap::expr_tag<boost::yap::expr_kind::terminal>, const matrix_multi<Scalar_T, LO, HI, Tune_P>& leaf) const {
           if (leaf.frame() == target_frame) {
               return leaf.get_matrix();
           } else {
               matrix_multi<Scalar_T, LO, HI, Tune_P> coerced(leaf, target_frame);
-              return coerced.get_matrix();
+              temp_storage.push_back(coerced.get_matrix());
+              return temp_storage.back();
           }
       }
 
       template <typename S>
         requires (!boost::yap::is_expr<S>::value)
-      auto operator()(boost::yap::expr_tag<boost::yap::expr_kind::terminal>, const S& leaf) const {
+      const MatrixType& operator()(boost::yap::expr_tag<boost::yap::expr_kind::terminal>, const S& leaf) const {
           using Scalar_T = typename MatrixType::value_type;
           matrix_multi<Scalar_T, IndexSet::v_lo, IndexSet::v_hi, tuning<>> coerced(static_cast<Scalar_T>(leaf), target_frame);
-          return coerced.get_matrix();
+          temp_storage.push_back(coerced.get_matrix());
+          return temp_storage.back();
       }
 
       template <typename LHS, typename RHS>
