@@ -22,5 +22,5 @@ echo
 echo "expressions "${se}":"
 ${dir}/../expressions/expressions ${se} | tee expressions-${se}.out
 echo
-echo "versor "${se}":"
-${dir}/../versor/versor ${se} | tee versor-${se}.out
+echo "versor "${sv}":"
+${dir}/../versor/versor ${sv} | tee versor-${sv}.out
