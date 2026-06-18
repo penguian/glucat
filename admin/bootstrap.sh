@@ -179,7 +179,7 @@ if test -f Makefile.am.in; then
   done
 fi
 # echo "AC_OUTPUT( \\" >> configure.ac.new
-mfs=`find . -type d -print | fgrep -v "/." | \
+mfs=`find . -type d -print | grep -F -v "/." | \
      sed -e "s#\./##" -e "/^debian/d" | sort`
 for i in $mfs; do
   topleveldir=`echo $i| sed -e "s#/.*##"`
