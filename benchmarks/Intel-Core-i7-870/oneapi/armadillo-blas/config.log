@@ -27,11 +27,7 @@ uname -v = #35-Ubuntu SMP PREEMPT_DYNAMIC Sat Oct 11 10:06:31 UTC 2025
 /usr/bin/oslevel       = unknown
 /bin/universe          = unknown
 
-PATH: /opt/intel/oneapi/mpi/2021.16/bin/
-PATH: /opt/intel/oneapi/dev-utilities/2025.2/bin/
-PATH: /opt/intel/oneapi/debugger/2025.2/opt/debugger/bin/
 PATH: /opt/intel/oneapi/compiler/2025.2/bin/
-PATH: /home/leopardi/bin/
 PATH: /home/leopardi/opt/anaconda3/condabin/
 PATH: /home/leopardi/bin/
 PATH: /usr/local/sbin/
@@ -49,39 +45,39 @@ PATH: /snap/bin/
 ## Core tests. ##
 ## ----------- ##
 
-configure:2323: looking for aux files: missing install-sh config.guess config.sub
-configure:2336:  trying ./admin/
-configure:2365:   ./admin/missing found
-configure:2347:   ./admin/install-sh found
-configure:2365:   ./admin/config.guess found
-configure:2365:   ./admin/config.sub found
-configure:2801: checking build system type
-configure:2817: result: x86_64-pc-linux-gnu
-configure:2837: checking host system type
-configure:2852: result: x86_64-pc-linux-gnu
-configure:2872: checking target system type
-configure:2887: result: x86_64-pc-linux-gnu
-configure:2941: checking for a BSD-compatible install
-configure:3015: result: /usr/bin/install -c
-configure:3026: checking whether sleep supports fractional seconds
-configure:3042: result: yes
-configure:3045: checking filesystem timestamp resolution
-configure:3180: result: 0.01
-configure:3185: checking whether build environment is sane
-configure:3226: result: yes
-configure:3387: checking for a race-free mkdir -p
-configure:3430: result: /usr/bin/mkdir -p
-configure:3437: checking for gawk
-configure:3458: found /usr/bin/gawk
-configure:3470: result: gawk
-configure:3481: checking whether make sets $(MAKE)
-configure:3505: result: yes
-configure:3531: checking whether make supports nested variables
-configure:3550: result: yes
-configure:3564: checking xargs -n works
-configure:3580: result: yes
-configure:3655: checking how to create a pax tar archive
-configure:3666: tar --version
+configure:2329: looking for aux files: missing install-sh config.guess config.sub
+configure:2342:  trying ./admin/
+configure:2371:   ./admin/missing found
+configure:2353:   ./admin/install-sh found
+configure:2371:   ./admin/config.guess found
+configure:2371:   ./admin/config.sub found
+configure:2807: checking build system type
+configure:2823: result: x86_64-pc-linux-gnu
+configure:2843: checking host system type
+configure:2858: result: x86_64-pc-linux-gnu
+configure:2878: checking target system type
+configure:2893: result: x86_64-pc-linux-gnu
+configure:2947: checking for a BSD-compatible install
+configure:3021: result: /usr/bin/install -c
+configure:3032: checking whether sleep supports fractional seconds
+configure:3048: result: yes
+configure:3051: checking filesystem timestamp resolution
+configure:3186: result: 0.01
+configure:3191: checking whether build environment is sane
+configure:3232: result: yes
+configure:3393: checking for a race-free mkdir -p
+configure:3436: result: /usr/bin/mkdir -p
+configure:3443: checking for gawk
+configure:3464: found /usr/bin/gawk
+configure:3476: result: gawk
+configure:3487: checking whether make sets $(MAKE)
+configure:3511: result: yes
+configure:3537: checking whether make supports nested variables
+configure:3556: result: yes
+configure:3570: checking xargs -n works
+configure:3586: result: yes
+configure:3661: checking how to create a pax tar archive
+configure:3672: tar --version
 tar (GNU tar) 1.35
 Copyright (C) 2023 Free Software Foundation, Inc.
 License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
@@ -89,33 +85,33 @@ This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
 
 Written by John Gilmore and Jay Fenlason.
-configure:3669: $? = 0
-configure:3709: tardir=conftest.dir && eval tar --format=posix -chf - "$tardir" >conftest.tar
-configure:3712: $? = 0
-configure:3716: tar -xf - <conftest.tar
-configure:3719: $? = 0
-configure:3721: cat conftest.dir/file
+configure:3675: $? = 0
+configure:3715: tardir=conftest.dir && eval tar --format=posix -chf - "$tardir" >conftest.tar
+configure:3718: $? = 0
+configure:3722: tar -xf - <conftest.tar
+configure:3725: $? = 0
+configure:3727: cat conftest.dir/file
 GrepMe
-configure:3724: $? = 0
-configure:3739: result: gnutar
-configure:3781: checking for extra includes
-configure:3811: result: no
-configure:3815: checking for extra libs
-configure:3846: result: no
-configure:3864: checking whether make supports the include directive
-configure:3879: make -f confmf.GNU && cat confinc.out
+configure:3730: $? = 0
+configure:3745: result: gnutar
+configure:3787: checking for extra includes
+configure:3817: result: no
+configure:3821: checking for extra libs
+configure:3852: result: no
+configure:3870: checking whether make supports the include directive
+configure:3885: make -f confmf.GNU && cat confinc.out
 this is the am__doit target
-configure:3882: $? = 0
-configure:3901: result: yes (GNU style)
-configure:4048: checking for C++ compiler version
-configure:4057: icpx --version >&5
+configure:3888: $? = 0
+configure:3907: result: yes (GNU style)
+configure:4054: checking for C++ compiler version
+configure:4063: icpx --version >&5
 Intel(R) oneAPI DPC++/C++ Compiler 2025.2.1 (2025.2.0.20250806)
 Target: x86_64-unknown-linux-gnu
 Thread model: posix
 InstalledDir: /opt/intel/oneapi/compiler/2025.2/bin/compiler
 Configuration file: /opt/intel/oneapi/compiler/2025.2/bin/compiler/../icpx.cfg
-configure:4068: $? = 0
-configure:4057: icpx -v >&5
+configure:4074: $? = 0
+configure:4063: icpx -v >&5
 Intel(R) oneAPI DPC++/C++ Compiler 2025.2.1 (2025.2.0.20250806)
 Target: x86_64-unknown-linux-gnu
 Thread model: posix
@@ -127,44 +123,44 @@ Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/12
 Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/13
 Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/14
 ... rest of stderr output deleted ...
-configure:4068: $? = 0
-configure:4057: icpx -V >&5
+configure:4074: $? = 0
+configure:4063: icpx -V >&5
 Intel(R) oneAPI DPC++/C++ Compiler for applications running on Intel(R) 64, Version 2025.2.1 Build 20250806
 Copyright (C) 1985-2025 Intel Corporation. All rights reserved.
 
-configure:4068: $? = 0
-configure:4057: icpx -qversion >&5
+configure:4074: $? = 0
+configure:4063: icpx -qversion >&5
 icpx: error: unknown argument '-qversion'; did you mean '--version'?
 icpx: error: no input files
-configure:4068: $? = 1
-configure:4088: checking whether the C++ compiler works
-configure:4110: icpx    conftest.cpp  >&5
-configure:4114: $? = 0
-configure:4165: result: yes
-configure:4169: checking for C++ compiler default output file name
-configure:4171: result: a.out
-configure:4177: checking for suffix of executables
-configure:4184: icpx -o conftest    conftest.cpp  >&5
-configure:4188: $? = 0
-configure:4212: result: 
-configure:4236: checking whether we are cross compiling
-configure:4244: icpx -o conftest    conftest.cpp  >&5
-configure:4248: $? = 0
-configure:4255: ./conftest
-configure:4259: $? = 0
-configure:4274: result: no
-configure:4280: checking for suffix of object files
-configure:4303: icpx -c   conftest.cpp >&5
-configure:4307: $? = 0
-configure:4331: result: o
-configure:4335: checking whether the compiler supports GNU C++
-configure:4355: icpx -c   conftest.cpp >&5
-configure:4355: $? = 0
-configure:4367: result: yes
-configure:4378: checking whether icpx accepts -g
-configure:4399: icpx -c -g  conftest.cpp >&5
+configure:4074: $? = 1
+configure:4094: checking whether the C++ compiler works
+configure:4116: icpx    conftest.cpp  >&5
+configure:4120: $? = 0
+configure:4171: result: yes
+configure:4175: checking for C++ compiler default output file name
+configure:4177: result: a.out
+configure:4183: checking for suffix of executables
+configure:4190: icpx -o conftest    conftest.cpp  >&5
+configure:4194: $? = 0
+configure:4218: result: 
+configure:4242: checking whether we are cross compiling
+configure:4250: icpx -o conftest    conftest.cpp  >&5
+configure:4254: $? = 0
+configure:4261: ./conftest
+configure:4265: $? = 0
+configure:4280: result: no
+configure:4286: checking for suffix of object files
+configure:4309: icpx -c   conftest.cpp >&5
+configure:4313: $? = 0
+configure:4337: result: o
+configure:4341: checking whether the compiler supports GNU C++
+configure:4361: icpx -c   conftest.cpp >&5
+configure:4361: $? = 0
+configure:4373: result: yes
+configure:4384: checking whether icpx accepts -g
+configure:4405: icpx -c -g  conftest.cpp >&5
 icpx: remark: note that use of '-g' without any optimization-level option will turn off most compiler optimizations similar to use of '-O0'; use '-Rno-debug-disables-optimization' to disable this remark [-Rdebug-disables-optimization]
-configure:4399: $? = 0
+configure:4405: $? = 0
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "glucat"
@@ -184,11 +180,11 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:4415: icpx -c   conftest.cpp >&5
-configure:4415: $? = 0
-configure:4446: result: no
-configure:4466: checking for icpx option to enable C++11 features
-configure:4481: icpx  -c -O2  conftest.cpp >&5
+configure:4421: icpx -c   conftest.cpp >&5
+configure:4421: $? = 0
+configure:4452: result: no
+configure:4472: checking for icpx option to enable C++11 features
+configure:4487: icpx  -c -O2  conftest.cpp >&5
 conftest.cpp:177:25: warning: empty parentheses interpreted as a function declaration [-Wvexing-parse]
   177 |   cxx11test::delegate d2();
       |                         ^~
@@ -196,121 +192,125 @@ conftest.cpp:177:25: note: remove parentheses to declare a variable
   177 |   cxx11test::delegate d2();
       |                         ^~
 1 warning generated.
-configure:4481: $? = 0
-configure:4500: result: none needed
-configure:4571: checking dependency style of icpx
-configure:4684: result: gcc3
-configure:4704: checking for stdio.h
-configure:4704: icpx -c -O2  conftest.cpp >&5
-configure:4704: $? = 0
-configure:4704: result: yes
-configure:4704: checking for stdlib.h
-configure:4704: icpx -c -O2  conftest.cpp >&5
-configure:4704: $? = 0
-configure:4704: result: yes
-configure:4704: checking for string.h
-configure:4704: icpx -c -O2  conftest.cpp >&5
-configure:4704: $? = 0
-configure:4704: result: yes
-configure:4704: checking for inttypes.h
-configure:4704: icpx -c -O2  conftest.cpp >&5
-configure:4704: $? = 0
-configure:4704: result: yes
-configure:4704: checking for stdint.h
-configure:4704: icpx -c -O2  conftest.cpp >&5
-configure:4704: $? = 0
-configure:4704: result: yes
-configure:4704: checking for strings.h
-configure:4704: icpx -c -O2  conftest.cpp >&5
-configure:4704: $? = 0
-configure:4704: result: yes
-configure:4704: checking for sys/stat.h
-configure:4704: icpx -c -O2  conftest.cpp >&5
-configure:4704: $? = 0
-configure:4704: result: yes
-configure:4704: checking for sys/types.h
-configure:4704: icpx -c -O2  conftest.cpp >&5
-configure:4704: $? = 0
-configure:4704: result: yes
-configure:4704: checking for unistd.h
-configure:4704: icpx -c -O2  conftest.cpp >&5
-configure:4704: $? = 0
-configure:4704: result: yes
-configure:4919: checking for boost/version.hpp
-configure:4919: icpx -c   -I. -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)    conftest.cpp >&5
-configure:4919: $? = 0
-configure:4919: result: yes
-configure:5002: checking for main in -larmadillo
-configure:5024: icpx -o conftest     conftest.cpp -larmadillo   >&5
+configure:4487: $? = 0
+configure:4506: result: none needed
+configure:4577: checking dependency style of icpx
+configure:4690: result: gcc3
+configure:4710: checking for stdio.h
+configure:4710: icpx -c -O2  conftest.cpp >&5
+configure:4710: $? = 0
+configure:4710: result: yes
+configure:4710: checking for stdlib.h
+configure:4710: icpx -c -O2  conftest.cpp >&5
+configure:4710: $? = 0
+configure:4710: result: yes
+configure:4710: checking for string.h
+configure:4710: icpx -c -O2  conftest.cpp >&5
+configure:4710: $? = 0
+configure:4710: result: yes
+configure:4710: checking for inttypes.h
+configure:4710: icpx -c -O2  conftest.cpp >&5
+configure:4710: $? = 0
+configure:4710: result: yes
+configure:4710: checking for stdint.h
+configure:4710: icpx -c -O2  conftest.cpp >&5
+configure:4710: $? = 0
+configure:4710: result: yes
+configure:4710: checking for strings.h
+configure:4710: icpx -c -O2  conftest.cpp >&5
+configure:4710: $? = 0
+configure:4710: result: yes
+configure:4710: checking for sys/stat.h
+configure:4710: icpx -c -O2  conftest.cpp >&5
+configure:4710: $? = 0
+configure:4710: result: yes
+configure:4710: checking for sys/types.h
+configure:4710: icpx -c -O2  conftest.cpp >&5
+configure:4710: $? = 0
+configure:4710: result: yes
+configure:4710: checking for unistd.h
+configure:4710: icpx -c -O2  conftest.cpp >&5
+configure:4710: $? = 0
+configure:4710: result: yes
+configure:4925: checking for boost/version.hpp
+configure:4925: icpx -c   -I. -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)    conftest.cpp >&5
+configure:4925: $? = 0
+configure:4925: result: yes
+configure:4953: checking for boost/yap/expression.hpp
+configure:4953: icpx -c   -I. -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)    conftest.cpp >&5
+configure:4953: $? = 0
+configure:4953: result: yes
+configure:5040: checking for main in -larmadillo
+configure:5062: icpx -o conftest     conftest.cpp -larmadillo   >&5
 conftest.cpp:23:18: warning: 'main' should not be 'extern "C"' [-Wmain]
    23 |   extern "C" int main ();
       |                  ^
 1 warning generated.
-configure:5024: $? = 0
-configure:5036: result: yes
-configure:5064: checking for armadillo
-configure:5064: icpx -c   -I. -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)    conftest.cpp >&5
-configure:5064: $? = 0
-configure:5064: result: yes
-configure:5105: checking for flexiblas_init in -lflexiblas
-configure:5127: icpx -o conftest     conftest.cpp -lflexiblas   >&5
-configure:5127: $? = 0
-configure:5139: result: yes
-configure:5145: Auto-selected FlexiBLAS backend
-configure:5308: checking for flexiblas_init in -lflexiblas
-configure:5342: result: yes
-configure:5347: FlexiBLAS support enabled
-configure:5610: checking for boost/unordered/unordered_flat_map.hpp
-configure:5610: icpx -c   -I. -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)    -D_GLUCAT_USE_ARMADILLO -DARMA_WARN_LEVEL=1 conftest.cpp >&5
-configure:5610: $? = 0
-configure:5610: result: yes
-configure:5614: boost::unordered_flat_map support enabled.
-configure:5652: checking for eigen3/Eigen/Dense
-configure:5652: icpx -c   -I. -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)    -D_GLUCAT_USE_ARMADILLO -DARMA_WARN_LEVEL=1 -D_GLUCAT_USE_BOOST_UNORDERED_FLAT_MAP conftest.cpp >&5
-configure:5652: $? = 0
-configure:5652: result: yes
-configure:5701: checking whether icpx supports C++23 features with -std=c++23
-configure:6564: icpx -std=c++23 -c   conftest.cpp >&5
+configure:5062: $? = 0
+configure:5074: result: yes
+configure:5102: checking for armadillo
+configure:5102: icpx -c   -I. -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)    conftest.cpp >&5
+configure:5102: $? = 0
+configure:5102: result: yes
+configure:5143: checking for flexiblas_init in -lflexiblas
+configure:5165: icpx -o conftest     conftest.cpp -lflexiblas   >&5
+configure:5165: $? = 0
+configure:5177: result: yes
+configure:5183: Auto-selected FlexiBLAS backend
+configure:5346: checking for flexiblas_init in -lflexiblas
+configure:5380: result: yes
+configure:5385: FlexiBLAS support enabled
+configure:5648: checking for boost/unordered/unordered_flat_map.hpp
+configure:5648: icpx -c   -I. -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)    -D_GLUCAT_USE_ARMADILLO -DARMA_WARN_LEVEL=1 conftest.cpp >&5
+configure:5648: $? = 0
+configure:5648: result: yes
+configure:5652: boost::unordered_flat_map support enabled.
+configure:5690: checking for eigen3/Eigen/Dense
+configure:5690: icpx -c   -I. -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)    -D_GLUCAT_USE_ARMADILLO -DARMA_WARN_LEVEL=1 -D_GLUCAT_USE_BOOST_UNORDERED_FLAT_MAP conftest.cpp >&5
+configure:5690: $? = 0
+configure:5690: result: yes
+configure:5739: checking whether icpx supports C++23 features with -std=c++23
+configure:6602: icpx -std=c++23 -c   conftest.cpp >&5
 conftest.cpp:130:36: warning: volatile-qualified parameter type 'volatile int' is deprecated [-Wdeprecated-volatile]
   130 |     test(const int c, volatile int v)
       |                                    ^
 1 warning generated.
-configure:6564: $? = 0
-configure:6576: result: yes
-configure:6618: checking for icpx -std=c++23 version
-configure:6638: result: 2025.2.0.20250806
-configure:6741: checking whether icpx -std=c++23 supports -march=native
-configure:6769: icpx -std=c++23 -o conftest -O3  -Werror -march=native   conftest.cpp  >&5
-configure:6769: $? = 0
-configure:6787: result: yes
-configure:6799: checking whether icpx -std=c++23 supports -flto=thin
-configure:6827: icpx -std=c++23 -o conftest -O3  -march=native -Werror -flto=thin   conftest.cpp  >&5
-configure:6827: $? = 0
-configure:6845: result: yes
-configure:6857: checking whether icpx -std=c++23 supports -mllvm -inline-threshold=1000 (compile only)
-configure:6885: icpx -std=c++23 -c -O3  -march=native -flto=thin -Werror -mllvm -inline-threshold=1000  conftest.cpp >&5
-configure:6885: $? = 0
-configure:6902: result: yes
-configure:6914: checking whether icpx -std=c++23 supports -mllvm -inlinehint-threshold=1000 (compile only)
-configure:6942: icpx -std=c++23 -c -O3  -march=native -flto=thin -mllvm -inline-threshold=1000 -Werror -mllvm -inlinehint-threshold=1000  conftest.cpp >&5
-configure:6942: $? = 0
-configure:6959: result: yes
-configure:6971: checking whether icpx -std=c++23 supports -funroll-loops
-configure:6999: icpx -std=c++23 -o conftest -O3  -march=native -flto=thin -mllvm -inline-threshold=1000 -mllvm -inlinehint-threshold=1000 -Werror -funroll-loops   conftest.cpp  >&5
-configure:6999: $? = 0
-configure:7017: result: yes
-configure:8678: checking whether icpx -std=c++23 supports -Wno-deprecated-register
-configure:8706: icpx -std=c++23 -o conftest -Wall  -O3  -march=native -flto=thin -mllvm -inline-threshold=1000 -mllvm -inlinehint-threshold=1000 -funroll-loops -Werror -Wno-deprecated-register   conftest.cpp  >&5
-configure:8706: $? = 0
-configure:8724: result: yes
-configure:8736: checking whether icpx -std=c++23 supports -Wno-unused-command-line-argument
-configure:8764: icpx -std=c++23 -o conftest -Wall  -O3  -march=native -flto=thin -mllvm -inline-threshold=1000 -mllvm -inlinehint-threshold=1000 -funroll-loops -Wno-deprecated-register -Werror -Wno-unused-command-line-argument   conftest.cpp  >&5
-configure:8764: $? = 0
-configure:8782: result: yes
-configure:9364: checking whether icpx -std=c++23 supports -fp-model source
-configure:9392: icpx -std=c++23 -o conftest -Wall  -O3  -march=native -flto=thin -mllvm -inline-threshold=1000 -mllvm -inlinehint-threshold=1000 -funroll-loops -Wno-deprecated-register -Wno-unused-command-line-argument -Werror -fp-model source   conftest.cpp  >&5
+configure:6602: $? = 0
+configure:6614: result: yes
+configure:6656: checking for icpx -std=c++23 version
+configure:6676: result: 2025.2.0.20250806
+configure:6779: checking whether icpx -std=c++23 supports -march=native
+configure:6807: icpx -std=c++23 -o conftest -O3  -Werror -march=native   conftest.cpp  >&5
+configure:6807: $? = 0
+configure:6825: result: yes
+configure:6837: checking whether icpx -std=c++23 supports -flto=thin
+configure:6865: icpx -std=c++23 -o conftest -O3  -march=native -Werror -flto=thin   conftest.cpp  >&5
+configure:6865: $? = 0
+configure:6883: result: yes
+configure:6895: checking whether icpx -std=c++23 supports -mllvm -inline-threshold=1000 (compile only)
+configure:6923: icpx -std=c++23 -c -O3  -march=native -flto=thin -Werror -mllvm -inline-threshold=1000  conftest.cpp >&5
+configure:6923: $? = 0
+configure:6940: result: yes
+configure:6952: checking whether icpx -std=c++23 supports -mllvm -inlinehint-threshold=1000 (compile only)
+configure:6980: icpx -std=c++23 -c -O3  -march=native -flto=thin -mllvm -inline-threshold=1000 -Werror -mllvm -inlinehint-threshold=1000  conftest.cpp >&5
+configure:6980: $? = 0
+configure:6997: result: yes
+configure:7009: checking whether icpx -std=c++23 supports -funroll-loops
+configure:7037: icpx -std=c++23 -o conftest -O3  -march=native -flto=thin -mllvm -inline-threshold=1000 -mllvm -inlinehint-threshold=1000 -Werror -funroll-loops   conftest.cpp  >&5
+configure:7037: $? = 0
+configure:7055: result: yes
+configure:8716: checking whether icpx -std=c++23 supports -Wno-deprecated-register
+configure:8744: icpx -std=c++23 -o conftest -Wall  -O3  -march=native -flto=thin -mllvm -inline-threshold=1000 -mllvm -inlinehint-threshold=1000 -funroll-loops -Werror -Wno-deprecated-register   conftest.cpp  >&5
+configure:8744: $? = 0
+configure:8762: result: yes
+configure:8774: checking whether icpx -std=c++23 supports -Wno-unused-command-line-argument
+configure:8802: icpx -std=c++23 -o conftest -Wall  -O3  -march=native -flto=thin -mllvm -inline-threshold=1000 -mllvm -inlinehint-threshold=1000 -funroll-loops -Wno-deprecated-register -Werror -Wno-unused-command-line-argument   conftest.cpp  >&5
+configure:8802: $? = 0
+configure:8820: result: yes
+configure:9460: checking whether icpx -std=c++23 supports -fp-model source
+configure:9488: icpx -std=c++23 -o conftest -Wall  -O3  -march=native -flto=thin -mllvm -inline-threshold=1000 -mllvm -inlinehint-threshold=1000 -funroll-loops -Wno-deprecated-register -Wno-unused-command-line-argument -Werror -fp-model source   conftest.cpp  >&5
 icpx: error: unsupported argument 'source' to option '-ffp-model='
-configure:9392: $? = 1
+configure:9488: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "glucat"
@@ -341,30 +341,30 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:9415: result: no
-configure:9422: checking whether icpx -std=c++23 supports -fp-model precise
-configure:9450: icpx -std=c++23 -o conftest -Wall  -O3  -march=native -flto=thin -mllvm -inline-threshold=1000 -mllvm -inlinehint-threshold=1000 -funroll-loops -Wno-deprecated-register -Wno-unused-command-line-argument -Werror -fp-model precise   conftest.cpp  >&5
-configure:9450: $? = 0
-configure:9468: result: yes
-configure:9481: checking whether icpx -std=c++23 supports -march=native
-configure:9527: result: yes
-configure:9546: checking whether icpx -std=c++23 supports -fexceptions
-configure:9574: icpx -std=c++23 -o conftest -fp-model precise -Wall  -O3  -march=native -flto=thin -mllvm -inline-threshold=1000 -mllvm -inlinehint-threshold=1000 -funroll-loops -Wno-deprecated-register -Wno-unused-command-line-argument -march=native -Werror -fexceptions   conftest.cpp  >&5
-configure:9574: $? = 0
-configure:9592: result: yes
-configure:9605: checking whether icpx -std=c++23 supports -Woverloaded-virtual
-configure:9633: icpx -std=c++23 -o conftest -fp-model precise -Wall  -O3  -march=native -flto=thin -mllvm -inline-threshold=1000 -mllvm -inlinehint-threshold=1000 -funroll-loops -Wno-deprecated-register -Wno-unused-command-line-argument -march=native -Werror -Woverloaded-virtual   conftest.cpp  >&5
-configure:9633: $? = 0
-configure:9651: result: yes
-configure:9670: checking how to run the C++ preprocessor
-configure:9692: icpx -std=c++23 -E  conftest.cpp
-configure:9692: $? = 0
-configure:9708: icpx -std=c++23 -E  conftest.cpp
+configure:9511: result: no
+configure:9518: checking whether icpx -std=c++23 supports -fp-model precise
+configure:9546: icpx -std=c++23 -o conftest -Wall  -O3  -march=native -flto=thin -mllvm -inline-threshold=1000 -mllvm -inlinehint-threshold=1000 -funroll-loops -Wno-deprecated-register -Wno-unused-command-line-argument -Werror -fp-model precise   conftest.cpp  >&5
+configure:9546: $? = 0
+configure:9564: result: yes
+configure:9577: checking whether icpx -std=c++23 supports -march=native
+configure:9623: result: yes
+configure:9642: checking whether icpx -std=c++23 supports -fexceptions
+configure:9670: icpx -std=c++23 -o conftest -fp-model precise -Wall  -O3  -march=native -flto=thin -mllvm -inline-threshold=1000 -mllvm -inlinehint-threshold=1000 -funroll-loops -Wno-deprecated-register -Wno-unused-command-line-argument -march=native -Werror -fexceptions   conftest.cpp  >&5
+configure:9670: $? = 0
+configure:9688: result: yes
+configure:9701: checking whether icpx -std=c++23 supports -Woverloaded-virtual
+configure:9729: icpx -std=c++23 -o conftest -fp-model precise -Wall  -O3  -march=native -flto=thin -mllvm -inline-threshold=1000 -mllvm -inlinehint-threshold=1000 -funroll-loops -Wno-deprecated-register -Wno-unused-command-line-argument -march=native -Werror -Woverloaded-virtual   conftest.cpp  >&5
+configure:9729: $? = 0
+configure:9747: result: yes
+configure:9766: checking how to run the C++ preprocessor
+configure:9788: icpx -std=c++23 -E  conftest.cpp
+configure:9788: $? = 0
+configure:9804: icpx -std=c++23 -E  conftest.cpp
 conftest.cpp:22:10: fatal error: 'ac_nonexistent.h' file not found
    22 | #include <ac_nonexistent.h>
       |          ^~~~~~~~~~~~~~~~~~
 1 error generated.
-configure:9708: $? = 1
+configure:9804: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "glucat"
@@ -388,15 +388,15 @@ configure: failed program was:
 | #define HAVE_CXX23 1
 | /* end confdefs.h.  */
 | #include <ac_nonexistent.h>
-configure:9737: result: icpx -std=c++23 -E
-configure:9751: icpx -std=c++23 -E  conftest.cpp
-configure:9751: $? = 0
-configure:9767: icpx -std=c++23 -E  conftest.cpp
+configure:9833: result: icpx -std=c++23 -E
+configure:9847: icpx -std=c++23 -E  conftest.cpp
+configure:9847: $? = 0
+configure:9863: icpx -std=c++23 -E  conftest.cpp
 conftest.cpp:22:10: fatal error: 'ac_nonexistent.h' file not found
    22 | #include <ac_nonexistent.h>
       |          ^~~~~~~~~~~~~~~~~~
 1 error generated.
-configure:9767: $? = 1
+configure:9863: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "glucat"
@@ -420,73 +420,79 @@ configure: failed program was:
 | #define HAVE_CXX23 1
 | /* end confdefs.h.  */
 | #include <ac_nonexistent.h>
-configure:9812: checking for doxygen
-configure:9833: found /usr/bin/doxygen
-configure:9845: result: doxygen
-configure:9883: checking for sphinx-build
-configure:9904: found /usr/bin/sphinx-build
-configure:9916: result: sphinx-build
-configure:9976: checking if doc should be compiled
-configure:9988: result: yes
-configure:9976: checking if gfft_test should be compiled
-configure:9988: result: yes
-configure:9976: checking if glucat should be compiled
-configure:9988: result: no
-configure:9976: checking if products should be compiled
-configure:9988: result: yes
-configure:9976: checking if pyclical should be compiled
-configure:9988: result: no
-configure:9976: checking if squaring should be compiled
-configure:9988: result: yes
-configure:9976: checking if test should be compiled
-configure:9988: result: yes
-configure:9976: checking if test00 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test01 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test02 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test03 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test04 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test05 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test06 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test07 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test08 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test09 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test10 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test11 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test12 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test13 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test14 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test15 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test16 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test17 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test18 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test_doctest should be compiled
-configure:9988: result: no
-configure:9976: checking if test_move should be compiled
-configure:9988: result: yes
-configure:9976: checking if transforms should be compiled
-configure:9988: result: yes
-configure:10396: checking that generated files are newer than configure
-configure:10402: result: done
-configure:10569: creating ./config.status
+configure:9908: checking for doxygen
+configure:9929: found /usr/bin/doxygen
+configure:9941: result: doxygen
+configure:9979: checking for sphinx-build
+configure:10000: found /usr/bin/sphinx-build
+configure:10012: result: sphinx-build
+configure:10072: checking if doc should be compiled
+configure:10084: result: yes
+configure:10072: checking if expressions should be compiled
+configure:10084: result: yes
+configure:10072: checking if gfft_test should be compiled
+configure:10084: result: yes
+configure:10072: checking if glucat should be compiled
+configure:10084: result: no
+configure:10072: checking if products should be compiled
+configure:10084: result: yes
+configure:10072: checking if pyclical should be compiled
+configure:10084: result: no
+configure:10072: checking if squaring should be compiled
+configure:10084: result: yes
+configure:10072: checking if test should be compiled
+configure:10084: result: yes
+configure:10072: checking if test00 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test01 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test02 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test03 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test04 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test05 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test06 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test07 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test08 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test09 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test10 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test11 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test12 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test13 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test14 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test15 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test16 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test17 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test18 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test19 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test_doctest should be compiled
+configure:10084: result: no
+configure:10072: checking if test_move should be compiled
+configure:10084: result: yes
+configure:10072: checking if transforms should be compiled
+configure:10084: result: yes
+configure:10072: checking if versor should be compiled
+configure:10084: result: yes
+configure:10522: checking that generated files are newer than configure
+configure:10528: result: done
+configure:10707: creating ./config.status
 
 ## ---------------------- ##
 ## Running config.status. ##
@@ -503,117 +509,131 @@ generated by GNU Autoconf 2.72.  Invocation command line was
 
 on pensieri
 
-config.status:990: creating Doxyfile
-config.status:990: creating Makefile
-config.status:990: creating doc/Makefile
-config.status:990: creating gfft_test/Makefile
-config.status:990: creating glucat/Makefile
-config.status:990: creating products/Makefile
-config.status:990: creating pyclical/Makefile
-config.status:990: creating pyclical/demos/Makefile
-config.status:990: creating squaring/Makefile
-config.status:990: creating test/Makefile
-config.status:990: creating test00/Makefile
-config.status:990: creating test01/Makefile
-config.status:990: creating test02/Makefile
-config.status:990: creating test03/Makefile
-config.status:990: creating test04/Makefile
-config.status:990: creating test05/Makefile
-config.status:990: creating test06/Makefile
-config.status:990: creating test07/Makefile
-config.status:990: creating test08/Makefile
-config.status:990: creating test09/Makefile
-config.status:990: creating test10/Makefile
-config.status:990: creating test11/Makefile
-config.status:990: creating test12/Makefile
-config.status:990: creating test13/Makefile
-config.status:990: creating test14/Makefile
-config.status:990: creating test15/Makefile
-config.status:990: creating test16/Makefile
-config.status:990: creating test17/Makefile
-config.status:990: creating test18/Makefile
-config.status:990: creating test_doctest/Makefile
-config.status:990: creating test_move/Makefile
-config.status:990: creating transforms/Makefile
-config.status:990: creating config.h
-config.status:1219: executing glucat/glucat_config.h commands
-config.status:1257: creating glucat/glucat_config.h - prefix GLUCAT for config.h defines
-config.status:1219: executing depfiles commands
-config.status:1385: cd gfft_test       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:999: creating Doxyfile
+config.status:999: creating Makefile
+config.status:999: creating doc/Makefile
+config.status:999: creating expressions/Makefile
+config.status:999: creating gfft_test/Makefile
+config.status:999: creating glucat/Makefile
+config.status:999: creating products/Makefile
+config.status:999: creating pyclical/Makefile
+config.status:999: creating pyclical/demos/Makefile
+config.status:999: creating squaring/Makefile
+config.status:999: creating test/Makefile
+config.status:999: creating test00/Makefile
+config.status:999: creating test01/Makefile
+config.status:999: creating test02/Makefile
+config.status:999: creating test03/Makefile
+config.status:999: creating test04/Makefile
+config.status:999: creating test05/Makefile
+config.status:999: creating test06/Makefile
+config.status:999: creating test07/Makefile
+config.status:999: creating test08/Makefile
+config.status:999: creating test09/Makefile
+config.status:999: creating test10/Makefile
+config.status:999: creating test11/Makefile
+config.status:999: creating test12/Makefile
+config.status:999: creating test13/Makefile
+config.status:999: creating test14/Makefile
+config.status:999: creating test15/Makefile
+config.status:999: creating test16/Makefile
+config.status:999: creating test17/Makefile
+config.status:999: creating test18/Makefile
+config.status:999: creating test19/Makefile
+config.status:999: creating test_doctest/Makefile
+config.status:999: creating test_move/Makefile
+config.status:999: creating transforms/Makefile
+config.status:999: creating versor/Makefile
+config.status:999: creating config.h
+config.status:1180: config.h is unchanged
+config.status:1228: executing glucat/glucat_config.h commands
+config.status:1266: creating glucat/glucat_config.h - prefix GLUCAT for config.h defines
+config.status:1288: glucat/glucat_config.h is unchanged
+config.status:1228: executing depfiles commands
+config.status:1394: cd expressions       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1390: $? = 0
-config.status:1385: cd products       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1399: $? = 0
+config.status:1394: cd gfft_test       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1390: $? = 0
-config.status:1385: cd squaring       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1399: $? = 0
+config.status:1394: cd products       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1390: $? = 0
-config.status:1385: cd test00       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1399: $? = 0
+config.status:1394: cd squaring       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1390: $? = 0
-config.status:1385: cd test01       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1399: $? = 0
+config.status:1394: cd test00       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1390: $? = 0
-config.status:1385: cd test02       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1399: $? = 0
+config.status:1394: cd test01       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1390: $? = 0
-config.status:1385: cd test03       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1399: $? = 0
+config.status:1394: cd test02       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1390: $? = 0
-config.status:1385: cd test04       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1399: $? = 0
+config.status:1394: cd test03       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1390: $? = 0
-config.status:1385: cd test05       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1399: $? = 0
+config.status:1394: cd test04       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1390: $? = 0
-config.status:1385: cd test06       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1399: $? = 0
+config.status:1394: cd test05       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1390: $? = 0
-config.status:1385: cd test07       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1399: $? = 0
+config.status:1394: cd test06       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1390: $? = 0
-config.status:1385: cd test08       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1399: $? = 0
+config.status:1394: cd test07       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1390: $? = 0
-config.status:1385: cd test09       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1399: $? = 0
+config.status:1394: cd test08       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1390: $? = 0
-config.status:1385: cd test10       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1399: $? = 0
+config.status:1394: cd test09       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1390: $? = 0
-config.status:1385: cd test11       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1399: $? = 0
+config.status:1394: cd test10       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1390: $? = 0
-config.status:1385: cd test12       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1399: $? = 0
+config.status:1394: cd test11       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1390: $? = 0
-config.status:1385: cd test13       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1399: $? = 0
+config.status:1394: cd test12       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1390: $? = 0
-config.status:1385: cd test14       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1399: $? = 0
+config.status:1394: cd test13       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1390: $? = 0
-config.status:1385: cd test15       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1399: $? = 0
+config.status:1394: cd test14       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1390: $? = 0
-config.status:1385: cd test16       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1399: $? = 0
+config.status:1394: cd test15       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1390: $? = 0
-config.status:1385: cd test17       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1399: $? = 0
+config.status:1394: cd test16       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1390: $? = 0
-config.status:1385: cd test18       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1399: $? = 0
+config.status:1394: cd test17       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1390: $? = 0
-config.status:1385: cd test_doctest       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1399: $? = 0
+config.status:1394: cd test18       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1390: $? = 0
-config.status:1385: cd test_move       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1399: $? = 0
+config.status:1394: cd test19       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1390: $? = 0
-config.status:1385: cd transforms       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1399: $? = 0
+config.status:1394: cd test_doctest       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1390: $? = 0
+config.status:1399: $? = 0
+config.status:1394: cd test_move       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+make: Nothing to be done for 'am--depfiles'.
+config.status:1399: $? = 0
+config.status:1394: cd transforms       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+make: Nothing to be done for 'am--depfiles'.
+config.status:1399: $? = 0
+config.status:1394: cd versor       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+make: Nothing to be done for 'am--depfiles'.
+config.status:1399: $? = 0
 
 ## ---------------- ##
 ## Cache variables. ##
@@ -646,6 +666,7 @@ ac_cv_env_target_alias_value=
 ac_cv_header_armadillo=yes
 ac_cv_header_boost_unordered_unordered_flat_map_hpp=yes
 ac_cv_header_boost_version_hpp=yes
+ac_cv_header_boost_yap_expression_hpp=yes
 ac_cv_header_eigen3_Eigen_Dense=yes
 ac_cv_header_inttypes_h=yes
 ac_cv_header_stdint_h=yes
@@ -758,7 +779,7 @@ SET_MAKE=''
 SHELL='/bin/bash'
 SPHINXBUILD='sphinx-build'
 STRIP=''
-TOPSUBDIRS=' doc gfft_test products squaring test test00 test01 test02 test03 test04 test05 test06 test07 test08 test09 test10 test11 test12 test13 test14 test15 test16 test17 test18 test_move transforms'
+TOPSUBDIRS=' doc expressions gfft_test products squaring test test00 test01 test02 test03 test04 test05 test06 test07 test08 test09 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test_move transforms versor'
 USER_INCLUDES=''
 USER_LDFLAGS=''
 USE_EXCEPTIONS='-fexceptions'
@@ -794,6 +815,8 @@ docdir='${datarootdir}/doc/${PACKAGE_TARNAME}'
 doxydir='/home/leopardi/sync/src/penguian/glucat.3'
 dvidir='${docdir}'
 exec_prefix='${prefix}'
+expressions_SUBDIR_included_FALSE='#'
+expressions_SUBDIR_included_TRUE=''
 gfft_test_SUBDIR_included_FALSE='#'
 gfft_test_SUBDIR_included_TRUE=''
 glucat_SUBDIR_included_FALSE=''
@@ -878,6 +901,8 @@ test17_SUBDIR_included_FALSE='#'
 test17_SUBDIR_included_TRUE=''
 test18_SUBDIR_included_FALSE='#'
 test18_SUBDIR_included_TRUE=''
+test19_SUBDIR_included_FALSE='#'
+test19_SUBDIR_included_TRUE=''
 test_SUBDIR_included_FALSE='#'
 test_SUBDIR_included_TRUE=''
 test_doctest_SUBDIR_included_FALSE=''
@@ -888,6 +913,8 @@ transforms_SUBDIR_included_FALSE='#'
 transforms_SUBDIR_included_TRUE=''
 use_cython_FALSE=''
 use_cython_TRUE='#'
+versor_SUBDIR_included_FALSE='#'
+versor_SUBDIR_included_TRUE=''
 
 ## ----------- ##
 ## confdefs.h. ##
