@@ -1094,85 +1094,17 @@ GluCat 0.98a2 with PyClical has so far been built and tested using:
     Fedora Linux Asahi Remix 43 (KDE Plasma Desktop Edition)
     g++ 15.2.1 20260123 (Red Hat 15.2.1-7)
     Armadillo 12.8.1
+    Cython 3.1.3
     Doxygen 1.14.0
     Eigen3 3.4.0
     GSL 2.8
-    QD 2.3.24
-    Cython 3.1.3
     Numpy 2.3.5
     Python 3.14.5
+    QD 2.3.24
     ```
     `./test/test-all-config-options.sh`
     All 12 configuration commands corresponding to each of the 12
     `test.configure*.out` files in `./test_runtime.aarch64`
-    
- 5) AWS Graviton:
-    Virtual 4 core `ARM Cortex-A72 Model 3 (AWS Graviton A1 image)` with
-
-    ```
-    Linux 5.15.0-1077-aws #84~20.04.1-Ubuntu SMP aarch64
-    Ubuntu 20.04.6 LTS
-    g++ (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0
-    Blaze 3.9.0
-    Boost 1.71.0
-    GSL Version: 2.5+dfsg-6build1
-    QD Version: 2.3.22+dfsg.1-3build1
-    Cython 0.29.14
-    Python 3.8.10
-    ```
-    `./test/fast-test-all-config-options.sh`
-    All 12 configuration commands corresponding to each of the 12
-    `fast-test.configure*.out` files in `./test_runtime`.
-    Note: All tests involving `long double` give different answers
-    from the same tests on x86-64 hardware, because `long double` is
-    128 bits on ARM 64 hardware vs 80 bits on x86-64.
-    https://github.com/ARM-software/abi-aa/blob/main/aapcs64/aapcs64.rst#arithmetic-types
-
- 6) CoCalc:
-    Virtual 2 core `Intel(R) Xeon(R) CPU @ 2.80GHz` with
-
-    ```
-    Linux 5.15.0-1074-gcp #83~20.04.1-Ubuntu SMP x86 64
-    Ubuntu 24.04.4 LTS
-    clang++ Ubuntu clang version 18.1.3 (1ubuntu1)
-    Armadillo 12.6.7
-    Boost 1.83.0
-    Cython 3.0.8
-    Eigen 3.4.0
-    Python 3.12.10
-    Numpy 1.26.4
-    ```
-    `./test/fast-test-all-config-options.sh`
-    All 12 configuration commands corresponding to each of the 12
-    `fast-test.configure*.out` files in `./test_runtime`
-
- 7) GitHub codespaces:
-    AMD EPYC 7763 64-Core Processor with
-
-    ```
-    Linux codespaces-50eecb 6.5.0-1025-azure #26~22.04.1-Ubuntu SMP x86_64
-    Ubuntu 20.04.6 LTS
-    g++ (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0
-    Blaze 3.8.2
-    Boost 1.71.1
-    GSL Version: 2.5+dfsg-6build1
-    QD Version: 2.3.22+dfsg.1-3build1
-    Cython 0.29.14
-    Python 3.12.1
-    ```
-    `./test/fast-test-all-config-options.sh`
-    All 12 configuration commands corresponding to each of the 12
-    `fast-test.configure*.out` files in `./test_runtime`.
-
-     Note: all configuration commands other than
-     ```
-     ./configure --disable-pyclical
-     ```
-     result in
-     ```
-     configure: WARNING: Cannot build using Cython.
-     configure: WARNING: Cannot build PyClical.
-     ```
 
 Notes on software versions
 ==========================

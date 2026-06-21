@@ -6,9 +6,6 @@ TODO for GluCat 0.98a2 with PyClical
 ### 0.98a2 (Current)
 * [x] Achieve 100% C++ function coverage across the core library via `test_doctest`.
 * [x] Reinforce representation-independence by defining `nbr_rows()` and `nbr_cols()` as protected in `matrix_multi`.
-* Further harden the stochastic identity tests in `test_doctest`.
-* Complete the transition of all legacy tests to the modern unit testing framework.
-* Improve the packaging of the example and test programs.
 
 ### 0.98a3: Defense in Depth
 * **C++ Quality**: Implement `clang-format` and `cppcheck` linting.
@@ -16,6 +13,9 @@ TODO for GluCat 0.98a2 with PyClical
 * **Automation**: Integrate `pre-commit` hooks for all quality checks.
 * **CI/CD**: Establish GitHub Actions matrix builds (GCC/Clang, multiple Boost versions).
 * **Environment Automation**: Automate Jupyter and Mayavi setup as much as possible; fully document manual steps for non-automatable constraints.
+* Further harden the stochastic identity tests in `test_doctest`.
+* Complete the transition of all legacy tests to the modern unit testing framework.
+* Improve the packaging of the example and test programs.
 
 ### 0.98a4: Raytracer
 * Integrate `rayconfglucat` as `raytracer` subdirectory under GPL v3.
