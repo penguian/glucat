@@ -17,7 +17,12 @@ TODO for GluCat 0.98a2 with PyClical
 * **CI/CD**: Establish GitHub Actions matrix builds (GCC/Clang, multiple Boost versions).
 * **Environment Automation**: Automate Jupyter and Mayavi setup as much as possible; fully document manual steps for non-automatable constraints.
 
-### 0.98a4: Documentation
+### 0.98a4: Raytracer
+* Integrate `rayconfglucat` as `raytracer` subdirectory under GPL v3.
+* Implement `--enable-raytracer` configure option and dependency checks (FLTK, OpenGL, libpng, zlib).
+* Update coordinate transformations in `scene.cpp` to use `operator|` and `versor_exp`.
+
+### 0.98a5: Documentation
 * **ReadTheDocs**: Set up RTD formatting and automated deployment.
 * **User Guide**: Develop a comprehensive User Guide using Sphinx + MyST.
 * **Maintenance Guide**: Develop a technical Maintenance Guide using Doxygen + Sphinx (Breathe).
@@ -25,11 +30,17 @@ TODO for GluCat 0.98a2 with PyClical
 
 ## Future Stabilisation (0.99bx series)
 * Completely remove legacy `icc`/`icpc` compile flags, quirks, and workarounds in the next major version release.
-* Expand the Cython-based Python extension module PyClical into a Sage interface.
-* Try defining concepts and more numeric traits so that GluCat can
-  eventually become a Boost library.
 
 ## Post-1.0 Possibilities
+
+### Sage and Boost integration
+* Expand the Cython-based Python extension module PyClical into a Sage interface.
+* Try defining concepts and more numeric traits so that GluCat can eventually become a Boost library.
+
+### Machine Learning and Clifford Neural Networks
+* Develop a unified PyTorch-PyClical Autograd Extension to integrate high-dimensional Clifford algebra operations into deep learning training pipelines.
+* Implement custom PyTorch `torch.autograd.Function` wrapper layers that offload geometric computation to pre-compiled GluCat templates in the forward pass, and compute analytical bilinear gradients using Clifford conjugation in the backward pass.
+* Establish integrations with geometric deep learning frameworks (such as Microsoft's *cliffordlayers*) to solve high-dimensional optimization problems (e.g. searching for LPS generators on $S^7$ and $S^{15}$) without automatic differentiation graph-tracking bloat.
 
 ### Transcendental functions
 * Devise better algorithms and better implementations of existing algorithms for

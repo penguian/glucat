@@ -1,4 +1,4 @@
-GluCat design notes 2016-07-10, updated 2026-05-13
+GluCat design notes 2016-07-10, updated 2026-06-21
 ==================================================
 
 This document describes some of the decisions that underly the design of GluCat,
@@ -180,7 +180,8 @@ The 0.98a2 release focuses on maximizing the performance of Clifford products an
   3. Matrix-based algorithm (for high dimensions/fill factors).
 - **Threshold Tuning**: Restored the `Inv_Fast_Dim_Threshold` to ensure efficient matrix-to-framed conversion and restored parity with the legacy performance baseline.
 - **Include Path Standardization**: Completed the migration to prefix-based include paths (`<doctest/doctest.h>`, `<eigen3/Eigen/...>`) to align with modern Linux distribution layouts.
-- **Coverage Expansion**: Added `test18` to the regression suite and verified performance and numerical correctness across all dispatch paths.
+- **Coverage Expansion**: Added `test18` and `test19` to the regression suite and verified performance and numerical correctness across all dispatch paths.
+- **Versor/Sandwich Optimizations**: Optimized sparse-domain involution via native `versor` and `versor_exp` functions for `framed_multi`, and delegated dense sandwich products (`matrix_multi::versor()`) to `operator|` to achieve optimal dense performance.
 
 
 Split of code between glucat/matrix_imp.h and glucat/matrix_multi_imp.h
