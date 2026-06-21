@@ -44,39 +44,39 @@ PATH: /snap/bin/
 ## Core tests. ##
 ## ----------- ##
 
-configure:2323: looking for aux files: missing install-sh config.guess config.sub
-configure:2336:  trying ./admin/
-configure:2365:   ./admin/missing found
-configure:2347:   ./admin/install-sh found
-configure:2365:   ./admin/config.guess found
-configure:2365:   ./admin/config.sub found
-configure:2801: checking build system type
-configure:2817: result: x86_64-pc-linux-gnu
-configure:2837: checking host system type
-configure:2852: result: x86_64-pc-linux-gnu
-configure:2872: checking target system type
-configure:2887: result: x86_64-pc-linux-gnu
-configure:2941: checking for a BSD-compatible install
-configure:3015: result: /usr/bin/install -c
-configure:3026: checking whether sleep supports fractional seconds
-configure:3042: result: yes
-configure:3045: checking filesystem timestamp resolution
-configure:3180: result: 0.01
-configure:3185: checking whether build environment is sane
-configure:3226: result: yes
-configure:3387: checking for a race-free mkdir -p
-configure:3430: result: /usr/bin/mkdir -p
-configure:3437: checking for gawk
-configure:3458: found /usr/bin/gawk
-configure:3470: result: gawk
-configure:3481: checking whether make sets $(MAKE)
-configure:3505: result: yes
-configure:3531: checking whether make supports nested variables
-configure:3550: result: yes
-configure:3564: checking xargs -n works
-configure:3580: result: yes
-configure:3655: checking how to create a pax tar archive
-configure:3666: tar --version
+configure:2329: looking for aux files: missing install-sh config.guess config.sub
+configure:2342:  trying ./admin/
+configure:2371:   ./admin/missing found
+configure:2353:   ./admin/install-sh found
+configure:2371:   ./admin/config.guess found
+configure:2371:   ./admin/config.sub found
+configure:2807: checking build system type
+configure:2823: result: x86_64-pc-linux-gnu
+configure:2843: checking host system type
+configure:2858: result: x86_64-pc-linux-gnu
+configure:2878: checking target system type
+configure:2893: result: x86_64-pc-linux-gnu
+configure:2947: checking for a BSD-compatible install
+configure:3021: result: /usr/bin/install -c
+configure:3032: checking whether sleep supports fractional seconds
+configure:3048: result: yes
+configure:3051: checking filesystem timestamp resolution
+configure:3186: result: 0.01
+configure:3191: checking whether build environment is sane
+configure:3232: result: yes
+configure:3393: checking for a race-free mkdir -p
+configure:3436: result: /usr/bin/mkdir -p
+configure:3443: checking for gawk
+configure:3464: found /usr/bin/gawk
+configure:3476: result: gawk
+configure:3487: checking whether make sets $(MAKE)
+configure:3511: result: yes
+configure:3537: checking whether make supports nested variables
+configure:3556: result: yes
+configure:3570: checking xargs -n works
+configure:3586: result: yes
+configure:3661: checking how to create a pax tar archive
+configure:3672: tar --version
 tar (GNU tar) 1.35
 Copyright (C) 2023 Free Software Foundation, Inc.
 License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
@@ -84,33 +84,36 @@ This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
 
 Written by John Gilmore and Jay Fenlason.
-configure:3669: $? = 0
-configure:3709: tardir=conftest.dir && eval tar --format=posix -chf - "$tardir" >conftest.tar
-configure:3712: $? = 0
-configure:3716: tar -xf - <conftest.tar
-configure:3719: $? = 0
-configure:3721: cat conftest.dir/file
+configure:3675: $? = 0
+configure:3715: tardir=conftest.dir && eval tar --format=posix -chf - "$tardir" >conftest.tar
+configure:3718: $? = 0
+configure:3722: tar -xf - <conftest.tar
+configure:3725: $? = 0
+configure:3727: cat conftest.dir/file
 GrepMe
-configure:3724: $? = 0
-configure:3739: result: gnutar
-configure:3781: checking for extra includes
-configure:3811: result: no
-configure:3815: checking for extra libs
-configure:3846: result: no
-configure:3864: checking whether make supports the include directive
-configure:3879: make -f confmf.GNU && cat confinc.out
+configure:3730: $? = 0
+configure:3745: result: gnutar
+configure:3787: checking for extra includes
+configure:3817: result: no
+configure:3821: checking for extra libs
+configure:3852: result: no
+configure:3870: checking whether make supports the include directive
+configure:3885: make -f confmf.GNU && cat confinc.out
 this is the am__doit target
-configure:3882: $? = 0
-configure:3901: result: yes (GNU style)
-configure:4048: checking for C++ compiler version
-configure:4057: g++ --version >&5
+configure:3888: $? = 0
+configure:3907: result: yes (GNU style)
+configure:3994: checking for g++
+configure:4015: found /usr/bin/g++
+configure:4027: result: g++
+configure:4054: checking for C++ compiler version
+configure:4063: g++ --version >&5
 g++ (Ubuntu 14.2.0-19ubuntu2) 14.2.0
 Copyright (C) 2024 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-configure:4068: $? = 0
-configure:4057: g++ -v >&5
+configure:4074: $? = 0
+configure:4063: g++ -v >&5
 Using built-in specs.
 COLLECT_GCC=g++
 COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-linux-gnu/14/lto-wrapper
@@ -122,47 +125,47 @@ Thread model: posix
 Supported LTO compression algorithms: zlib zstd
 gcc version 14.2.0 (Ubuntu 14.2.0-19ubuntu2) 
 ... rest of stderr output deleted ...
-configure:4068: $? = 0
-configure:4057: g++ -V >&5
+configure:4074: $? = 0
+configure:4063: g++ -V >&5
 g++: error: unrecognized command-line option '-V'
 g++: fatal error: no input files
 compilation terminated.
-configure:4068: $? = 1
-configure:4057: g++ -qversion >&5
+configure:4074: $? = 1
+configure:4063: g++ -qversion >&5
 g++: error: unrecognized command-line option '-qversion'; did you mean '--version'?
 g++: fatal error: no input files
 compilation terminated.
-configure:4068: $? = 1
-configure:4088: checking whether the C++ compiler works
-configure:4110: g++    conftest.cpp  >&5
-configure:4114: $? = 0
-configure:4165: result: yes
-configure:4169: checking for C++ compiler default output file name
-configure:4171: result: a.out
-configure:4177: checking for suffix of executables
-configure:4184: g++ -o conftest    conftest.cpp  >&5
-configure:4188: $? = 0
-configure:4212: result: 
-configure:4236: checking whether we are cross compiling
-configure:4244: g++ -o conftest    conftest.cpp  >&5
-configure:4248: $? = 0
-configure:4255: ./conftest
-configure:4259: $? = 0
-configure:4274: result: no
-configure:4280: checking for suffix of object files
-configure:4303: g++ -c   conftest.cpp >&5
-configure:4307: $? = 0
-configure:4331: result: o
-configure:4335: checking whether the compiler supports GNU C++
-configure:4355: g++ -c   conftest.cpp >&5
-configure:4355: $? = 0
-configure:4367: result: yes
-configure:4378: checking whether g++ accepts -g
-configure:4399: g++ -c -g  conftest.cpp >&5
-configure:4399: $? = 0
-configure:4446: result: yes
-configure:4466: checking for g++ option to enable C++11 features
-configure:4481: g++  -c -g -O2  conftest.cpp >&5
+configure:4074: $? = 1
+configure:4094: checking whether the C++ compiler works
+configure:4116: g++    conftest.cpp  >&5
+configure:4120: $? = 0
+configure:4171: result: yes
+configure:4175: checking for C++ compiler default output file name
+configure:4177: result: a.out
+configure:4183: checking for suffix of executables
+configure:4190: g++ -o conftest    conftest.cpp  >&5
+configure:4194: $? = 0
+configure:4218: result: 
+configure:4242: checking whether we are cross compiling
+configure:4250: g++ -o conftest    conftest.cpp  >&5
+configure:4254: $? = 0
+configure:4261: ./conftest
+configure:4265: $? = 0
+configure:4280: result: no
+configure:4286: checking for suffix of object files
+configure:4309: g++ -c   conftest.cpp >&5
+configure:4313: $? = 0
+configure:4337: result: o
+configure:4341: checking whether the compiler supports GNU C++
+configure:4361: g++ -c   conftest.cpp >&5
+configure:4361: $? = 0
+configure:4373: result: yes
+configure:4384: checking whether g++ accepts -g
+configure:4405: g++ -c -g  conftest.cpp >&5
+configure:4405: $? = 0
+configure:4452: result: yes
+configure:4472: checking for g++ option to enable C++11 features
+configure:4487: g++  -c -g -O2  conftest.cpp >&5
 conftest.cpp: In function 'int main(int, char**)':
 conftest.cpp:177:25: warning: empty parentheses were disambiguated as a function declaration [-Wvexing-parse]
   177 |   cxx11test::delegate d2();
@@ -172,155 +175,163 @@ conftest.cpp:177:25: note: remove parentheses to default-initialize a variable
       |                         ^~
       |                         --
 conftest.cpp:177:25: note: or replace parentheses with braces to value-initialize a variable
-configure:4481: $? = 0
-configure:4500: result: none needed
-configure:4571: checking dependency style of g++
-configure:4684: result: gcc3
-configure:4704: checking for stdio.h
-configure:4704: g++ -c -g -O2  conftest.cpp >&5
-configure:4704: $? = 0
-configure:4704: result: yes
-configure:4704: checking for stdlib.h
-configure:4704: g++ -c -g -O2  conftest.cpp >&5
-configure:4704: $? = 0
-configure:4704: result: yes
-configure:4704: checking for string.h
-configure:4704: g++ -c -g -O2  conftest.cpp >&5
-configure:4704: $? = 0
-configure:4704: result: yes
-configure:4704: checking for inttypes.h
-configure:4704: g++ -c -g -O2  conftest.cpp >&5
-configure:4704: $? = 0
-configure:4704: result: yes
-configure:4704: checking for stdint.h
-configure:4704: g++ -c -g -O2  conftest.cpp >&5
-configure:4704: $? = 0
-configure:4704: result: yes
-configure:4704: checking for strings.h
-configure:4704: g++ -c -g -O2  conftest.cpp >&5
-configure:4704: $? = 0
-configure:4704: result: yes
-configure:4704: checking for sys/stat.h
-configure:4704: g++ -c -g -O2  conftest.cpp >&5
-configure:4704: $? = 0
-configure:4704: result: yes
-configure:4704: checking for sys/types.h
-configure:4704: g++ -c -g -O2  conftest.cpp >&5
-configure:4704: $? = 0
-configure:4704: result: yes
-configure:4704: checking for unistd.h
-configure:4704: g++ -c -g -O2  conftest.cpp >&5
-configure:4704: $? = 0
-configure:4704: result: yes
-configure:4919: checking for boost/version.hpp
-configure:4919: g++ -c   -I. -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)    conftest.cpp >&5
-configure:4919: $? = 0
-configure:4919: result: yes
-configure:5308: checking for flexiblas_init in -lflexiblas
-configure:5330: g++ -o conftest     conftest.cpp -lflexiblas   >&5
-configure:5330: $? = 0
-configure:5342: result: yes
-configure:5347: FlexiBLAS support enabled
-configure:5375: checking whether g++ supports -fopenmp
-configure:5403: g++ -o conftest  -Werror -fopenmp   conftest.cpp  >&5
-configure:5403: $? = 0
-configure:5421: result: yes
-configure:5505: checking for omp.h
-configure:5505: g++ -c  -fopenmp  conftest.cpp >&5
-configure:5505: $? = 0
-configure:5505: result: yes
-configure:5589: OpenMP support enabled with -fopenmp
-configure:5610: checking for boost/unordered/unordered_flat_map.hpp
-configure:5610: g++ -c  -fopenmp  -I. -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)    -DEIGEN_USE_BLAS -DEIGEN_USE_LAPACKE conftest.cpp >&5
-configure:5610: $? = 0
-configure:5610: result: yes
-configure:5614: boost::unordered_flat_map support enabled.
-configure:5652: checking for eigen3/Eigen/Dense
-configure:5652: g++ -c  -fopenmp  -I. -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)    -DEIGEN_USE_BLAS -DEIGEN_USE_LAPACKE -D_GLUCAT_USE_BOOST_UNORDERED_FLAT_MAP conftest.cpp >&5
-configure:5652: $? = 0
-configure:5652: result: yes
-configure:5701: checking whether g++ supports C++23 features with -std=c++23
-configure:6564: g++ -std=c++23 -c  -fopenmp  conftest.cpp >&5
+configure:4487: $? = 0
+configure:4506: result: none needed
+configure:4577: checking dependency style of g++
+configure:4690: result: gcc3
+configure:4710: checking for stdio.h
+configure:4710: g++ -c -g -O2  conftest.cpp >&5
+configure:4710: $? = 0
+configure:4710: result: yes
+configure:4710: checking for stdlib.h
+configure:4710: g++ -c -g -O2  conftest.cpp >&5
+configure:4710: $? = 0
+configure:4710: result: yes
+configure:4710: checking for string.h
+configure:4710: g++ -c -g -O2  conftest.cpp >&5
+configure:4710: $? = 0
+configure:4710: result: yes
+configure:4710: checking for inttypes.h
+configure:4710: g++ -c -g -O2  conftest.cpp >&5
+configure:4710: $? = 0
+configure:4710: result: yes
+configure:4710: checking for stdint.h
+configure:4710: g++ -c -g -O2  conftest.cpp >&5
+configure:4710: $? = 0
+configure:4710: result: yes
+configure:4710: checking for strings.h
+configure:4710: g++ -c -g -O2  conftest.cpp >&5
+configure:4710: $? = 0
+configure:4710: result: yes
+configure:4710: checking for sys/stat.h
+configure:4710: g++ -c -g -O2  conftest.cpp >&5
+configure:4710: $? = 0
+configure:4710: result: yes
+configure:4710: checking for sys/types.h
+configure:4710: g++ -c -g -O2  conftest.cpp >&5
+configure:4710: $? = 0
+configure:4710: result: yes
+configure:4710: checking for unistd.h
+configure:4710: g++ -c -g -O2  conftest.cpp >&5
+configure:4710: $? = 0
+configure:4710: result: yes
+configure:4925: checking for boost/version.hpp
+configure:4925: g++ -c   -I. -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)    conftest.cpp >&5
+configure:4925: $? = 0
+configure:4925: result: yes
+configure:4953: checking for boost/yap/expression.hpp
+configure:4953: g++ -c   -I. -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)    conftest.cpp >&5
+configure:4953: $? = 0
+configure:4953: result: yes
+configure:5346: checking for flexiblas_init in -lflexiblas
+configure:5368: g++ -o conftest     conftest.cpp -lflexiblas   >&5
+configure:5368: $? = 0
+configure:5380: result: yes
+configure:5385: FlexiBLAS support enabled
+configure:5413: checking whether g++ supports -fopenmp
+configure:5441: g++ -o conftest  -Werror -fopenmp   conftest.cpp  >&5
+configure:5441: $? = 0
+configure:5459: result: yes
+configure:5543: checking for omp.h
+configure:5543: g++ -c  -fopenmp  conftest.cpp >&5
+configure:5543: $? = 0
+configure:5543: result: yes
+configure:5627: OpenMP support enabled with -fopenmp
+configure:5648: checking for boost/unordered/unordered_flat_map.hpp
+configure:5648: g++ -c  -fopenmp  -I. -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)    -DEIGEN_USE_BLAS -DEIGEN_USE_LAPACKE conftest.cpp >&5
+configure:5648: $? = 0
+configure:5648: result: yes
+configure:5652: boost::unordered_flat_map support enabled.
+configure:5690: checking for eigen3/Eigen/Dense
+configure:5690: g++ -c  -fopenmp  -I. -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)    -DEIGEN_USE_BLAS -DEIGEN_USE_LAPACKE -D_GLUCAT_USE_BOOST_UNORDERED_FLAT_MAP conftest.cpp >&5
+configure:5690: $? = 0
+configure:5690: result: yes
+configure:5739: checking whether g++ supports C++23 features with -std=c++23
+configure:6602: g++ -std=c++23 -c  -fopenmp  conftest.cpp >&5
 conftest.cpp:131:36: warning: 'volatile'-qualified parameter is deprecated [-Wvolatile]
   131 |     test(const int c, volatile int v)
       |                       ~~~~~~~~~~~~~^
-configure:6564: $? = 0
-configure:6576: result: yes
-configure:6618: checking for g++ -std=c++23 version
-configure:6628: result: 14.2.0
-configure:7033: checking whether g++ -std=c++23 supports -march=native
-configure:7061: g++ -std=c++23 -o conftest -O3  -fopenmp -Werror -march=native   conftest.cpp  >&5
-configure:7061: $? = 0
-configure:7079: result: yes
-configure:7091: checking whether g++ -std=c++23 supports -finline-limit=8000
-configure:7119: g++ -std=c++23 -o conftest -O3  -fopenmp -march=native -Werror -finline-limit=8000   conftest.cpp  >&5
-configure:7119: $? = 0
-configure:7137: result: yes
-configure:7149: checking whether g++ -std=c++23 supports --param large-function-insns=8000
-configure:7177: g++ -std=c++23 -o conftest -O3  -fopenmp -march=native -finline-limit=8000 -Werror --param large-function-insns=8000   conftest.cpp  >&5
-configure:7177: $? = 0
-configure:7195: result: yes
-configure:7207: checking whether g++ -std=c++23 supports --param max-inline-insns-auto=8000
-configure:7235: g++ -std=c++23 -o conftest -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 -Werror --param max-inline-insns-auto=8000   conftest.cpp  >&5
-configure:7235: $? = 0
-configure:7253: result: yes
-configure:7265: checking whether g++ -std=c++23 supports --param max-inline-insns-single=8000
-configure:7293: g++ -std=c++23 -o conftest -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 -Werror --param max-inline-insns-single=8000   conftest.cpp  >&5
-configure:7293: $? = 0
-configure:7311: result: yes
-configure:7323: checking whether g++ -std=c++23 supports --param inline-unit-growth=1000
-configure:7351: g++ -std=c++23 -o conftest -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 -Werror --param inline-unit-growth=1000   conftest.cpp  >&5
-configure:7351: $? = 0
-configure:7369: result: yes
-configure:7381: checking whether g++ -std=c++23 supports --param large-function-growth=1000
-configure:7409: g++ -std=c++23 -o conftest -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 -Werror --param large-function-growth=1000   conftest.cpp  >&5
-configure:7409: $? = 0
-configure:7427: result: yes
-configure:7439: checking whether g++ -std=c++23 supports -funroll-loops
-configure:7467: g++ -std=c++23 -o conftest -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 --param large-function-growth=1000 -Werror -funroll-loops   conftest.cpp  >&5
-configure:7467: $? = 0
-configure:7485: result: yes
-configure:7497: checking whether g++ -std=c++23 supports -fvariable-expansion-in-unroller
-configure:7525: g++ -std=c++23 -o conftest -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 --param large-function-growth=1000 -funroll-loops -Werror -fvariable-expansion-in-unroller   conftest.cpp  >&5
-configure:7525: $? = 0
-configure:7543: result: yes
-configure:7555: checking whether g++ -std=c++23 supports -fno-var-tracking-assignments
-configure:7583: g++ -std=c++23 -o conftest -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 --param large-function-growth=1000 -funroll-loops -fvariable-expansion-in-unroller -Werror -fno-var-tracking-assignments   conftest.cpp  >&5
-configure:7583: $? = 0
-configure:7601: result: yes
-configure:7613: checking whether g++ -std=c++23 supports -flto=auto
-configure:7641: g++ -std=c++23 -o conftest -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 --param large-function-growth=1000 -funroll-loops -fvariable-expansion-in-unroller -fno-var-tracking-assignments -Werror -flto=auto   conftest.cpp  >&5
-configure:7641: $? = 0
-configure:7659: result: yes
-configure:7671: checking whether g++ -std=c++23 supports -fuse-linker-plugin
-configure:7699: g++ -std=c++23 -o conftest -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 --param large-function-growth=1000 -funroll-loops -fvariable-expansion-in-unroller -fno-var-tracking-assignments -flto=auto -Werror -fuse-linker-plugin   conftest.cpp  >&5
-configure:7699: $? = 0
-configure:7717: result: yes
-configure:8981: checking whether g++ -std=c++23 supports -fno-check-new
-configure:9009: g++ -std=c++23 -o conftest -Wall -g -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 --param large-function-growth=1000 -funroll-loops -fvariable-expansion-in-unroller -fno-var-tracking-assignments -flto=auto -fuse-linker-plugin -Werror -fno-check-new   conftest.cpp  >&5
-configure:9009: $? = 0
-configure:9027: result: yes
-configure:9050: checking for bits/wordsize.h
-configure:9050: g++ -std=c++23 -c -Wall -g -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 --param large-function-growth=1000 -funroll-loops -fvariable-expansion-in-unroller -fno-var-tracking-assignments -flto=auto -fuse-linker-plugin -fno-check-new  -I. -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)    -DEIGEN_USE_BLAS -DEIGEN_USE_LAPACKE -D_GLUCAT_USE_BOOST_UNORDERED_FLAT_MAP -DNDEBUG conftest.cpp >&5
-configure:9050: $? = 0
-configure:9050: result: yes
-configure:9546: checking whether g++ -std=c++23 supports -fexceptions
-configure:9574: g++ -std=c++23 -o conftest -Wall -g -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 --param large-function-growth=1000 -funroll-loops -fvariable-expansion-in-unroller -fno-var-tracking-assignments -flto=auto -fuse-linker-plugin -fno-check-new -Werror -fexceptions   conftest.cpp  >&5
-configure:9574: $? = 0
-configure:9592: result: yes
-configure:9605: checking whether g++ -std=c++23 supports -Woverloaded-virtual
-configure:9633: g++ -std=c++23 -o conftest -Wall -g -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 --param large-function-growth=1000 -funroll-loops -fvariable-expansion-in-unroller -fno-var-tracking-assignments -flto=auto -fuse-linker-plugin -fno-check-new -Werror -Woverloaded-virtual   conftest.cpp  >&5
-configure:9633: $? = 0
-configure:9651: result: yes
-configure:9670: checking how to run the C++ preprocessor
-configure:9692: g++ -std=c++23 -E  conftest.cpp
-configure:9692: $? = 0
-configure:9708: g++ -std=c++23 -E  conftest.cpp
+configure:6602: $? = 0
+configure:6614: result: yes
+configure:6656: checking for g++ -std=c++23 version
+configure:6666: result: 14.2.0
+configure:7071: checking whether g++ -std=c++23 supports -march=native
+configure:7099: g++ -std=c++23 -o conftest -O3  -fopenmp -Werror -march=native   conftest.cpp  >&5
+configure:7099: $? = 0
+configure:7117: result: yes
+configure:7129: checking whether g++ -std=c++23 supports -finline-limit=8000
+configure:7157: g++ -std=c++23 -o conftest -O3  -fopenmp -march=native -Werror -finline-limit=8000   conftest.cpp  >&5
+configure:7157: $? = 0
+configure:7175: result: yes
+configure:7187: checking whether g++ -std=c++23 supports --param large-function-insns=8000
+configure:7215: g++ -std=c++23 -o conftest -O3  -fopenmp -march=native -finline-limit=8000 -Werror --param large-function-insns=8000   conftest.cpp  >&5
+configure:7215: $? = 0
+configure:7233: result: yes
+configure:7245: checking whether g++ -std=c++23 supports --param max-inline-insns-auto=8000
+configure:7273: g++ -std=c++23 -o conftest -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 -Werror --param max-inline-insns-auto=8000   conftest.cpp  >&5
+configure:7273: $? = 0
+configure:7291: result: yes
+configure:7303: checking whether g++ -std=c++23 supports --param max-inline-insns-single=8000
+configure:7331: g++ -std=c++23 -o conftest -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 -Werror --param max-inline-insns-single=8000   conftest.cpp  >&5
+configure:7331: $? = 0
+configure:7349: result: yes
+configure:7361: checking whether g++ -std=c++23 supports --param inline-unit-growth=1000
+configure:7389: g++ -std=c++23 -o conftest -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 -Werror --param inline-unit-growth=1000   conftest.cpp  >&5
+configure:7389: $? = 0
+configure:7407: result: yes
+configure:7419: checking whether g++ -std=c++23 supports --param large-function-growth=1000
+configure:7447: g++ -std=c++23 -o conftest -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 -Werror --param large-function-growth=1000   conftest.cpp  >&5
+configure:7447: $? = 0
+configure:7465: result: yes
+configure:7477: checking whether g++ -std=c++23 supports -funroll-loops
+configure:7505: g++ -std=c++23 -o conftest -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 --param large-function-growth=1000 -Werror -funroll-loops   conftest.cpp  >&5
+configure:7505: $? = 0
+configure:7523: result: yes
+configure:7535: checking whether g++ -std=c++23 supports -fvariable-expansion-in-unroller
+configure:7563: g++ -std=c++23 -o conftest -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 --param large-function-growth=1000 -funroll-loops -Werror -fvariable-expansion-in-unroller   conftest.cpp  >&5
+configure:7563: $? = 0
+configure:7581: result: yes
+configure:7593: checking whether g++ -std=c++23 supports -fno-var-tracking-assignments
+configure:7621: g++ -std=c++23 -o conftest -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 --param large-function-growth=1000 -funroll-loops -fvariable-expansion-in-unroller -Werror -fno-var-tracking-assignments   conftest.cpp  >&5
+configure:7621: $? = 0
+configure:7639: result: yes
+configure:7651: checking whether g++ -std=c++23 supports -flto=auto
+configure:7679: g++ -std=c++23 -o conftest -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 --param large-function-growth=1000 -funroll-loops -fvariable-expansion-in-unroller -fno-var-tracking-assignments -Werror -flto=auto   conftest.cpp  >&5
+configure:7679: $? = 0
+configure:7697: result: yes
+configure:7709: checking whether g++ -std=c++23 supports -fuse-linker-plugin
+configure:7737: g++ -std=c++23 -o conftest -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 --param large-function-growth=1000 -funroll-loops -fvariable-expansion-in-unroller -fno-var-tracking-assignments -flto=auto -Werror -fuse-linker-plugin   conftest.cpp  >&5
+configure:7737: $? = 0
+configure:7755: result: yes
+configure:9019: checking whether g++ -std=c++23 supports -fno-check-new
+configure:9047: g++ -std=c++23 -o conftest -Wall -g -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 --param large-function-growth=1000 -funroll-loops -fvariable-expansion-in-unroller -fno-var-tracking-assignments -flto=auto -fuse-linker-plugin -Werror -fno-check-new   conftest.cpp  >&5
+configure:9047: $? = 0
+configure:9065: result: yes
+configure:9077: checking whether g++ -std=c++23 supports -Wno-psabi
+configure:9105: g++ -std=c++23 -o conftest -Wall -g -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 --param large-function-growth=1000 -funroll-loops -fvariable-expansion-in-unroller -fno-var-tracking-assignments -flto=auto -fuse-linker-plugin -fno-check-new -Werror -Wno-psabi   conftest.cpp  >&5
+configure:9105: $? = 0
+configure:9123: result: yes
+configure:9146: checking for bits/wordsize.h
+configure:9146: g++ -std=c++23 -c -Wall -g -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 --param large-function-growth=1000 -funroll-loops -fvariable-expansion-in-unroller -fno-var-tracking-assignments -flto=auto -fuse-linker-plugin -fno-check-new -Wno-psabi  -I. -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)    -DEIGEN_USE_BLAS -DEIGEN_USE_LAPACKE -D_GLUCAT_USE_BOOST_UNORDERED_FLAT_MAP -DNDEBUG conftest.cpp >&5
+configure:9146: $? = 0
+configure:9146: result: yes
+configure:9642: checking whether g++ -std=c++23 supports -fexceptions
+configure:9670: g++ -std=c++23 -o conftest -Wall -g -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 --param large-function-growth=1000 -funroll-loops -fvariable-expansion-in-unroller -fno-var-tracking-assignments -flto=auto -fuse-linker-plugin -fno-check-new -Wno-psabi -Werror -fexceptions   conftest.cpp  >&5
+configure:9670: $? = 0
+configure:9688: result: yes
+configure:9701: checking whether g++ -std=c++23 supports -Woverloaded-virtual
+configure:9729: g++ -std=c++23 -o conftest -Wall -g -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 --param large-function-growth=1000 -funroll-loops -fvariable-expansion-in-unroller -fno-var-tracking-assignments -flto=auto -fuse-linker-plugin -fno-check-new -Wno-psabi -Werror -Woverloaded-virtual   conftest.cpp  >&5
+configure:9729: $? = 0
+configure:9747: result: yes
+configure:9766: checking how to run the C++ preprocessor
+configure:9788: g++ -std=c++23 -E  conftest.cpp
+configure:9788: $? = 0
+configure:9804: g++ -std=c++23 -E  conftest.cpp
 conftest.cpp:23:10: fatal error: ac_nonexistent.h: No such file or directory
    23 | #include <ac_nonexistent.h>
       |          ^~~~~~~~~~~~~~~~~~
 compilation terminated.
-configure:9708: $? = 1
+configure:9804: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "glucat"
@@ -345,15 +356,15 @@ configure: failed program was:
 | #define HAVE_CXX23 1
 | /* end confdefs.h.  */
 | #include <ac_nonexistent.h>
-configure:9737: result: g++ -std=c++23 -E
-configure:9751: g++ -std=c++23 -E  conftest.cpp
-configure:9751: $? = 0
-configure:9767: g++ -std=c++23 -E  conftest.cpp
+configure:9833: result: g++ -std=c++23 -E
+configure:9847: g++ -std=c++23 -E  conftest.cpp
+configure:9847: $? = 0
+configure:9863: g++ -std=c++23 -E  conftest.cpp
 conftest.cpp:23:10: fatal error: ac_nonexistent.h: No such file or directory
    23 | #include <ac_nonexistent.h>
       |          ^~~~~~~~~~~~~~~~~~
 compilation terminated.
-configure:9767: $? = 1
+configure:9863: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "glucat"
@@ -378,73 +389,79 @@ configure: failed program was:
 | #define HAVE_CXX23 1
 | /* end confdefs.h.  */
 | #include <ac_nonexistent.h>
-configure:9812: checking for doxygen
-configure:9833: found /usr/bin/doxygen
-configure:9845: result: doxygen
-configure:9883: checking for sphinx-build
-configure:9904: found /usr/bin/sphinx-build
-configure:9916: result: sphinx-build
-configure:9976: checking if doc should be compiled
-configure:9988: result: yes
-configure:9976: checking if gfft_test should be compiled
-configure:9988: result: yes
-configure:9976: checking if glucat should be compiled
-configure:9988: result: no
-configure:9976: checking if products should be compiled
-configure:9988: result: yes
-configure:9976: checking if pyclical should be compiled
-configure:9988: result: no
-configure:9976: checking if squaring should be compiled
-configure:9988: result: yes
-configure:9976: checking if test should be compiled
-configure:9988: result: yes
-configure:9976: checking if test00 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test01 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test02 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test03 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test04 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test05 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test06 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test07 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test08 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test09 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test10 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test11 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test12 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test13 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test14 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test15 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test16 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test17 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test18 should be compiled
-configure:9988: result: yes
-configure:9976: checking if test_doctest should be compiled
-configure:9988: result: no
-configure:9976: checking if test_move should be compiled
-configure:9988: result: yes
-configure:9976: checking if transforms should be compiled
-configure:9988: result: yes
-configure:10396: checking that generated files are newer than configure
-configure:10402: result: done
-configure:10569: creating ./config.status
+configure:9908: checking for doxygen
+configure:9929: found /usr/bin/doxygen
+configure:9941: result: doxygen
+configure:9979: checking for sphinx-build
+configure:10000: found /usr/bin/sphinx-build
+configure:10012: result: sphinx-build
+configure:10072: checking if doc should be compiled
+configure:10084: result: yes
+configure:10072: checking if expressions should be compiled
+configure:10084: result: yes
+configure:10072: checking if gfft_test should be compiled
+configure:10084: result: yes
+configure:10072: checking if glucat should be compiled
+configure:10084: result: no
+configure:10072: checking if products should be compiled
+configure:10084: result: yes
+configure:10072: checking if pyclical should be compiled
+configure:10084: result: no
+configure:10072: checking if squaring should be compiled
+configure:10084: result: yes
+configure:10072: checking if test should be compiled
+configure:10084: result: yes
+configure:10072: checking if test00 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test01 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test02 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test03 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test04 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test05 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test06 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test07 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test08 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test09 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test10 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test11 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test12 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test13 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test14 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test15 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test16 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test17 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test18 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test19 should be compiled
+configure:10084: result: yes
+configure:10072: checking if test_doctest should be compiled
+configure:10084: result: no
+configure:10072: checking if test_move should be compiled
+configure:10084: result: yes
+configure:10072: checking if transforms should be compiled
+configure:10084: result: yes
+configure:10072: checking if versor should be compiled
+configure:10084: result: yes
+configure:10522: checking that generated files are newer than configure
+configure:10528: result: done
+configure:10707: creating ./config.status
 
 ## ---------------------- ##
 ## Running config.status. ##
@@ -461,119 +478,129 @@ generated by GNU Autoconf 2.72.  Invocation command line was
 
 on pensieri
 
-config.status:992: creating Doxyfile
-config.status:992: creating Makefile
-config.status:992: creating doc/Makefile
-config.status:992: creating gfft_test/Makefile
-config.status:992: creating glucat/Makefile
-config.status:992: creating products/Makefile
-config.status:992: creating pyclical/Makefile
-config.status:992: creating pyclical/demos/Makefile
-config.status:992: creating squaring/Makefile
-config.status:992: creating test/Makefile
-config.status:992: creating test00/Makefile
-config.status:992: creating test01/Makefile
-config.status:992: creating test02/Makefile
-config.status:992: creating test03/Makefile
-config.status:992: creating test04/Makefile
-config.status:992: creating test05/Makefile
-config.status:992: creating test06/Makefile
-config.status:992: creating test07/Makefile
-config.status:992: creating test08/Makefile
-config.status:992: creating test09/Makefile
-config.status:992: creating test10/Makefile
-config.status:992: creating test11/Makefile
-config.status:992: creating test12/Makefile
-config.status:992: creating test13/Makefile
-config.status:992: creating test14/Makefile
-config.status:992: creating test15/Makefile
-config.status:992: creating test16/Makefile
-config.status:992: creating test17/Makefile
-config.status:992: creating test18/Makefile
-config.status:992: creating test_doctest/Makefile
-config.status:992: creating test_move/Makefile
-config.status:992: creating transforms/Makefile
-config.status:992: creating config.h
-config.status:1173: config.h is unchanged
-config.status:1221: executing glucat/glucat_config.h commands
-config.status:1259: creating glucat/glucat_config.h - prefix GLUCAT for config.h defines
-config.status:1281: glucat/glucat_config.h is unchanged
-config.status:1221: executing depfiles commands
-config.status:1387: cd gfft_test       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1001: creating Doxyfile
+config.status:1001: creating Makefile
+config.status:1001: creating doc/Makefile
+config.status:1001: creating expressions/Makefile
+config.status:1001: creating gfft_test/Makefile
+config.status:1001: creating glucat/Makefile
+config.status:1001: creating products/Makefile
+config.status:1001: creating pyclical/Makefile
+config.status:1001: creating pyclical/demos/Makefile
+config.status:1001: creating squaring/Makefile
+config.status:1001: creating test/Makefile
+config.status:1001: creating test00/Makefile
+config.status:1001: creating test01/Makefile
+config.status:1001: creating test02/Makefile
+config.status:1001: creating test03/Makefile
+config.status:1001: creating test04/Makefile
+config.status:1001: creating test05/Makefile
+config.status:1001: creating test06/Makefile
+config.status:1001: creating test07/Makefile
+config.status:1001: creating test08/Makefile
+config.status:1001: creating test09/Makefile
+config.status:1001: creating test10/Makefile
+config.status:1001: creating test11/Makefile
+config.status:1001: creating test12/Makefile
+config.status:1001: creating test13/Makefile
+config.status:1001: creating test14/Makefile
+config.status:1001: creating test15/Makefile
+config.status:1001: creating test16/Makefile
+config.status:1001: creating test17/Makefile
+config.status:1001: creating test18/Makefile
+config.status:1001: creating test19/Makefile
+config.status:1001: creating test_doctest/Makefile
+config.status:1001: creating test_move/Makefile
+config.status:1001: creating transforms/Makefile
+config.status:1001: creating versor/Makefile
+config.status:1001: creating config.h
+config.status:1230: executing glucat/glucat_config.h commands
+config.status:1268: creating glucat/glucat_config.h - prefix GLUCAT for config.h defines
+config.status:1230: executing depfiles commands
+config.status:1396: cd expressions       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1392: $? = 0
-config.status:1387: cd products       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1401: $? = 0
+config.status:1396: cd gfft_test       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1392: $? = 0
-config.status:1387: cd squaring       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1401: $? = 0
+config.status:1396: cd products       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1392: $? = 0
-config.status:1387: cd test00       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1401: $? = 0
+config.status:1396: cd squaring       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1392: $? = 0
-config.status:1387: cd test01       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1401: $? = 0
+config.status:1396: cd test00       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1392: $? = 0
-config.status:1387: cd test02       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1401: $? = 0
+config.status:1396: cd test01       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1392: $? = 0
-config.status:1387: cd test03       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1401: $? = 0
+config.status:1396: cd test02       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1392: $? = 0
-config.status:1387: cd test04       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1401: $? = 0
+config.status:1396: cd test03       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1392: $? = 0
-config.status:1387: cd test05       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1401: $? = 0
+config.status:1396: cd test04       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1392: $? = 0
-config.status:1387: cd test06       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1401: $? = 0
+config.status:1396: cd test05       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1392: $? = 0
-config.status:1387: cd test07       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1401: $? = 0
+config.status:1396: cd test06       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1392: $? = 0
-config.status:1387: cd test08       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1401: $? = 0
+config.status:1396: cd test07       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1392: $? = 0
-config.status:1387: cd test09       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1401: $? = 0
+config.status:1396: cd test08       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1392: $? = 0
-config.status:1387: cd test10       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1401: $? = 0
+config.status:1396: cd test09       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1392: $? = 0
-config.status:1387: cd test11       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1401: $? = 0
+config.status:1396: cd test10       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1392: $? = 0
-config.status:1387: cd test12       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1401: $? = 0
+config.status:1396: cd test11       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1392: $? = 0
-config.status:1387: cd test13       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1401: $? = 0
+config.status:1396: cd test12       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1392: $? = 0
-config.status:1387: cd test14       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1401: $? = 0
+config.status:1396: cd test13       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1392: $? = 0
-config.status:1387: cd test15       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1401: $? = 0
+config.status:1396: cd test14       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1392: $? = 0
-config.status:1387: cd test16       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1401: $? = 0
+config.status:1396: cd test15       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1392: $? = 0
-config.status:1387: cd test17       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1401: $? = 0
+config.status:1396: cd test16       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1392: $? = 0
-config.status:1387: cd test18       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1401: $? = 0
+config.status:1396: cd test17       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1392: $? = 0
-config.status:1387: cd test_doctest       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1401: $? = 0
+config.status:1396: cd test18       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1392: $? = 0
-config.status:1387: cd test_move       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1401: $? = 0
+config.status:1396: cd test19       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1392: $? = 0
-config.status:1387: cd transforms       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+config.status:1401: $? = 0
+config.status:1396: cd test_doctest       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
 make: Nothing to be done for 'am--depfiles'.
-config.status:1392: $? = 0
+config.status:1401: $? = 0
+config.status:1396: cd test_move       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+make: Nothing to be done for 'am--depfiles'.
+config.status:1401: $? = 0
+config.status:1396: cd transforms       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+make: Nothing to be done for 'am--depfiles'.
+config.status:1401: $? = 0
+config.status:1396: cd versor       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+make: Nothing to be done for 'am--depfiles'.
+config.status:1401: $? = 0
 
 ## ---------------- ##
 ## Cache variables. ##
@@ -589,8 +616,8 @@ ac_cv_env_CXXCPP_set=
 ac_cv_env_CXXCPP_value=
 ac_cv_env_CXXFLAGS_set=
 ac_cv_env_CXXFLAGS_value=
-ac_cv_env_CXX_set=set
-ac_cv_env_CXX_value=g++
+ac_cv_env_CXX_set=
+ac_cv_env_CXX_value=
 ac_cv_env_LDFLAGS_set=
 ac_cv_env_LDFLAGS_value=
 ac_cv_env_LIBS_set=
@@ -606,6 +633,7 @@ ac_cv_env_target_alias_value=
 ac_cv_header_bits_wordsize_h=yes
 ac_cv_header_boost_unordered_unordered_flat_map_hpp=yes
 ac_cv_header_boost_version_hpp=yes
+ac_cv_header_boost_yap_expression_hpp=yes
 ac_cv_header_eigen3_Eigen_Dense=yes
 ac_cv_header_inttypes_h=yes
 ac_cv_header_omp_h=yes
@@ -626,6 +654,7 @@ ac_cv_prog_AWK=gawk
 ac_cv_prog_CXXCPP='g++ -std=c++23 -E'
 ac_cv_prog_DOXYGEN=doxygen
 ac_cv_prog_SPHINXBUILD=sphinx-build
+ac_cv_prog_ac_ct_CXX=g++
 ac_cv_prog_cxx_cxx11=
 ac_cv_prog_cxx_g=yes
 ac_cv_prog_cxx_stdcxx=
@@ -638,6 +667,7 @@ am_cv_prog_tar_pax=gnutar
 am_cv_sleep_fractional_seconds=yes
 am_cv_xargs_n_works=yes
 ax_cv_cxx_compile_cxx23__std_cpp23=yes
+glucat_cv_prog_cxx_Wno_psabi=yes
 glucat_cv_prog_cxx_Woverloaded_virtual=yes
 glucat_cv_prog_cxx__param_inline_unit_growth_1000=yes
 glucat_cv_prog_cxx__param_large_function_growth_1000=yes
@@ -679,7 +709,7 @@ CTAGS='ctags'
 CXX='g++ -std=c++23'
 CXXCPP='g++ -std=c++23 -E'
 CXXDEPMODE='depmode=gcc3'
-CXXFLAGS='-Wall -g -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 --param large-function-growth=1000 -funroll-loops -fvariable-expansion-in-unroller -fno-var-tracking-assignments -flto=auto -fuse-linker-plugin -fno-check-new -fexceptions'
+CXXFLAGS='-Wall -g -O3  -fopenmp -march=native -finline-limit=8000 --param large-function-insns=8000 --param max-inline-insns-auto=8000 --param max-inline-insns-single=8000 --param inline-unit-growth=1000 --param large-function-growth=1000 -funroll-loops -fvariable-expansion-in-unroller -fno-var-tracking-assignments -flto=auto -fuse-linker-plugin -fno-check-new -Wno-psabi -fexceptions'
 CXXVERSION='14.2.0'
 CYGPATH_W='echo'
 DEFS='-DHAVE_CONFIG_H'
@@ -724,13 +754,13 @@ SET_MAKE=''
 SHELL='/bin/bash'
 SPHINXBUILD='sphinx-build'
 STRIP=''
-TOPSUBDIRS=' doc gfft_test products squaring test test00 test01 test02 test03 test04 test05 test06 test07 test08 test09 test10 test11 test12 test13 test14 test15 test16 test17 test18 test_move transforms'
+TOPSUBDIRS=' doc expressions gfft_test products squaring test test00 test01 test02 test03 test04 test05 test06 test07 test08 test09 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test_move transforms versor'
 USER_INCLUDES=''
 USER_LDFLAGS=''
 USE_EXCEPTIONS='-fexceptions'
 VERSION='0.98a2'
 WOVERLOADED_VIRTUAL='-Woverloaded-virtual'
-ac_ct_CXX=''
+ac_ct_CXX='g++'
 all_includes='-I. -I$(srcdir) -I$(top_srcdir) -I$(top_builddir)  '
 am__EXEEXT_FALSE=''
 am__EXEEXT_TRUE='#'
@@ -760,6 +790,8 @@ docdir='${datarootdir}/doc/${PACKAGE_TARNAME}'
 doxydir='/home/leopardi/sync/src/penguian/glucat.14'
 dvidir='${docdir}'
 exec_prefix='${prefix}'
+expressions_SUBDIR_included_FALSE='#'
+expressions_SUBDIR_included_TRUE=''
 gfft_test_SUBDIR_included_FALSE='#'
 gfft_test_SUBDIR_included_TRUE=''
 glucat_SUBDIR_included_FALSE=''
@@ -844,6 +876,8 @@ test17_SUBDIR_included_FALSE='#'
 test17_SUBDIR_included_TRUE=''
 test18_SUBDIR_included_FALSE='#'
 test18_SUBDIR_included_TRUE=''
+test19_SUBDIR_included_FALSE='#'
+test19_SUBDIR_included_TRUE=''
 test_SUBDIR_included_FALSE='#'
 test_SUBDIR_included_TRUE=''
 test_doctest_SUBDIR_included_FALSE=''
@@ -854,6 +888,8 @@ transforms_SUBDIR_included_FALSE='#'
 transforms_SUBDIR_included_TRUE=''
 use_cython_FALSE=''
 use_cython_TRUE='#'
+versor_SUBDIR_included_FALSE='#'
+versor_SUBDIR_included_TRUE=''
 
 ## ----------- ##
 ## confdefs.h. ##

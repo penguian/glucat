@@ -35,6 +35,7 @@ build_notebook_from_demo(ctx, "clifford_demo")
 build_notebook_from_demo(ctx, "pyclical_demo")
 build_notebook_from_demo(ctx, "sqrt_log_demo")
 build_notebook_from_demo(ctx, "m_theory_demo")
+build_notebook_from_demo(ctx, "versor_demo")
 
 for key, tut in sorted(pt.tutorial_dict.items()):
     build_notebook_from_tut(ctx, tut)

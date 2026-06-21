@@ -45,6 +45,7 @@
 #include <limits>
 #include <cmath>
 #include <vector>
+#include <list>
 #include <algorithm>
 #include <functional>
 
@@ -441,6 +442,7 @@ namespace glucat
    */
   template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
   template< typename Matrix_T >
+    requires (!boost::yap::is_expr<Matrix_T>::value)
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
   matrix_multi(const Matrix_T& mtx, const index_set_t frm)
   : m_frame( frm )
@@ -840,11 +842,11 @@ namespace glucat
     multivector_t l_ref, r_ref;
     const auto frm = reframe(lhs, rhs, l_ref, r_ref);
     const int n = frm.count();
-    
+
     auto l_grades = l_ref.decompose();
     auto r_grades = r_ref.decompose();
-    
-    const Scalar_T threshold = std::numeric_limits<Scalar_T>::epsilon() * 
+
+    const Scalar_T threshold = std::numeric_limits<Scalar_T>::epsilon() *
                                numeric_traits<Scalar_T>::pow(Scalar_T(2), Tune_P::tuning_values_p::products_different_bits);
     using matrix_t = typename multivector_t::matrix_t;
     std::vector<matrix_t> grade_sums(n + 1);
@@ -909,11 +911,11 @@ namespace glucat
     multivector_t l_ref, r_ref;
     const auto frm = reframe(lhs, rhs, l_ref, r_ref);
     const int n = frm.count();
-    
+
     auto l_grades = l_ref.decompose();
     auto r_grades = r_ref.decompose();
-    
-    const Scalar_T threshold = std::numeric_limits<Scalar_T>::epsilon() * 
+
+    const Scalar_T threshold = std::numeric_limits<Scalar_T>::epsilon() *
                                numeric_traits<Scalar_T>::pow(Scalar_T(2), Tune_P::tuning_values_p::products_different_bits);
     using matrix_t = typename multivector_t::matrix_t;
     std::vector<matrix_t> grade_sums(n + 1);
@@ -979,11 +981,11 @@ namespace glucat
     multivector_t l_ref, r_ref;
     const auto frm = reframe(lhs, rhs, l_ref, r_ref);
     const int n = frm.count();
-    
+
     auto l_grades = l_ref.decompose();
     auto r_grades = r_ref.decompose();
-    
-    const Scalar_T threshold = std::numeric_limits<Scalar_T>::epsilon() * 
+
+    const Scalar_T threshold = std::numeric_limits<Scalar_T>::epsilon() *
                                numeric_traits<Scalar_T>::pow(Scalar_T(2), Tune_P::tuning_values_p::products_different_bits);
     using matrix_t = typename multivector_t::matrix_t;
     std::vector<matrix_t> grade_sums(n + 1);
@@ -1223,6 +1225,48 @@ namespace glucat
   matrix_multi<Scalar_T,LO,HI,Tune_P>::
   operator|= (const multivector_t& rhs)
   { return *this = rhs * *this / rhs.involute(); }
+
+  /*
+   * @brief Transformation via twisted adjoint action (sandwich product)
+   * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param R The transformation operator
+   * @param prechecked Bypass validation check?
+   * @return Result
+   */
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  inline typename matrix_multi<Scalar_T,LO,HI,Tune_P>::multivector_t
+  matrix_multi<Scalar_T,LO,HI,Tune_P>::
+  versor (const multivector_t& R, const bool prechecked) const
+  {
+    if (prechecked)
+    {
+      multivector_t scale = R * R.conj();
+      return R * (*this) * R.conj() / scale.scalar();
+    }
+    else
+      return (*this) | R;
+  }
+
+  /*
+   * @brief Transformation via exponentiated generator
+   * @details
+   * @tparam Scalar_T
+   * @tparam LO
+   * @tparam HI
+   * @tparam Tune_P
+   * @param A The generator multivector
+   * @param prechecked Bypass validation check?
+   * @return Result
+   */
+  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
+  inline typename matrix_multi<Scalar_T,LO,HI,Tune_P>::multivector_t
+  matrix_multi<Scalar_T,LO,HI,Tune_P>::
+  versor_exp (const multivector_t& A, const bool prechecked) const
+  { return this->versor(exp(A), prechecked); }
 
   /*
    * @brief Clifford multiplicative inverse
@@ -1501,7 +1545,26 @@ namespace glucat
     const auto* e_mat = table(p, q);
 
     std::vector<basis_matrix_t> e_mat_frm;
-    for (index_t j = LO; j <= HI; ++j) if (frm.test(j)) e_mat_frm.push_back(e_mat[j]);
+    for (index_t j = LO; j <= HI; ++j)
+    {
+      if (frm.test(j))
+      {
+        index_t sig_index = 0;
+        if (j < 0)
+        {
+          index_t count = 0;
+          for (index_t k = LO; k <= j; ++k) if (frm.test(k)) count++;
+          sig_index = -(q - count + 1);
+        }
+        else
+        {
+          index_t count = 0;
+          for (index_t k = 1; k <= j; ++k) if (frm.test(k)) count++;
+          sig_index = count;
+        }
+        e_mat_frm.push_back(e_mat[sig_index]);
+      }
+    }
 
     index_set_t parity_ist;
     bool found = false;
@@ -1609,7 +1672,20 @@ namespace glucat
     {
       if (frm.test(j))
       {
-        e_mat_frm.push_back(e_mat[j]);
+        index_t sig_index = 0;
+        if (j < 0)
+        {
+          index_t count = 0;
+          for (index_t k = LO; k <= j; ++k) if (frm.test(k)) count++;
+          sig_index = -(q - count + 1);
+        }
+        else
+        {
+          index_t count = 0;
+          for (index_t k = 1; k <= j; ++k) if (frm.test(k)) count++;
+          sig_index = count;
+        }
+        e_mat_frm.push_back(e_mat[sig_index]);
         s_j_frm.push_back(index_set_t(j).sign_of_square());
       }
     }
@@ -1727,7 +1803,7 @@ namespace glucat
   {
     const int n = this->m_frame.count();
     auto fm = this->template fast_framed_multi<Scalar_T, Tune_P>();
-    
+
     std::vector<matrix_multi> res(n + 1, matrix_multi(Scalar_T(0), this->m_frame));
     for (int k = 0; k <= n; ++k)
     {
@@ -3372,6 +3448,136 @@ namespace glucat{
     else
       return clifford_exp(val);
   }
+
+  // ---------------- Boost.YAP Visitors for matrix_multi ----------------
+
+  template <typename IndexSet>
+  struct frame_accumulator {
+      template <typename T>
+      decltype(auto) eval_child(T&& x) const {
+          if constexpr (boost::yap::is_expr<T>::value) {
+              return boost::yap::transform(std::forward<T>(x), *this);
+          } else {
+              return (*this)(boost::yap::expr_tag<boost::yap::expr_kind::terminal>{}, std::forward<T>(x));
+          }
+      }
+
+      template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+      IndexSet operator()(boost::yap::expr_tag<boost::yap::expr_kind::terminal>, const matrix_multi<Scalar_T, LO, HI, Tune_P>& leaf) const {
+          return leaf.frame();
+      }
+
+      template <typename T>
+        requires (!boost::yap::is_expr<T>::value)
+      IndexSet operator()(boost::yap::expr_tag<boost::yap::expr_kind::terminal>, const T&) const {
+          return IndexSet();
+      }
+
+      template <typename LHS, typename RHS>
+      IndexSet operator()(boost::yap::expr_tag<boost::yap::expr_kind::plus>, LHS const& lhs, RHS const& rhs) const {
+          return eval_child(lhs) | eval_child(rhs);
+      }
+
+      template <typename LHS, typename RHS>
+      IndexSet operator()(boost::yap::expr_tag<boost::yap::expr_kind::minus>, LHS const& lhs, RHS const& rhs) const {
+          return eval_child(lhs) | eval_child(rhs);
+      }
+  };
+
+  template <typename IndexSet, typename MatrixType>
+  struct evaluator {
+      IndexSet target_frame;
+      mutable std::list<MatrixType> temp_storage;
+
+      evaluator(IndexSet tf) : target_frame(std::move(tf)) {}
+
+      template <typename T>
+      decltype(auto) eval_child(T&& x) const {
+          if constexpr (boost::yap::is_expr<T>::value) {
+              return boost::yap::transform(std::forward<T>(x), *this);
+          } else {
+              return (*this)(boost::yap::expr_tag<boost::yap::expr_kind::terminal>{}, std::forward<T>(x));
+          }
+      }
+
+      template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+      const MatrixType& operator()(boost::yap::expr_tag<boost::yap::expr_kind::terminal>, const matrix_multi<Scalar_T, LO, HI, Tune_P>& leaf) const {
+          if (leaf.frame() == target_frame) {
+              return leaf.get_matrix();
+          } else {
+              matrix_multi<Scalar_T, LO, HI, Tune_P> coerced(leaf, target_frame);
+              temp_storage.push_back(coerced.get_matrix());
+              return temp_storage.back();
+          }
+      }
+
+      template <typename S>
+        requires (!boost::yap::is_expr<S>::value)
+      const MatrixType& operator()(boost::yap::expr_tag<boost::yap::expr_kind::terminal>, const S& leaf) const {
+          using Scalar_T = typename MatrixType::value_type;
+          matrix_multi<Scalar_T, IndexSet::v_lo, IndexSet::v_hi, tuning<>> coerced(static_cast<Scalar_T>(leaf), target_frame);
+          temp_storage.push_back(coerced.get_matrix());
+          return temp_storage.back();
+      }
+
+      template <typename LHS, typename RHS>
+      auto operator()(boost::yap::expr_tag<boost::yap::expr_kind::plus>, LHS const& lhs, RHS const& rhs) const {
+          return eval_child(lhs) + eval_child(rhs);
+      }
+
+      template <typename LHS, typename RHS>
+      auto operator()(boost::yap::expr_tag<boost::yap::expr_kind::minus>, LHS const& lhs, RHS const& rhs) const {
+          return eval_child(lhs) - eval_child(rhs);
+      }
+  };
+
+  // ---------------- matrix_multi::matrix_multi(const Expr&) ----------------
+
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  template <typename Expr>
+    requires (boost::yap::is_expr<Expr>::value)
+  inline matrix_multi<Scalar_T, LO, HI, Tune_P>::
+  matrix_multi(const Expr& expr)
+  {
+      *this = expr;
+  }
+
+  // ---------------- matrix_multi::matrix_multi(const Expr&, const index_set_t) ----------------
+
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  template <typename Expr>
+    requires (boost::yap::is_expr<Expr>::value)
+  inline matrix_multi<Scalar_T, LO, HI, Tune_P>::
+  matrix_multi(const Expr& expr, const index_set_t frm)
+  {
+      matrix_multi temp(expr);
+      *this = matrix_multi(temp, frm);
+  }
+
+  // ---------------- matrix_multi::operator=(const Expr&) ----------------
+
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  template <typename Expr>
+    requires (boost::yap::is_expr<Expr>::value)
+  inline matrix_multi<Scalar_T, LO, HI, Tune_P>&
+  matrix_multi<Scalar_T, LO, HI, Tune_P>::
+  operator=(const Expr& expr)
+  {
+      using index_set_t = typename matrix_multi<Scalar_T, LO, HI, Tune_P>::index_set_t;
+      using matrix_t = typename matrix_multi<Scalar_T, LO, HI, Tune_P>::matrix_t;
+
+      // 1. Discover F_common
+      index_set_t F_common = boost::yap::transform(expr, frame_accumulator<index_set_t>{});
+
+      // 2. Evaluate expression to get the final matrix
+      auto res_matrix = boost::yap::transform(expr, evaluator<index_set_t, matrix_t>{F_common});
+
+      // 3. Assign to this
+      this->m_frame = F_common;
+      this->m_matrix = std::move(res_matrix);
+
+      return *this;
+  }
 }
 #ifdef GLUCAT_DOCTEST
 #include <sstream>
@@ -3769,6 +3975,58 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK(m_inv == m1);
     CHECK(m1.pow(2) == mm_t(1.0));
   }
+
+  SUBCASE("Expression Templates") {
+    using index_set_t = mm_t::index_set_t;
+    mm_t a(index_set_t("{1}"), T(10.0));
+    mm_t b(index_set_t("{2}"), T(20.0));
+    mm_t c(index_set_t("{1, 3}"), T(30.0));
+
+    // Verify operator overloads produce a Boost.YAP expression
+    auto expr = a + b - c;
+    static_assert(boost::yap::is_expr<decltype(expr)>::value);
+
+    // Verify Phase 1: Accumulate union frame
+    index_set_t F_common = boost::yap::transform(expr, frame_accumulator<index_set_t>{});
+    CHECK(F_common == index_set_t("{1, 2, 3}"));
+
+    // Verify Phase 2: Correct evaluation
+    mm_t res;
+    res = expr;
+
+    // Check with eager reframed manual addition/subtraction
+    mm_t a_ref(a, F_common);
+    mm_t b_ref(b, F_common);
+    mm_t c_ref(c, F_common);
+
+    mm_t temp1 = a_ref + b_ref;
+    mm_t expected = temp1 - c_ref;
+    CHECK(res == expected);
+
+    // Verify mixing with scalar terminals
+    auto expr_with_scalar_rhs = (a + b) + T(10.0);
+    auto expr_with_scalar_lhs = T(10.0) + (a + b);
+
+    static_assert(boost::yap::is_expr<decltype(expr_with_scalar_rhs)>::value);
+    static_assert(boost::yap::is_expr<decltype(expr_with_scalar_lhs)>::value);
+
+    // Verify Phase 1: Accumulate union frame
+    index_set_t F_common_rhs = boost::yap::transform(expr_with_scalar_rhs, frame_accumulator<index_set_t>{});
+    CHECK(F_common_rhs == (a.frame() | b.frame()));
+
+    index_set_t F_common_lhs = boost::yap::transform(expr_with_scalar_lhs, frame_accumulator<index_set_t>{});
+    CHECK(F_common_lhs == (a.frame() | b.frame()));
+
+    // Verify Phase 2: Correct evaluation
+    mm_t res_rhs = expr_with_scalar_rhs;
+    mm_t expected_rhs = (a + b) + mm_t(T(10.0), a.frame() | b.frame());
+    CHECK(res_rhs == expected_rhs);
+
+    mm_t res_lhs = expr_with_scalar_lhs;
+    mm_t expected_lhs = mm_t(T(10.0), a.frame() | b.frame()) + (a + b);
+    CHECK(res_lhs == expected_lhs);
+  }
+
 
 }
 #endif

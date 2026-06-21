@@ -1,3 +1,10 @@
+(CDPATH="${ZSH_VERSION+.}:" && cd . && /bin/sh '/home/leopardi/src/penguian/glucat.4/admin/missing' autoheader)
+rm -f stamp-h1
+touch config.h.in
+rm -f stamp-h1
+cd . && /bin/sh ./config.status config.h
+config.status: creating config.h
+config.status: config.h is unchanged
 make  all-recursive
 make[1]: Entering directory '/home/leopardi/src/penguian/glucat.4'
 Making all in glucat
@@ -6,6 +13,12 @@ make[3]: Entering directory '/home/leopardi/src/penguian/glucat.4/glucat'
 make[3]: Nothing to be done for 'all-am'.
 make[3]: Leaving directory '/home/leopardi/src/penguian/glucat.4/glucat'
 make[2]: Leaving directory '/home/leopardi/src/penguian/glucat.4/glucat'
+Making all in expressions
+make[2]: Entering directory '/home/leopardi/src/penguian/glucat.4/expressions'
+clang++ -std=c++23 -DHAVE_CONFIG_H -I. -I..  -I. -I. -I.. -I..   -D_GLUCAT_USE_ARMADILLO -DARMA_WARN_LEVEL=1 -D_GLUCAT_USE_OPENMP -DARMA_USE_OPENMP -D_GLUCAT_USE_BOOST_UNORDERED_FLAT_MAP -DNDEBUG   -Wall  -O3  -fopenmp -march=native -flto=thin -mllvm -inline-threshold=1000 -mllvm -inlinehint-threshold=1000 -funroll-loops -Wno-deprecated-register -Wno-unused-command-line-argument -fexceptions -MT expressions.o -MD -MP -MF .deps/expressions.Tpo -c -o expressions.o expressions.cpp
+mv -f .deps/expressions.Tpo .deps/expressions.Po
+clang++ -std=c++23  -Wall  -O3  -fopenmp -march=native -flto=thin -mllvm -inline-threshold=1000 -mllvm -inlinehint-threshold=1000 -funroll-loops -Wno-deprecated-register -Wno-unused-command-line-argument -fexceptions   -o expressions expressions.o  -larmadillo -lflexiblas
+make[2]: Leaving directory '/home/leopardi/src/penguian/glucat.4/expressions'
 Making all in gfft_test
 make[2]: Entering directory '/home/leopardi/src/penguian/glucat.4/gfft_test'
 clang++ -std=c++23 -DHAVE_CONFIG_H -I. -I..  -I. -I. -I.. -I..   -D_GLUCAT_USE_ARMADILLO -DARMA_WARN_LEVEL=1 -D_GLUCAT_USE_OPENMP -DARMA_USE_OPENMP -D_GLUCAT_USE_BOOST_UNORDERED_FLAT_MAP -DNDEBUG   -Wall  -O3  -fopenmp -march=native -flto=thin -mllvm -inline-threshold=1000 -mllvm -inlinehint-threshold=1000 -funroll-loops -Wno-deprecated-register -Wno-unused-command-line-argument -fexceptions -MT gfft_test.o -MD -MP -MF .deps/gfft_test.Tpo -c -o gfft_test.o gfft_test.cpp
@@ -18,6 +31,12 @@ clang++ -std=c++23 -DHAVE_CONFIG_H -I. -I..  -I. -I. -I.. -I..   -D_GLUCAT_USE_A
 mv -f .deps/products.Tpo .deps/products.Po
 clang++ -std=c++23  -Wall  -O3  -fopenmp -march=native -flto=thin -mllvm -inline-threshold=1000 -mllvm -inlinehint-threshold=1000 -funroll-loops -Wno-deprecated-register -Wno-unused-command-line-argument -fexceptions   -o products products.o  -larmadillo -lflexiblas
 make[2]: Leaving directory '/home/leopardi/src/penguian/glucat.4/products'
+Making all in versor
+make[2]: Entering directory '/home/leopardi/src/penguian/glucat.4/versor'
+clang++ -std=c++23 -DHAVE_CONFIG_H -I. -I..  -I. -I. -I.. -I..   -D_GLUCAT_USE_ARMADILLO -DARMA_WARN_LEVEL=1 -D_GLUCAT_USE_OPENMP -DARMA_USE_OPENMP -D_GLUCAT_USE_BOOST_UNORDERED_FLAT_MAP -DNDEBUG   -Wall  -O3  -fopenmp -march=native -flto=thin -mllvm -inline-threshold=1000 -mllvm -inlinehint-threshold=1000 -funroll-loops -Wno-deprecated-register -Wno-unused-command-line-argument -fexceptions -MT versor.o -MD -MP -MF .deps/versor.Tpo -c -o versor.o versor.cpp
+mv -f .deps/versor.Tpo .deps/versor.Po
+clang++ -std=c++23  -Wall  -O3  -fopenmp -march=native -flto=thin -mllvm -inline-threshold=1000 -mllvm -inlinehint-threshold=1000 -funroll-loops -Wno-deprecated-register -Wno-unused-command-line-argument -fexceptions   -o versor versor.o  -larmadillo -lflexiblas
+make[2]: Leaving directory '/home/leopardi/src/penguian/glucat.4/versor'
 Making all in squaring
 make[2]: Entering directory '/home/leopardi/src/penguian/glucat.4/squaring'
 clang++ -std=c++23 -DHAVE_CONFIG_H -I. -I..  -I. -I. -I.. -I..   -D_GLUCAT_USE_ARMADILLO -DARMA_WARN_LEVEL=1 -D_GLUCAT_USE_OPENMP -DARMA_USE_OPENMP -D_GLUCAT_USE_BOOST_UNORDERED_FLAT_MAP -DNDEBUG   -Wall  -O3  -fopenmp -march=native -flto=thin -mllvm -inline-threshold=1000 -mllvm -inlinehint-threshold=1000 -funroll-loops -Wno-deprecated-register -Wno-unused-command-line-argument -fexceptions -MT squaring.o -MD -MP -MF .deps/squaring.Tpo -c -o squaring.o squaring.cpp

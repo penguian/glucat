@@ -57,7 +57,7 @@ the instructions above to install from Git clone, you should have a directory,
 glucat-0.98a2. Under this directory you should see a number of subdirectories,
 including `./admin`, `./doc`, `./glucat`, `./gfft_test`, `./products`,
 `./pyclical`, `./squaring`, `./test`, `./test_coverage`, `./test_doctest`,
-`./test_move`, `./test_runtime.*`, `./testxx`, and `./transforms`.
+`./test_move`, `./test_runtime.*`, `./test00` to `./test19`, and `./transforms`.
 
 The following instructions are meant to be used with `glucat-0.98a2` as the
 current directory.
@@ -129,7 +129,7 @@ GluCat includes two types of test programs, timing (benchmark) tests, and
 functionality (regression) tests. The regression tests are also used as
 programming examples. The source code for the timing tests is in `./gfft_test`,
 `./products`, `./squaring` and `./transforms`. The source code for the regression
-tests is in the subdirectories `./test00` to `./test17`. Compilation of these test
+tests is in the subdirectories `./test00` to `./test19`. Compilation of these test
 programs uses C++ headers defined in `./test` as well as `./glucat`.
 
 Your own programs, written in C++
@@ -531,8 +531,8 @@ To build and run the regression test programs, set the environment variable `CXX
 to indicate your C++ compiler, eg. `g++` for GNU C++, `icpx` for Intel
 C++, then run `./configure` as above, and then run `make check`. This builds and
 runs the executable files `./test_move/test_move` and `./test00/test00` to
-`./test17/test17`. This produces the intermediate output files
-`./test_move/test_move.out` and `./test00/test00.out` to `./test17/test17.out`,
+`./test19/test19`. This produces the intermediate output files
+`./test_move/test_move.out` and `./test00/test00.out` to `./test19/test19.out`,
 and the final test output file `./test_runtime/test.out`. 
 
 Note the difference between `make check` and `make check-local`:
@@ -596,18 +596,18 @@ The test_runtime.* directories
 The static test runtime baseline directories `./test_runtime.x86-64` and
 `./test_runtime.aarch64` contain sample test output files.
 
-The sample test output files include `gfft_test-11.out`, `products-8.out`,
-`squaring-11.out` and `transforms-8.out`.
+The sample test output files include `expressions-8.out`, `gfft_test-11.out`,
+`products-8.out`, `squaring-11.out`, and `transforms-8.out`.
 
 The `./test_runtime.x86-64` directory contains 24 sample versions of the regression
 test results (corresponding to 12 different combinations of configuration
-parameters, for two different sets of tests: the complete set of 19 tests, and a
+parameters, for two different sets of tests: the complete set of 20 tests, and a
 subset of 3 tests), and also includes the sample output file `eg3.res` and the
 test input file `eg8.txt` (needed by programming example 8, reading multivectors from input).
 
 The `./test_runtime.aarch64` directory contains 12 sample versions of the full
 regression test results (corresponding to 12 different combinations of configuration
-parameters for the complete set of 19 tests).
+parameters for the complete set of 20 tests).
 
 
 Re-running the regression tests
@@ -616,14 +616,14 @@ Re-running the regression tests
 The main regression test script is `./test/test.sh`. Once you have built and run
 the regression tests via `make check`, you can use this script to re-run the
 regression tests. The script `./test/test.sh` reruns tests `./test00/test00` to
-`./test18/test18`, using relative pathnames, so it is best to leave `test.sh`
+`./test19/test19`, using relative pathnames, so it is best to leave `test.sh`
 where it is and invoke it using its full path name. This allows it to find
-`test00` to `test18`.
+`test00` to `test19`.
 
 The test script `./test/test.sh` takes any number (including zero) of numeric
-parameters. Parameters in the range `00` to `18` correspond to coding examples
-`./test00/test00` to `./test18/test18`. These examples are run in numerical
-order. With zero parameters, all examples from `00` to `18` are run in order.
+parameters. Parameters in the range `00` to `19` correspond to coding examples
+`./test00/test00` to `./test19/test19`. These examples are run in numerical
+order. With zero parameters, all examples from `00` to `19` are run in order.
 Many of the examples are run twice - once with `framed_multi<Scalar_T>` and once
 with `matrix_multi<Scalar_T>`.
 
@@ -741,14 +741,14 @@ you run the tests using different architecture, compilers or random number
 generators, you should expect to have different floating point arithmetic
 results, but generally, still within acceptable error tolerances.
 
-The regression tests `./test00/test00` to `./test18/test18` recognize the program
+The regression tests `./test00/test00` to `./test19/test19` recognize the program
 arguments `--help`, `--no-catch`, and `--verbose`. The `--no-catch` argument
 disables the default exception catching behaviour of a regression test, to
 allow program crashes to be more easily debugged. For `./test00/test00` and
 `./test11/test11` the argument `--verbose` produces verbose output essentially by
 setting the error tolerance to zero. Verbose output can become quite large.
 
-The test script `./test/test_optional.sh` runs all examples 00 to 18 in order,
+The test script `./test/test_optional.sh` runs all examples 00 to 19 in order,
 with the given parameters as program arguments.
 
 
@@ -860,7 +860,7 @@ directory to ease future comparisons without clobbering the baseline
 
 The difference between `./test/test-all-config-options.sh` and
 `./test/fast-test-all-config-options.sh` is that the former runs all of the tests
-`./test00` to `./test18`, whereas the latter runs only `./test00`, `./test10` and
+`./test00` to `./test19`, whereas the latter runs only `./test00`, `./test10` and
 `./test11`. Both scripts build and check `./pyclical`. More specifically, the
 `./test/test-one-config-option.sh` script runs `make check`, and the
 `./test/fast-test-one-config-option.sh` script runs `make fast-check`. For the
@@ -896,14 +896,15 @@ The test program `./transforms/transforms` takes a parameter `n`, and transforms
 larger and larger multivectors within the subalgebras defined by  frames
 limited by the value of `n`.
 
-The test script `./test/timing_tests.sh` takes up to 4 numeric parameters.
-The command `./test/timing_tests.sh $a $b $c $d` runs
+The test script `./test/timing_tests.sh` takes up to 5 numeric parameters.
+The command `./test/timing_tests.sh $a $b $c $d $e` runs
 
 ```
  ./products/products $a
  ./squaring/squaring $b
  ./gfft_test/gfft_test $c
  ./transforms/transforms $d
+ ./expressions/expressions $e
 ```
 The default is:
 
@@ -912,6 +913,7 @@ The default is:
  ./squaring/squaring 11
  ./gfft_test/gfft_test 11
  ./transforms/transforms 8
+ ./expressions/expressions 8
 ```
 
 The sample timing test results are organized in target-specific baseline directories:
@@ -1040,121 +1042,69 @@ GluCat 0.98a2 with PyClical has so far been built and tested using:
     4 core `Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz` with
 
     ```
-    Linux 6.11.0-13-generic #14-Ubuntu SMP 2024
-    Kubuntu 24.10
-    Blaze 3.9.0
+    Linux 6.14.0-35-generic #35-Ubuntu SMP 2025
+    Kubuntu 25.04 LTS
+    Armadillo 15.2.1
     Boost 1.83.0
-    GSL 2.8
-    QD 2.3.23
     Cython 3.0.11
-    Python 3.12.7
+    Doxygen 1.9.8 
+    Eigen3 3.4.0 
+    GSL 2.8
+    Numpy 2.2.3
+    QD 2.3.23
+    Python 3.13.3
+    TeXLive 2024.20250309
 
-    Numpy 1.21.5
-    Matplotlib 3.5.1
-    Mayavi2 4.8.1
-    VTK 9.1.0
-    Doxygen 1.9.8
-    pdfTeX 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian)
     ```
     `./test/fast-test-all-config-options.sh`:
     All 12 configuration commands corresponding to each of the 12
     `fast-test.configure*.out` files in `./test_runtime`
     tested with the following compiler versions:
 
-    1) `g++ 14.2.0 (Ubuntu 14.2.0-4ubuntu2)`
-    2) `Ubuntu clang version 19.1.1 (1ubuntu1)`
+    1) `g++ 14.2.0 (Ubuntu 14.2.0-19ubuntu2)`
+    2) `Ubuntu clang version 20.1.2 (0ubuntu1)`
     3) `Intel(R) oneAPI DPC++/C++ Compiler 2025.0.4 (2025.0.4.20241205)`
 
-    Note: One test in test_runtime/fast-test.configure.eig-blaze-qd.out
-    fails due to a difference between Intel and AMD x86-64 floating
-    point arithmetic.
+3) Vincitor (Pensieri running VirtualBox):
+    Virtual 1 core `Intel(R) Core(TM) i7 CPU 870 @ 2.93GHz` with
 
- 3) Ginestra
+    ```
+    Linux 6.12.6-1-default #1 SMP 2024
+    openSUSE Tumbleweed Release 20241224
+    g++ (SUSE Linux) 14.2.1 20241007
+    Armadillo 15.2.4
+    Boost 1.86.0
+    Cython 3.0.12
+    Doxygen 1.12.0
+    Eigen 5.0.1
+    GSL 2.8
+    Numpy 2.1.3
+    Python 3.11.11
+    QD 2.3.24
+    TeX Live 2026.20260301
+    ```
+    `./test/fast-test-all-config-options.sh`
+    All 12 configuration commands corresponding to each of the 12
+    `fast-test.configure*.out` files in `./test_runtime.x86-64`
+
+ 4) Ginestra
     Apple M2 Pro with 6 Avalanche performance cores and 4 Icestorm efficiency cores with
     ```
     Linux 6.19.14-400.asahi.fc43.aarch64+16k SMP aarch64
     Fedora Linux Asahi Remix 43 (KDE Plasma Desktop Edition)
     g++ 15.2.1 20260123 (Red Hat 15.2.1-7)
     Armadillo 12.8.1
+    Cython 3.1.3
     Doxygen 1.14.0
     Eigen3 3.4.0
     GSL 2.8
-    QD 2.3.24
-    Cython 3.1.3
     Numpy 2.3.5
     Python 3.14.5
+    QD 2.3.24
     ```
     `./test/test-all-config-options.sh`
     All 12 configuration commands corresponding to each of the 12
     `test.configure*.out` files in `./test_runtime.aarch64`
-    
- 5) AWS Graviton:
-    Virtual 4 core `ARM Cortex-A72 Model 3 (AWS Graviton A1 image)` with
-
-    ```
-    Linux 5.15.0-1077-aws #84~20.04.1-Ubuntu SMP aarch64
-    Ubuntu 20.04.6 LTS
-    g++ (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0
-    Blaze 3.9.0
-    Boost 1.71.0
-    GSL Version: 2.5+dfsg-6build1
-    QD Version: 2.3.22+dfsg.1-3build1
-    Cython 0.29.14
-    Python 3.8.10
-    ```
-    `./test/fast-test-all-config-options.sh`
-    All 12 configuration commands corresponding to each of the 12
-    `fast-test.configure*.out` files in `./test_runtime`.
-    Note: All tests involving `long double` give different answers
-    from the same tests on x86-64 hardware, because `long double` is
-    128 bits on ARM 64 hardware vs 80 bits on x86-64.
-    https://github.com/ARM-software/abi-aa/blob/main/aapcs64/aapcs64.rst#arithmetic-types
-
- 6) CoCalc:
-    Virtual 2 core `Intel(R) Xeon(R) CPU @ 2.80GHz` with
-
-    ```
-    Linux 5.15.0-1074-gcp #83~20.04.1-Ubuntu SMP x86 64
-    Ubuntu 24.04.4 LTS
-    clang++ Ubuntu clang version 18.1.3 (1ubuntu1)
-    Armadillo 12.6.7
-    Boost 1.83.0
-    Cython 3.0.8
-    Eigen 3.4.0
-    Python 3.12.10
-    Numpy 1.26.4
-    ```
-    `./test/fast-test-all-config-options.sh`
-    All 12 configuration commands corresponding to each of the 12
-    `fast-test.configure*.out` files in `./test_runtime`
-
- 7) GitHub codespaces:
-    AMD EPYC 7763 64-Core Processor with
-
-    ```
-    Linux codespaces-50eecb 6.5.0-1025-azure #26~22.04.1-Ubuntu SMP x86_64
-    Ubuntu 20.04.6 LTS
-    g++ (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0
-    Blaze 3.8.2
-    Boost 1.71.1
-    GSL Version: 2.5+dfsg-6build1
-    QD Version: 2.3.22+dfsg.1-3build1
-    Cython 0.29.14
-    Python 3.12.1
-    ```
-    `./test/fast-test-all-config-options.sh`
-    All 12 configuration commands corresponding to each of the 12
-    `fast-test.configure*.out` files in `./test_runtime`.
-
-     Note: all configuration commands other than
-     ```
-     ./configure --disable-pyclical
-     ```
-     result in
-     ```
-     configure: WARNING: Cannot build using Cython.
-     configure: WARNING: Cannot build PyClical.
-     ```
 
 Notes on software versions
 ==========================

@@ -39,11 +39,14 @@ namespace peg11
   using namespace std;
   using namespace glucat;
 
-  template< class Multivector_T >
+  template< class LHS_T, class RHS_T >
   static
   void
-  check(const Multivector_T& lhs, const Multivector_T& rhs, const string& msg, const bool need_inv = false)
+  check(const LHS_T& lhs_in, const RHS_T& rhs_in, const string& msg, const bool need_inv = false)
   {
+    using Multivector_T = typename LHS_T::multivector_t;
+    const Multivector_T lhs(lhs_in);
+    const Multivector_T rhs(rhs_in);
 
     const auto lhs_isinf = lhs.isinf();
     const auto lhs_isnan = lhs.isnan();

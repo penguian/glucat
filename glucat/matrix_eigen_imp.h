@@ -488,7 +488,7 @@ namespace glucat { namespace matrix
   inline eigen_matrix_wrapper<Scalar_T>
   eigen_matrix_wrapper<Scalar_T>::
   operator+ (const eigen_matrix_wrapper<Scalar_T>& other) const
-  { return eigen_matrix_wrapper<Scalar_T>(m_mat + other.m_mat); }
+  { return eigen_matrix_wrapper<Scalar_T>(MatrixType(m_mat + other.m_mat)); }
 
   /*
    * @brief Subtraction
@@ -501,7 +501,7 @@ namespace glucat { namespace matrix
   inline eigen_matrix_wrapper<Scalar_T>
   eigen_matrix_wrapper<Scalar_T>::
   operator- (const eigen_matrix_wrapper<Scalar_T>& other) const
-  { return eigen_matrix_wrapper<Scalar_T>(m_mat - other.m_mat); }
+  { return eigen_matrix_wrapper<Scalar_T>(MatrixType(m_mat - other.m_mat)); }
 
   /*
    * @brief Matrix Multiplication
@@ -514,7 +514,7 @@ namespace glucat { namespace matrix
   inline eigen_matrix_wrapper<Scalar_T>
   eigen_matrix_wrapper<Scalar_T>::
   operator* (const eigen_matrix_wrapper<Scalar_T>& other) const
-  { return eigen_matrix_wrapper<Scalar_T>(m_mat * other.m_mat); }
+  { return eigen_matrix_wrapper<Scalar_T>(MatrixType(m_mat * other.m_mat)); }
 
   /*
    * @brief Unary -
@@ -526,7 +526,7 @@ namespace glucat { namespace matrix
   inline eigen_matrix_wrapper<Scalar_T>
   eigen_matrix_wrapper<Scalar_T>::
   operator- () const
-  { return eigen_matrix_wrapper<Scalar_T>(-m_mat); }
+  { return eigen_matrix_wrapper<Scalar_T>(MatrixType(-m_mat)); }
 
   /*
    * @brief Transpose
@@ -538,7 +538,7 @@ namespace glucat { namespace matrix
   inline eigen_matrix_wrapper<Scalar_T>
   eigen_matrix_wrapper<Scalar_T>::
   t() const
-  { return eigen_matrix_wrapper<Scalar_T>(m_mat.transpose()); }
+  { return eigen_matrix_wrapper<Scalar_T>(MatrixType(m_mat.transpose())); }
 
   /*
    * @brief Output to stream
@@ -845,7 +845,7 @@ namespace glucat { namespace matrix
   eigen_matrix_wrapper<Scalar_T>::
   mono_prod(const eigen_matrix_wrapper<Scalar_T>& other) const
   {
-    return eigen_matrix_wrapper<Scalar_T>(m_mat * other.m_mat);
+    return eigen_matrix_wrapper<Scalar_T>(MatrixType(m_mat * other.m_mat));
   }
 
   /*

@@ -3330,3 +3330,13 @@ Testing signature (3,5) : PASSED
 Testing signature (2,6) : PASSED
 Testing signature (1,7) : PASSED
 Testing signature (0,8) : PASSED
+
+Test 19:
+Programming example 19 : Sandwich products equivalence
+double:
+Testing bivector generator equivalence on Cl(3,0):
+  operator|  == explicit: OK
+  versor  == explicit: OK
+  versor_exp == explicit: OK
+  versor_exp(prechecked) == explicit: OK
+All equivalence tests PASSED

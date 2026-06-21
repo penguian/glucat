@@ -103,7 +103,7 @@ $ACLOCAL || exit 1
 echo "*** Creating configure"
 call_and_fix_autoconf
 
-if egrep "^AC_CONFIG_HEADERS" configure.ac >/dev/null 2>&1; then
+if grep -E "^AC_CONFIG_HEADERS" configure.ac >/dev/null 2>&1; then
   echo "*** Creating config.h template"
   $AUTOHEADER || exit 1
 fi
@@ -111,7 +111,7 @@ fi
 echo "*** Creating Makefile templates"
 $AUTOMAKE || exit 1
 
-if egrep "^bootstrap-local:" $makefile_am >/dev/null; then \
+if grep -E "^bootstrap-local:" $makefile_am >/dev/null; then \
   strip_makefile
   $MAKE -f $makefile_wo bootstrap-local || exit 1
 fi
@@ -169,7 +169,7 @@ configure_ac()
 rm -f configure.ac configure.ac.new
 kde_use_qt_param=
 test -f configure.files || { echo "need configure.files for configure.ac"; exit 1; }
-cat `egrep -v "configure.ac.bot" < configure.files` > configure.ac.new
+cat `grep -E -v "configure.ac.bot" < configure.files` > configure.ac.new
 echo "GLUCAT_CREATE_SUBDIRSLIST" >> configure.ac.new
 if test -f Makefile.am.in; then
   subdirs=`cat subdirs`
@@ -179,7 +179,7 @@ if test -f Makefile.am.in; then
   done
 fi
 # echo "AC_OUTPUT( \\" >> configure.ac.new
-mfs=`find . -type d -print | fgrep -v "/." | \
+mfs=`find . -type d -print | grep -F -v "/." | \
      sed -e "s#\./##" -e "/^debian/d" | sort`
 for i in $mfs; do
   topleveldir=`echo $i| sed -e "s#/.*##"`
@@ -203,17 +203,17 @@ for i in $mfs; do
     echo "AC_CONFIG_FILES([ $i/Makefile.rules ])" >> configure.ac.new
   fi
 done
-egrep '^dnl AC_OUTPUT\(.*\)' `cat configure.files` | sed -e "s#^.*dnl AC_OUTPUT(\(.*\))#AC_CONFIG_FILES([ \1 ])#" >> configure.ac.new
+grep -E '^dnl AC_OUTPUT\(.*\)' `cat configure.files` | sed -e "s#^.*dnl AC_OUTPUT(\(.*\))#AC_CONFIG_FILES([ \1 ])#" >> configure.ac.new
 if test -n "$UNSERMAKE"; then
   echo "AC_CONFIG_FILES([ MakeVars ])" >> configure.ac.new
 fi
 echo "AC_OUTPUT" >> configure.ac.new
 modulename=
 if test -f configure.ac.in; then
-   if head -2 configure.ac.in | egrep "^#MIN_CONFIG\(.*\)$" > /dev/null; then
+   if head -2 configure.ac.in | grep -E "^#MIN_CONFIG\(.*\)$" > /dev/null; then
       kde_use_qt_param=`cat configure.ac.in | sed -n -e "s/#MIN_CONFIG(\(.*\))/\1/p"`
    fi
-   if head -2 configure.ac.in | egrep "^#MIN_CONFIG" > /dev/null; then
+   if head -2 configure.ac.in | grep -E "^#MIN_CONFIG" > /dev/null; then
       line=`grep "^AM_INIT_AUTOMAKE(" configure.ac.in`
       if test -n "$line"; then
 	  modulename=`echo $line | sed -e "s#AM_INIT_AUTOMAKE(\([^,]*\),.*#\1#"`
@@ -235,7 +235,7 @@ if test -n "$kde_use_qt_param"; then
 fi
 sed -e "s#@MODULENAME@#$modulename#" configure.ac.new |
 	sed -e "s#@VERSION@#$VERSION#" > configure.ac
-botfiles=`cat configure.files | egrep "configure.ac.bot"`
+botfiles=`cat configure.files | grep -E "configure.ac.bot"`
 test -n "$botfiles" && cat $botfiles >> configure.ac
 rm -f configure.ac.new
 }

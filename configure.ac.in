@@ -193,6 +193,11 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   dnl Check for Boost version
   GLUCAT_CHECK_HEADERS([boost/version.hpp], [], [])
 
+  dnl Check for Boost.YAP headers
+  GLUCAT_CHECK_HEADERS([boost/yap/expression.hpp], [], [
+    AC_MSG_ERROR([Boost.YAP headers not found. Boost 1.66.0 or later with Boost.YAP is required.])
+  ])
+
   if [[[ "$glucat_use_doctest" == "yes" ]]]; then
      GLUCAT_CHECK_HEADERS([doctest/doctest.h], [], [
         AC_MSG_WARN([doctest/doctest.h not found.])
@@ -578,6 +583,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     "g++"*)
       GLUCAT_CHECK_COMPILER_FLAG([fno-check-new],
             [CXXFLAGS="$CXXFLAGS -fno-check-new"])
+      dnl Suppress noisy ABI warnings on GCC (highly prevalent on AArch64 and SIMD code)
+      GLUCAT_CHECK_COMPILER_FLAG([Wno-psabi],
+            [CXXFLAGS="$CXXFLAGS -Wno-psabi"])
       dnl For compatibility with Cygwin gcc
       GLUCAT_CHECK_HEADERS([bits/wordsize.h],[GLUCAT_CPPFLAGS="$GLUCAT_CPPFLAGS -DHAVE_BITS_WORDSIZE_H"],[],[])
       if [[[ "$glucat_build_using_qd" == "yes" ]]]; then

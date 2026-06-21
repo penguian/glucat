@@ -1,119 +1,119 @@
 Clifford algebra transform test:
 Fill: 0.5
 R_{-11,11} in R_{-11,11}:
- CPU = mm:        0.005 fm:        0.014 trials mm:     1 fm:     1  diff: 0.00e+00
+ CPU = mm:        0.004 fm:        0.015 trials mm:     1 fm:     1  diff: 0.00e+00
 R_{-10,10} in R_{-10,10}:
  CPU = mm:        0.001 fm:        0.001 trials mm:     1 fm:     1  diff: 0.00e+00
 R_{-9,9} in R_{-9,9}:
- CPU = mm:        0.001 fm:        0.001 trials mm:     1 fm:     1  diff: 7.74e-17
+ CPU = mm:        0.001 fm:        0.000 trials mm:     1 fm:     4  diff: 7.74e-17
 R_{-8,8} in R_{-8,8}:
- CPU = mm:        0.001 fm:        0.001 trials mm:     1 fm:     1  diff: 6.31e-17
+ CPU = mm:        0.001 fm:        0.001 trials mm:     1 fm:     2  diff: 6.31e-17
 R_{-7,7} in R_{-7,7}:
- CPU = mm:        0.001 fm:        0.001 trials mm:     2 fm:     1  diff: 0.00e+00
+ CPU = mm:        0.001 fm:        0.001 trials mm:     1 fm:     4  diff: 0.00e+00
 R_{-6,6} in R_{-6,6}:
- CPU = mm:        0.001 fm:        0.001 trials mm:     1 fm:     2  diff: 0.00e+00
-R_{-5,5} in R_{-5,5}:
- CPU = mm:        0.000 fm:        0.001 trials mm:     4 fm:     2  diff: 0.00e+00
-R_{-10,-5,5,10} in R_{-10,-5,5,10}:
- CPU = mm:        0.006 fm:        0.008 trials mm:     1 fm:     1  diff: 7.65e-17
-R_{-4,4} in R_{-4,4}:
- CPU = mm:        0.001 fm:        0.001 trials mm:     1 fm:     1  diff: 0.00e+00
-R_{-8,-4,4,8} in R_{-8,-4,4,8}:
- CPU = mm:        0.003 fm:        0.004 trials mm:     1 fm:     1  diff: 4.73e-17
-R_{-3,3} in R_{-3,3}:
- CPU = mm:        0.001 fm:        0.001 trials mm:     1 fm:     1  diff: 0.00e+00
-R_{-6,-3,3,6} in R_{-6,-3,3,6}:
- CPU = mm:        0.003 fm:        0.003 trials mm:     1 fm:     1  diff: 9.73e-17
-R_{-9,-6,-3,3,6,9} in R_{-9,-6,-3,3,6,9}:
- CPU = mm:        0.016 fm:        0.019 trials mm:     1 fm:     1  diff: 1.02e-16
-R_{-2,2} in R_{-2,2}:
  CPU = mm:        0.001 fm:        0.001 trials mm:     2 fm:     1  diff: 0.00e+00
-R_{-4,-2,2,4} in R_{-4,-2,2,4}:
- CPU = mm:        0.003 fm:        0.003 trials mm:     1 fm:     1  diff: 2.41e-17
-R_{-6,-4,-2,2,4,6} in R_{-6,-4,-2,2,4,6}:
- CPU = mm:        0.012 fm:        0.016 trials mm:     1 fm:     1  diff: 1.35e-16
-R_{-8,-6,-4,-2,2,4,6,8} in R_{-8,-6,-4,-2,2,4,6,8}:
- CPU = mm:        0.056 fm:        0.082 trials mm:     1 fm:     1  diff: 1.01e-16
-R_{-10,-8,-6,-4,-2,2,4,6,8,10} in R_{-10,-8,-6,-4,-2,2,4,6,8,10}:
- CPU = mm:        0.254 fm:        0.449 trials mm:     1 fm:     1  diff: 1.42e-16
-R_{-1,1} in R_{-1,1}:
+R_{-5,5} in R_{-5,5}:
+ CPU = mm:        0.001 fm:        0.001 trials mm:     1 fm:     2  diff: 0.00e+00
+R_{-10,-5,5,10} in R_{-10,-5,5,10}:
+ CPU = mm:        0.005 fm:        0.007 trials mm:     1 fm:     1  diff: 7.65e-17
+R_{-4,4} in R_{-4,4}:
+ CPU = mm:        0.001 fm:        0.001 trials mm:     2 fm:     1  diff: 0.00e+00
+R_{-8,-4,4,8} in R_{-8,-4,4,8}:
+ CPU = mm:        0.002 fm:        0.003 trials mm:     1 fm:     1  diff: 4.73e-17
+R_{-3,3} in R_{-3,3}:
+ CPU = mm:        0.001 fm:        0.000 trials mm:     1 fm:     4  diff: 0.00e+00
+R_{-6,-3,3,6} in R_{-6,-3,3,6}:
+ CPU = mm:        0.002 fm:        0.003 trials mm:     1 fm:     1  diff: 9.73e-17
+R_{-9,-6,-3,3,6,9} in R_{-9,-6,-3,3,6,9}:
+ CPU = mm:        0.014 fm:        0.019 trials mm:     1 fm:     1  diff: 1.02e-16
+R_{-2,2} in R_{-2,2}:
  CPU = mm:        0.001 fm:        0.001 trials mm:     1 fm:     1  diff: 0.00e+00
+R_{-4,-2,2,4} in R_{-4,-2,2,4}:
+ CPU = mm:        0.002 fm:        0.004 trials mm:     1 fm:     1  diff: 2.41e-17
+R_{-6,-4,-2,2,4,6} in R_{-6,-4,-2,2,4,6}:
+ CPU = mm:        0.011 fm:        0.016 trials mm:     1 fm:     1  diff: 1.35e-16
+R_{-8,-6,-4,-2,2,4,6,8} in R_{-8,-6,-4,-2,2,4,6,8}:
+ CPU = mm:        0.054 fm:        0.082 trials mm:     1 fm:     1  diff: 1.01e-16
+R_{-10,-8,-6,-4,-2,2,4,6,8,10} in R_{-10,-8,-6,-4,-2,2,4,6,8,10}:
+ CPU = mm:        0.258 fm:        0.450 trials mm:     1 fm:     1  diff: 1.42e-16
+R_{-1,1} in R_{-1,1}:
+ CPU = mm:        0.001 fm:        0.001 trials mm:     1 fm:     2  diff: 0.00e+00
 R_{-2,-1,1,2} in R_{-2,-1,1,2}:
  CPU = mm:        0.003 fm:        0.004 trials mm:     1 fm:     1  diff: 7.57e-17
 R_{-3,-2,-1,1,2,3} in R_{-3,-2,-1,1,2,3}:
- CPU = mm:        0.011 fm:        0.016 trials mm:     1 fm:     1  diff: 9.64e-17
+ CPU = mm:        0.009 fm:        0.014 trials mm:     1 fm:     1  diff: 9.64e-17
 R_{-4,-3,-2,-1,1,2,3,4} in R_{-4,-3,-2,-1,1,2,3,4}:
- CPU = mm:        0.045 fm:        0.069 trials mm:     1 fm:     1  diff: 1.12e-16
+ CPU = mm:        0.045 fm:        0.071 trials mm:     1 fm:     1  diff: 1.12e-16
 R_{-5,-4,-3,-2,-1,1,2,3,4,5} in R_{-5,-4,-3,-2,-1,1,2,3,4,5}:
- CPU = mm:        0.218 fm:        0.371 trials mm:     1 fm:     1  diff: 1.33e-16
+ CPU = mm:        0.218 fm:        0.369 trials mm:     1 fm:     1  diff: 1.33e-16
 R_{-6,-5,-4,-3,-2,-1,1,2,3,4,5,6} in R_{-6,-5,-4,-3,-2,-1,1,2,3,4,5,6}:
- CPU = mm:        1.019 fm:        1.924 trials mm:     1 fm:     1  diff: 1.51e-16
+ CPU = mm:        1.021 fm:        1.941 trials mm:     1 fm:     1  diff: 1.51e-16
 R_{-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7} in R_{-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7}:
- CPU = mm:        4.813 fm:        9.277 trials mm:     1 fm:     1  diff: 1.63e-16
+ CPU = mm:        4.804 fm:        9.263 trials mm:     1 fm:     1  diff: 1.63e-16
 R_{-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8} in R_{-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8}:
- CPU = mm:       23.042 fm:       44.255 trials mm:     1 fm:     1  diff: 1.75e-16
+ CPU = mm:       22.988 fm:       44.322 trials mm:     1 fm:     1  diff: 1.75e-16
 R_{-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9} in R_{-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9}:
- CPU = mm:      115.381 fm:      211.902 trials mm:     1 fm:     1  diff: 1.87e-16
+ CPU = mm:      114.873 fm:      211.974 trials mm:     1 fm:     1  diff: 1.87e-16
 R_{-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10} in R_{-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10}:
- CPU = mm:      616.230 fm:     1030.082 trials mm:     1 fm:     1  diff: 1.98e-16
+ CPU = mm:      614.667 fm:     1030.420 trials mm:     1 fm:     1  diff: 1.98e-16
 R_{-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10,11} in R_{-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10,11}:
- CPU = mm:     3594.956 fm:     5181.933 trials mm:     1 fm:     1  diff: 2.09e-16
+ CPU = mm:     3596.010 fm:     5183.918 trials mm:     1 fm:     1  diff: 2.09e-16
 Fill: 1
 R_{-11,11} in R_{-11,11}:
- CPU = mm:        0.004 fm:        0.002 trials mm:     1 fm:     1  diff: 5.93e-17
+ CPU = mm:        0.004 fm:        0.003 trials mm:     1 fm:     1  diff: 5.93e-17
 R_{-10,10} in R_{-10,10}:
  CPU = mm:        0.001 fm:        0.001 trials mm:     1 fm:     1  diff: 1.73e-17
 R_{-9,9} in R_{-9,9}:
- CPU = mm:        0.001 fm:        0.001 trials mm:     1 fm:     1  diff: 1.27e-16
+ CPU = mm:        0.001 fm:        0.001 trials mm:     2 fm:     1  diff: 1.27e-16
 R_{-8,8} in R_{-8,8}:
- CPU = mm:        0.000 fm:        0.001 trials mm:     4 fm:     1  diff: 6.46e-17
+ CPU = mm:        0.001 fm:        0.001 trials mm:     1 fm:     1  diff: 6.46e-17
 R_{-7,7} in R_{-7,7}:
- CPU = mm:        0.001 fm:        0.000 trials mm:     1 fm:     4  diff: 9.79e-17
+ CPU = mm:        0.001 fm:        0.001 trials mm:     4 fm:     2  diff: 9.79e-17
 R_{-6,6} in R_{-6,6}:
- CPU = mm:        0.001 fm:        0.001 trials mm:     1 fm:     2  diff: 9.11e-17
+ CPU = mm:        0.001 fm:        0.001 trials mm:     2 fm:     1  diff: 9.11e-17
 R_{-5,5} in R_{-5,5}:
- CPU = mm:        0.001 fm:        0.001 trials mm:     1 fm:     2  diff: 9.92e-17
+ CPU = mm:        0.001 fm:        0.001 trials mm:     2 fm:     1  diff: 9.92e-17
 R_{-10,-5,5,10} in R_{-10,-5,5,10}:
- CPU = mm:        0.005 fm:        0.005 trials mm:     1 fm:     1  diff: 9.76e-17
+ CPU = mm:        0.005 fm:        0.006 trials mm:     1 fm:     1  diff: 9.76e-17
 R_{-4,4} in R_{-4,4}:
- CPU = mm:        0.001 fm:        0.001 trials mm:     4 fm:     4  diff: 0.00e+00
+ CPU = mm:        0.001 fm:        0.001 trials mm:     1 fm:     1  diff: 0.00e+00
 R_{-8,-4,4,8} in R_{-8,-4,4,8}:
- CPU = mm:        0.003 fm:        0.003 trials mm:     1 fm:     1  diff: 6.53e-17
+ CPU = mm:        0.003 fm:        0.004 trials mm:     1 fm:     1  diff: 6.53e-17
 R_{-3,3} in R_{-3,3}:
- CPU = mm:        0.001 fm:        0.001 trials mm:     1 fm:     4  diff: 4.20e-17
+ CPU = mm:        0.001 fm:        0.000 trials mm:     1 fm:     4  diff: 4.20e-17
 R_{-6,-3,3,6} in R_{-6,-3,3,6}:
  CPU = mm:        0.003 fm:        0.003 trials mm:     1 fm:     1  diff: 7.61e-17
 R_{-9,-6,-3,3,6,9} in R_{-9,-6,-3,3,6,9}:
- CPU = mm:        0.017 fm:        0.020 trials mm:     1 fm:     1  diff: 9.20e-17
+ CPU = mm:        0.016 fm:        0.021 trials mm:     1 fm:     1  diff: 9.20e-17
 R_{-2,2} in R_{-2,2}:
- CPU = mm:        0.001 fm:        0.000 trials mm:     1 fm:     4  diff: 3.26e-17
+ CPU = mm:        0.001 fm:        0.001 trials mm:     1 fm:     1  diff: 3.26e-17
 R_{-4,-2,2,4} in R_{-4,-2,2,4}:
  CPU = mm:        0.003 fm:        0.003 trials mm:     1 fm:     1  diff: 9.42e-17
 R_{-6,-4,-2,2,4,6} in R_{-6,-4,-2,2,4,6}:
  CPU = mm:        0.015 fm:        0.018 trials mm:     1 fm:     1  diff: 8.84e-17
 R_{-8,-6,-4,-2,2,4,6,8} in R_{-8,-6,-4,-2,2,4,6,8}:
- CPU = mm:        0.079 fm:        0.095 trials mm:     1 fm:     1  diff: 1.39e-16
+ CPU = mm:        0.078 fm:        0.095 trials mm:     1 fm:     1  diff: 1.39e-16
 R_{-10,-8,-6,-4,-2,2,4,6,8,10} in R_{-10,-8,-6,-4,-2,2,4,6,8,10}:
- CPU = mm:        0.381 fm:        0.459 trials mm:     1 fm:     1  diff: 1.42e-16
+ CPU = mm:        0.380 fm:        0.456 trials mm:     1 fm:     1  diff: 1.42e-16
 R_{-1,1} in R_{-1,1}:
- CPU = mm:        0.001 fm:        0.001 trials mm:     1 fm:     1  diff: 0.00e+00
+ CPU = mm:        0.001 fm:        0.001 trials mm:     1 fm:     2  diff: 0.00e+00
 R_{-2,-1,1,2} in R_{-2,-1,1,2}:
- CPU = mm:        0.002 fm:        0.004 trials mm:     1 fm:     1  diff: 9.69e-17
+ CPU = mm:        0.002 fm:        0.003 trials mm:     1 fm:     1  diff: 9.69e-17
 R_{-3,-2,-1,1,2,3} in R_{-3,-2,-1,1,2,3}:
  CPU = mm:        0.012 fm:        0.015 trials mm:     1 fm:     1  diff: 1.01e-16
 R_{-4,-3,-2,-1,1,2,3,4} in R_{-4,-3,-2,-1,1,2,3,4}:
- CPU = mm:        0.061 fm:        0.077 trials mm:     1 fm:     1  diff: 1.36e-16
+ CPU = mm:        0.060 fm:        0.077 trials mm:     1 fm:     1  diff: 1.36e-16
 R_{-5,-4,-3,-2,-1,1,2,3,4,5} in R_{-5,-4,-3,-2,-1,1,2,3,4,5}:
- CPU = mm:        0.309 fm:        0.379 trials mm:     1 fm:     1  diff: 1.35e-16
+ CPU = mm:        0.310 fm:        0.381 trials mm:     1 fm:     1  diff: 1.35e-16
 R_{-6,-5,-4,-3,-2,-1,1,2,3,4,5,6} in R_{-6,-5,-4,-3,-2,-1,1,2,3,4,5,6}:
- CPU = mm:        1.546 fm:        1.891 trials mm:     1 fm:     1  diff: 1.50e-16
+ CPU = mm:        1.540 fm:        1.894 trials mm:     1 fm:     1  diff: 1.50e-16
 R_{-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7} in R_{-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7}:
- CPU = mm:        7.737 fm:        9.169 trials mm:     1 fm:     1  diff: 1.66e-16
+ CPU = mm:        7.723 fm:        9.151 trials mm:     1 fm:     1  diff: 1.66e-16
 R_{-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8} in R_{-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8}:
- CPU = mm:       40.287 fm:       45.610 trials mm:     1 fm:     1  diff: 1.78e-16
+ CPU = mm:       40.153 fm:       45.619 trials mm:     1 fm:     1  diff: 1.78e-16
 R_{-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9} in R_{-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9}:
- CPU = mm:      218.128 fm:      232.996 trials mm:     1 fm:     1  diff: 1.90e-16
+ CPU = mm:      217.791 fm:      232.982 trials mm:     1 fm:     1  diff: 1.90e-16
 R_{-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10} in R_{-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10}:
- CPU = mm:     1281.017 fm:     1249.817 trials mm:     1 fm:     1  diff: 2.01e-16
+ CPU = mm:     1279.401 fm:     1249.696 trials mm:     1 fm:     1  diff: 2.01e-16
 R_{-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10,11} in R_{-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10,11}:
- CPU = mm:     8196.162 fm:     7216.859 trials mm:     1 fm:     1  diff: 2.12e-16
+ CPU = mm:     8193.455 fm:     7219.134 trials mm:     1 fm:     1  diff: 2.12e-16
