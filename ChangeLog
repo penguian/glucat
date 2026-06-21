@@ -1,3 +1,1381 @@
+2026-06-21  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* NEWS: Update NEWS for 0.98a2
+
+2026-06-21  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* doc/benchmarks/compiler_architecture_comparison_report.md: Update
+	the performance report
+
+2026-06-21  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* doc/benchmarks/compiler_architecture_comparison_report.md: Update
+	the performance report
+
+2026-06-21  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md, TODO.md: Update top level documentation
+
+2026-06-21  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* DESIGN.md, INSTALL.md, README.md, TODO.md: Update top level
+	documentation
+
+2026-06-21  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : commit 318b426ca1576293c501655b56666899dba0574c Author: Paul
+	Leopardi <paul.leopardi@anu.edu.au> Date:   Sun Jun 21 19:34:44 2026
+	+1000
+
+2026-06-20  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	*
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-blas-openmp/config.lo
+	g,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-blas-openmp/expressio
+	ns-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-blas-openmp/gfft_test
+	-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-blas-openmp/ldd.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-blas-openmp/make.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-blas-openmp/products-
+	8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-blas-openmp/squaring-
+	11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-blas-openmp/timing_te
+	sts.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-blas-openmp/transform
+	s-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-blas-openmp/versor-16
+	.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-blas/config.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-blas/expressions-8.ou
+	t,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-blas/gfft_test-11.out
+	, benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-blas/ldd.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-blas/make.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-blas/products-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-blas/squaring-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-blas/timing_tests.log
+	,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-blas/transforms-8.out
+	, benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-blas/versor-16.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-flexiblas-openmp/conf
+	ig.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-flexiblas-openmp/expr
+	essions-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-flexiblas-openmp/gfft
+	_test-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-flexiblas-openmp/ldd.
+	log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-flexiblas-openmp/make
+	.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-flexiblas-openmp/prod
+	ucts-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-flexiblas-openmp/squa
+	ring-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-flexiblas-openmp/timi
+	ng_tests.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-flexiblas-openmp/tran
+	sforms-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-flexiblas-openmp/vers
+	or-16.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-flexiblas/config.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-flexiblas/expressions
+	-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-flexiblas/gfft_test-1
+	1.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-flexiblas/ldd.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-flexiblas/make.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-flexiblas/products-8.
+	out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-flexiblas/squaring-11
+	.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-flexiblas/timing_test
+	s.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-flexiblas/transforms-
+	8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-flexiblas/versor-16.o
+	ut,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openblas-openmp/confi
+	g.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openblas-openmp/expre
+	ssions-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openblas-openmp/gfft_
+	test-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openblas-openmp/ldd.l
+	og,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openblas-openmp/make.
+	log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openblas-openmp/produ
+	cts-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openblas-openmp/squar
+	ing-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openblas-openmp/timin
+	g_tests.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openblas-openmp/trans
+	forms-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openblas-openmp/verso
+	r-16.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openblas/config.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openblas/expressions-
+	8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openblas/gfft_test-11
+	.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openblas/ldd.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openblas/make.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openblas/products-8.o
+	ut,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openblas/squaring-11.
+	out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openblas/timing_tests
+	.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openblas/transforms-8
+	.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openblas/versor-16.ou
+	t, benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openmp/config.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openmp/expressions-8.
+	out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openmp/gfft_test-11.o
+	ut, benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openmp/ldd.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openmp/make.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openmp/products-8.out
+	,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openmp/squaring-11.ou
+	t,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openmp/timing_tests.l
+	og,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openmp/transforms-8.o
+	ut,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo-openmp/versor-16.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo/config.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo/expressions-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo/gfft_test-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo/ldd.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo/make.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo/products-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo/squaring-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo/timing_tests.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo/transforms-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/armadillo/versor-16.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-blas-openmp/config.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-blas-openmp/expressions-8
+	.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-blas-openmp/gfft_test-11.
+	out, benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-blas-openmp/ldd.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-blas-openmp/make.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-blas-openmp/products-8.ou
+	t,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-blas-openmp/squaring-11.o
+	ut,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-blas-openmp/timing_tests.
+	log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-blas-openmp/transforms-8.
+	out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-blas-openmp/versor-16.out
+	, benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-blas/config.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-blas/expressions-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-blas/gfft_test-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-blas/ldd.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-blas/make.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-blas/products-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-blas/squaring-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-blas/timing_tests.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-blas/transforms-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-blas/versor-16.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-flexiblas-openmp/config.l
+	og,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-flexiblas-openmp/expressi
+	ons-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-flexiblas-openmp/gfft_tes
+	t-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-flexiblas-openmp/ldd.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-flexiblas-openmp/make.log
+	,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-flexiblas-openmp/products
+	-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-flexiblas-openmp/squaring
+	-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-flexiblas-openmp/timing_t
+	ests.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-flexiblas-openmp/transfor
+	ms-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-flexiblas-openmp/versor-1
+	6.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-flexiblas/config.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-flexiblas/expressions-8.o
+	ut,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-flexiblas/gfft_test-11.ou
+	t, benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-flexiblas/ldd.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-flexiblas/make.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-flexiblas/products-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-flexiblas/squaring-11.out
+	,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-flexiblas/timing_tests.lo
+	g,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-flexiblas/transforms-8.ou
+	t,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-flexiblas/versor-16.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openblas-openmp/config.lo
+	g,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openblas-openmp/expressio
+	ns-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openblas-openmp/gfft_test
+	-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openblas-openmp/ldd.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openblas-openmp/make.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openblas-openmp/products-
+	8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openblas-openmp/squaring-
+	11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openblas-openmp/timing_te
+	sts.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openblas-openmp/transform
+	s-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openblas-openmp/versor-16
+	.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openblas/config.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openblas/expressions-8.ou
+	t,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openblas/gfft_test-11.out
+	, benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openblas/ldd.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openblas/make.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openblas/products-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openblas/squaring-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openblas/timing_tests.log
+	,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openblas/transforms-8.out
+	, benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openblas/versor-16.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openmp/config.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openmp/expressions-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openmp/gfft_test-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openmp/ldd.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openmp/make.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openmp/products-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openmp/squaring-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openmp/timing_tests.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openmp/transforms-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen-openmp/versor-16.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen/config.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen/expressions-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen/gfft_test-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen/ldd.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen/make.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen/products-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen/squaring-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen/timing_tests.log,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen/transforms-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/clang/eigen/versor-16.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-blas-openmp/config.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-blas-openmp/expressions
+	-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-blas-openmp/gfft_test-1
+	1.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-blas-openmp/ldd.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-blas-openmp/make.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-blas-openmp/products-8.
+	out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-blas-openmp/squaring-11
+	.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-blas-openmp/timing_test
+	s.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-blas-openmp/transforms-
+	8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-blas-openmp/versor-16.o
+	ut, benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-blas/config.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-blas/expressions-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-blas/gfft_test-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-blas/ldd.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-blas/make.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-blas/products-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-blas/squaring-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-blas/timing_tests.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-blas/transforms-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-blas/versor-16.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-flexiblas-openmp/config
+	.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-flexiblas-openmp/expres
+	sions-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-flexiblas-openmp/gfft_t
+	est-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-flexiblas-openmp/ldd.lo
+	g,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-flexiblas-openmp/make.l
+	og,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-flexiblas-openmp/produc
+	ts-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-flexiblas-openmp/squari
+	ng-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-flexiblas-openmp/timing
+	_tests.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-flexiblas-openmp/transf
+	orms-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-flexiblas-openmp/versor
+	-16.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-flexiblas/config.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-flexiblas/expressions-8
+	.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-flexiblas/gfft_test-11.
+	out, benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-flexiblas/ldd.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-flexiblas/make.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-flexiblas/products-8.ou
+	t,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-flexiblas/squaring-11.o
+	ut,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-flexiblas/timing_tests.
+	log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-flexiblas/transforms-8.
+	out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-flexiblas/versor-16.out
+	,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openblas-openmp/config.
+	log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openblas-openmp/express
+	ions-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openblas-openmp/gfft_te
+	st-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openblas-openmp/ldd.log
+	,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openblas-openmp/make.lo
+	g,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openblas-openmp/product
+	s-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openblas-openmp/squarin
+	g-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openblas-openmp/timing_
+	tests.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openblas-openmp/transfo
+	rms-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openblas-openmp/versor-
+	16.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openblas/config.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openblas/expressions-8.
+	out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openblas/gfft_test-11.o
+	ut, benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openblas/ldd.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openblas/make.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openblas/products-8.out
+	,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openblas/squaring-11.ou
+	t,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openblas/timing_tests.l
+	og,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openblas/transforms-8.o
+	ut,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openblas/versor-16.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openmp/config.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openmp/expressions-8.ou
+	t,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openmp/gfft_test-11.out
+	, benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openmp/ldd.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openmp/make.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openmp/products-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openmp/squaring-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openmp/timing_tests.log
+	,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openmp/transforms-8.out
+	, benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo-openmp/versor-16.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo/config.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo/expressions-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo/gfft_test-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo/ldd.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo/make.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo/products-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo/squaring-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo/timing_tests.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo/transforms-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/armadillo/versor-16.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-blas-openmp/config.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-blas-openmp/expressions-8.o
+	ut,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-blas-openmp/gfft_test-11.ou
+	t, benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-blas-openmp/ldd.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-blas-openmp/make.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-blas-openmp/products-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-blas-openmp/squaring-11.out
+	,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-blas-openmp/timing_tests.lo
+	g,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-blas-openmp/transforms-8.ou
+	t,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-blas-openmp/versor-16.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-blas/config.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-blas/expressions-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-blas/gfft_test-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-blas/ldd.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-blas/make.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-blas/products-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-blas/squaring-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-blas/timing_tests.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-blas/transforms-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-blas/versor-16.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-flexiblas-openmp/config.log
+	,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-flexiblas-openmp/expression
+	s-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-flexiblas-openmp/gfft_test-
+	11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-flexiblas-openmp/ldd.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-flexiblas-openmp/make.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-flexiblas-openmp/products-8
+	.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-flexiblas-openmp/squaring-1
+	1.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-flexiblas-openmp/timing_tes
+	ts.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-flexiblas-openmp/transforms
+	-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-flexiblas-openmp/versor-16.
+	out, benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-flexiblas/config.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-flexiblas/expressions-8.out
+	,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-flexiblas/gfft_test-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-flexiblas/ldd.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-flexiblas/make.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-flexiblas/products-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-flexiblas/squaring-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-flexiblas/timing_tests.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-flexiblas/transforms-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-flexiblas/versor-16.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openblas-openmp/config.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openblas-openmp/expressions
+	-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openblas-openmp/gfft_test-1
+	1.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openblas-openmp/ldd.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openblas-openmp/make.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openblas-openmp/products-8.
+	out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openblas-openmp/squaring-11
+	.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openblas-openmp/timing_test
+	s.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openblas-openmp/transforms-
+	8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openblas-openmp/versor-16.o
+	ut, benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openblas/config.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openblas/expressions-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openblas/gfft_test-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openblas/ldd.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openblas/make.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openblas/products-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openblas/squaring-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openblas/timing_tests.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openblas/transforms-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openblas/versor-16.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openmp/config.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openmp/expressions-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openmp/gfft_test-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openmp/ldd.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openmp/make.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openmp/products-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openmp/squaring-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openmp/timing_tests.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openmp/transforms-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen-openmp/versor-16.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen/config.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen/expressions-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen/gfft_test-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen/ldd.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen/make.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen/products-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen/squaring-11.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen/timing_tests.log,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen/transforms-8.out,
+	benchmarks/AMD-Ryzen-7-8840HS/gcc/eigen/versor-16.out: Update
+	benchmark results for AMD Ryzen
+
+2026-06-19  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime.aarch64/fast-test.configure.armadillo-debug-yes.out,
+	test_runtime.aarch64/fast-test.configure.armadillo-openmp.out,
+	test_runtime.aarch64/fast-test.configure.armadillo-qd-std.out,
+	test_runtime.aarch64/fast-test.configure.armadillo.out,
+	test_runtime.aarch64/fast-test.configure.debug-full.out,
+	test_runtime.aarch64/fast-test.configure.debug-yes.out,
+	test_runtime.aarch64/fast-test.configure.default.out,
+	test_runtime.aarch64/fast-test.configure.disable-dependency.out,
+	test_runtime.aarch64/fast-test.configure.disable-pyclical.out,
+	test_runtime.aarch64/fast-test.configure.prefix-home-opt.out,
+	test_runtime.aarch64/fast-test.configure.qd.out,
+	test_runtime.aarch64/fast-test.configure.std.out,
+	test_runtime.aarch64/gfft_test-11.out,
+	test_runtime.aarch64/products-8.out,
+	test_runtime.aarch64/squaring-11.out,
+	test_runtime.aarch64/test.configure.armadillo-debug-yes.out,
+	test_runtime.aarch64/test.configure.armadillo-openmp.out,
+	test_runtime.aarch64/test.configure.armadillo-qd-std.out,
+	test_runtime.aarch64/test.configure.armadillo.out,
+	test_runtime.aarch64/test.configure.debug-full.out,
+	test_runtime.aarch64/test.configure.debug-yes.out,
+	test_runtime.aarch64/test.configure.default.out,
+	test_runtime.aarch64/test.configure.disable-dependency.out,
+	test_runtime.aarch64/test.configure.disable-pyclical.out,
+	test_runtime.aarch64/test.configure.prefix-home-opt.out,
+	test_runtime.aarch64/test.configure.qd.out,
+	test_runtime.aarch64/test.configure.std.out,
+	test_runtime.aarch64/timing_tests.out,
+	test_runtime.aarch64/transforms-8.out: Update test results for
+	aarch64
+
+2026-06-19  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/test.out: Update Pyclical test results
+
+2026-06-19  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	*
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-blas-openmp/con
+	fig.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-blas-openmp/gff
+	t_test-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-blas-openmp/ldd
+	.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-blas-openmp/mak
+	e.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-blas-openmp/pro
+	ducts-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-blas-openmp/squ
+	aring-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-blas-openmp/tim
+	ing_tests.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-blas-openmp/tra
+	nsforms-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-blas/config.log
+	,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-blas/gfft_test-
+	11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-blas/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-blas/make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-blas/products-8
+	.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-blas/squaring-1
+	1.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-blas/timing_tes
+	ts.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-blas/transforms
+	-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-flexiblas-openm
+	p/config.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-flexiblas-openm
+	p/gfft_test-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-flexiblas-openm
+	p/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-flexiblas-openm
+	p/make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-flexiblas-openm
+	p/products-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-flexiblas-openm
+	p/squaring-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-flexiblas-openm
+	p/timing_tests.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-flexiblas-openm
+	p/transforms-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-flexiblas/confi
+	g.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-flexiblas/gfft_
+	test-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-flexiblas/ldd.l
+	og,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-flexiblas/make.
+	log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-flexiblas/produ
+	cts-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-flexiblas/squar
+	ing-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-flexiblas/timin
+	g_tests.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-flexiblas/trans
+	forms-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-openblas-openmp
+	/config.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-openblas-openmp
+	/gfft_test-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-openblas-openmp
+	/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-openblas-openmp
+	/make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-openblas-openmp
+	/products-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-openblas-openmp
+	/squaring-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-openblas-openmp
+	/timing_tests.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-openblas-openmp
+	/transforms-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-openblas/config
+	.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-openblas/gfft_t
+	est-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-openblas/ldd.lo
+	g,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-openblas/make.l
+	og,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-openblas/produc
+	ts-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-openblas/squari
+	ng-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-openblas/timing
+	_tests.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-openblas/transf
+	orms-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-openmp/config.l
+	og,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-openmp/gfft_tes
+	t-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-openmp/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-openmp/make.log
+	,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-openmp/products
+	-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-openmp/squaring
+	-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-openmp/timing_t
+	ests.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo-openmp/transfor
+	ms-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo/config.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo/gfft_test-11.ou
+	t, benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo/make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo/products-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo/squaring-11.out
+	,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo/timing_tests.lo
+	g,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/armadillo/transforms-8.ou
+	t,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-blas-openmp/config.
+	log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-blas-openmp/gfft_te
+	st-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-blas-openmp/ldd.log
+	,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-blas-openmp/make.lo
+	g,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-blas-openmp/product
+	s-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-blas-openmp/squarin
+	g-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-blas-openmp/timing_
+	tests.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-blas-openmp/transfo
+	rms-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-blas/config.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-blas/gfft_test-11.o
+	ut, benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-blas/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-blas/make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-blas/products-8.out
+	,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-blas/squaring-11.ou
+	t,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-blas/timing_tests.l
+	og,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-blas/transforms-8.o
+	ut,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-flexiblas-openmp/co
+	nfig.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-flexiblas-openmp/gf
+	ft_test-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-flexiblas-openmp/ld
+	d.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-flexiblas-openmp/ma
+	ke.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-flexiblas-openmp/pr
+	oducts-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-flexiblas-openmp/sq
+	uaring-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-flexiblas-openmp/ti
+	ming_tests.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-flexiblas-openmp/tr
+	ansforms-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-flexiblas/config.lo
+	g,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-flexiblas/gfft_test
+	-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-flexiblas/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-flexiblas/make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-flexiblas/products-
+	8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-flexiblas/squaring-
+	11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-flexiblas/timing_te
+	sts.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-flexiblas/transform
+	s-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-openblas-openmp/con
+	fig.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-openblas-openmp/gff
+	t_test-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-openblas-openmp/ldd
+	.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-openblas-openmp/mak
+	e.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-openblas-openmp/pro
+	ducts-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-openblas-openmp/squ
+	aring-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-openblas-openmp/tim
+	ing_tests.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-openblas-openmp/tra
+	nsforms-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-openblas/config.log
+	,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-openblas/gfft_test-
+	11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-openblas/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-openblas/make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-openblas/products-8
+	.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-openblas/squaring-1
+	1.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-openblas/timing_tes
+	ts.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-openblas/transforms
+	-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-openmp/config.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-openmp/gfft_test-11
+	.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-openmp/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-openmp/make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-openmp/products-8.o
+	ut,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-openmp/squaring-11.
+	out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-openmp/timing_tests
+	.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen-openmp/transforms-8
+	.out, benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen/config.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen/gfft_test-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen/make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen/products-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen/squaring-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen/timing_tests.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc-env/eigen/transforms-8.out: 
+	Remove an obsolete gcc benchmark
+
+2026-06-18  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	*
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-blas-openmp/confi
+	g.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-blas-openmp/expre
+	ssions-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-blas-openmp/gfft_
+	test-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-blas-openmp/ldd.l
+	og,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-blas-openmp/make.
+	log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-blas-openmp/produ
+	cts-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-blas-openmp/squar
+	ing-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-blas-openmp/timin
+	g_tests.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-blas-openmp/trans
+	forms-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-blas-openmp/verso
+	r-16.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-blas/config.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-blas/expressions-
+	8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-blas/gfft_test-11
+	.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-blas/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-blas/make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-blas/products-8.o
+	ut,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-blas/squaring-11.
+	out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-blas/timing_tests
+	.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-blas/transforms-8
+	.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-blas/versor-16.ou
+	t,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-flexiblas-openmp/
+	config.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-flexiblas-openmp/
+	expressions-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-flexiblas-openmp/
+	gfft_test-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-flexiblas-openmp/
+	ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-flexiblas-openmp/
+	make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-flexiblas-openmp/
+	products-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-flexiblas-openmp/
+	squaring-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-flexiblas-openmp/
+	timing_tests.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-flexiblas-openmp/
+	transforms-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-flexiblas-openmp/
+	versor-16.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-flexiblas/config.
+	log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-flexiblas/express
+	ions-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-flexiblas/gfft_te
+	st-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-flexiblas/ldd.log
+	,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-flexiblas/make.lo
+	g,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-flexiblas/product
+	s-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-flexiblas/squarin
+	g-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-flexiblas/timing_
+	tests.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-flexiblas/transfo
+	rms-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-flexiblas/versor-
+	16.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openblas-openmp/c
+	onfig.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openblas-openmp/e
+	xpressions-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openblas-openmp/g
+	fft_test-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openblas-openmp/l
+	dd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openblas-openmp/m
+	ake.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openblas-openmp/p
+	roducts-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openblas-openmp/s
+	quaring-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openblas-openmp/t
+	iming_tests.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openblas-openmp/t
+	ransforms-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openblas-openmp/v
+	ersor-16.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openblas/config.l
+	og,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openblas/expressi
+	ons-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openblas/gfft_tes
+	t-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openblas/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openblas/make.log
+	,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openblas/products
+	-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openblas/squaring
+	-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openblas/timing_t
+	ests.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openblas/transfor
+	ms-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openblas/versor-1
+	6.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openmp/config.log
+	,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openmp/expression
+	s-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openmp/gfft_test-
+	11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openmp/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openmp/make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openmp/products-8
+	.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openmp/squaring-1
+	1.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openmp/timing_tes
+	ts.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openmp/transforms
+	-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo-openmp/versor-16.
+	out, benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo/config.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo/expressions-8.out
+	,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo/gfft_test-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo/make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo/products-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo/squaring-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo/timing_tests.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo/transforms-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/armadillo/versor-16.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-blas-openmp/config.lo
+	g,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-blas-openmp/expressio
+	ns-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-blas-openmp/gfft_test
+	-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-blas-openmp/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-blas-openmp/make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-blas-openmp/products-
+	8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-blas-openmp/squaring-
+	11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-blas-openmp/timing_te
+	sts.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-blas-openmp/transform
+	s-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-blas-openmp/versor-16
+	.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-blas/config.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-blas/expressions-8.ou
+	t,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-blas/gfft_test-11.out
+	, benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-blas/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-blas/make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-blas/products-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-blas/squaring-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-blas/timing_tests.log
+	,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-blas/transforms-8.out
+	, benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-blas/versor-16.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-flexiblas-openmp/conf
+	ig.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-flexiblas-openmp/expr
+	essions-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-flexiblas-openmp/gfft
+	_test-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-flexiblas-openmp/ldd.
+	log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-flexiblas-openmp/make
+	.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-flexiblas-openmp/prod
+	ucts-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-flexiblas-openmp/squa
+	ring-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-flexiblas-openmp/timi
+	ng_tests.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-flexiblas-openmp/tran
+	sforms-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-flexiblas-openmp/vers
+	or-16.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-flexiblas/config.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-flexiblas/expressions
+	-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-flexiblas/gfft_test-1
+	1.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-flexiblas/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-flexiblas/make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-flexiblas/products-8.
+	out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-flexiblas/squaring-11
+	.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-flexiblas/timing_test
+	s.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-flexiblas/transforms-
+	8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-flexiblas/versor-16.o
+	ut,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openblas-openmp/confi
+	g.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openblas-openmp/expre
+	ssions-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openblas-openmp/gfft_
+	test-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openblas-openmp/ldd.l
+	og,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openblas-openmp/make.
+	log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openblas-openmp/produ
+	cts-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openblas-openmp/squar
+	ing-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openblas-openmp/timin
+	g_tests.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openblas-openmp/trans
+	forms-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openblas-openmp/verso
+	r-16.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openblas/config.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openblas/expressions-
+	8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openblas/gfft_test-11
+	.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openblas/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openblas/make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openblas/products-8.o
+	ut,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openblas/squaring-11.
+	out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openblas/timing_tests
+	.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openblas/transforms-8
+	.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openblas/versor-16.ou
+	t, benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openmp/config.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openmp/expressions-8.
+	out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openmp/gfft_test-11.o
+	ut, benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openmp/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openmp/make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openmp/products-8.out
+	,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openmp/squaring-11.ou
+	t,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openmp/timing_tests.l
+	og,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openmp/transforms-8.o
+	ut,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen-openmp/versor-16.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen/config.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen/expressions-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen/gfft_test-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen/make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen/products-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen/squaring-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen/timing_tests.log,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen/transforms-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/clang/eigen/versor-16.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-blas-openmp/config.
+	log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-blas-openmp/express
+	ions-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-blas-openmp/gfft_te
+	st-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-blas-openmp/ldd.log
+	,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-blas-openmp/make.lo
+	g,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-blas-openmp/product
+	s-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-blas-openmp/squarin
+	g-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-blas-openmp/timing_
+	tests.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-blas-openmp/transfo
+	rms-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-blas-openmp/versor-
+	16.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-blas/config.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-blas/expressions-8.
+	out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-blas/gfft_test-11.o
+	ut, benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-blas/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-blas/make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-blas/products-8.out
+	,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-blas/squaring-11.ou
+	t,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-blas/timing_tests.l
+	og,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-blas/transforms-8.o
+	ut,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-blas/versor-16.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-flexiblas-openmp/co
+	nfig.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-flexiblas-openmp/ex
+	pressions-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-flexiblas-openmp/gf
+	ft_test-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-flexiblas-openmp/ld
+	d.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-flexiblas-openmp/ma
+	ke.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-flexiblas-openmp/pr
+	oducts-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-flexiblas-openmp/sq
+	uaring-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-flexiblas-openmp/ti
+	ming_tests.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-flexiblas-openmp/tr
+	ansforms-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-flexiblas-openmp/ve
+	rsor-16.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-flexiblas/config.lo
+	g,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-flexiblas/expressio
+	ns-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-flexiblas/gfft_test
+	-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-flexiblas/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-flexiblas/make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-flexiblas/products-
+	8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-flexiblas/squaring-
+	11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-flexiblas/timing_te
+	sts.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-flexiblas/transform
+	s-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-flexiblas/versor-16
+	.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openblas-openmp/con
+	fig.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openblas-openmp/exp
+	ressions-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openblas-openmp/gff
+	t_test-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openblas-openmp/ldd
+	.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openblas-openmp/mak
+	e.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openblas-openmp/pro
+	ducts-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openblas-openmp/squ
+	aring-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openblas-openmp/tim
+	ing_tests.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openblas-openmp/tra
+	nsforms-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openblas-openmp/ver
+	sor-16.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openblas/config.log
+	,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openblas/expression
+	s-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openblas/gfft_test-
+	11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openblas/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openblas/make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openblas/products-8
+	.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openblas/squaring-1
+	1.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openblas/timing_tes
+	ts.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openblas/transforms
+	-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openblas/versor-16.
+	out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openmp/config.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openmp/expressions-
+	8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openmp/gfft_test-11
+	.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openmp/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openmp/make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openmp/products-8.o
+	ut,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openmp/squaring-11.
+	out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openmp/timing_tests
+	.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openmp/transforms-8
+	.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo-openmp/versor-16.ou
+	t, benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo/config.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo/expressions-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo/gfft_test-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo/make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo/products-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo/squaring-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo/timing_tests.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo/transforms-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/armadillo/versor-16.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-blas-openmp/config.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-blas-openmp/expressions
+	-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-blas-openmp/gfft_test-1
+	1.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-blas-openmp/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-blas-openmp/make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-blas-openmp/products-8.
+	out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-blas-openmp/squaring-11
+	.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-blas-openmp/timing_test
+	s.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-blas-openmp/transforms-
+	8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-blas-openmp/versor-16.o
+	ut, benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-blas/config.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-blas/expressions-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-blas/gfft_test-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-blas/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-blas/make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-blas/products-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-blas/squaring-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-blas/timing_tests.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-blas/transforms-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-blas/versor-16.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-flexiblas-openmp/config
+	.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-flexiblas-openmp/expres
+	sions-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-flexiblas-openmp/gfft_t
+	est-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-flexiblas-openmp/ldd.lo
+	g,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-flexiblas-openmp/make.l
+	og,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-flexiblas-openmp/produc
+	ts-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-flexiblas-openmp/squari
+	ng-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-flexiblas-openmp/timing
+	_tests.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-flexiblas-openmp/transf
+	orms-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-flexiblas-openmp/versor
+	-16.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-flexiblas/config.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-flexiblas/expressions-8
+	.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-flexiblas/gfft_test-11.
+	out, benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-flexiblas/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-flexiblas/make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-flexiblas/products-8.ou
+	t,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-flexiblas/squaring-11.o
+	ut,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-flexiblas/timing_tests.
+	log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-flexiblas/transforms-8.
+	out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-flexiblas/versor-16.out
+	,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openblas-openmp/config.
+	log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openblas-openmp/express
+	ions-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openblas-openmp/gfft_te
+	st-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openblas-openmp/ldd.log
+	,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openblas-openmp/make.lo
+	g,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openblas-openmp/product
+	s-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openblas-openmp/squarin
+	g-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openblas-openmp/timing_
+	tests.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openblas-openmp/transfo
+	rms-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openblas-openmp/versor-
+	16.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openblas/config.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openblas/expressions-8.
+	out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openblas/gfft_test-11.o
+	ut, benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openblas/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openblas/make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openblas/products-8.out
+	,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openblas/squaring-11.ou
+	t,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openblas/timing_tests.l
+	og,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openblas/transforms-8.o
+	ut,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openblas/versor-16.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openmp/config.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openmp/expressions-8.ou
+	t,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openmp/gfft_test-11.out
+	, benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openmp/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openmp/make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openmp/products-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openmp/squaring-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openmp/timing_tests.log
+	,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openmp/transforms-8.out
+	, benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen-openmp/versor-16.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen/config.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen/expressions-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen/gfft_test-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen/ldd.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen/make.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen/products-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen/squaring-11.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen/timing_tests.log,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen/transforms-8.out,
+	benchmarks/Apple-Avalanche-M2-Pro/gcc/eigen/versor-16.out: Update
+	Apple M2 Pro benchmark results
+
+2026-06-18  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* admin/bootstrap.sh: Use grep -F instead of fgrep
+
+2026-06-18  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test/timing_tests.sh: Use the correct argument sv for the versor
+	test
+
+2026-06-17  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* admin/bootstrap.sh: Change egrep to POSIX grep -E
+
+2026-06-17  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in: Suppress outdated g++ ABI warnings
+
+2026-06-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_eigen_imp.h: Prevent a warning at -O1
+
+2026-06-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_runtime.x86-64/eg3.res, test_runtime.x86-64/eg8.txt,
+	test_runtime.x86-64/gfft_test-11.out,
+	test_runtime.x86-64/products-8.out,
+	test_runtime.x86-64/squaring-11.out,
+	test_runtime.x86-64/test.configure.armadillo-debug-yes.out,
+	test_runtime.x86-64/test.configure.armadillo-openmp.out,
+	test_runtime.x86-64/test.configure.armadillo-qd-std.out,
+	test_runtime.x86-64/test.configure.armadillo.out,
+	test_runtime.x86-64/test.configure.debug-full.out,
+	test_runtime.x86-64/test.configure.debug-yes.out,
+	test_runtime.x86-64/test.configure.default.out,
+	test_runtime.x86-64/test.configure.disable-dependency.out,
+	test_runtime.x86-64/test.configure.disable-pyclical.out,
+	test_runtime.x86-64/test.configure.prefix-home-opt.out,
+	test_runtime.x86-64/test.configure.qd.out,
+	test_runtime.x86-64/test.configure.std.out,
+	test_runtime.x86-64/test.out, test_runtime.x86-64/transforms-8.out: 
+	Update x86-64 test results
+
+2026-06-15  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/matrix_multi_imp.h: Add temp_storage
+
+2026-06-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* Makefile.am.in, glucat/clifford_algebra.h,
+	glucat/framed_multi_imp.h, glucat/matrix_multi.h,
+	glucat/matrix_multi_imp.h, pyclical/PyClical.pyx,
+	pyclical/demos/Makefile.am,
+	pyclical/demos/build_pyclical_notebooks.py,
+	pyclical/demos/versor_demo.py, pyclical/glucat.pxd, test/test.sh,
+	test/test_optional.sh, test/timing_tests.sh, test19/Makefile.am,
+	test19/peg19.h, test19/test19.cpp, versor/Makefile.am,
+	versor/versor.cpp, versor/versor.h: Add versor and versor_exp
+	functions
+
+2026-06-11  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in, glucat/matrix_multi.h, glucat/matrix_multi_imp.h: 
+	Add expression templates for matrix_multi addition
+
+2026-06-09  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test_doctest/test_doctest.h: Allow lhs and rhs to have different
+	types
+
+2026-06-09  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test11/peg11.h: Allow lhs and rhs to have different types
+
+2026-06-09  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* expressions/expressions.h: Add an addition expression to the
+	timing test
+
+2026-06-08  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md, Makefile.am.in, expressions/Makefile.am,
+	expressions/expressions.cpp, expressions/expressions.h,
+	test/timing_tests.sh: Add an expressions timing test
+
+2026-06-07  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #77 from penguian/76-improve-performance Improve performance
+
 2026-06-07  Paul Leopardi <paul.leopardi@anu.edu.au>
 
 	* NEWS: Update NEWS
