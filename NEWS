@@ -1,11 +1,14 @@
 2026-06-07: 0.98a2
 GluCat 0.98a2 improves performance and adds configuration options and benchmarks.
 
-o Tuned and optimized framed_multi and matrix_multi geometric product algorithms.
+o Optimized framed_multi/matrix_multi products, adding native sparse versor solvers.
+o Integrated Boost.YAP-based expression templates for the matrix_multi engine.
+o Hardened build safety by adding temp_storage to stabilize temporary reference lifetimes.
 o Added the --with-blas option to configure.
-o Introduced a systematic benchmarking suite with cross-platform result logs.
-o Deprecated the Intel Classic C++ compiler and modernized Autotools build flags.
-o Added test18 and expanded C++ doctest coverage.
+o Introduced systematic cross-platform benchmarks, including expressions-8 and versor-16 timing suites.
+o Conditionally suppressed noisy g++ ABI warnings (-Wno-psabi) via Autotools detection.
+o Modernized Autotools flags, deprecated Intel Classic C++, and cleaned deprecated egrep/fgrep usages.
+o Added test18, test19, and expanded C++ doctest coverage.
 
 2026-05-12: 0.98a1
 GluCat 0.98a1 achieves 100% C++ function coverage.
