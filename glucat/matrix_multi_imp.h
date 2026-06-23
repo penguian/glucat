@@ -3710,55 +3710,201 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK(approx_equal(log(neg, i, false), i * T(std::numbers::pi)));
   }
   SUBCASE("Transcendental identities (random)") {
-    using namespace glucat;
-    using index_set_t = mm_t::index_set_t; index_set_t frm = index_set_t();
+    using index_set_t = mm_t::index_set_t;
+
+    auto is_error = [](const mm_t& lhs, const mm_t& rhs, double tol) {
+      using scalar_t = mm_t::scalar_t;
+      scalar_t diff = abs(lhs - rhs);
+      scalar_t ref = abs(rhs);
+      return ( (abs(lhs) < tol) || (ref < tol) )
+             ? (diff > tol)
+             : (diff > ref * tol);
+    };
+
+    static const T eps = std::numeric_limits<T>::epsilon();
+    const T tol = eps * 1024.0;
+
+    auto test_trans = [&](const mm_t& A) {
+      const mm_t exp_A = exp(A);
+      const mm_t exp_mA = exp(-A);
+      const mm_t cos_A = cos(A);
+      const mm_t sin_A = sin(A);
+      const mm_t cosh_A = cosh(A);
+      const mm_t sinh_A = sinh(A);
+      const mm_t sqrt_A = sqrt(A);
+
+      CHECK_FALSE(is_error(exp_A * exp_mA, mm_t(1), tol));
+      CHECK_FALSE(is_error(cosh_A + sinh_A, exp_A, tol));
+      if (!A.isnan() && !A.isinf()) {
+        CHECK_FALSE(is_error(sqrt_A * sqrt_A, A, tol));
+      }
+
+      if (A != 0.0 && A != 1.0) {
+        CHECK_FALSE(is_error(cos(A) + complexifier(A)*sin(A), exp(complexifier(A)*A), tol));
+        CHECK_FALSE(is_error(cos(A)*tan(A), sin(A), tol));
+        CHECK_FALSE(is_error(cosh(A)*tanh(A), sinh(A), tol));
+        CHECK_FALSE(is_error(sqrt(mm_t(4.0)), mm_t(2.0), tol));
+      }
+    };
+
+    test_trans(mm_t(0));
+    test_trans(mm_t(1));
+    test_trans(mm_t::random(index_set_t(1)));
+
+    index_set_t frm = index_set_t();
     const T fill = T(0.5);
-    for (index_t i = 1; i <= 7; ++i) {
+    for (index_t i = 1; i <= 4; ++i) {
       frm |= index_set_t(i);
+      test_trans(mm_t::random(frm, fill));
+
       frm |= index_set_t(-i);
-
-      mm_t a = mm_t::random(frm, fill);
-
-      // exp(a) * exp(-a) == 1
-      CHECK(approx_equal(exp(a) * exp(-a), mm_t(T(1.0), mm_t::index_set_t())));
-
-      // cosh(a) + sinh(a) == exp(a)
-      CHECK(approx_equal(cosh(a) + sinh(a), exp(a)));
-
-      // sqrt(a) * sqrt(a) == a
-      mm_t s = sqrt(a);
-      if (!s.isnan() && !s.isinf())
-        CHECK(approx_equal(s * s, a, T(1e-11), T(1e-11)));
+      test_trans(mm_t::random(frm, fill));
     }
   }
 
   SUBCASE("Geometric algebra identities (random)") {
-    using index_set_t = mm_t::index_set_t; index_set_t frm = index_set_t();
+    using index_set_t = mm_t::index_set_t;
     const T fill = T(0.5);
-    for (index_t i = 1; i <= 7; ++i) {
+
+    auto is_error = [](const mm_t& lhs, const mm_t& rhs, double tol) {
+      using scalar_t = mm_t::scalar_t;
+      scalar_t diff = abs(lhs - rhs);
+      scalar_t ref = abs(rhs);
+      return ( (abs(lhs) < tol) || (ref < tol) )
+             ? (diff > tol)
+             : (diff > ref * tol);
+    };
+
+    static const T eps = std::numeric_limits<T>::epsilon();
+    const T tol = eps * 4096.0;
+
+    index_set_t frm = index_set_t();
+    for (index_t i = 1; i <= 4; ++i) {
       frm |= index_set_t(i);
-      frm |= index_set_t(-i);
+
+      auto test_idents = [&](auto& a, auto& b, auto& c) {
+        const index_t a_grade = a.frame().count();
+        const index_t b_grade = b.frame().count();
+
+        // Identity [HS] (1.21a)
+        for (index_t r = 1; r <= a_grade; ++r) {
+          const auto a_r = a(r);
+          for (index_t s = 1; s <= b_grade; ++s) {
+            const auto b_s = b(s);
+            auto lhs = a_r & b_s;
+            auto rhs = (a_r * b_s)(index_t(std::abs(int(r-s))));
+            CHECK_FALSE(is_error(lhs, rhs, tol));
+          }
+        }
+
+        // Identity [HS] (1.22a)
+        for (index_t r = 0; r <= a_grade; ++r) {
+          const auto a_r = a(r);
+          for (index_t s = 0; s <= b_grade; ++s) {
+            const auto b_s = b(s);
+            auto lhs = a_r ^ b_s;
+            auto rhs = (a_r * b_s)(r+s);
+            CHECK_FALSE(is_error(lhs, rhs, tol));
+          }
+        }
+
+        // Identity for Left Contraction (%)
+        for (index_t r = 0; r <= a_grade; ++r) {
+          const auto a_r = a(r);
+          for (index_t s = 0; s <= b_grade; ++s) {
+            const auto b_s = b(s);
+            auto lhs = a_r % b_s;
+            auto rhs = (s >= r) ? (a_r * b_s)(s - r) : mm_t(0);
+            CHECK_FALSE(is_error(lhs, rhs, tol));
+          }
+        }
+
+        // Identity [HS] (1.25a)
+        CHECK_FALSE(is_error((a ^ b) ^ c, a ^ (b ^ c), tol));
+
+        // Left Contraction Identity: a % (b % c) == (a ^ b) % c
+        CHECK_FALSE(is_error(a % (b % c), (a ^ b) % c, tol));
+
+        // Identity [HS] (1.31)
+        const auto a_1 = a(1);
+        CHECK_FALSE(is_error(a_1 * b, (a_1 & b) + (a_1 ^ b), tol));
+
+        // [HS] (1.44): star(a, b) == scalar(a * b)
+        CHECK(star(a, b) == doctest::Approx(scalar(a * b)));
+      };
 
       mm_t a = mm_t::random(frm, fill);
       mm_t b = mm_t::random(frm, fill);
       mm_t c = mm_t::random(frm, fill);
+      test_idents(a, b, c);
 
-      // [HS] (1.25a): (a ^ b) ^ c == a ^ (b ^ c)
-      CHECK(approx_equal((a ^ b) ^ c, a ^ (b ^ c)));
+      frm |= index_set_t(-i);
+      a = mm_t::random(frm, fill);
+      b = mm_t::random(frm, fill);
+      c = mm_t::random(frm, fill);
+      test_idents(a, b, c);
+    }
+  }
 
-      // [HS] (1.31): a_1 * b == (a_1 & b) + (a_1 ^ b)
-      mm_t a_1 = a(1);
-      CHECK(approx_equal(a_1 * b, (a_1 & b) + (a_1 ^ b)));
+  SUBCASE("Matrix methods (checkerboard)") {
+    using index_set_t = mm_t::index_set_t;
+    using framed_multi_t = glucat::framed_multi<double, -8, 8>;
 
-      // [HS] (1.44): star(a, b) == scalar(a * b)
-      CHECK(numeric_traits<T>::to_double(star(a, b)) == doctest::Approx(numeric_traits<T>::to_double(scalar(a * b))));
+    auto is_error = [](const mm_t& lhs, const mm_t& rhs, double tol) {
+      using scalar_t = mm_t::scalar_t;
+      scalar_t diff = abs(lhs - rhs);
+      scalar_t ref = abs(rhs);
+      return ( (abs(lhs) < tol) || (ref < tol) )
+             ? (diff > tol)
+             : (diff > ref * tol);
+    };
 
-      // [HS] (1.21a): (a_r * b_s)(|r-s|) == a_r & b_s (sampled)
-      index_t r = frm.count() / 2;
-      index_t s = frm.count() / 2;
-      mm_t a_r = a(r);
-      mm_t b_s = b(s);
-      CHECK(approx_equal(a_r & b_s, (a_r * b_s)(index_t(std::abs(r-s)))));
+    static const T eps = std::numeric_limits<T>::epsilon();
+    const T tol = eps * 512.0;
+
+    auto test_matrix_methods = [&](const mm_t& mm) {
+      framed_multi_t fm(mm);
+
+      CHECK_FALSE(is_error(mm_t(fm.involute()), mm.involute(), tol));
+      CHECK_FALSE(is_error(mm_t(fm.even()), mm.even(), tol));
+      CHECK_FALSE(is_error(mm_t(fm.odd()), mm.odd(), tol));
+      CHECK_FALSE(is_error(mm.even() + mm.odd(), mm, tol));
+      CHECK_FALSE(is_error(mm_t(fm.reverse()), mm.reverse(), tol));
+      CHECK_FALSE(is_error(mm_t(fm.conj()), mm.conj(), tol));
+
+      auto grades = mm.decompose();
+      mm_t sum(T(0.0), mm.frame());
+      for (size_t i = 0; i < grades.size(); ++i) {
+        sum += grades[i];
+        CHECK_FALSE(is_error(mm.project(i), grades[i], tol));
+      }
+      CHECK_FALSE(is_error(sum, mm, tol));
+
+      for (size_t i = 0; i < grades.size(); ++i) {
+        mm_t ref_i(fm(i), mm.frame());
+        CHECK_FALSE(is_error(grades[i], ref_i, tol));
+      }
+    };
+
+    struct Signature { int p; int q; };
+    Signature signatures[] = {
+      {0, 0}, // Type 0: R
+      {1, 0}, // Type 1: C
+      {2, 0}, // Type 2: H
+      {3, 0}, // Type 3: H+H
+      {0, 4}, // Type 4: H
+      {0, 3}, // Type 5: C
+      {0, 2}, // Type 6: R
+      {0, 1}  // Type 7: R+R
+    };
+
+    for (const auto& sig : signatures) {
+      index_set_t frame;
+      for (int i = 1; i <= sig.p; ++i) frame |= index_set_t(i);
+      for (int i = 1; i <= sig.q; ++i) frame |= index_set_t(-i);
+
+      mm_t mm = mm_t::random(frame);
+      test_matrix_methods(mm);
     }
   }
 

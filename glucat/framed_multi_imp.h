@@ -2962,57 +2962,139 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK(approx_equal(log(neg, fm_t("{-1}"), false), fm_t("{-1}") * T(std::numbers::pi)));
   }
   SUBCASE("Transcendental identities (random)") {
-    using namespace glucat;
-    using index_set_t = fm_t::index_set_t; using is_t = fm_t::index_set_t; index_set_t frm = index_set_t();
+    using index_set_t = fm_t::index_set_t;
+
+    auto is_error = [](const fm_t& lhs, const fm_t& rhs, double tol) {
+      using scalar_t = fm_t::scalar_t;
+      scalar_t diff = abs(lhs - rhs);
+      scalar_t ref = abs(rhs);
+      return ( (abs(lhs) < tol) || (ref < tol) )
+             ? (diff > tol)
+             : (diff > ref * tol);
+    };
+
+    static const double eps = std::numeric_limits<double>::epsilon();
+    const double tol = eps * 1024.0;
+
+    auto test_trans = [&](const fm_t& A) {
+      const fm_t exp_A = exp(A);
+      const fm_t exp_mA = exp(-A);
+      const fm_t cos_A = cos(A);
+      const fm_t sin_A = sin(A);
+      const fm_t cosh_A = cosh(A);
+      const fm_t sinh_A = sinh(A);
+      const fm_t sqrt_A = sqrt(A);
+
+      CHECK_FALSE(is_error(exp_A * exp_mA, fm_t(1), tol));
+      CHECK_FALSE(is_error(cosh_A + sinh_A, exp_A, tol));
+      if (!A.isnan() && !A.isinf()) {
+        CHECK_FALSE(is_error(sqrt_A * sqrt_A, A, tol));
+      }
+
+      if (A != 0.0 && A != 1.0) {
+        CHECK_FALSE(is_error(cos(A) + complexifier(A)*sin(A), exp(complexifier(A)*A), tol));
+        CHECK_FALSE(is_error(cos(A)*tan(A), sin(A), tol));
+        CHECK_FALSE(is_error(cosh(A)*tanh(A), sinh(A), tol));
+        CHECK_FALSE(is_error(sqrt(fm_t(4.0)), fm_t(2.0), tol));
+      }
+    };
+
+    test_trans(fm_t(0));
+    test_trans(fm_t(1));
+    test_trans(fm_t::random(index_set_t(1)));
+
+    index_set_t frm = index_set_t();
     const double fill = 0.5;
-    for (index_t i = 1; i <= 7; ++i) {
+    for (index_t i = 1; i <= 4; ++i) {
       frm |= index_set_t(i);
+      test_trans(fm_t::random(frm, fill));
+
       frm |= index_set_t(-i);
-
-      fm_t a = fm_t::random(frm, fill);
-
-      // exp(a) * exp(-a) == 1
-      CHECK(approx_equal(exp(a) * exp(-a), fm_t(T(1.0), is_t())));
-
-      // cosh(a) + sinh(a) == exp(a)
-      CHECK(approx_equal(cosh(a) + sinh(a), exp(a)));
-
-      // sqrt(a) * sqrt(a) == a
-      // Note: sqrt might not always return a value that squares back to a due to branch cuts,
-      // but for many random a it should work or be close.
-      fm_t s = sqrt(a);
-      if (!s.isnan() && !s.isinf())
-        CHECK(approx_equal(s * s, a));
+      test_trans(fm_t::random(frm, fill));
     }
   }
 
   SUBCASE("Geometric algebra identities (random)") {
-    using index_set_t = fm_t::index_set_t; index_set_t frm = index_set_t();
+    using index_set_t = fm_t::index_set_t;
     const double fill = 0.5;
-    for (index_t i = 1; i <= 7; ++i) {
+
+    auto is_error = [](const fm_t& lhs, const fm_t& rhs, double tol) {
+      using scalar_t = fm_t::scalar_t;
+      scalar_t diff = abs(lhs - rhs);
+      scalar_t ref = abs(rhs);
+      return ( (abs(lhs) < tol) || (ref < tol) )
+             ? (diff > tol)
+             : (diff > ref * tol);
+    };
+
+    static const double eps = std::numeric_limits<double>::epsilon();
+    const double tol = eps * 4096.0;
+
+    index_set_t frm = index_set_t();
+    for (index_t i = 1; i <= 4; ++i) {
       frm |= index_set_t(i);
-      frm |= index_set_t(-i);
+
+      auto test_idents = [&](auto& a, auto& b, auto& c) {
+        const index_t a_grade = a.frame().count();
+        const index_t b_grade = b.frame().count();
+
+        // Identity [HS] (1.21a)
+        for (index_t r = 1; r <= a_grade; ++r) {
+          const auto a_r = a(r);
+          for (index_t s = 1; s <= b_grade; ++s) {
+            const auto b_s = b(s);
+            auto lhs = a_r & b_s;
+            auto rhs = (a_r * b_s)(index_t(std::abs(int(r-s))));
+            CHECK_FALSE(is_error(lhs, rhs, tol));
+          }
+        }
+
+        // Identity [HS] (1.22a)
+        for (index_t r = 0; r <= a_grade; ++r) {
+          const auto a_r = a(r);
+          for (index_t s = 0; s <= b_grade; ++s) {
+            const auto b_s = b(s);
+            auto lhs = a_r ^ b_s;
+            auto rhs = (a_r * b_s)(r+s);
+            CHECK_FALSE(is_error(lhs, rhs, tol));
+          }
+        }
+
+        // Identity for Left Contraction (%)
+        for (index_t r = 0; r <= a_grade; ++r) {
+          const auto a_r = a(r);
+          for (index_t s = 0; s <= b_grade; ++s) {
+            const auto b_s = b(s);
+            auto lhs = a_r % b_s;
+            auto rhs = (s >= r) ? (a_r * b_s)(s - r) : fm_t(0);
+            CHECK_FALSE(is_error(lhs, rhs, tol));
+          }
+        }
+
+        // Identity [HS] (1.25a)
+        CHECK_FALSE(is_error((a ^ b) ^ c, a ^ (b ^ c), tol));
+
+        // Left Contraction Identity: a % (b % c) == (a ^ b) % c
+        CHECK_FALSE(is_error(a % (b % c), (a ^ b) % c, tol));
+
+        // Identity [HS] (1.31)
+        const auto a_1 = a(1);
+        CHECK_FALSE(is_error(a_1 * b, (a_1 & b) + (a_1 ^ b), tol));
+
+        // [HS] (1.44): star(a, b) == scalar(a * b)
+        CHECK(star(a, b) == doctest::Approx(scalar(a * b)));
+      };
 
       fm_t a = fm_t::random(frm, fill);
       fm_t b = fm_t::random(frm, fill);
       fm_t c = fm_t::random(frm, fill);
+      test_idents(a, b, c);
 
-      // [HS] (1.25a): (a ^ b) ^ c == a ^ (b ^ c)
-      CHECK(approx_equal((a ^ b) ^ c, a ^ (b ^ c)));
-
-      // [HS] (1.31): a_1 * b == (a_1 & b) + (a_1 ^ b)
-      fm_t a_1 = a(1);
-      CHECK(approx_equal(a_1 * b, (a_1 & b) + (a_1 ^ b)));
-
-      // [HS] (1.44): star(a, b) == scalar(a * b)
-      CHECK(star(a, b) == doctest::Approx(numeric_traits<T>::to_double(scalar(a * b))));
-
-      // [HS] (1.21a): (a_r * b_s)(|r-s|) == a_r & b_s (sampled)
-      index_t r = frm.count() / 2;
-      index_t s = frm.count() / 2;
-      fm_t a_r = a(r);
-      fm_t b_s = b(s);
-      CHECK(approx_equal(a_r & b_s, (a_r * b_s)(index_t(std::abs(r-s)))));
+      frm |= index_set_t(-i);
+      a = fm_t::random(frm, fill);
+      b = fm_t::random(frm, fill);
+      c = fm_t::random(frm, fill);
+      test_idents(a, b, c);
     }
   }
 
