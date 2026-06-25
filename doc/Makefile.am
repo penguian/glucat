@@ -2,6 +2,8 @@ AUTOMAKE_OPTIONS = foreign
 
 EXTRA_DIST = Makefile.in
 
+if doc_SUBDIR_included
+
 htmldir = $(docdir)/html
 pdfdir = $(docdir)/pdf
 
@@ -40,5 +42,7 @@ clean-local:
 	rm -f .doxygen-out
 
 .PHONY: doc html pdf
+
+endif
 
 endif
