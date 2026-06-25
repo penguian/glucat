@@ -2992,9 +2992,9 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
       }
 
       if (A != 0.0 && A != 1.0) {
-        CHECK_FALSE(is_error(cos(A) + complexifier(A)*sin(A), exp(complexifier(A)*A), tol));
-        CHECK_FALSE(is_error(cos(A)*tan(A), sin(A), tol));
-        CHECK_FALSE(is_error(cosh(A)*tanh(A), sinh(A), tol));
+        CHECK_FALSE(is_error(cos_A + complexifier(A)*sin_A, exp(complexifier(A)*A), tol));
+        CHECK_FALSE(is_error(cos_A*tan(A), sin_A, tol));
+        CHECK_FALSE(is_error(cosh_A*tanh(A), sinh_A, tol));
         CHECK_FALSE(is_error(sqrt(fm_t(4.0)), fm_t(2.0), tol));
       }
     };

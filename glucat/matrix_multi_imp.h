@@ -3740,9 +3740,9 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
       }
 
       if (A != 0.0 && A != 1.0) {
-        CHECK_FALSE(is_error(cos(A) + complexifier(A)*sin(A), exp(complexifier(A)*A), tol));
-        CHECK_FALSE(is_error(cos(A)*tan(A), sin(A), tol));
-        CHECK_FALSE(is_error(cosh(A)*tanh(A), sinh(A), tol));
+        CHECK_FALSE(is_error(cos_A + complexifier(A)*sin_A, exp(complexifier(A)*A), tol));
+        CHECK_FALSE(is_error(cos_A*tan(A), sin_A, tol));
+        CHECK_FALSE(is_error(cosh_A*tanh(A), sinh_A, tol));
         CHECK_FALSE(is_error(sqrt(mm_t(4.0)), mm_t(2.0), tol));
       }
     };
@@ -3899,6 +3899,8 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>") {
     };
 
     for (const auto& sig : signatures) {
+      CAPTURE(sig.p);
+      CAPTURE(sig.q);
       index_set_t frame;
       for (int i = 1; i <= sig.p; ++i) frame |= index_set_t(i);
       for (int i = 1; i <= sig.q; ++i) frame |= index_set_t(-i);
