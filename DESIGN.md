@@ -184,6 +184,18 @@ The 0.98a2 release focuses on maximizing the performance of Clifford products an
 - **Versor/Sandwich Optimizations**: Optimized sparse-domain involution via native `versor` and `versor_exp` functions for `framed_multi`, and delegated dense sandwich products (`matrix_multi::versor()`) to `operator|` to achieve optimal dense performance.
 
 
+Defence in Depth and Quality Hardening (0.98a2 to 0.98a3)
+---------------------------------------------------------
+The 0.98a3 release introduces a comprehensive quality-hardening framework, dividing enforcement into multiple, reviewable stages.
+
+### Definition-Adjacent C++ Unit Testing (Stage 0)
+To improve the organization and readability of the regression test suite:
+- **Locality of Tests**: The test suite was refactored by moving specific template `TEST_CASE` / `SUBCASE` blocks directly into the C++ template implementation headers (`glucat/framed_multi_imp.h` and `glucat/matrix_multi_imp.h`) under `#ifdef GLUCAT_DOCTEST` preprocessor guards. This mirrors Python's doctest locality pattern, placing tests next to the definitions of the functions they verify.
+- **Simplification of Test Runner**: The separate, redundant header files `test_doctest.h` and `test_matrix_methods.h` were eliminated. `test_doctest.cpp` was reduced to an entrypoint runner that imports `glucat/glucat_imp.h`.
+- **Performance Optimization**: Nested `SUBCASE` calls inside nested loop and lambda test-helper structures were removed. By avoiding combinatorial re-execution of test cases while retaining the same number of individual assertions, the execution time was reduced significantly.
+- **Type Safety & Hardening**: Comparisons with `Approx` and `is_error` lambdas were updated to accept concrete multivector types (`const fm_t&` and `const mm_t&`), preventing type deduction errors for standard double scalars.
+
+
 Split of code between glucat/matrix_imp.h and glucat/matrix_multi_imp.h
 -----------------------------------------------------------------------
 

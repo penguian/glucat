@@ -7,7 +7,7 @@ TODO for GluCat 0.98a2 with PyClical
 * [x] Achieve 100% C++ function coverage across the core library via `test_doctest`.
 * [x] Reinforce representation-independence by defining `nbr_rows()` and `nbr_cols()` as protected in `matrix_multi`.
 
-### 0.98a3: Defense in Depth
+### 0.98a3: Defence in Depth
 * **C++ Quality**: Implement `clang-format` and `cppcheck` linting.
 * **Cython/Python Quality**: Implement `ruff` and `pylint` for PyClical.
 * **Automation**: Integrate `pre-commit` hooks for all quality checks.

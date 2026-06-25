@@ -1,3 +1,8 @@
+2026-06-23: 0.98a3 (In Development)
+GluCat 0.98a3 implements the Defence in Depth quality-hardening framework.
+
+o Stage 0: Refactored the primary C++ regression suite (test_doctest), deleted redundant test headers, and embedded inline test template assertions next to function definitions.
+
 2026-06-07: 0.98a2
 GluCat 0.98a2 improves performance and adds configuration options and benchmarks.
 
