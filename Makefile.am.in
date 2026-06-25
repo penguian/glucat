@@ -102,10 +102,10 @@ dist-hook:
 	cd $(top_distdir) && rm -rf */.deps
 
 lint-check:
-	clang-format --dry-run --Werror glucat/*.h
+	python3 format_helper.py check glucat/*.h
 
 lint-fix:
-	clang-format -i glucat/*.h
+	python3 format_helper.py fix glucat/*.h
 
 cppcheck:
 	cppcheck --project=glucat.cppcheck --error-exitcode=1
