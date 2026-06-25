@@ -1,0 +1,3 @@
+# One-time bulk reformat of glucat/ headers using clang-format
+# Replace <REPLACE_WITH_FORMATTING_COMMIT_HASH> with the actual git commit hash once committed.
+<REPLACE_WITH_FORMATTING_COMMIT_HASH>
