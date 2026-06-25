@@ -31,15 +31,15 @@
  See also Arvind Raja's original header comments and references in glucat.h
  ***************************************************************************/
 
-#include "glucat/global.h"
-#include "glucat/scalar.h"
-#include "glucat/qd.h"
-
 #include <cfloat>
 #include <limits>
 
+#include "glucat/global.h"
+#include "glucat/qd.h"
+#include "glucat/scalar.h"
+
 #if defined(_GLUCAT_USE_QD)
-# include <qd/qd_real.h>
+#include <qd/qd_real.h>
 #endif
 
 namespace glucat
@@ -49,168 +49,192 @@ namespace glucat
 
 #if !defined(_GLUCAT_USE_QD) || !defined(QD_API)
 
-# if DBL_MANT_DIG < LDBL_MANT_DIG
+#if DBL_MANT_DIG < LDBL_MANT_DIG
 
   /// Promoted type for double
-  template<>
-  struct
-  numeric_traits<double>::
-  promoted {using type = long double;};
+  template <>
+  struct numeric_traits<double>::promoted
+  {
+    using type = long double;
+  };
 
   /// Demoted type for long double
-  template<>
-  struct
-  numeric_traits<long double>::
-  demoted {using type = double;};
-
-# else
-
-  /// Promoted type for double
-  template<>
-  struct
-  numeric_traits<double>::
-  promoted {using type = double;};
-
-  /// Demoted type for long double
-  template<>
-  struct
-  numeric_traits<long double>::
-  demoted {using type = float;};
-
-# endif // DBL_MANT_DIG < LDBL_MANT_DIG
-
-  /// Promoted type for long double
-  template<>
-  struct
-  numeric_traits<long double>::
-  promoted {using type = long double;};
+  template <>
+  struct numeric_traits<long double>::demoted
+  {
+    using type = double;
+  };
 
 #else
 
-# if (DBL_MANT_DIG < LDBL_MANT_DIG) && (LDBL_MANT_DIG < DBL_MANT_DIG*2)
-
   /// Promoted type for double
-  template<>
-  struct
-  numeric_traits<double>::
-  promoted {using type = long double;};
+  template <>
+  struct numeric_traits<double>::promoted
+  {
+    using type = double;
+  };
 
   /// Demoted type for long double
-  template<>
-  struct
-  numeric_traits<long double>::
-  demoted {using type = double;};
+  template <>
+  struct numeric_traits<long double>::demoted
+  {
+    using type = float;
+  };
+
+#endif  // DBL_MANT_DIG < LDBL_MANT_DIG
 
   /// Promoted type for long double
-  template<>
-  struct
-  numeric_traits<long double>::
-  promoted {using type = dd_real;};
+  template <>
+  struct numeric_traits<long double>::promoted
+  {
+    using type = long double;
+  };
 
-  /// Demoted type for dd_real
-  template<>
-  struct
-  numeric_traits<dd_real>::
-  demoted {using type = long double;};
+#else
 
-  /// Promoted type for dd_real
-  template<>
-  struct
-  numeric_traits<dd_real>::
-  promoted {using type = qd_real;};
-
-  /// Demoted type for qd_real
-  template<>
-  struct
-  numeric_traits<qd_real>::
-  demoted {using type = dd_real;};
-
-# elif (LDBL_MANT_DIG < DBL_MANT_DIG*2)
+#if (DBL_MANT_DIG < LDBL_MANT_DIG) && (LDBL_MANT_DIG < DBL_MANT_DIG * 2)
 
   /// Promoted type for double
-  template<>
-  struct
-  numeric_traits<double>::
-  promoted {using type = dd_real;};
+  template <>
+  struct numeric_traits<double>::promoted
+  {
+    using type = long double;
+  };
 
   /// Demoted type for long double
-  template<>
-  struct
-  numeric_traits<long double>::
-  demoted {using type = float;};
+  template <>
+  struct numeric_traits<long double>::demoted
+  {
+    using type = double;
+  };
 
   /// Promoted type for long double
-  template<>
-  struct
-  numeric_traits<long double>::
-  promoted {using type = dd_real;};
+  template <>
+  struct numeric_traits<long double>::promoted
+  {
+    using type = dd_real;
+  };
 
   /// Demoted type for dd_real
-  template<>
-  struct
-  numeric_traits<dd_real>::
-  demoted {using type = double;};
+  template <>
+  struct numeric_traits<dd_real>::demoted
+  {
+    using type = long double;
+  };
 
   /// Promoted type for dd_real
-  template<>
-  struct
-  numeric_traits<dd_real>::
-  promoted {using type = qd_real;};
+  template <>
+  struct numeric_traits<dd_real>::promoted
+  {
+    using type = qd_real;
+  };
 
   /// Demoted type for qd_real
-  template<>
-  struct
-  numeric_traits<qd_real>::
-  demoted {using type = dd_real;};
+  template <>
+  struct numeric_traits<qd_real>::demoted
+  {
+    using type = dd_real;
+  };
 
-# else
+#elif (LDBL_MANT_DIG < DBL_MANT_DIG * 2)
 
   /// Promoted type for double
-  template<>
-  struct
-  numeric_traits<double>::
-  promoted {using type = dd_real;};
-
-  /// Demoted type for dd_real
-  template<>
-  struct
-  numeric_traits<dd_real>::
-  demoted {using type = double;};
-
-  /// Promoted type for dd_real
-  template<>
-  struct
-  numeric_traits<dd_real>::
-  promoted {using type = long double;};
+  template <>
+  struct numeric_traits<double>::promoted
+  {
+    using type = dd_real;
+  };
 
   /// Demoted type for long double
-  template<>
-  struct
-  numeric_traits<long double>::
-  demoted {using type = dd_real;};
+  template <>
+  struct numeric_traits<long double>::demoted
+  {
+    using type = float;
+  };
 
   /// Promoted type for long double
-  template<>
-  struct
-  numeric_traits<long double>::
-  promoted {using type = qd_real;};
+  template <>
+  struct numeric_traits<long double>::promoted
+  {
+    using type = dd_real;
+  };
+
+  /// Demoted type for dd_real
+  template <>
+  struct numeric_traits<dd_real>::demoted
+  {
+    using type = double;
+  };
+
+  /// Promoted type for dd_real
+  template <>
+  struct numeric_traits<dd_real>::promoted
+  {
+    using type = qd_real;
+  };
 
   /// Demoted type for qd_real
-  template<>
-  struct
-  numeric_traits<qd_real>::
-  demoted {using type = long double;};
+  template <>
+  struct numeric_traits<qd_real>::demoted
+  {
+    using type = dd_real;
+  };
 
-# endif // (DBL_MANT_DIG < LDBL_MANT_DIG) && (LDBL_MANT_DIG < DBL_MANT_DIG*2)
+#else
+
+  /// Promoted type for double
+  template <>
+  struct numeric_traits<double>::promoted
+  {
+    using type = dd_real;
+  };
+
+  /// Demoted type for dd_real
+  template <>
+  struct numeric_traits<dd_real>::demoted
+  {
+    using type = double;
+  };
+
+  /// Promoted type for dd_real
+  template <>
+  struct numeric_traits<dd_real>::promoted
+  {
+    using type = long double;
+  };
+
+  /// Demoted type for long double
+  template <>
+  struct numeric_traits<long double>::demoted
+  {
+    using type = dd_real;
+  };
+
+  /// Promoted type for long double
+  template <>
+  struct numeric_traits<long double>::promoted
+  {
+    using type = qd_real;
+  };
+
+  /// Demoted type for qd_real
+  template <>
+  struct numeric_traits<qd_real>::demoted
+  {
+    using type = long double;
+  };
+
+#endif  // (DBL_MANT_DIG < LDBL_MANT_DIG) && (LDBL_MANT_DIG < DBL_MANT_DIG*2)
 
   /// Promoted type for qd_real
-  template<>
-  struct
-  numeric_traits<qd_real>::
-  promoted {using type = qd_real;};
+  template <>
+  struct numeric_traits<qd_real>::promoted
+  {
+    using type = qd_real;
+  };
 
-#endif // !defined(_GLUCAT_USE_QD) || !defined(QD_API)
+#endif  // !defined(_GLUCAT_USE_QD) || !defined(QD_API)
 
-} // namespace glucat
+}  // namespace glucat
 
-#endif // _GLUCAT_PROMOTION_H
+#endif  // _GLUCAT_PROMOTION_H

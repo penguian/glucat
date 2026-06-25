@@ -39,34 +39,20 @@
 // ref: S. Meyers, "Effective C++ ", Addison-Wesley, 1992.
  ***************************************************************************/
 
-#include "glucat/portability.h"
-
-#include "glucat/global.h"
-
-#include "glucat/errors.h"
-
-#include "glucat/index_set.h"
-
-#include "glucat/scalar.h"
-
-#include "glucat/long_double.h"
-
-#include "glucat/qd.h"
-
-#include "glucat/promotion.h"
-
-#include "glucat/random.h"
-
 #include "glucat/clifford_algebra.h"
-
-#include "glucat/tuning.h"
-
+#include "glucat/errors.h"
 #include "glucat/framed_multi.h"
-
-#include "glucat/matrix.h"
-
 #include "glucat/generation.h"
-
+#include "glucat/global.h"
+#include "glucat/index_set.h"
+#include "glucat/long_double.h"
+#include "glucat/matrix.h"
 #include "glucat/matrix_multi.h"
+#include "glucat/portability.h"
+#include "glucat/promotion.h"
+#include "glucat/qd.h"
+#include "glucat/random.h"
+#include "glucat/scalar.h"
+#include "glucat/tuning.h"
 
 #endif  // _GLUCAT_GLUCAT_H

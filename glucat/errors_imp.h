@@ -31,11 +31,11 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
-#include "glucat/errors.h"
-
-#include <string>
 #include <iostream>
 #include <ostream>
+#include <string>
+
+#include "glucat/errors.h"
 
 namespace glucat
 {
@@ -45,69 +45,74 @@ namespace glucat
    * @tparam Class_T Base exception class
    * @param msg Error message
    */
-  template< class Class_T >
-  error<Class_T>::
-  error(const std::string& msg)
-  : glucat_error(Class_T::classname(), msg)
-  { }
+  template <class Class_T>
+  error<Class_T>::error(const std::string& msg)
+      : glucat_error(Class_T::classname(), msg)
+  {
+  }
 
-  template< class Class_T >
-  error<Class_T>::
-  error(const std::string& context, const std::string& msg)
-  : glucat_error(context, msg)
-  { }
+  template <class Class_T>
+  error<Class_T>::error(const std::string& context, const std::string& msg)
+      : glucat_error(context, msg)
+  {
+  }
 
-  template< class Class_T >
-  auto
-  error<Class_T>::
-  heading() const noexcept -> std::string_view
+  template <class Class_T>
+  auto error<Class_T>::heading() const noexcept -> std::string_view
   { return "Error in glucat::"; }
 
-  template< class Class_T >
-  auto
-  error<Class_T>::
-  classname() const noexcept -> std::string_view
+  template <class Class_T>
+  auto error<Class_T>::classname() const noexcept -> std::string_view
   { return name; }
 
-  template< class Class_T >
-  void
-  error<Class_T>::
-  print_error_msg() const
-  { std::cerr << heading() << classname() << std::endl << what() << std::endl; }
-}
+  template <class Class_T>
+  void error<Class_T>::print_error_msg() const
+  {
+    std::cerr << heading() << classname() << std::endl << what() << std::endl;
+  }
+}  // namespace glucat
 
 #ifdef GLUCAT_DOCTEST
 #include <sstream>
 #include <string_view>
-struct dummy_class {
+struct dummy_class
+{
   static constexpr std::string_view name = "dummy_class";
   static std::string_view classname() { return name; }
 };
 
-TEST_CASE("errors") {
+TEST_CASE("errors")
+{
   using namespace glucat;
 
-  SUBCASE("Two-argument constructor") {
+  SUBCASE("Two-argument constructor")
+  {
     error<dummy_class> e("test_context", "test_message");
     CHECK(e.heading() == "Error in glucat::");
     CHECK(e.classname() == "test_context");
     CHECK(std::string(e.what()) == "test_message");
   }
 
-  SUBCASE("One-argument constructor") {
+  SUBCASE("One-argument constructor")
+  {
     error<dummy_class> e("test_message_only");
     CHECK(e.classname() == "dummy_class");
     CHECK(std::string(e.what()) == "test_message_only");
   }
 
-  SUBCASE("Output verification (std::cerr redirection)") {
+  SUBCASE("Output verification (std::cerr redirection)")
+  {
     error<dummy_class> e("context", "message");
 
     // Redirect cerr to a stringstream using RAII
     std::stringstream buffer;
-    struct CerrRedirect {
+    struct CerrRedirect
+    {
       std::streambuf* old;
-      CerrRedirect(std::streambuf* new_buf) : old(std::cerr.rdbuf(new_buf)) {}
+      CerrRedirect(std::streambuf* new_buf)
+          : old(std::cerr.rdbuf(new_buf))
+      {
+      }
       ~CerrRedirect() { std::cerr.rdbuf(old); }
     } redirect(buffer.rdbuf());
 
@@ -121,4 +126,4 @@ TEST_CASE("errors") {
 }
 #endif
 
-#endif // _GLUCAT_ERRORS_IMP_H
+#endif  // _GLUCAT_ERRORS_IMP_H

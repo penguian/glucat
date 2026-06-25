@@ -33,17 +33,16 @@
  ***************************************************************************
  ***************************************************************************/
 
-#include "glucat/framed_multi.h"
-
-#include "glucat/scalar.h"
-#include "glucat/random.h"
-#include "glucat/generation.h"
-#include "glucat/matrix.h"
-
-#include <sstream>
+#include <cmath>
 #include <fstream>
 #include <limits>
-#include <cmath>
+#include <sstream>
+
+#include "glucat/framed_multi.h"
+#include "glucat/generation.h"
+#include "glucat/matrix.h"
+#include "glucat/random.h"
+#include "glucat/scalar.h"
 
 namespace glucat
 {
@@ -55,10 +54,8 @@ namespace glucat
    * @tparam HI High index limit
    * @tparam Tune_P Tuning policy
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  classname() -> std::string_view
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::classname() -> std::string_view
   { return "framed_multi"; }
 
 #define _GLUCAT_HASH_N(x) (x)
@@ -81,11 +78,11 @@ namespace glucat
    * @tparam HI High index limit
    * @tparam Tune_P Tuning policy
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  framed_multi()
-  : map_t(_GLUCAT_HASH_N(0))
-  { }
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  framed_multi<Scalar_T, LO, HI, Tune_P>::framed_multi()
+      : map_t(_GLUCAT_HASH_N(0))
+  {
+  }
 
   /*
    * @brief Move constructor
@@ -96,11 +93,12 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @param other Other matrix
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  framed_multi(framed_multi&& other) noexcept(std::is_nothrow_move_constructible_v<Scalar_T>)
-  : map_t(std::move(other))
-  { }
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  framed_multi<Scalar_T, LO, HI, Tune_P>::framed_multi(framed_multi&& other) noexcept(
+      std::is_nothrow_move_constructible_v<Scalar_T>)
+      : map_t(std::move(other))
+  {
+  }
 
   /*
    * @brief Private constructor using hash_size
@@ -111,11 +109,11 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @param hash_size Value
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  framed_multi(const hash_size_t& hash_size)
-  : map_t(_GLUCAT_HASH_N(hash_size()))
-  { }
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  framed_multi<Scalar_T, LO, HI, Tune_P>::framed_multi(const hash_size_t& hash_size)
+      : map_t(_GLUCAT_HASH_N(hash_size()))
+  {
+  }
 
   /*
    * @brief Construct a multivector from a multivector with a different scalar type
@@ -126,11 +124,10 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @param val Value
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  template< typename Other_Scalar_T, typename Other_Tune_P >
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  framed_multi(const framed_multi<Other_Scalar_T,LO,HI,Other_Tune_P>& val)
-  : map_t(_GLUCAT_HASH_N(val.size()))
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  template <typename Other_Scalar_T, typename Other_Tune_P>
+  framed_multi<Scalar_T, LO, HI, Tune_P>::framed_multi(const framed_multi<Other_Scalar_T, LO, HI, Other_Tune_P>& val)
+      : map_t(_GLUCAT_HASH_N(val.size()))
   {
     for (auto& val_term : val)
       this->insert(term_t(val_term.first, numeric_traits<Scalar_T>::to_scalar_t(val_term.second)));
@@ -147,12 +144,11 @@ namespace glucat
    * @param frm Frame
    * @param prechecked Bool: true if i has already been checked?
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  template< typename Other_Scalar_T, typename Other_Tune_P >
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  framed_multi(const framed_multi<Other_Scalar_T,LO,HI,Other_Tune_P>& val,
-               const index_set_t frm, const bool prechecked)
-  : map_t(_GLUCAT_HASH_N(val.size()))
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  template <typename Other_Scalar_T, typename Other_Tune_P>
+  framed_multi<Scalar_T, LO, HI, Tune_P>::framed_multi(const framed_multi<Other_Scalar_T, LO, HI, Other_Tune_P>& val,
+                                                       const index_set_t frm, const bool prechecked)
+      : map_t(_GLUCAT_HASH_N(val.size()))
   {
     if (!prechecked && (val.frame() | frm) != frm)
       throw error_t("multivector_t(val,frm): cannot initialize with value outside of frame");
@@ -171,11 +167,9 @@ namespace glucat
    * @param frm Frame
    * @param prechecked Bool: true if i has already been checked?
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  framed_multi(const multivector_t& val,
-               const index_set_t frm, const bool prechecked)
-  : map_t(_GLUCAT_HASH_N(val.size()))
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  framed_multi<Scalar_T, LO, HI, Tune_P>::framed_multi(const multivector_t& val, const index_set_t frm, const bool prechecked)
+      : map_t(_GLUCAT_HASH_N(val.size()))
   {
     if (!prechecked && (val.frame() | frm) != frm)
       throw error_t("multivector_t(val,frm): cannot initialize with value outside of frame");
@@ -193,10 +187,9 @@ namespace glucat
    * @param ist Value
    * @param crd Value
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  framed_multi(const index_set_t ist, const Scalar_T& crd)
-  : map_t(_GLUCAT_HASH_N(1))
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  framed_multi<Scalar_T, LO, HI, Tune_P>::framed_multi(const index_set_t ist, const Scalar_T& crd)
+      : map_t(_GLUCAT_HASH_N(1))
   {
     if (crd != Scalar_T(0))
       this->insert(term_t(ist, crd));
@@ -214,11 +207,10 @@ namespace glucat
    * @param frm Frame
    * @param prechecked Bool: true if i has already been checked?
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  framed_multi(const index_set_t ist, const Scalar_T& crd,
-               const index_set_t frm, const bool prechecked)
-  : map_t(_GLUCAT_HASH_N(1))
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  framed_multi<Scalar_T, LO, HI, Tune_P>::framed_multi(const index_set_t ist, const Scalar_T& crd, const index_set_t frm,
+                                                       const bool prechecked)
+      : map_t(_GLUCAT_HASH_N(1))
   {
     if (!prechecked && (ist | frm) != frm)
       throw error_t("multivector_t(ist,crd,frm): cannot initialize with value outside of frame");
@@ -236,10 +228,9 @@ namespace glucat
    * @param scr Value
    * @param frm Frame
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  framed_multi(const Scalar_T& scr, const index_set_t frm)
-  : map_t(_GLUCAT_HASH_N(1))
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  framed_multi<Scalar_T, LO, HI, Tune_P>::framed_multi(const Scalar_T& scr, const index_set_t frm)
+      : map_t(_GLUCAT_HASH_N(1))
   {
     if (scr != Scalar_T(0))
       this->insert(term_t(index_set_t(), scr));
@@ -255,10 +246,9 @@ namespace glucat
    * @param scr Value
    * @param frm Frame
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  framed_multi(const int scr, const index_set_t frm)
-  : map_t(_GLUCAT_HASH_N(1))
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  framed_multi<Scalar_T, LO, HI, Tune_P>::framed_multi(const int scr, const index_set_t frm)
+      : map_t(_GLUCAT_HASH_N(1))
   {
     if (scr != Scalar_T(0))
       this->insert(term_t(index_set_t(), Scalar_T(scr)));
@@ -275,23 +265,18 @@ namespace glucat
    * @param frm Frame
    * @param prechecked Bool: true if i has already been checked?
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  framed_multi(const vector_t& vec,
-               const index_set_t frm, const bool prechecked)
-  : map_t(_GLUCAT_HASH_N(vec.size()))
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  framed_multi<Scalar_T, LO, HI, Tune_P>::framed_multi(const vector_t& vec, const index_set_t frm, const bool prechecked)
+      : map_t(_GLUCAT_HASH_N(vec.size()))
   {
     if (!prechecked && index_t(vec.size()) != frm.count())
       throw error_t("multivector_t(vec,frm): cannot initialize with vector not matching frame");
     auto idx = frm.min();
-    const auto frm_end = frm.max()+1;
+    const auto frm_end = frm.max() + 1;
     for (auto& crd : vec)
     {
       *this += term_t(index_set_t(idx), crd);
-      for (
-        ++idx;
-        idx != frm_end && !frm[idx];
-        ++idx)
+      for (++idx; idx != frm_end && !frm[idx]; ++idx)
         ;
     }
   }
@@ -305,10 +290,9 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @param str Value
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  framed_multi(const std::string& str)
-  : map_t(_GLUCAT_HASH_N(0))
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  framed_multi<Scalar_T, LO, HI, Tune_P>::framed_multi(const std::string& str)
+      : map_t(_GLUCAT_HASH_N(0))
   {
     std::istringstream ss(str);
     ss >> *this;
@@ -331,10 +315,9 @@ namespace glucat
    * @param frm Frame
    * @param prechecked Bool: true if i has already been checked?
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  framed_multi(const std::string& str, const index_set_t frm, const bool prechecked)
-  : map_t(_GLUCAT_HASH_N(0))
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  framed_multi<Scalar_T, LO, HI, Tune_P>::framed_multi(const std::string& str, const index_set_t frm, const bool prechecked)
+      : map_t(_GLUCAT_HASH_N(0))
   {
     if (prechecked)
       *this = multivector_t(str);
@@ -351,11 +334,10 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @param val Value
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  template< typename Other_Scalar_T, typename Other_Tune_P >
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  framed_multi(const matrix_multi<Other_Scalar_T,LO,HI,Other_Tune_P>& val)
-  : map_t(_GLUCAT_HASH_N(1))
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  template <typename Other_Scalar_T, typename Other_Tune_P>
+  framed_multi<Scalar_T, LO, HI, Tune_P>::framed_multi(const matrix_multi<Other_Scalar_T, LO, HI, Other_Tune_P>& val)
+      : map_t(_GLUCAT_HASH_N(1))
   {
     if (val == Other_Scalar_T(0))
       return;
@@ -371,12 +353,12 @@ namespace glucat
     if (dim >= Tuning_Values_P::inv_fast_dim_threshold)
       try
       {
-        *this = (val.template fast_framed_multi<Scalar_T,Tune_P>()).truncated();
+        *this = (val.template fast_framed_multi<Scalar_T, Tune_P>()).truncated();
         return;
       }
       catch (const std::exception& e)
-      { } // Fall back to the slow algorithm
-
+      {
+      }  // Fall back to the slow algorithm
 
     const auto val_norm = traits_t::to_scalar_t(val.norm());
     if (traits_t::isNaN_or_isInf(val_norm))
@@ -386,16 +368,11 @@ namespace glucat
     }
     const auto frm = val.frame();
     const auto algebra_dim = set_value_t(1) << frm.count();
-    auto result = multivector_t(
-      _GLUCAT_HASH_SIZE_T(std::min<size_t>(algebra_dim, val.m_matrix.nnz())));
-    for (auto
-        stv = set_value_t(0);
-        stv != algebra_dim;
-        stv++)
+    auto result = multivector_t(_GLUCAT_HASH_SIZE_T(std::min<size_t>(algebra_dim, val.m_matrix.nnz())));
+    for (auto stv = set_value_t(0); stv != algebra_dim; stv++)
     {
       const auto ist = index_set_t(stv, frm, true);
-      const auto crd =
-        traits_t::to_scalar_t(val.basis_element(ist).template inner<Other_Scalar_T>(val.m_matrix));
+      const auto crd = traits_t::to_scalar_t(val.basis_element(ist).template inner<Other_Scalar_T>(val.m_matrix));
       if (crd != Scalar_T(0))
         result.insert(term_t(ist, crd));
     }
@@ -412,10 +389,8 @@ namespace glucat
    * @param rhs Right hand side
    * @return True if equal
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  operator==  (const multivector_t& rhs) const -> bool
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::operator==(const multivector_t& rhs) const -> bool
   {
     if (this->size() != rhs.size())
       return false;
@@ -439,23 +414,20 @@ namespace glucat
    * @param scr Value
    * @return True if equal
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  operator==  (const Scalar_T& scr) const -> bool
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  inline auto framed_multi<Scalar_T, LO, HI, Tune_P>::operator==(const Scalar_T& scr) const -> bool
   {
     switch (this->size())
     {
-    case 0:
-      return scr == Scalar_T(0);
-    case 1:
+      case 0:
+        return scr == Scalar_T(0);
+      case 1:
       {
         const auto& this_it = this->begin();
         return this_it->first == index_set_t() && this_it->second == scr;
       }
-    default:
-      return false;
+      default:
+        return false;
     }
   }
 
@@ -474,11 +446,8 @@ namespace glucat
    * @param scr Scalar
    * @return Reference to this
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  operator+= (const Scalar_T& scr) -> multivector_t&
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  inline auto framed_multi<Scalar_T, LO, HI, Tune_P>::operator+=(const Scalar_T& scr) -> multivector_t&
   {
     *this += term_t(index_set_t(), scr);
     return *this;
@@ -494,12 +463,9 @@ namespace glucat
    * @param rhs Right hand side
    * @return Reference to this
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  operator+= (const multivector_t& rhs) -> multivector_t&
-  { // simply add terms
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  inline auto framed_multi<Scalar_T, LO, HI, Tune_P>::operator+=(const multivector_t& rhs) -> multivector_t&
+  {  // simply add terms
     for (auto& rhs_term : rhs)
       *this += rhs_term;
     return *this;
@@ -522,11 +488,8 @@ namespace glucat
    * @param scr Scalar
    * @return Reference to this
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  operator-= (const Scalar_T& scr) -> multivector_t&
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  inline auto framed_multi<Scalar_T, LO, HI, Tune_P>::operator-=(const Scalar_T& scr) -> multivector_t&
   {
     *this += term_t(index_set_t(), -scr);
     return *this;
@@ -542,11 +505,8 @@ namespace glucat
    * @param rhs Right hand side
    * @return Reference to this
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  operator-= (const multivector_t& rhs) -> multivector_t&
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  inline auto framed_multi<Scalar_T, LO, HI, Tune_P>::operator-=(const multivector_t& rhs) -> multivector_t&
   {
     for (auto& rhs_term : rhs)
       *this += term_t(rhs_term.first, -(rhs_term.second));
@@ -567,12 +527,9 @@ namespace glucat
    *
    * @return Unary minus
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  operator- () const -> multivector_t
-  { // multiply coordinates of all terms by -1
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  inline auto framed_multi<Scalar_T, LO, HI, Tune_P>::operator-() const -> multivector_t
+  {  // multiply coordinates of all terms by -1
     auto result = *this;
     for (auto& result_term : result)
       const_cast<Scalar_T&>(result_term.second) *= Scalar_T(-1);
@@ -589,11 +546,9 @@ namespace glucat
    * @param scr Value
    * @return Reference to this
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  operator*= (const Scalar_T& scr) -> multivector_t&
-  { // multiply coordinates of all terms by scalar
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::operator*=(const Scalar_T& scr) -> multivector_t&
+  {  // multiply coordinates of all terms by scalar
     using traits_t = numeric_traits<Scalar_T>;
 
     if (traits_t::isNaN_or_isInf(scr))
@@ -634,11 +589,11 @@ namespace glucat
    * clifford<>("{1}") * clifford<>("{2}"); // Returns {1,2}
    * @endcode
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  operator* (const framed_multi<Scalar_T,LO,HI,Tune_P>& lhs, const framed_multi<Scalar_T,LO,HI,Tune_P>& rhs) -> framed_multi<Scalar_T,LO,HI,Tune_P>
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto operator*(const framed_multi<Scalar_T, LO, HI, Tune_P>& lhs, const framed_multi<Scalar_T, LO, HI, Tune_P>& rhs)
+      -> framed_multi<Scalar_T, LO, HI, Tune_P>
   {
-    using multivector_t = framed_multi<Scalar_T,LO,HI,Tune_P>;
+    using multivector_t = framed_multi<Scalar_T, LO, HI, Tune_P>;
     using traits_t = numeric_traits<Scalar_T>;
     using term_t = typename multivector_t::term_t;
     using index_set_t = typename multivector_t::index_set_t;
@@ -654,9 +609,8 @@ namespace glucat
     using Tuning_Values_P = typename Tune_P::tuning_values_p;
     const auto direct_mult = lhs_size * rhs_size <= double(algebra_dim);
     if (direct_mult)
-    { // If we have a sparse multiply, store the result directly
-      auto result = multivector_t(
-        _GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
+    {  // If we have a sparse multiply, store the result directly
+      auto result = multivector_t(_GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
       for (auto& lhs_term : lhs)
         for (auto& rhs_term : rhs)
           result += term_t(lhs_term) * term_t(rhs_term);
@@ -666,17 +620,21 @@ namespace glucat
     {
       const set_value_t dim = algebra_dim;
       std::vector<Scalar_T> l_vec(dim, Scalar_T(0));
-      for (auto& term : lhs) l_vec[term.first.value_of_fold(our_frame)] = term.second;
+      for (auto& term : lhs)
+        l_vec[term.first.value_of_fold(our_frame)] = term.second;
       std::vector<Scalar_T> r_vec(dim, Scalar_T(0));
-      for (auto& term : rhs) r_vec[term.first.value_of_fold(our_frame)] = term.second;
+      for (auto& term : rhs)
+        r_vec[term.first.value_of_fold(our_frame)] = term.second;
 
       std::vector<index_set_t> ists(dim);
       std::vector<set_value_t> l_indices, r_indices;
       for (set_value_t k = 0; k < dim; ++k)
       {
         ists[k] = index_set_t(k, our_frame, true);
-        if (l_vec[k] != Scalar_T(0)) l_indices.push_back(k);
-        if (r_vec[k] != Scalar_T(0)) r_indices.push_back(k);
+        if (l_vec[k] != Scalar_T(0))
+          l_indices.push_back(k);
+        if (r_vec[k] != Scalar_T(0))
+          r_indices.push_back(k);
       }
 
       std::vector<Scalar_T> res_vec(dim, Scalar_T(0));
@@ -697,10 +655,9 @@ namespace glucat
       return result.truncated();
     }
     else
-    { // Past a certain threshold, the matrix algorithm is fastest
+    {  // Past a certain threshold, the matrix algorithm is fastest
       using matrix_multi_t = typename multivector_t::matrix_multi_t;
-      return multivector_t(matrix_multi_t(lhs, our_frame, true) *
-                           matrix_multi_t(rhs, our_frame, true));
+      return multivector_t(matrix_multi_t(lhs, our_frame, true) * matrix_multi_t(rhs, our_frame, true));
     }
   }
 
@@ -714,11 +671,8 @@ namespace glucat
    * @param rhs Right hand side
    * @return Reference to this
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  operator*= (const multivector_t& rhs) -> multivector_t&
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  inline auto framed_multi<Scalar_T, LO, HI, Tune_P>::operator*=(const multivector_t& rhs) -> multivector_t&
   { return *this = *this * rhs; }
 
   /*
@@ -746,16 +700,16 @@ namespace glucat
    * clifford<>("{1}") ^ clifford<>("{2}"); // Returns {1,2}
    * @endcode
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  operator^ (const framed_multi<Scalar_T,LO,HI,Tune_P>& lhs, const framed_multi<Scalar_T,LO,HI,Tune_P>& rhs) -> framed_multi<Scalar_T,LO,HI,Tune_P>
-  { // Arvind Raja's original reference:
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto operator^(const framed_multi<Scalar_T, LO, HI, Tune_P>& lhs, const framed_multi<Scalar_T, LO, HI, Tune_P>& rhs)
+      -> framed_multi<Scalar_T, LO, HI, Tune_P>
+  {  // Arvind Raja's original reference:
     // "old clical, outerproduct(p,q:pterm):pterm in file compmod.pas"
 
     if (lhs.empty() || rhs.empty())
       return Scalar_T(0);
 
-    using multivector_t = framed_multi<Scalar_T,LO,HI,Tune_P>;
+    using multivector_t = framed_multi<Scalar_T, LO, HI, Tune_P>;
     using index_set_t = typename multivector_t::index_set_t;
     using term_t = typename multivector_t::term_t;
 
@@ -768,8 +722,7 @@ namespace glucat
     if (lhs_size * rhs_size <= double(algebra_dim))
     {
       const auto empty_set = index_set_t();
-      auto result = multivector_t(
-        _GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
+      auto result = multivector_t(_GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
       for (auto& lhs_term : lhs)
         for (auto& rhs_term : rhs)
           if ((lhs_term.first & rhs_term.first) == empty_set)
@@ -780,9 +733,11 @@ namespace glucat
     {
       const set_value_t dim = algebra_dim;
       std::vector<Scalar_T> l_vec(dim, Scalar_T(0));
-      for (auto& term : lhs) l_vec[term.first.value_of_fold(our_frame)] = term.second;
+      for (auto& term : lhs)
+        l_vec[term.first.value_of_fold(our_frame)] = term.second;
       std::vector<Scalar_T> r_vec(dim, Scalar_T(0));
-      for (auto& term : rhs) r_vec[term.first.value_of_fold(our_frame)] = term.second;
+      for (auto& term : rhs)
+        r_vec[term.first.value_of_fold(our_frame)] = term.second;
 
       std::vector<set_value_t> unfolded_bits(dim);
       std::vector<unsigned long> h_vals(dim);
@@ -795,7 +750,7 @@ namespace glucat
       std::vector<Scalar_T> res_vec(dim, Scalar_T(0));
       for (set_value_t k = 0; k < dim; ++k)
       {
-        for (set_value_t i = k; ; i = (i - 1) & k)
+        for (set_value_t i = k;; i = (i - 1) & k)
         {
           set_value_t j = k ^ i;
           if (l_vec[i] != Scalar_T(0) && r_vec[j] != Scalar_T(0))
@@ -806,7 +761,8 @@ namespace glucat
             Scalar_T sign = (neg & 1) ? Scalar_T(-1) : Scalar_T(1);
             res_vec[k] += sign * l_vec[i] * r_vec[j];
           }
-          if (i == 0) break;
+          if (i == 0)
+            break;
         }
       }
       auto result = multivector_t(_GLUCAT_HASH_SIZE_T(dim));
@@ -818,8 +774,7 @@ namespace glucat
     else
     {
       using matrix_multi_t = typename multivector_t::matrix_multi_t;
-      return multivector_t(matrix_multi_t(lhs, our_frame, true) ^
-                           matrix_multi_t(rhs, our_frame, true));
+      return multivector_t(matrix_multi_t(lhs, our_frame, true) ^ matrix_multi_t(rhs, our_frame, true));
     }
   }
 
@@ -838,11 +793,8 @@ namespace glucat
    * @param rhs Right hand side
    * @return Reference to this
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  operator^= (const multivector_t& rhs) -> multivector_t&
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  inline auto framed_multi<Scalar_T, LO, HI, Tune_P>::operator^=(const multivector_t& rhs) -> multivector_t&
   { return *this = *this ^ rhs; }
 
   /*
@@ -870,16 +822,16 @@ namespace glucat
    * clifford<>("{1}") & clifford<>("{1}"); // Returns 1
    * @endcode
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  operator& (const framed_multi<Scalar_T,LO,HI,Tune_P>& lhs, const framed_multi<Scalar_T,LO,HI,Tune_P>& rhs) -> framed_multi<Scalar_T,LO,HI,Tune_P>
-  { // Arvind Raja's original reference:
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto operator&(const framed_multi<Scalar_T, LO, HI, Tune_P>& lhs, const framed_multi<Scalar_T, LO, HI, Tune_P>& rhs)
+      -> framed_multi<Scalar_T, LO, HI, Tune_P>
+  {  // Arvind Raja's original reference:
     // "old clical, innerproduct(p,q:pterm):pterm in file compmod.pas"
 
     if (lhs.empty() || rhs.empty())
       return Scalar_T(0);
 
-    using multivector_t = framed_multi<Scalar_T,LO,HI,Tune_P>;
+    using multivector_t = framed_multi<Scalar_T, LO, HI, Tune_P>;
     using index_set_t = typename multivector_t::index_set_t;
     using term_t = typename multivector_t::term_t;
 
@@ -891,8 +843,7 @@ namespace glucat
     const auto frm_count = our_frame.count();
     if (lhs_size * rhs_size <= double(algebra_dim))
     {
-      auto result = multivector_t(
-        _GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
+      auto result = multivector_t(_GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
       const auto empty_set = index_set_t();
       for (auto& lhs_term : lhs)
       {
@@ -915,9 +866,11 @@ namespace glucat
     {
       const set_value_t dim = algebra_dim;
       std::vector<Scalar_T> l_vec(dim, Scalar_T(0));
-      for (auto& term : lhs) l_vec[term.first.value_of_fold(our_frame)] = term.second;
+      for (auto& term : lhs)
+        l_vec[term.first.value_of_fold(our_frame)] = term.second;
       std::vector<Scalar_T> r_vec(dim, Scalar_T(0));
-      for (auto& term : rhs) r_vec[term.first.value_of_fold(our_frame)] = term.second;
+      for (auto& term : rhs)
+        r_vec[term.first.value_of_fold(our_frame)] = term.second;
 
       std::vector<set_value_t> unfolded_bits(dim);
       std::vector<unsigned long> h_vals(dim);
@@ -930,12 +883,14 @@ namespace glucat
       std::vector<Scalar_T> res_vec(dim, Scalar_T(0));
       for (set_value_t i = 1; i < dim; ++i)
       {
-        if (l_vec[i] == Scalar_T(0)) continue;
+        if (l_vec[i] == Scalar_T(0))
+          continue;
         unsigned long uthis = unfolded_bits[i];
         // j is submask of i
-        for (set_value_t j = i; ; j = (j - 1) & i)
+        for (set_value_t j = i;; j = (j - 1) & i)
         {
-          if (j == 0) break;
+          if (j == 0)
+            break;
           if (r_vec[j] != Scalar_T(0))
           {
             unsigned long urhs = unfolded_bits[j];
@@ -946,7 +901,8 @@ namespace glucat
             Scalar_T sign = (neg & 1) ? Scalar_T(-1) : Scalar_T(1);
             res_vec[i ^ j] += sign * l_vec[i] * r_vec[j];
           }
-          if (i == 0) break;
+          if (i == 0)
+            break;
         }
         // j is strict superset of i
         for (set_value_t j = (i + 1) | i; j < dim; j = (j + 1) | i)
@@ -972,8 +928,7 @@ namespace glucat
     else
     {
       using matrix_multi_t = typename multivector_t::matrix_multi_t;
-      return multivector_t(matrix_multi_t(lhs, our_frame, true) &
-                           matrix_multi_t(rhs, our_frame, true));
+      return multivector_t(matrix_multi_t(lhs, our_frame, true) & matrix_multi_t(rhs, our_frame, true));
     }
   }
 
@@ -987,11 +942,8 @@ namespace glucat
    * @param rhs Right hand side
    * @return Reference to this
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  operator&= (const multivector_t& rhs) -> multivector_t&
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  inline auto framed_multi<Scalar_T, LO, HI, Tune_P>::operator&=(const multivector_t& rhs) -> multivector_t&
   { return *this = *this & rhs; }
 
   /*
@@ -1019,9 +971,9 @@ namespace glucat
    * clifford<>("{1,2}") % clifford<>("{1}"); // Returns -{2}
    * @endcode
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  operator% (const framed_multi<Scalar_T,LO,HI,Tune_P>& lhs, const framed_multi<Scalar_T,LO,HI,Tune_P>& rhs) -> framed_multi<Scalar_T,LO,HI,Tune_P>
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto operator%(const framed_multi<Scalar_T, LO, HI, Tune_P>& lhs, const framed_multi<Scalar_T, LO, HI, Tune_P>& rhs)
+      -> framed_multi<Scalar_T, LO, HI, Tune_P>
   {
     // Reference: Leo Dorst, "Honing geometric algebra for its use in the computer sciences",
     // in Geometric Computing with Clifford Algebras, ed. G. Sommer,
@@ -1031,7 +983,7 @@ namespace glucat
     if (lhs.empty() || rhs.empty())
       return Scalar_T(0);
 
-    using multivector_t = framed_multi<Scalar_T,LO,HI,Tune_P>;
+    using multivector_t = framed_multi<Scalar_T, LO, HI, Tune_P>;
     using index_set_t = typename multivector_t::index_set_t;
     using term_t = typename multivector_t::term_t;
 
@@ -1043,8 +995,7 @@ namespace glucat
     const auto frm_count = our_frame.count();
     if (lhs_size * rhs_size <= double(algebra_dim))
     {
-      auto result = multivector_t(
-        _GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
+      auto result = multivector_t(_GLUCAT_HASH_SIZE_T(size_t(std::min(lhs_size * rhs_size, double(algebra_dim)))));
       for (auto& rhs_term : rhs)
       {
         const auto rhs_ist = rhs_term.first;
@@ -1061,9 +1012,11 @@ namespace glucat
     {
       const set_value_t dim = algebra_dim;
       std::vector<Scalar_T> l_vec(dim, Scalar_T(0));
-      for (auto& term : lhs) l_vec[term.first.value_of_fold(our_frame)] = term.second;
+      for (auto& term : lhs)
+        l_vec[term.first.value_of_fold(our_frame)] = term.second;
       std::vector<Scalar_T> r_vec(dim, Scalar_T(0));
-      for (auto& term : rhs) r_vec[term.first.value_of_fold(our_frame)] = term.second;
+      for (auto& term : rhs)
+        r_vec[term.first.value_of_fold(our_frame)] = term.second;
 
       std::vector<set_value_t> unfolded_bits(dim);
       std::vector<unsigned long> h_vals(dim);
@@ -1076,7 +1029,8 @@ namespace glucat
       std::vector<Scalar_T> res_vec(dim, Scalar_T(0));
       for (set_value_t i = 0; i < dim; ++i)
       {
-        if (l_vec[i] == Scalar_T(0)) continue;
+        if (l_vec[i] == Scalar_T(0))
+          continue;
         unsigned long uthis = unfolded_bits[i];
         // j is superset of i
         for (set_value_t j = i; j < dim; j = (j + 1) | i)
@@ -1102,8 +1056,7 @@ namespace glucat
     else
     {
       using matrix_multi_t = typename multivector_t::matrix_multi_t;
-      return multivector_t(matrix_multi_t(lhs, our_frame, true) %
-                           matrix_multi_t(rhs, our_frame, true));
+      return multivector_t(matrix_multi_t(lhs, our_frame, true) % matrix_multi_t(rhs, our_frame, true));
     }
   }
 
@@ -1117,11 +1070,8 @@ namespace glucat
    * @param rhs Right hand side
    * @return Result
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  operator%= (const multivector_t& rhs) -> multivector_t&
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  inline auto framed_multi<Scalar_T, LO, HI, Tune_P>::operator%=(const multivector_t& rhs) -> multivector_t&
   { return *this = *this % rhs; }
 
   /*
@@ -1144,20 +1094,13 @@ namespace glucat
    * @param rhs Right hand side
    * @return Result
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  star(const framed_multi<Scalar_T,LO,HI,Tune_P>& lhs, const framed_multi<Scalar_T,LO,HI,Tune_P>& rhs) -> Scalar_T
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto star(const framed_multi<Scalar_T, LO, HI, Tune_P>& lhs, const framed_multi<Scalar_T, LO, HI, Tune_P>& rhs) -> Scalar_T
   {
     auto result = Scalar_T(0);
     const auto small_star_large = lhs.size() < rhs.size();
-    const auto* smallp =
-      small_star_large
-      ? &lhs
-      : &rhs;
-    const auto* largep =
-      small_star_large
-      ? &rhs
-      : &lhs;
+    const auto* smallp = small_star_large ? &lhs : &rhs;
+    const auto* largep = small_star_large ? &rhs : &lhs;
 
     for (auto& small_term : *smallp)
     {
@@ -1180,12 +1123,9 @@ namespace glucat
    * @param rhs Right hand side
    * @return Result
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  hstar(const framed_multi<Scalar_T,LO,HI,Tune_P>& lhs, const framed_multi<Scalar_T,LO,HI,Tune_P>& rhs) -> Scalar_T
-  {
-    return scalar(lhs.reverse() * rhs);
-  }
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto hstar(const framed_multi<Scalar_T, LO, HI, Tune_P>& lhs, const framed_multi<Scalar_T, LO, HI, Tune_P>& rhs) -> Scalar_T
+  { return scalar(lhs.reverse() * rhs); }
 
   /*
    * @brief Quotient of multivector and scalar
@@ -1197,11 +1137,9 @@ namespace glucat
    * @param scr Value
    * @return Reference to this
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  operator/= (const Scalar_T& scr) -> multivector_t&
-  { // Divide coordinates of all terms by scr
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::operator/=(const Scalar_T& scr) -> multivector_t&
+  {  // Divide coordinates of all terms by scr
     using traits_t = numeric_traits<Scalar_T>;
 
     if (traits_t::isNaN(scr))
@@ -1233,12 +1171,11 @@ namespace glucat
    * clifford<>("2{1}") / clifford<>("{1}"); // Returns 2
    * @endcode
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  operator/ (const framed_multi<Scalar_T,LO,HI,Tune_P>& lhs, const framed_multi<Scalar_T,LO,HI,Tune_P>& rhs) -> framed_multi<Scalar_T,LO,HI,Tune_P>
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  inline auto operator/(const framed_multi<Scalar_T, LO, HI, Tune_P>& lhs, const framed_multi<Scalar_T, LO, HI, Tune_P>& rhs)
+      -> framed_multi<Scalar_T, LO, HI, Tune_P>
   {
-    using multivector_t = framed_multi<Scalar_T,LO,HI,Tune_P>;
+    using multivector_t = framed_multi<Scalar_T, LO, HI, Tune_P>;
     using traits_t = numeric_traits<Scalar_T>;
     using matrix_multi_t = typename multivector_t::matrix_multi_t;
 
@@ -1259,11 +1196,8 @@ namespace glucat
    * @param rhs Right hand side
    * @return Geometric quotient *this / rhs
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  operator/= (const multivector_t& rhs) -> multivector_t&
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  inline auto framed_multi<Scalar_T, LO, HI, Tune_P>::operator/=(const multivector_t& rhs) -> multivector_t&
   { return *this = *this / rhs; }
 
   /*
@@ -1282,12 +1216,11 @@ namespace glucat
    * clifford<>("{2}") | clifford<>("{1,2}"); // Returns -{2}
    * @endcode
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  operator| (const framed_multi<Scalar_T,LO,HI,Tune_P>& lhs, const framed_multi<Scalar_T,LO,HI,Tune_P>& rhs) -> framed_multi<Scalar_T,LO,HI,Tune_P>
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  inline auto operator|(const framed_multi<Scalar_T, LO, HI, Tune_P>& lhs, const framed_multi<Scalar_T, LO, HI, Tune_P>& rhs)
+      -> framed_multi<Scalar_T, LO, HI, Tune_P>
   {
-    using multivector_t = framed_multi<Scalar_T,LO,HI,Tune_P>;
+    using multivector_t = framed_multi<Scalar_T, LO, HI, Tune_P>;
     using matrix_multi_t = typename multivector_t::matrix_multi_t;
 
     return multivector_t(matrix_multi_t(rhs) * matrix_multi_t(lhs) / matrix_multi_t(rhs.involute()));
@@ -1303,11 +1236,8 @@ namespace glucat
    * @param rhs Right hand side
    * @return Reference to this
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  operator|= (const multivector_t& rhs) -> multivector_t&
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  inline auto framed_multi<Scalar_T, LO, HI, Tune_P>::operator|=(const multivector_t& rhs) -> multivector_t&
   { return *this = *this | rhs; }
 
   /*
@@ -1321,11 +1251,8 @@ namespace glucat
    * @param prechecked Bypass validation check?
    * @return Result
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  versor (const multivector_t& R, const bool prechecked) const -> multivector_t
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  inline auto framed_multi<Scalar_T, LO, HI, Tune_P>::versor(const multivector_t& R, const bool prechecked) const -> multivector_t
   {
     if (prechecked)
     {
@@ -1347,11 +1274,9 @@ namespace glucat
    * @param prechecked Bypass validation check?
    * @return Result
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  versor_exp (const multivector_t& A, const bool prechecked) const -> multivector_t
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  inline auto framed_multi<Scalar_T, LO, HI, Tune_P>::versor_exp(const multivector_t& A, const bool prechecked) const
+      -> multivector_t
   { return this->versor(exp(A), prechecked); }
 
   /*
@@ -1363,11 +1288,8 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @return Result
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  inv() const -> multivector_t
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  inline auto framed_multi<Scalar_T, LO, HI, Tune_P>::inv() const -> multivector_t
   {
     auto result = matrix_multi_t(Scalar_T(1), this->frame());
     return multivector_t(result /= matrix_multi_t(*this));
@@ -1383,11 +1305,9 @@ namespace glucat
    * @param other Other matrix
    * @return Reference to this
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  operator= (framed_multi&& other) noexcept(std::is_nothrow_move_assignable_v<Scalar_T>) -> multivector_t&
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  inline auto framed_multi<Scalar_T, LO, HI, Tune_P>::operator=(framed_multi&& other) noexcept(
+      std::is_nothrow_move_assignable_v<Scalar_T>) -> multivector_t&
   {
     map_t::operator=(std::move(other));
     return *this;
@@ -1403,10 +1323,8 @@ namespace glucat
    * @param m Matrix
    * @return Result
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  pow(int m) const -> multivector_t
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::pow(int m) const -> multivector_t
   { return glucat::pow(*this, m); }
 
   /*
@@ -1419,18 +1337,14 @@ namespace glucat
    * @param m Matrix
    * @return Result
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  outer_pow(int m) const -> multivector_t
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::outer_pow(int m) const -> multivector_t
   {
     if (m < 0)
       throw error_t("outer_pow(int): negative exponent");
     auto result = multivector_t(Scalar_T(1));
     auto a = *this;
-    for (;
-        m != 0;
-        m >>= 1, a = a ^ a)
+    for (; m != 0; m >>= 1, a = a ^ a)
       if (m & 1)
         result ^= a;
     return result;
@@ -1445,11 +1359,8 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @return Result
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  frame() const -> index_set_t
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  inline auto framed_multi<Scalar_T, LO, HI, Tune_P>::frame() const -> index_set_t
   {
     auto result = index_set_t();
     for (auto& this_term : *this)
@@ -1466,11 +1377,8 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @return Grade
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  grade() const -> index_t
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  inline auto framed_multi<Scalar_T, LO, HI, Tune_P>::grade() const -> index_t
   {
     auto result = index_t(0);
     for (auto& this_term : *this)
@@ -1488,11 +1396,8 @@ namespace glucat
    * @param ist Value
    * @return Element reference
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  operator[] (const index_set_t ist) const -> Scalar_T
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  inline auto framed_multi<Scalar_T, LO, HI, Tune_P>::operator[](const index_set_t ist) const -> Scalar_T
   {
     const auto& this_it = this->find(ist);
     if (this_it == this->end())
@@ -1510,12 +1415,10 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @return Element
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  operator() (index_t grade) const -> multivector_t
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::operator()(index_t grade) const -> multivector_t
   {
-    if ((grade < 0) || (grade > HI-LO))
+    if ((grade < 0) || (grade > HI - LO))
       return Scalar_T(0);
     else
     {
@@ -1536,11 +1439,8 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @return Scalar part
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  scalar() const -> Scalar_T
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  inline auto framed_multi<Scalar_T, LO, HI, Tune_P>::scalar() const -> Scalar_T
   { return (*this)[index_set_t()]; }
 
   /*
@@ -1552,11 +1452,8 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @return Pure part
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  pure() const -> multivector_t
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  inline auto framed_multi<Scalar_T, LO, HI, Tune_P>::pure() const -> multivector_t
   { return *this - this->scalar(); }
 
   /*
@@ -1568,11 +1465,9 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @return Even part
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  even() const -> multivector_t
-  { // even part of x, sum of the pure(count) with even count
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::even() const -> multivector_t
+  {  // even part of x, sum of the pure(count) with even count
     auto result = multivector_t();
     for (auto& this_term : *this)
       if ((this_term.first.count() % 2) == 0)
@@ -1589,11 +1484,9 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @return Odd part
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  odd() const -> multivector_t
-  { // even part of x, sum of the pure(count) with even count
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::odd() const -> multivector_t
+  {  // even part of x, sum of the pure(count) with even count
     auto result = multivector_t();
     for (auto& this_term : *this)
       if ((this_term.first.count() % 2) == 1)
@@ -1610,10 +1503,8 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @return Vector part
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  vector_part() const -> vector_t
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::vector_part() const -> vector_t
   { return this->vector_part(this->frame(), true); }
 
   /*
@@ -1627,20 +1518,15 @@ namespace glucat
    * @param prechecked Bool: true if i has already been checked?
    * @return True if successful or condition met
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  vector_part(const index_set_t frm, const bool prechecked) const -> vector_t
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::vector_part(const index_set_t frm, const bool prechecked) const -> vector_t
   {
     if (!prechecked && (this->frame() | frm) != frm)
       throw error_t("vector_part(frm): value is outside of requested frame");
     auto result = vector_t();
     result.reserve(frm.count());
-    const auto frm_end = frm.max()+1;
-    for (auto
-        idx  = frm.min();
-        idx != frm_end;
-        ++idx)
+    const auto frm_end = frm.max() + 1;
+    for (auto idx = frm.min(); idx != frm_end; ++idx)
       // Frame may contain indices which do not correspond to a grade 1 term but
       // frame cannot omit any index corresponding to a grade 1 term
       if (frm[idx])
@@ -1657,14 +1543,12 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @return Main involution
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  involute() const -> multivector_t
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::involute() const -> multivector_t
   {
     auto result = *this;
     for (auto& result_term : result)
-    { // for a k-vector u, involute(u) == (-1)^k * u
+    {  // for a k-vector u, involute(u) == (-1)^k * u
       if ((result_term.first.count() % 2) == 1)
         const_cast<Scalar_T&>(result_term.second) *= Scalar_T(-1);
     }
@@ -1680,10 +1564,8 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @return Reverse
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  reverse() const -> multivector_t
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::reverse() const -> multivector_t
   {
     auto result = *this;
     for (auto& result_term : result)
@@ -1691,12 +1573,12 @@ namespace glucat
       //                                {  u, k == 0,1 (mod 4)
       switch (result_term.first.count() % 4)
       {
-      case 2:
-      case 3:
-        const_cast<Scalar_T&>(result_term.second) *= Scalar_T(-1);
-        break;
-      default:
-        break;
+        case 2:
+        case 3:
+          const_cast<Scalar_T&>(result_term.second) *= Scalar_T(-1);
+          break;
+        default:
+          break;
       }
     return result;
   }
@@ -1710,14 +1592,12 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @return Clifford conjugate
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  conj() const -> multivector_t
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::conj() const -> multivector_t
   {
     auto result = *this;
     // Use explicit iterator to avoid deduction issues with robin_map
-    using map_t = typename framed_multi<Scalar_T,LO,HI,Tune_P>::map_t;
+    using map_t = typename framed_multi<Scalar_T, LO, HI, Tune_P>::map_t;
     for (typename map_t::iterator it = result.begin(); it != result.end(); ++it)
     {
       auto& result_term = *it;
@@ -1725,12 +1605,12 @@ namespace glucat
       //                             {  u, k == 0,3 (mod 4)
       switch (result_term.first.count() % 4)
       {
-      case 1:
-      case 2:
-        const_cast<Scalar_T&>(result_term.second) *= Scalar_T(-1);
-        break;
-      default:
-        break;
+        case 1:
+        case 2:
+          const_cast<Scalar_T&>(result_term.second) *= Scalar_T(-1);
+          break;
+        default:
+          break;
       }
     }
     return result;
@@ -1745,20 +1625,15 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @return Quadratic form
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  quad() const -> Scalar_T
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::quad() const -> Scalar_T
   {
     // scalar(conj(x)*x) = 2*quad(even(x)) - quad(x)
     // ref: old clical: quadfunction(p:pter):pterm in file compmod.pas
     auto result = Scalar_T(0);
     for (auto& this_term : *this)
     {
-      const auto sign =
-        (this_term.first.count_neg() % 2)
-        ? -Scalar_T(1)
-        :  Scalar_T(1);
+      const auto sign = (this_term.first.count_neg() % 2) ? -Scalar_T(1) : Scalar_T(1);
       result += sign * (this_term.second) * (this_term.second);
     }
     return result;
@@ -1773,10 +1648,8 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @return Norm
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  norm() const -> Scalar_T
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::norm() const -> Scalar_T
   {
     using traits_t = numeric_traits<Scalar_T>;
 
@@ -1784,7 +1657,7 @@ namespace glucat
     for (auto& this_term : *this)
     {
       const auto abs_crd = traits_t::abs(this_term.second);
-      result +=  abs_crd * abs_crd;
+      result += abs_crd * abs_crd;
     }
     return result;
   }
@@ -1798,10 +1671,8 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @return Maximum absolute value
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  max_abs() const -> Scalar_T
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::max_abs() const -> Scalar_T
   {
     using traits_t = numeric_traits<Scalar_T>;
 
@@ -1826,32 +1697,22 @@ namespace glucat
    * @param fill Value
    * @return Result
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  random(const index_set_t frm, Scalar_T fill) -> multivector_t
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::random(const index_set_t frm, Scalar_T fill) -> multivector_t
   {
-    using multivector_t = framed_multi<Scalar_T,LO,HI,Tune_P>;
+    using multivector_t = framed_multi<Scalar_T, LO, HI, Tune_P>;
     using index_set_t = typename multivector_t::index_set_t;
     using term_t = typename multivector_t::term_t;
 
     using random_generator_t = random_generator<Scalar_T>;
     auto& generator = random_generator_t::generator();
 
-    fill =
-      (fill < Scalar_T(0))
-      ? Scalar_T(0)
-      : (fill > Scalar_T(1))
-        ? Scalar_T(1)
-        : fill;
+    fill = (fill < Scalar_T(0)) ? Scalar_T(0) : (fill > Scalar_T(1)) ? Scalar_T(1) : fill;
     const auto algebra_dim = set_value_t(1) << frm.count();
     using traits_t = numeric_traits<Scalar_T>;
     const auto mean_abs = traits_t::sqrt(Scalar_T(double(algebra_dim)));
     auto result = multivector_t();
-    for (auto
-        stv = set_value_t(0);
-        stv != algebra_dim;
-        ++stv)
+    for (auto stv = set_value_t(0); stv != algebra_dim; ++stv)
       if (generator.uniform() < fill)
       {
         const auto& result_crd = generator.normal() / mean_abs;
@@ -1869,12 +1730,11 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @param msg Value
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  void
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  write(const std::string& msg) const
-  { std::cout << msg << std::endl << "  " << (*this) << std::endl; }
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  inline void framed_multi<Scalar_T, LO, HI, Tune_P>::write(const std::string& msg) const
+  {
+    std::cout << msg << std::endl << "  " << (*this) << std::endl;
+  }
 
   /*
    * @brief Write multivector to file
@@ -1886,11 +1746,8 @@ namespace glucat
    * @param ofile Value
    * @param msg Value
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  void
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  write(std::ofstream& ofile, const std::string& msg) const
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  inline void framed_multi<Scalar_T, LO, HI, Tune_P>::write(std::ofstream& ofile, const std::string& msg) const
   {
     if (!ofile)
       throw error_t("write(ofile,msg): cannot write to output file");
@@ -1903,7 +1760,7 @@ namespace glucat
    * @tparam Map_T
    * @tparam Sorted_Map_T
    */
-  template< typename Map_T,typename Sorted_Map_T >
+  template <typename Map_T, typename Sorted_Map_T>
   class sorted_range
   {
   public:
@@ -1911,29 +1768,30 @@ namespace glucat
     using sorted_map_t = Sorted_Map_T;
     using sorted_iterator = typename Sorted_Map_T::const_iterator;
 
-    sorted_range (Sorted_Map_T &sorted_val, const Map_T& val)
+    sorted_range(Sorted_Map_T& sorted_val, const Map_T& val)
     {
       for (auto& val_term : val)
         sorted_val.insert(val_term);
       sorted_begin = sorted_val.begin();
-      sorted_end   = sorted_val.end();
+      sorted_end = sorted_val.end();
     }
     sorted_iterator sorted_begin;
     sorted_iterator sorted_end;
   };
 
-  template< typename Sorted_Map_T >
-  class sorted_range< Sorted_Map_T, Sorted_Map_T >
+  template <typename Sorted_Map_T>
+  class sorted_range<Sorted_Map_T, Sorted_Map_T>
   {
   public:
     using map_t = Sorted_Map_T;
     using sorted_map_t = Sorted_Map_T;
     using sorted_iterator = typename Sorted_Map_T::const_iterator;
 
-    sorted_range (Sorted_Map_T &sorted_val, const Sorted_Map_T& val)
-    : sorted_begin( val.begin() ),
-      sorted_end( val.end() )
-    { }
+    sorted_range(Sorted_Map_T& sorted_val, const Sorted_Map_T& val)
+        : sorted_begin(val.begin())
+        , sorted_end(val.end())
+    {
+    }
     sorted_iterator sorted_begin;
     sorted_iterator sorted_end;
   };
@@ -1949,9 +1807,8 @@ namespace glucat
    * @param val Value
    * @return Output stream
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  operator<< (std::ostream& os, const framed_multi<Scalar_T,LO,HI,Tune_P>& val) -> std::ostream&
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto operator<<(std::ostream& os, const framed_multi<Scalar_T, LO, HI, Tune_P>& val) -> std::ostream&
   {
     using limits_t = std::numeric_limits<Scalar_T>;
     if (val.empty())
@@ -1966,7 +1823,7 @@ namespace glucat
     else
     {
       using traits_t = numeric_traits<Scalar_T>;
-      using multivector_t = framed_multi<Scalar_T,LO,HI,Tune_P>;
+      using multivector_t = framed_multi<Scalar_T, LO, HI, Tune_P>;
       Scalar_T truncation;
       switch (os.flags() & std::ios::floatfield)
       {
@@ -1991,12 +1848,10 @@ namespace glucat
         using map_t = typename multivector_t::map_t;
         using sorted_map_t = typename multivector_t::sorted_map_t;
         auto sorted_val = sorted_map_t();
-        const auto sorted_val_range = sorted_range< map_t, sorted_map_t >(sorted_val, truncated_val);
+        const auto sorted_val_range = sorted_range<map_t, sorted_map_t>(sorted_val, truncated_val);
         auto sorted_it = sorted_val_range.sorted_begin;
         os << *sorted_it;
-        for (++sorted_it;
-            sorted_it != sorted_val_range.sorted_end;
-            ++sorted_it)
+        for (++sorted_it; sorted_it != sorted_val_range.sorted_end; ++sorted_it)
         {
           const Scalar_T& scr = sorted_it->second;
           if (scr >= 0.0)
@@ -2018,14 +1873,12 @@ namespace glucat
    * @param term Value
    * @return Output stream
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  auto
-  operator<< (std::ostream& os, const std::pair< const index_set<LO,HI>, Scalar_T >& term) -> std::ostream&
+  template <typename Scalar_T, const index_t LO, const index_t HI>
+  auto operator<<(std::ostream& os, const std::pair<const index_set<LO, HI>, Scalar_T>& term) -> std::ostream&
   {
     const auto second_as_double = numeric_traits<Scalar_T>::to_double(term.second);
     const auto use_double =
-      (os.precision() <= std::numeric_limits<double>::digits10) ||
-      (term.second == Scalar_T(second_as_double));
+        (os.precision() <= std::numeric_limits<double>::digits10) || (term.second == Scalar_T(second_as_double));
     if (term.first.count() == 0)
       if (use_double)
         os << second_as_double;
@@ -2040,10 +1893,10 @@ namespace glucat
     {
       if (use_double)
       {
-        auto tol = std::pow(10.0,-os.precision());
-        if ( std::fabs(second_as_double + 1.0) < tol )
+        auto tol = std::pow(10.0, -os.precision());
+        if (std::fabs(second_as_double + 1.0) < tol)
           os << '-';
-        else if ( std::fabs(second_as_double - 1.0) >= tol )
+        else if (std::fabs(second_as_double - 1.0) >= tol)
           os << second_as_double;
       }
       else
@@ -2066,11 +1919,10 @@ namespace glucat
    * @param val Value
    * @return Input stream
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  operator>> (std::istream& s, framed_multi<Scalar_T,LO,HI,Tune_P> & val) -> std::istream&
-  { // Input looks like 1.0-2.0{1,2}+3.2{3,4}.
-    using multivector_t = framed_multi<Scalar_T,LO,HI,Tune_P>;
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto operator>>(std::istream& s, framed_multi<Scalar_T, LO, HI, Tune_P>& val) -> std::istream&
+  {  // Input looks like 1.0-2.0{1,2}+3.2{3,4}.
+    using multivector_t = framed_multi<Scalar_T, LO, HI, Tune_P>;
     // Parsing variables.
     auto local_val = multivector_t();
     auto c = 0;
@@ -2080,26 +1932,26 @@ namespace glucat
     // The multivector may begin with '+' or '-'. Check for this.
     c = s.peek();
     if (s.good() && (c == int('+') || c == int('-')))
-    { // A '-' here negates the following term.
+    {  // A '-' here negates the following term.
       negative = (c == int('-'));
       // Consume the '+' or '-'.
       s.get();
     }
     while (s.good())
-    { // Parse a term.
+    {  // Parse a term.
       // A term consists of an optional scalar, followed by an optional index set.
       // At least one of the two must be present.
       // Default coordinate is Scalar_T(1).
       auto coordinate = Scalar_T(1);
       // Default index set is empty.
-      auto ist = index_set<LO,HI>();
+      auto ist = index_set<LO, HI>();
       // First, check for an opening brace.
       c = s.peek();
       if (s.good())
-      { // If the character is not an opening brace,
+      {  // If the character is not an opening brace,
         // a coordinate value is expected here.
         if (c != int('{'))
-        { // Try to read a coordinate value.
+        {  // Try to read a coordinate value.
           double coordinate_as_double;
           s >> coordinate_as_double;
           // Reading the coordinate may have resulted in an end of file condition.
@@ -2109,7 +1961,7 @@ namespace glucat
         }
       }
       else
-      { // End of file here ends parsing while a term may still be expected.
+      {  // End of file here ends parsing while a term may still be expected.
         break;
       }
       // Coordinate is now Scalar_T(1) or a Scalar_T value.
@@ -2118,7 +1970,7 @@ namespace glucat
       {
         c = s.peek();
         if (s.good() && c == int('{'))
-        { // Try to read index set.
+        {  // Try to read index set.
           s >> ist;
         }
       }
@@ -2131,10 +1983,7 @@ namespace glucat
         if (coordinate != Scalar_T(0))
         {
           // Add the term to the local multivector.
-          coordinate =
-            negative
-            ? -coordinate
-            :  coordinate;
+          coordinate = negative ? -coordinate : coordinate;
           using term_t = typename multivector_t::term_t;
           local_val += term_t(ist, coordinate);
         }
@@ -2144,9 +1993,9 @@ namespace glucat
       {
         c = s.peek();
         if (s.good())
-        { // Only '+' and '-' are valid here.
+        {  // Only '+' and '-' are valid here.
           if (c == int('+') || c == int('-'))
-          { // A '-' here negates the following term.
+          {  // A '-' here negates the following term.
             negative = (c == int('-'));
             // Consume the '+' or '-'.
             s.get();
@@ -2155,7 +2004,7 @@ namespace glucat
             expect_term = true;
           }
           else
-          { // Any other character here is a not failure,
+          {  // Any other character here is a not failure,
             // but still ends the parsing of the multivector.
             break;
           }
@@ -2167,7 +2016,7 @@ namespace glucat
       s.clear(std::istream::failbit);
     // End of file is not a failure.
     if (s)
-    { // The multivector has been successfully parsed.
+    {  // The multivector has been successfully parsed.
       val = local_val;
     }
     return s;
@@ -2182,10 +2031,8 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @return Number of terms
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  nbr_terms () const -> size_type
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::nbr_terms() const -> size_type
   { return this->size(); }
 
   /*
@@ -2198,12 +2045,9 @@ namespace glucat
    * @param term The term to insert.
    * @return Reference to this.
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  operator+= (const term_t& term) -> multivector_t&
-  { // Do not insert terms with 0 coordinate
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  inline auto framed_multi<Scalar_T, LO, HI, Tune_P>::operator+=(const term_t& term) -> multivector_t&
+  {  // Do not insert terms with 0 coordinate
     if (term.second != Scalar_T(0))
     {
       const auto& this_it = this->find(term.first);
@@ -2227,10 +2071,8 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @return True if condition met
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  isinf() const -> bool
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::isinf() const -> bool
   {
     using traits_t = numeric_traits<Scalar_T>;
 
@@ -2250,10 +2092,8 @@ namespace glucat
    * @tparam Tune_P Tuning policy
    * @return True if successful or condition met
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  isnan() const -> bool
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::isnan() const -> bool
   {
     using traits_t = numeric_traits<Scalar_T>;
 
@@ -2274,10 +2114,8 @@ namespace glucat
    * @param limit Truncation limit
    * @return Truncated mulivector
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  truncated(const Scalar_T& limit) const -> multivector_t
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::truncated(const Scalar_T& limit) const -> multivector_t
   {
     using traits_t = numeric_traits<Scalar_T>;
 
@@ -2303,10 +2141,8 @@ namespace glucat
    * @param frm Frame
    * @return Multivector folded from frame
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  fold(const index_set_t frm) const -> multivector_t
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::fold(const index_set_t frm) const -> multivector_t
   {
     if (frm.is_contiguous())
       return *this;
@@ -2329,10 +2165,8 @@ namespace glucat
    * @param frm Frame
    * @return Multivector unfolded into frame
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  unfold(const index_set_t frm) const -> multivector_t
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::unfold(const index_set_t frm) const -> multivector_t
   {
     if (frm.is_contiguous())
       return *this;
@@ -2353,43 +2187,38 @@ namespace glucat
    * @return Resulting multivector
    */
   // Reference: [L] 16.4 Periodicity of 8, p216
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  centre_pm4_qp4(index_t& p, index_t& q) -> multivector_t&
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::centre_pm4_qp4(index_t& p, index_t& q) -> multivector_t&
   {
     // We add 4 to q by subtracting 4 from p
-    if (q+4 > -LO)
+    if (q + 4 > -LO)
       throw error_t("centre_pm4_qp4(p,q): LO is too high to represent this value");
-    if (this->frame().max() > p-4)
+    if (this->frame().max() > p - 4)
     {
       using index_pair_t = typename index_set_t::index_pair_t;
-      const auto pm3210 = index_set_t(index_pair_t(p-3,p), true);
-      const auto qm4321 = index_set_t(index_pair_t(-q-4,-q-1), true);
+      const auto pm3210 = index_set_t(index_pair_t(p - 3, p), true);
+      const auto qm4321 = index_set_t(index_pair_t(-q - 4, -q - 1), true);
       const auto& tqm4321 = term_t(qm4321, Scalar_T(1));
       auto result = multivector_t();
       for (auto& this_term : *this)
       {
         const auto ist = this_term.first;
-        if (ist.max() > p-4)
+        if (ist.max() > p - 4)
         {
           auto var_term = var_term_t();
-          for (auto
-              n = index_t(0);
-              n != index_t(4);
-              ++n)
-            if (ist[n+p-3])
-              var_term *= term_t(index_set_t(n-q-4), Scalar_T(1)) * tqm4321;
+          for (auto n = index_t(0); n != index_t(4); ++n)
+            if (ist[n + p - 3])
+              var_term *= term_t(index_set_t(n - q - 4), Scalar_T(1)) * tqm4321;
           // Mask out {p-3}..{p}
-          result.insert(term_t(ist & ~pm3210, this_term.second) *
-                        term_t(var_term.first, var_term.second));
+          result.insert(term_t(ist & ~pm3210, this_term.second) * term_t(var_term.first, var_term.second));
         }
         else
           result.insert(this_term);
       }
       *this = result;
     }
-    p -=4; q += 4;
+    p -= 4;
+    q += 4;
     return *this;
   }
 
@@ -2401,43 +2230,38 @@ namespace glucat
    * @return Resulting multivector
    */
   // Reference: [L] 16.4 Periodicity of 8, p216
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  centre_pp4_qm4(index_t& p, index_t& q) -> multivector_t&
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::centre_pp4_qm4(index_t& p, index_t& q) -> multivector_t&
   {
     // We add 4 to p by subtracting 4 from q
-    if (p+4 > HI)
+    if (p + 4 > HI)
       throw error_t("centre_pp4_qm4(p,q): HI is too low to represent this value");
-    if (this->frame().min() < -q+4)
+    if (this->frame().min() < -q + 4)
     {
       using index_pair_t = typename index_set_t::index_pair_t;
-      const auto qp0123 = index_set_t(index_pair_t(-q,-q+3), true);
-      const auto pp1234 = index_set_t(index_pair_t(p+1,p+4), true);
+      const auto qp0123 = index_set_t(index_pair_t(-q, -q + 3), true);
+      const auto pp1234 = index_set_t(index_pair_t(p + 1, p + 4), true);
       const auto& tpp1234 = term_t(pp1234, Scalar_T(1));
       auto result = multivector_t();
       for (auto& this_term : *this)
       {
         index_set_t ist = this_term.first;
-        if (ist.min() < -q+4)
+        if (ist.min() < -q + 4)
         {
           auto var_term = var_term_t();
-          for (auto
-              n = index_t(0);
-              n != index_t(4);
-              ++n)
-            if (ist[n-q])
-              var_term *= term_t(index_set_t(n+p+1), Scalar_T(1)) * tpp1234;
+          for (auto n = index_t(0); n != index_t(4); ++n)
+            if (ist[n - q])
+              var_term *= term_t(index_set_t(n + p + 1), Scalar_T(1)) * tpp1234;
           // Mask out {-q}..{-q+3}
-          result.insert(term_t(var_term.first, var_term.second) *
-                        term_t(ist & ~qp0123, this_term.second));
+          result.insert(term_t(var_term.first, var_term.second) * term_t(ist & ~qp0123, this_term.second));
         }
         else
           result.insert(this_term);
       }
       *this = result;
     }
-    p +=4; q -= 4;
+    p += 4;
+    q -= 4;
     return *this;
   }
 
@@ -2449,26 +2273,21 @@ namespace glucat
    * @return Resulting multivector
    */
   // Reference: [P] Proposition 15.20, p 131
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  centre_qp1_pm1(index_t& p, index_t& q) -> multivector_t&
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::centre_qp1_pm1(index_t& p, index_t& q) -> multivector_t&
   {
-    if (q+1 > HI)
+    if (q + 1 > HI)
       throw error_t("centre_qp1_pm1(p,q): HI is too low to represent this value");
-    if (p-1 > -LO)
+    if (p - 1 > -LO)
       throw error_t("centre_qp1_pm1(p,q): LO is too high to represent this value");
-    const auto qp1 = index_set_t(q+1);
+    const auto qp1 = index_set_t(q + 1);
     const auto& tqp1 = term_t(qp1, Scalar_T(1));
     auto result = multivector_t();
     for (auto& this_term : *this)
     {
       const auto ist = this_term.first;
       auto var_term = var_term_t(index_set_t(), this_term.second);
-      for (auto
-          n = -q;
-          n != p;
-          ++n)
+      for (auto n = -q; n != p; ++n)
         if (n != 0 && ist[n])
           var_term *= term_t(index_set_t(-n) | qp1, Scalar_T(1));
       if (p != 0 && ist[p])
@@ -2476,8 +2295,8 @@ namespace glucat
       result.insert(term_t(var_term.first, var_term.second));
     }
     index_t orig_p = p;
-    p = q+1;
-    q = orig_p-1;
+    p = q + 1;
+    q = orig_p - 1;
     return *this = result;
   }
 
@@ -2491,10 +2310,8 @@ namespace glucat
    * @param ist Index set
    * @return Pair containing quotient and remainder
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  divide(const index_set_t ist) const -> framed_pair_t
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::divide(const index_set_t ist) const -> framed_pair_t
   {
     auto quo = multivector_t();
     auto rem = multivector_t();
@@ -2517,10 +2334,8 @@ namespace glucat
    * @param odd Bool: If true, take the odd part, otherwise take the even part
    * @return The matrix representing the multivector *this
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  fast(const index_t level, const bool odd) const -> matrix_t
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::fast(const index_t level, const bool odd) const -> matrix_t
   {
     // Assume val is already folded and centred
 
@@ -2535,14 +2350,14 @@ namespace glucat
       return matrix::unit<matrix_t>(1) * this->scalar();
 
     auto I = matrix::unit<matrix_t>(2);
-    auto J = matrix_t(2,2);
-    J.zeros(); // Ensure zeroed
-    J(0,1)  = Scalar_T(-1);
-    J(1,0)  = Scalar_T( 1);
+    auto J = matrix_t(2, 2);
+    J.zeros();  // Ensure zeroed
+    J(0, 1) = Scalar_T(-1);
+    J(1, 0) = Scalar_T(1);
     auto K = J;
-    K(0,1)  = Scalar_T( 1);
+    K(0, 1) = Scalar_T(1);
     auto JK = I;
-    JK(0,0) = Scalar_T(-1);
+    JK(0, 0) = Scalar_T(-1);
 
     const auto ist_mn = index_set_t(-level);
     const auto ist_pn = index_set_t(level);
@@ -2565,20 +2380,16 @@ namespace glucat
       const auto& rem_mn = pair_mn.second;
       const auto& pair_quo_mnpn = quo_mn.divide(ist_pn);
       const auto& val_mnpn = pair_quo_mnpn.first;
-      const auto& val_mn   = pair_quo_mnpn.second;
+      const auto& val_mn = pair_quo_mnpn.second;
       const auto& pair_rem_mnpn = rem_mn.divide(ist_pn);
-      const auto& val_pn   = pair_rem_mnpn.first;
-      const auto& val_1    = pair_rem_mnpn.second;
+      const auto& val_pn = pair_rem_mnpn.first;
+      const auto& val_1 = pair_rem_mnpn.second;
       if (odd)
-        return - JK.kron(val_1.fast   (level-1, 1))
-               + I.kron(val_mnpn.fast(level-1, 1))
-               + J.kron(val_mn.fast  (level-1, 0))
-               + K.kron(val_pn.fast  (level-1, 0));
+        return -JK.kron(val_1.fast(level - 1, 1)) + I.kron(val_mnpn.fast(level - 1, 1)) + J.kron(val_mn.fast(level - 1, 0))
+               + K.kron(val_pn.fast(level - 1, 0));
       else
-        return   I.kron(val_1.fast   (level-1, 0))
-               + JK.kron(val_mnpn.fast(level-1, 0))
-               + K.kron(val_mn.fast  (level-1, 1))
-               - J.kron(val_pn.fast  (level-1, 1));
+        return I.kron(val_1.fast(level - 1, 0)) + JK.kron(val_mnpn.fast(level - 1, 0)) + K.kron(val_mn.fast(level - 1, 1))
+               - J.kron(val_pn.fast(level - 1, 1));
     }
   }
 
@@ -2592,19 +2403,18 @@ namespace glucat
    * @param frm Frame
    * @return The matrix_multi_t value representing the multivector *this
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  template< typename Other_Scalar_T, typename Other_Tune_P >
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  fast_matrix_multi(const index_set_t frm) const -> matrix_multi<Other_Scalar_T,LO,HI,Other_Tune_P>
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  template <typename Other_Scalar_T, typename Other_Tune_P>
+  auto framed_multi<Scalar_T, LO, HI, Tune_P>::fast_matrix_multi(const index_set_t frm) const
+      -> matrix_multi<Other_Scalar_T, LO, HI, Other_Tune_P>
   {
     // Fold val
     auto val = this->fold(frm);
     auto p = frm.count_pos();
     auto q = frm.count_neg();
     const auto bott_offset = gen::offset_to_super[pos_mod(p - q, 8)];
-    p += std::max(bott_offset,index_t(0));
-    q -= std::min(bott_offset,index_t(0));
+    p += std::max(bott_offset, index_t(0));
+    q -= std::min(bott_offset, index_t(0));
     if (p > HI)
       throw error_t("fast_matrix_multi(frm): HI is too low to represent this value");
     if (q > -LO)
@@ -2616,7 +2426,7 @@ namespace glucat
       val.centre_pp4_qm4(p, q);
     if (p - q > 1)
       val.centre_qp1_pm1(p, q);
-    const index_t level = (p + q)/2;
+    const index_t level = (p + q) / 2;
 
     // Do the fast transform
     const auto& ev_val = val.even();
@@ -2625,14 +2435,11 @@ namespace glucat
     auto ev_res = ev_val.fast(level, 0);
     auto od_res = od_val.fast(level, 1);
 
-    return matrix_multi<Other_Scalar_T,LO,HI,Other_Tune_P>(ev_res + od_res, frm);
+    return matrix_multi<Other_Scalar_T, LO, HI, Other_Tune_P>(ev_res + od_res, frm);
   }
 
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  framed_multi<Scalar_T,LO,HI,Tune_P>::
-  fast_framed_multi() const -> multivector_t
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  inline auto framed_multi<Scalar_T, LO, HI, Tune_P>::fast_framed_multi() const -> multivector_t
   { return *this; }
 
   /*
@@ -2654,12 +2461,9 @@ namespace glucat
    * @param rhs Right hand side term
    * @return The coordinate of lhs * rhs as multivectors
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  inline
-  static
-  auto
-  crd_of_mult(const std::pair<const index_set<LO,HI>, Scalar_T>& lhs,
-              const std::pair<const index_set<LO,HI>, Scalar_T>& rhs) -> Scalar_T
+  template <typename Scalar_T, const index_t LO, const index_t HI>
+  inline static auto crd_of_mult(const std::pair<const index_set<LO, HI>, Scalar_T>& lhs,
+                                 const std::pair<const index_set<LO, HI>, Scalar_T>& rhs) -> Scalar_T
   { return lhs.first.sign_of_mult(rhs.first) * lhs.second * rhs.second; }
 
   /*
@@ -2681,13 +2485,11 @@ namespace glucat
    * @param rhs Right hand side term
    * @return Clifford product of lhs and rhs as multivectors
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI >
-  inline
-  auto
-  operator* (const std::pair<const index_set<LO,HI>, Scalar_T>& lhs,
-             const std::pair<const index_set<LO,HI>, Scalar_T>& rhs) -> std::pair<const index_set<LO,HI>, Scalar_T>
+  template <typename Scalar_T, const index_t LO, const index_t HI>
+  inline auto operator*(const std::pair<const index_set<LO, HI>, Scalar_T>& lhs,
+                        const std::pair<const index_set<LO, HI>, Scalar_T>& rhs) -> std::pair<const index_set<LO, HI>, Scalar_T>
   {
-    using term_t = std::pair<const index_set<LO,HI>, Scalar_T>;
+    using term_t = std::pair<const index_set<LO, HI>, Scalar_T>;
     return term_t(lhs.first ^ rhs.first, crd_of_mult(lhs, rhs));
   }
 
@@ -2703,9 +2505,9 @@ namespace glucat
    * @param prechecked Bool: true if i has already been checked?
    * @return Square root of val
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  sqrt(const framed_multi<Scalar_T,LO,HI,Tune_P>& val, const framed_multi<Scalar_T,LO,HI,Tune_P>& i, bool prechecked) -> framed_multi<Scalar_T,LO,HI,Tune_P>
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto sqrt(const framed_multi<Scalar_T, LO, HI, Tune_P>& val, const framed_multi<Scalar_T, LO, HI, Tune_P>& i, bool prechecked)
+      -> framed_multi<Scalar_T, LO, HI, Tune_P>
   {
     using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
@@ -2721,7 +2523,7 @@ namespace glucat
       else
         return traits_t::sqrt(realval);
     }
-    using multivector_t = framed_multi<Scalar_T,LO,HI,Tune_P>;
+    using multivector_t = framed_multi<Scalar_T, LO, HI, Tune_P>;
     using matrix_multi_t = typename multivector_t::matrix_multi_t;
     return multivector_t(sqrt(matrix_multi_t(val), matrix_multi_t(i), prechecked));
   }
@@ -2736,9 +2538,8 @@ namespace glucat
    * @param val Multivector
    * @return Exponential of val
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  exp(const framed_multi<Scalar_T,LO,HI,Tune_P>& val) -> framed_multi<Scalar_T,LO,HI,Tune_P>
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto exp(const framed_multi<Scalar_T, LO, HI, Tune_P>& val) -> framed_multi<Scalar_T, LO, HI, Tune_P>
   {
     using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
@@ -2753,9 +2554,9 @@ namespace glucat
     const auto frm_count = val.frame().count();
     const auto algebra_dim = set_value_t(1) << frm_count;
 
-    using multivector_t = framed_multi<Scalar_T,LO,HI,Tune_P>;
+    using multivector_t = framed_multi<Scalar_T, LO, HI, Tune_P>;
 
-    if( (size * size <= double(algebra_dim)) || (frm_count < index_t(Tuning_Values_P::mult_matrix_threshold)))
+    if ((size * size <= double(algebra_dim)) || (frm_count < index_t(Tuning_Values_P::mult_matrix_threshold)))
     {
       using tune_same_p = typename Tune_P::tuning_same_p;
       const precision_t function_precision = Tune_P::function_precision;
@@ -2763,7 +2564,7 @@ namespace glucat
       if constexpr (function_precision == precision_demoted)
       {
         using demoted_scalar_t = typename traits_t::demoted::type;
-        using demoted_multivector_t = framed_multi<demoted_scalar_t,LO,HI,tune_same_p>;
+        using demoted_multivector_t = framed_multi<demoted_scalar_t, LO, HI, tune_same_p>;
 
         const auto& demoted_val = demoted_multivector_t(val);
         return multivector_t(clifford_exp(demoted_val));
@@ -2771,7 +2572,7 @@ namespace glucat
       else if constexpr (function_precision == precision_promoted)
       {
         using promoted_scalar_t = typename traits_t::promoted::type;
-        using promoted_multivector_t = framed_multi<promoted_scalar_t,LO,HI,tune_same_p>;
+        using promoted_multivector_t = framed_multi<promoted_scalar_t, LO, HI, tune_same_p>;
 
         const auto& promoted_val = promoted_multivector_t(val);
         return multivector_t(clifford_exp(promoted_val));
@@ -2781,7 +2582,7 @@ namespace glucat
     }
     else
     {
-      using matrix_multi_t = matrix_multi<Scalar_T,LO,HI,Tune_P>;
+      using matrix_multi_t = matrix_multi<Scalar_T, LO, HI, Tune_P>;
       return multivector_t(exp(matrix_multi_t(val)));
     }
   }
@@ -2798,9 +2599,9 @@ namespace glucat
    * @param prechecked Bool: true if i has already been checked?
    * @return Logarithm of val
    */
-  template< typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  log(const framed_multi<Scalar_T,LO,HI,Tune_P>& val, const framed_multi<Scalar_T,LO,HI,Tune_P>& i, bool prechecked) -> framed_multi<Scalar_T,LO,HI,Tune_P>
+  template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
+  auto log(const framed_multi<Scalar_T, LO, HI, Tune_P>& val, const framed_multi<Scalar_T, LO, HI, Tune_P>& i, bool prechecked)
+      -> framed_multi<Scalar_T, LO, HI, Tune_P>
   {
     using traits_t = numeric_traits<Scalar_T>;
     if (val == Scalar_T(0) || val.isnan())
@@ -2816,30 +2617,33 @@ namespace glucat
       else
         return traits_t::log(realval);
     }
-    using multivector_t = framed_multi<Scalar_T,LO,HI,Tune_P>;
+    using multivector_t = framed_multi<Scalar_T, LO, HI, Tune_P>;
     using matrix_multi_t = typename multivector_t::matrix_multi_t;
     return multivector_t(log(matrix_multi_t(val), matrix_multi_t(i), prechecked));
   }
-}
+}  // namespace glucat
 #ifdef GLUCAT_DOCTEST
-#include <iostream>
-#include <iomanip>
-#include <numbers>
-#include <filesystem>
-#include <system_error>
 #include <chrono>
+#include <filesystem>
+#include <iomanip>
+#include <iostream>
+#include <numbers>
+#include <system_error>
 
-TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
+TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>")
+{
   using namespace glucat;
   using fm_t = glucat::framed_multi<double, -8, 8>;
   using T = double;
   using is_t = fm_t::index_set_t;
 
-  SUBCASE("Metadata") {
+  SUBCASE("Metadata")
+  {
     CHECK(fm_t::classname() == "framed_multi");
   }
 
-  SUBCASE("Constructor and string representation") {
+  SUBCASE("Constructor and string representation")
+  {
     fm_t f1(2.0);
     std::ostringstream oss1;
     oss1 << f1;
@@ -2856,7 +2660,8 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK(oss3.str() == "-{1}");
   }
 
-  SUBCASE("Geometric operations") {
+  SUBCASE("Geometric operations")
+  {
     fm_t e1("{1}");
     fm_t e2("{2}");
     fm_t e3("{3}");
@@ -2880,7 +2685,8 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK(star(e1, e1) == scalar(e1 * e1));
   }
 
-  SUBCASE("Arithmetic and approximate equality") {
+  SUBCASE("Arithmetic and approximate equality")
+  {
     fm_t m1(1.0);
     fm_t m2("{1}");
     CHECK((m1 + m2) == fm_t("1+{1}"));
@@ -2893,12 +2699,13 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK(0.0 != m1);
   }
 
-  SUBCASE("Transcendental functions") {
+  SUBCASE("Transcendental functions")
+  {
     fm_t x("{1,2}");
     const double pi = std::numbers::pi;
 
     // exp and log
-    fm_t e_x = exp(x * (pi/4.0));
+    fm_t e_x = exp(x * (pi / 4.0));
     // exp({1,2}*pi/4) = cos(pi/4) + {1,2}*sin(pi/4) = (1 + {1,2})/sqrt(2)
     CHECK(approx_equal(e_x, (fm_t(1.0) + fm_t("{1,2}")) / std::sqrt(2.0)));
     CHECK(approx_equal(exp(log(e_x)), e_x));
@@ -2907,14 +2714,14 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     fm_t s_x = sin(x);
     fm_t c_x = cos(x);
     // sin^2 + cos^2 = 1
-    CHECK(approx_equal(s_x*s_x + c_x*c_x, fm_t(1.0)));
+    CHECK(approx_equal(s_x * s_x + c_x * c_x, fm_t(1.0)));
     CHECK(approx_equal(cos(acos(fm_t(0.5))), fm_t(0.5)));
 
     // sinh and cosh
     fm_t sh_x = sinh(x);
     fm_t ch_x = cosh(x);
     // cosh^2 - sinh^2 = 1
-    CHECK(approx_equal(ch_x*ch_x - sh_x*sh_x, fm_t(1.0)));
+    CHECK(approx_equal(ch_x * ch_x - sh_x * sh_x, fm_t(1.0)));
     CHECK(approx_equal(cosh(acosh(fm_t(2.0))), fm_t(2.0)));
 
     // tan and tanh
@@ -2925,13 +2732,14 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     fm_t A = fm_t("0.5{1}+0.5{1,2}");
     CHECK(approx_equal(exp(A) * exp(-A), fm_t(1.0)));
     CHECK(approx_equal(cosh(A) + sinh(A), exp(A)));
-    CHECK(approx_equal(cos(A) + complexifier(A)*sin(A), exp(complexifier(A)*A)));
-    CHECK(approx_equal(cos(A)*tan(A), sin(A)));
-    CHECK(approx_equal(cosh(A)*tanh(A), sinh(A)));
+    CHECK(approx_equal(cos(A) + complexifier(A) * sin(A), exp(complexifier(A) * A)));
+    CHECK(approx_equal(cos(A) * tan(A), sin(A)));
+    CHECK(approx_equal(cosh(A) * tanh(A), sinh(A)));
     CHECK(approx_equal(sqrt(fm_t(4.0)), fm_t(2.0)));
   }
 
-  SUBCASE("Adversarial and edge cases") {
+  SUBCASE("Adversarial and edge cases")
+  {
     // NaN handling
     fm_t n(glucat::numeric_traits<double>::NaN());
     CHECK(n.isnan());
@@ -2961,22 +2769,23 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     fm_t neg(T(-1.0), is_t());
     CHECK(approx_equal(log(neg, fm_t("{-1}"), false), fm_t("{-1}") * T(std::numbers::pi)));
   }
-  SUBCASE("Transcendental identities (random)") {
+  SUBCASE("Transcendental identities (random)")
+  {
     using index_set_t = fm_t::index_set_t;
 
-    auto is_error = [](const fm_t& lhs, const fm_t& rhs, double tol) {
+    auto is_error = [](const fm_t& lhs, const fm_t& rhs, double tol)
+    {
       using scalar_t = fm_t::scalar_t;
       scalar_t diff = abs(lhs - rhs);
       scalar_t ref = abs(rhs);
-      return ( (abs(lhs) < tol) || (ref < tol) )
-             ? (diff > tol)
-             : (diff > ref * tol);
+      return ((abs(lhs) < tol) || (ref < tol)) ? (diff > tol) : (diff > ref * tol);
     };
 
     static const double eps = std::numeric_limits<double>::epsilon();
     const double tol = eps * 1024.0;
 
-    auto test_trans = [&](const fm_t& A) {
+    auto test_trans = [&](const fm_t& A)
+    {
       const fm_t exp_A = exp(A);
       const fm_t exp_mA = exp(-A);
       const fm_t cos_A = cos(A);
@@ -2987,14 +2796,16 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
 
       CHECK_FALSE(is_error(exp_A * exp_mA, fm_t(1), tol));
       CHECK_FALSE(is_error(cosh_A + sinh_A, exp_A, tol));
-      if (!A.isnan() && !A.isinf()) {
+      if (!A.isnan() && !A.isinf())
+      {
         CHECK_FALSE(is_error(sqrt_A * sqrt_A, A, tol));
       }
 
-      if (A != 0.0 && A != 1.0) {
-        CHECK_FALSE(is_error(cos_A + complexifier(A)*sin_A, exp(complexifier(A)*A), tol));
-        CHECK_FALSE(is_error(cos_A*tan(A), sin_A, tol));
-        CHECK_FALSE(is_error(cosh_A*tanh(A), sinh_A, tol));
+      if (A != 0.0 && A != 1.0)
+      {
+        CHECK_FALSE(is_error(cos_A + complexifier(A) * sin_A, exp(complexifier(A) * A), tol));
+        CHECK_FALSE(is_error(cos_A * tan(A), sin_A, tol));
+        CHECK_FALSE(is_error(cosh_A * tanh(A), sinh_A, tol));
         CHECK_FALSE(is_error(sqrt(fm_t(4.0)), fm_t(2.0), tol));
       }
     };
@@ -3005,7 +2816,8 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
 
     index_set_t frm = index_set_t();
     const double fill = 0.5;
-    for (index_t i = 1; i <= 4; ++i) {
+    for (index_t i = 1; i <= 4; ++i)
+    {
       frm |= index_set_t(i);
       test_trans(fm_t::random(frm, fill));
 
@@ -3014,56 +2826,64 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     }
   }
 
-  SUBCASE("Geometric algebra identities (random)") {
+  SUBCASE("Geometric algebra identities (random)")
+  {
     using index_set_t = fm_t::index_set_t;
     const double fill = 0.5;
 
-    auto is_error = [](const fm_t& lhs, const fm_t& rhs, double tol) {
+    auto is_error = [](const fm_t& lhs, const fm_t& rhs, double tol)
+    {
       using scalar_t = fm_t::scalar_t;
       scalar_t diff = abs(lhs - rhs);
       scalar_t ref = abs(rhs);
-      return ( (abs(lhs) < tol) || (ref < tol) )
-             ? (diff > tol)
-             : (diff > ref * tol);
+      return ((abs(lhs) < tol) || (ref < tol)) ? (diff > tol) : (diff > ref * tol);
     };
 
     static const double eps = std::numeric_limits<double>::epsilon();
     const double tol = eps * 4096.0;
 
     index_set_t frm = index_set_t();
-    for (index_t i = 1; i <= 4; ++i) {
+    for (index_t i = 1; i <= 4; ++i)
+    {
       frm |= index_set_t(i);
 
-      auto test_idents = [&](auto& a, auto& b, auto& c) {
+      auto test_idents = [&](auto& a, auto& b, auto& c)
+      {
         const index_t a_grade = a.frame().count();
         const index_t b_grade = b.frame().count();
 
         // Identity [HS] (1.21a)
-        for (index_t r = 1; r <= a_grade; ++r) {
+        for (index_t r = 1; r <= a_grade; ++r)
+        {
           const auto a_r = a(r);
-          for (index_t s = 1; s <= b_grade; ++s) {
+          for (index_t s = 1; s <= b_grade; ++s)
+          {
             const auto b_s = b(s);
             auto lhs = a_r & b_s;
-            auto rhs = (a_r * b_s)(index_t(std::abs(int(r-s))));
+            auto rhs = (a_r * b_s)(index_t(std::abs(int(r - s))));
             CHECK_FALSE(is_error(lhs, rhs, tol));
           }
         }
 
         // Identity [HS] (1.22a)
-        for (index_t r = 0; r <= a_grade; ++r) {
+        for (index_t r = 0; r <= a_grade; ++r)
+        {
           const auto a_r = a(r);
-          for (index_t s = 0; s <= b_grade; ++s) {
+          for (index_t s = 0; s <= b_grade; ++s)
+          {
             const auto b_s = b(s);
             auto lhs = a_r ^ b_s;
-            auto rhs = (a_r * b_s)(r+s);
+            auto rhs = (a_r * b_s)(r + s);
             CHECK_FALSE(is_error(lhs, rhs, tol));
           }
         }
 
         // Identity for Left Contraction (%)
-        for (index_t r = 0; r <= a_grade; ++r) {
+        for (index_t r = 0; r <= a_grade; ++r)
+        {
           const auto a_r = a(r);
-          for (index_t s = 0; s <= b_grade; ++s) {
+          for (index_t s = 0; s <= b_grade; ++s)
+          {
             const auto b_s = b(s);
             auto lhs = a_r % b_s;
             auto rhs = (s >= r) ? (a_r * b_s)(s - r) : fm_t(0);
@@ -3098,7 +2918,8 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     }
   }
 
-  SUBCASE("Mixed-precision and assignment interchangeability") {
+  SUBCASE("Mixed-precision and assignment interchangeability")
+  {
     using fm_f_t = glucat::framed_multi<float, -8, 8>;
     using fm_d_t = glucat::framed_multi<double, -8, 8>;
 
@@ -3153,7 +2974,8 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK(f_f1 == fm_f_t("{1}"));
   }
 
-  SUBCASE("Mixed-representation assignment") {
+  SUBCASE("Mixed-representation assignment")
+  {
     using mm_d_t = glucat::matrix_multi<double, -8, 8>;
     fm_t f("{1,2}");
     mm_d_t m("{1,2}");
@@ -3164,7 +2986,8 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK(f2 == f);
   }
 
-  SUBCASE("Advanced Constructor Gaps") {
+  SUBCASE("Advanced Constructor Gaps")
+  {
     using index_set_t = fm_t::index_set_t;
     using scalar_t = fm_t::scalar_t;
     index_set_t ist(1);
@@ -3183,17 +3006,22 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK_THROWS_AS(fm_t(invalid_ist, crd, frm, false), glucat_error);
   }
 
-  SUBCASE("Fast Path (32 terms)") {
+  SUBCASE("Fast Path (32 terms)")
+  {
     using index_set_t = fm_t::index_set_t;
     using scalar_t = fm_t::scalar_t;
     index_set_t large_frm;
-    for(int i=1; i<=6; ++i) large_frm |= index_set_t(i); // 6 generators
+    for (int i = 1; i <= 6; ++i)
+      large_frm |= index_set_t(i);  // 6 generators
 
     fm_t f;
-    for(int i=0; i<32; ++i) {
-       index_set_t ist;
-       for(int j=0; j<6; ++j) if (i & (1 << j)) ist |= index_set_t(j+1);
-       f += typename fm_t::term_t(ist, scalar_t(i+1));
+    for (int i = 0; i < 32; ++i)
+    {
+      index_set_t ist;
+      for (int j = 0; j < 6; ++j)
+        if (i & (1 << j))
+          ist |= index_set_t(j + 1);
+      f += typename fm_t::term_t(ist, scalar_t(i + 1));
     }
 
     CHECK(f.nbr_terms() >= 16);
@@ -3208,7 +3036,8 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     res = a % b;
   }
 
-  SUBCASE("Exceptions") {
+  SUBCASE("Exceptions")
+  {
     fm_t f1(1.0);
     // Parsing errors
     CHECK_THROWS(fm_t("{invalid}"));
@@ -3221,7 +3050,8 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK_THROWS(fm_t(is_t(1), T(1.0), is_t(), false));
   }
 
-  SUBCASE("I/O and Formatting") {
+  SUBCASE("I/O and Formatting")
+  {
     fm_t f(1.23456789);
     std::ostringstream oss;
     oss << std::setprecision(4) << std::fixed << f;
@@ -3233,7 +3063,8 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK(oss.str().find("e+00") != std::string::npos);
   }
 
-  SUBCASE("Complexifier and Log") {
+  SUBCASE("Complexifier and Log")
+  {
     fm_t f(T(1.0), is_t());
     // Log of a scalar doesn't need a complexifier if scalar > 0
     CHECK(log(f) == fm_t(T(0.0), is_t()));
@@ -3245,7 +3076,8 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK_NOTHROW(log(f_neg, complexifier));
   }
 
-  SUBCASE("Clifford Algebra Operations") {
+  SUBCASE("Clifford Algebra Operations")
+  {
     fm_t f1("{1}");
     fm_t f2("{2}");
     fm_t f12 = f1 * f2;
@@ -3253,12 +3085,12 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
 
     // Involute
     CHECK(f1.involute() == -f1);
-    CHECK(f12.involute() == f12); // (-e1)*(-e2) = e12
+    CHECK(f12.involute() == f12);  // (-e1)*(-e2) = e12
     CHECK(f_mix.involute() == fm_t("1-{1}+{1,2}"));
 
     // Reverse
     CHECK(f1.reverse() == f1);
-    CHECK(f12.reverse() == -f12); // e2*e1 = -e12
+    CHECK(f12.reverse() == -f12);  // e2*e1 = -e12
     CHECK(f_mix.reverse() == fm_t("1+{1}-{1,2}"));
 
     // Conjugate
@@ -3270,7 +3102,8 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK(f_mix.max_abs() == doctest::Approx(numeric_traits<T>::to_double(T(1.0))));
   }
 
-  SUBCASE("Projections and Parts") {
+  SUBCASE("Projections and Parts")
+  {
     fm_t f_mix("1+{1}+{1,2}");
 
     CHECK(f_mix.pure() == fm_t("{1}+{1,2}"));
@@ -3291,7 +3124,8 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK(v2[2] == doctest::Approx(numeric_traits<T>::to_double(T(3.0))));
   }
 
-  SUBCASE("Numerical Stability and Truncation") {
+  SUBCASE("Numerical Stability and Truncation")
+  {
     using is_t = fm_t::index_set_t;
     fm_t f_small("1e8+{1}+1e-8{1,2}");
     CHECK(f_small.truncated(T(1.0e-6)) == fm_t(T(1.0e8), is_t()));
@@ -3305,12 +3139,23 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK(!f_inf.isnan());
   }
 
-  SUBCASE("Extended I/O") {
+  SUBCASE("Extended I/O")
+  {
     fm_t f("1+{1}");
-    f.write("Test prefix"); // Mostly for coverage
+    f.write("Test prefix");  // Mostly for coverage
 
-    auto temp_path = std::filesystem::temp_directory_path() / ("test_io_" + std::to_string(std::chrono::system_clock::now().time_since_epoch().count()) + ".txt");
-    struct Cleanup { std::filesystem::path p; ~Cleanup() { std::error_code ec; if(std::filesystem::exists(p, ec)) std::filesystem::remove(p, ec); } } cleanup{temp_path};
+    auto temp_path = std::filesystem::temp_directory_path()
+                     / ("test_io_" + std::to_string(std::chrono::system_clock::now().time_since_epoch().count()) + ".txt");
+    struct Cleanup
+    {
+      std::filesystem::path p;
+      ~Cleanup()
+      {
+        std::error_code ec;
+        if (std::filesystem::exists(p, ec))
+          std::filesystem::remove(p, ec);
+      }
+    } cleanup{temp_path};
 
     std::ofstream ofs(temp_path);
     f.write(ofs, "File prefix");
@@ -3318,7 +3163,8 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK(std::filesystem::exists(temp_path));
   }
 
-  SUBCASE("More Clifford Operations") {
+  SUBCASE("More Clifford Operations")
+  {
     fm_t f1("{1}");
     fm_t f_mix("1+{1}+{1,2}");
     using is_t = fm_t::index_set_t;
@@ -3339,7 +3185,8 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK(f1.outer_pow(2) == fm_t(T(0.0), is_t()));
   }
 
-  SUBCASE("Defensive and Edge Case Coverage") {
+  SUBCASE("Defensive and Edge Case Coverage")
+  {
     using is_t = fm_t::index_set_t;
     using mm_t = matrix_multi<T, -8, 8>;
 
@@ -3362,7 +3209,7 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>") {
     CHECK(f_zero.nbr_terms() == 0);
 
     // 1x1 matrix conversion (Lines 366-369)
-    mm_t m_1x1(T(3.14), is_t()); // scalar is effectively 1x1 matrix
+    mm_t m_1x1(T(3.14), is_t());  // scalar is effectively 1x1 matrix
     fm_t f_1x1(m_1x1);
     CHECK(f_1x1[is_t()] == doctest::Approx(numeric_traits<T>::to_double(T(3.14))));
 
