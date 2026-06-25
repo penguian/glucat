@@ -133,5 +133,45 @@ namespace glucat
   inline auto pos_mod(LHS_T lhs, RHS_T rhs) -> LHS_T
   { return lhs > 0 ? lhs % rhs : (-lhs) % rhs == 0 ? 0 : rhs - (-lhs) % rhs; }
 
+  /*
+   * @brief Inverse reversed Gray code
+   * @details
+   * @param x Value
+   * @return Inverse
+   */
+  inline constexpr auto inverse_reversed_gray(unsigned long x) -> unsigned long
+  {
+    // Reference: [JA]
+#if (_GLUCAT_BITS_PER_ULONG >= 64)
+    x ^= x << 32;  // for 64-bit words
+#endif
+    x ^= x << 16;  // reversed_gray ** 16
+    x ^= x << 8;   // reversed_gray **  8
+    x ^= x << 4;   // reversed_gray **  4
+    x ^= x << 2;   // reversed_gray **  2
+    x ^= x << 1;   // reversed_gray **  1
+    return x;
+  }
+
+  /*
+   * @brief Inverse Gray code
+   * @details
+   * @param x Value
+   * @return Inverse
+   */
+  inline constexpr auto inverse_gray(unsigned long x) -> unsigned long
+  {
+    // Reference: [JA]
+#if (_GLUCAT_BITS_PER_ULONG >= 64)
+    x ^= x >> 32;  // for 64-bit words
+#endif
+    x ^= x >> 16;  // gray ** 16
+    x ^= x >> 8;   // gray **  8
+    x ^= x >> 4;   // gray **  4
+    x ^= x >> 2;   // gray **  2
+    x ^= x >> 1;   // gray **  1
+    return x;
+  }
+
 }  // namespace glucat
 #endif  // _GLUCAT_GLOBAL_H

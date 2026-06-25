@@ -708,7 +708,19 @@ CXXFLAGS="$CXXFLAGS $USE_EXCEPTIONS"
 if [[[ "$glucat_enable_doc" == "yes" ]]]; then
   AC_CHECK_PROGS([DOXYGEN],[doxygen])
   if [[[ -z "$DOXYGEN" ]]]; then
-    AC_MSG_WARN([Doxygen not found - continuing without Doxygen support])
+    AC_MSG_ERROR([doxygen is required for building documentation, but was not found])
+  fi
+  AC_CHECK_PROGS([DOT],[dot])
+  if [[[ -z "$DOT" ]]]; then
+    AC_MSG_ERROR([dot (Graphviz) is required for building documentation, but was not found])
+  fi
+  AC_CHECK_PROGS([PDFLATEX],[pdflatex])
+  if [[[ -z "$PDFLATEX" ]]]; then
+    AC_MSG_WARN([pdflatex not found - PDF documentation support will be disabled])
+  fi
+  AC_CHECK_PROGS([MAKEINDEX],[makeindex])
+  if [[[ -z "$MAKEINDEX" ]]]; then
+    AC_MSG_WARN([makeindex not found - PDF index support will be disabled])
   fi
 else
   DOXYGEN=""

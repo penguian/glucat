@@ -1019,46 +1019,6 @@ namespace glucat
   }
 
   /*
-   * @brief Inverse reversed Gray code
-   * @details
-   * @param x Value
-   * @return Inverse
-   */
-  inline constexpr static auto inverse_reversed_gray(unsigned long x) -> unsigned long
-  {
-    // Reference: [JA]
-#if (_GLUCAT_BITS_PER_ULONG >= 64)
-    x ^= x << 32;  // for 64-bit words
-#endif
-    x ^= x << 16;  // reversed_gray ** 16
-    x ^= x << 8;   // reversed_gray **  8
-    x ^= x << 4;   // reversed_gray **  4
-    x ^= x << 2;   // reversed_gray **  2
-    x ^= x << 1;   // reversed_gray **  1
-    return x;
-  }
-
-  /*
-   * @brief Inverse Gray code
-   * @details
-   * @param x Value
-   * @return Inverse
-   */
-  inline constexpr static auto inverse_gray(unsigned long x) -> unsigned long
-  {
-    // Reference: [JA]
-#if (_GLUCAT_BITS_PER_ULONG >= 64)
-    x ^= x >> 32;  // for 64-bit words
-#endif
-    x ^= x >> 16;  // gray ** 16
-    x ^= x >> 8;   // gray **  8
-    x ^= x >> 4;   // gray **  4
-    x ^= x >> 2;   // gray **  2
-    x ^= x >> 1;   // gray **  1
-    return x;
-  }
-
-  /*
    * @brief Sign of geometric product of two Clifford basis elements
    * @details
    *
