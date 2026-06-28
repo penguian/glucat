@@ -38,8 +38,7 @@ _GLUCAT_CTAssert(std::numeric_limits<unsigned int>::radix == 2, CannotSetThresho
 {
   // Base class for policies
   struct policy
-  {
-  };
+  { };
 
   // Precision policy
   enum precision_t

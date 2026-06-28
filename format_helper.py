@@ -13,7 +13,14 @@ def preprocess(content):
     #   return foo;
     # }
     pattern = re.compile(r"\n(\s*)\{\s*(return\s+[^;]+;)\s*\}")
-    return pattern.sub(r"\n\1{\n\1  \2\n\1}", content)
+    content = pattern.sub(r"\n\1{\n\1  \2\n\1}", content)
+    # Transforms:
+    # { } or {}
+    # into:
+    # {
+    # }
+    empty_pattern = re.compile(r"\n(\s*)\{\s*\}")
+    return empty_pattern.sub(r"\n\1{\n\1}", content)
 
 def postprocess(content):
     # Transforms:
@@ -25,7 +32,14 @@ def postprocess(content):
     # auto blah()
     # { return foo; }
     pattern = re.compile(r"\n(\s*)\{\n\s*(return\s+[^;]+;)\n\s*\}")
-    return pattern.sub(r"\n\1{ \2 }", content)
+    content = pattern.sub(r"\n\1{ \2 }", content)
+    # Transforms:
+    # {
+    # }
+    # back into:
+    # { }
+    empty_pattern = re.compile(r"\n(\s*)\{\n\1\}")
+    return empty_pattern.sub(r"\n\1{ }", content)
 
 
 def check_file(filepath):

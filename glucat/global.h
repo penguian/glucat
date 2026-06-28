@@ -48,8 +48,7 @@ namespace glucat
   struct CTAssertion;
   template <>
   struct CTAssertion<true>
-  {
-  };
+  { };
 #define _GLUCAT_CTAssert(expr, msg)            \
   namespace                                    \
   {                                            \
@@ -112,19 +111,19 @@ namespace glucat
 #endif
 
   // If radix of unsigned char is not 2, we can't easily determine number of bits from sizeof
-  _GLUCAT_CTAssert(std::numeric_limits<unsigned char>::radix == 2, CannotDetermineBitsPerChar)
+  _GLUCAT_CTAssert(std::numeric_limits<unsigned char>::radix == 2, CannotDetermineBitsPerChar);
 
-      // Number of bits per char is used to determine number of bits in set_value_t
-      const index_t BITS_PER_CHAR = std::numeric_limits<unsigned char>::digits;
+  // Number of bits per char is used to determine number of bits in set_value_t
+  const index_t BITS_PER_CHAR = std::numeric_limits<unsigned char>::digits;
 
   // Number of bits in set_value_t
   const index_t BITS_PER_SET_VALUE = std::numeric_limits<set_value_t>::digits;
 
-  _GLUCAT_CTAssert(_GLUCAT_BITS_PER_ULONG == BITS_PER_SET_VALUE, BitsPerULongDoesNotMatchSetValueT)
+  _GLUCAT_CTAssert(_GLUCAT_BITS_PER_ULONG == BITS_PER_SET_VALUE, BitsPerULongDoesNotMatchSetValueT);
 
-      // Constants which are determined by size
-      // Default lowest index in an index set
-      const index_t DEFAULT_LO = -index_t(BITS_PER_SET_VALUE / 2);
+  // Constants which are determined by size
+  // Default lowest index in an index set
+  const index_t DEFAULT_LO = -index_t(BITS_PER_SET_VALUE / 2);
   // Default highest index in an index set
   const index_t DEFAULT_HI = index_t(BITS_PER_SET_VALUE / 2);
 

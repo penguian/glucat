@@ -70,23 +70,19 @@ namespace glucat
 
     template <typename T>
     struct find_scalar_type<T&> : find_scalar_type<T>
-    {
-    };
+    { };
 
     template <typename T>
     struct find_scalar_type<const T&> : find_scalar_type<T>
-    {
-    };
+    { };
 
     template <typename T>
     struct find_scalar_type<T*> : find_scalar_type<T>
-    {
-    };
+    { };
 
     template <typename T>
     struct find_scalar_type<const T*> : find_scalar_type<T>
-    {
-    };
+    { };
 
     template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
     struct find_scalar_type<matrix_multi<Scalar_T, LO, HI, Tune_P>>
@@ -96,13 +92,11 @@ namespace glucat
 
     template <typename T, typename = void>
     struct has_scalar_type : std::false_type
-    {
-    };
+    { };
 
     template <typename T>
     struct has_scalar_type<T, std::void_t<typename find_scalar_type<T>::type>> : std::true_type
-    {
-    };
+    { };
 
     template <typename... Args>
     struct find_scalar_in_list;
@@ -125,39 +119,32 @@ namespace glucat
 
     template <typename... Args>
     struct find_scalar_in_tuple<boost::hana::tuple<Args...>> : find_scalar_in_list<Args...>
-    {
-    };
+    { };
 
     template <boost::yap::expr_kind Kind, typename Tuple>
     struct find_scalar_type<matrix_multi_expr<Kind, Tuple>> : find_scalar_in_tuple<std::decay_t<Tuple>>
-    {
-    };
+    { };
 
     // --- find_matrix_multi ---
     template <typename T, typename = void>
     struct find_matrix_multi
-    {
-    };
+    { };
 
     template <typename T>
     struct find_matrix_multi<T&> : find_matrix_multi<T>
-    {
-    };
+    { };
 
     template <typename T>
     struct find_matrix_multi<const T&> : find_matrix_multi<T>
-    {
-    };
+    { };
 
     template <typename T>
     struct find_matrix_multi<T*> : find_matrix_multi<T>
-    {
-    };
+    { };
 
     template <typename T>
     struct find_matrix_multi<const T*> : find_matrix_multi<T>
-    {
-    };
+    { };
 
     template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
     struct find_matrix_multi<matrix_multi<Scalar_T, LO, HI, Tune_P>>
@@ -167,40 +154,34 @@ namespace glucat
 
     template <typename T, typename = void>
     struct has_matrix_multi : std::false_type
-    {
-    };
+    { };
 
     template <typename T>
     struct has_matrix_multi<T, std::void_t<typename find_matrix_multi<T>::type>> : std::true_type
-    {
-    };
+    { };
 
     template <typename... Args>
     struct find_in_list;
 
     template <>
     struct find_in_list<>
-    {
-    };
+    { };
 
     template <typename First, typename... Rest>
     struct find_in_list<First, Rest...>
         : std::conditional_t<has_matrix_multi<First>::value, find_matrix_multi<First>, find_in_list<Rest...>>
-    {
-    };
+    { };
 
     template <typename Tuple>
     struct find_in_tuple;
 
     template <typename... Args>
     struct find_in_tuple<boost::hana::tuple<Args...>> : find_in_list<Args...>
-    {
-    };
+    { };
 
     template <boost::yap::expr_kind Kind, typename Tuple>
     struct find_matrix_multi<matrix_multi_expr<Kind, Tuple>> : find_in_tuple<std::decay_t<Tuple>>
-    {
-    };
+    { };
 
     // --- get_terminal ---
     template <typename T>
@@ -664,7 +645,6 @@ namespace std
   /// Numeric limits for matrix_multi inherit limits for the corresponding scalar type
   template <typename Scalar_T, const glucat::index_t LO, const glucat::index_t HI, typename Tune_P>
   struct numeric_limits<glucat::matrix_multi<Scalar_T, LO, HI, Tune_P>> : public numeric_limits<Scalar_T>
-  {
-  };
+  { };
 }  // namespace std
 #endif  // _GLUCAT_MATRIX_MULTI_H

@@ -341,7 +341,6 @@ namespace std
   /// Numeric limits for framed_multi inherit limits for the corresponding scalar type
   template <typename Scalar_T, const glucat::index_t LO, const glucat::index_t HI, typename Tune_P>
   struct numeric_limits<glucat::framed_multi<Scalar_T, LO, HI, Tune_P>> : public numeric_limits<Scalar_T>
-  {
-  };
+  { };
 }  // namespace std
 #endif  // _GLUCAT_FRAMED_MULTI_H

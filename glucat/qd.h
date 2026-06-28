@@ -282,36 +282,28 @@ namespace Eigen
     ::qd_real val;
     qd_real_eigen()
         : val(0.0)
-    {
-    }
+    { }
     qd_real_eigen(const ::qd_real& x)
         : val(x)
-    {
-    }
+    { }
     qd_real_eigen(double x)
         : val(x)
-    {
-    }
+    { }
     qd_real_eigen(int x)
         : val(x)
-    {
-    }
+    { }
     qd_real_eigen(long x)
         : val(static_cast<double>(x))
-    {
-    }
+    { }
     qd_real_eigen(unsigned long x)
         : val(static_cast<double>(x))
-    {
-    }
+    { }
     qd_real_eigen(long long x)
         : val(static_cast<double>(x))
-    {
-    }
+    { }
     qd_real_eigen(unsigned long long x)
         : val(static_cast<double>(x))
-    {
-    }
+    { }
 
     operator ::qd_real&() { return val; }
     operator const ::qd_real&() const { return val; }
@@ -353,36 +345,28 @@ namespace Eigen
     ::dd_real val;
     dd_real_eigen()
         : val(0.0)
-    {
-    }
+    { }
     dd_real_eigen(const ::dd_real& x)
         : val(x)
-    {
-    }
+    { }
     dd_real_eigen(double x)
         : val(x)
-    {
-    }
+    { }
     dd_real_eigen(int x)
         : val(x)
-    {
-    }
+    { }
     dd_real_eigen(long x)
         : val(static_cast<double>(x))
-    {
-    }
+    { }
     dd_real_eigen(unsigned long x)
         : val(static_cast<double>(x))
-    {
-    }
+    { }
     dd_real_eigen(long long x)
         : val(static_cast<double>(x))
-    {
-    }
+    { }
     dd_real_eigen(unsigned long long x)
         : val(static_cast<double>(x))
-    {
-    }
+    { }
 
     operator ::dd_real&() { return val; }
     operator const ::dd_real&() const { return val; }

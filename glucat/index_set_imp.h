@@ -71,8 +71,7 @@ namespace glucat
   template <const index_t LO, const index_t HI>
   inline constexpr index_set<LO, HI>::index_set(const bitset_t bst)
       : bitset_t(bst)
-  {
-  }
+  { }
 
   /*
    * @brief Constructor from set value of an index set folded within the given frame
@@ -785,8 +784,7 @@ namespace glucat
     index_t i;
     os << '{';
     for (i = LO; (i <= HI) && !(ist[i]); ++i)
-    {
-    }
+    { }
     if (i <= HI)
       os << i;
     for (++i; i <= HI; ++i)
@@ -1026,10 +1024,10 @@ namespace glucat
    */
   inline constexpr auto inverse_reversed_gray(unsigned long x) -> unsigned long
   {
-    // Reference: [JA]
-    #if (_GLUCAT_BITS_PER_ULONG >= 64)
+// Reference: [JA]
+#if (_GLUCAT_BITS_PER_ULONG >= 64)
     x ^= x << 32;  // for 64-bit words
-    #endif
+#endif
     x ^= x << 16;  // reversed_gray ** 16
     x ^= x << 8;   // reversed_gray **  8
     x ^= x << 4;   // reversed_gray **  4
@@ -1046,10 +1044,10 @@ namespace glucat
    */
   inline constexpr auto inverse_gray(unsigned long x) -> unsigned long
   {
-    // Reference: [JA]
-    #if (_GLUCAT_BITS_PER_ULONG >= 64)
+// Reference: [JA]
+#if (_GLUCAT_BITS_PER_ULONG >= 64)
     x ^= x >> 32;  // for 64-bit words
-    #endif
+#endif
     x ^= x >> 16;  // gray ** 16
     x ^= x >> 8;   // gray **  8
     x ^= x >> 4;   // gray **  4
@@ -1258,8 +1256,7 @@ namespace glucat
   inline constexpr index_set<LO, HI>::reference::reference(index_set_t& ist, index_t idx)
       : m_pst(&ist)
       , m_idx(idx)
-  {
-  }
+  { }
 
   /*
    * @brief for b[i] == c[j];

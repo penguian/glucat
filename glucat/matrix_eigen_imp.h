@@ -143,8 +143,7 @@ namespace glucat
     template <typename Scalar_T>
     inline eigen_matrix_wrapper<Scalar_T>::eigen_matrix_wrapper(const eigen_matrix_wrapper<Scalar_T>& other)
         : m_mat(other.m_mat)
-    {
-    }
+    { }
 
     /*
      * @brief Move constructor
@@ -156,8 +155,7 @@ namespace glucat
     inline eigen_matrix_wrapper<Scalar_T>::eigen_matrix_wrapper(eigen_matrix_wrapper<Scalar_T>&& other) noexcept(
         std::is_nothrow_move_constructible_v<Scalar_T>)
         : m_mat(std::move(other.m_mat))
-    {
-    }
+    { }
 
     /*
      * @brief Copy assignment
@@ -236,8 +234,7 @@ namespace glucat
     template <typename Scalar_T>
     inline eigen_matrix_wrapper<Scalar_T>::eigen_matrix_wrapper(const MatrixType& m)
         : m_mat(m)
-    {
-    }
+    { }
 
     /*
      * @brief Constructor from Eigen (move)
@@ -248,8 +245,7 @@ namespace glucat
     template <typename Scalar_T>
     inline eigen_matrix_wrapper<Scalar_T>::eigen_matrix_wrapper(MatrixType&& m)
         : m_mat(std::move(m))
-    {
-    }
+    { }
 
     /*
      * @brief Set size
@@ -918,8 +914,7 @@ namespace glucat
     template <typename Scalar_T>
     inline eigen_sparse_wrapper<Scalar_T>::eigen_sparse_wrapper(const MatrixType& m)
         : m_mat(m)
-    {
-    }
+    { }
 
     /*
      * @brief Armadillo/uBLAS/Generator style constructor support
@@ -947,8 +942,7 @@ namespace glucat
     template <typename Scalar_T>
     inline eigen_sparse_wrapper<Scalar_T>::eigen_sparse_wrapper(const eigen_sparse_wrapper<Scalar_T>& other)
         : m_mat(other.m_mat)
-    {
-    }
+    { }
 
     /*
      * @brief Move constructor
@@ -960,8 +954,7 @@ namespace glucat
     inline eigen_sparse_wrapper<Scalar_T>::eigen_sparse_wrapper(eigen_sparse_wrapper<Scalar_T>&& other) noexcept(
         std::is_nothrow_move_constructible_v<Scalar_T>)
         : m_mat(std::move(other.m_mat))
-    {
-    }
+    { }
 
     /*
      * @brief Copy assignment

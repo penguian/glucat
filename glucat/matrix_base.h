@@ -46,8 +46,7 @@ namespace glucat
     /// Helper for static_assert in templates
     template <typename...>
     struct dependent_false : std::false_type
-    {
-    };
+    { };
 
     /// =========================================================================
     /// Traits
@@ -55,12 +54,10 @@ namespace glucat
     /// Helper trait for complex check
     template <typename Scalar_T>
     struct is_complex_t : std::false_type
-    {
-    };
+    { };
     template <typename Scalar_T>
     struct is_complex_t<std::complex<Scalar_T>> : std::true_type
-    {
-    };
+    { };
 
     /// Classification of eigenvalues of a matrix
     enum eig_case_t

@@ -164,8 +164,7 @@ namespace glucat
     template <typename Scalar_T>
     inline arma_matrix_wrapper<Scalar_T>::arma_matrix_wrapper(const arma_matrix_wrapper<Scalar_T>& other)
         : m_mat(other.m_mat)
-    {
-    }
+    { }
 
     /*
      * @brief Move constructor
@@ -177,8 +176,7 @@ namespace glucat
     inline arma_matrix_wrapper<Scalar_T>::arma_matrix_wrapper(arma_matrix_wrapper<Scalar_T>&& other) noexcept(
         std::is_nothrow_move_constructible_v<Scalar_T>)
         : m_mat(std::move(other.m_mat))
-    {
-    }
+    { }
 
     /*
      * @brief Copy assignment
@@ -699,8 +697,7 @@ namespace glucat
     template <typename Scalar_T>
     inline arma_matrix_wrapper<Scalar_T>::arma_matrix_wrapper(const MatrixType& m)
         : m_mat(m)
-    {
-    }
+    { }
 
     /*
      * @brief Helper to construct from raw arma mat
@@ -711,8 +708,7 @@ namespace glucat
     template <typename Scalar_T>
     inline arma_matrix_wrapper<Scalar_T>::arma_matrix_wrapper(MatrixType&& m)
         : m_mat(std::move(m))
-    {
-    }
+    { }
 
     /*
      * @brief Trace of product
@@ -905,8 +901,7 @@ namespace glucat
     template <typename Scalar_T>
     inline arma_sparse_wrapper<Scalar_T>::arma_sparse_wrapper(const MatrixType& m)
         : m_mat(m)
-    {
-    }
+    { }
 
     /*
      * @brief Constructor with size
@@ -930,8 +925,7 @@ namespace glucat
     template <typename Scalar_T>
     inline arma_sparse_wrapper<Scalar_T>::arma_sparse_wrapper(const arma_sparse_wrapper<Scalar_T>& other)
         : m_mat(other.m_mat)
-    {
-    }
+    { }
 
     /*
      * @brief Move constructor
@@ -943,8 +937,7 @@ namespace glucat
     inline arma_sparse_wrapper<Scalar_T>::arma_sparse_wrapper(arma_sparse_wrapper<Scalar_T>&& other) noexcept(
         std::is_nothrow_move_constructible_v<Scalar_T>)
         : m_mat(std::move(other.m_mat))
-    {
-    }
+    { }
 
     /*
      * @brief Copy assignment

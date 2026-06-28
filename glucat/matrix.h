@@ -49,8 +49,7 @@ namespace glucat
     /// Trait to determine if Scalar_T is natively supported by Armadillo
     template <typename Scalar_T>
     struct is_arma_supported : std::false_type
-    {
-    };
+    { };
 
     /// Declarations to satisfy the compiler
     /// Matrix wrapper for Eigen (forward)
@@ -87,23 +86,19 @@ namespace glucat
     /// Armadillo support for float
     template <>
     struct is_arma_supported<float> : std::true_type
-    {
-    };
+    { };
     /// Armadillo support for double
     template <>
     struct is_arma_supported<double> : std::true_type
-    {
-    };
+    { };
     /// Armadillo support for complex float
     template <>
     struct is_arma_supported<std::complex<float>> : std::true_type
-    {
-    };
+    { };
     /// Armadillo support for complex double
     template <>
     struct is_arma_supported<std::complex<double>> : std::true_type
-    {
-    };
+    { };
 
     /// Matrix type selector specialization for Armadillo
     template <typename Scalar_T>

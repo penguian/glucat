@@ -138,8 +138,7 @@ namespace glucat
       std::is_nothrow_move_constructible_v<Scalar_T>)
       : m_frame(std::move(other.m_frame))
       , m_matrix(std::move(other.m_matrix))
-  {
-  }
+  { }
 
   /*
    * @brief Construct a multivector from a multivector with a different scalar type
@@ -375,12 +374,10 @@ namespace glucat
         return;
       }
       catch (const glucat_error& e)
-      {
-      }
+      { }
     const auto dim = folded_dim<matrix_index_t>(this->m_frame);
     if (dim == 0)
-    {
-    }
+    { }
     this->m_matrix.zeros(dim, dim);
 
     for (auto& val_term : val)
@@ -413,8 +410,7 @@ namespace glucat
         return;
       }
       catch (const glucat_error& e)
-      {
-      }
+      { }
     this->m_frame = our_frame;
     const auto dim = folded_dim<matrix_index_t>(our_frame);
     this->m_matrix.zeros(dim, dim);
@@ -467,8 +463,7 @@ namespace glucat
   matrix_multi<Scalar_T, LO, HI, Tune_P>::matrix_multi(const matrix_t& mtx, const index_set_t frm)
       : m_frame(frm)
       , m_matrix(mtx)
-  {
-  }
+  { }
 
   /*
    * @brief Find a common frame for operands of a binary operator
@@ -770,8 +765,7 @@ namespace glucat
     result.m_matrix.zeros();
     result.m_matrix = lhs_ref.m_matrix * rhs_ref.m_matrix;
     if (result.m_matrix.nbr_rows() == 0)
-    {
-    }
+    { }
     return result;
   }
 
@@ -3536,8 +3530,7 @@ namespace glucat
 
     evaluator(IndexSet tf)
         : target_frame(std::move(tf))
-    {
-    }
+    { }
 
     template <typename T>
     decltype(auto) eval_child(T&& x) const

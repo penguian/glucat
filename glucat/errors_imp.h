@@ -48,14 +48,12 @@ namespace glucat
   template <class Class_T>
   error<Class_T>::error(const std::string& msg)
       : glucat_error(Class_T::classname(), msg)
-  {
-  }
+  { }
 
   template <class Class_T>
   error<Class_T>::error(const std::string& context, const std::string& msg)
       : glucat_error(context, msg)
-  {
-  }
+  { }
 
   template <class Class_T>
   auto error<Class_T>::heading() const noexcept -> std::string_view
@@ -111,8 +109,7 @@ TEST_CASE("errors")
       std::streambuf* old;
       CerrRedirect(std::streambuf* new_buf)
           : old(std::cerr.rdbuf(new_buf))
-      {
-      }
+      { }
       ~CerrRedirect() { std::cerr.rdbuf(old); }
     } redirect(buffer.rdbuf());
 

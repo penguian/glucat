@@ -81,8 +81,7 @@ namespace glucat
   template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
   framed_multi<Scalar_T, LO, HI, Tune_P>::framed_multi()
       : map_t(_GLUCAT_HASH_N(0))
-  {
-  }
+  { }
 
   /*
    * @brief Move constructor
@@ -97,8 +96,7 @@ namespace glucat
   framed_multi<Scalar_T, LO, HI, Tune_P>::framed_multi(framed_multi&& other) noexcept(
       std::is_nothrow_move_constructible_v<Scalar_T>)
       : map_t(std::move(other))
-  {
-  }
+  { }
 
   /*
    * @brief Private constructor using hash_size
@@ -112,8 +110,7 @@ namespace glucat
   template <typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P>
   framed_multi<Scalar_T, LO, HI, Tune_P>::framed_multi(const hash_size_t& hash_size)
       : map_t(_GLUCAT_HASH_N(hash_size()))
-  {
-  }
+  { }
 
   /*
    * @brief Construct a multivector from a multivector with a different scalar type
@@ -357,8 +354,7 @@ namespace glucat
         return;
       }
       catch (const std::exception& e)
-      {
-      }  // Fall back to the slow algorithm
+      { }  // Fall back to the slow algorithm
 
     const auto val_norm = traits_t::to_scalar_t(val.norm());
     if (traits_t::isNaN_or_isInf(val_norm))
@@ -1773,8 +1769,7 @@ namespace glucat
     sorted_range(Sorted_Map_T& sorted_val, const Sorted_Map_T& val)
         : sorted_begin(val.begin())
         , sorted_end(val.end())
-    {
-    }
+    { }
     sorted_iterator sorted_begin;
     sorted_iterator sorted_end;
   };
