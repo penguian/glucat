@@ -166,7 +166,7 @@ namespace glucat
     constexpr auto min() const -> index_t;
     // Maximum member
     constexpr auto max() const -> index_t;
-    // Underling bitset value
+    // Underlying bitset value
     constexpr auto to_set_value() const -> set_value_t { return bitset_t::to_ulong(); }
     // Functions which support Clifford algebra operations
 
@@ -184,6 +184,28 @@ namespace glucat
     constexpr auto sign_of_mult(const index_set_t& ist) const -> int;
     // Sign of geometric square of a Clifford basis element
     constexpr auto sign_of_square() const -> int;
+
+    // Sign helper support for optimized multiplication
+    class sign_helper
+    {
+      friend class index_set;
+
+    public:
+      constexpr sign_helper()
+          : val(0)
+      { }
+      ~sign_helper() = default;
+
+    private:
+      set_value_t val;
+      constexpr explicit sign_helper(set_value_t v)
+          : val(v)
+      { }
+    };
+
+    constexpr auto to_sign_helper() const -> sign_helper;
+    static constexpr auto sign_of_disjoint_mult(const index_set_t& lhs, const sign_helper& rhs_helper) -> int;
+    static constexpr auto sign_of_mult(const index_set_t& lhs, const index_set_t& rhs, const sign_helper& rhs_helper) -> int;
 
     // Hash function
     constexpr auto hash_fn() const -> size_t;

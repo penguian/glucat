@@ -731,7 +731,7 @@ namespace glucat
     }
     else if (frm_count < index_t(Tuning_Values_P::products_matrix_threshold))
     {
-      const set_value_t dim = algebra_dim;
+      const size_t dim = size_t(1) << frm_count;
       std::vector<Scalar_T> l_vec(dim, Scalar_T(0));
       for (auto& term : lhs)
         l_vec[term.first.value_of_fold(our_frame)] = term.second;
@@ -739,26 +739,24 @@ namespace glucat
       for (auto& term : rhs)
         r_vec[term.first.value_of_fold(our_frame)] = term.second;
 
-      std::vector<set_value_t> unfolded_bits(dim);
-      std::vector<unsigned long> h_vals(dim);
-      for (set_value_t k = 0; k < dim; ++k)
+      using helper_t = typename index_set_t::sign_helper;
+      std::vector<index_set_t> unfolded_sets(dim);
+      std::vector<helper_t> sign_helpers(dim);
+      for (size_t k = 0; k < dim; ++k)
       {
-        unfolded_bits[k] = index_set_t(k, our_frame, true).to_set_value();
-        h_vals[k] = inverse_reversed_gray(unfolded_bits[k]);
+        unfolded_sets[k] = index_set_t(k, our_frame, true);
+        sign_helpers[k] = unfolded_sets[k].to_sign_helper();
       }
 
       std::vector<Scalar_T> res_vec(dim, Scalar_T(0));
-      for (set_value_t k = 0; k < dim; ++k)
+      for (size_t k = 0; k < dim; ++k)
       {
-        for (set_value_t i = k;; i = (i - 1) & k)
+        for (size_t i = k;; i = (i - 1) & k)
         {
-          set_value_t j = k ^ i;
+          size_t j = k ^ i;
           if (l_vec[i] != Scalar_T(0) && r_vec[j] != Scalar_T(0))
           {
-            unsigned long uthis = unfolded_bits[i];
-            unsigned long h = h_vals[j];
-            unsigned long neg = inverse_gray(uthis & h);
-            Scalar_T sign = (neg & 1) ? Scalar_T(-1) : Scalar_T(1);
+            Scalar_T sign = index_set_t::sign_of_disjoint_mult(unfolded_sets[i], sign_helpers[j]);
             res_vec[k] += sign * l_vec[i] * r_vec[j];
           }
           if (i == 0)
@@ -766,9 +764,9 @@ namespace glucat
         }
       }
       auto result = multivector_t(_GLUCAT_HASH_SIZE_T(dim));
-      for (set_value_t k = 0; k < dim; ++k)
+      for (size_t k = 0; k < dim; ++k)
         if (res_vec[k] != Scalar_T(0))
-          result.insert(term_t(index_set_t(k, our_frame, true), res_vec[k]));
+          result.insert(term_t(unfolded_sets[k], res_vec[k]));
       return result;
     }
     else
@@ -864,7 +862,7 @@ namespace glucat
     }
     else if (frm_count < index_t(Tuning_Values_P::products_matrix_threshold))
     {
-      const set_value_t dim = algebra_dim;
+      const size_t dim = size_t(1) << frm_count;
       std::vector<Scalar_T> l_vec(dim, Scalar_T(0));
       for (auto& term : lhs)
         l_vec[term.first.value_of_fold(our_frame)] = term.second;
@@ -872,57 +870,47 @@ namespace glucat
       for (auto& term : rhs)
         r_vec[term.first.value_of_fold(our_frame)] = term.second;
 
-      std::vector<set_value_t> unfolded_bits(dim);
-      std::vector<unsigned long> h_vals(dim);
-      for (set_value_t k = 0; k < dim; ++k)
+      using helper_t = typename index_set_t::sign_helper;
+      std::vector<index_set_t> unfolded_sets(dim);
+      std::vector<helper_t> sign_helpers(dim);
+      for (size_t k = 0; k < dim; ++k)
       {
-        unfolded_bits[k] = index_set_t(k, our_frame, true).to_set_value();
-        h_vals[k] = inverse_reversed_gray(unfolded_bits[k]);
+        unfolded_sets[k] = index_set_t(k, our_frame, true);
+        sign_helpers[k] = unfolded_sets[k].to_sign_helper();
       }
 
       std::vector<Scalar_T> res_vec(dim, Scalar_T(0));
-      for (set_value_t i = 1; i < dim; ++i)
+      for (size_t i = 1; i < dim; ++i)
       {
         if (l_vec[i] == Scalar_T(0))
           continue;
-        unsigned long uthis = unfolded_bits[i];
         // j is submask of i
-        for (set_value_t j = i;; j = (j - 1) & i)
+        for (size_t j = i;; j = (j - 1) & i)
         {
           if (j == 0)
             break;
           if (r_vec[j] != Scalar_T(0))
           {
-            unsigned long urhs = unfolded_bits[j];
-            unsigned long h = h_vals[j];
-            unsigned long k_val = inverse_gray(uthis & h);
-            unsigned long q_val = inverse_gray((uthis & urhs) >> -index_set_t::v_lo);
-            unsigned long neg = k_val ^ q_val;
-            Scalar_T sign = (neg & 1) ? Scalar_T(-1) : Scalar_T(1);
+            Scalar_T sign = index_set_t::sign_of_mult(unfolded_sets[i], unfolded_sets[j], sign_helpers[j]);
             res_vec[i ^ j] += sign * l_vec[i] * r_vec[j];
           }
           if (i == 0)
             break;
         }
         // j is strict superset of i
-        for (set_value_t j = (i + 1) | i; j < dim; j = (j + 1) | i)
+        for (size_t j = (i + 1) | i; j < dim; j = (j + 1) | i)
         {
           if (r_vec[j] != Scalar_T(0))
           {
-            unsigned long urhs = unfolded_bits[j];
-            unsigned long h = h_vals[j];
-            unsigned long k_val = inverse_gray(uthis & h);
-            unsigned long q_val = inverse_gray((uthis & urhs) >> -index_set_t::v_lo);
-            unsigned long neg = k_val ^ q_val;
-            Scalar_T sign = (neg & 1) ? Scalar_T(-1) : Scalar_T(1);
+            Scalar_T sign = index_set_t::sign_of_mult(unfolded_sets[i], unfolded_sets[j], sign_helpers[j]);
             res_vec[i ^ j] += sign * l_vec[i] * r_vec[j];
           }
         }
       }
       auto result = multivector_t(_GLUCAT_HASH_SIZE_T(dim));
-      for (set_value_t k = 0; k < dim; ++k)
+      for (size_t k = 0; k < dim; ++k)
         if (res_vec[k] != Scalar_T(0))
-          result.insert(term_t(index_set_t(k, our_frame, true), res_vec[k]));
+          result.insert(term_t(unfolded_sets[k], res_vec[k]));
       return result;
     }
     else
@@ -1010,7 +998,7 @@ namespace glucat
     }
     else if (frm_count < index_t(Tuning_Values_P::products_matrix_threshold))
     {
-      const set_value_t dim = algebra_dim;
+      const size_t dim = size_t(1) << frm_count;
       std::vector<Scalar_T> l_vec(dim, Scalar_T(0));
       for (auto& term : lhs)
         l_vec[term.first.value_of_fold(our_frame)] = term.second;
@@ -1018,39 +1006,34 @@ namespace glucat
       for (auto& term : rhs)
         r_vec[term.first.value_of_fold(our_frame)] = term.second;
 
-      std::vector<set_value_t> unfolded_bits(dim);
-      std::vector<unsigned long> h_vals(dim);
-      for (set_value_t k = 0; k < dim; ++k)
+      using helper_t = typename index_set_t::sign_helper;
+      std::vector<index_set_t> unfolded_sets(dim);
+      std::vector<helper_t> sign_helpers(dim);
+      for (size_t k = 0; k < dim; ++k)
       {
-        unfolded_bits[k] = index_set_t(k, our_frame, true).to_set_value();
-        h_vals[k] = inverse_reversed_gray(unfolded_bits[k]);
+        unfolded_sets[k] = index_set_t(k, our_frame, true);
+        sign_helpers[k] = unfolded_sets[k].to_sign_helper();
       }
 
       std::vector<Scalar_T> res_vec(dim, Scalar_T(0));
-      for (set_value_t i = 0; i < dim; ++i)
+      for (size_t i = 0; i < dim; ++i)
       {
         if (l_vec[i] == Scalar_T(0))
           continue;
-        unsigned long uthis = unfolded_bits[i];
         // j is superset of i
-        for (set_value_t j = i; j < dim; j = (j + 1) | i)
+        for (size_t j = i; j < dim; j = (j + 1) | i)
         {
           if (r_vec[j] != Scalar_T(0))
           {
-            unsigned long urhs = unfolded_bits[j];
-            unsigned long h = h_vals[j];
-            unsigned long k_val = inverse_gray(uthis & h);
-            unsigned long q_val = inverse_gray((uthis & urhs) >> -index_set_t::v_lo);
-            unsigned long neg = k_val ^ q_val;
-            Scalar_T sign = (neg & 1) ? Scalar_T(-1) : Scalar_T(1);
+            Scalar_T sign = index_set_t::sign_of_mult(unfolded_sets[i], unfolded_sets[j], sign_helpers[j]);
             res_vec[i ^ j] += sign * l_vec[i] * r_vec[j];
           }
         }
       }
       auto result = multivector_t(_GLUCAT_HASH_SIZE_T(dim));
-      for (set_value_t k = 0; k < dim; ++k)
+      for (size_t k = 0; k < dim; ++k)
         if (res_vec[k] != Scalar_T(0))
-          result.insert(term_t(index_set_t(k, our_frame, true), res_vec[k]));
+          result.insert(term_t(unfolded_sets[k], res_vec[k]));
       return result;
     }
     else
