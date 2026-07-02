@@ -46,7 +46,7 @@ def check_file(filepath):
     if "glucat_config.h" in filepath:
         return True
     try:
-        with open(filepath, "r") as f:
+        with open(filepath, "r", encoding="utf-8") as f:
             content = f.read()
     except Exception as e:
         print(f"Error reading {filepath}: {e}", file=sys.stderr)
@@ -74,7 +74,7 @@ def fix_file(filepath):
     if "glucat_config.h" in filepath:
         return True
     try:
-        with open(filepath, "r") as f:
+        with open(filepath, "r", encoding="utf-8") as f:
             content = f.read()
     except Exception as e:
         print(f"Error reading {filepath}: {e}", file=sys.stderr)
@@ -100,7 +100,7 @@ def fix_file(filepath):
     postprocessed = postprocess(formatted)
     
     if postprocessed != content:
-        with open(filepath, "w") as f:
+        with open(filepath, "w", encoding="utf-8") as f:
             f.write(postprocessed)
         print(f"Formatted {filepath}")
     return True

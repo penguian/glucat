@@ -13,7 +13,7 @@ You can run all local tests and linters at once using the verification script:
 ./verify_all.sh
 ```
 This script will run:
-1. Python checks: `ruff` and `pylint` on the `pyclical/` wrapper and demos.
+1. Python checks: `ruff` and `pylint` on the `pyclical/` wrapper, demos, and benchmarks.
 2. C++ style check: `clang-format` (restricted to the `glucat/` directory).
 3. C++ static analysis: `cppcheck` (restricted to the `glucat/` directory).
 4. Primary regression tests: `make check-local`.

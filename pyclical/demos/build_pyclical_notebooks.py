@@ -19,7 +19,7 @@ import sys
 
 def build_notebook(ctx, module_name, title):
     module = __import__(module_name)
-    sys.stdout = open(module_name + ".ipynb", "w")
+    sys.stdout = open(module_name + ".ipynb", "w", encoding="utf-8")
     ctx.print_notebook_header(title)
     module.run(ctx)
     ctx.print_notebook_footer()
