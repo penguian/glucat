@@ -1,0 +1,13 @@
+# Ruff configuration for GluCat / PyClical
+
+# Exclude notebooks and build artifacts
+extend-exclude = ["*.ipynb", "build/", "dist/", "__pycache__"]
+
+[lint]
+# Enable Pyflakes (F), pycodestyle (E, W)
+select = ["E", "F", "W"]
+
+# Suppress specific rules for demos and test files where star imports, bare-excepts, and long lines are standard
+[lint.per-file-ignores]
+"pyclical/demos/*" = ["F403", "F405", "E722", "F401", "F841", "E501"]
+"pyclical/test.py" = ["F401", "F841", "E501"]
