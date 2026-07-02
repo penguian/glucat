@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-# Run PyClical & demos linting
-ruff check pyclical/ pyclical/demos/
-pylint pyclical/ pyclical/demos/
+# Run PyClical, demos, and benchmarks linting
+ruff check pyclical/ pyclical/demos/ benchmarks/
+pylint pyclical/ pyclical/demos/ benchmarks/
 
 # Notebook validation (to be enabled in Stage 4)
 # python3 pyclical/demos/validate_notebooks.py
