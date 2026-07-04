@@ -1,6 +1,8 @@
 README for GluCat 0.98a2 with PyClical
 ======================================
 
+[![CI](https://github.com/penguian/glucat/actions/workflows/ci.yml/badge.svg)](https://github.com/penguian/glucat/actions/workflows/ci.yml)
+
 GluCat is a library of C++ template classes for calculations with the universal
 Clifford algebras over the real field. The dimension of the algebras you can
 use is limited only by computer word size. Unlike some software packages for

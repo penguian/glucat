@@ -1,0 +1,146 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, 86-github-actions-ci ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  cpp-matrix:
+    name: C++ (${{ matrix.compiler.cc }}-${{ matrix.compiler.version }}, ${{ matrix.backend }}, Boost ${{ matrix.boost }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler:
+          - { cc: gcc,   cxx: g++,     version: "13" }
+          - { cc: clang, cxx: clang++, version: "18" }
+        backend:
+          - eigen
+          - armadillo
+        boost:
+          - "1.84.0"
+          - "1.85.0"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install C++ Compiler
+        run: |
+          sudo apt-get update
+          if [ "${{ matrix.compiler.cc }}" = "clang" ]; then
+            sudo apt-get install -y clang-${{ matrix.compiler.version }} llvm-${{ matrix.compiler.version }}
+          else
+            sudo apt-get install -y gcc-${{ matrix.compiler.version }} g++-${{ matrix.compiler.version }}
+          fi
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get install -y libeigen3-dev libarmadillo-dev libtool autoconf automake pkg-config
+
+      - name: Install Boost Headers
+        run: |
+          wget -q https://github.com/boostorg/boost/releases/download/boost-${{ matrix.boost }}/boost-${{ matrix.boost }}.tar.gz
+          tar -xzf boost-${{ matrix.boost }}.tar.gz boost-${{ matrix.boost }}/boost --strip-components=1
+          sudo mv boost /usr/local/include/boost
+
+      - name: Bootstrap & Configure
+        env:
+          CC: ${{ matrix.compiler.cc }}-${{ matrix.compiler.version }}
+          CXX: ${{ matrix.compiler.cxx }}-${{ matrix.compiler.version }}
+        run: |
+          autoreconf -fi
+          CONFIGURE_FLAGS=""
+          if [ "${{ matrix.backend }}" = "armadillo" ]; then
+            CONFIGURE_FLAGS="--with-armadillo=yes"
+          fi
+          ./configure $CONFIGURE_FLAGS CXXFLAGS="-O2 -g -Werror=return-type -Werror=uninitialized -Werror=format"
+
+      - name: Build
+        run: make -j$(nproc)
+
+      - name: Run C++ tests
+        run: make check-local
+
+  pyclical:
+    name: PyClical CI
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libeigen3-dev libarmadillo-dev libtool autoconf automake pkg-config python3-pip python3-dev cython3
+
+      - name: Install Boost Headers (Latest 1.85.0)
+        run: |
+          wget -q https://github.com/boostorg/boost/releases/download/boost-1.85.0/boost-1.85.0.tar.gz
+          tar -xzf boost-1.85.0.tar.gz boost-1.85.0/boost --strip-components=1
+          sudo mv boost /usr/local/include/boost
+
+      - name: Set up virtual environment
+        run: |
+          python3 -m venv venv
+          echo "$GITHUB_WORKSPACE/venv/bin" >> $GITHUB_PATH
+
+      - name: Install Python dependencies
+        run: |
+          pip install --upgrade pip
+          pip install pytest ruff pylint nbformat Cython numpy
+
+      - name: Bootstrap & Configure PyClical
+        run: |
+          autoreconf -fi
+          ./configure --enable-pyclical
+
+      - name: Build
+        run: make -j$(nproc)
+
+      - name: Lint PyClical & demos
+        run: |
+          ruff check pyclical/ pyclical/demos/
+          pylint pyclical/ pyclical/demos/
+
+      - name: Validate generated notebooks
+        run: python3 pyclical/demos/validate_notebooks.py
+
+      - name: Run PyClical tests
+        run: python3 -m pytest pyclical/test_pytest_doctests.py -v
+
+  doc:
+    name: Documentation Build
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libeigen3-dev libarmadillo-dev libtool autoconf automake pkg-config
+          sudo apt-get install -y doxygen graphviz texlive-latex-base texlive-latex-extra texlive-binaries
+
+      - name: Install Boost Headers (Latest 1.85.0)
+        run: |
+          wget -q https://github.com/boostorg/boost/releases/download/boost-1.85.0/boost-1.85.0.tar.gz
+          tar -xzf boost-1.85.0.tar.gz boost-1.85.0/boost --strip-components=1
+          sudo mv boost /usr/local/include/boost
+
+      - name: Bootstrap & configure with --enable-doc
+        run: |
+          autoreconf -fi
+          ./configure --enable-doc
+
+      - name: Build documentation
+        run: make doc
+
+      - name: Verify output artefacts exist
+        run: |
+          test -f doc/api/html/index.html
+          test -f doc/api/GluCat-API-reference-manual.pdf
