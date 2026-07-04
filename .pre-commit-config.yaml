@@ -3,9 +3,9 @@ repos:
     rev: v5.0.0
     hooks:
       - id: trailing-whitespace
-        exclude: '^(test_runtime\..*/|benchmarks/(AMD-|Apple-|Intel-)/|.*\.out$|.*\.log$|ChangeLog$|test08/eg8.txt$)'
+        exclude: '^(test_runtime\..*/|benchmarks/(AMD|Apple|Intel)-[^/]*/|.*\.out$|.*\.log$|ChangeLog$|test08/eg8.txt$)'
       - id: end-of-file-fixer
-        exclude: '^(test_runtime\..*/|benchmarks/(AMD-|Apple-|Intel-)/|.*\.out$|.*\.log$|ChangeLog$|test08/eg8.txt$)'
+        exclude: '^(test_runtime\..*/|benchmarks/(AMD|Apple|Intel)-[^/]*/|.*\.out$|.*\.log$|ChangeLog$|test08/eg8.txt$)'
       - id: check-yaml
       - id: check-merge-conflict
 

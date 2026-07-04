@@ -38,7 +38,8 @@ class TorusDemoDialog(HasTraits):
     radius              : Relative radius of the ball around each point.
     resolution          : Resolution of the ball around each point.
     opacity             : Opacity of the ball around each point.
-    reciprocal          : Use the reciprocal bivector with respect to the pseudoscalar of R_{4,0}
+    reciprocal          : Use the reciprocal bivector with respect to
+                          the pseudoscalar of R_{4,0}
     """
 
     number_of_orbits = Range(1, 16, default_nbr_orbits)
@@ -46,7 +47,7 @@ class TorusDemoDialog(HasTraits):
     scaling = Range(1, 32000, default_scaling)
     segment_length = Range(1, 32000, default_segment_len)
     figure_width = Range(128, 4096, default_figwidth)
-    figure_height = Range(128, 4096, default_figwidth)
+    figure_height = Range(128, 4096, default_figheight)
     radius = Range(0.01, 0.1, default_radius)
     resolution = Range(3, 32, default_resolution)
     opacity = Range(0.0, 1.0, default_opacity)

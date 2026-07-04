@@ -52,6 +52,7 @@ test03/eg3.res
 
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints/
+*.ipynb
 
 # Linter and static analysis caches
 .ruff_cache/
