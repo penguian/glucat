@@ -37,4 +37,4 @@ repos:
         name: check license headers
         entry: python check_license_headers.py
         language: python
-        types_or: [c++, python]
+        types_or: [c++, python, cython]

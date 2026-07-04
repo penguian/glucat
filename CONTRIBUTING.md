@@ -74,7 +74,7 @@ git commit -m "temp commit" --no-verify
 
 All source files (`.py`, `.h`, `.cpp`, `.hpp`, `.pyx`, `.pxd`) must have a valid license header.
 - Core source files must include the **GNU Lesser General Public License (LGPL)** header.
-- PyClical tutorials and demos must include the **Creative Commons BY-SA 3.0** header.
+- PyClical tutorials (e.g., `pyclical_tutorial_*.py` files) must include the **Creative Commons BY-SA 3.0** header. Other PyClical source files (including core wrapper modules and general demos) should include the **GNU Lesser General Public License (LGPL)** header.
 
 > [!NOTE]
 > **Unique Exemption:** The demo file [pyclical/demos/plotting_demo_dialog.py](pyclical/demos/plotting_demo_dialog.py) is a unique exemption. Since it is a derivative work of a TraitsUI/Mayavi template copyrighted by Enthought, Inc., it maintains its original **BSD Style** license header. This is the only BSD-licensed file permitted in the repository.
