@@ -52,7 +52,7 @@ jobs:
           CC: ${{ matrix.compiler.cc }}-${{ matrix.compiler.version }}
           CXX: ${{ matrix.compiler.cxx }}-${{ matrix.compiler.version }}
         run: |
-          autoreconf -fi
+          make -f admin/Makefile.common bootstrap
           CONFIGURE_FLAGS=""
           if [ "${{ matrix.backend }}" = "armadillo" ]; then
             CONFIGURE_FLAGS="--with-armadillo=yes"
@@ -96,7 +96,7 @@ jobs:
 
       - name: Bootstrap & Configure PyClical
         run: |
-          autoreconf -fi
+          make -f admin/Makefile.common bootstrap
           ./configure --enable-pyclical
 
       - name: Build
@@ -135,7 +135,7 @@ jobs:
 
       - name: Bootstrap & configure with --enable-doc
         run: |
-          autoreconf -fi
+          make -f admin/Makefile.common bootstrap
           ./configure --enable-doc
 
       - name: Build documentation
