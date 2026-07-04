@@ -25,11 +25,14 @@ from builtins import str
 from PyClical import *
 from pyclical_tutorial_utils import *
 
+
 def run(ctx=tutorial_context(globals())):
     for name, method in get_object_methods(ctx).items():
-        exec("global "+name+";"+name+"=method")
+        exec("global " + name + ";" + name + "=method")
 
-    print_fill("# versor_demo.py: Demonstrate versor and versor_exp with PyClical.")
+    print_fill(
+        "# versor_demo.py: Demonstrate versor and versor_exp with PyClical."
+    )
     print_line()
     print_fill("INITIALIZATION.")
     print_exec("from PyClical import *")
@@ -49,7 +52,9 @@ def run(ctx=tutorial_context(globals())):
     print_exec("print(R)")
     print_line()
 
-    print_fill("Compare the explicit sandwich product, operator|, versor(), and versor_exp().")
+    print_fill(
+        "Compare the explicit sandwich product, operator|, versor(), and versor_exp()."
+    )
     print_line()
     print_exec("explicit_sand = R * X * involute(exp(-A))")
     print_exec("print(explicit_sand)")
@@ -73,6 +78,7 @@ def run(ctx=tutorial_context(globals())):
     pause()
     print_line()
     print_fill("You have completed the demonstration file versor_demo.py.")
+
 
 if __name__ == "__main__":
     try:

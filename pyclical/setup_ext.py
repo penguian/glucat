@@ -33,7 +33,8 @@ def filtered_libraries():
         "mkl_gf_lp64",
         "mkl_intel",
         "mkl_intel_lp64",
-        "mkl_sequential"]
+        "mkl_sequential",
+    ]
     substituted = False
     for lib in mkl_libraries:
         try:
@@ -52,11 +53,12 @@ def filtered_libraries():
 def setup_ext(ext_name, source):
     define_macros = []
     if os.environ.get("GLUCAT_PYCLICAL_TRACE"):
-        define_macros.append(('CYTHON_TRACE', '1'))
+        define_macros.append(("CYTHON_TRACE", "1"))
 
     ext = Extension(
         ext_name,
         sources=[source],
         libraries=filtered_libraries(),
-        define_macros=define_macros)
+        define_macros=define_macros,
+    )
     return ext

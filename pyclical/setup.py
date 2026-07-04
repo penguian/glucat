@@ -26,11 +26,11 @@ from Cython.Build import cythonize
 import Cython.Compiler.Options
 import os
 
-Cython.Compiler.Options.annotate=True
-ext_name = os.environ['ext_name']
-source   = os.environ['source_pyx']
+Cython.Compiler.Options.annotate = True
+ext_name = os.environ["ext_name"]
+source = os.environ["source_pyx"]
 ext = setup_ext(ext_name, source)
 setup(
-    name = ext_name,
-    ext_modules = cythonize([ext], compiler_directives={'linetrace': True})
+    name=ext_name,
+    ext_modules=cythonize([ext], compiler_directives={"linetrace": True}),
 )

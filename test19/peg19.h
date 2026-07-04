@@ -6,6 +6,21 @@
                              -------------------
     begin                : Thu Jun 11 2026
     copyright            : (C) 2001-2026 by Paul C. Leopardi
+ ***************************************************************************
+
+    This library is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with this library.  If not, see <http://www.gnu.org/licenses/>.
+
  ***************************************************************************/
 
 #include <iostream>
@@ -43,13 +58,13 @@ void versor_equivalence_test() {
     frm.set(3);
 
     mm_t X = mm_t::random(frm);
-    
+
     // Bivector generator
     mm_t A = mm_t::random(frm)(2);
     mm_t R = exp(A);
 
     cout << "Testing bivector generator equivalence on Cl(3,0):" << endl;
-    
+
     // Explicit sandwich: R * X * involute(exp(-A))
     mm_t explicit_sand = R * X * involute(exp(-A));
     // Solver-based operator|: X | R

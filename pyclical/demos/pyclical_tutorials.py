@@ -15,48 +15,92 @@ from builtins import input
 from builtins import object
 from pyclical_tutorial_utils import *
 
+
 class tutorial_module(object):
     def __init__(self, tutorial_title, tutorial_module_name):
-        self.title       = tutorial_title
+        self.title = tutorial_title
         self.module_name = tutorial_module_name
 
-tutorial_dict = dict( [
-    ("0.0", tutorial_module("0.0 Notation.",
-                            "pyclical_tutorial_0_0_notation")),
 
-    ("0.1", tutorial_module("0.1 Index sets.",
-                            "pyclical_tutorial_0_1_index_sets")),
+tutorial_dict = dict(
+    [
+        (
+            "0.0",
+            tutorial_module("0.0 Notation.", "pyclical_tutorial_0_0_notation"),
+        ),
+        (
+            "0.1",
+            tutorial_module(
+                "0.1 Index sets.", "pyclical_tutorial_0_1_index_sets"
+            ),
+        ),
+        (
+            "0.2",
+            tutorial_module(
+                "0.2 Operations.", "pyclical_tutorial_0_2_operations"
+            ),
+        ),
+        (
+            "0.3",
+            tutorial_module(
+                "0.3 Algebraic functions.", "pyclical_tutorial_0_3_functions"
+            ),
+        ),
+        (
+            "0.4",
+            tutorial_module(
+                "0.4 Square root and transcendental functions.",
+                "pyclical_tutorial_0_4_transcendental",
+            ),
+        ),
+        (
+            "1.0",
+            tutorial_module(
+                "1.0 Plane geometry.", "pyclical_tutorial_1_0_plane"
+            ),
+        ),
+        (
+            "1.1",
+            tutorial_module(
+                "1.1 Complex numbers.", "pyclical_tutorial_1_1_complex"
+            ),
+        ),
+        (
+            "1.2",
+            tutorial_module(
+                "1.2 Space geometry and vector algebra.",
+                "pyclical_tutorial_1_2_space",
+            ),
+        ),
+        (
+            "1.3",
+            tutorial_module(
+                "1.3 Electromagnetism and Lorentz transformations.",
+                "pyclical_tutorial_1_3_lorentz",
+            ),
+        ),
+        (
+            "1.4",
+            tutorial_module(
+                "1.4 The fourth dimension.", "pyclical_tutorial_1_4_fourth"
+            ),
+        ),
+        (
+            "1.5",
+            tutorial_module(
+                "1.5 Conformal Geometric Algebra.",
+                "pyclical_tutorial_1_5_conformal",
+            ),
+        ),
+        (
+            "2.0",
+            tutorial_module(
+                "2.0 Exterior product.", "pyclical_tutorial_2_0_wedge_product"
+            ),
+        ),
+    ]
+)
 
-    ("0.2", tutorial_module("0.2 Operations.",
-                            "pyclical_tutorial_0_2_operations")),
-
-    ("0.3", tutorial_module("0.3 Algebraic functions.",
-                            "pyclical_tutorial_0_3_functions")),
-
-    ("0.4", tutorial_module("0.4 Square root and transcendental functions.",
-                            "pyclical_tutorial_0_4_transcendental")),
-
-    ("1.0", tutorial_module("1.0 Plane geometry.",
-                            "pyclical_tutorial_1_0_plane")),
-
-    ("1.1", tutorial_module("1.1 Complex numbers.",
-                            "pyclical_tutorial_1_1_complex")),
-
-    ("1.2", tutorial_module("1.2 Space geometry and vector algebra.",
-                            "pyclical_tutorial_1_2_space")),
-
-    ("1.3", tutorial_module("1.3 Electromagnetism and Lorentz transformations.",
-                            "pyclical_tutorial_1_3_lorentz")),
-
-    ("1.4", tutorial_module("1.4 The fourth dimension.",
-                            "pyclical_tutorial_1_4_fourth")),
-
-    ("1.5", tutorial_module("1.5 Conformal Geometric Algebra.",
-                            "pyclical_tutorial_1_5_conformal")),
-
-    ("2.0", tutorial_module("2.0 Exterior product.",
-                            "pyclical_tutorial_2_0_wedge_product")),
-                      ])
 
 def tutorial():
     ctx = tutorial_context(globals())
@@ -70,8 +114,13 @@ def tutorial():
             print_fill(tut.title)
 
         print("")
-        input_str = input(fill("Enter the number for the tutorial you want to run, or Q to quit:") + " ")
-        if (len(input_str) > 0) and (input_str[0].upper() == 'Q'):
+        input_str = input(
+            fill(
+                "Enter the number for the tutorial you want to run, or Q to quit:"
+            )
+            + " "
+        )
+        if (len(input_str) > 0) and (input_str[0].upper() == "Q"):
             break
 
         try:
@@ -84,6 +133,7 @@ def tutorial():
             continue
         except:
             print_fill("Please enter a valid tutorial number.")
+
 
 if __name__ == "__main__":
     tutorial()

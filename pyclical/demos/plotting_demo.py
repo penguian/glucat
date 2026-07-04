@@ -30,22 +30,26 @@ from PyClical import *
 #
 # Default values common to functions draw_orbit and demo.
 #
-default_nbr_points  = 20000
-default_segment_len =  5000
-default_fignum      =     1
-default_figwidth    =    15
-default_figheight   =    12
-default_azimuth     =   210
-default_jitter      =     1
+default_nbr_points = 20000
+default_segment_len = 5000
+default_fignum = 1
+default_figwidth = 15
+default_figheight = 12
+default_azimuth = 210
+default_jitter = 1
 
-def draw_orbit(r, s,
-        nbr_points  = default_nbr_points,
-        segment_len = default_segment_len,
-        fignum      = default_fignum,
-        figwidth    = default_figwidth,
-        figheight   = default_figheight,
-        azimuth     = default_azimuth,
-        jitter      = default_jitter):
+
+def draw_orbit(
+    r,
+    s,
+    nbr_points=default_nbr_points,
+    segment_len=default_segment_len,
+    fignum=default_fignum,
+    figwidth=default_figwidth,
+    figheight=default_figheight,
+    azimuth=default_azimuth,
+    jitter=default_jitter,
+):
     """
     Plot a curve created by a random sequence using the rotors r and s,
 
@@ -67,14 +71,15 @@ def draw_orbit(r, s,
     from mpl_toolkits.mplot3d import Axes3D
     from matplotlib.animation import FuncAnimation
     import matplotlib.pyplot as plt
+
     #
     # Frame for 3D Euclidean space R^3.
     #
-    r3frame = istpq(3,0)
+    r3frame = istpq(3, 0)
     #
     # Frame for Conformal Geometric Algebra (CGA).
     #
-    cga3frame = istpq(4,1)
+    cga3frame = istpq(4, 1)
     #
     # Reframe the rotors r and s, for speed.
     #
@@ -100,13 +105,13 @@ def draw_orbit(r, s,
     # Use a new figure.
     #
     fig = plt.figure(num=fignum, figsize=(figwidth, figheight))
-    ax  = fig.add_subplot(projection='3d')
+    ax = fig.add_subplot(projection="3d")
     ax.view_init(azim=azimuth)
     #
     # Draw the origin as a white point. This works around a bug in mplot3d where
     # plots with a small range in Z values are plotted as if Z is close to 0.
     #
-    ax.scatter([0], [0], [0], c='white', alpha=0.0, edgecolors='none')
+    ax.scatter([0], [0], [0], c="white", alpha=0.0, edgecolors="none")
     plt.draw()
     #
     # Split the curve into M segments.
@@ -135,11 +140,11 @@ def draw_orbit(r, s,
         #
         # Calculate the norms of the points in p and store them in n.
         #
-        n = np.sqrt(np.reshape(np.sum(p*p, 1), [segment_len, 1]))
+        n = np.sqrt(np.reshape(np.sum(p * p, 1), [segment_len, 1]))
         #
         # Fudge norm 0 to the value 1 to avoid dividing by 0.
         #
-        n[n==0] = 1.0
+        n[n == 0] = 1.0
         #
         # Tile the norm n to be a segment_len by 3 array
         # for use in determining colours.
@@ -164,27 +169,31 @@ def draw_orbit(r, s,
         #
         phi = jitter * frame_number
         ax.view_init(azim=azimuth + phi)
+
     #
     # Construct an animation that rotates the plot about a vertical axis.
     #
     rotate = FuncAnimation(fig, update, interval=1, save_count=4)
     plt.show()
 
+
 #
 # Default values for demo.
 #
-default_nbr_curves  =     4
-default_scaling     =  8000
+default_nbr_curves = 4
+default_scaling = 8000
+
 
 def demo(
-        nbr_curves  = default_nbr_curves,
-        nbr_points  = default_nbr_points,
-        scaling     = default_scaling,
-        segment_len = default_segment_len,
-        figwidth    = default_figwidth,
-        figheight   = default_figheight,
-        azimuth     = default_azimuth,
-        jitter      = default_jitter):
+    nbr_curves=default_nbr_curves,
+    nbr_points=default_nbr_points,
+    scaling=default_scaling,
+    segment_len=default_segment_len,
+    figwidth=default_figwidth,
+    figheight=default_figheight,
+    azimuth=default_azimuth,
+    jitter=default_jitter,
+):
     """
     Plot curves created by exponentiating a random bivector and its reciprocal in R_{4,0}.
 
@@ -201,7 +210,7 @@ def demo(
     #
     # Frame for 4D Euclidean space R^4.
     #
-    r4frame = istpq(4,0)
+    r4frame = istpq(4, 0)
     #
     # Plot nbr_curves curves.
     #
@@ -217,14 +226,23 @@ def demo(
         #
         # Exponentiate the bivectors br and bs to obtain rotors r and s.
         #
-        r  = exp(br)
-        s  = exp(bs)
+        r = exp(br)
+        s = exp(bs)
         #
         # Draw the curve.
         #
         fignum = i + 1
-        draw_orbit(r, s, nbr_points, segment_len,
-                   fignum, figwidth, figheight, azimuth, jitter)
+        draw_orbit(
+            r,
+            s,
+            nbr_points,
+            segment_len,
+            fignum,
+            figwidth,
+            figheight,
+            azimuth,
+            jitter,
+        )
 
 
 if __name__ == "__main__":

@@ -123,7 +123,7 @@ framework.
 
 The `./test_coverage` directory contains scripts for generating code coverage
 reports for the various test suites. The `doctest` coverage script supports
-selective testing of the Eigen and Armadillo backends, as well as combined 
+selective testing of the Eigen and Armadillo backends, as well as combined
 reports.
 
 The `./test_runtime.x86-64` and `./test_runtime.aarch64` directories contain static
@@ -416,5 +416,3 @@ Some code conventions are:
 * `Other_Sentence_Case`: Other template parameters, including template template
 parameters.
 * `ALL_CAPS_WITH_UNDERSCORES`: A global constant defined in `<glucat/global.h>`
-
-

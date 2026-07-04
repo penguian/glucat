@@ -14,30 +14,41 @@
 
 from pyclical_tutorial_utils import *
 
+
 def run(ctx):
     for name, method in get_object_methods(ctx).items():
-        exec("global "+name+";"+name+"=method")
+        exec("global " + name + ";" + name + "=method")
 
     print_head("0.4 Square root and transcendental functions.")
     print_line()
-    print_fill("This file contains a tutorial that describes the square root and " +
-              " transcendental functions on Clifford algebra elements available within PyClical.")
+    print_fill(
+        "This file contains a tutorial that describes the square root and "
+        + " transcendental functions on Clifford algebra elements available within PyClical."
+    )
     print_line()
-    print_fill("It is recommended that you do the tutorials in order, beginning with" +
-              " 0.0 Notation.")
+    print_fill(
+        "It is recommended that you do the tutorials in order, beginning with"
+        + " 0.0 Notation."
+    )
     print_line()
     print_exec("from PyClical import *")
 
     pause()
     print_line()
-    print_fill("PyClical is based on two Python classes, clifford, and index_set.")
+    print_fill(
+        "PyClical is based on two Python classes, clifford, and index_set."
+    )
     print_line()
-    print_fill("The clifford class implements Clifford algebras over the double precision" +
-              " floating point approximation to the real numbers.")
+    print_fill(
+        "The clifford class implements Clifford algebras over the double precision"
+        + " floating point approximation to the real numbers."
+    )
     print_line()
-    print_fill("Tutorial 0.0 Notation showed you how to construct objects of type clifford. " +
-              " This tutorial shows you how to use the square root and " +
-              " transcendental functions defined on these objects.")
+    print_fill(
+        "Tutorial 0.0 Notation showed you how to construct objects of type clifford. "
+        + " This tutorial shows you how to use the square root and "
+        + " transcendental functions defined on these objects."
+    )
 
     pause()
     print_line()
@@ -50,18 +61,22 @@ def run(ctx):
     print_line()
     print_fill("The complexifier function.")
     print_line()
-    print_fill("One key property of Clifford algebras is that they generally contain many" +
-              " square roots of -1. " +
-              " Some Clifford algebras have a pseudoscalar e(s) that squares to -1 and" +
-              " commutes with all algebra elements. " +
-              " Such a Clifford algebra is isomorphic to a full matrix algebra over" +
-              " the complex field, and in this case the pseudoscalar e(s) corresponds to" +
-              " the complex i times the identity matrix.")
+    print_fill(
+        "One key property of Clifford algebras is that they generally contain many"
+        + " square roots of -1. "
+        + " Some Clifford algebras have a pseudoscalar e(s) that squares to -1 and"
+        + " commutes with all algebra elements. "
+        + " Such a Clifford algebra is isomorphic to a full matrix algebra over"
+        + " the complex field, and in this case the pseudoscalar e(s) corresponds to"
+        + " the complex i times the identity matrix."
+    )
     print_line()
-    print_fill("The complexifier function takes a clifford object x and returns the pseudoscalar e(s)" +
-              " corresponding to the smallest Clifford algebra A containing x," +
-              " such that A is isomorphic to a full complex matrix algebra. " +
-              " In some cases, there are two such algebras and an arbitrary choice is made.")
+    print_fill(
+        "The complexifier function takes a clifford object x and returns the pseudoscalar e(s)"
+        + " corresponding to the smallest Clifford algebra A containing x,"
+        + " such that A is isomorphic to a full complex matrix algebra. "
+        + " In some cases, there are two such algebras and an arbitrary choice is made."
+    )
     print_line()
     print_exec("print(complexifier(1))")
     print_exec("print(complexifier(e(1)))")
@@ -71,18 +86,22 @@ def run(ctx):
     print_exec("print(j * w - w * j)")
 
     pause()
-    check_exec("set i to be the complexifier of x",
-               "i",
-               "complexifier(x)")
-    check_eval("compare with -1 to check that i is a square root of -1",
-               "i * i",
-               "print(1 + {})")
-    check_eval("compare with x * i to check that i commutes with x",
-               "i * x",
-               "print(x * i - {})")
+    check_exec("set i to be the complexifier of x", "i", "complexifier(x)")
+    check_eval(
+        "compare with -1 to check that i is a square root of -1",
+        "i * i",
+        "print(1 + {})",
+    )
+    check_eval(
+        "compare with x * i to check that i commutes with x",
+        "i * x",
+        "print(x * i - {})",
+    )
 
     pause()
-    print_fill("The complexifier function can also take an index set or a string as an argument.")
+    print_fill(
+        "The complexifier function can also take an index set or a string as an argument."
+    )
     print_line()
     print_fill("Examples:")
     print_line()
@@ -91,18 +110,24 @@ def run(ctx):
     print_exec("print(complexifier('{1,2}'))")
 
     pause()
-    print_fill("The square root function and many of the transcendental functions" +
-              " take a complexifier i as an optional argument, i.e. f(x, i). " +
-              " The default is to use complexifier(x) as the complexifier.")
+    print_fill(
+        "The square root function and many of the transcendental functions"
+        + " take a complexifier i as an optional argument, i.e. f(x, i). "
+        + " The default is to use complexifier(x) as the complexifier."
+    )
     print_line()
-    print_fill("In the case of the square root and logarithm functions, this is because" +
-              " the function needs to use a complexifier i in the case where" +
-              " the matrix representation of the clifford object x has a negative real eigenvalue. "
-              " See [L-2010] for more details.")
+    print_fill(
+        "In the case of the square root and logarithm functions, this is because"
+        + " the function needs to use a complexifier i in the case where"
+        + " the matrix representation of the clifford object x has a negative real eigenvalue. "
+        " See [L-2010] for more details."
+    )
     print_line()
-    print_fill("The other functions that use a complexifier i," +
-              " do so either because they are implemented by an expression using i," +
-              " or because the function eventually calls sqrt or log.")
+    print_fill(
+        "The other functions that use a complexifier i,"
+        + " do so either because they are implemented by an expression using i,"
+        + " or because the function eventually calls sqrt or log."
+    )
 
     pause()
     print_line()
@@ -116,8 +141,10 @@ def run(ctx):
     print_exec("print(sqrt(2*e(-1)))")
 
     pause()
-    print_fill("For the examples for the transcendental functions," +
-              " we will use the following clifford objects.")
+    print_fill(
+        "For the examples for the transcendental functions,"
+        + " we will use the following clifford objects."
+    )
     print_exec("i = e(-1)")
     print_exec("j = e({1,2})")
     print_exec("k = e({1,2,3})")
@@ -199,31 +226,32 @@ def run(ctx):
     print_line()
     print_fill("Try these now.")
 
-    check_exec("set i to be the complexifier of w",
-               "i",
-               "complexifier(w)")
-    check_exec("set y to be the exponential of (i times w)",
-               "y",
-               "exp(i * w)")
-    check_exec("set z to be the cosine of w plus i times the sine of w",
-               "z",
-               "cos(w) + i * sin(w)")
+    check_exec("set i to be the complexifier of w", "i", "complexifier(w)")
+    check_exec("set y to be the exponential of (i times w)", "y", "exp(i * w)")
+    check_exec(
+        "set z to be the cosine of w plus i times the sine of w",
+        "z",
+        "cos(w) + i * sin(w)",
+    )
     print_fill("Checking:")
     print_exec("print(y - z)")
 
     pause()
-    check_exec("set y to be the exponential of x",
-               "y",
-               "exp(x)")
-    check_exec("set z to be the hyperbolic cosine of x plus the hyperbolic sine of x",
-               "z",
-               "cosh(x) + sinh(x)")
+    check_exec("set y to be the exponential of x", "y", "exp(x)")
+    check_exec(
+        "set z to be the hyperbolic cosine of x plus the hyperbolic sine of x",
+        "z",
+        "cosh(x) + sinh(x)",
+    )
     print_fill("Checking:")
     print_exec("print(y - z)")
 
     pause()
     print_line()
-    print_fill("You have completed the tutorial file pyclical_tutorial_0_4_transcendental.py.")
+    print_fill(
+        "You have completed the tutorial file pyclical_tutorial_0_4_transcendental.py."
+    )
+
 
 if __name__ == "__main__":
     ctx = tutorial_context(globals())

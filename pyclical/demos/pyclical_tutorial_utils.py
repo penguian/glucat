@@ -31,39 +31,40 @@ import math
 
 # Allowed builtins
 allowed_builtins = {
-    'False': False,
-    'None': None,
-    'True': True,
-    'abs': abs,
-    'bool': bool,
-    'complex': complex,
-    'dict': dict,
-    'divmod': divmod,
-    'enumerate': enumerate,
-    'filter': filter,
-    'float': float,
-    'format': format,
-    'int': int,
-    'len': len,
-    'list': list,
-    'map': map,
-    'math': math,
-    'max': max,
-    'min': min,
-    'pow': pow,
-    'print': print,
-    'range': range,
-    'repr': repr,
-    'reversed': reversed,
-    'round': round,
-    'set': set,
-    'sorted': sorted,
-    'str': str,
-    'sum': sum,
-    'tuple': tuple,
-    'type': type,
-    'zip': zip,
+    "False": False,
+    "None": None,
+    "True": True,
+    "abs": abs,
+    "bool": bool,
+    "complex": complex,
+    "dict": dict,
+    "divmod": divmod,
+    "enumerate": enumerate,
+    "filter": filter,
+    "float": float,
+    "format": format,
+    "int": int,
+    "len": len,
+    "list": list,
+    "map": map,
+    "math": math,
+    "max": max,
+    "min": min,
+    "pow": pow,
+    "print": print,
+    "range": range,
+    "repr": repr,
+    "reversed": reversed,
+    "round": round,
+    "set": set,
+    "sorted": sorted,
+    "str": str,
+    "sum": sum,
+    "tuple": tuple,
+    "type": type,
+    "zip": zip,
 }
+
 
 def allowed_import(name, globals=None, locals=None, fromlist=(), level=0):
     """
@@ -72,14 +73,17 @@ def allowed_import(name, globals=None, locals=None, fromlist=(), level=0):
     Note: this is not a security measure and assumes a non-malicious user.
     It is intended to prevent accidental execution of arbitrary code.
     """
-    if name == 'PyClical':
+    if name == "PyClical":
         return PyClical
-    if name.startswith('IPython'):
+    if name.startswith("IPython"):
         import importlib
+
         return importlib.import_module(name)
     raise ImportError(f"Import of '{name}' is not allowed in tutorial sandbox.")
 
-allowed_builtins['__import__'] = allowed_import
+
+allowed_builtins["__import__"] = allowed_import
+
 
 def get_allowed_scope():
     """
@@ -89,11 +93,12 @@ def get_allowed_scope():
     Note: this is not a security measure and assumes a non-malicious user.
     It is intended to prevent accidental execution of arbitrary code.
     """
-    scope = {'__builtins__': allowed_builtins}
+    scope = {"__builtins__": allowed_builtins}
     for name in dir(PyClical):
-        if not name.startswith('_'):
+        if not name.startswith("_"):
             scope[name] = getattr(PyClical, name)
     return scope
+
 
 def allowed_exec(command_str, scope=None):
     """
@@ -106,6 +111,7 @@ def allowed_exec(command_str, scope=None):
         scope = get_allowed_scope()
     exec(command_str, scope)
 
+
 def allowed_eval(expression_str, scope=None):
     """
     Restricted eval function that evaluates within an allowed scope.
@@ -117,11 +123,13 @@ def allowed_eval(expression_str, scope=None):
         scope = get_allowed_scope()
     return eval(expression_str, scope)
 
+
 def get_console_width():
     import os
+
     default_console_width = 80
     try:
-        height_str, width_str = os.popen('stty size', 'r').read().split()
+        height_str, width_str = os.popen("stty size", "r").read().split()
         console_width = int(width_str)
         if console_width < 1:
             console_width = default_console_width
@@ -129,13 +137,16 @@ def get_console_width():
         console_width = default_console_width
     return console_width
 
-def fill(output_str, indent = "    "):
+
+def fill(output_str, indent="    "):
     from textwrap import TextWrapper
+
     console_width = get_console_width()
-    wrapper = TextWrapper(initial_indent    = indent,
-                          subsequent_indent = indent,
-                          width = console_width)
+    wrapper = TextWrapper(
+        initial_indent=indent, subsequent_indent=indent, width=console_width
+    )
     return wrapper.fill(output_str)
+
 
 def is_near(x, y):
     try:
@@ -152,19 +163,24 @@ def is_near(x, y):
         elif isinstance(x, numbers.Real) or isinstance(x, clifford):
             tol = 4.0 * scalar_epsilon
             if abs(x) > tol:
-                return abs(x-y) / abs(x) < tol
+                return abs(x - y) / abs(x) < tol
             else:
-                return abs(x-y) < tol
+                return abs(x - y) < tol
         else:
             return x == y
     except:
-         return False
+        return False
+
 
 def get_object_methods(obj):
-    return dict([
-        (method, getattr(obj, method))
-        for method in dir(obj)
-        if callable(getattr(obj, method)) and not method.startswith('_')])
+    return dict(
+        [
+            (method, getattr(obj, method))
+            for method in dir(obj)
+            if callable(getattr(obj, method)) and not method.startswith("_")
+        ]
+    )
+
 
 class interaction_context(object):
     def __init__(self, dictionary):
@@ -176,10 +192,10 @@ class interaction_context(object):
     def print_line(self):
         print("print_line")
 
-    def print_head(self, output_str, indent = "    "):
+    def print_head(self, output_str, indent="    "):
         print("print_head: ", output_str)
 
-    def print_fill(self, output_str, indent = "    "):
+    def print_fill(self, output_str, indent="    "):
         print("print_fill: ", output_str)
 
     def print_exec(self, command_str):
@@ -197,6 +213,7 @@ class interaction_context(object):
     def check_eval(self, prompt, value_str, command_str):
         print("check_exec: ", prompt, value_str, command_str)
 
+
 class tutorial_context(interaction_context):
     def __init__(self, dictionary=None):
         # We ignore the passed dictionary to enforce the allowed scope
@@ -209,10 +226,10 @@ class tutorial_context(interaction_context):
     def print_line(self):
         print("")
 
-    def print_head(self, output_str, indent = ""):
+    def print_head(self, output_str, indent=""):
         print(fill(output_str, indent))
 
-    def print_fill(self, output_str, indent = "    "):
+    def print_fill(self, output_str, indent="    "):
         print(fill(output_str, indent))
 
     def print_exec(self, command_str):
@@ -230,7 +247,9 @@ class tutorial_context(interaction_context):
     def check_exec(self, prompt, var_name, value_str):
         try:
             sandbox = self.object_names.copy()
-            filled_prompt = fill("Exercise: Enter a Python statement to " + prompt, "")
+            filled_prompt = fill(
+                "Exercise: Enter a Python statement to " + prompt, ""
+            )
             print("")
             self.input_exec(filled_prompt, sandbox)
             value = allowed_eval(value_str, self.object_names)
@@ -242,8 +261,12 @@ class tutorial_context(interaction_context):
             print("\nThat's right.\n")
         else:
             print("\nNot quite.\n")
-        self.print_fill("Here is one way to do this, and then print the result:")
-        self.print_exec(var_name+" = "+value_str+"; print("+var_name+")")
+        self.print_fill(
+            "Here is one way to do this, and then print the result:"
+        )
+        self.print_exec(
+            var_name + " = " + value_str + "; print(" + var_name + ")"
+        )
 
     def check_eval(self, prompt, value_str, command_str):
         try:
@@ -251,7 +274,9 @@ class tutorial_context(interaction_context):
         except:
             value = None
         try:
-            filled_prompt = fill("Exercise: Enter a Python expression to " + prompt, "")
+            filled_prompt = fill(
+                "Exercise: Enter a Python expression to " + prompt, ""
+            )
             print("")
             input_value = self.input_eval(filled_prompt)
             if is_near(input_value, value):

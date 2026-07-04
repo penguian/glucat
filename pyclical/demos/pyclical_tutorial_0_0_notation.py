@@ -13,37 +13,48 @@
 
 from pyclical_tutorial_utils import *
 
+
 def run(ctx):
     for name, method in get_object_methods(ctx).items():
-        exec("global "+name+";"+name+"=method")
+        exec("global " + name + ";" + name + "=method")
 
     print_head("0.0 Notation.")
     print_line()
-    print_fill("This file contains a tutorial that explains the notation used by PyClical.")
+    print_fill(
+        "This file contains a tutorial that explains the notation used by PyClical."
+    )
     print_line()
 
     pause()
     print_line()
-    print_fill("To use the capabilities of PyClical from within Python, you must either" +
-              " import the PyClical extension module or import objects from this module. " +
-              " The simplest way to do this is to use the following Python statement:")
+    print_fill(
+        "To use the capabilities of PyClical from within Python, you must either"
+        + " import the PyClical extension module or import objects from this module. "
+        + " The simplest way to do this is to use the following Python statement:"
+    )
     print_line()
     print_exec("from PyClical import *")
 
     pause()
     print_line()
-    print_fill("PyClical is based on two Python classes, clifford, and index_set.")
+    print_fill(
+        "PyClical is based on two Python classes, clifford, and index_set."
+    )
     print_line()
-    print_fill("The clifford class supports all of the operations usually needed in Clifford" +
-              " and Grassmann algebras.")
+    print_fill(
+        "The clifford class supports all of the operations usually needed in Clifford"
+        + " and Grassmann algebras."
+    )
     print_line()
     print_fill("The index_set class plays an important supporting role.")
     print_line()
 
     pause()
     print_line()
-    print_fill("Every clifford object class can be represented as a linear combination of" +
-              " basis elements, with each basis element represented as an index set.")
+    print_fill(
+        "Every clifford object class can be represented as a linear combination of"
+        + " basis elements, with each basis element represented as an index set."
+    )
     print_line()
     print_fill("Examples:")
     print_line()
@@ -52,15 +63,19 @@ def run(ctx):
 
     pause()
     print_line()
-    print_fill("The index sets are displayed in canonical increasing order of the indices," +
-              " corresponding exactly to the multiplication of generators of the Clifford" +
-              " algebra in the same canonical increasing order.")
+    print_fill(
+        "The index sets are displayed in canonical increasing order of the indices,"
+        + " corresponding exactly to the multiplication of generators of the Clifford"
+        + " algebra in the same canonical increasing order."
+    )
     print_line()
     print_fill("Examples:")
     print_line()
     print_exec("w = clifford(index_set({-2,3,4})); print(w)")
     print_exec("print(repr(w))")
-    print_exec("x = clifford(index_set({-2})) * clifford(index_set({3})) * clifford(index_set({4})); print(x)")
+    print_exec(
+        "x = clifford(index_set({-2})) * clifford(index_set({3})) * clifford(index_set({4})); print(x)"
+    )
     print_exec("print(repr(x))")
 
     pause()
@@ -75,8 +90,10 @@ def run(ctx):
 
     pause()
     print_line()
-    print_fill("Because an index set is a set, you can list the elements in any order" +
-              " when creating an index set.")
+    print_fill(
+        "Because an index set is a set, you can list the elements in any order"
+        + " when creating an index set."
+    )
     print_line()
     print_fill("Examples:")
     print_line()
@@ -94,14 +111,18 @@ def run(ctx):
     print_exec("r = ist(-2); print(r)")
     print_exec("s = ist({-2,3,4}); print(s)")
     print_line()
-    print_fill("and istpq(p,q) is an abbreviation for index_set({-q,...,-1,1,...,p}):")
+    print_fill(
+        "and istpq(p,q) is an abbreviation for index_set({-q,...,-1,1,...,p}):"
+    )
     print_line()
     print_exec("t = istpq(4,1); print(t)")
     print_exec("u = istpq(0,4); print(u)")
 
     pause()
     print_line()
-    print_fill("The abbreviation e(obj) is often used for clifford(index_set(obj)),")
+    print_fill(
+        "The abbreviation e(obj) is often used for clifford(index_set(obj)),"
+    )
     print_line()
     print_exec("w = e({4,3,-2}); print(w)")
     print_exec("x = e(-2) * e(3) * e(4); print(x)")
@@ -114,10 +135,12 @@ def run(ctx):
 
     pause()
     print_line()
-    print_fill("To obtain the coordinate of a clifford object x with respect to an index set s," +
-              " use subscripting notation x[s]. " +
-              " You can also use an index, a set of indices, or a string as the subscript,"
-              " as long as the subscript defines an index set.")
+    print_fill(
+        "To obtain the coordinate of a clifford object x with respect to an index set s,"
+        + " use subscripting notation x[s]. "
+        + " You can also use an index, a set of indices, or a string as the subscript,"
+        " as long as the subscript defines an index set."
+    )
     print_line()
     print_fill("Examples:")
     print_line()
@@ -131,9 +154,11 @@ def run(ctx):
 
     pause()
     print_line()
-    print_fill("There is a special notation to specify vectors, using a tuple or list of" +
-              " coordinates and a basis. " +
-              " The basis is specified using an index set.")
+    print_fill(
+        "There is a special notation to specify vectors, using a tuple or list of"
+        + " coordinates and a basis. "
+        + " The basis is specified using an index set."
+    )
     print_line()
     print_fill("Examples:")
     print_line()
@@ -141,22 +166,20 @@ def run(ctx):
     print_exec("w = clifford([1,5,4,-7], istpq(1,3)); print(w)")
 
     pause()
-    check_exec("set s to be the index_set {-1,3,4}.",
-               "s",
-               "ist({-1,3,4})")
+    check_exec("set s to be the index_set {-1,3,4}.", "s", "ist({-1,3,4})")
     pause()
-    check_exec("set v to be the vector 2{-1}+3{1}.",
-               "v",
-               "2*e(-1)+3*e(1)")
+    check_exec("set v to be the vector 2{-1}+3{1}.", "v", "2*e(-1)+3*e(1)")
     pause()
-    check_exec("set x to be the multivector 3{1}+4{2,3}.",
-               "x",
-               "3*e(1)+4*e({2,3})")
+    check_exec(
+        "set x to be the multivector 3{1}+4{2,3}.", "x", "3*e(1)+4*e({2,3})"
+    )
 
     pause()
     print_line()
-    print_fill("You can also create a random element of a given Clifford algebra. " +
-              " The algebra is specified using an index set.")
+    print_fill(
+        "You can also create a random element of a given Clifford algebra. "
+        + " The algebra is specified using an index set."
+    )
     print_line()
     print_fill("Examples:")
     print_line()
@@ -165,7 +188,10 @@ def run(ctx):
 
     pause()
     print_line()
-    print_fill("You have completed the tutorial file pyclical_tutorial_0_0_notation.py.")
+    print_fill(
+        "You have completed the tutorial file pyclical_tutorial_0_0_notation.py."
+    )
+
 
 if __name__ == "__main__":
     ctx = tutorial_context(globals())

@@ -14,27 +14,34 @@
 
 from pyclical_tutorial_utils import *
 
+
 def run(ctx):
     for name, method in get_object_methods(ctx).items():
-        exec("global "+name+";"+name+"=method")
+        exec("global " + name + ";" + name + "=method")
 
     print_head("1.5 Conformal Geometric Algebra.")
     print_line()
-    print_fill("This tutorial shows you how to use PyClical to perform the" +
-              " operations of Conformal Geometric Algebra.")
+    print_fill(
+        "This tutorial shows you how to use PyClical to perform the"
+        + " operations of Conformal Geometric Algebra."
+    )
     print_line()
-    print_fill("It is recommended that you do the tutorials in order, beginning with" +
-              " 0.0 Notation.")
+    print_fill(
+        "It is recommended that you do the tutorials in order, beginning with"
+        + " 0.0 Notation."
+    )
     print_line()
     print_exec("from PyClical import *")
 
     pause()
     print_line()
-    print_fill("PyClical includes objects and functions relevant to Conformal" +
-              " Geometric Algebra based on Euclidean 3D space." +
-              " The conventions used match those of the text:" +
-              " C. Doran and A. Lasenby, Geometric algebra for physicists, Cambridge, 2003." +
-              " This text is referred to as [DL] in this tutorial.")
+    print_fill(
+        "PyClical includes objects and functions relevant to Conformal"
+        + " Geometric Algebra based on Euclidean 3D space."
+        + " The conventions used match those of the text:"
+        + " C. Doran and A. Lasenby, Geometric algebra for physicists, Cambridge, 2003."
+        + " This text is referred to as [DL] in this tutorial."
+    )
 
     pause()
     print_line()
@@ -45,10 +52,12 @@ def run(ctx):
 
     pause()
     print_line()
-    print_fill("The function cga3 maps Euclidean 3D vectors from the Clifford" +
-              " algebra defined by the index set {1,2,3} into the corresponding" +
-              " Conformal Geometric Algebra (CGA) defined by the index set {-1,1,2,3,4}."
-              " The mapping is defined by [DL (10.50)].")
+    print_fill(
+        "The function cga3 maps Euclidean 3D vectors from the Clifford"
+        + " algebra defined by the index set {1,2,3} into the corresponding"
+        + " Conformal Geometric Algebra (CGA) defined by the index set {-1,1,2,3,4}."
+        " The mapping is defined by [DL (10.50)]."
+    )
     print_line()
     print_exec("x = cga3(v); print(x)")
     print_line()
@@ -62,18 +71,24 @@ def run(ctx):
 
     pause()
     print_line()
-    print_fill("The function cga3std maps null vectors in CGA into a standard form." +
-              " The mapping is defined by [DL (10.52)].")
+    print_fill(
+        "The function cga3std maps null vectors in CGA into a standard form."
+        + " The mapping is defined by [DL (10.52)]."
+    )
     print_line()
-    print_fill("Here we check that the image x of the vector v is already in standard form.")
+    print_fill(
+        "Here we check that the image x of the vector v is already in standard form."
+    )
     print_line()
     print_exec("sx = cga3std(x); print(sx)")
     print_exec("print(norm(sx * sx))")
 
     pause()
     print_line()
-    print_fill("The function agc3 maps a standard null vector in GGA back to Euclidean 3D space." +
-              " The mapping is defined by [DL (10.50)].")
+    print_fill(
+        "The function agc3 maps a standard null vector in GGA back to Euclidean 3D space."
+        + " The mapping is defined by [DL (10.50)]."
+    )
 
     print_line()
     print_exec("v1 = agc3(x); print(v1)")
@@ -82,27 +97,37 @@ def run(ctx):
 
     pause()
     print_line()
-    print_fill("The CGA includes two distinguished elements, as defined in [DL]:")
+    print_fill(
+        "The CGA includes two distinguished elements, as defined in [DL]:"
+    )
     print_line()
-    print_fill("The element nbar3 corresponds to the origin of Euclidean 3D space:")
+    print_fill(
+        "The element nbar3 corresponds to the origin of Euclidean 3D space:"
+    )
     print_line()
     print_exec("print(nbar3)")
     print_line()
-    print_fill("The element ninf3 corresponds to the point at infinity for Euclidean 3D space:")
+    print_fill(
+        "The element ninf3 corresponds to the point at infinity for Euclidean 3D space:"
+    )
     print_line()
     print_exec("print(ninf3)")
     print_line()
 
     pause()
     print_line()
-    print_fill("Transformations in the spin group corresponding to index set {-1,2,3,4}" +
-              " are orthogonal transformations and therefore preserve the quadratic form." +
-              " Therefore null vectors are transformed to null vectors.")
+    print_fill(
+        "Transformations in the spin group corresponding to index set {-1,2,3,4}"
+        + " are orthogonal transformations and therefore preserve the quadratic form."
+        + " Therefore null vectors are transformed to null vectors."
+    )
     print_line()
 
     pause()
     print_line()
-    print_fill("We first create a bivector as the exterior product of two vectors:")
+    print_fill(
+        "We first create a bivector as the exterior product of two vectors:"
+    )
     print_line()
     print_exec("u = cl('{-1}+3{1}+4{2}-3{3}+{4}')")
     print_exec("w = cl('{-1}+2{1}-3{2}-3{3}+{4}')")
@@ -115,20 +140,18 @@ def run(ctx):
 
     pause()
     print_line()
-    print_fill("We now check that the action of g on x to produce y yields a null vector:")
+    print_fill(
+        "We now check that the action of g on x to produce y yields a null vector:"
+    )
     print_line()
-    check_exec("set y to be the result of the action of g on x.",
-               "y",
-               "x | g")
+    check_exec("set y to be the result of the action of g on x.", "y", "x | g")
     print_line()
     print_exec("print(norm(y * y))")
     print_line()
 
     pause()
     print_line()
-    check_exec("set sy to be the CGA standard form of y.",
-               "sy",
-               "cga3std(y)")
+    check_exec("set sy to be the CGA standard form of y.", "sy", "cga3std(y)")
     print_line()
     print_exec("print(norm(sy * sy))")
     print_line()
@@ -155,23 +178,30 @@ def run(ctx):
 
     pause()
     print_line()
-    print_fill("Our g is not an orthogonal transformation in Euclidean 3D space.")
+    print_fill(
+        "Our g is not an orthogonal transformation in Euclidean 3D space."
+    )
     print_line()
     print_exec("print(v * v)")
     print_line()
 
     pause()
     print_line()
-    check_exec("set asy to be the Euclidean 3D vector corresponding to sy.",
-               "asy",
-               "agc3(sy)")
+    check_exec(
+        "set asy to be the Euclidean 3D vector corresponding to sy.",
+        "asy",
+        "agc3(sy)",
+    )
     print_line()
     print_exec("print(asy * asy)")
     print_line()
 
     pause()
     print_line()
-    print_fill("You have completed the tutorial file pyclical_tutorial_1_5_conformal.py.")
+    print_fill(
+        "You have completed the tutorial file pyclical_tutorial_1_5_conformal.py."
+    )
+
 
 if __name__ == "__main__":
     ctx = tutorial_context(globals())

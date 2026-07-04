@@ -1,3 +1,25 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#
+# GluCat: Generic library of universal Clifford algebra templates
+#
+# compare_all.py : Compare all benchmark run results across compilers/backends
+#
+#    copyright            : (C) 2026 by Paul C. Leopardi
+#
+#    This library is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Lesser General Public License as published
+#    by the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This library is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Lesser General Public License for more details.
+#
+#    You should have received a copy of the GNU Lesser General Public License
+#    along with this library.  If not, see <http://www.gnu.org/licenses/>.
+
 import os
 import re
 
@@ -10,7 +32,7 @@ def parse_prod_output(cfg_dir):
     if not os.path.exists(prod_path):
         return prod_fm, prod_mm
 
-    with open(prod_path, 'r', encoding='utf-8') as f:
+    with open(prod_path, "r", encoding="utf-8") as f:
         content = f.read()
 
     # framed_multi<double>
@@ -46,7 +68,7 @@ def parse_sq_output(cfg_dir):
     if not os.path.exists(sq_path):
         return sq_fm, sq_mm
 
-    with open(sq_path, 'r', encoding='utf-8') as f:
+    with open(sq_path, "r", encoding="utf-8") as f:
         content = f.read()
 
     # framed_multi<double>
@@ -84,7 +106,7 @@ def parse_trans_output(cfg_dir):
     if not os.path.exists(trans_path):
         return trans_mm_old, trans_mm_new, trans_fm_old, trans_fm_new
 
-    with open(trans_path, 'r', encoding='utf-8') as f:
+    with open(trans_path, "r", encoding="utf-8") as f:
         content = f.read()
 
     pat = (
@@ -110,7 +132,7 @@ def parse_gfft_test_output(cfg_dir):
     if not os.path.exists(gfft_path):
         return gfft_mm, gfft_fm
 
-    with open(gfft_path, 'r', encoding='utf-8') as f:
+    with open(gfft_path, "r", encoding="utf-8") as f:
         content = f.read()
 
     pat = (
@@ -134,7 +156,7 @@ def parse_versor_output(cfg_dir):
     if not os.path.exists(versor_path):
         return results
 
-    with open(versor_path, 'r', encoding='utf-8') as f:
+    with open(versor_path, "r", encoding="utf-8") as f:
         content = f.read()
 
     # framed_multi
@@ -177,7 +199,7 @@ def parse_expr_output(cfg_dir):
     if not os.path.exists(expr_path):
         return results
 
-    with open(expr_path, 'r', encoding='utf-8') as f:
+    with open(expr_path, "r", encoding="utf-8") as f:
         content = f.read()
 
     # framed_multi<double>
@@ -270,9 +292,14 @@ def print_multiplications_table(results, cfgs):
     """Print products benchmark results."""
     print("## 1. Multiplications (products-8.out, Cl(8,8) * under Fill: 0.5)")
     print_row(
-        "Configuration", "Backend",
-        "gcc fm (ms)", "gcc.sign_helper fm (ms)", "Ratio fm",
-        "gcc mm (ms)", "gcc.sign_helper mm (ms)", "Ratio mm"
+        "Configuration",
+        "Backend",
+        "gcc fm (ms)",
+        "gcc.sign_helper fm (ms)",
+        "Ratio fm",
+        "gcc mm (ms)",
+        "gcc.sign_helper mm (ms)",
+        "Ratio mm",
     )
     print_row(*[":---"] * 2 + [":---:"] * 6)
 
@@ -286,8 +313,12 @@ def print_multiplications_table(results, cfgs):
         print_row(
             cfg,
             "Eigen" if "eigen" in cfg else "Armadillo",
-            f"{fm_gcc:.3f}", f"{fm_sh:.3f}", f"{fm_ratio:.2f}x",
-            f"{mm_gcc:.3f}", f"{mm_sh:.3f}", f"{mm_ratio:.2f}x"
+            f"{fm_gcc:.3f}",
+            f"{fm_sh:.3f}",
+            f"{fm_ratio:.2f}x",
+            f"{mm_gcc:.3f}",
+            f"{mm_sh:.3f}",
+            f"{mm_ratio:.2f}x",
         )
 
 
@@ -298,9 +329,14 @@ def print_squaring_table(results, cfgs):
         "under Fill: 0.5)"
     )
     print_row(
-        "Configuration", "Backend",
-        "gcc fm (ms)", "gcc.sign_helper fm (ms)", "Ratio fm",
-        "gcc mm (ms)", "gcc.sign_helper mm (ms)", "Ratio mm"
+        "Configuration",
+        "Backend",
+        "gcc fm (ms)",
+        "gcc.sign_helper fm (ms)",
+        "Ratio fm",
+        "gcc mm (ms)",
+        "gcc.sign_helper mm (ms)",
+        "Ratio mm",
     )
     print_row(*[":---"] * 2 + [":---:"] * 6)
 
@@ -314,8 +350,12 @@ def print_squaring_table(results, cfgs):
         print_row(
             cfg,
             "Eigen" if "eigen" in cfg else "Armadillo",
-            f"{fm_gcc:.1f}", f"{fm_sh:.1f}", f"{fm_ratio:.2f}x",
-            f"{mm_gcc:.1f}", f"{mm_sh:.1f}", f"{mm_ratio:.2f}x"
+            f"{fm_gcc:.1f}",
+            f"{fm_sh:.1f}",
+            f"{fm_ratio:.2f}x",
+            f"{mm_gcc:.1f}",
+            f"{mm_sh:.1f}",
+            f"{mm_ratio:.2f}x",
         )
 
 
@@ -327,10 +367,18 @@ def print_transforms_table(results, cfgs):
     )
     print_row(
         "Configuration",
-        "gcc mm_old (ms)", "gcc.sign_helper mm_old (ms)", "Ratio mm_old",
-        "gcc mm_new (ms)", "gcc.sign_helper mm_new (ms)", "Ratio mm_new",
-        "gcc fm_old (ms)", "gcc.sign_helper fm_old (ms)", "Ratio fm_old",
-        "gcc fm_new (ms)", "gcc.sign_helper fm_new (ms)", "Ratio fm_new"
+        "gcc mm_old (ms)",
+        "gcc.sign_helper mm_old (ms)",
+        "Ratio mm_old",
+        "gcc mm_new (ms)",
+        "gcc.sign_helper mm_new (ms)",
+        "Ratio mm_new",
+        "gcc fm_old (ms)",
+        "gcc.sign_helper fm_old (ms)",
+        "Ratio fm_old",
+        "gcc fm_new (ms)",
+        "gcc.sign_helper fm_new (ms)",
+        "Ratio fm_new",
     )
     print_row(*[":---"] + [":---:"] * 12)
 
@@ -350,10 +398,18 @@ def print_transforms_table(results, cfgs):
         fn_r = fn_s / fn_g if fn_g > 0 else float("nan")
         print_row(
             cfg,
-            f"{mo_g:.2f}", f"{mo_s:.2f}", f"{mo_r:.2f}x",
-            f"{mn_g:.2f}", f"{mn_s:.2f}", f"{mn_r:.2f}x",
-            f"{fo_g:.2f}", f"{fo_s:.2f}", f"{fo_r:.2f}x",
-            f"{fn_g:.2f}", f"{fn_s:.2f}", f"{fn_r:.2f}x"
+            f"{mo_g:.2f}",
+            f"{mo_s:.2f}",
+            f"{mo_r:.2f}x",
+            f"{mn_g:.2f}",
+            f"{mn_s:.2f}",
+            f"{mn_r:.2f}x",
+            f"{fo_g:.2f}",
+            f"{fo_s:.2f}",
+            f"{fo_r:.2f}x",
+            f"{fn_g:.2f}",
+            f"{fn_s:.2f}",
+            f"{fn_r:.2f}x",
         )
 
 
@@ -365,8 +421,12 @@ def print_gfft_test_table(results, cfgs):
     )
     print_row(
         "Configuration",
-        "gcc mm (ms)", "gcc.sign_helper mm (ms)", "Ratio mm",
-        "gcc fm (ms)", "gcc.sign_helper fm (ms)", "Ratio fm"
+        "gcc mm (ms)",
+        "gcc.sign_helper mm (ms)",
+        "Ratio mm",
+        "gcc fm (ms)",
+        "gcc.sign_helper fm (ms)",
+        "Ratio fm",
     )
     print_row(*[":---"] + [":---:"] * 6)
 
@@ -379,8 +439,12 @@ def print_gfft_test_table(results, cfgs):
         fm_ratio = fm_sh / fm_gcc if fm_gcc > 0 else float("nan")
         print_row(
             cfg,
-            f"{mm_gcc:.1f}", f"{mm_sh:.1f}", f"{mm_ratio:.2f}x",
-            f"{fm_gcc:.1f}", f"{fm_sh:.1f}", f"{fm_ratio:.2f}x"
+            f"{mm_gcc:.1f}",
+            f"{mm_sh:.1f}",
+            f"{mm_ratio:.2f}x",
+            f"{fm_gcc:.1f}",
+            f"{fm_sh:.1f}",
+            f"{fm_ratio:.2f}x",
         )
 
 
@@ -393,10 +457,18 @@ def print_versors_table(results, cfgs):
     print("### Framed Multivector (`framed_multi`) Versors")
     print_row(
         "Configuration",
-        "gcc naive (ms)", "gcc.sh naive (ms)", "Ratio naive",
-        "gcc op| (ms)", "gcc.sh op| (ms)", "Ratio op|",
-        "gcc versor (ms)", "gcc.sh versor (ms)", "Ratio versor",
-        "gcc v_exp (ms)", "gcc.sh v_exp (ms)", "Ratio v_exp"
+        "gcc naive (ms)",
+        "gcc.sh naive (ms)",
+        "Ratio naive",
+        "gcc op| (ms)",
+        "gcc.sh op| (ms)",
+        "Ratio op|",
+        "gcc versor (ms)",
+        "gcc.sh versor (ms)",
+        "Ratio versor",
+        "gcc v_exp (ms)",
+        "gcc.sh v_exp (ms)",
+        "Ratio v_exp",
     )
     print_row(*[":---"] + [":---:"] * 12)
 
@@ -416,19 +488,35 @@ def print_versors_table(results, cfgs):
         ve_r = ve_s / ve_g if ve_g > 0 else float("nan")
         print_row(
             cfg,
-            f"{n_g:.1f}", f"{n_s:.1f}", f"{n_r:.2f}x",
-            f"{o_g:.1f}", f"{o_s:.1f}", f"{o_r:.2f}x",
-            f"{v_g:.1f}", f"{v_s:.1f}", f"{v_r:.2f}x",
-            f"{ve_g:.1f}", f"{ve_s:.1f}", f"{ve_r:.2f}x"
+            f"{n_g:.1f}",
+            f"{n_s:.1f}",
+            f"{n_r:.2f}x",
+            f"{o_g:.1f}",
+            f"{o_s:.1f}",
+            f"{o_r:.2f}x",
+            f"{v_g:.1f}",
+            f"{v_s:.1f}",
+            f"{v_r:.2f}x",
+            f"{ve_g:.1f}",
+            f"{ve_s:.1f}",
+            f"{ve_r:.2f}x",
         )
 
     print("\n### Dense Matrix Multivector (`matrix_multi`) Versors")
     print_row(
         "Configuration",
-        "gcc naive (ms)", "gcc.sh naive (ms)", "Ratio naive",
-        "gcc op| (ms)", "gcc.sh op| (ms)", "Ratio op|",
-        "gcc versor (ms)", "gcc.sh versor (ms)", "Ratio versor",
-        "gcc v_exp (ms)", "gcc.sh v_exp (ms)", "Ratio v_exp"
+        "gcc naive (ms)",
+        "gcc.sh naive (ms)",
+        "Ratio naive",
+        "gcc op| (ms)",
+        "gcc.sh op| (ms)",
+        "Ratio op|",
+        "gcc versor (ms)",
+        "gcc.sh versor (ms)",
+        "Ratio versor",
+        "gcc v_exp (ms)",
+        "gcc.sh v_exp (ms)",
+        "Ratio v_exp",
     )
     print_row(*[":---"] + [":---:"] * 12)
 
@@ -448,10 +536,18 @@ def print_versors_table(results, cfgs):
         ve_r = ve_s / ve_g if ve_g > 0 else float("nan")
         print_row(
             cfg,
-            f"{n_g:.1f}", f"{n_s:.1f}", f"{n_r:.2f}x",
-            f"{o_g:.1f}", f"{o_s:.1f}", f"{o_r:.2f}x",
-            f"{v_g:.1f}", f"{v_s:.1f}", f"{v_r:.2f}x",
-            f"{ve_g:.1f}", f"{ve_s:.1f}", f"{ve_r:.2f}x"
+            f"{n_g:.1f}",
+            f"{n_s:.1f}",
+            f"{n_r:.2f}x",
+            f"{o_g:.1f}",
+            f"{o_s:.1f}",
+            f"{o_r:.2f}x",
+            f"{v_g:.1f}",
+            f"{v_s:.1f}",
+            f"{v_r:.2f}x",
+            f"{ve_g:.1f}",
+            f"{ve_s:.1f}",
+            f"{ve_r:.2f}x",
         )
 
 
@@ -464,10 +560,18 @@ def print_expressions_table(results, cfgs):
     print("### Framed Multivector (`framed_multi<double>`) Expressions")
     print_row(
         "Configuration",
-        "gcc pade (ms)", "gcc.sh pade (ms)", "Ratio pade",
-        "gcc series (ms)", "gcc.sh series (ms)", "Ratio series",
-        "gcc mix (ms)", "gcc.sh mix (ms)", "Ratio mix",
-        "gcc add (ms)", "gcc.sh add (ms)", "Ratio add"
+        "gcc pade (ms)",
+        "gcc.sh pade (ms)",
+        "Ratio pade",
+        "gcc series (ms)",
+        "gcc.sh series (ms)",
+        "Ratio series",
+        "gcc mix (ms)",
+        "gcc.sh mix (ms)",
+        "Ratio mix",
+        "gcc add (ms)",
+        "gcc.sh add (ms)",
+        "Ratio add",
     )
     print_row(*[":---"] + [":---:"] * 12)
 
@@ -487,19 +591,35 @@ def print_expressions_table(results, cfgs):
         ad_r = ad_s / ad_g if ad_g > 0 else float("nan")
         print_row(
             cfg,
-            f"{pa_g:.1f}", f"{pa_s:.1f}", f"{pa_r:.2f}x",
-            f"{se_g:.1f}", f"{se_s:.1f}", f"{se_r:.2f}x",
-            f"{mi_g:.1f}", f"{mi_s:.1f}", f"{mi_r:.2f}x",
-            f"{ad_g:.2f}", f"{ad_s:.2f}", f"{ad_r:.2f}x"
+            f"{pa_g:.1f}",
+            f"{pa_s:.1f}",
+            f"{pa_r:.2f}x",
+            f"{se_g:.1f}",
+            f"{se_s:.1f}",
+            f"{se_r:.2f}x",
+            f"{mi_g:.1f}",
+            f"{mi_s:.1f}",
+            f"{mi_r:.2f}x",
+            f"{ad_g:.2f}",
+            f"{ad_s:.2f}",
+            f"{ad_r:.2f}x",
         )
 
     print("\n### Dense Matrix Multivector (`matrix_multi<double>`) Expressions")
     print_row(
         "Configuration",
-        "gcc pade (ms)", "gcc.sh pade (ms)", "Ratio pade",
-        "gcc series (ms)", "gcc.sh series (ms)", "Ratio series",
-        "gcc mix (ms)", "gcc.sh mix (ms)", "Ratio mix",
-        "gcc add (ms)", "gcc.sh add (ms)", "Ratio add"
+        "gcc pade (ms)",
+        "gcc.sh pade (ms)",
+        "Ratio pade",
+        "gcc series (ms)",
+        "gcc.sh series (ms)",
+        "Ratio series",
+        "gcc mix (ms)",
+        "gcc.sh mix (ms)",
+        "Ratio mix",
+        "gcc add (ms)",
+        "gcc.sh add (ms)",
+        "Ratio add",
     )
     print_row(*[":---"] + [":---:"] * 12)
 
@@ -519,10 +639,18 @@ def print_expressions_table(results, cfgs):
         ad_r = ad_s / ad_g if ad_g > 0 else float("nan")
         print_row(
             cfg,
-            f"{pa_g:.1f}", f"{pa_s:.1f}", f"{pa_r:.2f}x",
-            f"{se_g:.1f}", f"{se_s:.1f}", f"{se_r:.2f}x",
-            f"{mi_g:.1f}", f"{mi_s:.1f}", f"{mi_r:.2f}x",
-            f"{ad_g:.2f}", f"{ad_s:.2f}", f"{ad_r:.2f}x"
+            f"{pa_g:.1f}",
+            f"{pa_s:.1f}",
+            f"{pa_r:.2f}x",
+            f"{se_g:.1f}",
+            f"{se_s:.1f}",
+            f"{se_r:.2f}x",
+            f"{mi_g:.1f}",
+            f"{mi_s:.1f}",
+            f"{mi_r:.2f}x",
+            f"{ad_g:.2f}",
+            f"{ad_s:.2f}",
+            f"{ad_r:.2f}x",
         )
 
 
@@ -531,14 +659,22 @@ def main():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     base_dir = os.path.join(script_dir, "AMD-Ryzen-7-8840HS")
     cfgs = [
-        "armadillo", "armadillo-blas", "armadillo-blas-openmp",
-        "armadillo-flexiblas", "armadillo-flexiblas-openmp",
-        "armadillo-openblas", "armadillo-openblas-openmp",
+        "armadillo",
+        "armadillo-blas",
+        "armadillo-blas-openmp",
+        "armadillo-flexiblas",
+        "armadillo-flexiblas-openmp",
+        "armadillo-openblas",
+        "armadillo-openblas-openmp",
         "armadillo-openmp",
-        "eigen", "eigen-blas", "eigen-blas-openmp",
-        "eigen-flexiblas", "eigen-flexiblas-openmp",
-        "eigen-openblas", "eigen-openblas-openmp",
-        "eigen-openmp"
+        "eigen",
+        "eigen-blas",
+        "eigen-blas-openmp",
+        "eigen-flexiblas",
+        "eigen-flexiblas-openmp",
+        "eigen-openblas",
+        "eigen-openblas-openmp",
+        "eigen-openmp",
     ]
 
     print(
