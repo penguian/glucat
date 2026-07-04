@@ -1,3 +1,25 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#
+# GluCat: Generic library of universal Clifford algebra templates
+#
+# compare.py : Compare benchmark run results
+#
+#    copyright            : (C) 2026 by Paul C. Leopardi
+#
+#    This library is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Lesser General Public License as published
+#    by the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This library is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Lesser General Public License for more details.
+#
+#    You should have received a copy of the GNU Lesser General Public License
+#    along with this library.  If not, see <http://www.gnu.org/licenses/>.
+
 import os
 import re
 
@@ -142,9 +164,14 @@ def print_products_table(results, cfgs):
         "matrix_multi<double> Multiplication (Cl(8,8) * at Fill: 0.5)"
     )
     print_row(
-        "Configuration", "Backend",
-        "gcc framed_multi (ms)", "gcc.sign_helper framed_multi (ms)", "Ratio",
-        "gcc matrix_multi (ms)", "gcc.sign_helper matrix_multi (ms)", "Ratio"
+        "Configuration",
+        "Backend",
+        "gcc framed_multi (ms)",
+        "gcc.sign_helper framed_multi (ms)",
+        "Ratio",
+        "gcc matrix_multi (ms)",
+        "gcc.sign_helper matrix_multi (ms)",
+        "Ratio",
     )
     print_row(*[":---"] * 2 + [":---:"] * 6)
 
@@ -160,8 +187,12 @@ def print_products_table(results, cfgs):
         print_row(
             cfg,
             "Eigen" if "eigen" in cfg else "Armadillo",
-            f"{fm_gcc:.3f}", f"{fm_sh:.3f}", f"{fm_ratio:.2f}x",
-            f"{mm_gcc:.3f}", f"{mm_sh:.3f}", f"{mm_ratio:.2f}x"
+            f"{fm_gcc:.3f}",
+            f"{fm_sh:.3f}",
+            f"{fm_ratio:.2f}x",
+            f"{mm_gcc:.3f}",
+            f"{mm_sh:.3f}",
+            f"{mm_ratio:.2f}x",
         )
 
 
@@ -172,9 +203,14 @@ def print_squaring_table(results, cfgs):
         "(Cl(11,11) squaring * at Fill: 0.5)"
     )
     print_row(
-        "Configuration", "Backend",
-        "gcc framed_multi (ms)", "gcc.sign_helper framed_multi (ms)", "Ratio",
-        "gcc matrix_multi (ms)", "gcc.sign_helper matrix_multi (ms)", "Ratio"
+        "Configuration",
+        "Backend",
+        "gcc framed_multi (ms)",
+        "gcc.sign_helper framed_multi (ms)",
+        "Ratio",
+        "gcc matrix_multi (ms)",
+        "gcc.sign_helper matrix_multi (ms)",
+        "Ratio",
     )
     print_row(*[":---"] * 2 + [":---:"] * 6)
 
@@ -190,8 +226,12 @@ def print_squaring_table(results, cfgs):
         print_row(
             cfg,
             "Eigen" if "eigen" in cfg else "Armadillo",
-            f"{fm_gcc:.1f}", f"{fm_sh:.1f}", f"{fm_ratio:.2f}x",
-            f"{mm_gcc:.1f}", f"{mm_sh:.1f}", f"{mm_ratio:.2f}x"
+            f"{fm_gcc:.1f}",
+            f"{fm_sh:.1f}",
+            f"{fm_ratio:.2f}x",
+            f"{mm_gcc:.1f}",
+            f"{mm_sh:.1f}",
+            f"{mm_ratio:.2f}x",
         )
 
 
@@ -203,10 +243,18 @@ def print_transforms_table(results, cfgs):
     )
     print_row(
         "Configuration",
-        "gcc mm_old (ms)", "gcc.sign_helper mm_old (ms)", "Ratio",
-        "gcc mm_new (ms)", "gcc.sign_helper mm_new (ms)", "Ratio",
-        "gcc fm_old (ms)", "gcc.sign_helper fm_old (ms)", "Ratio",
-        "gcc fm_new (ms)", "gcc.sign_helper fm_new (ms)", "Ratio"
+        "gcc mm_old (ms)",
+        "gcc.sign_helper mm_old (ms)",
+        "Ratio",
+        "gcc mm_new (ms)",
+        "gcc.sign_helper mm_new (ms)",
+        "Ratio",
+        "gcc fm_old (ms)",
+        "gcc.sign_helper fm_old (ms)",
+        "Ratio",
+        "gcc fm_new (ms)",
+        "gcc.sign_helper fm_new (ms)",
+        "Ratio",
     )
     print_row(*[":---"] + [":---:"] * 12)
 
@@ -230,10 +278,18 @@ def print_transforms_table(results, cfgs):
 
         print_row(
             cfg,
-            f"{m_o_g:.2f}", f"{m_o_s:.2f}", f"{m_o_r:.2f}x",
-            f"{m_n_g:.2f}", f"{m_n_s:.2f}", f"{m_n_r:.2f}x",
-            f"{f_o_g:.2f}", f"{f_o_s:.2f}", f"{f_o_r:.2f}x",
-            f"{f_n_g:.2f}", f"{f_n_s:.2f}", f"{f_n_r:.2f}x"
+            f"{m_o_g:.2f}",
+            f"{m_o_s:.2f}",
+            f"{m_o_r:.2f}x",
+            f"{m_n_g:.2f}",
+            f"{m_n_s:.2f}",
+            f"{m_n_r:.2f}x",
+            f"{f_o_g:.2f}",
+            f"{f_o_s:.2f}",
+            f"{f_o_r:.2f}x",
+            f"{f_n_g:.2f}",
+            f"{f_n_s:.2f}",
+            f"{f_n_r:.2f}x",
         )
 
 
@@ -242,14 +298,22 @@ def main():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     base_dir = os.path.join(script_dir, "AMD-Ryzen-7-8840HS")
     cfgs = [
-        "armadillo", "armadillo-blas", "armadillo-blas-openmp",
-        "armadillo-flexiblas", "armadillo-flexiblas-openmp",
-        "armadillo-openblas", "armadillo-openblas-openmp",
+        "armadillo",
+        "armadillo-blas",
+        "armadillo-blas-openmp",
+        "armadillo-flexiblas",
+        "armadillo-flexiblas-openmp",
+        "armadillo-openblas",
+        "armadillo-openblas-openmp",
         "armadillo-openmp",
-        "eigen", "eigen-blas", "eigen-blas-openmp",
-        "eigen-flexiblas", "eigen-flexiblas-openmp",
-        "eigen-openblas", "eigen-openblas-openmp",
-        "eigen-openmp"
+        "eigen",
+        "eigen-blas",
+        "eigen-blas-openmp",
+        "eigen-flexiblas",
+        "eigen-flexiblas-openmp",
+        "eigen-openblas",
+        "eigen-openblas-openmp",
+        "eigen-openmp",
     ]
 
     print(

@@ -25,9 +25,10 @@
 from PyClical import *
 from pyclical_tutorial_utils import *
 
+
 def run(ctx=tutorial_context(globals())):
     for name, method in get_object_methods(ctx).items():
-        exec("global "+name+";"+name+"=method")
+        exec("global " + name + ";" + name + "=method")
 
     print_fill("# M-Theory Analysis: R_(10, 1) vs R_(1, 10)")
     print_line()
@@ -37,7 +38,9 @@ def run(ctx=tutorial_context(globals())):
 
     # --- 1. THE PSEUDOSCALAR TEST ---
     print_fill("1. THE PSEUDOSCALAR TEST")
-    print_fill("We define omega for R_(10, 1) using indices {-1, 1, 2, ..., 10}.")
+    print_fill(
+        "We define omega for R_(10, 1) using indices {-1, 1, 2, ..., 10}."
+    )
     # Signature: q=1 (-1), p=10 (1...10)
     print_exec("omega_10_1 = e({-1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10})")
     print_exec("print(f'R_(10, 1) omega^2: {omega_10_1 * omega_10_1}')")
@@ -52,7 +55,9 @@ def run(ctx=tutorial_context(globals())):
     # --- 2. IDEMPOTENTS AND SPLITTING ---
     print_line()
     print_fill("2. REAL IDEMPOTENTS (MAJORANA SPLIT)")
-    print_fill("Since R_(10, 1) omega^2 = 1, we can create real projection operators.")
+    print_fill(
+        "Since R_(10, 1) omega^2 = 1, we can create real projection operators."
+    )
     print_fill("This proves the algebra splits into M32(R) + M32(R).")
 
     print_exec("P_plus = 0.5 * (1 + omega_10_1)")
@@ -97,17 +102,24 @@ def run(ctx=tutorial_context(globals())):
     # --- 5. M5-BRANE EXAMPLE ---
     print_line()
     print_fill("5. M5-BRANE EXAMPLE")
-    print_fill("Creating a Grade 5 element (M5-brane) in R_(10, 1) and checking its square.")
+    print_fill(
+        "Creating a Grade 5 element (M5-brane) in R_(10, 1) and checking its square."
+    )
     # Signature: q=1 (-1), p=10 (1...10)
     print_exec("M5 = e({-1, 1, 2, 3, 4}) + e({6, 7, 8, 9, 10}); print(M5)")
     print_exec("print(M5 * M5)")
 
     print_line()
-    print_fill("Demo complete. R_(10, 1) is the correct choice for Majorana spinors.")
+    print_fill(
+        "Demo complete. R_(10, 1) is the correct choice for Majorana spinors."
+    )
 
     pause()
     print_line()
-    print_fill("You have completed the structural analysis of M-Theory physics in Glucat.")
+    print_fill(
+        "You have completed the structural analysis of M-Theory physics in Glucat."
+    )
+
 
 if __name__ == "__main__":
     try:

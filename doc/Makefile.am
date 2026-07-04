@@ -6,17 +6,17 @@ htmldir = $(docdir)/html
 pdfdir = $(docdir)/pdf
 
 if HAVE_DOXYGEN
-  
+
   nodist_html_DATA = api/html/*
   nodist_pdf_DATA = api/GluCat-API-reference-manual.pdf
-  
+
   glucatHEADERS = ../glucat/*.h
   testHEADERS = ../test/*.h
   PyClicalSOURCE = ../pyclical/glucat.pxd ../pyclical/PyClical.h  ../pyclical/PyClical.pxd ../pyclical/PyClical.pyx
-  
+
 doc: html pdf
 
-html: $(nodist_html_DATA) 
+html: $(nodist_html_DATA)
 
 $(nodist_html_DATA): .doxygen-out
 
@@ -42,4 +42,3 @@ clean-local:
 .PHONY: doc html pdf
 
 endif
-

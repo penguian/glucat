@@ -42,3 +42,39 @@ We provide Makefile targets for style checks and formatting:
   ```bash
   make lint-fix
   ```
+
+---
+
+## Commit-level Enforcement (Pre-commit Hooks)
+
+We use `pre-commit` to automate code quality and compliance checks at the commit level.
+
+### Installation & Activation
+
+To install the hooks in your local Git repository:
+1. Install `pre-commit` via pip:
+   ```bash
+   pip install pre-commit
+   ```
+2. Activate the pre-commit hooks:
+   ```bash
+   pre-commit install
+   ```
+
+Once installed, these hooks run automatically every time you execute `git commit`. If a hook fails (e.g., due to trailing whitespace, syntax issues, or missing license headers), the commit will be rejected, and any autofixes will be applied to your workspace files.
+
+### Bypassing Hooks
+
+If you need to bypass the pre-commit hooks for a specific commit (for example, during temporary WIP commits), use the `--no-verify` flag:
+```bash
+git commit -m "temp commit" --no-verify
+```
+
+### Licensing & Header Policy
+
+All source files (`.py`, `.h`, `.cpp`, `.hpp`, `.pyx`, `.pxd`) must have a valid license header.
+- Core source files must include the **GNU Lesser General Public License (LGPL)** header.
+- PyClical tutorials (e.g., `pyclical_tutorial_*.py` files) must include the **Creative Commons BY-SA 3.0** header. Other PyClical source files (including core wrapper modules and general demos) should include the **GNU Lesser General Public License (LGPL)** header.
+
+> [!NOTE]
+> **Unique Exemption:** The demo file [pyclical/demos/plotting_demo_dialog.py](pyclical/demos/plotting_demo_dialog.py) is a unique exemption. Since it is a derivative work of a TraitsUI/Mayavi template copyrighted by Enthought, Inc., it maintains its original **BSD Style** license header. This is the only BSD-licensed file permitted in the repository.

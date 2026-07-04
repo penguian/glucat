@@ -20,40 +20,55 @@
 
 from pyclical_tutorial_utils import *
 
+
 def run(ctx):
     for name, method in get_object_methods(ctx).items():
-        exec("global "+name+";"+name+"=method")
+        exec("global " + name + ";" + name + "=method")
 
     print_head("1.3 Electromagnetism and Lorentz transformations")
     print_line()
-    print_fill("This tutorial file contains examples which will introduce you to PyClical" +
-              " and the wide range of calculations with Clifford and Grassmann algebras that" +
-              " you can use PyClical to perform.")
+    print_fill(
+        "This tutorial file contains examples which will introduce you to PyClical"
+        + " and the wide range of calculations with Clifford and Grassmann algebras that"
+        + " you can use PyClical to perform."
+    )
     print_line()
-    print_fill("It is recommended that you do the tutorials in order, beginning with" +
-              " 0.0 Notation.")
+    print_fill(
+        "It is recommended that you do the tutorials in order, beginning with"
+        + " 0.0 Notation."
+    )
     print_line()
 
     pause()
     print_line()
-    print_fill("This file is based on the Plane Geometry section of the Tutorial from")
+    print_fill(
+        "This file is based on the Plane Geometry section of the Tutorial from"
+    )
     print_fill("[LMV] Pertti Lounesto, R. Mikkola, V. Vierros,")
-    print_fill("CLICAL Version 2.0 User Manual: Complex Number, Vector Space and" +
-              " Clifford Algebra Calculator for MS-DOS Personal Computers,")
-    print_fill("Helsinki University of Technology Institute of Mathematics" +
-              " Research Reports A248, August 1987.")
+    print_fill(
+        "CLICAL Version 2.0 User Manual: Complex Number, Vector Space and"
+        + " Clifford Algebra Calculator for MS-DOS Personal Computers,"
+    )
+    print_fill(
+        "Helsinki University of Technology Institute of Mathematics"
+        + " Research Reports A248, August 1987."
+    )
     print_line()
-    print_fill("Example numbers refer to [LMV], e.g. Example 10.2 is the second example" +
-              " on p. 10 of [LMV].")
+    print_fill(
+        "Example numbers refer to [LMV], e.g. Example 10.2 is the second example"
+        + " on p. 10 of [LMV]."
+    )
     print_line()
     print_exec("from PyClical import *")
 
     pause()
     print_line()
-    print_fill("Example 13.1. Using the Clifford algebra of 3 dimensional Euclidean space," +
-              " compute the Lorentz invariants, energy density and Poynting vector of the" +
-              " electromagnetic field F == E-j*B, with an electric component E == {1}+2{2}+4{3}" +
-              " and a magnetic component B == 3{1}+5{2}+7{3}, where j == {1,2,3}.")
+    print_fill(
+        "Example 13.1. Using the Clifford algebra of 3 dimensional Euclidean space,"
+        + " compute the Lorentz invariants, energy density and Poynting vector of the"
+        + " electromagnetic field F == E-j*B, with an electric component E == {1}+2{2}+4{3}"
+        + " and a magnetic component B == 3{1}+5{2}+7{3}, where j == {1,2,3}."
+    )
     print_line()
     print_exec("E = cl('{1}+2{2}+4{3}'); print(E)")
     print_exec("B = cl('3{1}+5{2}+7{3}'); print(B)")
@@ -64,7 +79,9 @@ def run(ctx):
     print_line()
     print_exec("Lorentz = F * F / 2; print(Lorentz)")
     print_line()
-    print_fill("Check that Lorentz(0) == (E**2 - B**2)/2; Lorentz(3)*j == E & B.")
+    print_fill(
+        "Check that Lorentz(0) == (E**2 - B**2)/2; Lorentz(3)*j == E & B."
+    )
     print_line()
     print_exec("print(Lorentz(0) - (E**2 - B**2)/2)")
     print_exec("print(Lorentz(3)*j - (E & B))")
@@ -80,11 +97,13 @@ def run(ctx):
 
     pause()
     print_line()
-    print_fill("Example 13.2. An observer O sees another observer O2 moving along the {1} axis" +
-              " at half the speed of light. Using the Clifford algebra of 3 dimensional" +
-              " Euclidean space, compute how the observer O2 decomposes the electromagnetic" +
-              " field F == E-j*B, with an electric component E == {1}+2{2}+4{3} and a magnetic" +
-              " component B == 3{1}+5{2}+7{3}, where j == {1,2,3}.")
+    print_fill(
+        "Example 13.2. An observer O sees another observer O2 moving along the {1} axis"
+        + " at half the speed of light. Using the Clifford algebra of 3 dimensional"
+        + " Euclidean space, compute how the observer O2 decomposes the electromagnetic"
+        + " field F == E-j*B, with an electric component E == {1}+2{2}+4{3} and a magnetic"
+        + " component B == 3{1}+5{2}+7{3}, where j == {1,2,3}."
+    )
     print_line()
     print_exec("v = 0.5*e(1); print(v)")
     print_exec("a = atanh(v); print(a)")
@@ -99,10 +118,12 @@ def run(ctx):
 
     pause()
     print_line()
-    print_fill("Example 14.1. At 10 o'clock observer O observes the point (1,1,0)." +
-              " Using the Clifford algebra of 3 dimensional Euclidean space," +
-              " compute coordinates of this event in the frame of another observer O2" +
-              " moving along the {1} axis at half the speed of light.")
+    print_fill(
+        "Example 14.1. At 10 o'clock observer O observes the point (1,1,0)."
+        + " Using the Clifford algebra of 3 dimensional Euclidean space,"
+        + " compute coordinates of this event in the frame of another observer O2"
+        + " moving along the {1} axis at half the speed of light."
+    )
     print_line()
     print_exec("x = 10+e(1)+e(2); print(x)")
     print_line()
@@ -115,10 +136,12 @@ def run(ctx):
 
     pause()
     print_line()
-    print_fill("Example 14.2. Using the Clifford algebra defined by the index_set istpq(3,1)," +
-              " compute the Lorentz invariants, energy density and Poynting vector of the" +
-              " electromagnetic field F == E-j*B, with an electric component E == {-1,1}+2{-1,2}+4{-1,3}" +
-              " and a magnetic component B == 3{-1,1}+5{-1,2}+7{-1,3}, where j == {1,2,3}.")
+    print_fill(
+        "Example 14.2. Using the Clifford algebra defined by the index_set istpq(3,1),"
+        + " compute the Lorentz invariants, energy density and Poynting vector of the"
+        + " electromagnetic field F == E-j*B, with an electric component E == {-1,1}+2{-1,2}+4{-1,3}"
+        + " and a magnetic component B == 3{-1,1}+5{-1,2}+7{-1,3}, where j == {1,2,3}."
+    )
     print_line()
     print_exec("E = cl('{-1,1}+2{-1,2}+4{-1,3}'); print(E)")
     print_exec("B = cl('3{-1,1}+5{-1,2}+7{-1,3}'); print(B)")
@@ -129,7 +152,9 @@ def run(ctx):
     print_line()
     print_exec("Lorentz = F * F / 2; print(Lorentz)")
     print_line()
-    print_fill("Check that Lorentz(0) == (E**2 - B**2)/2; Lorentz(4)/j == E & B.")
+    print_fill(
+        "Check that Lorentz(0) == (E**2 - B**2)/2; Lorentz(4)/j == E & B."
+    )
     print_line()
     print_exec("print(Lorentz(0) - (E**2 - B**2)/2)")
     print_exec("print(Lorentz(4)/j - (E & B))")
@@ -148,7 +173,10 @@ def run(ctx):
 
     pause()
     print_line()
-    print_fill("You have completed the tutorial file pyclical_tutorial_1_3_lorentz.py.")
+    print_fill(
+        "You have completed the tutorial file pyclical_tutorial_1_3_lorentz.py."
+    )
+
 
 if __name__ == "__main__":
     ctx = tutorial_context(globals())

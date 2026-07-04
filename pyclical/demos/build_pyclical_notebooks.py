@@ -17,6 +17,7 @@ import pyclical_tutorials as pt
 import pyclical_notebook_utils as pn
 import sys
 
+
 def build_notebook(ctx, module_name, title):
     module = __import__(module_name)
     original_stdout = sys.stdout
@@ -29,11 +30,14 @@ def build_notebook(ctx, module_name, title):
     finally:
         sys.stdout = original_stdout
 
+
 def build_notebook_from_demo(ctx, module_name):
     build_notebook(ctx, module_name, module_name)
 
+
 def build_notebook_from_tut(ctx, tut):
     build_notebook(ctx, tut.module_name, tut.title)
+
 
 ctx = pn.notebook_context(globals())
 build_notebook_from_demo(ctx, "clifford_demo")

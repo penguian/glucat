@@ -327,18 +327,18 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
          ])
          CXXFLAGS="$glucat_save_cxxflags"
          CXXFLAGS="$CXXFLAGS $glucat_openmp_flag"
-         
+
          if test "$glucat_use_armadillo" = "yes"; then
             GLUCAT_CPPFLAGS="$GLUCAT_CPPFLAGS -D_GLUCAT_USE_OPENMP -DARMA_USE_OPENMP"
          fi
-         
+
          if test "$glucat_use_blas" = "no"; then
             GLUCAT_CHECK_LIB([openblas],[cblas_dgemm],
                [all_libraries="$all_libraries -lopenblas"
                 AC_MSG_NOTICE([OpenBLAS support automatically enabled for OpenMP])],
                [])
          fi
-         
+
          AC_MSG_NOTICE([OpenMP support enabled with $glucat_openmp_flag])
       else
          AC_MSG_WARN([OpenMP support requested but compiler flag was not found.])

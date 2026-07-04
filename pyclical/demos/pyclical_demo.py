@@ -25,16 +25,25 @@
 from PyClical import *
 from pyclical_tutorial_utils import *
 
+
 def run(ctx=tutorial_context(globals())):
     for name, method in get_object_methods(ctx).items():
-        exec("global "+name+";"+name+"=method")
+        exec("global " + name + ";" + name + "=method")
 
-    print_fill("# pyclical_demo.py: This file is an almost complete port of the DEMO file from")
-    print_fill("#                   CLICAL by Pertti Lounesto, R. Mikkola, V. Vierros, 1987-1994.")
+    print_fill(
+        "# pyclical_demo.py: This file is an almost complete port of the DEMO file from"
+    )
+    print_fill(
+        "#                   CLICAL by Pertti Lounesto, R. Mikkola, V. Vierros, 1987-1994."
+    )
     print_line()
-    print_fill("This demonstration file contains examples on the following topics:")
+    print_fill(
+        "This demonstration file contains examples on the following topics:"
+    )
     print_fill("  -Rotations in three dimensions R^3")
-    print_fill("  -Lorentz transformations of the Minkowski space-time R^(3,1) ")
+    print_fill(
+        "  -Lorentz transformations of the Minkowski space-time R^(3,1) "
+    )
     print_fill("  -Electromagnetism in the Clifford algebras R_3 and R_(3,1)")
     print_fill("  -Complex Clifford algebra CxR_(3,1)")
     print_fill("  -Cayley algebra of octonions")
@@ -61,7 +70,9 @@ def run(ctx=tutorial_context(globals())):
     print_line()
     print_exec("y = s*x/s; print(y)")
     print_line()
-    print_fill("Check that the length is preserved by computing the squares of the vectors.")
+    print_fill(
+        "Check that the length is preserved by computing the squares of the vectors."
+    )
     print_line()
     print_exec("print(y*y)")
     print_exec("print(x*x)")
@@ -70,7 +81,9 @@ def run(ctx=tutorial_context(globals())):
     print_line()
     print_fill("LORENTZ TRANSFORMATIONS IN THE MINKOWSKI SPACE-TIME R^(3,1)")
     print_line()
-    print_exec("A = -3*e({-1,1})-e({-1,2})+4*e({1,2})-2*e({-1,3})+3*e({1,3})+e({2,3}); print(A)")
+    print_exec(
+        "A = -3*e({-1,1})-e({-1,2})+4*e({1,2})-2*e({-1,3})+3*e({1,3})+e({2,3}); print(A)"
+    )
     print_exec("s = exp(A/2); print(s)")
     print_line()
     print_fill("Lorentz transformation of a space-time point (or event).")
@@ -89,10 +102,14 @@ def run(ctx=tutorial_context(globals())):
     print_line()
     print_fill("Lorentz transformation of an electromagnetic bivector F.")
     print_line()
-    print_exec("F = -2*e({-1,1})-e({-1,2})+5*e({1,2})-2*e({-1,3})+e({1,3})+7*e({2,3}); print(F)")
+    print_exec(
+        "F = -2*e({-1,1})-e({-1,2})+5*e({1,2})-2*e({-1,3})+e({1,3})+7*e({2,3}); print(F)"
+    )
     print_exec("G = s*F/s; print(G)")
     print_line()
-    print_fill("Check that the Lorentz invariants are preserved (j == -{-1,1,2,3}).")
+    print_fill(
+        "Check that the Lorentz invariants are preserved (j == -{-1,1,2,3})."
+    )
     print_line()
     print_exec("print(G*G/2)")
     print_exec("print(F*F/2)")
@@ -112,7 +129,9 @@ def run(ctx=tutorial_context(globals())):
     print_exec("E = e(1)+2*e(2)+4*e(3); print(E)")
     print_exec("B = 3*e(1)+5*e(2)+7*e(3); print(B)")
     print_line()
-    print_fill("The role of the imaginary unit is played by the unit volume element.")
+    print_fill(
+        "The role of the imaginary unit is played by the unit volume element."
+    )
     print_line()
     print_exec("i = e({1,2,3}); print(i)")
     print_exec("F = E-i*B; print(F)")
@@ -141,8 +160,10 @@ def run(ctx=tutorial_context(globals())):
 
     pause()
     print_line()
-    print_fill("Consider a boost at half the velocity of light" +
-              " in the direction of the positive x-axis.")
+    print_fill(
+        "Consider a boost at half the velocity of light"
+        + " in the direction of the positive x-axis."
+    )
     print_line()
     print_exec("v = 0.5*e(1); print(v)")
     print_exec("a = atanh(v); print(a)")
@@ -183,7 +204,9 @@ def run(ctx=tutorial_context(globals())):
     print_exec("E = E*e(-1); print(E)")
     print_exec("B = B*e(-1); print(B)")
     print_line()
-    print_fill("The role of the imaginary unit is played by the unit volume element.")
+    print_fill(
+        "The role of the imaginary unit is played by the unit volume element."
+    )
     print_line()
     print_exec("i = -e({-1,1,2,3}); print(i)")
     print_exec("F = E-i*B; print(F)")
@@ -204,7 +227,9 @@ def run(ctx=tutorial_context(globals())):
     print_line()
     print_fill("COMPLEX CLIFFORD ALGEBRA CxR_(3,1)")
     print_line()
-    print_fill("The role of the imaginary unit is played by a unit bivector of R_(3,3).")
+    print_fill(
+        "The role of the imaginary unit is played by a unit bivector of R_(3,3)."
+    )
     print_line()
     print_exec("i = e({-3,-2}); print(i)")
 
@@ -242,7 +267,9 @@ def run(ctx=tutorial_context(globals())):
 
     pause()
     print_line()
-    print_fill("Check that the invariants of the complex rotation are preserved.")
+    print_fill(
+        "Check that the invariants of the complex rotation are preserved."
+    )
     print_line()
     print_exec("print(x*x-y*y)")
     print_exec("print(u*u-v*v)")
@@ -255,7 +282,9 @@ def run(ctx=tutorial_context(globals())):
     print_line()
     print_fill("Define a Cayley product of two paravectors in R+R^(0,7).")
     print_line()
-    print_exec("f = (1-e({-7,-6,-4}))*(1-e({-6,-5,-3}))*(1-e({-5,-4,-2}))*(1-e({-4,-3,-1})); print(f)")
+    print_exec(
+        "f = (1-e({-7,-6,-4}))*(1-e({-6,-5,-3}))*(1-e({-5,-4,-2}))*(1-e({-4,-3,-1})); print(f)"
+    )
     print_exec("o = lambda x,y:   real(x*y*f)+(x*y*f)(1)")
 
     pause()
@@ -293,7 +322,9 @@ def run(ctx=tutorial_context(globals())):
 
     pause()
     print_line()
-    print_fill("Check the Moufang identity (a o b) o (c o a) == (a o (b o c)) o a.")
+    print_fill(
+        "Check the Moufang identity (a o b) o (c o a) == (a o (b o c)) o a."
+    )
     print_line()
     print_exec("print(o(o(a,b),o(c,a)))")
     print_exec("print(o(o(a,o(b,c)),a))")
@@ -303,15 +334,19 @@ def run(ctx=tutorial_context(globals())):
     print_fill("CONFORMAL TRANSFORMATIONS AND VAHLEN MATRICES")
     print_fill("in the Minkowski space-time R^(3,1).")
     print_line()
-    print_fill("We choose the two extra dimensions e(-2), e(4)  so that our Minkowski space-time" +
-              " has a basis  { e(-1), e(1), e(2), e(3) }.")
+    print_fill(
+        "We choose the two extra dimensions e(-2), e(4)  so that our Minkowski space-time"
+        + " has a basis  { e(-1), e(1), e(2), e(3) }."
+    )
     print_line()
     print_exec("eneg = e(-2); print(eneg)")
     print_exec("epos = e(4); print(epos)")
 
     pause()
     print_line()
-    print_fill("We give entries of a 2x2-matrix in the Lie algebra of the Vahlen group.")
+    print_fill(
+        "We give entries of a 2x2-matrix in the Lie algebra of the Vahlen group."
+    )
     print_line()
     print_exec("A = 3+4*e({1,2})+e({2,3})-2*e({-1,3}); print(A)")
     print_exec("B = 3*e(-1)+7*e(1)+e(2); print(B)")
@@ -329,10 +364,14 @@ def run(ctx=tutorial_context(globals())):
 
     pause()
     print_line()
-    print_fill("We form the following VAHLEN matrix" +
-              " in the Lie algebra of the Vahlen group")
+    print_fill(
+        "We form the following VAHLEN matrix"
+        + " in the Lie algebra of the Vahlen group"
+    )
     print_line()
-    print_exec("VAHLEN = A*mat11+B*mat12+involute(C)*mat21+involute(D)*mat22; print(VAHLEN)")
+    print_exec(
+        "VAHLEN = A*mat11+B*mat12+involute(C)*mat21+involute(D)*mat22; print(VAHLEN)"
+    )
 
     pause()
     print_line()
@@ -344,7 +383,9 @@ def run(ctx=tutorial_context(globals())):
     print_exec("Vah11 = (vahlen^epos^eneg)/(epos^eneg); print(Vah11)")
     print_exec("Vah12 = ((vahlen^eneg)/eneg-Vah11)/epos; print(Vah12)")
     print_exec("Vah21 = ((vahlen^epos)/epos-Vah11)/eneg; print(Vah21)")
-    print_exec("Vah22 = (vahlen-Vah11-Vah12*epos-Vah21*eneg)/(epos^eneg); print(Vah22)")
+    print_exec(
+        "Vah22 = (vahlen-Vah11-Vah12*epos-Vah21*eneg)/(epos^eneg); print(Vah22)"
+    )
 
     pause()
     print_line()
@@ -386,7 +427,9 @@ def run(ctx=tutorial_context(globals())):
 
     pause()
     print_line()
-    print_fill("Rotate x by the angle pi/2 and perform a boost in the direction e(3).")
+    print_fill(
+        "Rotate x by the angle pi/2 and perform a boost in the direction e(3)."
+    )
     print_line()
     print_exec("u = exp(B/2); print(u)")
     print_exec("y = u*x/u; print(y)")
@@ -397,8 +440,12 @@ def run(ctx=tutorial_context(globals())):
 
     pause()
     print_line()
-    print_fill("Compare the above ordinary exponential exp(A) = 1+A+AA/2+AAA/6+...")
-    print_fill("to the following exterior exponential expo(B) = 1+B+B^B/2+B^B^B/6:")
+    print_fill(
+        "Compare the above ordinary exponential exp(A) = 1+A+AA/2+AAA/6+..."
+    )
+    print_fill(
+        "to the following exterior exponential expo(B) = 1+B+B^B/2+B^B^B/6:"
+    )
     print_line()
     print_exec("expo = lambda B: 1+B+(B^B)/2+(B^B^B)/6")
     print_exec("v = expo(B); print(v)")
@@ -410,7 +457,9 @@ def run(ctx=tutorial_context(globals())):
 
     pause()
     print_line()
-    print_fill("Check that ordinary logarithm and exterior logarithm return B/2 and B.")
+    print_fill(
+        "Check that ordinary logarithm and exterior logarithm return B/2 and B."
+    )
     print_line()
     print_exec("print(log(u))")
 
@@ -444,9 +493,13 @@ def run(ctx=tutorial_context(globals())):
     print_fill("{-2,1}-{1,3}, {-2,1}+{-4,3}, {-3,-1}-{-1,2},")
     print_fill("{-2,2}-{2,3}, {-2,2}+{-3,3}, {-2,-1}-{-1,3},")
     print_fill("and their exponential stabilizes v.")
-    print_fill("As an example, take a linear combination of the above bivectors:")
+    print_fill(
+        "As an example, take a linear combination of the above bivectors:"
+    )
     print_line()
-    print_exec("B = 3*(e({-2,-1})-e({-1,3}))-4*(e({-4,1})-e({-3,2}))-7*(e({-3,1})+e({-4,2})); print(B)")
+    print_exec(
+        "B = 3*(e({-2,-1})-e({-1,3}))-4*(e({-4,1})-e({-3,2}))-7*(e({-3,1})+e({-4,2})); print(B)"
+    )
     print_line()
     print_fill("and exponentiate:")
     print_line()
@@ -463,7 +516,9 @@ def run(ctx=tutorial_context(globals())):
     print_line()
     print_fill("Take an arbitrary bivector:")
     print_line()
-    print_exec("F = 2*e({-3,-2})+3*e({-4,-1})-7*e({-3,2})+4*e({1,2})-5*e({-2,3}); print(F)")
+    print_exec(
+        "F = 2*e({-3,-2})+3*e({-4,-1})-7*e({-3,2})+4*e({1,2})-5*e({-2,3}); print(F)"
+    )
     print_line()
     print_fill("and exponentiate:")
     print_line()
@@ -477,12 +532,18 @@ def run(ctx=tutorial_context(globals())):
 
     pause()
     print_line()
-    print_fill("Check that reverse(w)*Ak*w vanishes for a pure spinor w and a k-vector Ak" +
-              " when k == 0,1,2 but not when k == 3  (v and reverse(w)*A3*w are parallel)")
+    print_fill(
+        "Check that reverse(w)*Ak*w vanishes for a pure spinor w and a k-vector Ak"
+        + " when k == 0,1,2 but not when k == 3  (v and reverse(w)*A3*w are parallel)"
+    )
     print_line()
     print_exec("A1 = 2*e(1)+3*e(2)+5*e(3)+7*e(-4)+e(-3)+4*e(-2); print(A1)")
-    print_exec("A2 = e({-4,-3})-4*e({-3,1})-3*e({-4,2})+3*e({1,2})-5*e({-4,3})-e({-2,3})+2*e({2,3}); print(A2)")
-    print_exec("A3 = e({-4,-3,-2})+2*e({-4,-3,2})+4*e({-2,1,2})+e({-4,-3,3})+5*e({-3,-2,3})+3*e({-4,2,3})+e({1,2,3}); print(A3)")
+    print_exec(
+        "A2 = e({-4,-3})-4*e({-3,1})-3*e({-4,2})+3*e({1,2})-5*e({-4,3})-e({-2,3})+2*e({2,3}); print(A2)"
+    )
+    print_exec(
+        "A3 = e({-4,-3,-2})+2*e({-4,-3,2})+4*e({-2,1,2})+e({-4,-3,3})+5*e({-3,-2,3})+3*e({-4,2,3})+e({1,2,3}); print(A3)"
+    )
 
     pause()
     print_exec("print(reverse(w)*w)")
@@ -500,6 +561,7 @@ def run(ctx=tutorial_context(globals())):
     pause()
     print_line()
     print_fill("You have completed the demonstration file pyclical_demo.py.")
+
 
 if __name__ == "__main__":
     try:

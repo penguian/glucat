@@ -38,22 +38,26 @@ from PyClical import *
 #
 # Default values common to functions draw_orbit and demo.
 #
-default_nbr_points  =  8000
-default_segment_len =  8000
-default_figwidth    =  1024
-default_figheight   =  1024
-default_radius      =     0.05
-default_resolution  =     8
-default_opacity     =     1.0
+default_nbr_points = 8000
+default_segment_len = 8000
+default_figwidth = 1024
+default_figheight = 1024
+default_radius = 0.05
+default_resolution = 8
+default_opacity = 1.0
 
-def draw_orbit(r, s,
-        nbr_points  = default_nbr_points,
-        segment_len = default_segment_len,
-        figwidth    = default_figwidth,
-        figheight   = default_figheight,
-        radius      = default_radius,
-        resolution  = default_resolution,
-        opacity     = default_opacity):
+
+def draw_orbit(
+    r,
+    s,
+    nbr_points=default_nbr_points,
+    segment_len=default_segment_len,
+    figwidth=default_figwidth,
+    figheight=default_figheight,
+    radius=default_radius,
+    resolution=default_resolution,
+    opacity=default_opacity,
+):
     """
     Plot an orbit created by a random sequence using the rotors r and s,
 
@@ -71,11 +75,11 @@ def draw_orbit(r, s,
     #
     # Frame for 3D Euclidean space R^3.
     #
-    r3frame = istpq(3,0)
+    r3frame = istpq(3, 0)
     #
     # Frame for Conformal Geometric Algebra (CGA).
     #
-    cga3frame = istpq(4,1)
+    cga3frame = istpq(4, 1)
     #
     # Reframe the rotors r and s, for speed.
     #
@@ -111,7 +115,7 @@ def draw_orbit(r, s,
             # Determine the current 3D Euclidean point
             # corresponding to the CGA null vector u.
             #
-            p[k,:] = agc3(u).vector_part(r3frame)
+            p[k, :] = agc3(u).vector_part(r3frame)
             #
             # Act on u via the adjoint action of either the rotor r or the rotor s.
             # See [DV] for orbits of rotors in 3D CGA.
@@ -125,40 +129,48 @@ def draw_orbit(r, s,
         #
         # Calculate the norms of the points in p and store them in n.
         #
-        n = np.sqrt(np.reshape(np.sum(p*p, 1), [segment_len, 1]))
+        n = np.sqrt(np.reshape(np.sum(p * p, 1), [segment_len, 1]))
         #
         # Plot the new scattered points.
         #
-        ml.points3d(p[:,0], p[:,1], p[:,2], n[:,0],
-                    colormap="jet",
-                    scale_factor=radius,
-                    resolution=resolution,
-                    opacity=opacity)
+        ml.points3d(
+            p[:, 0],
+            p[:, 1],
+            p[:, 2],
+            n[:, 0],
+            colormap="jet",
+            scale_factor=radius,
+            resolution=resolution,
+            opacity=opacity,
+        )
     #
     # Show the plot.
     #
     ml.show()
 
+
 #
 # Default values for demo.
 #
-default_nbr_figures =    4
-default_nbr_orbits  =    1
-default_scaling     = 1000
-default_reciprocal  = True
+default_nbr_figures = 4
+default_nbr_orbits = 1
+default_scaling = 1000
+default_reciprocal = True
+
 
 def demo(
-        nbr_figures = default_nbr_figures,
-        nbr_orbits  = default_nbr_orbits,
-        nbr_points  = default_nbr_points,
-        scaling     = default_scaling,
-        segment_len = default_segment_len,
-        figwidth    = default_figwidth,
-        figheight   = default_figheight,
-        radius      = default_radius,
-        resolution  = default_resolution,
-        opacity     = default_opacity,
-        reciprocal  = default_reciprocal):
+    nbr_figures=default_nbr_figures,
+    nbr_orbits=default_nbr_orbits,
+    nbr_points=default_nbr_points,
+    scaling=default_scaling,
+    segment_len=default_segment_len,
+    figwidth=default_figwidth,
+    figheight=default_figheight,
+    radius=default_radius,
+    resolution=default_resolution,
+    opacity=default_opacity,
+    reciprocal=default_reciprocal,
+):
     """
     Plot orbits created by exponentiating a random bivector and its reciprocal in R_{4,0}.
 
@@ -183,7 +195,7 @@ def demo(
     #
     # Frame for 4D Euclidean space R^4.
     #
-    r4frame = istpq(4,0)
+    r4frame = istpq(4, 0)
     #
     # Plot nbr_figures figures.
     #
@@ -207,19 +219,22 @@ def demo(
             #
             # Exponentiate the bivectors br and bs to obtain rotors r and s.
             #
-            r  = exp(br)
-            s  = exp(bs)
+            r = exp(br)
+            s = exp(bs)
             #
             # Draw the orbit.
             #
-            draw_orbit(r, s,
-                       nbr_points=nbr_points,
-                       segment_len=segment_len,
-                       figwidth=figwidth,
-                       figheight=figheight,
-                       radius=radius,
-                       resolution=resolution,
-                       opacity=opacity)
+            draw_orbit(
+                r,
+                s,
+                nbr_points=nbr_points,
+                segment_len=segment_len,
+                figwidth=figwidth,
+                figheight=figheight,
+                radius=radius,
+                resolution=resolution,
+                opacity=opacity,
+            )
 
 
 if __name__ == "__main__":

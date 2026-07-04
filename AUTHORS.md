@@ -113,7 +113,7 @@ C.F. Gerald,  P.O. Wheatley:
 Linear Algebra Backends (Modernization Phase)
 ---------------------------------------------
 
-* Paul C. Leopardi: CRTP-based linear algebra abstraction, Eigen and Armadillo 
+* Paul C. Leopardi: CRTP-based linear algebra abstraction, Eigen and Armadillo
   wrappers.
 * Eigen project: Default linear algebra backend.
 * Armadillo project: Alternative linear algebra backend.
@@ -356,4 +356,3 @@ Other Clifford algebra software
 
 ### swMATH
  * https://zbmath.org/software/?q=clifford+algebras
- 

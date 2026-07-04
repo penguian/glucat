@@ -4,9 +4,9 @@ INSTALL for GluCat 0.98a2 with PyClical
 Prerequisites: Before You Begin
 ===============================
 
-GluCat uses the C++ Standard Library, the Boost Library, and either Eigen or 
-Armadillo for linear algebra. The PyClical Python extension module is built 
-using Cython and Python. Make sure that you have all of these installed and 
+GluCat uses the C++ Standard Library, the Boost Library, and either Eigen or
+Armadillo for linear algebra. The PyClical Python extension module is built
+using Cython and Python. Make sure that you have all of these installed and
 working before attempting to use GluCat with PyClical.
 
 Use the instructions at http://www.boost.org/more/download.html to obtain
@@ -15,8 +15,8 @@ the same C++ compiler version as you will be using to build programs that will
 use the GluCat library.
 
 GluCat uses the Eigen C++ library by default for its linear algebra backend.
-You can obtain Eigen from http://eigen.tuxfamily.org/. Alternatively, you can 
-configure GluCat to use the Armadillo C++ library, available from 
+You can obtain Eigen from http://eigen.tuxfamily.org/. Alternatively, you can
+configure GluCat to use the Armadillo C++ library, available from
 http://arma.sourceforge.net/.
 
 The default configuration of GluCat, as well as most combinations of
@@ -206,7 +206,7 @@ output (useful mainly for debugging `./configure`).
 The following additional options are recognized by `./configure`:
 
   `--with-doctest`: Enables the modern unit testing suite in `test_doctest`.
-  
+
   `--with-unordered-map=boost|std`: Chooses the implementation of the hash
   map used in `framed_multi`. The default is `boost` (requires Boost 1.83.0+).
 
@@ -283,12 +283,12 @@ The option `--enable-debug=full` turns on full debugging, by adding the compiler
 flags `-O0 -g3` to `CXXFLAGS` in the Makefiles, and does not add the compiler flag
 `-DNDEBUG` to `CXXFLAGS` in the Makefiles.
 
-The preprocessor symbol `NDEBUG` is used to control debugging in the C++ 
+The preprocessor symbol `NDEBUG` is used to control debugging in the C++
 Standard Library and the linear algebra backends (Eigen or Armadillo).
 
-If `NDEBUG` is defined, the library compiles in release mode, which typically 
-disables runtime assertions and enables optimizations. If `NDEBUG` is not 
-defined, the library compiles in debug mode, providing more extensive runtime 
+If `NDEBUG` is defined, the library compiles in release mode, which typically
+disables runtime assertions and enables optimizations. If `NDEBUG` is not
+defined, the library compiles in debug mode, providing more extensive runtime
 checks at the cost of performance.
 
 
@@ -412,7 +412,7 @@ To compile your own programs using the GluCat library with OpenBLAS or FlexiBLAS
 ```
   --with-openmp           use OpenMP (requires Armadillo) [default=no]
 ```
-This option controls the use of OpenMP for parallel processing. This option 
+This option controls the use of OpenMP for parallel processing. This option
 requires that the Armadillo library is also used.
 
 The option `--with-openmp` adds `-D_GLUCAT_USE_OPENMP` and OpenMP compiler flags
@@ -497,8 +497,8 @@ with `EXTCXXFLAGS = $(glucat_extra_cxxflags_pyclical) $(CXXFLAGS)`,
 `EXTAM_CPPFLAGS=$(all_includes)`, and the values of the other environment variables
 set by `./configure`.
 
-You can run `pyclical/setup.py` yourself, but you must set the environment 
-variables to appropriate values. See `To Configure` above to determine these 
+You can run `pyclical/setup.py` yourself, but you must set the environment
+variables to appropriate values. See `To Configure` above to determine these
 values.
 
 Alternatively, if you have Python installed but do not have Cython, then
@@ -533,17 +533,17 @@ C++, then run `./configure` as above, and then run `make check`. This builds and
 runs the executable files `./test_move/test_move` and `./test00/test00` to
 `./test19/test19`. This produces the intermediate output files
 `./test_move/test_move.out` and `./test00/test00.out` to `./test19/test19.out`,
-and the final test output file `./test_runtime/test.out`. 
+and the final test output file `./test_runtime/test.out`.
 
 Note the difference between `make check` and `make check-local`:
-* `make check` is a standard recursive Automake target. It first enters each 
-  subdirectory in the `SUBDIRS` list (including timing tests like `gfft_test`) 
+* `make check` is a standard recursive Automake target. It first enters each
+  subdirectory in the `SUBDIRS` list (including timing tests like `gfft_test`)
   and runs `make check` there, before running the legacy regression tests.
-* `make check-local` is a faster alternative that skips the recursive pass 
+* `make check-local` is a faster alternative that skips the recursive pass
   through `SUBDIRS` and only runs the legacy functionality tests.
 
-When you want to generate `test_runtime/test.out` to compare with the existing 
-sample files in `test_runtime.*`, you should use parallel make with the 
+When you want to generate `test_runtime/test.out` to compare with the existing
+sample files in `test_runtime.*`, you should use parallel make with the
 `check-local` target:
 ```
   make -j${NPROCS} check-local
@@ -579,8 +579,8 @@ To run the coverage tests for the doctest suite:
  bash test_coverage/src/run_clang_doctest_coverage.sh [--backend=eigen|arma|both]
 ```
 
-By default, the script tests both backends and combines their results into a 
-unified report. You can use the `--backend` argument to select a specific 
+By default, the script tests both backends and combines their results into a
+unified report. You can use the `--backend` argument to select a specific
 backend.
 
 The resulting HTML report will be available in
@@ -627,7 +627,7 @@ order. With zero parameters, all examples from `00` to `19` are run in order.
 Many of the examples are run twice - once with `framed_multi<Scalar_T>` and once
 with `matrix_multi<Scalar_T>`.
 
-The baseline test results are structured as follows: 
+The baseline test results are structured as follows:
 
 The tests results in `./test_runtime.aarch64` come from runs on an Apple M2 Pro
 with 6 Avalanche performance cores and 4 Icestorm efficiency cores with
@@ -644,7 +644,7 @@ with 6 Avalanche performance cores and 4 Icestorm efficiency cores with
     Numpy 2.3.5
     Python 3.14.5
     ```
-The tests results in `./test_runtime.x86-64` come from runs on an 8 core 
+The tests results in `./test_runtime.x86-64` come from runs on an 8 core
 AMD Ryzen 7 8840HS w/ Radeon 780M Graphics` @ 3.3 GHz with
 ```
     Linux 6.11.0-14-generic #15-Ubuntu SMP 2025
@@ -1047,8 +1047,8 @@ GluCat 0.98a2 with PyClical has so far been built and tested using:
     Armadillo 15.2.1
     Boost 1.83.0
     Cython 3.0.11
-    Doxygen 1.9.8 
-    Eigen3 3.4.0 
+    Doxygen 1.9.8
+    Eigen3 3.4.0
     GSL 2.8
     Numpy 2.2.3
     QD 2.3.23

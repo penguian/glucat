@@ -1,4 +1,4 @@
-EXTRA_DIST = Makefile.am 
+EXTRA_DIST = Makefile.am
 
 AUTOMAKE_OPTIONS = foreign
 

@@ -41,15 +41,15 @@ rm -rf test_doctest/test_doctest_*
 run_coverage() {
     local name=$1
     local flags=$2
-    
+
     echo "=== Running coverage for $name ==="
     ./configure --disable-pyclical --with-doctest $flags
     make clean || true
-    
+
     # We set LLVM_PROFILE_FILE as an absolute path to avoid directory confusion
     export LLVM_PROFILE_FILE="$(pwd)/${name}.profraw"
     make -C test_doctest check -j$(( $(nproc) / 2 ))
-    
+
     # Backup binary for llvm-cov
     cp test_doctest/test_doctest test_doctest/test_doctest_${name}
 }

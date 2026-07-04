@@ -78,9 +78,9 @@ semantics.
 2. Introduction of a CRTP-based (Curiously Recurring Template Pattern) matrix
 abstraction layer. The new base class `matrix_base<>` (in `glucat/matrix_base.h`)
 provides a unified interface that delegates to specific implementation wrappers.
-To ensure template robustness and avoid issues with circular dependencies or 
-complex deduction, these wrappers and the base class use explicit or trailing 
-return types for all public methods (e.g., `trace()`, `norm_inf()`, `nnz()`, 
+To ensure template robustness and avoid issues with circular dependencies or
+complex deduction, these wrappers and the base class use explicit or trailing
+return types for all public methods (e.g., `trace()`, `norm_inf()`, `nnz()`,
 `classify_eigenvalues()`).
 
 3. Implementation of wrappers for Eigen (`eigen_matrix_wrapper`) and Armadillo
@@ -94,14 +94,14 @@ underlying linear algebra library.
 5. Integration of a modern unit testing framework (`doctest`) and code coverage
 analysis infrastructure.
 
-6. Hardening of the C++ API by marking cross-representation and string-based 
-constructors as `explicit`. This prevents unintended implicit conversions 
-that could lead to subtle performance regressions or logical errors. 
-To maintain mathematical expressiveness, templated assignment and compound 
-assignment operators (e.g., `=`, `+=`) are used to allow mixed-representation 
-operations without requiring explicit casts, provided the scalar types match. 
-This ensures that `A += B` remains interchangeable with `A = A + B`. 
-Global operator templates continue to be used for mixed-type binary 
+6. Hardening of the C++ API by marking cross-representation and string-based
+constructors as `explicit`. This prevents unintended implicit conversions
+that could lead to subtle performance regressions or logical errors.
+To maintain mathematical expressiveness, templated assignment and compound
+assignment operators (e.g., `=`, `+=`) are used to allow mixed-representation
+operations without requiring explicit casts, provided the scalar types match.
+This ensures that `A += B` remains interchangeable with `A = A + B`.
+Global operator templates continue to be used for mixed-type binary
 algebraic expressions.
 
 7. Reinforcement of representation-independence. To ensure that the public API
@@ -113,21 +113,21 @@ prevents user code from relying on internal representation details and
 ensures a consistent interface across all multivector representations
 (e.g., framed_multi).
 
-8. Optimization of sparse diagonal operations. To address performance issues 
-with manual diagonal write loops (which are particularly slow for compressed 
-sparse formats), the `unit(rows, cols)` method was added to the backend 
-wrappers, and `unit_helper` was specialized for all wrappers to ensure the 
-generic `unit(dim)` free function uses backend-optimized methods (e.g., 
-`setIdentity()` for Eigen, `eye()` for Armadillo). The `trace()` function 
-for sparse wrappers was also optimized to use backend-specific efficient 
+8. Optimization of sparse diagonal operations. To address performance issues
+with manual diagonal write loops (which are particularly slow for compressed
+sparse formats), the `unit(rows, cols)` method was added to the backend
+wrappers, and `unit_helper` was specialized for all wrappers to ensure the
+generic `unit(dim)` free function uses backend-optimized methods (e.g.,
+`setIdentity()` for Eigen, `eye()` for Armadillo). The `trace()` function
+for sparse wrappers was also optimized to use backend-specific efficient
 implementations.
 
-9. Modernization of the public API by replacing trailing return types 
-(`auto func() -> T`) with standard ones (`T func()`) across all core 
-classes and matrix wrappers. This improves API reasoning and consistency 
-while maintaining the stability of template instantiations. Where 
-necessary for sparse matrix proxy objects (e.g., in Armadillo), 
-`decltype(auto)` is used to preserve reference semantics without trailing 
+9. Modernization of the public API by replacing trailing return types
+(`auto func() -> T`) with standard ones (`T func()`) across all core
+classes and matrix wrappers. This improves API reasoning and consistency
+while maintaining the stability of template instantiations. Where
+necessary for sparse matrix proxy objects (e.g., in Armadillo),
+`decltype(auto)` is used to preserve reference semantics without trailing
 syntax.
 
 10. **Coverage and High-Precision Reliability**: Integration of advanced LLVM-based coverage tools with a robust binary preservation strategy. This ensures that high-precision paths (QD) and specialized backends (Armadillo) are reliably verified across the library's entire template space.
@@ -137,38 +137,38 @@ syntax.
 Refinement of Modernization Phase (0.98a0 to 0.98a2)
 --------------------------------------------------
 
-Following the initial Alpha release (0.98a0), the library underwent further 
-refinement to improve performance parity with legacy uBLAS and ensure 
+Following the initial Alpha release (0.98a0), the library underwent further
+refinement to improve performance parity with legacy uBLAS and ensure
 100% test reliability.
 
 ### Linear Algebra Backend Refinement
-While 0.98a0 introduced the Eigen and Armadillo wrappers, 0.98a1 focused on 
+While 0.98a0 introduced the Eigen and Armadillo wrappers, 0.98a1 focused on
 optimizing these backends:
-- **Armadillo Optimization**: Refactored Kronecker products (`kron`) and 
-  quotients (`nork`) in the Armadillo backend to utilize high-performance 
+- **Armadillo Optimization**: Refactored Kronecker products (`kron`) and
+  quotients (`nork`) in the Armadillo backend to utilize high-performance
   block operations (`submat`), significantly reducing temporary object creation.
-- **Backend Dispatch**: Consolidated the product operators (`*`, `^`, `%`, `&`) 
-  in `framed_multi_imp.h` into a unified 3-way dispatch strategy. This allows 
-  the library to dynamically choose between sparse term-loops, dense 
-  basis-loops, or matrix-based algorithms based on dimensions and 
+- **Backend Dispatch**: Consolidated the product operators (`*`, `^`, `%`, `&`)
+  in `framed_multi_imp.h` into a unified 3-way dispatch strategy. This allows
+  the library to dynamically choose between sparse term-loops, dense
+  basis-loops, or matrix-based algorithms based on dimensions and
   thresholds (`Inv_Fast_Dim_Threshold`, `Products_Matrix_Threshold`).
 
 ### Testing and Reliability
-- **100% C++ Function Coverage**: A major milestone in 0.98a1 was the 
-  achievement of 100% C++ function coverage across the core library. This was 
-  accomplished by migrating the extensive PyClical Python doctest suite into 
+- **100% C++ Function Coverage**: A major milestone in 0.98a1 was the
+  achievement of 100% C++ function coverage across the core library. This was
+  accomplished by migrating the extensive PyClical Python doctest suite into
   the C++ `test_doctest` framework using `SUBCASE` blocks.
-- **Include Path Standardization**: To align with modern Linux distribution 
-  standards and simplify build system configuration, include paths were 
-  refactored to use standard prefixes (e.g., `<doctest/doctest.h>` and 
+- **Include Path Standardization**: To align with modern Linux distribution
+  standards and simplify build system configuration, include paths were
+  refactored to use standard prefixes (e.g., `<doctest/doctest.h>` and
   `<eigen3/Eigen/...>`).
 
 ### Type Safety and API Modernization
-- **Set Value Standardization**: Transitioned all local variables receiving 
-  `to_set_value()` results to use the `set_value_t` type, ensuring 
+- **Set Value Standardization**: Transitioned all local variables receiving
+  `to_set_value()` results to use the `set_value_t` type, ensuring
   consistency across different `index_set` implementations.
-- **Return Type Consolidation**: Completed the modernization of the public 
-  API by replacing legacy trailing return types with standard return types, 
+- **Return Type Consolidation**: Completed the modernization of the public
+  API by replacing legacy trailing return types with standard return types,
   improving readability and compatibility with standard C++ tooling.
 
 ### Product Optimization (0.98a1 to 0.98a2)
@@ -276,8 +276,8 @@ contains:
     using matrix_index_t = matrix::matrix_index_t;
 ```
 where `matrix_t` and `sparse_matrix_t` are selected based on the scalar type and
-via `--with-armadillo`). To ensure template robustness and avoid issues with 
-circular dependencies or complex deduction, these wrappers use explicit return 
+via `--with-armadillo`). To ensure template robustness and avoid issues with
+circular dependencies or complex deduction, these wrappers use explicit return
 types for all public methods (e.g., `trace()`, `norm_inf()`, `nnz()`).
 and in `glucat/framed_multi.h`, the definition of the template class `framed_multi<>`
 contains:

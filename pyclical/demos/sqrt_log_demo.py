@@ -26,11 +26,14 @@ from builtins import range
 from PyClical import *
 from pyclical_tutorial_utils import *
 
+
 def run(ctx=tutorial_context(globals())):
     for name, method in get_object_methods(ctx).items():
-        exec("global "+name+";"+name+"=method")
+        exec("global " + name + ";" + name + "=method")
 
-    print_fill("# sqrt_log_demo.py: Demonstrate various sqrt and log calculations with PyClical.")
+    print_fill(
+        "# sqrt_log_demo.py: Demonstrate various sqrt and log calculations with PyClical."
+    )
     print_line()
     print_fill("INITIALIZATION.")
     print_exec("from PyClical import *")
@@ -96,13 +99,19 @@ def run(ctx=tutorial_context(globals())):
     print_fill("in Conformal Geometric Algebra R_(4,1).")
     print_line()
     print_fill("Reference:")
-    print_fill("[D+V]: L. Dorst and R. Valkenburg, 'Square root and logarithm of rotors',")
-    print_fill("L. Dorst and J. Lasenby (editors), Guide to geometric algebra in practice,")
+    print_fill(
+        "[D+V]: L. Dorst and R. Valkenburg, 'Square root and logarithm of rotors',"
+    )
+    print_fill(
+        "L. Dorst and J. Lasenby (editors), Guide to geometric algebra in practice,"
+    )
     print_fill("Springer, 2011, Chapter 5, pp. 81-104.")
     print_line()
     print_fill("Define a bivector B.")
     print_line()
-    print_exec("B = clifford('2{-1,1}+3{-1,2}+4{-1,3}+5{-1,4}+{1,2}+2{1,3}+3{1,4}-4{2,3}-5{2,4}+{3,4}')")
+    print_exec(
+        "B = clifford('2{-1,1}+3{-1,2}+4{-1,3}+5{-1,4}+{1,2}+2{1,3}+3{1,4}-4{2,3}-5{2,4}+{3,4}')"
+    )
     print_exec("print(B)")
     print_line()
     print_fill("Exponentiate -B/2 to obtain the rotor R.")
@@ -126,7 +135,9 @@ def run(ctx=tutorial_context(globals())):
     print_line()
     print_exec("dv_disc = (1+R(0))**2 - (R(4))**2")
     print_exec("print(dv_disc)")
-    print_exec("dv_sqrt_R = (1+R)*(1+R(0)-R(4))/(2*dv_disc)*(1+R(0)+R(4)+sqrt(dv_disc))/sqrt(1+R(0)+sqrt(dv_disc))")
+    print_exec(
+        "dv_sqrt_R = (1+R)*(1+R(0)-R(4))/(2*dv_disc)*(1+R(0)+R(4)+sqrt(dv_disc))/sqrt(1+R(0)+sqrt(dv_disc))"
+    )
     print_exec("print(dv_sqrt_R)")
     print_exec("print(dv_sqrt_R*dv_sqrt_R)")
     print_exec("print(abs(dv_sqrt_R*dv_sqrt_R - R))")
@@ -155,16 +166,24 @@ def run(ctx=tutorial_context(globals())):
 
     pause()
     print_line()
-    print_fill("Now use [D+V, Section 5.3] to try to obtain a logarithm of R or -R.")
+    print_fill(
+        "Now use [D+V, Section 5.3] to try to obtain a logarithm of R or -R."
+    )
     print_line()
     print_line()
-    print_fill("Obtain the bivector F via the exterior derivative of the action of the rotor R, as per [D+V (5.24)].")
+    print_fill(
+        "Obtain the bivector F via the exterior derivative of the action of the rotor R, as per [D+V (5.24)]."
+    )
     print_line()
     print_exec("F = 2 * (R(4)-R(0)) * R(2); print(F)")
     print_line()
-    print_fill("Check the split of F into commuting 2-blades, as per [D+V (5.25)].")
+    print_fill(
+        "Check the split of F into commuting 2-blades, as per [D+V (5.25)]."
+    )
     print_line()
-    print_exec("dv_norm = lambda F : sqrt(sqrt( (2*scalar(F**2) - F**2) * F**2 ))")
+    print_exec(
+        "dv_norm = lambda F : sqrt(sqrt( (2*scalar(F**2) - F**2) * F**2 ))"
+    )
     print_exec("F_m = F*(1 - ((dv_norm(F))**2)/(F**2))/2")
     print_exec("F_p = F*(1 + ((dv_norm(F))**2)/(F**2))/2")
     print_line()
@@ -192,13 +211,17 @@ def run(ctx=tutorial_context(globals())):
     print_line()
     print_fill("Define atanh2 as per [D+V (5.21)].")
     print_line()
-    print_exec("atanh2 = lambda s, c :"
-               + " math.asinh(sqrt(scalar(s**2)))/sqrt(scalar(s**2))*s if scalar(s**2) > 0"
-               + " else s if scalar(s**2) == 0"
-               + " else math.atan2(sqrt(scalar(-s**2)),c)/sqrt(scalar(-s**2))*s if -1 <= scalar(s**2) < 0"
-               + " else float('nan')")
+    print_exec(
+        "atanh2 = lambda s, c :"
+        + " math.asinh(sqrt(scalar(s**2)))/sqrt(scalar(s**2))*s if scalar(s**2) > 0"
+        + " else s if scalar(s**2) == 0"
+        + " else math.atan2(sqrt(scalar(-s**2)),c)/sqrt(scalar(-s**2))*s if -1 <= scalar(s**2) < 0"
+        + " else float('nan')"
+    )
     print_line()
-    print_fill("Display the values of atanh2 to be used to obtain the logarithm.")
+    print_fill(
+        "Display the values of atanh2 to be used to obtain the logarithm."
+    )
     print_line()
     print_exec("print(atanh2(S_m,C_m))")
     print_exec("print(atanh2(S_p,C_p))")
@@ -216,18 +239,24 @@ def run(ctx=tutorial_context(globals())):
     print_exec("print(abs(exp(dv_log_R) - R))")
     print_exec("print(abs(exp(dv_log_R) + R))")
     print_line()
-    print_fill("Use the pseudoscalar i = e({-1,1,2,3,4}) to obtain the log of -R or R.")
+    print_fill(
+        "Use the pseudoscalar i = e({-1,1,2,3,4}) to obtain the log of -R or R."
+    )
     print_line()
     print_exec("i = e({-1,1,2,3,4})")
     print_line()
-    print_fill("First, verify that i has the required properties: squares to -1 and commutes with vectors.")
+    print_fill(
+        "First, verify that i has the required properties: squares to -1 and commutes with vectors."
+    )
     print_line()
     print_exec("print(i*i)")
     print_exec("print(i*e(-1) - e(-1)*i)")
-    for k in range(1,5):
-        print_exec("print(i*e("+str(k)+") - e("+str(k)+")*i)")
+    for k in range(1, 5):
+        print_exec("print(i*e(" + str(k) + ") - e(" + str(k) + ")*i)")
     print_line()
-    print_fill("Now use the properties of i to find an expression for the log of -R or R.")
+    print_fill(
+        "Now use the properties of i to find an expression for the log of -R or R."
+    )
     print_line()
     print_exec("print(abs(exp(dv_log_R + i*pi) - R))")
     print_exec("print(abs(exp(dv_log_R + i*pi) + R))")
@@ -235,6 +264,7 @@ def run(ctx=tutorial_context(globals())):
     pause()
     print_line()
     print_fill("You have completed the demonstration file sqrt_log_demo.py.")
+
 
 if __name__ == "__main__":
     try:
