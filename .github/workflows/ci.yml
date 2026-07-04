@@ -92,7 +92,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           pip install --upgrade pip
-          pip install pytest ruff pylint nbformat Cython numpy
+          pip install pytest ruff pylint nbformat Cython numpy setuptools wheel
 
       - name: Bootstrap & Configure PyClical
         env:
