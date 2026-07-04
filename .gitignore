@@ -52,3 +52,13 @@ test03/eg3.res
 
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints/
+
+# Linter and static analysis caches
+.ruff_cache/
+.pylint.d/
+.cppcheck_build/
+.pytest_cache/
+
+# Local scratch directory
+/scratch/
+

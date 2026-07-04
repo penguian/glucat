@@ -32,13 +32,11 @@
  ***************************************************************************
  ***************************************************************************/
 
-#include "glucat/scalar.h"
-#include "glucat/qd.h"
-
-
-
 #include <cmath>
 #include <limits>
+
+#include "glucat/qd.h"
+#include "glucat/scalar.h"
 
 namespace glucat
 {
@@ -54,12 +52,9 @@ namespace glucat
    * @param val Value
    * @return Converted value
    */
-  template< >
-  template< typename Other_Scalar_T >
-  inline
-  auto
-  numeric_traits<float>::
-  to_scalar_t(const Other_Scalar_T& val) -> float
+  template <>
+  template <typename Other_Scalar_T>
+  inline auto numeric_traits<float>::to_scalar_t(const Other_Scalar_T& val) -> float
   { return static_cast<float>(numeric_traits<Other_Scalar_T>::to_double(val)); }
 
   /*
@@ -78,12 +73,9 @@ namespace glucat
    * @param val Value
    * @return Converted value
    */
-  template< >
-  template< typename Other_Scalar_T >
-  inline
-  auto
-  numeric_traits<double>::
-  to_scalar_t(const Other_Scalar_T& val) -> double
+  template <>
+  template <typename Other_Scalar_T>
+  inline auto numeric_traits<double>::to_scalar_t(const Other_Scalar_T& val) -> double
   { return numeric_traits<Other_Scalar_T>::to_double(val); }
 
 #if defined(_GLUCAT_USE_QD)
@@ -93,12 +85,9 @@ namespace glucat
    * @param val Value
    * @return Converted value
    */
-  template< >
-  template< >
-  inline
-  auto
-  numeric_traits<long double>::
-  to_scalar_t(const dd_real& val) -> long double
+  template <>
+  template <>
+  inline auto numeric_traits<long double>::to_scalar_t(const dd_real& val) -> long double
   { return static_cast<long double>(val.x[0]) + static_cast<long double>(val.x[1]); }
 
   /*
@@ -107,12 +96,9 @@ namespace glucat
    * @param val Value
    * @return Converted value
    */
-  template< >
-  template< >
-  inline
-  auto
-  numeric_traits<long double>::
-  to_scalar_t(const qd_real& val) -> long double
+  template <>
+  template <>
+  inline auto numeric_traits<long double>::to_scalar_t(const qd_real& val) -> long double
   { return static_cast<long double>(val.x[0]) + static_cast<long double>(val.x[1]); }
 
   /*
@@ -121,13 +107,10 @@ namespace glucat
    * @param val Value
    * @return Converted value
    */
-  template< >
-  template< >
-  inline
-  auto
-  numeric_traits<dd_real>::
-  to_scalar_t(const long double& val) -> dd_real
-  { return {double(val),double(val - static_cast<long double>(double(val)))}; }
+  template <>
+  template <>
+  inline auto numeric_traits<dd_real>::to_scalar_t(const long double& val) -> dd_real
+  { return {double(val), double(val - static_cast<long double>(double(val)))}; }
 
   /*
    * @brief Cast to dd_real
@@ -135,13 +118,10 @@ namespace glucat
    * @param val Value
    * @return Converted value
    */
-  template< >
-  template< >
-  inline
-  auto
-  numeric_traits<dd_real>::
-  to_scalar_t(const qd_real& val) -> dd_real
-  { return {val.x[0],val.x[1]}; }
+  template <>
+  template <>
+  inline auto numeric_traits<dd_real>::to_scalar_t(const qd_real& val) -> dd_real
+  { return {val.x[0], val.x[1]}; }
 
   /*
    * @brief Cast to qd_real
@@ -149,13 +129,10 @@ namespace glucat
    * @param val Value
    * @return Converted value
    */
-  template< >
-  template< >
-  inline
-  auto
-  numeric_traits<qd_real>::
-  to_scalar_t(const long double& val) -> qd_real
-  { return {double(val),double(val - static_cast<long double>(double(val))),0.0,0.0}; }
+  template <>
+  template <>
+  inline auto numeric_traits<qd_real>::to_scalar_t(const long double& val) -> qd_real
+  { return {double(val), double(val - static_cast<long double>(double(val))), 0.0, 0.0}; }
 
   /*
    * @brief Cast to qd_real
@@ -163,13 +140,10 @@ namespace glucat
    * @param val Value
    * @return Converted value
    */
-  template< >
-  template< >
-  inline
-  auto
-  numeric_traits<qd_real>::
-  to_scalar_t(const dd_real& val) -> qd_real
-  { return {val.x[0],val.x[1],0.0,0.0}; }
+  template <>
+  template <>
+  inline auto numeric_traits<qd_real>::to_scalar_t(const dd_real& val) -> qd_real
+  { return {val.x[0], val.x[1], 0.0, 0.0}; }
 #endif
 
 #if defined(_GLUCAT_USE_QD) && defined(EIGEN_MAJOR_VERSION)
@@ -199,10 +173,8 @@ namespace glucat
    * @param val Value
    * @return Result
    */
-  template< typename Scalar_T >
-  inline
-  auto
-  to_promote(const Scalar_T& val) -> typename numeric_traits<Scalar_T>::promoted::type
+  template <typename Scalar_T>
+  inline auto to_promote(const Scalar_T& val) -> typename numeric_traits<Scalar_T>::promoted::type
   {
     using promoted_scalar_t = typename numeric_traits<Scalar_T>::promoted::type;
     return numeric_traits<promoted_scalar_t>::to_scalar_t(val);
@@ -224,37 +196,40 @@ namespace glucat
    * @param val Value
    * @return Result
    */
-  template< typename Scalar_T >
-  inline
-  auto
-  to_demote(const Scalar_T& val) -> typename numeric_traits<Scalar_T>::demoted::type
+  template <typename Scalar_T>
+  inline auto to_demote(const Scalar_T& val) -> typename numeric_traits<Scalar_T>::demoted::type
   {
     using demoted_scalar_t = typename numeric_traits<Scalar_T>::demoted::type;
     return numeric_traits<demoted_scalar_t>::to_scalar_t(val);
   }
-}
+}  // namespace glucat
 
 #ifdef GLUCAT_DOCTEST
 #include <doctest/doctest.h>
+
 #include <complex>
 
-namespace glucat {
+namespace glucat
+{
 
   template <typename T>
-  void test_scalar_traits() {
+  void test_scalar_traits()
+  {
     using traits = numeric_traits<T>;
 
     T zero(0);
     T one(1);
 
-    SUBCASE("Constants") {
+    SUBCASE("Constants")
+    {
       CHECK(traits::pi() > T(3));
       CHECK(traits::pi() < T(4));
       CHECK(traits::ln_2() > T(0.6));
       CHECK(traits::ln_2() < T(0.7));
     }
 
-    SUBCASE("Classification") {
+    SUBCASE("Classification")
+    {
       CHECK_FALSE(traits::isNaN_or_isInf(zero));
       CHECK_FALSE(traits::isNaN_or_isInf(one));
       CHECK_FALSE(traits::isNaN(zero));
@@ -264,7 +239,8 @@ namespace glucat {
       CHECK(traits::isNaN(nan_val));
     }
 
-    SUBCASE("Math Functions") {
+    SUBCASE("Math Functions")
+    {
       T val = T(4);
       CHECK(numeric_traits<T>::to_double(traits::sqrt(val)) == doctest::Approx(2.0));
 
@@ -274,11 +250,12 @@ namespace glucat {
       CHECK(numeric_traits<T>::to_double(traits::log(traits::exp(one))) == doctest::Approx(1.0));
 
       T pi_val = traits::pi();
-      CHECK(numeric_traits<T>::to_double(traits::sin(pi_val/T(2))) == doctest::Approx(1.0));
+      CHECK(numeric_traits<T>::to_double(traits::sin(pi_val / T(2))) == doctest::Approx(1.0));
       CHECK(numeric_traits<T>::to_double(traits::cos(pi_val)) == doctest::Approx(-1.0));
     }
 
-    SUBCASE("Promote and Demote") {
+    SUBCASE("Promote and Demote")
+    {
       T val(2);
       auto p = to_promote(val);
       static_assert(std::is_same_v<decltype(p), typename traits::promoted::type>);
@@ -288,18 +265,35 @@ namespace glucat {
     }
   }
 
-} // namespace glucat
+}  // namespace glucat
 
-TEST_CASE("scalar::traits_and_math") {
-  SUBCASE("float")       { glucat::test_scalar_traits<float>(); }
-  SUBCASE("double")      { glucat::test_scalar_traits<double>(); }
-  SUBCASE("long double") { glucat::test_scalar_traits<long double>(); }
+TEST_CASE("scalar::traits_and_math")
+{
+  SUBCASE("float")
+  {
+    glucat::test_scalar_traits<float>();
+  }
+  SUBCASE("double")
+  {
+    glucat::test_scalar_traits<double>();
+  }
+  SUBCASE("long double")
+  {
+    glucat::test_scalar_traits<long double>();
+  }
 #ifdef _GLUCAT_USE_QD
-  SUBCASE("dd_real")     { glucat::test_scalar_traits<dd_real>(); }
-  SUBCASE("qd_real")     { glucat::test_scalar_traits<qd_real>(); }
+  SUBCASE("dd_real")
+  {
+    glucat::test_scalar_traits<dd_real>();
+  }
+  SUBCASE("qd_real")
+  {
+    glucat::test_scalar_traits<qd_real>();
+  }
 #endif
 
-  SUBCASE("is_complex trait") {
+  SUBCASE("is_complex trait")
+  {
     using namespace glucat;
     CHECK_FALSE(is_complex_v<float>);
     CHECK_FALSE(is_complex_v<double>);
@@ -313,4 +307,4 @@ TEST_CASE("scalar::traits_and_math") {
 }
 #endif
 
-#endif // _GLUCAT_SCALAR_IMP_H
+#endif  // _GLUCAT_SCALAR_IMP_H

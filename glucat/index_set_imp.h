@@ -31,11 +31,11 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
-#include "glucat/index_set.h"
-
+#include <sstream>
 #include <string>
 #include <string_view>
-#include <sstream>
+
+#include "glucat/index_set.h"
 
 namespace glucat
 {
@@ -44,11 +44,8 @@ namespace glucat
   //      Chapter 1, Bit wizardry, http://www.jjj.de/bitwizardry/bitwizardrypage.html
   // [L]: Pertti Lounesto, "Clifford algebras and spinors", Cambridge UP, 1997.
 
-  template<const index_t LO, const index_t HI>
-  inline
-  auto
-  index_set<LO,HI>::
-  classname() -> std::string_view
+  template <const index_t LO, const index_t HI>
+  inline auto index_set<LO, HI>::classname() -> std::string_view
   { return "index_set"; }
 
   /*
@@ -58,11 +55,11 @@ namespace glucat
    * @tparam HI
    * @param idx Value
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  index_set<LO,HI>::
-  index_set(const index_t idx)
-  { this->set(idx); }
+  template <const index_t LO, const index_t HI>
+  inline constexpr index_set<LO, HI>::index_set(const index_t idx)
+  {
+    this->set(idx);
+  }
 
   /*
    * @brief Constructor from bitset_t
@@ -71,11 +68,9 @@ namespace glucat
    * @tparam HI
    * @param bst Value
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  index_set<LO,HI>::
-  index_set(const bitset_t bst):
-  bitset_t(bst)
+  template <const index_t LO, const index_t HI>
+  inline constexpr index_set<LO, HI>::index_set(const bitset_t bst)
+      : bitset_t(bst)
   { }
 
   /*
@@ -87,13 +82,11 @@ namespace glucat
    * @param frm Value
    * @param prechecked Already checked?
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  index_set<LO,HI>::
-  index_set(const set_value_t folded_val, const index_set_t frm, const bool prechecked)
+  template <const index_t LO, const index_t HI>
+  inline constexpr index_set<LO, HI>::index_set(const set_value_t folded_val, const index_set_t frm, const bool prechecked)
   {
     if (!prechecked && folded_val >= (set_value_t(1) << frm.count()))
-        throw error_t("index_set(val,frm): cannot create: value gives an index set outside of frame");
+      throw error_t("index_set(val,frm): cannot create: value gives an index set outside of frame");
     const index_set_t folded_frame = frm.fold();
     const index_t min_index = folded_frame.min();
     const index_t skip = min_index > 0 ? 1 : 0;
@@ -109,23 +102,14 @@ namespace glucat
    * @param range Value
    * @param prechecked Already checked?
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  index_set<LO,HI>::
-  index_set(const index_pair_t& range, const bool prechecked)
+  template <const index_t LO, const index_t HI>
+  inline constexpr index_set<LO, HI>::index_set(const index_pair_t& range, const bool prechecked)
   {
     if (!prechecked && (range.first < LO || range.second > HI))
-        throw error_t("index_set(range): cannot create: range is too large");
-    const index_t begin_bit = (range.first < 0)
-                            ? range.first-LO
-                            : range.first-LO-1;
-    const index_t end_bit = (range.second < 0)
-                            ? range.second-LO+1
-                            : range.second-LO;
-    unsigned long mask = ( (end_bit == _GLUCAT_BITS_PER_ULONG)
-                           ? -1UL
-                           : (1UL << end_bit)-1UL)
-                         & ~((1UL << begin_bit)-1UL);
+      throw error_t("index_set(range): cannot create: range is too large");
+    const index_t begin_bit = (range.first < 0) ? range.first - LO : range.first - LO - 1;
+    const index_t end_bit = (range.second < 0) ? range.second - LO + 1 : range.second - LO;
+    unsigned long mask = ((end_bit == _GLUCAT_BITS_PER_ULONG) ? -1UL : (1UL << end_bit) - 1UL) & ~((1UL << begin_bit) - 1UL);
     *this = bitset_t(mask);
   }
 
@@ -136,9 +120,8 @@ namespace glucat
    * @tparam HI
    * @param str Value
    */
-  template<const index_t LO, const index_t HI>
-  index_set<LO,HI>::
-  index_set(const std::string& str)
+  template <const index_t LO, const index_t HI>
+  index_set<LO, HI>::index_set(const std::string& str)
   {
     std::istringstream ss(str);
     ss >> *this;
@@ -158,11 +141,8 @@ namespace glucat
    * @param rhs Right hand side
    * @return True if equal
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::
-  operator== (const index_set_t& rhs) const -> bool
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::operator==(const index_set_t& rhs) const -> bool
   {
     const auto* pthis = static_cast<const bitset_t*>(this);
     return *pthis == static_cast<const bitset_t&>(rhs);
@@ -176,11 +156,8 @@ namespace glucat
    * @param rhs Right hand side
    * @return True if not equal
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::
-  operator!= (const index_set_t& rhs) const -> bool
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::operator!=(const index_set_t& rhs) const -> bool
   {
     const auto* pthis = static_cast<const bitset_t*>(this);
     return *pthis != static_cast<const bitset_t&>(rhs);
@@ -193,11 +170,8 @@ namespace glucat
    * @tparam HI
    * @return Result
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::
-  operator~ () const -> index_set_t
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::operator~() const -> index_set_t
   { return bitset_t::operator~(); }
 
   /*
@@ -207,11 +181,8 @@ namespace glucat
    * @tparam HI
    * @return Reference to this
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::
-  operator^= (const index_set_t rhs) -> index_set_t&
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::operator^=(const index_set_t rhs) -> index_set_t&
   {
     bitset_t* pthis = this;
     *pthis ^= static_cast<bitset_t>(rhs);
@@ -242,11 +213,8 @@ namespace glucat
    * @param rhs Right hand side
    * @return Outer product
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  operator^ (const index_set<LO,HI>& lhs,
-             const index_set<LO,HI>& rhs) -> index_set<LO,HI>
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto operator^(const index_set<LO, HI>& lhs, const index_set<LO, HI>& rhs) -> index_set<LO, HI>
   {
     using index_set_t = index_set<LO, HI>;
     using bitset_t = typename index_set_t::bitset_t;
@@ -261,11 +229,8 @@ namespace glucat
    * @param rhs Right hand side
    * @return Reference to this
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::
-  operator&= (const index_set_t rhs) -> index_set_t&
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::operator&=(const index_set_t rhs) -> index_set_t&
   {
     bitset_t* pthis = this;
     *pthis &= static_cast<bitset_t>(rhs);
@@ -287,11 +252,8 @@ namespace glucat
    * @param rhs Right hand side
    * @return Inner product
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  operator& (const index_set<LO,HI>& lhs,
-             const index_set<LO,HI>& rhs) -> index_set<LO,HI>
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto operator&(const index_set<LO, HI>& lhs, const index_set<LO, HI>& rhs) -> index_set<LO, HI>
   {
     using index_set_t = index_set<LO, HI>;
     using bitset_t = typename index_set_t::bitset_t;
@@ -306,11 +268,8 @@ namespace glucat
    * @param rhs Right hand side
    * @return Reference to this
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::
-  operator|= (const index_set_t rhs) -> index_set_t&
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::operator|=(const index_set_t rhs) -> index_set_t&
   {
     bitset_t* pthis = this;
     *pthis |= static_cast<bitset_t>(rhs);
@@ -332,11 +291,8 @@ namespace glucat
    * @param rhs Right hand side
    * @return Bitwise OR
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  operator| (const index_set<LO,HI>& lhs,
-             const index_set<LO,HI>& rhs) -> index_set<LO,HI>
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto operator|(const index_set<LO, HI>& lhs, const index_set<LO, HI>& rhs) -> index_set<LO, HI>
   {
     using index_set_t = index_set<LO, HI>;
     using bitset_t = typename index_set_t::bitset_t;
@@ -351,11 +307,8 @@ namespace glucat
    * @param idx Value
    * @return Element reference
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::
-  operator[] (const index_t idx) -> reference
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::operator[](const index_t idx) -> reference
   { return reference(*this, idx); }
 
   /*
@@ -366,11 +319,8 @@ namespace glucat
    * @param idx Value
    * @return Element reference
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::
-  operator[] (const index_t idx) const -> bool
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::operator[](const index_t idx) const -> bool
   { return this->test(idx); }
 
   /*
@@ -381,18 +331,13 @@ namespace glucat
    * @param idx Value
    * @return True if successful or condition met
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::
-  test(const index_t idx) const -> bool
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::test(const index_t idx) const -> bool
   {
     // Reference: [JA], 1.2.1
-    return (idx < 0)
-           ?   bool(to_set_value() & (1UL << (idx - LO)))
-           : (idx > 0)
-             ? bool(to_set_value() & (1UL << (idx - LO - 1)))
-             : false;
+    return (idx < 0)   ? bool(to_set_value() & (1UL << (idx - LO)))
+           : (idx > 0) ? bool(to_set_value() & (1UL << (idx - LO - 1)))
+                       : false;
   }
 
   /*
@@ -402,11 +347,8 @@ namespace glucat
    * @tparam HI
    * @return Result
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::
-  set() -> index_set_t&
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::set() -> index_set_t&
   {
     bitset_t::set();
     return *this;
@@ -420,16 +362,13 @@ namespace glucat
    * @param idx Value
    * @return Result
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::
-  set(index_t idx) -> index_set_t&
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::set(index_t idx) -> index_set_t&
   {
     if (idx > 0)
-      bitset_t::set(idx-LO-1);
+      bitset_t::set(idx - LO - 1);
     else if (idx < 0)
-      bitset_t::set(idx-LO);
+      bitset_t::set(idx - LO);
     return *this;
   }
 
@@ -442,16 +381,13 @@ namespace glucat
    * @param val Value
    * @return Result
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::
-  set(const index_t idx, const int val) -> index_set_t&
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::set(const index_t idx, const int val) -> index_set_t&
   {
     if (idx > 0)
-      bitset_t::set(idx-LO-1, val);
+      bitset_t::set(idx - LO - 1, val);
     else if (idx < 0)
-      bitset_t::set(idx-LO, val);
+      bitset_t::set(idx - LO, val);
     return *this;
   }
 
@@ -462,11 +398,8 @@ namespace glucat
    * @tparam HI
    * @return Result
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::
-  reset() -> index_set_t&
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::reset() -> index_set_t&
   {
     bitset_t::reset();
     return *this;
@@ -480,16 +413,13 @@ namespace glucat
    * @param idx Value
    * @return Result
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::
-  reset(const index_t idx) -> index_set_t&
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::reset(const index_t idx) -> index_set_t&
   {
     if (idx > 0)
-      bitset_t::reset(idx-LO-1);
+      bitset_t::reset(idx - LO - 1);
     else if (idx < 0)
-      bitset_t::reset(idx-LO);
+      bitset_t::reset(idx - LO);
     return *this;
   }
 
@@ -500,11 +430,8 @@ namespace glucat
    * @tparam HI
    * @return Result
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::
-  flip() -> index_set<LO,HI>&
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::flip() -> index_set<LO, HI>&
   {
     bitset_t::flip();
     return *this;
@@ -518,16 +445,13 @@ namespace glucat
    * @param idx Value
    * @return Result
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::
-  flip(const index_t idx) -> index_set_t&
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::flip(const index_t idx) -> index_set_t&
   {
     if (idx > 0)
-      bitset_t::flip(idx-LO-1);
+      bitset_t::flip(idx - LO - 1);
     else if (idx < 0)
-      bitset_t::flip(idx-LO);
+      bitset_t::flip(idx - LO);
     return *this;
   }
 
@@ -538,11 +462,8 @@ namespace glucat
    * @tparam HI
    * @return Result
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::
-  count() const -> index_t
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::count() const -> index_t
   {
     set_value_t val = to_set_value();
     // Reference: [JA], 1.3
@@ -551,7 +472,7 @@ namespace glucat
     else
     {
       index_t result = 1;
-      while (val &= val-1)
+      while (val &= val - 1)
         ++result;
       return result;
     }
@@ -564,11 +485,8 @@ namespace glucat
    * @tparam HI
    * @return Result
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::
-  count_neg() const -> index_t
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::count_neg() const -> index_t
   {
     static const index_set_t lo_mask = bitset_t((1UL << -LO) - 1UL);
     const index_set_t neg_part = *this & lo_mask;
@@ -582,11 +500,8 @@ namespace glucat
    * @tparam HI
    * @return Result
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::
-  count_pos() const -> index_t
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::count_pos() const -> index_t
   {
     const auto* pthis = static_cast<const bitset_t*>(this);
     const index_set_t pos_part = *pthis >> -LO;
@@ -601,11 +516,8 @@ namespace glucat
    * @tparam HI
    * @return Result
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::
-  min() const -> index_t
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::min() const -> index_t
   {
     // Reference: [JA], 1.3
     set_value_t val = to_set_value();
@@ -613,7 +525,7 @@ namespace glucat
       return 0;
     else
     {
-      val -= val & (val-1); // isolate lowest bit
+      val -= val & (val - 1);  // isolate lowest bit
 
       index_t idx = 0;
       const index_t nbits = HI - LO;
@@ -625,16 +537,16 @@ namespace glucat
         if (val & 0xffff0000ffff0000ul)
           idx += 16;
         if (val & 0xff00ff00ff00ff00ul)
-          idx +=  8;
+          idx += 8;
       }
-        if (val & 0xf0f0f0f0f0f0f0f0ul)
-          idx +=  4;
-        if (val & 0xccccccccccccccccul)
-          idx +=  2;
-        if (val & 0xaaaaaaaaaaaaaaaaul)
-          idx +=  1;
+      if (val & 0xf0f0f0f0f0f0f0f0ul)
+        idx += 4;
+      if (val & 0xccccccccccccccccul)
+        idx += 2;
+      if (val & 0xaaaaaaaaaaaaaaaaul)
+        idx += 1;
 
-      return idx + ((idx < -LO) ? LO : LO+1);
+      return idx + ((idx < -LO) ? LO : LO + 1);
     }
   }
 #elif (_GLUCAT_BITS_PER_ULONG == 32)
@@ -645,11 +557,8 @@ namespace glucat
    * @tparam HI
    * @return Result
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  index_t
-  index_set<LO,HI>::
-  min() const
+  template <const index_t LO, const index_t HI>
+  inline constexpr index_t index_set<LO, HI>::min() const
   {
     // Reference: [JA], 1.3
     set_value_t val = to_set_value();
@@ -657,7 +566,7 @@ namespace glucat
       return 0;
     else
     {
-      val -= val & (val-1); // isolate lowest bit
+      val -= val & (val - 1);  // isolate lowest bit
 
       index_t idx = 0;
       const index_t nbits = HI - LO;
@@ -666,16 +575,16 @@ namespace glucat
         if (val & 0xffff0000ul)
           idx += 16;
         if (val & 0xff00ff00ul)
-          idx +=  8;
+          idx += 8;
       }
-        if (val & 0xf0f0f0f0ul)
-          idx +=  4;
-        if (val & 0xccccccccul)
-          idx +=  2;
-        if (val & 0xaaaaaaaaul)
-          idx +=  1;
+      if (val & 0xf0f0f0f0ul)
+        idx += 4;
+      if (val & 0xccccccccul)
+        idx += 2;
+      if (val & 0xaaaaaaaaul)
+        idx += 1;
 
-      return idx + ((idx < -LO) ? LO : LO+1);
+      return idx + ((idx < -LO) ? LO : LO + 1);
     }
   }
 #else
@@ -686,21 +595,13 @@ namespace glucat
    * @tparam HI
    * @return Result
    */
-  template<const index_t LO, const index_t HI>
-inline constexpr auto
-  index_set<LO,HI>::
-  min() const -> index_t
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::min() const -> index_t
   {
-    for (auto
-        idx = LO;
-        idx != 0;
-        ++idx)
+    for (auto idx = LO; idx != 0; ++idx)
       if (this->test(idx))
         return idx;
-    for (auto
-        idx = index_t(1);
-        idx <= HI;
-        ++idx)
+    for (auto idx = index_t(1); idx <= HI; ++idx)
       if (this->test(idx))
         return idx;
     return 0;
@@ -715,11 +616,8 @@ inline constexpr auto
    * @tparam HI
    * @return Result
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::
-  max() const -> index_t
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::max() const -> index_t
   {
     // Reference: [JA], 1.6
     auto val = to_set_value();
@@ -732,19 +630,36 @@ inline constexpr auto
       if (nbits > 8)
       {
         if (val & 0xffffffff00000000ul)
-          { val >>= 32; idx += 32; }
+        {
+          val >>= 32;
+          idx += 32;
+        }
         if (val & 0x00000000ffff0000ul)
-          { val >>= 16; idx += 16; }
+        {
+          val >>= 16;
+          idx += 16;
+        }
         if (val & 0x000000000000ff00ul)
-          { val >>=  8; idx +=  8; }
+        {
+          val >>= 8;
+          idx += 8;
+        }
       }
-        if (val & 0x00000000000000f0ul)
-          { val >>=  4; idx +=  4; }
-        if (val & 0x000000000000000cul)
-          { val >>=  2; idx +=  2; }
-        if (val & 0x0000000000000002ul)
-          {             idx +=  1; }
-      return idx + ((idx < -LO) ? LO : LO+1);
+      if (val & 0x00000000000000f0ul)
+      {
+        val >>= 4;
+        idx += 4;
+      }
+      if (val & 0x000000000000000cul)
+      {
+        val >>= 2;
+        idx += 2;
+      }
+      if (val & 0x0000000000000002ul)
+      {
+        idx += 1;
+      }
+      return idx + ((idx < -LO) ? LO : LO + 1);
     }
   }
 #elif (_GLUCAT_BITS_PER_ULONG == 32)
@@ -755,11 +670,8 @@ inline constexpr auto
    * @tparam HI
    * @return Result
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::
-  max() const -> index_t
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::max() const -> index_t
   {
     // Reference: [JA], 1.6
     auto val = to_set_value();
@@ -772,17 +684,31 @@ inline constexpr auto
       if (nbits > 8)
       {
         if (val & 0xffff0000ul)
-          { val >>= 16; idx += 16; }
+        {
+          val >>= 16;
+          idx += 16;
+        }
         if (val & 0x0000ff00ul)
-          { val >>=  8; idx +=  8; }
+        {
+          val >>= 8;
+          idx += 8;
+        }
       }
-        if (val & 0x000000f0ul)
-          { val >>=  4; idx +=  4; }
-        if (val & 0x0000000cul)
-          { val >>=  2; idx +=  2; }
-        if (val & 0x00000002ul)
-          {             idx +=  1; }
-      return idx + ((idx < -LO) ? LO : LO+1);
+      if (val & 0x000000f0ul)
+      {
+        val >>= 4;
+        idx += 4;
+      }
+      if (val & 0x0000000cul)
+      {
+        val >>= 2;
+        idx += 2;
+      }
+      if (val & 0x00000002ul)
+      {
+        idx += 1;
+      }
+      return idx + ((idx < -LO) ? LO : LO + 1);
     }
   }
 #else
@@ -793,21 +719,13 @@ inline constexpr auto
    * @tparam HI
    * @return Result
    */
-  template<const index_t LO, const index_t HI>
-inline constexpr auto
-  index_set<LO,HI>::
-  max() const -> index_t
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::max() const -> index_t
   {
-    for (auto
-        idx = HI;
-        idx != 0;
-        --idx)
+    for (auto idx = HI; idx != 0; --idx)
       if (this->test(idx))
         return idx;
-    for (auto
-        idx = index_t(-1);
-        idx >= LO;
-        --idx)
+    for (auto idx = index_t(-1); idx >= LO; --idx)
       if (this->test(idx))
         return idx;
     return 0;
@@ -822,17 +740,9 @@ inline constexpr auto
    * @return Result
    */
   //  eg. {3,4,5} is less than {3,7,8}
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  compare(const index_set<LO,HI>& a, const index_set<LO,HI>& b) -> int
-  {
-    return (a == b)
-           ? 0
-           : a.lex_less_than(b)
-             ? -1
-             :  1;
-  }
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto compare(const index_set<LO, HI>& a, const index_set<LO, HI>& b) -> int
+  { return (a == b) ? 0 : a.lex_less_than(b) ? -1 : 1; }
 
   /*
    * @brief Lexicographic ordering of two sets: *this < rhs
@@ -841,11 +751,8 @@ inline constexpr auto
    * @return Result
    */
   //  eg. {3,4,5} is less than {3,7,8}
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::
-  lex_less_than(const index_set_t& rhs) const -> bool
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::lex_less_than(const index_set_t& rhs) const -> bool
   { return to_set_value() < rhs.to_set_value(); }
 
   /*
@@ -854,19 +761,12 @@ inline constexpr auto
    * @param rhs Right hand side
    */
   // Order by count, then order lexicographically within the equivalence class of count.
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::
-  operator< (const index_set_t& rhs) const -> bool
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::operator<(const index_set_t& rhs) const -> bool
   {
     const auto this_grade = this->count();
-    const auto rhs_grade  = rhs.count();
-    return (this_grade < rhs_grade)
-           ? true
-           : (this_grade > rhs_grade)
-             ? false
-             : this->lex_less_than(rhs);
+    const auto rhs_grade = rhs.count();
+    return (this_grade < rhs_grade) ? true : (this_grade > rhs_grade) ? false : this->lex_less_than(rhs);
   }
 
   /*
@@ -878,21 +778,16 @@ inline constexpr auto
    * @param ist Value
    * @return Output stream
    */
-  template<const index_t LO, const index_t HI>
-  auto
-  operator<< (std::ostream& os, const index_set<LO,HI>& ist) -> std::ostream&
+  template <const index_t LO, const index_t HI>
+  auto operator<<(std::ostream& os, const index_set<LO, HI>& ist) -> std::ostream&
   {
     index_t i;
     os << '{';
-    for (i = LO;
-        (i <= HI) && !(ist[i]);
-        ++i)
+    for (i = LO; (i <= HI) && !(ist[i]); ++i)
     { }
     if (i <= HI)
       os << i;
-    for (++i;
-        i <= HI;
-        ++i)
+    for (++i; i <= HI; ++i)
       if (ist[i])
         os << ',' << i;
     os << '}';
@@ -908,13 +803,12 @@ inline constexpr auto
    * @param ist Value
    * @return Input stream
    */
-  template<const index_t LO, const index_t HI>
-  auto
-  operator>> (std::istream& s, index_set<LO,HI>& ist) -> std::istream&
+  template <const index_t LO, const index_t HI>
+  auto operator>>(std::istream& s, index_set<LO, HI>& ist) -> std::istream&
   {
     // Parsing variables.
     auto i = index_t(0);
-    using index_set_t = index_set<LO,HI>;
+    using index_set_t = index_set<LO, HI>;
     auto local_ist = index_set_t();
     // Parsing control variables.
     auto parse_index_list = true;
@@ -926,16 +820,16 @@ inline constexpr auto
     if (!s.good())
       parse_index_list = false;
     else
-    { // Check for an opening brace.
+    {  // Check for an opening brace.
       expect_closing_brace = (c == int('{'));
       if (expect_closing_brace)
-      { // Consume the opening brace.
+      {  // Consume the opening brace.
         s.get();
         // The next character may be a closing brace,
         // indicating the empty index set.
         c = s.peek();
         if (s.good() && (c == int('}')))
-        { // A closing brace has been parsed and is no longer expected.
+        {  // A closing brace has been parsed and is no longer expected.
           expect_closing_brace = false;
           // Consume the closing brace.
           s.get();
@@ -945,14 +839,12 @@ inline constexpr auto
       }
     }
     if (s.good() && parse_index_list)
-    { // Parse an optional index list.
+    {  // Parse an optional index list.
       // The index list starts with a first index.
-      for (s >> i;
-          !s.fail();
-          s >> i)
-      { // An index has been parsed. Check to see if it is in range.
+      for (s >> i; !s.fail(); s >> i)
+      {  // An index has been parsed. Check to see if it is in range.
         if ((i < LO) || (i > HI))
-        { // An index out of range is a failure.
+        {  // An index out of range is a failure.
           s.clear(std::istream::failbit);
           break;
         }
@@ -972,7 +864,7 @@ inline constexpr auto
           break;
         // First, test for a closing brace, if expected.
         if (expect_closing_brace && (c == int('}')))
-        { // Consume the closing brace.
+        {  // Consume the closing brace.
           s.get();
           // Immediately after parsing the closing brace, it is no longer expected.
           expect_closing_brace = false;
@@ -981,13 +873,13 @@ inline constexpr auto
         }
         // Now test for a comma.
         if (c == int(','))
-        { // Consume the comma.
+        {  // Consume the comma.
           s.get();
           // A index is expected after the comma.
           expect_index = true;
         }
         else
-        { // Any other character here is a failure.
+        {  // Any other character here is a failure.
           s.clear(std::istream::failbit);
           break;
         }
@@ -998,7 +890,7 @@ inline constexpr auto
       s.clear(std::istream::failbit);
     // End of file is not a failure.
     if (s)
-    { // The index set has been successfully parsed.
+    {  // The index set has been successfully parsed.
       ist = local_ist;
     }
     return s;
@@ -1011,18 +903,13 @@ inline constexpr auto
    * @tparam HI
    * @return True if is contiguous
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::
-  is_contiguous () const -> bool
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::is_contiguous() const -> bool
   {
     const auto min_index = this->min();
     const auto max_index = this->max();
-    return (min_index < 0 && max_index > 0)
-         ?  max_index - min_index == this->count()
-         : (min_index == 1 || max_index == -1) &&
-           (max_index - min_index == this->count() - 1);
+    return (min_index < 0 && max_index > 0) ? max_index - min_index == this->count()
+                                            : (min_index == 1 || max_index == -1) && (max_index - min_index == this->count() - 1);
   }
 
   /*
@@ -1032,11 +919,8 @@ inline constexpr auto
    * @tparam HI
    * @return Result
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::
-  fold() const -> index_set<LO,HI>
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::fold() const -> index_set<LO, HI>
   { return this->fold(*this, true); }
 
   /*
@@ -1048,10 +932,8 @@ inline constexpr auto
    * @param prechecked Already checked?
    * @return True if successful or condition met
    */
-  template<const index_t LO, const index_t HI>
-inline constexpr auto
-  index_set<LO,HI>::
-  fold(const index_set_t frm, const bool prechecked) const -> index_set<LO,HI>
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::fold(const index_set_t frm, const bool prechecked) const -> index_set<LO, HI>
   {
     if (!prechecked && ((*this | frm) != frm))
       throw error_t("fold(frm): cannot fold from outside of frame");
@@ -1059,24 +941,18 @@ inline constexpr auto
     const auto frm_max = frm.max();
     auto result = index_set_t();
     auto fold_idx = index_t(-1);
-    for (auto
-        unfold_idx = fold_idx;
-        unfold_idx >= frm_min;
-        --unfold_idx)
+    for (auto unfold_idx = fold_idx; unfold_idx >= frm_min; --unfold_idx)
       if (frm.test(unfold_idx))
-        // result.set(fold_idx--, this->test(unfold_idx));
+      // result.set(fold_idx--, this->test(unfold_idx));
       {
         if (this->test(unfold_idx))
           result.set(fold_idx);
         --fold_idx;
       }
     fold_idx = index_t(1);
-    for (auto
-        unfold_idx = fold_idx;
-        unfold_idx <= frm_max;
-        ++unfold_idx)
+    for (auto unfold_idx = fold_idx; unfold_idx <= frm_max; ++unfold_idx)
       if (frm.test(unfold_idx))
-        // result.set(fold_idx++, this->test(unfold_idx));
+      // result.set(fold_idx++, this->test(unfold_idx));
       {
         if (this->test(unfold_idx))
           result.set(fold_idx);
@@ -1094,35 +970,26 @@ inline constexpr auto
    * @param prechecked Already checked?
    * @return True if successful or condition met
    */
-  template<const index_t LO, const index_t HI>
-inline constexpr auto
-  index_set<LO,HI>::
-  unfold(const index_set_t frm, const bool prechecked) const -> index_set_t
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::unfold(const index_set_t frm, const bool prechecked) const -> index_set_t
   {
-    const char* msg =
-      "unfold(frm): cannot unfold into a smaller frame";
+    const char* msg = "unfold(frm): cannot unfold into a smaller frame";
     const auto frm_min = frm.min();
     const auto frm_max = frm.max();
     auto result = index_set_t();
     auto fold_idx = index_t(-1);
-    for (auto
-        unfold_idx = fold_idx;
-        unfold_idx >= frm_min;
-        --unfold_idx)
+    for (auto unfold_idx = fold_idx; unfold_idx >= frm_min; --unfold_idx)
       if (frm.test(unfold_idx))
         if (this->test(fold_idx--))
           result.set(unfold_idx);
-    if (!prechecked && ((fold_idx+1) > this->min()))
+    if (!prechecked && ((fold_idx + 1) > this->min()))
       throw error_t(msg);
     fold_idx = index_t(1);
-    for (auto
-        unfold_idx = fold_idx;
-        unfold_idx <= frm_max;
-        ++unfold_idx)
+    for (auto unfold_idx = fold_idx; unfold_idx <= frm_max; ++unfold_idx)
       if (frm.test(unfold_idx))
         if (this->test(fold_idx++))
           result.set(unfold_idx);
-    if (!prechecked && ((fold_idx-1) < this->max()))
+    if (!prechecked && ((fold_idx - 1) < this->max()))
       throw error_t(msg);
     return result;
   }
@@ -1135,11 +1002,8 @@ inline constexpr auto
    * @param frm Value
    * @return Result
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::
-  value_of_fold(const index_set_t frm) const -> set_value_t
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::value_of_fold(const index_set_t frm) const -> set_value_t
   {
     const auto min_index = frm.fold().min();
     if (min_index == 0)
@@ -1148,7 +1012,7 @@ inline constexpr auto
     {
       const auto folded_set = this->fold(frm);
       const auto skip = min_index > 0 ? index_t(1) : index_t(0);
-      return folded_set.to_set_value() >> (min_index-LO-skip);
+      return folded_set.to_set_value() >> (min_index - LO - skip);
     }
   }
 
@@ -1158,19 +1022,17 @@ inline constexpr auto
    * @param x Value
    * @return Inverse
    */
-  inline constexpr
-  static
-  auto inverse_reversed_gray(unsigned long x) -> unsigned long
+  inline constexpr auto inverse_reversed_gray(unsigned long x) -> unsigned long
   {
-    // Reference: [JA]
+// Reference: [JA]
 #if (_GLUCAT_BITS_PER_ULONG >= 64)
-    x ^= x << 32; // for 64-bit words
+    x ^= x << 32;  // for 64-bit words
 #endif
-    x ^= x << 16; // reversed_gray ** 16
-    x ^= x <<  8; // reversed_gray **  8
-    x ^= x <<  4; // reversed_gray **  4
-    x ^= x <<  2; // reversed_gray **  2
-    x ^= x <<  1; // reversed_gray **  1
+    x ^= x << 16;  // reversed_gray ** 16
+    x ^= x << 8;   // reversed_gray **  8
+    x ^= x << 4;   // reversed_gray **  4
+    x ^= x << 2;   // reversed_gray **  2
+    x ^= x << 1;   // reversed_gray **  1
     return x;
   }
 
@@ -1180,19 +1042,17 @@ inline constexpr auto
    * @param x Value
    * @return Inverse
    */
-  inline constexpr
-  static
-  auto inverse_gray(unsigned long x) -> unsigned long
+  inline constexpr auto inverse_gray(unsigned long x) -> unsigned long
   {
-    // Reference: [JA]
+// Reference: [JA]
 #if (_GLUCAT_BITS_PER_ULONG >= 64)
-    x ^= x >> 32; // for 64-bit words
+    x ^= x >> 32;  // for 64-bit words
 #endif
-    x ^= x >> 16; // gray ** 16
-    x ^= x >>  8; // gray **  8
-    x ^= x >>  4; // gray **  4
-    x ^= x >>  2; // gray **  2
-    x ^= x >>  1; // gray **  1
+    x ^= x >> 16;  // gray ** 16
+    x ^= x >> 8;   // gray **  8
+    x ^= x >> 4;   // gray **  4
+    x ^= x >> 2;   // gray **  2
+    x ^= x >> 1;   // gray **  1
     return x;
   }
 
@@ -1213,16 +1073,14 @@ inline constexpr auto
    * @param rhs Right hand side
    * @return Result
    */
-  template<const index_t LO, const index_t HI>
-inline constexpr auto
-  index_set<LO,HI>::
-  sign_of_mult(const index_set_t& rhs) const -> int
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::sign_of_mult(const index_set_t& rhs) const -> int
   {
     // Implemented using Walsh functions and Gray codes.
     // Reference: [L] Chapter 21, 21.3
     // Reference: [JA]
     const auto uthis = this->to_set_value();
-    const auto urhs  =   rhs.to_set_value();
+    const auto urhs = rhs.to_set_value();
     const auto nbits = HI - LO;
     auto negative = 0UL;
     if (nbits > 8)
@@ -1241,18 +1099,12 @@ inline constexpr auto
     else
     {
       auto h = 0UL;
-      for (auto
-          j = index_t(0);
-          j < -LO;
-          ++j)
+      for (auto j = index_t(0); j < -LO; ++j)
       {
         h ^= urhs >> j;
         negative ^= h & (uthis >> j);
       }
-      for (auto
-          j = index_t(-LO);
-          j < nbits;
-          ++j)
+      for (auto j = index_t(-LO); j < nbits; ++j)
       {
         negative ^= h & (uthis >> j);
         h ^= urhs >> j;
@@ -1262,17 +1114,70 @@ inline constexpr auto
   }
 
   /*
+   * @brief Precompute and return a sign_helper for this set
+   */
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::to_sign_helper() const -> sign_helper
+  {
+    const auto uthis = this->to_set_value();
+    const auto nbits = HI - LO;
+    if (nbits > 8)
+    { return sign_helper(inverse_reversed_gray(uthis)); }
+    else
+    {
+      auto h = set_value_t(0);
+      auto helper_value = set_value_t(0);
+      for (auto j = index_t(0); j < -LO; ++j)
+      {
+        h ^= uthis >> j;
+        if (h & 1)
+          helper_value |= (set_value_t(1) << j);
+      }
+      for (auto j = index_t(-LO); j < nbits; ++j)
+      {
+        if (h & 1)
+          helper_value |= (set_value_t(1) << j);
+        h ^= uthis >> j;
+      }
+      return sign_helper(helper_value);
+    }
+  }
+
+  /*
+   * @brief Evaluates sign of disjoint product using the precomputed helper
+   */
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::sign_of_disjoint_mult(const index_set_t& lhs, const sign_helper& rhs_helper) -> int
+  {
+    const auto uthis = lhs.to_set_value();
+    const auto neg = inverse_gray(uthis & rhs_helper.val);
+    return 1 - int((neg & 1) << 1);
+  }
+
+  /*
+   * @brief Evaluates sign of general product using the precomputed helper
+   */
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::sign_of_mult(const index_set_t& lhs, const index_set_t& rhs,
+                                                        const sign_helper& rhs_helper) -> int
+  {
+    const auto uthis = lhs.to_set_value();
+    const auto urhs = rhs.to_set_value();
+    const auto k = inverse_gray(uthis & rhs_helper.val);
+    const auto q = inverse_gray((uthis & urhs) >> -LO);
+    const auto neg = k ^ q;
+    return 1 - int((neg & 1) << 1);
+  }
+
+  /*
    * @brief Sign of geometric square of a Clifford basis element
    * @details
    * @tparam LO
    * @tparam HI
    * @return Result
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::
-  sign_of_square() const -> int
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::sign_of_square() const -> int
   {
     auto result = 1 - int((this->count_neg() % 2) << 1);
     switch (this->count() % 4)
@@ -1294,11 +1199,8 @@ inline constexpr auto
    * @tparam HI
    * @return Size
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::
-  hash_fn() const -> size_t
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::hash_fn() const -> size_t
   {
     static const auto lo_mask = (1UL << -LO) - 1UL;
     const auto uthis = to_set_value();
@@ -1313,9 +1215,7 @@ inline constexpr auto
    * @param j Column index
    * @return Result
    */
-  inline constexpr
-  auto
-  sign_of_square(index_t j) -> int
+  inline constexpr auto sign_of_square(index_t j) -> int
   { return (j < 0) ? -1 : 1; }
 
   /*
@@ -1326,10 +1226,8 @@ inline constexpr auto
    * @param ist Value
    * @return Result
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  min_neg(const index_set<LO,HI>& ist) -> index_t
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto min_neg(const index_set<LO, HI>& ist) -> index_t
   { return std::min(ist.min(), 0); }
 
   /*
@@ -1340,13 +1238,11 @@ inline constexpr auto
    * @param ist Value
    * @return Result
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  max_pos(const index_set<LO,HI>& ist) -> index_t
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto max_pos(const index_set<LO, HI>& ist) -> index_t
   { return std::max(ist.max(), 0); }
 
-// index_set reference
+  // index_set reference
 
   /*
    * @brief index_set reference
@@ -1356,12 +1252,10 @@ inline constexpr auto
    * @param ist Value
    * @param idx Value
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  index_set<LO,HI>::reference::
-  reference( index_set_t& ist, index_t idx ) :
-    m_pst(&ist),
-    m_idx(idx)
+  template <const index_t LO, const index_t HI>
+  inline constexpr index_set<LO, HI>::reference::reference(index_set_t& ist, index_t idx)
+      : m_pst(&ist)
+      , m_idx(idx)
   { }
 
   /*
@@ -1372,11 +1266,8 @@ inline constexpr auto
    * @param c_j Value
    * @return True if equal
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::reference::
-  operator== (const reference& c_j) const -> bool
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::reference::operator==(const reference& c_j) const -> bool
   { return m_pst == c_j.m_pst && m_idx == c_j.m_idx; }
 
   /*
@@ -1387,13 +1278,10 @@ inline constexpr auto
    * @param x Value
    * @return Reference to this
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::reference::
-  operator= (bool x) -> reference&
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::reference::operator=(bool x) -> reference&
   {
-    if ( x )
+    if (x)
       m_pst->set(m_idx);
     else
       m_pst->reset(m_idx);
@@ -1408,15 +1296,12 @@ inline constexpr auto
    * @param c_j Value
    * @return Reference to this
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::reference::
-  operator= (const reference& c_j) -> reference&
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::reference::operator=(const reference& c_j) -> reference&
   {
     if (&c_j != this && c_j != *this)
     {
-      if ( (*c_j.m_pst)[c_j.m_idx] )
+      if ((*c_j.m_pst)[c_j.m_idx])
         m_pst->set(m_idx);
       else
         m_pst->reset(m_idx);
@@ -1431,11 +1316,8 @@ inline constexpr auto
    * @tparam HI
    * @return True if successful or condition met
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::reference::
-  operator~ () const -> bool
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::reference::operator~() const -> bool
   { return !(m_pst->test(m_idx)); }
 
   /*
@@ -1445,10 +1327,8 @@ inline constexpr auto
    * @tparam HI
    * @return True if successful or condition met
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  index_set<LO,HI>::reference::
-  operator bool () const
+  template <const index_t LO, const index_t HI>
+  inline constexpr index_set<LO, HI>::reference::operator bool() const
   { return m_pst->test(m_idx); }
 
   /*
@@ -1458,28 +1338,29 @@ inline constexpr auto
    * @tparam HI
    * @return Result
    */
-  template<const index_t LO, const index_t HI>
-  inline constexpr
-  auto
-  index_set<LO,HI>::reference::
-  flip() -> reference&
+  template <const index_t LO, const index_t HI>
+  inline constexpr auto index_set<LO, HI>::reference::flip() -> reference&
   {
     m_pst->flip(m_idx);
     return *this;
   }
-}
+}  // namespace glucat
 #ifdef GLUCAT_DOCTEST
 #include <doctest/doctest.h>
+
 #include <iostream>
 
-TEST_CASE("index_set<LO,HI>") {
+TEST_CASE("index_set<LO,HI>")
+{
   using is_t = glucat::index_set<-32, 32>;
 
-  SUBCASE("Metadata") {
+  SUBCASE("Metadata")
+  {
     CHECK(is_t::classname() == "index_set");
   }
 
-  SUBCASE("Constructor and string representation") {
+  SUBCASE("Constructor and string representation")
+  {
     is_t s1(1);
     std::ostringstream oss1;
     oss1 << s1;
@@ -1496,7 +1377,8 @@ TEST_CASE("index_set<LO,HI>") {
     CHECK(oss3.str() == "{}");
   }
 
-  SUBCASE("Comparisons") {
+  SUBCASE("Comparisons")
+  {
     CHECK(is_t(1) == is_t("{1}"));
     CHECK(is_t("{1}") != is_t("{2}"));
     CHECK(is_t("{1}") < is_t("{2}"));
@@ -1505,7 +1387,8 @@ TEST_CASE("index_set<LO,HI>") {
     CHECK_FALSE(is_t("{1}") >= is_t("{2}"));
   }
 
-  SUBCASE("Set operations") {
+  SUBCASE("Set operations")
+  {
     is_t s1("{1}");
     is_t s2("{2}");
     CHECK((s1 ^ s2) == is_t("{1,2}"));
@@ -1515,7 +1398,8 @@ TEST_CASE("index_set<LO,HI>") {
     CHECK((s1 | s2) == is_t("{1,2}"));
   }
 
-  SUBCASE("Cardinality and bounds") {
+  SUBCASE("Cardinality and bounds")
+  {
     is_t s("{-1,1,2}");
     CHECK(s.count() == 3);
     CHECK(s.count_neg() == 1);
@@ -1524,14 +1408,16 @@ TEST_CASE("index_set<LO,HI>") {
     CHECK(s.max() == 2);
   }
 
-  SUBCASE("Sign functions") {
+  SUBCASE("Sign functions")
+  {
     is_t s1("{1,2}");
     is_t s2("{-1}");
     CHECK(s1.sign_of_mult(s2) == 1);
     CHECK(s1.sign_of_square() == -1);
   }
 
-  SUBCASE("Adversarial and edge cases") {
+  SUBCASE("Adversarial and edge cases")
+  {
     // sign_of_square for single index
     CHECK(glucat::sign_of_square(1) == 1);
     CHECK(glucat::sign_of_square(-1) == -1);
@@ -1548,7 +1434,7 @@ TEST_CASE("index_set<LO,HI>") {
     is_t s2;
     s2[2] = s[1];
     CHECK(s2.test(2));
-    s2[2] = s[3]; // s[3] is false
+    s2[2] = s[3];  // s[3] is false
     CHECK_FALSE(s2.test(2));
 
     // operator~ and operator bool (via reference)
@@ -1563,8 +1449,8 @@ TEST_CASE("index_set<LO,HI>") {
     s_ref[1] = true;
     CHECK(s_ref[1]);
     CHECK_FALSE(~s_ref[1]);
-    CHECK(s_ref[1] == s_ref[1]); // same index set and index
-    s_ref[1] = s_ref[1]; // self assignment
+    CHECK(s_ref[1] == s_ref[1]);  // same index set and index
+    s_ref[1] = s_ref[1];          // self assignment
 
     // Comparisons with more varied sets
     CHECK(is_t("{1,2}") < is_t("{1,2,3}"));
@@ -1572,7 +1458,8 @@ TEST_CASE("index_set<LO,HI>") {
     CHECK(is_t("{-1,1}") != is_t("{1}"));
   }
 
-  SUBCASE("Exceptions") {
+  SUBCASE("Exceptions")
+  {
     CHECK_THROWS(is_t("{invalid}"));
     CHECK_THROWS(is_t("{1,invalid}"));
     CHECK_THROWS(is_t("{1,,2}"));
@@ -1584,7 +1471,8 @@ TEST_CASE("index_set<LO,HI>") {
     CHECK_THROWS(is_t("{1} garbage"));
   }
 
-  SUBCASE("Static Factory and Bit-Wizardry") {
+  SUBCASE("Static Factory and Bit-Wizardry")
+  {
     // Static factory methods (verified at compile-time, runtime check for consistency)
     static_assert(is_t::from_index<1>().test(1));
     static_assert(!is_t::from_index<1>().test(2));
@@ -1611,4 +1499,4 @@ TEST_CASE("index_set<LO,HI>") {
 }
 #endif
 
-#endif // _GLUCAT_INDEX_SET_IMP_H
+#endif  // _GLUCAT_INDEX_SET_IMP_H

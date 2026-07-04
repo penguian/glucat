@@ -31,9 +31,9 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
-#include <string>
 #include <exception>
 #include <stdexcept>
+#include <string>
 
 namespace glucat
 {
@@ -42,17 +42,18 @@ namespace glucat
   {
   public:
     glucat_error(std::string_view context, const std::string& msg)
-    : logic_error(msg), name(context)
+        : logic_error(msg)
+        , name(context)
     { }
     ~glucat_error() noexcept override = default;
-    virtual auto heading() const noexcept -> std::string_view =0;
-    virtual auto classname() const noexcept -> std::string_view =0;
-    virtual void print_error_msg() const =0;
+    virtual auto heading() const noexcept -> std::string_view = 0;
+    virtual auto classname() const noexcept -> std::string_view = 0;
+    virtual void print_error_msg() const = 0;
     std::string name;
   };
 
   /// Specific exception class
-  template< class Class_T >
+  template <class Class_T>
   class error : public glucat_error
   {
   public:
@@ -62,5 +63,5 @@ namespace glucat
     auto classname() const noexcept -> std::string_view override;
     void print_error_msg() const override;
   };
-}
-#endif // _GLUCAT_ERRORS_H
+}  // namespace glucat
+#endif  // _GLUCAT_ERRORS_H

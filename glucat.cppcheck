@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="1">
+    <root name="."/>
+    <builddir>.cppcheck_build</builddir>
+    <analyze-all-vs-configs>false</analyze-all-vs-configs>
+    <check-headers>true</check-headers>
+    <check-unused-templates>false</check-unused-templates>
+    <max-ctu-depth>10</max-ctu-depth>
+    <includedir>
+        <dir name="."/>
+    </includedir>
+    <paths>
+        <dir name="test_doctest"/>
+    </paths>
+    <defines>
+        <define name="__cplusplus" value="202302L"/>
+    </defines>
+    <suppressions>
+        <!-- Suppress warnings for missing system includes -->
+        <suppression>missingIncludeSystem</suppression>
+        <!-- Suppress template friend function syntax parser errors -->
+        <suppression>syntaxError</suppression>
+        <!-- Suppress unknown preprocessor macros in template headers -->
+        <suppression>unknownMacro</suppression>
+        <!-- Suppress intentional negative infinity logging in scalar.h -->
+        <suppression>invalidFunctionArg</suppression>
+        <!-- Suppress duplicate inherited member function warnings in wrappers -->
+        <suppression>duplInheritedMember</suppression>
+        <!-- Suppress false positives on compile-time C++20 constexpr requires clauses -->
+        <suppression>constStatement</suppression>
+    </suppressions>
+</project>

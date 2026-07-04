@@ -33,7 +33,6 @@
  ***************************************************************************/
 
 #include "glucat/matrix_base.h"
-
 #include "glucat/matrix_eigen.h"
 #if defined(_GLUCAT_USE_ARMADILLO)
 #include "glucat/matrix_arma.h"
@@ -41,125 +40,137 @@
 
 #include <type_traits>
 
-namespace glucat { namespace matrix
+namespace glucat
 {
-  // Traits Specializations
-
-  /// Trait to determine if Scalar_T is natively supported by Armadillo
-  template< typename Scalar_T >
-  struct is_arma_supported : std::false_type {};
-
-  /// Declarations to satisfy the compiler
-  /// Matrix wrapper for Eigen (forward)
-  template< typename Scalar_T > class eigen_matrix_wrapper;
-  /// Sparse matrix wrapper for Eigen (forward)
-  template< typename Scalar_T > class eigen_sparse_wrapper;
-
-  /// Dense Selector
-  /// Dense matrix type selector
-  template< typename Scalar_T, bool UseArma = is_arma_supported<Scalar_T>::value >
-  struct matrix_type_selector
+  namespace matrix
   {
-    using type = eigen_matrix_wrapper<Scalar_T>;
-  };
+    // Traits Specializations
 
-  // Dense matrix type selector
-  template< typename Scalar_T >
-  using matrix_t = typename matrix_type_selector<Scalar_T>::type;
+    /// Trait to determine if Scalar_T is natively supported by Armadillo
+    template <typename Scalar_T>
+    struct is_arma_supported : std::false_type
+    { };
 
-  /// Sparse matrix type selector
-  template< typename Scalar_T, bool UseArma = is_arma_supported<Scalar_T>::value >
-  struct sparse_matrix_type_selector
-  {
-    using type = eigen_sparse_wrapper<Scalar_T>;
-  };
+    /// Declarations to satisfy the compiler
+    /// Matrix wrapper for Eigen (forward)
+    template <typename Scalar_T>
+    class eigen_matrix_wrapper;
+    /// Sparse matrix wrapper for Eigen (forward)
+    template <typename Scalar_T>
+    class eigen_sparse_wrapper;
 
-  // Sparse matrix type selector
-  template< typename Scalar_T >
-  using sparse_matrix_t = typename sparse_matrix_type_selector<Scalar_T>::type;
+    /// Dense Selector
+    /// Dense matrix type selector
+    template <typename Scalar_T, bool UseArma = is_arma_supported<Scalar_T>::value>
+    struct matrix_type_selector
+    {
+      using type = eigen_matrix_wrapper<Scalar_T>;
+    };
+
+    // Dense matrix type selector
+    template <typename Scalar_T>
+    using matrix_t = typename matrix_type_selector<Scalar_T>::type;
+
+    /// Sparse matrix type selector
+    template <typename Scalar_T, bool UseArma = is_arma_supported<Scalar_T>::value>
+    struct sparse_matrix_type_selector
+    {
+      using type = eigen_sparse_wrapper<Scalar_T>;
+    };
+
+    // Sparse matrix type selector
+    template <typename Scalar_T>
+    using sparse_matrix_t = typename sparse_matrix_type_selector<Scalar_T>::type;
 
 #if defined(_GLUCAT_USE_ARMADILLO)
-  /// Armadillo support for float
-  template<> struct is_arma_supported<float> : std::true_type {};
-  /// Armadillo support for double
-  template<> struct is_arma_supported<double> : std::true_type {};
-  /// Armadillo support for complex float
-  template<> struct is_arma_supported<std::complex<float>> : std::true_type {};
-  /// Armadillo support for complex double
-  template<> struct is_arma_supported<std::complex<double>> : std::true_type {};
+    /// Armadillo support for float
+    template <>
+    struct is_arma_supported<float> : std::true_type
+    { };
+    /// Armadillo support for double
+    template <>
+    struct is_arma_supported<double> : std::true_type
+    { };
+    /// Armadillo support for complex float
+    template <>
+    struct is_arma_supported<std::complex<float>> : std::true_type
+    { };
+    /// Armadillo support for complex double
+    template <>
+    struct is_arma_supported<std::complex<double>> : std::true_type
+    { };
 
-  /// Matrix type selector specialization for Armadillo
-  template< typename Scalar_T >
-  struct matrix_type_selector<Scalar_T, true>
-  {
-    using type = arma_matrix_wrapper<Scalar_T>;
-  };
+    /// Matrix type selector specialization for Armadillo
+    template <typename Scalar_T>
+    struct matrix_type_selector<Scalar_T, true>
+    {
+      using type = arma_matrix_wrapper<Scalar_T>;
+    };
 
-  /// Sparse matrix type selector specialization for Armadillo
-  template< typename Scalar_T >
-  struct sparse_matrix_type_selector<Scalar_T, true>
-  {
-    using type = arma_sparse_wrapper<Scalar_T>;
-  };
+    /// Sparse matrix type selector specialization for Armadillo
+    template <typename Scalar_T>
+    struct sparse_matrix_type_selector<Scalar_T, true>
+    {
+      using type = arma_sparse_wrapper<Scalar_T>;
+    };
 #endif
 
-  // ===========================================================
-  // Matrix Template Classes (Facade)
-  // Named dense_matrix to avoid collision with namespace matrix
-  // ===========================================================
+    // ===========================================================
+    // Matrix Template Classes (Facade)
+    // Named dense_matrix to avoid collision with namespace matrix
+    // ===========================================================
 
-  /// Dense matrix class
-  template< typename Scalar_T >
-  class dense_matrix :
-  public matrix_type_selector<Scalar_T>::type
-  {
-  public:
-    using Base = typename matrix_type_selector<Scalar_T>::type;
-    using Base::Base; // Inherit constructors
-    using Base::operator=;
+    /// Dense matrix class
+    template <typename Scalar_T>
+    class dense_matrix : public matrix_type_selector<Scalar_T>::type
+    {
+    public:
+      using Base = typename matrix_type_selector<Scalar_T>::type;
+      using Base::Base;  // Inherit constructors
+      using Base::operator=;
 
-    /// Default constructor
-    dense_matrix() = default;
-    /// Copy constructor
-    dense_matrix(const dense_matrix&) = default;
-    /// Move constructor
-    dense_matrix(dense_matrix&&) = default;
-    /// Copy assignment
-    auto operator= (const dense_matrix&) -> dense_matrix& = default;
-    /// Move assignment
-    auto operator= (dense_matrix&&) -> dense_matrix& = default;
+      /// Default constructor
+      dense_matrix() = default;
+      /// Copy constructor
+      dense_matrix(const dense_matrix&) = default;
+      /// Move constructor
+      dense_matrix(dense_matrix&&) = default;
+      /// Copy assignment
+      auto operator=(const dense_matrix&) -> dense_matrix& = default;
+      /// Move assignment
+      auto operator=(dense_matrix&&) -> dense_matrix& = default;
 
-    /// Constructor from other matrix type
-    template< typename Other_Matrix_T >
-    explicit dense_matrix(const Other_Matrix_T& other);
-  };
+      /// Constructor from other matrix type
+      template <typename Other_Matrix_T>
+      explicit dense_matrix(const Other_Matrix_T& other);
+    };
 
-  /// Sparse matrix class
-  template< typename Scalar_T >
-  class sparse_matrix :
-  public sparse_matrix_type_selector<Scalar_T>::type
-  {
-  public:
-    using Base = typename sparse_matrix_type_selector<Scalar_T>::type;
-    using Base::Base; // Inherit constructors
-    using Base::operator=;
+    /// Sparse matrix class
+    template <typename Scalar_T>
+    class sparse_matrix : public sparse_matrix_type_selector<Scalar_T>::type
+    {
+    public:
+      using Base = typename sparse_matrix_type_selector<Scalar_T>::type;
+      using Base::Base;  // Inherit constructors
+      using Base::operator=;
 
-    /// Default constructor
-    sparse_matrix() = default;
-    /// Copy constructor
-    sparse_matrix(const sparse_matrix&) = default;
-    /// Move constructor
-    sparse_matrix(sparse_matrix&&) = default;
-    /// Copy assignment
-    auto operator= (const sparse_matrix&) -> sparse_matrix& = default;
-    /// Move assignment
-    auto operator= (sparse_matrix&&) -> sparse_matrix& = default;
+      /// Default constructor
+      sparse_matrix() = default;
+      /// Copy constructor
+      sparse_matrix(const sparse_matrix&) = default;
+      /// Move constructor
+      sparse_matrix(sparse_matrix&&) = default;
+      /// Copy assignment
+      auto operator=(const sparse_matrix&) -> sparse_matrix& = default;
+      /// Move assignment
+      auto operator=(sparse_matrix&&) -> sparse_matrix& = default;
 
-    // Constructor from other matrix type
-    template< typename Other_Matrix_T >
-    explicit sparse_matrix(const Other_Matrix_T& other);
-  };
+      // Constructor from other matrix type
+      template <typename Other_Matrix_T>
+      explicit sparse_matrix(const Other_Matrix_T& other);
+    };
 
-} }
+  }  // namespace matrix
+}  // namespace glucat
 
 #endif  // _GLUCAT_MATRIX_H

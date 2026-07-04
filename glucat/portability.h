@@ -36,30 +36,30 @@
 
 // Workaround for isnan and isinf
 #if __cplusplus > 199711L
-# define _GLUCAT_ISNAN(x) (std::isnan(x))
-# define _GLUCAT_ISINF(x) (std::isinf(x))
+#define _GLUCAT_ISNAN(x) (std::isnan(x))
+#define _GLUCAT_ISINF(x) (std::isinf(x))
 #else
-# define _GLUCAT_ISNAN(x) (x != x)
-# define _GLUCAT_ISINF(x) (!_GLUCAT_ISNAN(x) && _GLUCAT_ISNAN(x-x))
+#define _GLUCAT_ISNAN(x) (x != x)
+#define _GLUCAT_ISINF(x) (!_GLUCAT_ISNAN(x) && _GLUCAT_ISNAN(x - x))
 #endif
 
 // Workaround for abs and sqrt
 #if BOOST_VERSION >= 103400
-# define UBLAS_ABS  type_abs
-# define UBLAS_SQRT type_sqrt
+#define UBLAS_ABS type_abs
+#define UBLAS_SQRT type_sqrt
 #else
-# define UBLAS_ABS  abs
-# define UBLAS_SQRT sqrt
+#define UBLAS_ABS abs
+#define UBLAS_SQRT sqrt
 #endif
 
 // Use with Cygwin gcc to obtain __WORDSIZE
 #if defined(HAVE_BITS_WORDSIZE_H)
-# include <bits/wordsize.h>
+#include <bits/wordsize.h>
 #endif
 
 // Define usage of GCC pragmas for GCC, Clang and Intel compilers
 #if defined(__GNUC__)
-# define _GLUCAT_USE_GCC_PRAGMAS
+#define _GLUCAT_USE_GCC_PRAGMAS
 #endif
 
-#endif // _GLUCAT_PORTABILITY_H
+#endif  // _GLUCAT_PORTABILITY_H

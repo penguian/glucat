@@ -19,10 +19,15 @@ import sys
 
 def build_notebook(ctx, module_name, title):
     module = __import__(module_name)
-    sys.stdout = open(module_name + ".ipynb", "w")
-    ctx.print_notebook_header(title)
-    module.run(ctx)
-    ctx.print_notebook_footer()
+    original_stdout = sys.stdout
+    try:
+        with open(module_name + ".ipynb", "w", encoding="utf-8") as f:
+            sys.stdout = f
+            ctx.print_notebook_header(title)
+            module.run(ctx)
+            ctx.print_notebook_footer()
+    finally:
+        sys.stdout = original_stdout
 
 def build_notebook_from_demo(ctx, module_name):
     build_notebook(ctx, module_name, module_name)

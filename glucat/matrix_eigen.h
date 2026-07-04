@@ -34,7 +34,7 @@
 #include "glucat/matrix_base.h"
 
 #if defined(_GLUCAT_USE_QD)
-# include "glucat/qd.h"
+#include "glucat/qd.h"
 #endif
 
 #ifdef _GLUCAT_USE_GCC_PRAGMAS
@@ -42,9 +42,9 @@
 #pragma GCC diagnostic ignored "-Winline"
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #pragma GCC diagnostic ignored "-Wunused-local-typedefs"
-# if defined(__clang__)
-#  pragma GCC diagnostic ignored "-Wunused-but-set-variable"
-# endif
+#if defined(__clang__)
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#endif
 #endif
 
 #if defined(_GLUCAT_USE_QD)
@@ -58,385 +58,380 @@
 #pragma GCC diagnostic pop
 #endif
 
-#include <type_traits>
 #include <complex>
-#include <vector>
 #include <iostream>
+#include <type_traits>
+#include <vector>
 
-namespace glucat { namespace matrix
+namespace glucat
 {
-  // =========================================================================
-  // eigen_matrix_wrapper
-  // =========================================================================
-
-  /// Wrapper for Eigen matrix (forward)
-  template< typename Scalar_T > class eigen_matrix_wrapper;
-
-  /// Wrapper for Eigen sparse matrix (forward)
-  template< typename Scalar_T > class eigen_sparse_wrapper;
-
-  // Output to stream (forward)
-  template< typename Scalar_T >
-  std::ostream& operator<< (std::ostream& os, const eigen_matrix_wrapper<Scalar_T>& m);
-
-  /// Wrapper for Eigen matrix
-  template< typename Scalar_T >
-  class eigen_matrix_wrapper :
-  public matrix_base<eigen_matrix_wrapper<Scalar_T>>
+  namespace matrix
   {
-  public:
-    using MatrixType = Eigen::Matrix<Scalar_T, Eigen::Dynamic, Eigen::Dynamic>;
+    // =========================================================================
+    // eigen_matrix_wrapper
+    // =========================================================================
 
-    using value_type = Scalar_T;
-    using size_type = typename MatrixType::Index;
+    /// Wrapper for Eigen matrix (forward)
+    template <typename Scalar_T>
+    class eigen_matrix_wrapper;
 
-    MatrixType m_mat;
+    /// Wrapper for Eigen sparse matrix (forward)
+    template <typename Scalar_T>
+    class eigen_sparse_wrapper;
 
-    /// Constructors
-    /// Default constructor
-    eigen_matrix_wrapper() = default;
+    // Output to stream (forward)
+    template <typename Scalar_T>
+    std::ostream& operator<<(std::ostream& os, const eigen_matrix_wrapper<Scalar_T>& m);
 
-    // Sized constructor (rows, cols)
-    eigen_matrix_wrapper(matrix_index_t rows, matrix_index_t cols);
-
-    // Constructor from Eigen expressions (e.g. m * s)
-    template< typename Derived_T >
-    eigen_matrix_wrapper(const Eigen::MatrixBase<Derived_T>& other);
-
-    /// Generic Interop Constructor (e.g. from Armadillo matrix)
-    template< typename Other_Matrix_T >
-    explicit eigen_matrix_wrapper(const Other_Matrix_T& other);
-
-    // Constructor from eigen_sparse_wrapper
-    template< typename Other_Scalar_T >
-    explicit eigen_matrix_wrapper(const eigen_sparse_wrapper<Other_Scalar_T>& other);
-
-    // Copy constructor
-    eigen_matrix_wrapper(const eigen_matrix_wrapper& other);
-
-    // Move constructor
-    eigen_matrix_wrapper(eigen_matrix_wrapper&& other) noexcept(std::is_nothrow_move_constructible_v<Scalar_T>);
-
-    // Assignment
-    // Copy assignment
-    eigen_matrix_wrapper& operator= (const eigen_matrix_wrapper& other);
-    // Move assignment
-    eigen_matrix_wrapper& operator= (eigen_matrix_wrapper&& other) noexcept(std::is_nothrow_move_assignable_v<Scalar_T>);
-
-    // Generic Interop Assignment
-    template< typename Other_Matrix_T >
-    eigen_matrix_wrapper& operator= (const Other_Matrix_T& other);
-
-    // Constructor from Eigen
-    eigen_matrix_wrapper(const MatrixType& m);
-    // Constructor from Eigen (move)
-    eigen_matrix_wrapper(MatrixType&& m);
-
-    // Set size
-    void set_size(matrix_index_t rows, matrix_index_t cols);
-
-
-
-    // Helpers
-    // Number of rows
-    matrix_index_t nbr_rows() const;
-    // Number of columns
-    matrix_index_t nbr_cols() const;
-
-    // Clear
-    void clear();
-
-    // Set to zero
-    void zeros();
-    // Set size then set to zero
-    void zeros(matrix_index_t rows, matrix_index_t cols);
-
-    // Set to identity
-    void unit(matrix_index_t rows, matrix_index_t cols);
-
-    // Is finite?
-    bool is_finite() const;
-    // Has NaN?
-    bool has_nan() const;
-
-    // Element access
-    Scalar_T& operator() (matrix_index_t i, matrix_index_t j);
-    // Const element access
-    const Scalar_T& operator() (matrix_index_t i, matrix_index_t j) const;
-
-    // Operators
-    // Add and assign
-    eigen_matrix_wrapper& operator+= (const eigen_matrix_wrapper& other);
-    // Subtract and assign
-    eigen_matrix_wrapper& operator-= (const eigen_matrix_wrapper& other);
-    // Multiply by scalar and assign
-    eigen_matrix_wrapper& operator*= (const Scalar_T& val);
-    // Divide by scalar and assign
-    eigen_matrix_wrapper& operator/= (const Scalar_T& val);
-
-    // Addition
-    eigen_matrix_wrapper operator+ (const eigen_matrix_wrapper& other) const;
-    // Subtraction
-    eigen_matrix_wrapper operator- (const eigen_matrix_wrapper& other) const;
-
-    // Matrix Multiplication
-    eigen_matrix_wrapper operator* (const eigen_matrix_wrapper& other) const;
-
-    // Unary -
-    eigen_matrix_wrapper operator- () const;
-
-    // Transpose
-    eigen_matrix_wrapper t() const;
-
-    // New Member Functions (formerly free functions)
-    // Trace
-    Scalar_T trace() const;
-    // Eigenvalues
-    std::vector<std::complex<double>> eigenvalues() const;
-    // Infinity norm
-    Scalar_T norm_inf() const;
-    // Squared Frobenius norm
-    Scalar_T norm_frob2() const;
-    // Is NaN?
-    bool isnan() const;
-    // Is infinite?
-    bool isinf() const;
-    // Number of non-zeros
-    matrix_index_t nnz() const;
-    bool is_zero() const;
-    bool operator==(const eigen_matrix_wrapper& other) const;
-    bool operator!=(const eigen_matrix_wrapper& other) const { return !(*this == other); }
-
-    // Inner product
-    template< typename Result_Scalar_T, typename Other >
-    Result_Scalar_T inner(const Other& other) const;
-    // Trace of product: Trace(A*B) / Dim
-    template< typename Other >
-    Scalar_T trace_product(const Other& other) const;
-
-    // Unary multivector mappings
-    void involute();
-    void reverse(index_t p, index_t q);
-    // Similarity transform: result = S * M(perm, perm) * S
-    void similarity_transform(const std::vector<matrix_index_t>& perm, const std::vector<Scalar_T>& signs);
-    // Transpose similarity transform: result = S * M(perm, perm)^T * S
-    void transpose_similarity_transform(const std::vector<matrix_index_t>& perm, const std::vector<Scalar_T>& signs);
-
-    // Kronecker matrix product
-    eigen_matrix_wrapper kron(const eigen_matrix_wrapper& other) const;
-    eigen_matrix_wrapper mono_kron(const eigen_matrix_wrapper& other) const;
-    // Monomial matrix product
-    eigen_matrix_wrapper mono_prod(const eigen_matrix_wrapper& other) const;
-    // Mixed Kronecker matrix product: Dense x Sparse -> Dense (wrapper)
-    template< typename Other_Scalar_T >
-    eigen_matrix_wrapper<Other_Scalar_T> kron(const eigen_sparse_wrapper<Other_Scalar_T>& other) const;
-
-    // Left Kronecker quotient
-    template< typename RHS_T >
-    RHS_T nork(const RHS_T& rhs, bool mono = true) const;
-
-    // Output to stream
-    friend std::ostream& operator<< <>(std::ostream& os, const eigen_matrix_wrapper& m);
-  };
-
-  // Mixed operations
-  // Product of scalar and matrix wrapper
-  template< typename Scalar_T >
-  eigen_matrix_wrapper<Scalar_T> operator* (Scalar_T s, const eigen_matrix_wrapper<Scalar_T>& m)
-  {
-    return eigen_matrix_wrapper<Scalar_T>(s * m.m_mat);
-  }
-  // Product of matrix wrapper and scalar
-  template< typename Scalar_T >
-  eigen_matrix_wrapper<Scalar_T> operator* (const eigen_matrix_wrapper<Scalar_T>& m, Scalar_T s)
-  {
-    return eigen_matrix_wrapper<Scalar_T>(m.m_mat * s);
-  }
-
-  // =========================================================================
-  // eigen_sparse_wrapper
-  // =========================================================================
-
-  // Output to stream (forward)
-  template< typename Scalar_T >
-  std::ostream& operator<< (std::ostream& os, const eigen_sparse_wrapper<Scalar_T>& m);
-
-  /// Wrapper for Eigen sparse matrix
-  template< typename Scalar_T >
-  class eigen_sparse_wrapper :
-  public matrix_base<eigen_sparse_wrapper<Scalar_T>>
-  {
-  public:
-    using MatrixType = Eigen::SparseMatrix<Scalar_T>;
-
-    using value_type = Scalar_T;
-    using size_type = typename MatrixType::Index;
-
-    MatrixType m_mat;
-
-    eigen_sparse_wrapper() = default;
-
-    // Constructor from Eigen Sparse Matrix (e.g. expression result)
-    explicit eigen_sparse_wrapper(const MatrixType& m);
-
-    // Armadillo/uBLAS/Generator style constructor support
-    eigen_sparse_wrapper(matrix_index_t rows, matrix_index_t cols, matrix_index_t estimated_nnz = 0);
-
-    // Copy/Move similar to dense
-    eigen_sparse_wrapper(const eigen_sparse_wrapper& other);
-
-    // Move constructor
-    eigen_sparse_wrapper(eigen_sparse_wrapper&& other) noexcept(std::is_nothrow_move_constructible_v<Scalar_T>);
-
-    // Copy assignment
-    eigen_sparse_wrapper& operator= (const eigen_sparse_wrapper& other);
-
-    // Move assignment
-    eigen_sparse_wrapper& operator= (eigen_sparse_wrapper&& other) noexcept(std::is_nothrow_move_assignable_v<Scalar_T>);
-
-    // Set size
-    void set_size(matrix_index_t rows, matrix_index_t cols);
-
-
-
-    // Clear
-    void clear();
-
-    // Set to zero
-    void zeros();
-
-    // Set size then set to zero
-    void zeros(matrix_index_t rows, matrix_index_t cols);
-
-    // Set to identity
-    void unit(matrix_index_t rows, matrix_index_t cols);
-
-    // Iterator support
-    class const_iterator
+    /// Wrapper for Eigen matrix
+    template <typename Scalar_T>
+    class eigen_matrix_wrapper : public matrix_base<eigen_matrix_wrapper<Scalar_T>>
     {
     public:
-      using InnerIterator = typename MatrixType::InnerIterator;
+      using MatrixType = Eigen::Matrix<Scalar_T, Eigen::Dynamic, Eigen::Dynamic>;
 
-      const MatrixType* mp_mat;
-      matrix_index_t m_outer;
-      InnerIterator m_inner;
+      using value_type = Scalar_T;
+      using size_type = typename MatrixType::Index;
 
-      // Constructor for begin()
-      const_iterator(const MatrixType* mat, bool start = true);
+      MatrixType m_mat;
 
-      // Advance iterator
-      void advance();
+      /// Constructors
+      /// Default constructor
+      eigen_matrix_wrapper() = default;
 
-      // Check if end
-      bool is_end() const;
-      // Prefix increment
-      const_iterator& operator++ ();
+      // Sized constructor (rows, cols)
+      eigen_matrix_wrapper(matrix_index_t rows, matrix_index_t cols);
 
-      // Inequality comparison
-      bool operator!= (const const_iterator& other) const;
-      bool operator== (const const_iterator& other) const;
+      // Constructor from Eigen expressions (e.g. m * s)
+      template <typename Derived_T>
+      eigen_matrix_wrapper(const Eigen::MatrixBase<Derived_T>& other);
 
-      // Row index
-      matrix_index_t row() const;
-      // Column index
-      matrix_index_t col() const;
-      // Dereference
-      Scalar_T operator* () const;
+      /// Generic Interop Constructor (e.g. from Armadillo matrix)
+      template <typename Other_Matrix_T>
+      explicit eigen_matrix_wrapper(const Other_Matrix_T& other);
+
+      // Constructor from eigen_sparse_wrapper
+      template <typename Other_Scalar_T>
+      explicit eigen_matrix_wrapper(const eigen_sparse_wrapper<Other_Scalar_T>& other);
+
+      // Copy constructor
+      eigen_matrix_wrapper(const eigen_matrix_wrapper& other);
+
+      // Move constructor
+      eigen_matrix_wrapper(eigen_matrix_wrapper&& other) noexcept(std::is_nothrow_move_constructible_v<Scalar_T>);
+
+      // Assignment
+      // Copy assignment
+      eigen_matrix_wrapper& operator=(const eigen_matrix_wrapper& other);
+      // Move assignment
+      eigen_matrix_wrapper& operator=(eigen_matrix_wrapper&& other) noexcept(std::is_nothrow_move_assignable_v<Scalar_T>);
+
+      // Generic Interop Assignment
+      template <typename Other_Matrix_T>
+      eigen_matrix_wrapper& operator=(const Other_Matrix_T& other);
+
+      // Constructor from Eigen
+      eigen_matrix_wrapper(const MatrixType& m);
+      // Constructor from Eigen (move)
+      eigen_matrix_wrapper(MatrixType&& m);
+
+      // Set size
+      void set_size(matrix_index_t rows, matrix_index_t cols);
+
+      // Helpers
+      // Number of rows
+      matrix_index_t nbr_rows() const;
+      // Number of columns
+      matrix_index_t nbr_cols() const;
+
+      // Clear
+      void clear();
+
+      // Set to zero
+      void zeros();
+      // Set size then set to zero
+      void zeros(matrix_index_t rows, matrix_index_t cols);
+
+      // Set to identity
+      void unit(matrix_index_t rows, matrix_index_t cols);
+
+      // Is finite?
+      bool is_finite() const;
+      // Has NaN?
+      bool has_nan() const;
+
+      // Element access
+      Scalar_T& operator()(matrix_index_t i, matrix_index_t j);
+      // Const element access
+      const Scalar_T& operator()(matrix_index_t i, matrix_index_t j) const;
+
+      // Operators
+      // Add and assign
+      eigen_matrix_wrapper& operator+=(const eigen_matrix_wrapper& other);
+      // Subtract and assign
+      eigen_matrix_wrapper& operator-=(const eigen_matrix_wrapper& other);
+      // Multiply by scalar and assign
+      eigen_matrix_wrapper& operator*=(const Scalar_T& val);
+      // Divide by scalar and assign
+      eigen_matrix_wrapper& operator/=(const Scalar_T& val);
+
+      // Addition
+      eigen_matrix_wrapper operator+(const eigen_matrix_wrapper& other) const;
+      // Subtraction
+      eigen_matrix_wrapper operator-(const eigen_matrix_wrapper& other) const;
+
+      // Matrix Multiplication
+      eigen_matrix_wrapper operator*(const eigen_matrix_wrapper& other) const;
+
+      // Unary -
+      eigen_matrix_wrapper operator-() const;
+
+      // Transpose
+      eigen_matrix_wrapper t() const;
+
+      // New Member Functions (formerly free functions)
+      // Trace
+      Scalar_T trace() const;
+      // Eigenvalues
+      std::vector<std::complex<double>> eigenvalues() const;
+      // Infinity norm
+      Scalar_T norm_inf() const;
+      // Squared Frobenius norm
+      Scalar_T norm_frob2() const;
+      // Is NaN?
+      bool isnan() const;
+      // Is infinite?
+      bool isinf() const;
+      // Number of non-zeros
+      matrix_index_t nnz() const;
+      bool is_zero() const;
+      bool operator==(const eigen_matrix_wrapper& other) const;
+      bool operator!=(const eigen_matrix_wrapper& other) const { return !(*this == other); }
+
+      // Inner product
+      template <typename Result_Scalar_T, typename Other>
+      Result_Scalar_T inner(const Other& other) const;
+      // Trace of product: Trace(A*B) / Dim
+      template <typename Other>
+      Scalar_T trace_product(const Other& other) const;
+
+      // Unary multivector mappings
+      void involute();
+      void reverse(index_t p, index_t q);
+      // Similarity transform: result = S * M(perm, perm) * S
+      void similarity_transform(const std::vector<matrix_index_t>& perm, const std::vector<Scalar_T>& signs);
+      // Transpose similarity transform: result = S * M(perm, perm)^T * S
+      void transpose_similarity_transform(const std::vector<matrix_index_t>& perm, const std::vector<Scalar_T>& signs);
+
+      // Kronecker matrix product
+      eigen_matrix_wrapper kron(const eigen_matrix_wrapper& other) const;
+      eigen_matrix_wrapper mono_kron(const eigen_matrix_wrapper& other) const;
+      // Monomial matrix product
+      eigen_matrix_wrapper mono_prod(const eigen_matrix_wrapper& other) const;
+      // Mixed Kronecker matrix product: Dense x Sparse -> Dense (wrapper)
+      template <typename Other_Scalar_T>
+      eigen_matrix_wrapper<Other_Scalar_T> kron(const eigen_sparse_wrapper<Other_Scalar_T>& other) const;
+
+      // Left Kronecker quotient
+      template <typename RHS_T>
+      RHS_T nork(const RHS_T& rhs, bool mono = true) const;
+
+      // Output to stream
+      friend std::ostream& operator<< <>(std::ostream& os, const eigen_matrix_wrapper& m);
     };
 
-    // Iterator support
-    // Begin iterator
-    const_iterator begin() const;
-    // End iterator
-    const_iterator end() const;
+    // Mixed operations
+    // Product of scalar and matrix wrapper
+    template <typename Scalar_T>
+    eigen_matrix_wrapper<Scalar_T> operator*(Scalar_T s, const eigen_matrix_wrapper<Scalar_T>& m)
+    { return eigen_matrix_wrapper<Scalar_T>(s * m.m_mat); }
+    // Product of matrix wrapper and scalar
+    template <typename Scalar_T>
+    eigen_matrix_wrapper<Scalar_T> operator*(const eigen_matrix_wrapper<Scalar_T>& m, Scalar_T s)
+    { return eigen_matrix_wrapper<Scalar_T>(m.m_mat * s); }
 
-    // Number of rows
-    matrix_index_t nbr_rows() const;
-    // Number of columns
-    matrix_index_t nbr_cols() const;
+    // =========================================================================
+    // eigen_sparse_wrapper
+    // =========================================================================
 
-    // Const element access
-    Scalar_T operator() (matrix_index_t i, matrix_index_t j) const;
-    // Element access
-    Scalar_T& operator() (matrix_index_t i, matrix_index_t j);
+    // Output to stream (forward)
+    template <typename Scalar_T>
+    std::ostream& operator<<(std::ostream& os, const eigen_sparse_wrapper<Scalar_T>& m);
 
-    // Add and assign
-    eigen_sparse_wrapper& operator+= (const eigen_sparse_wrapper& other);
-    // Subtract and assign
-    eigen_sparse_wrapper& operator-= (const eigen_sparse_wrapper& other);
+    /// Wrapper for Eigen sparse matrix
+    template <typename Scalar_T>
+    class eigen_sparse_wrapper : public matrix_base<eigen_sparse_wrapper<Scalar_T>>
+    {
+    public:
+      using MatrixType = Eigen::SparseMatrix<Scalar_T>;
 
-    // Multiply by sparse wrapper
-    eigen_sparse_wrapper operator* (const eigen_sparse_wrapper& other) const;
+      using value_type = Scalar_T;
+      using size_type = typename MatrixType::Index;
 
-    // Multiply by scalar and assign
-    eigen_sparse_wrapper& operator*= (const Scalar_T& val);
+      MatrixType m_mat;
 
-    // New Member Functions
-    // Trace
-    Scalar_T trace() const;
-    // Eigenvalues
-    std::vector<std::complex<double>> eigenvalues() const;
-    // Infinity norm
-    Scalar_T norm_inf() const;
-    // Squared Frobenius norm
-    Scalar_T norm_frob2() const;
-    // Is NaN?
-    bool isnan() const;
-    // Is infinite?
-    bool isinf() const;
-    // Number of non-zeros
-        matrix_index_t nnz() const;
-    bool is_zero() const;
-    bool operator==(const eigen_sparse_wrapper& other) const;
-    bool operator!=(const eigen_sparse_wrapper& other) const { return !(*this == other); }
+      eigen_sparse_wrapper() = default;
 
-    // Inner product
-    template< typename Result_Scalar_T, typename Other >
-    Result_Scalar_T inner(const Other& other) const;
-    // Trace of product: Trace(A*B) / Dim
-    template< typename Other >
-    Scalar_T trace_product(const Other& other) const;
+      // Constructor from Eigen Sparse Matrix (e.g. expression result)
+      explicit eigen_sparse_wrapper(const MatrixType& m);
 
-    // Unary multivector mappings
-    void involute();
-    void reverse(index_t p, index_t q);
-    // Similarity transform: result = S * M(perm, perm) * S
-    void similarity_transform(const std::vector<matrix_index_t>& perm, const std::vector<Scalar_T>& signs);
-    // Transpose similarity transform: result = S * M(perm, perm)^T * S
-    void transpose_similarity_transform(const std::vector<matrix_index_t>& perm, const std::vector<Scalar_T>& signs);
+      // Armadillo/uBLAS/Generator style constructor support
+      eigen_sparse_wrapper(matrix_index_t rows, matrix_index_t cols, matrix_index_t estimated_nnz = 0);
 
-    // Mixed Kronecker matrix product: Sparse x Dense -> Dense (wrapper)
-    template< typename Other_Scalar_T >
-    eigen_matrix_wrapper<Other_Scalar_T> kron(const eigen_matrix_wrapper<Other_Scalar_T>& other) const;
-    // Kronecker matrix product of sparse wrappers
-    eigen_sparse_wrapper kron(const eigen_sparse_wrapper& other) const;
-    eigen_sparse_wrapper mono_kron(const eigen_sparse_wrapper& other) const;
-    // Monomial matrix product of sparse wrappers
-    eigen_sparse_wrapper mono_prod(const eigen_sparse_wrapper& other) const;
+      // Copy/Move similar to dense
+      eigen_sparse_wrapper(const eigen_sparse_wrapper& other);
 
-    // Left Kronecker quotient
-    template< typename RHS_T >
-    RHS_T nork(const RHS_T& rhs, bool mono = true) const;
+      // Move constructor
+      eigen_sparse_wrapper(eigen_sparse_wrapper&& other) noexcept(std::is_nothrow_move_constructible_v<Scalar_T>);
 
-    // Output to stream
-    friend std::ostream& operator<< <>(std::ostream& os, const eigen_sparse_wrapper& m);
-  };
+      // Copy assignment
+      eigen_sparse_wrapper& operator=(const eigen_sparse_wrapper& other);
 
-  // Product of sparse wrapper and scalar
-  template< typename Scalar_T >
-  eigen_sparse_wrapper<Scalar_T> operator* (const eigen_sparse_wrapper<Scalar_T>& m, Scalar_T s);
+      // Move assignment
+      eigen_sparse_wrapper& operator=(eigen_sparse_wrapper&& other) noexcept(std::is_nothrow_move_assignable_v<Scalar_T>);
 
-  // Product of scalar and sparse wrapper
-  template< typename Scalar_T >
-  eigen_sparse_wrapper<Scalar_T> operator* (Scalar_T s, const eigen_sparse_wrapper<Scalar_T>& m);
+      // Set size
+      void set_size(matrix_index_t rows, matrix_index_t cols);
 
-  // Sum of sparse wrappers
-  template< typename Scalar_T >
-  eigen_sparse_wrapper<Scalar_T> operator+ (const eigen_sparse_wrapper<Scalar_T>& lhs, const eigen_sparse_wrapper<Scalar_T>& rhs);
+      // Clear
+      void clear();
 
-  // Difference of sparse wrappers
-  template< typename Scalar_T >
-  eigen_sparse_wrapper<Scalar_T> operator- (const eigen_sparse_wrapper<Scalar_T>& lhs, const eigen_sparse_wrapper<Scalar_T>& rhs);
-} }
+      // Set to zero
+      void zeros();
+
+      // Set size then set to zero
+      void zeros(matrix_index_t rows, matrix_index_t cols);
+
+      // Set to identity
+      void unit(matrix_index_t rows, matrix_index_t cols);
+
+      // Iterator support
+      class const_iterator
+      {
+      public:
+        using InnerIterator = typename MatrixType::InnerIterator;
+
+        const MatrixType* mp_mat;
+        matrix_index_t m_outer;
+        InnerIterator m_inner;
+
+        // Constructor for begin()
+        const_iterator(const MatrixType* mat, bool start = true);
+
+        // Advance iterator
+        void advance();
+
+        // Check if end
+        bool is_end() const;
+        // Prefix increment
+        const_iterator& operator++();
+
+        // Inequality comparison
+        bool operator!=(const const_iterator& other) const;
+        bool operator==(const const_iterator& other) const;
+
+        // Row index
+        matrix_index_t row() const;
+        // Column index
+        matrix_index_t col() const;
+        // Dereference
+        Scalar_T operator*() const;
+      };
+
+      // Iterator support
+      // Begin iterator
+      const_iterator begin() const;
+      // End iterator
+      const_iterator end() const;
+
+      // Number of rows
+      matrix_index_t nbr_rows() const;
+      // Number of columns
+      matrix_index_t nbr_cols() const;
+
+      // Const element access
+      Scalar_T operator()(matrix_index_t i, matrix_index_t j) const;
+      // Element access
+      Scalar_T& operator()(matrix_index_t i, matrix_index_t j);
+
+      // Add and assign
+      eigen_sparse_wrapper& operator+=(const eigen_sparse_wrapper& other);
+      // Subtract and assign
+      eigen_sparse_wrapper& operator-=(const eigen_sparse_wrapper& other);
+
+      // Multiply by sparse wrapper
+      eigen_sparse_wrapper operator*(const eigen_sparse_wrapper& other) const;
+
+      // Multiply by scalar and assign
+      eigen_sparse_wrapper& operator*=(const Scalar_T& val);
+
+      // New Member Functions
+      // Trace
+      Scalar_T trace() const;
+      // Eigenvalues
+      std::vector<std::complex<double>> eigenvalues() const;
+      // Infinity norm
+      Scalar_T norm_inf() const;
+      // Squared Frobenius norm
+      Scalar_T norm_frob2() const;
+      // Is NaN?
+      bool isnan() const;
+      // Is infinite?
+      bool isinf() const;
+      // Number of non-zeros
+      matrix_index_t nnz() const;
+      bool is_zero() const;
+      bool operator==(const eigen_sparse_wrapper& other) const;
+      bool operator!=(const eigen_sparse_wrapper& other) const { return !(*this == other); }
+
+      // Inner product
+      template <typename Result_Scalar_T, typename Other>
+      Result_Scalar_T inner(const Other& other) const;
+      // Trace of product: Trace(A*B) / Dim
+      template <typename Other>
+      Scalar_T trace_product(const Other& other) const;
+
+      // Unary multivector mappings
+      void involute();
+      void reverse(index_t p, index_t q);
+      // Similarity transform: result = S * M(perm, perm) * S
+      void similarity_transform(const std::vector<matrix_index_t>& perm, const std::vector<Scalar_T>& signs);
+      // Transpose similarity transform: result = S * M(perm, perm)^T * S
+      void transpose_similarity_transform(const std::vector<matrix_index_t>& perm, const std::vector<Scalar_T>& signs);
+
+      // Mixed Kronecker matrix product: Sparse x Dense -> Dense (wrapper)
+      template <typename Other_Scalar_T>
+      eigen_matrix_wrapper<Other_Scalar_T> kron(const eigen_matrix_wrapper<Other_Scalar_T>& other) const;
+      // Kronecker matrix product of sparse wrappers
+      eigen_sparse_wrapper kron(const eigen_sparse_wrapper& other) const;
+      eigen_sparse_wrapper mono_kron(const eigen_sparse_wrapper& other) const;
+      // Monomial matrix product of sparse wrappers
+      eigen_sparse_wrapper mono_prod(const eigen_sparse_wrapper& other) const;
+
+      // Left Kronecker quotient
+      template <typename RHS_T>
+      RHS_T nork(const RHS_T& rhs, bool mono = true) const;
+
+      // Output to stream
+      friend std::ostream& operator<< <>(std::ostream& os, const eigen_sparse_wrapper& m);
+    };
+
+    // Product of sparse wrapper and scalar
+    template <typename Scalar_T>
+    eigen_sparse_wrapper<Scalar_T> operator*(const eigen_sparse_wrapper<Scalar_T>& m, Scalar_T s);
+
+    // Product of scalar and sparse wrapper
+    template <typename Scalar_T>
+    eigen_sparse_wrapper<Scalar_T> operator*(Scalar_T s, const eigen_sparse_wrapper<Scalar_T>& m);
+
+    // Sum of sparse wrappers
+    template <typename Scalar_T>
+    eigen_sparse_wrapper<Scalar_T> operator+(const eigen_sparse_wrapper<Scalar_T>& lhs, const eigen_sparse_wrapper<Scalar_T>& rhs);
+
+    // Difference of sparse wrappers
+    template <typename Scalar_T>
+    eigen_sparse_wrapper<Scalar_T> operator-(const eigen_sparse_wrapper<Scalar_T>& lhs, const eigen_sparse_wrapper<Scalar_T>& rhs);
+  }  // namespace matrix
+}  // namespace glucat
 
 #endif  // _GLUCAT_MATRIX_EIGEN_H

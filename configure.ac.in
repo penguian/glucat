@@ -209,6 +209,17 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     DO_NOT_COMPILE="$DO_NOT_COMPILE test_doctest"
   fi
 
+  AC_ARG_ENABLE([doc],
+    AS_HELP_STRING(
+      [--enable-doc],
+      [enable building documentation [default=no]]),
+    [glucat_enable_doc="$enableval"],
+    [glucat_enable_doc="no"])
+
+  if [[[ "$glucat_enable_doc" == "no" ]]]; then
+    DO_NOT_COMPILE="$DO_NOT_COMPILE doc"
+  fi
+
   dnl enable warnings for debug build
   if [[[ "$glucat_use_debug_code" != "no" ]]]; then
     glucat_use_warnings="yes"
@@ -554,6 +565,12 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   dnl Handle $glucat_use_warnings: enable compilation with -Wall and similar
   if [[[ "$glucat_use_warnings" == "yes" ]]]; then
       CXXFLAGS="-Wall $CXXFLAGS"
+      GLUCAT_CHECK_COMPILER_FLAG([Werror=return-type],
+            [CXXFLAGS="$CXXFLAGS -Werror=return-type"])
+      GLUCAT_CHECK_COMPILER_FLAG([Werror=uninitialized],
+            [CXXFLAGS="$CXXFLAGS -Werror=uninitialized"])
+      GLUCAT_CHECK_COMPILER_FLAG([Werror=format],
+            [CXXFLAGS="$CXXFLAGS -Werror=format"])
       case "$basename_cxx" in
         "clang++"*|icpx)
           GLUCAT_CHECK_COMPILER_FLAG([Wno-deprecated-register],
@@ -688,9 +705,25 @@ GLUCAT_CHECK_COMPILERS
 CXXFLAGS="$CXXFLAGS $USE_EXCEPTIONS"
 
 # From http://chris-miceli.blogspot.com.au/2011/01/integrating-doxygen-with-autotools.html
-AC_CHECK_PROGS([DOXYGEN],[doxygen])
-if [[[ -z "$DOXYGEN" ]]]; then
-  AC_MSG_WARN([Doxygen not found - continuing without Doxygen support])
+if [[[ "$glucat_enable_doc" == "yes" ]]]; then
+  AC_CHECK_PROGS([DOXYGEN],[doxygen])
+  if [[[ -z "$DOXYGEN" ]]]; then
+    AC_MSG_ERROR([doxygen is required for building documentation, but was not found])
+  fi
+  AC_CHECK_PROGS([DOT],[dot])
+  if [[[ -z "$DOT" ]]]; then
+    AC_MSG_ERROR([dot (Graphviz) is required for building documentation, but was not found])
+  fi
+  AC_CHECK_PROGS([PDFLATEX],[pdflatex])
+  if [[[ -z "$PDFLATEX" ]]]; then
+    AC_MSG_WARN([pdflatex not found - PDF documentation support will be disabled])
+  fi
+  AC_CHECK_PROGS([MAKEINDEX],[makeindex])
+  if [[[ -z "$MAKEINDEX" ]]]; then
+    AC_MSG_WARN([makeindex not found - PDF index support will be disabled])
+  fi
+else
+  DOXYGEN=""
 fi
 AC_SUBST([doxydir],[$(pwd)])
 AM_CONDITIONAL([HAVE_DOXYGEN],[test -n "$DOXYGEN"])

@@ -32,46 +32,44 @@
  ***************************************************************************/
 
 #include "glucat/errors.h"
-#include "glucat/scalar.h"
 #include "glucat/matrix.h"
 #include "glucat/matrix_base_imp.h"
-
 #include "glucat/matrix_eigen_imp.h"
+#include "glucat/scalar.h"
 #if defined(_GLUCAT_USE_ARMADILLO)
 #include "glucat/matrix_arma_imp.h"
 #endif
 
-namespace glucat { namespace matrix
+namespace glucat
 {
+  namespace matrix
+  {
 
-  /*
-   * @brief Constructor from other matrix type
-   * @details
-   * @tparam Scalar_T
-   * @param other Other matrix
-   */
-  template< typename Scalar_T >
-  template< typename Other_Matrix_T >
-  inline
-  dense_matrix<Scalar_T>::
-  dense_matrix(const Other_Matrix_T& other)
-  : Base(other)
-  { }
+    /*
+     * @brief Constructor from other matrix type
+     * @details
+     * @tparam Scalar_T
+     * @param other Other matrix
+     */
+    template <typename Scalar_T>
+    template <typename Other_Matrix_T>
+    inline dense_matrix<Scalar_T>::dense_matrix(const Other_Matrix_T& other)
+        : Base(other)
+    { }
 
-  /*
-   * @brief Constructor from other matrix type
-   * @details
-   * @tparam Scalar_T
-   * @param other Other matrix
-   */
-  template< typename Scalar_T >
-  template< typename Other_Matrix_T >
-  inline
-  sparse_matrix<Scalar_T>::
-  sparse_matrix(const Other_Matrix_T& other)
-  : Base(other)
-  { }
+    /*
+     * @brief Constructor from other matrix type
+     * @details
+     * @tparam Scalar_T
+     * @param other Other matrix
+     */
+    template <typename Scalar_T>
+    template <typename Other_Matrix_T>
+    inline sparse_matrix<Scalar_T>::sparse_matrix(const Other_Matrix_T& other)
+        : Base(other)
+    { }
 
-} }
+  }  // namespace matrix
+}  // namespace glucat
 
-#endif // _GLUCAT_MATRIX_IMP_H
+#endif  // _GLUCAT_MATRIX_IMP_H

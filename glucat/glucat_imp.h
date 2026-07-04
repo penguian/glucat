@@ -34,22 +34,14 @@
 
 // Template definitions which cannot be compiled separately
 
-#include "glucat/errors_imp.h"
-
-#include "glucat/index_set_imp.h"
-
-#include "glucat/scalar_imp.h"
-
 #include "glucat/clifford_algebra_imp.h"
-
-#include "glucat/random.h"
-
+#include "glucat/errors_imp.h"
 #include "glucat/framed_multi_imp.h"
-
-#include "glucat/matrix_imp.h"
-
 #include "glucat/generation_imp.h"
-
+#include "glucat/index_set_imp.h"
+#include "glucat/matrix_imp.h"
 #include "glucat/matrix_multi_imp.h"
+#include "glucat/random.h"
+#include "glucat/scalar_imp.h"
 
 #endif  // _GLUCAT_GLUCAT_IMP_H

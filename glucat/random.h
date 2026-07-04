@@ -38,7 +38,7 @@ namespace glucat
   /// Random number generator with single instance per Scalar_T
   /// Enforce singleton
   /// Reference: A. Alexandrescu, "Modern C++ Design", Chapter 6
-  template< typename Scalar_T >
+  template <typename Scalar_T>
   class random_generator
   {
   private:
@@ -46,11 +46,17 @@ namespace glucat
     // "... only defines a private destructor and has no friends"
     // Ref: Carlos O'Ryan, ACE http://doc.ece.uci.edu
     friend class friend_for_private_destructor;
+
   public:
     // Single instance of Random number generator
-    static auto generator() -> random_generator& { static random_generator g; return g;}
+    static auto generator() -> random_generator&
+    {
+      static random_generator g;
+      return g;
+    }
     random_generator(const random_generator&) = delete;
-    auto operator= (const random_generator&) -> random_generator& = delete;
+    auto operator=(const random_generator&) -> random_generator& = delete;
+
   private:
     static const unsigned long seed = 19590921UL;
 
@@ -58,18 +64,20 @@ namespace glucat
     std::uniform_real_distribution<double> uniform_dist;
     std::normal_distribution<double> normal_dist;
 
-    random_generator() :
-    uint_gen(), uniform_dist(0.0, 1.0), normal_dist(0.0, 1.0)
-    { this->uint_gen.seed(seed); }
+    random_generator()
+        : uint_gen()
+        , uniform_dist(0.0, 1.0)
+        , normal_dist(0.0, 1.0)
+    {
+      this->uint_gen.seed(seed);
+    }
 
     ~random_generator() = default;
 
   public:
-    auto uniform() -> Scalar_T
-    { return Scalar_T(this->uniform_dist(this->uint_gen)); }
-    auto normal() -> Scalar_T
-    { return Scalar_T(this->normal_dist(this->uint_gen)); }
+    auto uniform() -> Scalar_T { return Scalar_T(this->uniform_dist(this->uint_gen)); }
+    auto normal() -> Scalar_T { return Scalar_T(this->normal_dist(this->uint_gen)); }
   };
-}
+}  // namespace glucat
 
-#endif // _GLUCAT_RANDOM_H
+#endif  // _GLUCAT_RANDOM_H

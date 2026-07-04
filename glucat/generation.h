@@ -1,7 +1,7 @@
 #ifndef _GLUCAT_GENERATION_H
 #define _GLUCAT_GENERATION_H
 /***************************************************************************
-	  GluCat : Generic library of universal Clifford algebra templates
+          GluCat : Generic library of universal Clifford algebra templates
     generation.h : Declare functions for generation of the matrix representation
                              -------------------
     begin                : Wed Jan 23 2002
@@ -31,76 +31,76 @@
      See also Arvind Raja's original header comments in glucat.h
  ***************************************************************************/
 
-#include "glucat/global.h"
-
-
-
-#include <utility>
 #include <array>
 #include <map>
+#include <utility>
 #include <vector>
+
+#include "glucat/global.h"
 #include "glucat/matrix.h"
 
-namespace glucat { namespace gen
+namespace glucat
 {
-
-
-  /// A signature is a pair of indices, p, q, with p == frame.max(), q == -frame.min()
-  using signature_t = std::pair<index_t, index_t>;
-
-  /// Signed permutation data for similarity transformations
-  template< class Matrix_T >
-  struct transform_data_t
+  namespace gen
   {
-    std::vector<matrix::matrix_index_t> perm;
-    std::vector<typename Matrix_T::value_type> signs;
-  };
 
-  /// Table of generators for specific signatures
-  template< class Matrix_T >
-  class generator_table :
-  private std::map< signature_t, std::vector<Matrix_T> >
-  {
-  public:
-    // Pointer to generators for a specific signature
-    auto operator() (const index_t p, const index_t q) -> const Matrix_T*;
-    // Single instance of generator table
-    static auto generator() -> generator_table<Matrix_T>&;
+    /// A signature is a pair of indices, p, q, with p == frame.max(), q == -frame.min()
+    using signature_t = std::pair<index_t, index_t>;
 
-    // Cache access
-    auto parity_cache() -> std::map< signature_t, transform_data_t<Matrix_T> >& { return m_parity_cache; }
-    auto reversion_cache() -> std::map< signature_t, transform_data_t<Matrix_T> >& { return m_reversion_cache; }
+    /// Signed permutation data for similarity transformations
+    template <class Matrix_T>
+    struct transform_data_t
+    {
+      std::vector<matrix::matrix_index_t> perm;
+      std::vector<typename Matrix_T::value_type> signs;
+    };
 
-  private:
-    std::map< signature_t, transform_data_t<Matrix_T> > m_parity_cache;
-    std::map< signature_t, transform_data_t<Matrix_T> > m_reversion_cache;
+    /// Table of generators for specific signatures
+    template <class Matrix_T>
+    class generator_table : private std::map<signature_t, std::vector<Matrix_T> >
+    {
+    public:
+      // Pointer to generators for a specific signature
+      auto operator()(const index_t p, const index_t q) -> const Matrix_T*;
+      // Single instance of generator table
+      static auto generator() -> generator_table<Matrix_T>&;
 
-    // Construct a vector of generators for a specific signature
-    auto gen_vector(const index_t p, const index_t q) -> const std::vector<Matrix_T>&;
-    // Construct generators for p,q given generators for p-1,q-1
-    void gen_from_pm1_qm1(const std::vector<Matrix_T>& old, const signature_t sig);
-    // Construct generators for p,q given generators for p-4,q+4
-    void gen_from_pm4_qp4(const std::vector<Matrix_T>& old, const signature_t sig);
-    // Construct generators for p,q given generators for p+4,q-4
-    void gen_from_pp4_qm4(const std::vector<Matrix_T>& old, const signature_t sig);
-    // Construct generators for p,q given generators for q+1,p-1
-    void gen_from_qp1_pm1(const std::vector<Matrix_T>& old, const signature_t sig);
+      // Cache access
+      auto parity_cache() -> std::map<signature_t, transform_data_t<Matrix_T> >& { return m_parity_cache; }
+      auto reversion_cache() -> std::map<signature_t, transform_data_t<Matrix_T> >& { return m_reversion_cache; }
 
-    /// Friend declaration to avoid compiler warning:
-    /// "... only defines a private destructor and has no friends"
-    /// Ref: Carlos O'Ryan, ACE http://doc.ece.uci.edu
-    friend class friend_for_private_destructor;
-    /// Enforce singleton
-    /// Reference: A. Alexandrescu, "Modern C++ Design", Chapter 6
-    generator_table() = default;
-    ~generator_table() = default;
-  public:
-    generator_table(const generator_table&) = delete;
-    auto operator= (const generator_table&) -> generator_table& = delete;
-  };
+    private:
+      std::map<signature_t, transform_data_t<Matrix_T> > m_parity_cache;
+      std::map<signature_t, transform_data_t<Matrix_T> > m_reversion_cache;
 
-  // Offsets between the current signature and that of the real superalgebra
-  static const std::array<index_t, 8> offset_to_super = {0,-1, 0,-1,-2, 3, 2, 1};
+      // Construct a vector of generators for a specific signature
+      auto gen_vector(const index_t p, const index_t q) -> const std::vector<Matrix_T>&;
+      // Construct generators for p,q given generators for p-1,q-1
+      void gen_from_pm1_qm1(const std::vector<Matrix_T>& old, const signature_t sig);
+      // Construct generators for p,q given generators for p-4,q+4
+      void gen_from_pm4_qp4(const std::vector<Matrix_T>& old, const signature_t sig);
+      // Construct generators for p,q given generators for p+4,q-4
+      void gen_from_pp4_qm4(const std::vector<Matrix_T>& old, const signature_t sig);
+      // Construct generators for p,q given generators for q+1,p-1
+      void gen_from_qp1_pm1(const std::vector<Matrix_T>& old, const signature_t sig);
 
-} }
+      /// Friend declaration to avoid compiler warning:
+      /// "... only defines a private destructor and has no friends"
+      /// Ref: Carlos O'Ryan, ACE http://doc.ece.uci.edu
+      friend class friend_for_private_destructor;
+      /// Enforce singleton
+      /// Reference: A. Alexandrescu, "Modern C++ Design", Chapter 6
+      generator_table() = default;
+      ~generator_table() = default;
+
+    public:
+      generator_table(const generator_table&) = delete;
+      auto operator=(const generator_table&) -> generator_table& = delete;
+    };
+
+    // Offsets between the current signature and that of the real superalgebra
+    static const std::array<index_t, 8> offset_to_super = {0, -1, 0, -1, -2, 3, 2, 1};
+
+  }  // namespace gen
+}  // namespace glucat
 #endif  // _GLUCAT_GENERATION_H

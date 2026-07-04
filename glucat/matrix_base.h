@@ -32,88 +32,96 @@
  ***************************************************************************
  ***************************************************************************/
 
-#include <type_traits>
 #include <complex>
 #include <cstddef>
+#include <type_traits>
 
-namespace glucat { namespace matrix
+namespace glucat
 {
-  // Default index to use with matrices
-  using matrix_index_t = std::size_t;
-
-  /// Helper for static_assert in templates
-  template< typename... > struct dependent_false : std::false_type {};
-
-  /// =========================================================================
-  /// Traits
-  /// =========================================================================
-  /// Helper trait for complex check
-  template< typename Scalar_T > struct is_complex_t : std::false_type {};
-  template< typename Scalar_T > struct is_complex_t<std::complex<Scalar_T>> : std::true_type {};
-
-  /// Classification of eigenvalues of a matrix
-  enum eig_case_t
+  namespace matrix
   {
-    safe_eigs,
-    neg_real_eigs,
-    both_eigs
-  };
+    // Default index to use with matrices
+    using matrix_index_t = std::size_t;
 
-  ///  Structure containing classification of eigenvalues
-  template< typename Matrix_T >
-  struct eig_genus
-  {
-    using Scalar_T = typename Matrix_T::value_type;
-    // Is the matrix singular?
-    bool m_is_singular = false;
-    // What kind of eigenvalues does the matrix contain?
-    eig_case_t m_eig_case = safe_eigs;
-    // Argument such that exp(pi-m_safe_arg) lies between arguments of eigenvalues
-    Scalar_T   m_safe_arg = Scalar_T(0);
-  };
+    /// Helper for static_assert in templates
+    template <typename...>
+    struct dependent_false : std::false_type
+    { };
 
-  /// Base class providing member functions that delegate to the derived implementation (CRTP Pattern)
-  template< typename Derived_T >
-  class matrix_base
-  {
-  public:
-    /// Element access
-    inline decltype(auto) operator() (matrix_index_t i, matrix_index_t j)
-    { return derived()(i, j); }
+    /// =========================================================================
+    /// Traits
+    /// =========================================================================
+    /// Helper trait for complex check
+    template <typename Scalar_T>
+    struct is_complex_t : std::false_type
+    { };
+    template <typename Scalar_T>
+    struct is_complex_t<std::complex<Scalar_T>> : std::true_type
+    { };
 
-    /// Const element access
-    inline decltype(auto) operator() (matrix_index_t i, matrix_index_t j) const
-    { return derived()(i, j); }
+    /// Classification of eigenvalues of a matrix
+    enum eig_case_t
+    {
+      safe_eigs,
+      neg_real_eigs,
+      both_eigs
+    };
 
-    // Return const reference to derived class
-    const Derived_T& derived() const;
-    // Return reference to derived class
-    Derived_T& derived();
+    ///  Structure containing classification of eigenvalues
+    template <typename Matrix_T>
+    struct eig_genus
+    {
+      using Scalar_T = typename Matrix_T::value_type;
+      // Is the matrix singular?
+      bool m_is_singular = false;
+      // What kind of eigenvalues does the matrix contain?
+      eig_case_t m_eig_case = safe_eigs;
+      // Argument such that exp(pi-m_safe_arg) lies between arguments of eigenvalues
+      Scalar_T m_safe_arg = Scalar_T(0);
+    };
 
-    // Member functions delegating to namespace matrix implementation
-    // defined in matrix_base_imp.h
+    /// Base class providing member functions that delegate to the derived implementation (CRTP Pattern)
+    template <typename Derived_T>
+    class matrix_base
+    {
+    public:
+      /// Element access
+      inline decltype(auto) operator()(matrix_index_t i, matrix_index_t j) { return derived()(i, j); }
 
-    // Generic classify_eigenvalues relies on eigenvalues() member
-    eig_genus<Derived_T> classify_eigenvalues() const;
-  };
+      /// Const element access
+      inline decltype(auto) operator()(matrix_index_t i, matrix_index_t j) const { return derived()(i, j); }
 
-  // Core Operations as Free Functions
+      // Return const reference to derived class
+      const Derived_T& derived() const;
+      // Return reference to derived class
+      Derived_T& derived();
 
-  // Number of rows
-  template< typename Matrix_T >
-  matrix_index_t nbr_rows(const Matrix_T& mat);
+      // Member functions delegating to namespace matrix implementation
+      // defined in matrix_base_imp.h
 
-  // Number of columns
-  template< typename Matrix_T >
-  matrix_index_t nbr_cols(const Matrix_T& mat);
+      // Generic classify_eigenvalues relies on eigenvalues() member
+      eig_genus<Derived_T> classify_eigenvalues() const;
+    };
 
-  /// Helper struct for unit matrix creation
-  template< typename Matrix_T > struct unit_helper;
+    // Core Operations as Free Functions
 
-  // Identity matrix
-  template< typename Matrix_T >
-  Matrix_T unit(const matrix_index_t dim);
+    // Number of rows
+    template <typename Matrix_T>
+    matrix_index_t nbr_rows(const Matrix_T& mat);
 
-} }
+    // Number of columns
+    template <typename Matrix_T>
+    matrix_index_t nbr_cols(const Matrix_T& mat);
+
+    /// Helper struct for unit matrix creation
+    template <typename Matrix_T>
+    struct unit_helper;
+
+    // Identity matrix
+    template <typename Matrix_T>
+    Matrix_T unit(const matrix_index_t dim);
+
+  }  // namespace matrix
+}  // namespace glucat
 
 #endif  // _GLUCAT_MATRIX_BASE_H

@@ -55,18 +55,16 @@
 // Doron Zeilberger, "PADE" (Maple code), 2002.
 // http://www.math.rutgers.edu/~zeilberg/tokhniot/PADE
 
-#include "glucat/clifford_algebra.h"
-#include "glucat/scalar.h"
-
 #include <array>
 #include <iostream>
 
+#include "glucat/clifford_algebra.h"
+#include "glucat/scalar.h"
+
 namespace glucat
 {
-  template< typename Scalar_T, typename Index_Set_T, typename Multivector_T>
-  auto
-  clifford_algebra<Scalar_T,Index_Set_T,Multivector_T>::
-  classname() -> std::string_view
+  template <typename Scalar_T, typename Index_Set_T, typename Multivector_T>
+  auto clifford_algebra<Scalar_T, Index_Set_T, Multivector_T>::classname() -> std::string_view
   { return "clifford_algebra"; }
 
   /*
@@ -74,11 +72,9 @@ namespace glucat
    * @details
    * @return Result
    */
-  template< typename Scalar_T, typename Index_Set_T, typename Multivector_T>
-  const
-  Scalar_T
-  clifford_algebra<Scalar_T,Index_Set_T,Multivector_T>::
-  default_truncation = std::numeric_limits<Scalar_T>::epsilon();
+  template <typename Scalar_T, typename Index_Set_T, typename Multivector_T>
+  const Scalar_T clifford_algebra<Scalar_T, Index_Set_T, Multivector_T>::default_truncation =
+      std::numeric_limits<Scalar_T>::epsilon();
 
   /*
    * @brief Test for equality of multivectors
@@ -87,17 +83,12 @@ namespace glucat
    * @param rhs Right hand side
    * @return True if equal
    */
-  template
-  <
-    template<typename, const index_t, const index_t, typename> class Multivector,
-    template<typename, const index_t, const index_t, typename> class RHS,
-    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
-  >
-  inline
-  auto
-  operator== (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> bool
+  template <template <typename, const index_t, const index_t, typename> class Multivector,
+            template <typename, const index_t, const index_t, typename> class RHS, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto operator==(const Multivector<Scalar_T, LO, HI, Tune_P>& lhs, const RHS<Scalar_T, LO, HI, Tune_P>& rhs) -> bool
   {
-    using multivector_t = Multivector<Scalar_T,LO,HI,Tune_P>;
+    using multivector_t = Multivector<Scalar_T, LO, HI, Tune_P>;
     return lhs == multivector_t(rhs);
   }
 
@@ -108,15 +99,10 @@ namespace glucat
    * @param rhs Right hand side
    * @return True if not equal
    */
-  template
-  <
-    template<typename, const index_t, const index_t, typename> class Multivector,
-    template<typename, const index_t, const index_t, typename> class RHS,
-    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
-  >
-  inline
-  auto
-  operator!= (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> bool
+  template <template <typename, const index_t, const index_t, typename> class Multivector,
+            template <typename, const index_t, const index_t, typename> class RHS, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto operator!=(const Multivector<Scalar_T, LO, HI, Tune_P>& lhs, const RHS<Scalar_T, LO, HI, Tune_P>& rhs) -> bool
   { return !(lhs == rhs); }
 
   /*
@@ -126,11 +112,9 @@ namespace glucat
    * @param scr Value
    * @return True if not equal
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  operator!= (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const Scalar_T& scr) -> bool
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto operator!=(const Multivector<Scalar_T, LO, HI, Tune_P>& lhs, const Scalar_T& scr) -> bool
   { return !(lhs == scr); }
 
   /*
@@ -140,11 +124,9 @@ namespace glucat
    * @param rhs Right hand side
    * @return True if not equal
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  operator!= (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> bool
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto operator!=(const Scalar_T& scr, const Multivector<Scalar_T, LO, HI, Tune_P>& rhs) -> bool
   { return !(rhs == scr); }
 
   /*
@@ -153,21 +135,16 @@ namespace glucat
    * @param val Value
    * @return Result
    */
-  template
-  <
-    template<typename, const index_t, const index_t, typename> class Multivector,
-    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
-  >
-  auto
-  error_squared_tol(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  auto error_squared_tol(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Scalar_T
   {
-    using multivector_t = Multivector<Scalar_T,LO,HI,Tune_P>;
+    using multivector_t = Multivector<Scalar_T, LO, HI, Tune_P>;
     using Tuning_Values_P = typename Tune_P::tuning_values_p;
-    static const auto scalar_eps  = std::numeric_limits<Scalar_T>::epsilon();
+    static const auto scalar_eps = std::numeric_limits<Scalar_T>::epsilon();
     static const auto nbr_different_bits =
-       std::numeric_limits<Scalar_T>::digits / Tuning_Values_P::denom_different_bits + Tuning_Values_P::extra_different_bits;
-    static const auto abs_tol = scalar_eps *
-      numeric_traits<Scalar_T>::pow(Scalar_T(2), nbr_different_bits);
+        std::numeric_limits<Scalar_T>::digits / Tuning_Values_P::denom_different_bits + Tuning_Values_P::extra_different_bits;
+    static const auto abs_tol = scalar_eps * numeric_traits<Scalar_T>::pow(Scalar_T(2), nbr_different_bits);
     using framed_multi_t = typename multivector_t::framed_multi_t;
     const auto nbr_terms = double(framed_multi_t(val).truncated(scalar_eps).nbr_terms());
     return abs_tol * abs_tol * std::max(Scalar_T(nbr_terms), Scalar_T(1));
@@ -181,23 +158,15 @@ namespace glucat
    * @param threshold Value
    * @return Result
    */
-  template
-  <
-    template<typename, const index_t, const index_t, typename> class Multivector,
-    template<typename, const index_t, const index_t, typename> class RHS,
-    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
-  >
-  inline
-  auto
-  error_squared(const Multivector<Scalar_T,LO,HI,Tune_P>& lhs,
-                const RHS<Scalar_T,LO,HI,Tune_P>& rhs,
-                const Scalar_T threshold) -> Scalar_T
+  template <template <typename, const index_t, const index_t, typename> class Multivector,
+            template <typename, const index_t, const index_t, typename> class RHS, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto error_squared(const Multivector<Scalar_T, LO, HI, Tune_P>& lhs, const RHS<Scalar_T, LO, HI, Tune_P>& rhs,
+                            const Scalar_T threshold) -> Scalar_T
   {
     const auto relative = norm(rhs) > threshold;
-    const auto abs_norm_diff = norm(rhs-lhs);
-    return (relative)
-      ? abs_norm_diff/norm(rhs)
-      : abs_norm_diff;
+    const auto abs_norm_diff = norm(rhs - lhs);
+    return (relative) ? abs_norm_diff / norm(rhs) : abs_norm_diff;
   }
 
   /*
@@ -205,18 +174,11 @@ namespace glucat
    * @details
    * @return Result
    */
-  template
-  <
-    template<typename, const index_t, const index_t, typename> class Multivector,
-    template<typename, const index_t, const index_t, typename> class RHS,
-    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
-  >
-  inline
-  auto
-  approx_equal(const Multivector<Scalar_T,LO,HI,Tune_P>& lhs,
-               const RHS<Scalar_T,LO,HI,Tune_P>& rhs,
-               const Scalar_T threshold,
-               const Scalar_T tolerance) -> bool
+  template <template <typename, const index_t, const index_t, typename> class Multivector,
+            template <typename, const index_t, const index_t, typename> class RHS, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto approx_equal(const Multivector<Scalar_T, LO, HI, Tune_P>& lhs, const RHS<Scalar_T, LO, HI, Tune_P>& rhs,
+                           const Scalar_T threshold, const Scalar_T tolerance) -> bool
   { return error_squared(lhs, rhs, threshold) < tolerance; }
 
   /*
@@ -226,16 +188,10 @@ namespace glucat
    * @param rhs Right hand side
    * @return Result
    */
-  template
-  <
-    template<typename, const index_t, const index_t, typename> class Multivector,
-    template<typename, const index_t, const index_t, typename> class RHS,
-    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
-  >
-  inline
-  auto
-  approx_equal(const Multivector<Scalar_T,LO,HI,Tune_P>& lhs,
-               const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> bool
+  template <template <typename, const index_t, const index_t, typename> class Multivector,
+            template <typename, const index_t, const index_t, typename> class RHS, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto approx_equal(const Multivector<Scalar_T, LO, HI, Tune_P>& lhs, const RHS<Scalar_T, LO, HI, Tune_P>& rhs) -> bool
   {
     const Scalar_T rhs_tol = error_squared_tol(rhs);
     return approx_equal(lhs, rhs, rhs_tol, rhs_tol);
@@ -248,11 +204,10 @@ namespace glucat
    * @param scr Value
    * @return Sum
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  operator+ (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const Scalar_T& scr) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto operator+(const Multivector<Scalar_T, LO, HI, Tune_P>& lhs, const Scalar_T& scr)
+      -> Multivector<Scalar_T, LO, HI, Tune_P>
   {
     auto result = lhs;
     return result += scr;
@@ -265,14 +220,11 @@ namespace glucat
    * @param rhs Right hand side
    * @return Sum
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  operator+ (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> Multivector<Scalar_T,LO,HI,Tune_P>
-  {
-    return rhs + scr;
-  }
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto operator+(const Scalar_T& scr, const Multivector<Scalar_T, LO, HI, Tune_P>& rhs)
+      -> Multivector<Scalar_T, LO, HI, Tune_P>
+  { return rhs + scr; }
 
   /*
    * @brief Geometric sum
@@ -286,17 +238,13 @@ namespace glucat
    * @param rhs Right hand side
    * @return Sum
    */
-  template
-  <
-    template<typename, const index_t, const index_t, typename> class Multivector,
-    template<typename, const index_t, const index_t, typename> class RHS,
-    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
-  >
-  inline
-  auto
-  operator+ (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector,
+            template <typename, const index_t, const index_t, typename> class RHS, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto operator+(const Multivector<Scalar_T, LO, HI, Tune_P>& lhs, const RHS<Scalar_T, LO, HI, Tune_P>& rhs)
+      -> Multivector<Scalar_T, LO, HI, Tune_P>
   {
-    using multivector_t = Multivector<Scalar_T,LO,HI,Tune_P>;
+    using multivector_t = Multivector<Scalar_T, LO, HI, Tune_P>;
     auto result = lhs;
     return result += multivector_t(rhs);
   }
@@ -308,11 +256,10 @@ namespace glucat
    * @param scr Value
    * @return Difference
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  operator- (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const Scalar_T& scr) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto operator-(const Multivector<Scalar_T, LO, HI, Tune_P>& lhs, const Scalar_T& scr)
+      -> Multivector<Scalar_T, LO, HI, Tune_P>
   {
     auto result = lhs;
     return result -= scr;
@@ -325,11 +272,10 @@ namespace glucat
    * @param rhs Right hand side
    * @return Difference
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  operator- (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto operator-(const Scalar_T& scr, const Multivector<Scalar_T, LO, HI, Tune_P>& rhs)
+      -> Multivector<Scalar_T, LO, HI, Tune_P>
   { return -rhs + scr; }
 
   /*
@@ -344,17 +290,13 @@ namespace glucat
    * @param rhs Right hand side
    * @return Difference
    */
-  template
-  <
-    template<typename, const index_t, const index_t, typename> class Multivector,
-    template<typename, const index_t, const index_t, typename> class RHS,
-    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
-  >
-  inline
-  auto
-  operator- (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector,
+            template <typename, const index_t, const index_t, typename> class RHS, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto operator-(const Multivector<Scalar_T, LO, HI, Tune_P>& lhs, const RHS<Scalar_T, LO, HI, Tune_P>& rhs)
+      -> Multivector<Scalar_T, LO, HI, Tune_P>
   {
-    using multivector_t = Multivector<Scalar_T,LO,HI,Tune_P>;
+    using multivector_t = Multivector<Scalar_T, LO, HI, Tune_P>;
     auto result = lhs;
     return result -= multivector_t(rhs);
   }
@@ -366,11 +308,10 @@ namespace glucat
    * @param scr Value
    * @return Product
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  operator* (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const Scalar_T& scr) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto operator*(const Multivector<Scalar_T, LO, HI, Tune_P>& lhs, const Scalar_T& scr)
+      -> Multivector<Scalar_T, LO, HI, Tune_P>
   {
     auto result = lhs;
     return result *= scr;
@@ -383,12 +324,11 @@ namespace glucat
    * @param rhs Right hand side
    * @return Product
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  operator* (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> Multivector<Scalar_T,LO,HI,Tune_P>
-  { // Note: this assumes that scalar commutes with multivector.
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto operator*(const Scalar_T& scr, const Multivector<Scalar_T, LO, HI, Tune_P>& rhs)
+      -> Multivector<Scalar_T, LO, HI, Tune_P>
+  {  // Note: this assumes that scalar commutes with multivector.
     // This excludes Clifford algebras over non-commuting rings.
     return rhs * scr;
   }
@@ -400,17 +340,13 @@ namespace glucat
    * @param rhs Right hand side
    * @return Product
    */
-  template
-  <
-    template<typename, const index_t, const index_t, typename> class Multivector,
-    template<typename, const index_t, const index_t, typename> class RHS,
-    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
-  >
-  inline
-  auto
-  operator* (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector,
+            template <typename, const index_t, const index_t, typename> class RHS, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto operator*(const Multivector<Scalar_T, LO, HI, Tune_P>& lhs, const RHS<Scalar_T, LO, HI, Tune_P>& rhs)
+      -> Multivector<Scalar_T, LO, HI, Tune_P>
   {
-    using multivector_t = Multivector<Scalar_T,LO,HI,Tune_P>;
+    using multivector_t = Multivector<Scalar_T, LO, HI, Tune_P>;
     return lhs * multivector_t(rhs);
   }
 
@@ -421,17 +357,13 @@ namespace glucat
    * @param rhs Right hand side
    * @return Outer product
    */
-  template
-  <
-    template<typename, const index_t, const index_t, typename> class Multivector,
-    template<typename, const index_t, const index_t, typename> class RHS,
-    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
-  >
-  inline
-  auto
-  operator^ (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector,
+            template <typename, const index_t, const index_t, typename> class RHS, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto operator^(const Multivector<Scalar_T, LO, HI, Tune_P>& lhs, const RHS<Scalar_T, LO, HI, Tune_P>& rhs)
+      -> Multivector<Scalar_T, LO, HI, Tune_P>
   {
-    using multivector_t = Multivector<Scalar_T,LO,HI,Tune_P>;
+    using multivector_t = Multivector<Scalar_T, LO, HI, Tune_P>;
     return lhs ^ multivector_t(rhs);
   }
 
@@ -442,17 +374,13 @@ namespace glucat
    * @param rhs Right hand side
    * @return Inner product
    */
-  template
-  <
-    template<typename, const index_t, const index_t, typename> class Multivector,
-    template<typename, const index_t, const index_t, typename> class RHS,
-    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
-  >
-  inline
-  auto
-  operator& (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector,
+            template <typename, const index_t, const index_t, typename> class RHS, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto operator&(const Multivector<Scalar_T, LO, HI, Tune_P>& lhs, const RHS<Scalar_T, LO, HI, Tune_P>& rhs)
+      -> Multivector<Scalar_T, LO, HI, Tune_P>
   {
-    using multivector_t = Multivector<Scalar_T,LO,HI,Tune_P>;
+    using multivector_t = Multivector<Scalar_T, LO, HI, Tune_P>;
     return lhs & multivector_t(rhs);
   }
 
@@ -463,17 +391,13 @@ namespace glucat
    * @param rhs Right hand side
    * @return Result
    */
-  template
-  <
-    template<typename, const index_t, const index_t, typename> class Multivector,
-    template<typename, const index_t, const index_t, typename> class RHS,
-    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
-  >
-  inline
-  auto
-  operator% (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector,
+            template <typename, const index_t, const index_t, typename> class RHS, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto operator%(const Multivector<Scalar_T, LO, HI, Tune_P>& lhs, const RHS<Scalar_T, LO, HI, Tune_P>& rhs)
+      -> Multivector<Scalar_T, LO, HI, Tune_P>
   {
-    using multivector_t = Multivector<Scalar_T,LO,HI,Tune_P>;
+    using multivector_t = Multivector<Scalar_T, LO, HI, Tune_P>;
     return lhs % multivector_t(rhs);
   }
 
@@ -484,17 +408,12 @@ namespace glucat
    * @param rhs Right hand side
    * @return Result
    */
-  template
-  <
-    template<typename, const index_t, const index_t, typename> class Multivector,
-    template<typename, const index_t, const index_t, typename> class RHS,
-    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
-  >
-  inline
-  auto
-  star (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> Scalar_T
+  template <template <typename, const index_t, const index_t, typename> class Multivector,
+            template <typename, const index_t, const index_t, typename> class RHS, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto star(const Multivector<Scalar_T, LO, HI, Tune_P>& lhs, const RHS<Scalar_T, LO, HI, Tune_P>& rhs) -> Scalar_T
   {
-    using multivector_t = Multivector<Scalar_T,LO,HI,Tune_P>;
+    using multivector_t = Multivector<Scalar_T, LO, HI, Tune_P>;
     return star(lhs, multivector_t(rhs));
   }
 
@@ -505,11 +424,10 @@ namespace glucat
    * @param scr Value
    * @return Quotient
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  operator/ (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const Scalar_T& scr) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto operator/(const Multivector<Scalar_T, LO, HI, Tune_P>& lhs, const Scalar_T& scr)
+      -> Multivector<Scalar_T, LO, HI, Tune_P>
   {
     auto result = lhs;
     return result /= scr;
@@ -522,13 +440,12 @@ namespace glucat
    * @param rhs Right hand side
    * @return Quotient
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  operator/ (const Scalar_T& scr, const Multivector<Scalar_T,LO,HI,Tune_P>& rhs) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto operator/(const Scalar_T& scr, const Multivector<Scalar_T, LO, HI, Tune_P>& rhs)
+      -> Multivector<Scalar_T, LO, HI, Tune_P>
   {
-    using multivector_t = Multivector<Scalar_T,LO,HI,Tune_P>;
+    using multivector_t = Multivector<Scalar_T, LO, HI, Tune_P>;
     multivector_t result = scr;
     return result /= multivector_t(rhs);
   }
@@ -545,17 +462,13 @@ namespace glucat
    * @param rhs Right hand side
    * @return Quotient
    */
-  template
-  <
-    template<typename, const index_t, const index_t, typename> class Multivector,
-    template<typename, const index_t, const index_t, typename> class RHS,
-    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
-  >
-  inline
-  auto
-  operator/ (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector,
+            template <typename, const index_t, const index_t, typename> class RHS, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto operator/(const Multivector<Scalar_T, LO, HI, Tune_P>& lhs, const RHS<Scalar_T, LO, HI, Tune_P>& rhs)
+      -> Multivector<Scalar_T, LO, HI, Tune_P>
   {
-    using multivector_t = Multivector<Scalar_T,LO,HI,Tune_P>;
+    using multivector_t = Multivector<Scalar_T, LO, HI, Tune_P>;
     return lhs / multivector_t(rhs);
   }
 
@@ -566,17 +479,13 @@ namespace glucat
    * @param rhs Right hand side
    * @return Bitwise OR
    */
-  template
-  <
-    template<typename, const index_t, const index_t, typename> class Multivector,
-    template<typename, const index_t, const index_t, typename> class RHS,
-    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
-  >
-  inline
-  auto
-  operator| (const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector,
+            template <typename, const index_t, const index_t, typename> class RHS, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto operator|(const Multivector<Scalar_T, LO, HI, Tune_P>& lhs, const RHS<Scalar_T, LO, HI, Tune_P>& rhs)
+      -> Multivector<Scalar_T, LO, HI, Tune_P>
   {
-    using multivector_t = Multivector<Scalar_T,LO,HI,Tune_P>;
+    using multivector_t = Multivector<Scalar_T, LO, HI, Tune_P>;
     return lhs | multivector_t(rhs);
   }
 
@@ -586,11 +495,9 @@ namespace glucat
    * @param val Value
    * @return Result
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  inv(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto inv(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Multivector<Scalar_T, LO, HI, Tune_P>
   { return val.inv(); }
 
   /*
@@ -600,31 +507,19 @@ namespace glucat
    * @param rhs Right hand side
    * @return Result
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  pow(const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, int rhs) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  auto pow(const Multivector<Scalar_T, LO, HI, Tune_P>& lhs, int rhs) -> Multivector<Scalar_T, LO, HI, Tune_P>
   {
-    using multivector_t = Multivector<Scalar_T,LO,HI,Tune_P>;
+    using multivector_t = Multivector<Scalar_T, LO, HI, Tune_P>;
     if (lhs == Scalar_T(0))
     {
       using traits_t = numeric_traits<Scalar_T>;
-      return multivector_t(
-        (rhs < 0)
-        ? traits_t::NaN()
-        : (rhs == 0)
-          ? Scalar_T(1)
-          : Scalar_T(0));
+      return multivector_t((rhs < 0) ? traits_t::NaN() : (rhs == 0) ? Scalar_T(1) : Scalar_T(0));
     }
     auto result = multivector_t(Scalar_T(1));
-    auto power =
-      (rhs < 0)
-      ? lhs.inv()
-      : lhs;
-    for (auto
-        k = std::abs(rhs);
-        k != 0;
-        k /= 2)
+    auto power = (rhs < 0) ? lhs.inv() : lhs;
+    for (auto k = std::abs(rhs); k != 0; k /= 2)
     {
       if (k % 2)
         result *= power;
@@ -640,15 +535,11 @@ namespace glucat
    * @param rhs Right hand side
    * @return Result
    */
-  template
-  <
-    template<typename, const index_t, const index_t, typename> class Multivector,
-    template<typename, const index_t, const index_t, typename> class RHS,
-    typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P
-  >
-  inline
-  auto
-  pow(const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, const RHS<Scalar_T,LO,HI,Tune_P>& rhs) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector,
+            template <typename, const index_t, const index_t, typename> class RHS, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto pow(const Multivector<Scalar_T, LO, HI, Tune_P>& lhs, const RHS<Scalar_T, LO, HI, Tune_P>& rhs)
+      -> Multivector<Scalar_T, LO, HI, Tune_P>
   {
     using traits_t = numeric_traits<Scalar_T>;
 
@@ -656,12 +547,7 @@ namespace glucat
     {
       const Scalar_T m = rhs.scalar();
       if (rhs == m)
-        return
-          (m < 0)
-            ? traits_t::NaN()
-            : (m == 0)
-              ? Scalar_T(1)
-              : Scalar_T(0);
+        return (m < 0) ? traits_t::NaN() : (m == 0) ? Scalar_T(1) : Scalar_T(0);
       else
         return Scalar_T(0);
     }
@@ -675,10 +561,9 @@ namespace glucat
    * @param rhs Right hand side
    * @return Result
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  outer_pow(const Multivector<Scalar_T,LO,HI,Tune_P>& lhs, int rhs) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  auto outer_pow(const Multivector<Scalar_T, LO, HI, Tune_P>& lhs, int rhs) -> Multivector<Scalar_T, LO, HI, Tune_P>
   { return lhs.outer_pow(rhs); }
 
   /*
@@ -687,11 +572,9 @@ namespace glucat
    * @param val Value
    * @return Scalar part
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  scalar(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto scalar(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Scalar_T
   { return val.scalar(); }
 
   /*
@@ -700,13 +583,10 @@ namespace glucat
    * @param val Value
    * @return Result
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  real(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto real(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Scalar_T
   { return val.scalar(); }
-
 
   /*
    * @brief Pure part
@@ -714,11 +594,9 @@ namespace glucat
    * @param val Value
    * @return Pure part
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  pure(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto pure(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Multivector<Scalar_T, LO, HI, Tune_P>
   { return val - val.scalar(); }
 
   /*
@@ -727,11 +605,9 @@ namespace glucat
    * @param val Value
    * @return Even part
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  even(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto even(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Multivector<Scalar_T, LO, HI, Tune_P>
   { return val.even(); }
 
   /*
@@ -740,11 +616,9 @@ namespace glucat
    * @param val Value
    * @return Odd part
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  odd(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto odd(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Multivector<Scalar_T, LO, HI, Tune_P>
   { return val.odd(); }
 
   /*
@@ -753,11 +627,9 @@ namespace glucat
    * @param val Value
    * @return Vector part
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  vector_part(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> std::vector<Scalar_T>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto vector_part(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> std::vector<Scalar_T>
   { return val.vector_part(); }
 
   /*
@@ -771,11 +643,9 @@ namespace glucat
    * @param val Value
    * @return Main involution
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  involute(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto involute(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Multivector<Scalar_T, LO, HI, Tune_P>
   { return val.involute(); }
 
   /*
@@ -789,11 +659,9 @@ namespace glucat
    * @param val Value
    * @return Reverse
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  reverse(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto reverse(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Multivector<Scalar_T, LO, HI, Tune_P>
   { return val.reverse(); }
 
   /*
@@ -807,11 +675,9 @@ namespace glucat
    * @param val Value
    * @return Clifford conjugate
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  conj(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto conj(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Multivector<Scalar_T, LO, HI, Tune_P>
   { return val.conj(); }
 
   /*
@@ -820,11 +686,9 @@ namespace glucat
    * @param val Value
    * @return Quadratic form
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  quad(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto quad(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Scalar_T
   { return val.quad(); }
 
   /*
@@ -833,11 +697,9 @@ namespace glucat
    * @param val Value
    * @return Norm
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  norm(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto norm(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Scalar_T
   { return val.norm(); }
 
   /*
@@ -846,11 +708,9 @@ namespace glucat
    * @param val Value
    * @return Result
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  abs(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto abs(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Scalar_T
   { return numeric_traits<Scalar_T>::sqrt(val.norm()); }
 
   /*
@@ -859,11 +719,9 @@ namespace glucat
    * @param val Value
    * @return Maximum absolute value
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  max_abs(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Scalar_T
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto max_abs(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Scalar_T
   { return val.max_abs(); }
 
   /*
@@ -881,12 +739,11 @@ namespace glucat
    * @param val Value
    * @return Result
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  complexifier(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  auto complexifier(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Multivector<Scalar_T, LO, HI, Tune_P>
   {
-    using multivector_t = Multivector<Scalar_T,LO,HI,Tune_P>;
+    using multivector_t = Multivector<Scalar_T, LO, HI, Tune_P>;
     using traits_t = numeric_traits<Scalar_T>;
 
     auto frm = val.frame();
@@ -894,27 +751,15 @@ namespace glucat
     auto incp = array_t{0, 2, 1, 0};
     auto incq = array_t{1, 0, 0, 0};
     auto bott = pos_mod((frm.count_pos() - frm.count_neg()), 4);
-    for (auto
-        k = index_t(0);
-        k != incp[bott];
-        k++)
-      for (auto
-          idx = index_t(1);
-          idx != HI+1;
-          ++idx)
+    for (auto k = index_t(0); k != incp[bott]; k++)
+      for (auto idx = index_t(1); idx != HI + 1; ++idx)
         if (!frm[idx])
         {
           frm.set(idx);
           break;
         }
-    for (auto
-        k = index_t(0);
-        k != incq[bott];
-        k++)
-      for (auto
-          idx = index_t(-1);
-          idx != LO-1;
-          --idx)
+    for (auto k = index_t(0); k != incq[bott]; k++)
+      for (auto idx = index_t(-1); idx != LO - 1; --idx)
         if (!frm[idx])
         {
           frm.set(idx);
@@ -936,24 +781,19 @@ namespace glucat
    * @param i Complexifier -- commuting sqrt of -1
    * @param prechecked Already checked?
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  static
-  void
-  check_complex(const Multivector<Scalar_T,LO,HI,Tune_P>& val,
-                const Multivector<Scalar_T,LO,HI,Tune_P>& i, const bool prechecked = false)
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline static void check_complex(const Multivector<Scalar_T, LO, HI, Tune_P>& val, const Multivector<Scalar_T, LO, HI, Tune_P>& i,
+                                   const bool prechecked = false)
   {
     if (!prechecked)
     {
-      using multivector_t = Multivector<Scalar_T,LO,HI,Tune_P>;
+      using multivector_t = Multivector<Scalar_T, LO, HI, Tune_P>;
       using error_t = typename multivector_t::error_t;
 
       const auto i_frame = i.frame();
       // We need i to be a complexifier whose frame is large enough to represent val
-      if (complexifier(i) != i ||
-         (val.frame() | i_frame) != i_frame ||
-          complexifier(val).frame().count() > i_frame.count())
+      if (complexifier(i) != i || (val.frame() | i_frame) != i_frame || complexifier(val).frame().count() > i_frame.count())
         throw error_t("check_complex(val, i): i is not a valid complexifier for val");
     }
   }
@@ -966,11 +806,10 @@ namespace glucat
    * @param prechecked Already checked?
    * @return True if successful or condition met
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  sqrt(const Multivector<Scalar_T,LO,HI,Tune_P>& val, const Multivector<Scalar_T,LO,HI,Tune_P>& i, bool prechecked) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto sqrt(const Multivector<Scalar_T, LO, HI, Tune_P>& val, const Multivector<Scalar_T, LO, HI, Tune_P>& i,
+                   bool prechecked) -> Multivector<Scalar_T, LO, HI, Tune_P>
   { return sqrt(val, i, prechecked); }
 
   /*
@@ -979,11 +818,9 @@ namespace glucat
    * @param val Value
    * @return Result
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  sqrt(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto sqrt(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Multivector<Scalar_T, LO, HI, Tune_P>
   { return sqrt(val, complexifier(val), true); }
 
   /*
@@ -1001,10 +838,9 @@ namespace glucat
    * @param val Value
    * @return Result
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  clifford_exp(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  auto clifford_exp(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Multivector<Scalar_T, LO, HI, Tune_P>
   {
     // Scaling and squaring Pade' approximation of matrix exponential
     // Reference: [GL], Section 11.3, p572-576
@@ -1019,7 +855,7 @@ namespace glucat
     if (val == scalar_val)
       return scalar_exp;
 
-    using multivector_t = Multivector<Scalar_T,LO,HI,Tune_P>;
+    using multivector_t = Multivector<Scalar_T, LO, HI, Tune_P>;
     auto A = val - scalar_val;
     const auto pure_scale2 = A.norm();
 
@@ -1029,7 +865,7 @@ namespace glucat
       return scalar_exp;
 
     const auto ilog2_scale =
-      std::max(0, traits_t::to_int(ceil((log2(pure_scale2) + Scalar_T(A.frame().count()))/Scalar_T(2))) - 3);
+        std::max(0, traits_t::to_int(ceil((log2(pure_scale2) + Scalar_T(A.frame().count())) / Scalar_T(2))) - 3);
     const auto i_scale = traits_t::pow(Scalar_T(2), ilog2_scale);
     if (traits_t::isNaN_or_isInf(i_scale))
       return traits_t::NaN();
@@ -1038,64 +874,49 @@ namespace glucat
     multivector_t pure_exp;
     {
       using limits_t = std::numeric_limits<Scalar_T>;
-      const auto nbr_even_powers = 2*(limits_t::digits / 32) + 4;
+      const auto nbr_even_powers = 2 * (limits_t::digits / 32) + 4;
       using nbr_t = decltype(nbr_even_powers);
 
       // Create an array of coefficients
-      const auto max_power = 2*nbr_even_powers + 1;
-      static std::array<Scalar_T, max_power+1> c;
+      const auto max_power = 2 * nbr_even_powers + 1;
+      static std::array<Scalar_T, max_power + 1> c;
       if (c[0] != Scalar_T(1))
       {
         c[0] = Scalar_T(1);
-        for (auto
-            k = decltype(max_power)(0);
-            k != max_power;
-            ++k)
-          c[k+1] = c[k]*(max_power-k) / ((2*max_power-k)*(k+1));
+        for (auto k = decltype(max_power)(0); k != max_power; ++k)
+          c[k + 1] = c[k] * (max_power - k) / ((2 * max_power - k) * (k + 1));
       }
 
       // Create an array of even powers
       std::array<multivector_t, nbr_even_powers> AA;
       AA[0] = A * A;
       AA[1] = AA[0] * AA[0];
-      for (auto
-        k = nbr_t(2);
-        k != nbr_even_powers;
-        ++k)
-        AA[k] = AA[k-2] * AA[1];
+      for (auto k = nbr_t(2); k != nbr_even_powers; ++k)
+        AA[k] = AA[k - 2] * AA[1];
 
       // Use compensated summation to calculate U and AV
       auto residual = multivector_t();
       auto U = multivector_t(c[0]);
-      for (auto
-          k = nbr_t(0);
-          k != nbr_even_powers;
-          ++k)
+      for (auto k = nbr_t(0); k != nbr_even_powers; ++k)
       {
-        const auto& term = AA[k]*c[2*k + 2] - residual;
+        const auto& term = AA[k] * c[2 * k + 2] - residual;
         const auto& sum = U + term;
         residual = (sum - U) - term;
         U = sum;
       }
       residual = multivector_t();
       auto AV = multivector_t(c[1]);
-      for (auto
-          k = nbr_t(0);
-          k != nbr_even_powers;
-          ++k)
+      for (auto k = nbr_t(0); k != nbr_even_powers; ++k)
       {
-        const auto& term = AA[k]*c[2*k + 3] - residual;
+        const auto& term = AA[k] * c[2 * k + 3] - residual;
         const auto& sum = AV + term;
         residual = (sum - AV) - term;
         AV = sum;
       }
       AV *= A;
-      pure_exp = (U+AV) / (U-AV);
+      pure_exp = (U + AV) / (U - AV);
     }
-    for (auto
-        k = decltype(ilog2_scale)(0);
-        k != ilog2_scale;
-        ++k)
+    for (auto k = decltype(ilog2_scale)(0); k != ilog2_scale; ++k)
       pure_exp *= pure_exp;
     const auto result = pure_exp * scalar_exp;
 
@@ -1110,16 +931,11 @@ namespace glucat
    * @param prechecked Already checked?
    * @return True if successful or condition met
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  log(const Multivector<Scalar_T,LO,HI,Tune_P>& val, const Multivector<Scalar_T,LO,HI,Tune_P>& i, bool prechecked) -> Multivector<Scalar_T,LO,HI,Tune_P>
-  {
-
-    return log(val, i, prechecked);
-
-  }
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto log(const Multivector<Scalar_T, LO, HI, Tune_P>& val, const Multivector<Scalar_T, LO, HI, Tune_P>& i, bool prechecked)
+      -> Multivector<Scalar_T, LO, HI, Tune_P>
+  { return log(val, i, prechecked); }
 
   /*
    * @brief Natural logarithm of multivector
@@ -1136,11 +952,9 @@ namespace glucat
    * @param val Value
    * @return Result
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  log(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto log(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Multivector<Scalar_T, LO, HI, Tune_P>
   { return log(val, complexifier(val), true); }
 
   /*
@@ -1158,13 +972,10 @@ namespace glucat
    * @param val Value
    * @return Result
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  cosh(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto cosh(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Multivector<Scalar_T, LO, HI, Tune_P>
   {
-
     using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
       return traits_t::NaN();
@@ -1172,7 +983,7 @@ namespace glucat
     const auto& s = val.scalar();
     if (val == s)
       return traits_t::cosh(s);
-    const auto result = (exp(val)+exp(-val)) / Scalar_T(2);
+    const auto result = (exp(val) + exp(-val)) / Scalar_T(2);
 
     return result;
   }
@@ -1186,21 +997,18 @@ namespace glucat
    * @return Result
    */
   // Reference: [AS], Section 4.6, p86-89
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  acosh(const Multivector<Scalar_T,LO,HI,Tune_P>& val, const Multivector<Scalar_T,LO,HI,Tune_P>& i, bool prechecked) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto acosh(const Multivector<Scalar_T, LO, HI, Tune_P>& val, const Multivector<Scalar_T, LO, HI, Tune_P>& i,
+                    bool prechecked) -> Multivector<Scalar_T, LO, HI, Tune_P>
   {
     using traits_t = numeric_traits<Scalar_T>;
     check_complex(val, i, prechecked);
     if (val.isnan())
       return traits_t::NaN();
 
-    const auto radical = sqrt(val*val - Scalar_T(1), i, true);
-    const auto result = (norm(val + radical) >= norm(val))
-           ?  log(val + radical, i, true)
-           : -log(val - radical, i, true);
+    const auto radical = sqrt(val * val - Scalar_T(1), i, true);
+    const auto result = (norm(val + radical) >= norm(val)) ? log(val + radical, i, true) : -log(val - radical, i, true);
 
     return result;
   }
@@ -1221,11 +1029,9 @@ namespace glucat
    * @return Result
    */
   // Reference: [AS], Section 4.6, p86-89
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  acosh(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto acosh(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Multivector<Scalar_T, LO, HI, Tune_P>
   { return acosh(val, complexifier(val), true); }
 
   /*
@@ -1236,12 +1042,11 @@ namespace glucat
    * @param prechecked Already checked?
    * @return True if successful or condition met
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  cos(const Multivector<Scalar_T,LO,HI,Tune_P>& val, const Multivector<Scalar_T,LO,HI,Tune_P>& i, bool prechecked) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  auto cos(const Multivector<Scalar_T, LO, HI, Tune_P>& val, const Multivector<Scalar_T, LO, HI, Tune_P>& i, bool prechecked)
+      -> Multivector<Scalar_T, LO, HI, Tune_P>
   {
-
     using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
       return traits_t::NaN();
@@ -1253,9 +1058,8 @@ namespace glucat
     check_complex(val, i, prechecked);
 
     static const auto& twopi = Scalar_T(2) * traits_t::pi();
-    const auto& z = i *
-      (val - s + traits_t::fmod(s, twopi));
-    const auto result = (exp(z)+exp(-z)) / Scalar_T(2);
+    const auto& z = i * (val - s + traits_t::fmod(s, twopi));
+    const auto result = (exp(z) + exp(-z)) / Scalar_T(2);
 
     return result;
   }
@@ -1275,11 +1079,9 @@ namespace glucat
    * @param val Value
    * @return Result
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  cos(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto cos(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Multivector<Scalar_T, LO, HI, Tune_P>
   { return cos(val, complexifier(val), true); }
 
   /*
@@ -1291,13 +1093,11 @@ namespace glucat
    * @return Result
    */
   // Reference: [AS], Section 4.4, p79-83
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  acos(const Multivector<Scalar_T,LO,HI,Tune_P>& val, const Multivector<Scalar_T,LO,HI,Tune_P>& i, bool prechecked) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto acos(const Multivector<Scalar_T, LO, HI, Tune_P>& val, const Multivector<Scalar_T, LO, HI, Tune_P>& i,
+                   bool prechecked) -> Multivector<Scalar_T, LO, HI, Tune_P>
   {
-
     using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
       return traits_t::NaN();
@@ -1328,11 +1128,9 @@ namespace glucat
    * @return Result
    */
   // Reference: [AS], Section 4.4, p79-83
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  acos(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto acos(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Multivector<Scalar_T, LO, HI, Tune_P>
   { return acos(val, complexifier(val), true); }
 
   /*
@@ -1350,13 +1148,10 @@ namespace glucat
    * @param val Value
    * @return Result
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  sinh(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto sinh(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Multivector<Scalar_T, LO, HI, Tune_P>
   {
-
     using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
       return traits_t::NaN();
@@ -1365,7 +1160,7 @@ namespace glucat
     if (val == s)
       return traits_t::sinh(s);
 
-    const auto result = (exp(val)-exp(-val)) / Scalar_T(2);
+    const auto result = (exp(val) - exp(-val)) / Scalar_T(2);
 
     return result;
   }
@@ -1379,22 +1174,18 @@ namespace glucat
    * @return Result
    */
   // Reference: [AS], Section 4.6, p86-89
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  asinh(const Multivector<Scalar_T,LO,HI,Tune_P>& val, const Multivector<Scalar_T,LO,HI,Tune_P>& i, bool prechecked) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto asinh(const Multivector<Scalar_T, LO, HI, Tune_P>& val, const Multivector<Scalar_T, LO, HI, Tune_P>& i,
+                    bool prechecked) -> Multivector<Scalar_T, LO, HI, Tune_P>
   {
-
     using traits_t = numeric_traits<Scalar_T>;
     check_complex(val, i, prechecked);
     if (val.isnan())
       return traits_t::NaN();
 
-    const auto radical = sqrt(val*val + Scalar_T(1), i, true);
-    const auto result = (norm(val + radical) >= norm(val))
-           ?  log( val + radical, i, true)
-           : -log(-val + radical, i, true);
+    const auto radical = sqrt(val * val + Scalar_T(1), i, true);
+    const auto result = (norm(val + radical) >= norm(val)) ? log(val + radical, i, true) : -log(-val + radical, i, true);
 
     return result;
   }
@@ -1415,11 +1206,9 @@ namespace glucat
    * @return Result
    */
   // Reference: [AS], Section 4.6, p86-89
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  asinh(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto asinh(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Multivector<Scalar_T, LO, HI, Tune_P>
   { return asinh(val, complexifier(val), true); }
 
   /*
@@ -1430,12 +1219,11 @@ namespace glucat
    * @param prechecked Already checked?
    * @return True if successful or condition met
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  auto
-  sin(const Multivector<Scalar_T,LO,HI,Tune_P>& val, const Multivector<Scalar_T,LO,HI,Tune_P>& i, bool prechecked) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  auto sin(const Multivector<Scalar_T, LO, HI, Tune_P>& val, const Multivector<Scalar_T, LO, HI, Tune_P>& i, bool prechecked)
+      -> Multivector<Scalar_T, LO, HI, Tune_P>
   {
-
     using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
       return traits_t::NaN();
@@ -1447,9 +1235,8 @@ namespace glucat
     check_complex(val, i, prechecked);
 
     static const auto& twopi = Scalar_T(2) * traits_t::pi();
-    const auto& z = i *
-      (val - s + traits_t::fmod(s, twopi));
-    const auto result = i * (exp(-z)-exp(z)) / Scalar_T(2);
+    const auto& z = i * (val - s + traits_t::fmod(s, twopi));
+    const auto result = i * (exp(-z) - exp(z)) / Scalar_T(2);
 
     return result;
   }
@@ -1469,11 +1256,9 @@ namespace glucat
    * @param val Value
    * @return Result
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  sin(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto sin(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Multivector<Scalar_T, LO, HI, Tune_P>
   { return sin(val, complexifier(val), true); }
 
   /*
@@ -1485,13 +1270,11 @@ namespace glucat
    * @return Result
    */
   // Reference: [AS], Section 4.4, p79-83
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  asin(const Multivector<Scalar_T,LO,HI,Tune_P>& val, const Multivector<Scalar_T,LO,HI,Tune_P>& i, bool prechecked) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto asin(const Multivector<Scalar_T, LO, HI, Tune_P>& val, const Multivector<Scalar_T, LO, HI, Tune_P>& i,
+                   bool prechecked) -> Multivector<Scalar_T, LO, HI, Tune_P>
   {
-
     using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
       return traits_t::NaN();
@@ -1522,11 +1305,9 @@ namespace glucat
    * @return Result
    */
   // Reference: [AS], Section 4.4, p79-83
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  asin(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto asin(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Multivector<Scalar_T, LO, HI, Tune_P>
   { return asin(val, complexifier(val), true); }
 
   /*
@@ -1544,13 +1325,10 @@ namespace glucat
    * @param val Value
    * @return Result
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  tanh(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto tanh(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Multivector<Scalar_T, LO, HI, Tune_P>
   {
-
     using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
       return traits_t::NaN();
@@ -1572,20 +1350,17 @@ namespace glucat
    * @return Result
    */
   // Reference: [AS], Section 4.6, p86-89
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  atanh(const Multivector<Scalar_T,LO,HI,Tune_P>& val, const Multivector<Scalar_T,LO,HI,Tune_P>& i, bool prechecked) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto atanh(const Multivector<Scalar_T, LO, HI, Tune_P>& val, const Multivector<Scalar_T, LO, HI, Tune_P>& i,
+                    bool prechecked) -> Multivector<Scalar_T, LO, HI, Tune_P>
   {
-
     using traits_t = numeric_traits<Scalar_T>;
     check_complex(val, i, prechecked);
-    const auto result = val.isnan()
-        ? traits_t::NaN()
-        : (norm(val + Scalar_T(1)) > norm(val - Scalar_T(1)))
-          ? (log(val + Scalar_T(1), i, true) - log(-val + Scalar_T(1), i, true)) / Scalar_T(2)
-          : log((val + Scalar_T(1)) / (-val + Scalar_T(1)), i, true) / Scalar_T(2);
+    const auto result = val.isnan() ? traits_t::NaN()
+                        : (norm(val + Scalar_T(1)) > norm(val - Scalar_T(1)))
+                            ? (log(val + Scalar_T(1), i, true) - log(-val + Scalar_T(1), i, true)) / Scalar_T(2)
+                            : log((val + Scalar_T(1)) / (-val + Scalar_T(1)), i, true) / Scalar_T(2);
 
     return result;
   }
@@ -1606,11 +1381,9 @@ namespace glucat
    * @return Result
    */
   // Reference: [AS], Section 4.6, p86-89
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  atanh(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto atanh(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Multivector<Scalar_T, LO, HI, Tune_P>
   { return atanh(val, complexifier(val), true); }
 
   /*
@@ -1621,11 +1394,10 @@ namespace glucat
    * @param prechecked Already checked?
    * @return True if successful or condition met
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  tan(const Multivector<Scalar_T,LO,HI,Tune_P>& val, const Multivector<Scalar_T,LO,HI,Tune_P>& i, bool prechecked) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto tan(const Multivector<Scalar_T, LO, HI, Tune_P>& val, const Multivector<Scalar_T, LO, HI, Tune_P>& i, bool prechecked)
+      -> Multivector<Scalar_T, LO, HI, Tune_P>
   {
     using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
@@ -1654,11 +1426,9 @@ namespace glucat
    * @param val Value
    * @return Result
    */
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  tan(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto tan(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Multivector<Scalar_T, LO, HI, Tune_P>
   { return tan(val, complexifier(val), true); }
 
   /*
@@ -1670,11 +1440,10 @@ namespace glucat
    * @return Result
    */
   // Reference: [AS], Section 4.4, p79-83
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  atan(const Multivector<Scalar_T,LO,HI,Tune_P>& val, const Multivector<Scalar_T,LO,HI,Tune_P>& i, bool prechecked) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto atan(const Multivector<Scalar_T, LO, HI, Tune_P>& val, const Multivector<Scalar_T, LO, HI, Tune_P>& i,
+                   bool prechecked) -> Multivector<Scalar_T, LO, HI, Tune_P>
   {
     using traits_t = numeric_traits<Scalar_T>;
     if (val.isnan())
@@ -1704,30 +1473,32 @@ namespace glucat
    * @return Result
    */
   // Reference: [AS], Section 4.4, p79-83
-  template< template<typename, const index_t, const index_t, typename> class Multivector,
-            typename Scalar_T, const index_t LO, const index_t HI, typename Tune_P >
-  inline
-  auto
-  atan(const Multivector<Scalar_T,LO,HI,Tune_P>& val) -> Multivector<Scalar_T,LO,HI,Tune_P>
+  template <template <typename, const index_t, const index_t, typename> class Multivector, typename Scalar_T, const index_t LO,
+            const index_t HI, typename Tune_P>
+  inline auto atan(const Multivector<Scalar_T, LO, HI, Tune_P>& val) -> Multivector<Scalar_T, LO, HI, Tune_P>
   { return atan(val, complexifier(val), true); }
 
-}
+}  // namespace glucat
 #ifdef GLUCAT_DOCTEST
+#include <cmath>
 #include <fstream>
 #include <limits>
-#include <cmath>
+
 #include "glucat/matrix_multi.h"
 
-TEST_CASE("clifford_algebra_imp (generic templates)") {
+TEST_CASE("clifford_algebra_imp (generic templates)")
+{
   using namespace glucat;
   using mm_t = glucat::matrix_multi<double, -8, 8>;
   using ca_t = glucat::clifford_algebra<double, mm_t::index_set_t, mm_t>;
 
-  SUBCASE("Metadata") {
+  SUBCASE("Metadata")
+  {
     CHECK(ca_t::classname() == "clifford_algebra");
   }
 
-  SUBCASE("Generic operators and approx_equal") {
+  SUBCASE("Generic operators and approx_equal")
+  {
     mm_t m1(1.0);
     mm_t m2(1.0 + 1e-15);
     CHECK(approx_equal(m1, m2));
@@ -1735,7 +1506,8 @@ TEST_CASE("clifford_algebra_imp (generic templates)") {
     CHECK(m1 != mm_t(2.0));
   }
 
-  SUBCASE("Non-scalar transcendental branches") {
+  SUBCASE("Non-scalar transcendental branches")
+  {
     mm_t e12("{1,2}");
     // atan of non-scalar
     CHECK(approx_equal(tan(atan(e12 * 0.5)), e12 * 0.5));
@@ -1746,10 +1518,12 @@ TEST_CASE("clifford_algebra_imp (generic templates)") {
     CHECK(atanh(n).isnan());
   }
 
-  SUBCASE("Self-Aliasing Guards") {
+  SUBCASE("Self-Aliasing Guards")
+  {
     using index_set_t = mm_t::index_set_t;
     mm_t a = mm_t::random(index_set_t(1), 1.0);
-    if (a.frame() != index_set_t(1)) a += mm_t(index_set_t(1));
+    if (a.frame() != index_set_t(1))
+      a += mm_t(index_set_t(1));
     mm_t a_copy = a;
 
     a += a;
@@ -1767,10 +1541,12 @@ TEST_CASE("clifford_algebra_imp (generic templates)") {
     CHECK(a == a);
   }
 
-  SUBCASE("Division by Zero") {
+  SUBCASE("Division by Zero")
+  {
     using index_set_t = mm_t::index_set_t;
     mm_t a = mm_t::random(index_set_t(1), 1.0);
-    if (a.frame() != index_set_t(1)) a += mm_t(index_set_t(1));
+    if (a.frame() != index_set_t(1))
+      a += mm_t(index_set_t(1));
     mm_t zero_mv(0.0);
 
     mm_t res1 = a / 0.0;
@@ -1780,16 +1556,19 @@ TEST_CASE("clifford_algebra_imp (generic templates)") {
     CHECK(res2.isnan());
   }
 
-  SUBCASE("Explicit Logic Paths") {
+  SUBCASE("Explicit Logic Paths")
+  {
     using index_set_t = mm_t::index_set_t;
     index_set_t frm(1);
     mm_t a = mm_t::random(frm, 1.0);
-    if (a == 0.0) a += mm_t(frm, 1.0, frm, true);
+    if (a == 0.0)
+      a += mm_t(frm, 1.0, frm, true);
     mm_t b = mm_t::random(frm, 1.0);
 
     // star product, quad, norm, truncated
     CHECK(numeric_traits<double>::to_double(star(a, b)) == doctest::Approx(numeric_traits<double>::to_double(scalar(a * b))));
-    CHECK(numeric_traits<double>::to_double(a.quad()) == doctest::Approx(numeric_traits<double>::to_double(scalar(a * a.reverse()))));
+    CHECK(numeric_traits<double>::to_double(a.quad())
+          == doctest::Approx(numeric_traits<double>::to_double(scalar(a * a.reverse()))));
     CHECK(a.norm() >= 0);
     CHECK(a.truncated(0.1).grade() >= 0);
 
@@ -1807,10 +1586,12 @@ TEST_CASE("clifford_algebra_imp (generic templates)") {
     CHECK(approx_equal(inv_a * inv_test, mm_t(1.0)));
   }
 
-  SUBCASE("Exceptions and error paths") {
+  SUBCASE("Exceptions and error paths")
+  {
     using index_set_t = mm_t::index_set_t;
     mm_t a = mm_t::random(index_set_t(1), 1.0);
-    if (a.frame() != index_set_t(1)) a += mm_t(index_set_t(1));
+    if (a.frame() != index_set_t(1))
+      a += mm_t(index_set_t(1));
 
     // vector_part with incompatible frame
     index_set_t invalid_frame(2);
@@ -1822,14 +1603,16 @@ TEST_CASE("clifford_algebra_imp (generic templates)") {
     CHECK_THROWS_AS(a.write(bad_stream), glucat::glucat_error);
   }
 
-  SUBCASE("Exceptions") {
+  SUBCASE("Exceptions")
+  {
     mm_t m1(1.0);
     mm_t e1("{1}");
     // e1 is not a complexifier because e1*e1 == 1, not -1
     CHECK_THROWS(log(m1, e1, false));
   }
 
-  SUBCASE("NaN and Infinity") {
+  SUBCASE("NaN and Infinity")
+  {
     mm_t nan_v(std::numeric_limits<double>::quiet_NaN());
     CHECK(nan_v.isnan());
     CHECK_FALSE(nan_v.isinf());
@@ -1844,7 +1627,8 @@ TEST_CASE("clifford_algebra_imp (generic templates)") {
     CHECK((a * inf_v).isinf());
   }
 
-  SUBCASE("Logic and Comparisons") {
+  SUBCASE("Logic and Comparisons")
+  {
     mm_t a(1.0);
     mm_t b(1.0 + 1e-15);
     // Threshold branches in approx_equal

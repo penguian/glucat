@@ -34,10 +34,11 @@
 // If radix of int is not 2, we can't easily set thresholds
 _GLUCAT_CTAssert(std::numeric_limits<unsigned int>::radix == 2, CannotSetThresholds)
 
-namespace glucat
+    namespace glucat
 {
   // Base class for policies
-  struct policy{};
+  struct policy
+  { };
 
   // Precision policy
   enum precision_t
@@ -46,55 +47,41 @@ namespace glucat
     precision_same,
     precision_promoted
   };
-  const precision_t  Tuning_Default_Function_Precision      = precision_same;
+  const precision_t Tuning_Default_Function_Precision = precision_same;
 
   // Tuning policy default constants
-  const unsigned int Tuning_Default_Mult_Matrix_Threshold   =       8;
-  const unsigned int Tuning_Default_CR_Sqrt_Max_Steps       =     256;
-  const unsigned int Tuning_Default_DB_Sqrt_Max_Steps       =     256;
-  const unsigned int Tuning_Default_Log_Max_Outer_Steps     =     256;
-  const unsigned int Tuning_Default_Log_Max_Inner_Steps     =      32;
-  const unsigned int Tuning_Default_Basis_Max_Count         =      12;
-  const unsigned int Tuning_Default_Fast_Size_Threshold     =      16;
-  const unsigned int Tuning_Default_Inv_Fast_Dim_Threshold  =       2;
-  const unsigned int Tuning_Default_Denom_Different_Bits    =       8;
-  const unsigned int Tuning_Default_Extra_Different_Bits    =       8;
-  const unsigned int Tuning_Default_Products_Different_Bits   =     2;
-  const unsigned int Tuning_Default_Products_Matrix_Threshold =    22;
+  const unsigned int Tuning_Default_Mult_Matrix_Threshold = 8;
+  const unsigned int Tuning_Default_CR_Sqrt_Max_Steps = 256;
+  const unsigned int Tuning_Default_DB_Sqrt_Max_Steps = 256;
+  const unsigned int Tuning_Default_Log_Max_Outer_Steps = 256;
+  const unsigned int Tuning_Default_Log_Max_Inner_Steps = 32;
+  const unsigned int Tuning_Default_Basis_Max_Count = 12;
+  const unsigned int Tuning_Default_Fast_Size_Threshold = 16;
+  const unsigned int Tuning_Default_Inv_Fast_Dim_Threshold = 2;
+  const unsigned int Tuning_Default_Denom_Different_Bits = 8;
+  const unsigned int Tuning_Default_Extra_Different_Bits = 8;
+  const unsigned int Tuning_Default_Products_Different_Bits = 2;
+  const unsigned int Tuning_Default_Products_Matrix_Threshold = 22;
 
   /// Tuning policy values
-  template
-  <
-  unsigned int Mult_Matrix_Threshold   = Tuning_Default_Mult_Matrix_Threshold,
-  unsigned int CR_Sqrt_Max_Steps       = Tuning_Default_CR_Sqrt_Max_Steps,
-  unsigned int DB_Sqrt_Max_Steps       = Tuning_Default_DB_Sqrt_Max_Steps,
-  unsigned int Log_Max_Outer_Steps     = Tuning_Default_Log_Max_Outer_Steps,
-  unsigned int Log_Max_Inner_Steps     = Tuning_Default_Log_Max_Inner_Steps,
-  unsigned int Basis_Max_Count         = Tuning_Default_Basis_Max_Count,
-  unsigned int Fast_Size_Threshold     = Tuning_Default_Fast_Size_Threshold,
-  unsigned int Inv_Fast_Dim_Threshold  = Tuning_Default_Inv_Fast_Dim_Threshold,
-  unsigned int Denom_Different_Bits    = Tuning_Default_Denom_Different_Bits,
-  unsigned int Extra_Different_Bits    = Tuning_Default_Extra_Different_Bits,
-  unsigned int Products_Different_Bits = Tuning_Default_Products_Different_Bits,
-  unsigned int Products_Matrix_Threshold = Tuning_Default_Products_Matrix_Threshold
-  >
+  template <unsigned int Mult_Matrix_Threshold = Tuning_Default_Mult_Matrix_Threshold,
+            unsigned int CR_Sqrt_Max_Steps = Tuning_Default_CR_Sqrt_Max_Steps,
+            unsigned int DB_Sqrt_Max_Steps = Tuning_Default_DB_Sqrt_Max_Steps,
+            unsigned int Log_Max_Outer_Steps = Tuning_Default_Log_Max_Outer_Steps,
+            unsigned int Log_Max_Inner_Steps = Tuning_Default_Log_Max_Inner_Steps,
+            unsigned int Basis_Max_Count = Tuning_Default_Basis_Max_Count,
+            unsigned int Fast_Size_Threshold = Tuning_Default_Fast_Size_Threshold,
+            unsigned int Inv_Fast_Dim_Threshold = Tuning_Default_Inv_Fast_Dim_Threshold,
+            unsigned int Denom_Different_Bits = Tuning_Default_Denom_Different_Bits,
+            unsigned int Extra_Different_Bits = Tuning_Default_Extra_Different_Bits,
+            unsigned int Products_Different_Bits = Tuning_Default_Products_Different_Bits,
+            unsigned int Products_Matrix_Threshold = Tuning_Default_Products_Matrix_Threshold>
   struct tuning_values : policy
   {
-    using tuning_values_p = tuning_values
-    <
-    Mult_Matrix_Threshold,
-    CR_Sqrt_Max_Steps,
-    DB_Sqrt_Max_Steps,
-    Log_Max_Outer_Steps,
-    Log_Max_Inner_Steps,
-    Basis_Max_Count,
-    Fast_Size_Threshold,
-    Inv_Fast_Dim_Threshold,
-    Denom_Different_Bits,
-    Extra_Different_Bits,
-    Products_Different_Bits,
-    Products_Matrix_Threshold
-    >;
+    using tuning_values_p =
+        tuning_values<Mult_Matrix_Threshold, CR_Sqrt_Max_Steps, DB_Sqrt_Max_Steps, Log_Max_Outer_Steps, Log_Max_Inner_Steps,
+                      Basis_Max_Count, Fast_Size_Threshold, Inv_Fast_Dim_Threshold, Denom_Different_Bits, Extra_Different_Bits,
+                      Products_Different_Bits, Products_Matrix_Threshold>;
     // Tuning for multiplication
     // Minimum index count needed to invoke matrix multiplication algorithm
     static constexpr unsigned int mult_matrix_threshold = Mult_Matrix_Threshold;
@@ -130,46 +117,22 @@ namespace glucat
   using default_tuning_values_p = tuning_values<>;
 
   /// Tuning policy constants
-  template
-  <
-    typename Tuning_Values_P = default_tuning_values_p,
-    precision_t  Function_Precision = Tuning_Default_Function_Precision
-  >
+  template <typename Tuning_Values_P = default_tuning_values_p, precision_t Function_Precision = Tuning_Default_Function_Precision>
   struct tuning : policy
   {
-    using tune_p = tuning
-    <
-      Tuning_Values_P,
-      Function_Precision
-    >;
+    using tune_p = tuning<Tuning_Values_P, Function_Precision>;
     using tuning_values_p = Tuning_Values_P;
     // Precision used for exp, log and sqrt functions
     static const precision_t function_precision = Function_Precision;
     // Tuning used for return values of exp, log and sqrt functions
-    using tuning_same_p = tuning
-    <
-      Tuning_Values_P,
-      precision_same
-    >;
+    using tuning_same_p = tuning<Tuning_Values_P, precision_same>;
   };
 
-  using default_tuning_demoted_p = tuning
-  <
-    default_tuning_values_p,
-    precision_demoted
-  >;
+  using default_tuning_demoted_p = tuning<default_tuning_values_p, precision_demoted>;
 
-  using default_tuning_same_p = tuning
-  <
-    default_tuning_values_p,
-    precision_same
-  >;
+  using default_tuning_same_p = tuning<default_tuning_values_p, precision_same>;
 
-  using default_tuning_promoted_p = tuning
-  <
-    default_tuning_values_p,
-    precision_promoted
-  >;
+  using default_tuning_promoted_p = tuning<default_tuning_values_p, precision_promoted>;
 }
 
-#endif // GLUCAT_TUNING_H
+#endif  // GLUCAT_TUNING_H

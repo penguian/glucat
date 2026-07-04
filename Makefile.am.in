@@ -65,12 +65,14 @@ $(DOC):
 	$(MAKE) -C $(DOC)
 endif
 
-$(TESTOUT):
-	$(MAKE) -C $(@D) check
-
+if doc_SUBDIR_included
 install-doc:
 	-$(MAKE) -C $(DOC) install-data
 	rm -rf autom4te.cache
+endif
+
+$(TESTOUT):
+	$(MAKE) -C $(@D) check
 
 $(top_srcdir)/configure.ac: configure.ac.in $(top_srcdir)/subdirs
 	cd $(top_srcdir) && $(MAKE) -f admin/Makefile.common configure.ac ;
@@ -99,4 +101,13 @@ distclean-local:
 dist-hook:
 	cd $(top_distdir) && rm -rf */.deps
 
-.PHONY: doc test-out install-doc
+lint-check:
+	python3 format_helper.py check glucat/*.h
+
+lint-fix:
+	python3 format_helper.py fix glucat/*.h
+
+cppcheck:
+	cppcheck --project=glucat.cppcheck --error-exitcode=1
+
+.PHONY: doc test-out install-doc lint-check lint-fix cppcheck
