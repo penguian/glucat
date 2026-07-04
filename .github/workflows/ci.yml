@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         compiler:
-          - { cc: gcc,   cxx: g++,     version: "13" }
+          - { cc: gcc,   cxx: g++,     version: "14" }
           - { cc: clang, cxx: clang++, version: "18" }
         backend:
           - eigen
@@ -38,7 +38,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt-get install -y libeigen3-dev libarmadillo-dev libtool autoconf automake pkg-config
+          sudo apt-get install -y libeigen3-dev libarmadillo-dev libtool autoconf automake pkg-config doctest-dev
 
       - name: Install Boost Headers
         run: |
@@ -76,7 +76,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libeigen3-dev libarmadillo-dev libtool autoconf automake pkg-config python3-pip python3-dev cython3
+          sudo apt-get install -y libeigen3-dev libarmadillo-dev libtool autoconf automake pkg-config python3-pip python3-dev cython3 doctest-dev
 
       - name: Install Boost Headers (Latest 1.85.0)
         run: |
@@ -125,7 +125,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libeigen3-dev libarmadillo-dev libtool autoconf automake pkg-config
-          sudo apt-get install -y doxygen graphviz texlive-latex-base texlive-latex-extra texlive-binaries
+          sudo apt-get install -y doxygen graphviz texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-binaries
 
       - name: Install Boost Headers (Latest 1.85.0)
         run: |
