@@ -1,0 +1,40 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: '^(test_runtime\..*/|benchmarks/(AMD-|Apple-|Intel-)/|.*\.out$|.*\.log$|ChangeLog$|test08/eg8.txt$)'
+      - id: end-of-file-fixer
+        exclude: '^(test_runtime\..*/|benchmarks/(AMD-|Apple-|Intel-)/|.*\.out$|.*\.log$|ChangeLog$|test08/eg8.txt$)'
+      - id: check-yaml
+      - id: check-merge-conflict
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.0
+    hooks:
+      - id: ruff
+        args: [--fix]
+        files: ^(pyclical|benchmarks)/
+      - id: ruff-format
+        files: ^(pyclical|benchmarks)/
+
+  - repo: local
+    hooks:
+      - id: clang-format
+        name: clang-format via format_helper
+        entry: python3 format_helper.py fix
+        language: python
+        types: [c++]
+        files: ^glucat/
+
+      - id: cppcheck
+        name: cppcheck
+        entry: make cppcheck
+        language: system
+        pass_filenames: false
+
+      - id: check-license-headers
+        name: check license headers
+        entry: python3 check_license_headers.py
+        language: python
+        types_or: [c++, python]
