@@ -53,7 +53,8 @@ def parse_sq_output(ver_cfg_dir):
     fm_idx = content.find("framed_multi<double>")
     if fm_idx != -1:
         pat = (
-            r"Cl\(\s*11,\s*11\) in Cl\(\s*11,\s*11\) CPU =\s*[\d\.]+"
+            r"Cl\(\s*11,\s*11\) in "
+            r"Cl\(\s*11,\s*11\) CPU =\s*[\d\.]+"
             r" ms \(setup\)\s*([\d\.]+) \(\*\)"
         )
         m = re.search(pat, content[fm_idx:])
@@ -64,7 +65,8 @@ def parse_sq_output(ver_cfg_dir):
     mm_idx = content.find("matrix_multi<double>")
     if mm_idx != -1:
         pat = (
-            r"Cl\(\s*11,\s*11\) in Cl\(\s*11,\s*11\) CPU =\s*[\d\.]+"
+            r"Cl\(\s*11,\s*11\) in "
+            r"Cl\(\s*11,\s*11\) CPU =\s*[\d\.]+"
             r" ms \(setup\)\s*([\d\.]+) \(\*\)"
         )
         m = re.search(pat, content[mm_idx:])
@@ -250,7 +252,10 @@ def main():
         "eigen-openmp"
     ]
 
-    print("Comparing gcc vs gcc.sign_helper benchmarks on AMD Ryzen 7 8840HS...")
+    print(
+        "Comparing gcc vs gcc.sign_helper benchmarks on "
+        "AMD Ryzen 7 8840HS..."
+    )
     results = load_results(base_dir, cfgs)
     print_products_table(results, cfgs)
     print_squaring_table(results, cfgs)

@@ -13,7 +13,7 @@
         <dir name="test_doctest"/>
     </paths>
     <defines>
-        <define name="__cplusplus"/>
+        <define name="__cplusplus" value="202302L"/>
     </defines>
     <suppressions>
         <!-- Suppress warnings for missing system includes -->
