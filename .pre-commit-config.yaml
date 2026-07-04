@@ -22,7 +22,7 @@ repos:
     hooks:
       - id: clang-format
         name: clang-format via format_helper
-        entry: python3 format_helper.py fix
+        entry: python format_helper.py fix
         language: python
         types: [c++]
         files: ^glucat/
@@ -35,6 +35,6 @@ repos:
 
       - id: check-license-headers
         name: check license headers
-        entry: python3 check_license_headers.py
+        entry: python check_license_headers.py
         language: python
         types_or: [c++, python]

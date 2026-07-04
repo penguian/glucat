@@ -61,7 +61,6 @@ class notebook_context(interaction_context):
 
     def print_notebook_header(self, notebook_title):
         print("{")
-        print(' "metadata": {},')
         print(' "nbformat":', 4, ",")
         print(' "nbformat_minor":', 2, ",")
         print(' "metadata": {')

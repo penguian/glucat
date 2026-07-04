@@ -77,4 +77,4 @@ All source files (`.py`, `.h`, `.cpp`, `.hpp`, `.pyx`, `.pxd`) must have a valid
 - PyClical tutorials and demos must include the **Creative Commons BY-SA 3.0** header.
 
 > [!NOTE]
-> **Unique Exemption:** The demo file [plotting_demo_dialog.py](file:///home/leopardi/sync/src/penguian/glucat/pyclical/demos/plotting_demo_dialog.py) is a unique exemption. Since it is a derivative work of a TraitsUI/Mayavi template copyrighted by Enthought, Inc., it maintains its original **BSD Style** license header. This is the only BSD-licensed file permitted in the repository.
+> **Unique Exemption:** The demo file [pyclical/demos/plotting_demo_dialog.py](pyclical/demos/plotting_demo_dialog.py) is a unique exemption. Since it is a derivative work of a TraitsUI/Mayavi template copyrighted by Enthought, Inc., it maintains its original **BSD Style** license header. This is the only BSD-licensed file permitted in the repository.

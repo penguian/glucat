@@ -30,17 +30,39 @@ def check_file(filepath):
             lines = [f.readline() for _ in range(50)]
         content = "".join(lines)
 
-        if filepath.endswith("plotting_demo_dialog.py"):
-            if "BSD Style" in content:
+        normalized_path = os.path.normpath(filepath).replace("\\", "/")
+        exempt_suffix = "/pyclical/demos/plotting_demo_dialog.py"
+        is_exempt = (
+            normalized_path == "pyclical/demos/plotting_demo_dialog.py"
+            or normalized_path.endswith(exempt_suffix)
+        )
+
+        if is_exempt:
+            if "BSD" + " Style" in content:
                 return True
-            print(f"Error: Missing BSD license header in {filepath}", file=sys.stderr)
+            print(
+                f"Error: Missing BSD license header in {filepath}",
+                file=sys.stderr,
+            )
+            return False
+
+        if "BSD" + " Style" in content:
+            msg = (
+                "Error: BSD"
+                f" Style license header found in non-exempt file {filepath}"
+            )
+            print(msg, file=sys.stderr)
             return False
 
         if not any(sub in content for sub in LICENSE_SUBSTRINGS):
-            print(f"Error: Missing LGPL or CC BY-SA license header in {filepath}", file=sys.stderr)
+            msg = (
+                "Error: Missing LGPL or CC BY-SA license header "
+                f"in {filepath}"
+            )
+            print(msg, file=sys.stderr)
             return False
         return True
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-exception-caught
         print(f"Error reading {filepath}: {e}", file=sys.stderr)
         return False
 
