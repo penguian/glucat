@@ -76,7 +76,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libeigen3-dev libarmadillo-dev libtool autoconf automake pkg-config python3-pip python3-dev cython3 doctest-dev
+          sudo apt-get install -y gcc-14 g++-14 libeigen3-dev libarmadillo-dev libtool autoconf automake pkg-config python3-pip python3-dev cython3 doctest-dev
 
       - name: Install Boost Headers (Latest 1.85.0)
         run: |
@@ -95,6 +95,9 @@ jobs:
           pip install pytest ruff pylint nbformat Cython numpy
 
       - name: Bootstrap & Configure PyClical
+        env:
+          CC: gcc-14
+          CXX: g++-14
         run: |
           make -f admin/Makefile.common bootstrap
           ./configure --enable-pyclical
@@ -124,7 +127,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libeigen3-dev libarmadillo-dev libtool autoconf automake pkg-config
+          sudo apt-get install -y gcc-14 g++-14 libeigen3-dev libarmadillo-dev libtool autoconf automake pkg-config
           sudo apt-get install -y doxygen graphviz texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-binaries
 
       - name: Install Boost Headers (Latest 1.85.0)
@@ -134,6 +137,9 @@ jobs:
           sudo mv boost /usr/local/include/boost
 
       - name: Bootstrap & configure with --enable-doc
+        env:
+          CC: gcc-14
+          CXX: g++-14
         run: |
           make -f admin/Makefile.common bootstrap
           ./configure --enable-doc
