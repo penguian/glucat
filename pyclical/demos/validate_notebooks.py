@@ -90,7 +90,7 @@ def main():
                 nb = nbformat.read(f, as_version=nbformat.NO_CONVERT)
             if nb.get("nbformat") != 4:
                 raise NotebookValidationError(
-                    f"Expected nbformat 4, found nbformat {nb.get('nbformat')}"
+                    f"Expected nbformat 4, found nbformat {nb.get('nbformat', 'missing')}"
                 )
             validate(nb)
             print(f"  {nb_name} is valid.")
