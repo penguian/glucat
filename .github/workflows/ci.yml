@@ -44,6 +44,10 @@ jobs:
         run: |
           BOOST_UNDERSCORE=$(echo "${{ matrix.boost }}" | tr '.' '_')
           wget -q https://archives.boost.io/release/${{ matrix.boost }}/source/boost_${BOOST_UNDERSCORE}.tar.gz
+          case "${{ matrix.boost }}" in
+            "1.84.0") echo "a5800f405508f5df8114558ca9855d2640a2de8f0445f051fa1c7c3383045724  boost_${BOOST_UNDERSCORE}.tar.gz" | sha256sum --check ;;
+            "1.85.0") echo "be0d91732d5b0cc6fbb275c7939974457e79b54d6f07ce2e3dfdd68bef883b0b  boost_${BOOST_UNDERSCORE}.tar.gz" | sha256sum --check ;;
+          esac
           tar -xzf boost_${BOOST_UNDERSCORE}.tar.gz boost_${BOOST_UNDERSCORE}/boost --strip-components=1
           sudo rm -rf /usr/local/include/boost
           sudo mv -T boost /usr/local/include/boost
@@ -82,6 +86,7 @@ jobs:
       - name: Install Boost Headers (Latest 1.85.0)
         run: |
           wget -q https://archives.boost.io/release/1.85.0/source/boost_1_85_0.tar.gz
+          echo "be0d91732d5b0cc6fbb275c7939974457e79b54d6f07ce2e3dfdd68bef883b0b  boost_1_85_0.tar.gz" | sha256sum --check
           tar -xzf boost_1_85_0.tar.gz boost_1_85_0/boost --strip-components=1
           sudo rm -rf /usr/local/include/boost
           sudo mv -T boost /usr/local/include/boost
@@ -135,6 +140,7 @@ jobs:
       - name: Install Boost Headers (Latest 1.85.0)
         run: |
           wget -q https://archives.boost.io/release/1.85.0/source/boost_1_85_0.tar.gz
+          echo "be0d91732d5b0cc6fbb275c7939974457e79b54d6f07ce2e3dfdd68bef883b0b  boost_1_85_0.tar.gz" | sha256sum --check
           tar -xzf boost_1_85_0.tar.gz boost_1_85_0/boost --strip-components=1
           sudo rm -rf /usr/local/include/boost
           sudo mv -T boost /usr/local/include/boost
