@@ -1,0 +1,166 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+permissions:
+  contents: read
+
+jobs:
+  cpp-matrix:
+    name: C++ (${{ matrix.compiler.cc }}-${{ matrix.compiler.version }}, ${{ matrix.backend }}, Boost ${{ matrix.boost }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler:
+          - { cc: gcc,   cxx: g++,     version: "14" }
+          - { cc: clang, cxx: clang++, version: "18" }
+        backend:
+          - eigen
+          - armadillo
+        boost:
+          - "1.84.0"
+          - "1.85.0"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+
+      - name: Install C++ Compiler
+        run: |
+          sudo apt-get update
+          if [ "${{ matrix.compiler.cc }}" = "clang" ]; then
+            sudo apt-get install -y clang-${{ matrix.compiler.version }} llvm-${{ matrix.compiler.version }}
+          else
+            sudo apt-get install -y gcc-${{ matrix.compiler.version }} g++-${{ matrix.compiler.version }}
+          fi
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get install -y libeigen3-dev libarmadillo-dev libtool autoconf automake pkg-config doctest-dev
+
+      - name: Install Boost Headers
+        run: |
+          BOOST_UNDERSCORE=$(echo "${{ matrix.boost }}" | tr '.' '_')
+          wget -q https://archives.boost.io/release/${{ matrix.boost }}/source/boost_${BOOST_UNDERSCORE}.tar.gz
+          case "${{ matrix.boost }}" in
+            "1.84.0") echo "a5800f405508f5df8114558ca9855d2640a2de8f0445f051fa1c7c3383045724  boost_${BOOST_UNDERSCORE}.tar.gz" | sha256sum --check ;;
+            "1.85.0") echo "be0d91732d5b0cc6fbb275c7939974457e79b54d6f07ce2e3dfdd68bef883b0b  boost_${BOOST_UNDERSCORE}.tar.gz" | sha256sum --check ;;
+            *) echo "Unsupported Boost version: ${{ matrix.boost }}" >&2; exit 1 ;;
+          esac
+          tar -xzf boost_${BOOST_UNDERSCORE}.tar.gz boost_${BOOST_UNDERSCORE}/boost --strip-components=1
+          sudo rm -rf /usr/local/include/boost
+          sudo mv -T boost /usr/local/include/boost
+
+      - name: Bootstrap & Configure
+        env:
+          CC: ${{ matrix.compiler.cc }}-${{ matrix.compiler.version }}
+          CXX: ${{ matrix.compiler.cxx }}-${{ matrix.compiler.version }}
+        run: |
+          make -f admin/Makefile.common bootstrap
+          CONFIGURE_FLAGS="--disable-pyclical"
+          if [ "${{ matrix.backend }}" = "armadillo" ]; then
+            CONFIGURE_FLAGS="$CONFIGURE_FLAGS --with-armadillo=yes"
+          fi
+          ./configure $CONFIGURE_FLAGS CXXFLAGS="-O2 -g -Werror=return-type -Werror=uninitialized -Werror=format"
+
+      - name: Build
+        run: make -j$(nproc)
+
+      - name: Run C++ tests
+        run: make check-local
+
+  pyclical:
+    name: PyClical CI
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-14 g++-14 libeigen3-dev libarmadillo-dev libtool autoconf automake pkg-config python3-pip python3-dev doctest-dev python3-venv
+
+      - name: Install Boost Headers (Latest 1.85.0)
+        run: |
+          wget -q https://archives.boost.io/release/1.85.0/source/boost_1_85_0.tar.gz
+          echo "be0d91732d5b0cc6fbb275c7939974457e79b54d6f07ce2e3dfdd68bef883b0b  boost_1_85_0.tar.gz" | sha256sum --check
+          tar -xzf boost_1_85_0.tar.gz boost_1_85_0/boost --strip-components=1
+          sudo rm -rf /usr/local/include/boost
+          sudo mv -T boost /usr/local/include/boost
+
+      - name: Set up virtual environment
+        run: |
+          python3 -m venv venv
+          echo "$GITHUB_WORKSPACE/venv/bin" >> $GITHUB_PATH
+
+      - name: Install Python dependencies
+        run: |
+          pip install --upgrade pip
+          pip install pytest ruff pylint nbformat Cython numpy setuptools wheel
+
+      - name: Bootstrap & Configure PyClical
+        env:
+          CC: gcc-14
+          CXX: g++-14
+        run: |
+          make -f admin/Makefile.common bootstrap
+          ./configure --enable-pyclical
+
+      - name: Build
+        run: make -j$(nproc)
+
+      - name: Lint PyClical & demos
+        run: |
+          ruff check pyclical/ pyclical/demos/
+          pylint pyclical/ pyclical/demos/
+
+      - name: Validate generated notebooks
+        run: python3 pyclical/demos/validate_notebooks.py
+
+      - name: Run PyClical tests
+        run: python3 -m pytest pyclical/test_pytest_doctests.py -v
+
+  doc:
+    name: Documentation Build
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-14 g++-14 libeigen3-dev libarmadillo-dev libtool autoconf automake pkg-config
+          sudo apt-get install -y doxygen graphviz texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-binaries
+
+      - name: Install Boost Headers (Latest 1.85.0)
+        run: |
+          wget -q https://archives.boost.io/release/1.85.0/source/boost_1_85_0.tar.gz
+          echo "be0d91732d5b0cc6fbb275c7939974457e79b54d6f07ce2e3dfdd68bef883b0b  boost_1_85_0.tar.gz" | sha256sum --check
+          tar -xzf boost_1_85_0.tar.gz boost_1_85_0/boost --strip-components=1
+          sudo rm -rf /usr/local/include/boost
+          sudo mv -T boost /usr/local/include/boost
+
+      - name: Bootstrap & configure with --enable-doc
+        env:
+          CC: gcc-14
+          CXX: g++-14
+        run: |
+          make -f admin/Makefile.common bootstrap
+          ./configure --enable-doc --disable-pyclical
+
+      - name: Build documentation
+        run: make doc
+
+      - name: Verify output artefacts exist
+        run: |
+          test -f doc/api/html/index.html
+          test -f doc/api/GluCat-API-reference-manual.pdf
