@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ master, 86-github-actions-ci ]
+    branches: [ master ]
   pull_request:
     branches: [ master ]
 
@@ -45,7 +45,8 @@ jobs:
           BOOST_UNDERSCORE=$(echo "${{ matrix.boost }}" | tr '.' '_')
           wget -q https://archives.boost.io/release/${{ matrix.boost }}/source/boost_${BOOST_UNDERSCORE}.tar.gz
           tar -xzf boost_${BOOST_UNDERSCORE}.tar.gz boost_${BOOST_UNDERSCORE}/boost --strip-components=1
-          sudo mv boost /usr/local/include/boost
+          sudo rm -rf /usr/local/include/boost
+          sudo mv -T boost /usr/local/include/boost
 
       - name: Bootstrap & Configure
         env:
@@ -53,9 +54,9 @@ jobs:
           CXX: ${{ matrix.compiler.cxx }}-${{ matrix.compiler.version }}
         run: |
           make -f admin/Makefile.common bootstrap
-          CONFIGURE_FLAGS=""
+          CONFIGURE_FLAGS="--disable-pyclical"
           if [ "${{ matrix.backend }}" = "armadillo" ]; then
-            CONFIGURE_FLAGS="--with-armadillo=yes"
+            CONFIGURE_FLAGS="$CONFIGURE_FLAGS --with-armadillo=yes"
           fi
           ./configure $CONFIGURE_FLAGS CXXFLAGS="-O2 -g -Werror=return-type -Werror=uninitialized -Werror=format"
 
@@ -76,13 +77,14 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y gcc-14 g++-14 libeigen3-dev libarmadillo-dev libtool autoconf automake pkg-config python3-pip python3-dev cython3 doctest-dev
+          sudo apt-get install -y gcc-14 g++-14 libeigen3-dev libarmadillo-dev libtool autoconf automake pkg-config python3-pip python3-dev doctest-dev
 
       - name: Install Boost Headers (Latest 1.85.0)
         run: |
           wget -q https://archives.boost.io/release/1.85.0/source/boost_1_85_0.tar.gz
           tar -xzf boost_1_85_0.tar.gz boost_1_85_0/boost --strip-components=1
-          sudo mv boost /usr/local/include/boost
+          sudo rm -rf /usr/local/include/boost
+          sudo mv -T boost /usr/local/include/boost
 
       - name: Set up virtual environment
         run: |
@@ -134,7 +136,8 @@ jobs:
         run: |
           wget -q https://archives.boost.io/release/1.85.0/source/boost_1_85_0.tar.gz
           tar -xzf boost_1_85_0.tar.gz boost_1_85_0/boost --strip-components=1
-          sudo mv boost /usr/local/include/boost
+          sudo rm -rf /usr/local/include/boost
+          sudo mv -T boost /usr/local/include/boost
 
       - name: Bootstrap & configure with --enable-doc
         env:
@@ -142,7 +145,7 @@ jobs:
           CXX: g++-14
         run: |
           make -f admin/Makefile.common bootstrap
-          ./configure --enable-doc
+          ./configure --enable-doc --disable-pyclical
 
       - name: Build documentation
         run: make doc

@@ -25,7 +25,7 @@ This script will run:
 ### Continuous Integration (GitHub Actions)
 
 All pull requests and merges to `master` automatically trigger our GitHub Actions CI pipeline, which runs:
-- **C++ Build & Test Matrix:** Builds and tests GluCat against GCC 13 and Clang 18 using both Eigen and Armadillo backends across Boost versions 1.84.0 and 1.85.0. Curated compiler warning-to-error options (e.g. `-Werror=return-type`, `-Werror=uninitialized`, `-Werror=format`) are enforced.
+- **C++ Build & Test Matrix:** Builds and tests GluCat against GCC 14 and Clang 18 using both Eigen and Armadillo backends across Boost versions 1.84.0 and 1.85.0. Curated compiler warning-to-error options (e.g. `-Werror=return-type`, `-Werror=uninitialized`, `-Werror=format`) are enforced.
 - **PyClical Validation:** Lints Python files with Ruff/Pylint, validates generated Jupyter notebooks, and runs Python doctests.
 - **Documentation Build:** Installs doc dependencies (Doxygen, Graphviz, LaTeX) and verifies that documentation PDF and HTML manuals build cleanly.
 
