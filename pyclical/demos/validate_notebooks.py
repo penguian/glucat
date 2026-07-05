@@ -88,9 +88,10 @@ def main():
             # Re-read with nbformat to validate schema
             with open(nb_path, "r", encoding="utf-8") as f:
                 nb = nbformat.read(f, as_version=nbformat.NO_CONVERT)
-            if nb.get("nbformat") != 4:
+            nbformat_value = nb.get("nbformat", "missing")
+            if not isinstance(nbformat_value, int) or nbformat_value != 4:
                 raise NotebookValidationError(
-                    f"Expected nbformat 4, found nbformat {nb.get('nbformat', 'missing')}"
+                    f"Expected nbformat 4, found nbformat {nbformat_value}"
                 )
             validate(nb)
             print(f"  {nb_name} is valid.")
