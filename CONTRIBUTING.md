@@ -8,15 +8,15 @@ Before submitting a Pull Request, please ensure that all checks pass locally.
 
 ### Local Verification Gate
 
-You can run all local tests and linters at once using the verification script:
+You can run all local tests and linters at once using the verification script. Note that this requires the project to be bootstrapped and configured beforehand (so that a top-level `Makefile` is present):
 ```bash
 ./verify_all.sh
 ```
 This script will run:
-1. Python checks: `ruff` and `pylint` on the `pyclical/` wrapper, demos, and benchmarks.
-2. C++ style check: `clang-format` (restricted to the `glucat/` directory).
-3. C++ static analysis: `cppcheck` (restricted to the `glucat/` directory).
-4. Primary regression tests: `make check-local`.
+1. C++ style check: `clang-format` via `make lint-check` (restricted to the `glucat/` directory).
+2. C++ static analysis: `cppcheck` via `make cppcheck` (restricted to the `glucat/` directory).
+3. Primary regression tests: `make check-local`.
+4. Python checks: `ruff` and `pylint` on the `pyclical/` wrapper, demos, and benchmarks.
 5. Jupyter Notebook validation: Rebuilding and checking generated tutorials and demos against JSON syntax and `nbformat` schema via:
    ```bash
    python3 pyclical/demos/validate_notebooks.py
