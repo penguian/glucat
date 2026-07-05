@@ -37,10 +37,18 @@ def main():
 
     # 1. Run the build script
     print("Building notebooks...")
+    env = os.environ.copy()
+    parent_dir = os.path.dirname(script_dir)
+    if "PYTHONPATH" in env:
+        env["PYTHONPATH"] = parent_dir + os.pathsep + env["PYTHONPATH"]
+    else:
+        env["PYTHONPATH"] = parent_dir
+
     try:
         subprocess.run(
             [sys.executable, "build_pyclical_notebooks.py"],
             cwd=script_dir,
+            env=env,
             check=True,
             capture_output=True,
             text=True,
