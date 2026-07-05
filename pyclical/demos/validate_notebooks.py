@@ -50,13 +50,9 @@ def main():
             cwd=script_dir,
             env=env,
             check=True,
-            capture_output=True,
-            text=True,
         )
     except subprocess.CalledProcessError as e:
         print(f"Failed to build notebooks: {e}", file=sys.stderr)
-        print(f"Stdout:\n{e.stdout}", file=sys.stderr)
-        print(f"Stderr:\n{e.stderr}", file=sys.stderr)
         return 1
 
     # 2. Find all generated .ipynb files

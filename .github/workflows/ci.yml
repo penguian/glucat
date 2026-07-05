@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ master ]
 
+permissions:
+  contents: read
+
 jobs:
   cpp-matrix:
     name: C++ (${{ matrix.compiler.cc }}-${{ matrix.compiler.version }}, ${{ matrix.backend }}, Boost ${{ matrix.boost }})
@@ -81,7 +84,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y gcc-14 g++-14 libeigen3-dev libarmadillo-dev libtool autoconf automake pkg-config python3-pip python3-dev doctest-dev
+          sudo apt-get install -y gcc-14 g++-14 libeigen3-dev libarmadillo-dev libtool autoconf automake pkg-config python3-pip python3-dev doctest-dev python3-venv
 
       - name: Install Boost Headers (Latest 1.85.0)
         run: |
