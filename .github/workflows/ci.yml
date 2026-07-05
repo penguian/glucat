@@ -28,7 +28,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
       - name: Install C++ Compiler
         run: |
@@ -50,6 +50,7 @@ jobs:
           case "${{ matrix.boost }}" in
             "1.84.0") echo "a5800f405508f5df8114558ca9855d2640a2de8f0445f051fa1c7c3383045724  boost_${BOOST_UNDERSCORE}.tar.gz" | sha256sum --check ;;
             "1.85.0") echo "be0d91732d5b0cc6fbb275c7939974457e79b54d6f07ce2e3dfdd68bef883b0b  boost_${BOOST_UNDERSCORE}.tar.gz" | sha256sum --check ;;
+            *) echo "Unsupported Boost version: ${{ matrix.boost }}" >&2; exit 1 ;;
           esac
           tar -xzf boost_${BOOST_UNDERSCORE}.tar.gz boost_${BOOST_UNDERSCORE}/boost --strip-components=1
           sudo rm -rf /usr/local/include/boost
@@ -79,7 +80,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
       - name: Install dependencies
         run: |
@@ -132,7 +133,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
       - name: Install dependencies
         run: |
