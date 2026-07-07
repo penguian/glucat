@@ -109,15 +109,8 @@ namespace glucat
       throw error_t("index_set(range): cannot create: range is too large");
     const index_t begin_bit = (range.first < 0) ? range.first - LO : range.first - LO - 1;
     const index_t end_bit = (range.second < 0) ? range.second - LO + 1 : range.second - LO;
-    unsigned long mask;
-    if constexpr (HI - LO >= _GLUCAT_BITS_PER_ULONG)
-    {
-      mask = ((end_bit == _GLUCAT_BITS_PER_ULONG) ? -1UL : (1UL << end_bit) - 1UL) & ~((1UL << begin_bit) - 1UL);
-    }
-    else
-    {
-      mask = ((1UL << end_bit) - 1UL) & ~((1UL << begin_bit) - 1UL);
-    }
+    const unsigned long mask =
+        ((end_bit == _GLUCAT_BITS_PER_ULONG) ? ~0UL : ((1UL << end_bit) - 1UL)) & ~((1UL << begin_bit) - 1UL);
     *this = bitset_t(mask);
   }
 
@@ -1541,8 +1534,8 @@ namespace glucat
         CHECK_THROWS(
             []()
             {
-              is_t local_is1("{1}");
-              is_t local_is2("{2}");
+              [[maybe_unused]] is_t local_is1("{1}");
+              [[maybe_unused]] is_t local_is2("{2}");
               is_t(traits::hi + 1);
             }());
 
@@ -1623,13 +1616,28 @@ namespace glucat
   }  // namespace test
 }  // namespace glucat
 
-TEST_CASE("index_set<LO,HI>")
+TEST_CASE("index_set<-4, 4>")
 {
   glucat::test::run_index_set_tests<glucat::index_set<-4, 4>>();
-  glucat::test::run_index_set_tests<glucat::index_set<-8, 8>>();
-  glucat::test::run_index_set_tests<glucat::index_set<-16, 16>>();
-  glucat::test::run_index_set_tests<glucat::index_set<-32, 32>>();
+}
 
+TEST_CASE("index_set<-8, 8>")
+{
+  glucat::test::run_index_set_tests<glucat::index_set<-8, 8>>();
+}
+
+TEST_CASE("index_set<-16, 16>")
+{
+  glucat::test::run_index_set_tests<glucat::index_set<-16, 16>>();
+}
+
+TEST_CASE("index_set<-32, 32>")
+{
+  glucat::test::run_index_set_tests<glucat::index_set<-32, 32>>();
+}
+
+TEST_CASE("index_set one-off checks")
+{
   // Empty min/max checks to ensure 100% block coverage of min/max methods
   CHECK(glucat::index_set<-4, 4>().min() == 0);
   CHECK(glucat::index_set<-4, 4>().max() == 0);

@@ -3031,9 +3031,9 @@ TEST_CASE_TEMPLATE("framed_multi<Scalar_T, LO, HI, Tune_P>", T, float, double, l
         []()
         {
           fm_t local_f1("{1}");
-          fm_t local_f2("{2}");
+          [[maybe_unused]] fm_t local_f2("{2}");
           using is_t = typename fm_t::index_set_t;
-          is_t local_is("{1,2}");
+          [[maybe_unused]] is_t local_is("{1,2}");
           local_f1.outer_pow(-1);
         }());
   }

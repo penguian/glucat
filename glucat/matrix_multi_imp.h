@@ -4095,9 +4095,9 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>")
         []()
         {
           mm_t local_m1("{1}");
-          mm_t local_m2("{2}");
+          [[maybe_unused]] mm_t local_m2("{2}");
           using is_t = mm_t::index_set_t;
-          is_t local_is("{1,2}");
+          [[maybe_unused]] is_t local_is("{1,2}");
           local_m1.outer_pow(-1);
         }());
   }
