@@ -7,7 +7,8 @@ if [ "$1" = "--coverage" ]; then
     echo "Error: llvm-profdata or llvm-cov not found. Please install LLVM tools." >&2
     exit 1
   fi
-  bash test_coverage/src/run_clang_doctest_coverage.sh
+  shift
+  bash test_coverage/src/run_clang_doctest_coverage.sh "$@"
   exit 0
 fi
 
