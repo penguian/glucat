@@ -89,7 +89,7 @@ namespace glucat
       throw error_t("index_set(val,frm): cannot create: value gives an index set outside of frame");
     const index_set_t folded_frame = frm.fold();
     const index_t min_index = folded_frame.min();
-    const index_t skip = min_index > 0 ? 1 : 0;
+    const index_t skip = (min_index > 0);
     const index_set_t folded_set = index_set_t(bitset_t(folded_val) << (min_index - skip - LO));
     *this = folded_set.unfold(frm);
   }
@@ -109,7 +109,8 @@ namespace glucat
       throw error_t("index_set(range): cannot create: range is too large");
     const index_t begin_bit = (range.first < 0) ? range.first - LO : range.first - LO - 1;
     const index_t end_bit = (range.second < 0) ? range.second - LO + 1 : range.second - LO;
-    unsigned long mask = ((end_bit == _GLUCAT_BITS_PER_ULONG) ? -1UL : (1UL << end_bit) - 1UL) & ~((1UL << begin_bit) - 1UL);
+    const unsigned long mask =
+        ((end_bit == _GLUCAT_BITS_PER_ULONG) ? ~0UL : ((1UL << end_bit) - 1UL)) & ~((1UL << begin_bit) - 1UL);
     *this = bitset_t(mask);
   }
 
@@ -530,12 +531,18 @@ namespace glucat
       index_t idx = 0;
       const index_t nbits = HI - LO;
 
-      if (nbits > 8)
+      if constexpr (nbits > 32)
       {
         if (val & 0xffffffff00000000ul)
           idx += 32;
+      }
+      if constexpr (nbits > 16)
+      {
         if (val & 0xffff0000ffff0000ul)
           idx += 16;
+      }
+      if constexpr (nbits > 8)
+      {
         if (val & 0xff00ff00ff00ff00ul)
           idx += 8;
       }
@@ -570,10 +577,13 @@ namespace glucat
 
       index_t idx = 0;
       const index_t nbits = HI - LO;
-      if (nbits > 8)
+      if constexpr (nbits > 16)
       {
         if (val & 0xffff0000ul)
           idx += 16;
+      }
+      if constexpr (nbits > 8)
+      {
         if (val & 0xff00ff00ul)
           idx += 8;
       }
@@ -627,18 +637,24 @@ namespace glucat
     {
       auto idx = index_t(0);
       const auto nbits = HI - LO;
-      if (nbits > 8)
+      if constexpr (nbits > 32)
       {
         if (val & 0xffffffff00000000ul)
         {
           val >>= 32;
           idx += 32;
         }
+      }
+      if constexpr (nbits > 16)
+      {
         if (val & 0x00000000ffff0000ul)
         {
           val >>= 16;
           idx += 16;
         }
+      }
+      if constexpr (nbits > 8)
+      {
         if (val & 0x000000000000ff00ul)
         {
           val >>= 8;
@@ -681,13 +697,16 @@ namespace glucat
     {
       auto idx = index_t(0);
       const auto nbits = HI - LO;
-      if (nbits > 8)
+      if constexpr (nbits > 16)
       {
         if (val & 0xffff0000ul)
         {
           val >>= 16;
           idx += 16;
         }
+      }
+      if constexpr (nbits > 8)
+      {
         if (val & 0x0000ff00ul)
         {
           val >>= 8;
@@ -858,10 +877,7 @@ namespace glucat
           break;
         // The index list continues with a comma, and
         // may be ended by a closing brace, if it was begun with an opening brace.
-        // Parse a possible comma or closing brace.
         c = s.peek();
-        if (!s.good())
-          break;
         // First, test for a closing brace, if expected.
         if (expect_closing_brace && (c == int('}')))
         {  // Consume the closing brace.
@@ -1083,7 +1099,7 @@ namespace glucat
     const auto urhs = rhs.to_set_value();
     const auto nbits = HI - LO;
     auto negative = 0UL;
-    if (nbits > 8)
+    if constexpr (nbits > 8)
     {
       // Set h to be the inverse reversed Gray code of rhs.
       // This sets each bit of h to be the cumulative ^ of
@@ -1121,7 +1137,7 @@ namespace glucat
   {
     const auto uthis = this->to_set_value();
     const auto nbits = HI - LO;
-    if (nbits > 8)
+    if constexpr (nbits > 8)
     { return sign_helper(inverse_reversed_gray(uthis)); }
     else
     {
@@ -1350,152 +1366,314 @@ namespace glucat
 
 #include <iostream>
 
-TEST_CASE("index_set<LO,HI>")
+namespace glucat
 {
-  using is_t = glucat::index_set<-32, 32>;
-
-  SUBCASE("Metadata")
+  namespace test
   {
-    CHECK(is_t::classname() == "index_set");
-  }
+    template <typename T>
+    struct index_set_traits;
+    template <const index_t LO, const index_t HI>
+    struct index_set_traits<index_set<LO, HI>>
+    {
+      static constexpr index_t lo = LO;
+      static constexpr index_t hi = HI;
+    };
 
-  SUBCASE("Constructor and string representation")
-  {
-    is_t s1(1);
-    std::ostringstream oss1;
-    oss1 << s1;
-    CHECK(oss1.str() == "{1}");
+    template <typename is_t>
+    void run_index_set_tests()
+    {
+      using traits = index_set_traits<is_t>;
 
-    is_t s2("{1,2}");
-    std::ostringstream oss2;
-    oss2 << s2;
-    CHECK(oss2.str() == "{1,2}");
+      SUBCASE("Metadata")
+      {
+        CHECK(is_t::classname() == "index_set");
+      }
 
-    is_t s3("");
-    std::ostringstream oss3;
-    oss3 << s3;
-    CHECK(oss3.str() == "{}");
-  }
+      SUBCASE("Constructor and string representation")
+      {
+        is_t s1(1);
+        std::ostringstream oss1;
+        oss1 << s1;
+        CHECK(oss1.str() == "{1}");
 
-  SUBCASE("Comparisons")
-  {
-    CHECK(is_t(1) == is_t("{1}"));
-    CHECK(is_t("{1}") != is_t("{2}"));
-    CHECK(is_t("{1}") < is_t("{2}"));
-    CHECK(is_t("{1}") <= is_t("{2}"));
-    CHECK_FALSE(is_t("{1}") > is_t("{2}"));
-    CHECK_FALSE(is_t("{1}") >= is_t("{2}"));
-  }
+        is_t s2("{1,2}");
+        std::ostringstream oss2;
+        oss2 << s2;
+        CHECK(oss2.str() == "{1,2}");
 
-  SUBCASE("Set operations")
-  {
-    is_t s1("{1}");
-    is_t s2("{2}");
-    CHECK((s1 ^ s2) == is_t("{1,2}"));
-    CHECK((is_t("{1,2}") ^ s2) == s1);
-    CHECK((is_t("{1,2}") & s2) == s2);
-    CHECK((is_t("{1}") & s2) == is_t("{}"));
-    CHECK((s1 | s2) == is_t("{1,2}"));
-  }
+        is_t s3("");
+        std::ostringstream oss3;
+        oss3 << s3;
+        CHECK(oss3.str() == "{}");
+      }
 
-  SUBCASE("Cardinality and bounds")
-  {
-    is_t s("{-1,1,2}");
-    CHECK(s.count() == 3);
-    CHECK(s.count_neg() == 1);
-    CHECK(s.count_pos() == 2);
-    CHECK(s.min() == -1);
-    CHECK(s.max() == 2);
-  }
+      SUBCASE("Comparisons")
+      {
+        CHECK(is_t(1) == is_t("{1}"));
+        CHECK(is_t("{1}") != is_t("{2}"));
+        CHECK(is_t("{1}") < is_t("{2}"));
+        CHECK(is_t("{1}") <= is_t("{2}"));
+        CHECK_FALSE(is_t("{1}") > is_t("{2}"));
+        CHECK_FALSE(is_t("{1}") >= is_t("{2}"));
+      }
 
-  SUBCASE("Sign functions")
-  {
-    is_t s1("{1,2}");
-    is_t s2("{-1}");
-    CHECK(s1.sign_of_mult(s2) == 1);
-    CHECK(s1.sign_of_square() == -1);
-  }
+      SUBCASE("Set operations")
+      {
+        is_t s1("{1}");
+        is_t s2("{2}");
+        CHECK((s1 ^ s2) == is_t("{1,2}"));
+        CHECK((is_t("{1,2}") ^ s2) == s1);
+        CHECK((is_t("{1,2}") & s2) == s2);
+        CHECK((is_t("{1}") & s2) == is_t("{}"));
+        CHECK((s1 | s2) == is_t("{1,2}"));
+        s1 &= s2;
+        CHECK(s1 == is_t("{}"));
+      }
 
-  SUBCASE("Adversarial and edge cases")
-  {
-    // sign_of_square for single index
-    CHECK(glucat::sign_of_square(1) == 1);
-    CHECK(glucat::sign_of_square(-1) == -1);
+      SUBCASE("Cardinality and bounds")
+      {
+        is_t s("{-1,1,2}");
+        CHECK(s.count() == 3);
+        CHECK(s.count_neg() == 1);
+        CHECK(s.count_pos() == 2);
+        CHECK(s.min() == -1);
+        CHECK(s.max() == 2);
+      }
 
-    // reference operators
-    is_t s;
-    s[1] = true;
-    CHECK(s.test(1));
-    s[1] = false;
-    CHECK_FALSE(s.test(1));
-    s[1].flip();
-    CHECK(s.test(1));
+      SUBCASE("Sign functions")
+      {
+        is_t s1("{1,2}");
+        is_t s2("{-1}");
+        CHECK(s1.sign_of_mult(s2) == 1);
+        CHECK(s1.sign_of_square() == -1);
 
-    is_t s2;
-    s2[2] = s[1];
-    CHECK(s2.test(2));
-    s2[2] = s[3];  // s[3] is false
-    CHECK_FALSE(s2.test(2));
+        // sign of disjoint and general product with precomputed helper
+        auto h = s2.to_sign_helper();
+        CHECK(is_t::sign_of_disjoint_mult(s1, h) == 1);
+        CHECK(is_t::sign_of_mult(s1, s2, h) == 1);
+        CHECK(s1.hash_fn() != 0);
+      }
 
-    // operator~ and operator bool (via reference)
-    is_t s3("{1}");
-    CHECK(s3[1]);
-    CHECK_FALSE(s3[2]);
-    CHECK((~s3).test(1) == false);
-    CHECK((~s3).test(2) == true);
+      SUBCASE("Adversarial and edge cases")
+      {
+        // sign_of_square for single index
+        CHECK(glucat::sign_of_square(1) == 1);
+        CHECK(glucat::sign_of_square(-1) == -1);
 
-    // reference operators
-    is_t s_ref;
-    s_ref[1] = true;
-    CHECK(s_ref[1]);
-    CHECK_FALSE(~s_ref[1]);
-    CHECK(s_ref[1] == s_ref[1]);  // same index set and index
-    s_ref[1] = s_ref[1];          // self assignment
+        // reference operators
+        is_t s;
+        s[1] = true;
+        CHECK(s.test(1));
+        s[1] = false;
+        CHECK_FALSE(s.test(1));
+        s[1].flip();
+        CHECK(s.test(1));
 
-    // Comparisons with more varied sets
-    CHECK(is_t("{1,2}") < is_t("{1,2,3}"));
-    CHECK(is_t("{1,3}") > is_t("{1,2}"));
-    CHECK(is_t("{-1,1}") != is_t("{1}"));
-  }
+        is_t s2;
+        s2[2] = s[1];
+        CHECK(s2.test(2));
+        s2[2] = s[3];  // s[3] is false
+        CHECK_FALSE(s2.test(2));
 
-  SUBCASE("Exceptions")
-  {
-    CHECK_THROWS(is_t("{invalid}"));
-    CHECK_THROWS(is_t("{1,invalid}"));
-    CHECK_THROWS(is_t("{1,,2}"));
-    // Out of frame: is_t is <-32, 32>, so index 33 should throw if we try to set it via string or other means
-    // that check bounds.
-    // The constructor index_set(index_t val) uses prechecked=false by default, which should throw if out of bounds.
-    CHECK_THROWS(is_t(33));
-    CHECK_THROWS(is_t(-33));
-    CHECK_THROWS(is_t("{1} garbage"));
-  }
+        // operator~ and operator bool (via reference)
+        is_t s3("{1}");
+        CHECK(s3[1]);
+        CHECK_FALSE(s3[2]);
+        CHECK((~s3).test(1) == false);
+        CHECK((~s3).test(2) == true);
 
-  SUBCASE("Static Factory and Bit-Wizardry")
-  {
-    // Static factory methods (verified at compile-time, runtime check for consistency)
-    static_assert(is_t::from_index<1>().test(1));
-    static_assert(!is_t::from_index<1>().test(2));
-    static_assert(is_t::from_range<1, 3>().count() == 3);
-    CHECK(is_t::from_index<1>() == is_t(1));
-    CHECK(is_t::from_range<-1, 1>() == is_t(typename is_t::index_pair_t(-1, 1)));
+        // reference operators
+        is_t s_ref;
+        s_ref[1] = true;
+        CHECK(s_ref[1]);
+        CHECK_FALSE(~s_ref[1]);
+        CHECK(s_ref[1] == s_ref[1]);  // same index set and index
+        s_ref[1] = s_ref[1];          // self assignment
 
-    // Bit-wizardry coverage for 64-bit paths (requires LO <= -32, HI >= 32)
-    using large_is_t = glucat::index_set<-32, 32>;
-    large_is_t s_large;
-    s_large.set(32);
-    CHECK(s_large.max() == 32);
-    CHECK(s_large.min() == 32);
-    s_large.set(-32);
-    CHECK(s_large.min() == -32);
-    CHECK(s_large.max() == 32);
+        // Comparisons with more varied sets
+        CHECK(is_t("{1,2}") < is_t("{1,2,3}"));
+        CHECK(is_t("{1,3}") > is_t("{1,2}"));
+        CHECK(is_t("{-1,1}") != is_t("{1}"));
+        CHECK_FALSE(is_t("{1,2,3}") < is_t("{1,2}"));
 
-    large_is_t s_mid;
-    s_mid.set(16);
-    CHECK(s_mid.max() == 16);
-    s_mid.set(8);
-    CHECK(s_mid.min() == 8);
-  }
+        // Negative index reset/flip
+        is_t s_neg;
+        s_neg[-1] = true;
+        CHECK(s_neg.test(-1));
+        s_neg.reset(-1);
+        CHECK_FALSE(s_neg.test(-1));
+        s_neg.flip(-1);
+        CHECK(s_neg.test(-1));
+
+        // Parsing empty set via braces
+        CHECK(is_t("{}") == is_t(""));
+
+        // Parsing bad stream input
+        std::istringstream bad_ss;
+        bad_ss.setstate(std::ios::failbit);
+        is_t s_bad;
+        bad_ss >> s_bad;
+        CHECK_FALSE(bad_ss.good());
+
+        // range positive and max constructors check for branch coverage
+        CHECK(is_t::template from_range<1, 3>().count() == 3);
+        CHECK(is_t::template from_range<-3, -1>().count() == 3);
+        CHECK(is_t::template from_range<traits::lo, traits::hi>().count() == traits::hi - traits::lo);
+      }
+
+      SUBCASE("Exceptions")
+      {
+        CHECK_THROWS(is_t("{invalid}"));
+        CHECK_THROWS(is_t("{1,invalid}"));
+        CHECK_THROWS(is_t("{1,,2}"));
+        CHECK_THROWS(is_t(traits::hi + 1));
+        CHECK_THROWS(is_t(traits::lo - 1));
+        CHECK_THROWS(is_t("{1} garbage"));
+
+        // Implicit Exception Unwinding Landing Pads (destructor cleanup branches test)
+        CHECK_THROWS(
+            []()
+            {
+              [[maybe_unused]] is_t local_is1("{1}");
+              [[maybe_unused]] is_t local_is2("{2}");
+              is_t(traits::hi + 1);
+            }());
+
+        // Folded value constructors
+        is_t s_fold_val(3ULL, is_t("{1,2}"), false);
+        CHECK(s_fold_val == is_t("{1,2}"));
+
+        // Fold with negative indices
+        CHECK(is_t("{-1}").fold(is_t("{-1}"), false) == is_t("{-1}"));
+
+        // sign_of_square checks for count 0 and 1
+        CHECK(is_t().sign_of_square() == 1);
+        CHECK(is_t("{1}").sign_of_square() == 1);
+        CHECK_THROWS(is_t(4ULL, is_t("{1,2}"), false));
+
+        // Large index set scans
+        using large_is_t = glucat::index_set<-32, 32>;
+        large_is_t is_l1("{32}");
+        CHECK(is_l1.min() == 32);
+        CHECK(is_l1.max() == 32);
+        large_is_t is_l2("{-32}");
+        CHECK(is_l2.min() == -32);
+        CHECK(is_l2.max() == -32);
+        large_is_t is_l3("{-32, 32}");
+        CHECK(is_l3.min() == -32);
+        CHECK(is_l3.max() == 32);
+
+        // fold(frm) exceptions
+        CHECK_THROWS(is_t("{1,2}").fold(is_t("{1}"), false));
+
+        // Constructor out of frame with prechecked=false
+        is_t frm("{-1, 1}");
+        CHECK_THROWS(is_t(4, frm, false));
+
+        // Constructor range out of bounds with prechecked=false
+        using range_t = typename is_t::index_pair_t;
+        CHECK_THROWS(is_t(range_t(traits::lo - 1, traits::hi), false));
+        CHECK_THROWS(is_t(range_t(traits::lo, traits::hi + 1), false));
+
+        // unfold into too small frame with prechecked=false
+        is_t s_unfold("{-1, 1}");
+        is_t frm_small("{-1}");
+        CHECK_THROWS(s_unfold.unfold(frm_small, false));
+        CHECK_THROWS(is_t("{-2,-1}").unfold(is_t("{-1}"), false));
+        CHECK_THROWS(is_t("{1,2}").unfold(is_t("{1}"), false));
+
+        // Stream parsing errors
+        is_t s_parse;
+        std::ostringstream ss1;
+        ss1 << "{" << (traits::hi + 1) << "}";  // out of range index
+        std::istringstream iss1(ss1.str());
+        iss1 >> s_parse;
+        CHECK(iss1.fail());
+
+        std::istringstream ss2("{1 2}");  // space instead of comma
+        ss2 >> s_parse;
+        CHECK(ss2.fail());
+
+        std::istringstream ss3("{1,2");  // missing closing brace
+        ss3 >> s_parse;
+        CHECK(ss3.fail());
+
+        std::istringstream ss4("{1;}");  // invalid character
+        ss4 >> s_parse;
+        CHECK(ss4.fail());
+      }
+
+      SUBCASE("Static Factory and Bit-Wizardry")
+      {
+        // Static factory methods (verified at compile-time, runtime check for consistency)
+        static_assert(is_t::template from_index<1>().test(1));
+        static_assert(!is_t::template from_index<1>().test(2));
+        static_assert(is_t::template from_range<1, 3>().count() == 3);
+        CHECK(is_t::template from_index<1>() == is_t(1));
+        CHECK(is_t::template from_range<-1, 1>() == is_t(typename is_t::index_pair_t(-1, 1)));
+      }
+    }
+  }  // namespace test
+}  // namespace glucat
+
+TEST_CASE("index_set<-4, 4>")
+{
+  glucat::test::run_index_set_tests<glucat::index_set<-4, 4>>();
+}
+
+TEST_CASE("index_set<-8, 8>")
+{
+  glucat::test::run_index_set_tests<glucat::index_set<-8, 8>>();
+}
+
+TEST_CASE("index_set<-16, 16>")
+{
+  glucat::test::run_index_set_tests<glucat::index_set<-16, 16>>();
+}
+
+TEST_CASE("index_set<-32, 32>")
+{
+  glucat::test::run_index_set_tests<glucat::index_set<-32, 32>>();
+}
+
+TEST_CASE("index_set one-off checks")
+{
+  // Empty min/max checks to ensure 100% block coverage of min/max methods
+  CHECK(glucat::index_set<-4, 4>().min() == 0);
+  CHECK(glucat::index_set<-4, 4>().max() == 0);
+  CHECK(glucat::index_set<-8, 8>().min() == 0);
+  CHECK(glucat::index_set<-8, 8>().max() == 0);
+  CHECK(glucat::index_set<-16, 16>().min() == 0);
+  CHECK(glucat::index_set<-16, 16>().max() == 0);
+  CHECK(glucat::index_set<-32, 32>().min() == 0);
+  CHECK(glucat::index_set<-32, 32>().max() == 0);
+
+  // value_of_fold(empty)
+  CHECK(glucat::index_set<-8, 8>().value_of_fold(glucat::index_set<-8, 8>()) == 0);
+
+  // fold with negative indices
+  CHECK(glucat::index_set<-8, 8>("{-1}").fold(glucat::index_set<-8, 8>("{-1}"), false) == glucat::index_set<-8, 8>("{-1}"));
+
+  // sign_of_square default cases
+  CHECK(glucat::index_set<-8, 8>().sign_of_square() == 1);
+  CHECK(glucat::index_set<-8, 8>("{1}").sign_of_square() == 1);
+  CHECK(glucat::index_set<-8, 8>("{-1}").sign_of_square() == -1);
+
+  // Additional bit-wizardry for large set
+  using large_is_t = glucat::index_set<-32, 32>;
+  large_is_t s_large;
+  s_large.set(32);
+  CHECK(s_large.max() == 32);
+  CHECK(s_large.min() == 32);
+  s_large.set(-32);
+  CHECK(s_large.min() == -32);
+  CHECK(s_large.max() == 32);
+
+  large_is_t s_mid;
+  s_mid.set(16);
+  CHECK(s_mid.max() == 16);
+  s_mid.set(8);
+  CHECK(s_mid.min() == 8);
 }
 #endif
 

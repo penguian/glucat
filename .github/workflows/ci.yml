@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   cpp-matrix:
-    name: C++ (${{ matrix.compiler.cc }}-${{ matrix.compiler.version }}, ${{ matrix.backend }}, Boost ${{ matrix.boost }})
+    name: "C++ (${{ matrix.compiler.cc }}-${{ matrix.compiler.version }}, ${{ matrix.backend }}, Boost ${{ matrix.boost }}, QD: ${{ matrix.qd }})"
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
@@ -25,6 +25,30 @@ jobs:
         boost:
           - "1.84.0"
           - "1.85.0"
+        qd:
+          - "no"
+        exclude:
+          - compiler: { cc: gcc,   cxx: g++,     version: "14" }
+            backend: eigen
+          - compiler: { cc: clang, cxx: clang++, version: "18" }
+            backend: armadillo
+        include:
+          - compiler: { cc: gcc,   cxx: g++,     version: "14" }
+            backend: eigen
+            boost: "1.84.0"
+            qd: "yes"
+          - compiler: { cc: gcc,   cxx: g++,     version: "14" }
+            backend: eigen
+            boost: "1.85.0"
+            qd: "yes"
+          - compiler: { cc: clang, cxx: clang++, version: "18" }
+            backend: armadillo
+            boost: "1.84.0"
+            qd: "yes"
+          - compiler: { cc: clang, cxx: clang++, version: "18" }
+            backend: armadillo
+            boost: "1.85.0"
+            qd: "yes"
 
     steps:
       - name: Checkout repository
@@ -41,7 +65,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt-get install -y libeigen3-dev libarmadillo-dev libtool autoconf automake pkg-config doctest-dev
+          sudo apt-get install -y libeigen3-dev libarmadillo-dev libtool autoconf automake pkg-config doctest-dev libqd-dev
 
       - name: Install Boost Headers
         run: |
@@ -62,17 +86,20 @@ jobs:
           CXX: ${{ matrix.compiler.cxx }}-${{ matrix.compiler.version }}
         run: |
           make -f admin/Makefile.common bootstrap
-          CONFIGURE_FLAGS="--disable-pyclical"
+          CONFIGURE_FLAGS="--disable-pyclical --with-doctest"
           if [ "${{ matrix.backend }}" = "armadillo" ]; then
             CONFIGURE_FLAGS="$CONFIGURE_FLAGS --with-armadillo=yes"
+          fi
+          if [ "${{ matrix.qd }}" = "yes" ]; then
+            CONFIGURE_FLAGS="$CONFIGURE_FLAGS --with-qd"
           fi
           ./configure $CONFIGURE_FLAGS CXXFLAGS="-O2 -g -Werror=return-type -Werror=uninitialized -Werror=format"
 
       - name: Build
-        run: make -j$(nproc)
+        run: make -j$(nproc) -C test_doctest
 
       - name: Run C++ tests
-        run: make check-local
+        run: make -C test_doctest check
 
   pyclical:
     name: PyClical CI

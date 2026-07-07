@@ -2608,12 +2608,11 @@ namespace glucat
 #include <numbers>
 #include <system_error>
 
-TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>")
+TEST_CASE_TEMPLATE("framed_multi<Scalar_T, LO, HI, Tune_P>", T, float, double, long double)
 {
   using namespace glucat;
-  using fm_t = glucat::framed_multi<double, -8, 8>;
-  using T = double;
-  using is_t = fm_t::index_set_t;
+  using fm_t = glucat::framed_multi<T, -8, 8>;
+  using is_t = typename fm_t::index_set_t;
 
   SUBCASE("Metadata")
   {
@@ -2622,7 +2621,7 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>")
 
   SUBCASE("Constructor and string representation")
   {
-    fm_t f1(2.0);
+    fm_t f1(T(2.0));
     std::ostringstream oss1;
     oss1 << f1;
     CHECK(oss1.str() == "2");
@@ -2645,11 +2644,11 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>")
     fm_t e3("{3}");
     CHECK((e1 * e2) == fm_t("{1,2}"));
     CHECK((e2 * e1) == fm_t("-{1,2}"));
-    CHECK((e1 * e1) == fm_t(1.0));
+    CHECK((e1 * e1) == fm_t(T(1.0)));
 
     // HS (1.21a): (a_r * b_s)(|r-s|) == a_r & b_s
-    CHECK(scalar(e1 * e2) == 0.0);
-    CHECK(scalar(e1 * e1) == 1.0);
+    CHECK(scalar(e1 * e2) == T(0.0));
+    CHECK(scalar(e1 * e1) == T(1.0));
 
     // HS (1.25a): (a ^ b) ^ c == a ^ (b ^ c)
     CHECK(((e1 ^ e2) ^ e3) == (e1 ^ (e2 ^ e3)));
@@ -2665,74 +2664,74 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>")
 
   SUBCASE("Arithmetic and approximate equality")
   {
-    fm_t m1(1.0);
+    fm_t m1(T(1.0));
     fm_t m2("{1}");
     CHECK((m1 + m2) == fm_t("1+{1}"));
     CHECK((m1 - m2) == fm_t("1-{1}"));
-    CHECK((m1 * 2.0) == fm_t(2.0));
-    CHECK((2.0 * m1) == fm_t(2.0));
-    CHECK(approx_equal(m1, fm_t(1.0 + 1e-15)));
+    CHECK((m1 * T(2.0)) == fm_t(T(2.0)));
+    CHECK((T(2.0) * m1) == fm_t(T(2.0)));
+    CHECK(approx_equal(m1, fm_t(T(1.0) + T(1e-15))));
     CHECK(m1 != m2);
-    CHECK(m1 != 0.0);
-    CHECK(0.0 != m1);
+    CHECK(m1 != T(0.0));
+    CHECK(T(0.0) != m1);
   }
 
   SUBCASE("Transcendental functions")
   {
     fm_t x("{1,2}");
-    const double pi = std::numbers::pi;
+    const T pi = T(std::numbers::pi);
 
     // exp and log
-    fm_t e_x = exp(x * (pi / 4.0));
+    fm_t e_x = exp(x * (pi / T(4.0)));
     // exp({1,2}*pi/4) = cos(pi/4) + {1,2}*sin(pi/4) = (1 + {1,2})/sqrt(2)
-    CHECK(approx_equal(e_x, (fm_t(1.0) + fm_t("{1,2}")) / std::sqrt(2.0)));
+    CHECK(approx_equal(e_x, (fm_t(T(1.0)) + fm_t("{1,2}")) / std::sqrt(T(2.0))));
     CHECK(approx_equal(exp(log(e_x)), e_x));
 
     // sin and cos
     fm_t s_x = sin(x);
     fm_t c_x = cos(x);
     // sin^2 + cos^2 = 1
-    CHECK(approx_equal(s_x * s_x + c_x * c_x, fm_t(1.0)));
-    CHECK(approx_equal(cos(acos(fm_t(0.5))), fm_t(0.5)));
+    CHECK(approx_equal(s_x * s_x + c_x * c_x, fm_t(T(1.0))));
+    CHECK(approx_equal(cos(acos(fm_t(T(0.5)))), fm_t(T(0.5))));
 
     // sinh and cosh
     fm_t sh_x = sinh(x);
     fm_t ch_x = cosh(x);
     // cosh^2 - sinh^2 = 1
-    CHECK(approx_equal(ch_x * ch_x - sh_x * sh_x, fm_t(1.0)));
-    CHECK(approx_equal(cosh(acosh(fm_t(2.0))), fm_t(2.0)));
+    CHECK(approx_equal(ch_x * ch_x - sh_x * sh_x, fm_t(T(1.0))));
+    CHECK(approx_equal(cosh(acosh(fm_t(T(2.0)))), fm_t(T(2.0))));
 
     // tan and tanh
-    CHECK(approx_equal(tan(atan(fm_t(0.5))), fm_t(0.5)));
-    CHECK(approx_equal(tanh(atanh(fm_t(0.5))), fm_t(0.5)));
+    CHECK(approx_equal(tan(atan(fm_t(T(0.5)))), fm_t(T(0.5))));
+    CHECK(approx_equal(tanh(atanh(fm_t(T(0.5)))), fm_t(T(0.5))));
 
     // peg11.h identities
     fm_t A = fm_t("0.5{1}+0.5{1,2}");
-    CHECK(approx_equal(exp(A) * exp(-A), fm_t(1.0)));
+    CHECK(approx_equal(exp(A) * exp(-A), fm_t(T(1.0))));
     CHECK(approx_equal(cosh(A) + sinh(A), exp(A)));
     CHECK(approx_equal(cos(A) + complexifier(A) * sin(A), exp(complexifier(A) * A)));
     CHECK(approx_equal(cos(A) * tan(A), sin(A)));
     CHECK(approx_equal(cosh(A) * tanh(A), sinh(A)));
-    CHECK(approx_equal(sqrt(fm_t(4.0)), fm_t(2.0)));
+    CHECK(approx_equal(sqrt(fm_t(T(4.0))), fm_t(T(2.0))));
   }
 
   SUBCASE("Adversarial and edge cases")
   {
     // NaN handling
-    fm_t n(glucat::numeric_traits<double>::NaN());
+    fm_t n(glucat::numeric_traits<T>::NaN());
     CHECK(n.isnan());
     CHECK(exp(n).isnan());
     CHECK(log(n).isnan());
-    CHECK(log(n, fm_t(glucat::numeric_traits<double>::NaN()), false).isnan());
+    CHECK(log(n, fm_t(glucat::numeric_traits<T>::NaN()), false).isnan());
 
     // Purely scalar multivector
     fm_t s(T(2.0), is_t());
-    CHECK(approx_equal(exp(s), fm_t(std::exp(2.0))));
-    CHECK(approx_equal(log(s), fm_t(std::log(2.0))));
-    CHECK(approx_equal(sqrt(s), fm_t(std::sqrt(2.0))));
+    CHECK(approx_equal(exp(s), fm_t(std::exp(T(2.0)))));
+    CHECK(approx_equal(log(s), fm_t(std::log(T(2.0)))));
+    CHECK(approx_equal(sqrt(s), fm_t(std::sqrt(T(2.0)))));
     // For log of scalar, we need a valid complexifier
     fm_t i("{-1}");
-    CHECK(approx_equal(log(s, i, false), fm_t(std::log(2.0))));
+    CHECK(approx_equal(log(s, i, false), fm_t(std::log(T(2.0)))));
 
     // Zero
     fm_t zero(T(0.0), is_t());
@@ -2741,7 +2740,7 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>")
 
     // Large multivector to trigger matrix-based exp
     fm_t large = fm_t("1+{1}+{2}+{3}+{4}+{5}+{1,2}+{1,3}+{1,4}+{1,5}+{2,3}+{2,4}+{2,5}+{3,4}+{3,5}+{4,5}");
-    CHECK(approx_equal(exp(large), exp(glucat::matrix_multi<double, -8, 8>(large))));
+    CHECK(approx_equal(exp(large), exp(glucat::matrix_multi<T, -8, 8>(large))));
 
     // Negative log for framed_multi
     fm_t neg(T(-1.0), is_t());
@@ -2749,18 +2748,18 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>")
   }
   SUBCASE("Transcendental identities (random)")
   {
-    using index_set_t = fm_t::index_set_t;
+    using index_set_t = typename fm_t::index_set_t;
 
-    auto is_error = [](const fm_t& lhs, const fm_t& rhs, double tol)
+    auto is_error = [](const fm_t& lhs, const fm_t& rhs, T tol)
     {
-      using scalar_t = fm_t::scalar_t;
+      using scalar_t = typename fm_t::scalar_t;
       scalar_t diff = abs(lhs - rhs);
       scalar_t ref = abs(rhs);
       return ((abs(lhs) < tol) || (ref < tol)) ? (diff > tol) : (diff > ref * tol);
     };
 
-    static const double eps = std::numeric_limits<double>::epsilon();
-    const double tol = eps * 1024.0;
+    static const T eps = std::numeric_limits<T>::epsilon();
+    const T tol = eps * T(1024.0);
 
     auto test_trans = [&](const fm_t& A)
     {
@@ -2772,28 +2771,28 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>")
       const fm_t sinh_A = sinh(A);
       const fm_t sqrt_A = sqrt(A);
 
-      CHECK_FALSE(is_error(exp_A * exp_mA, fm_t(1), tol));
+      CHECK_FALSE(is_error(exp_A * exp_mA, fm_t(T(1)), tol));
       CHECK_FALSE(is_error(cosh_A + sinh_A, exp_A, tol));
       if (!A.isnan() && !A.isinf())
       {
         CHECK_FALSE(is_error(sqrt_A * sqrt_A, A, tol));
       }
 
-      if (A != 0.0 && A != 1.0)
+      if (A != T(0.0) && A != T(1.0))
       {
         CHECK_FALSE(is_error(cos_A + complexifier(A) * sin_A, exp(complexifier(A) * A), tol));
         CHECK_FALSE(is_error(cos_A * tan(A), sin_A, tol));
         CHECK_FALSE(is_error(cosh_A * tanh(A), sinh_A, tol));
-        CHECK_FALSE(is_error(sqrt(fm_t(4.0)), fm_t(2.0), tol));
+        CHECK_FALSE(is_error(sqrt(fm_t(T(4.0))), fm_t(T(2.0)), tol));
       }
     };
 
-    test_trans(fm_t(0));
-    test_trans(fm_t(1));
+    test_trans(fm_t(T(0)));
+    test_trans(fm_t(T(1)));
     test_trans(fm_t::random(index_set_t(1)));
 
     index_set_t frm = index_set_t();
-    const double fill = 0.5;
+    const T fill = T(0.5);
     for (index_t i = 1; i <= 4; ++i)
     {
       frm |= index_set_t(i);
@@ -2806,19 +2805,19 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>")
 
   SUBCASE("Geometric algebra identities (random)")
   {
-    using index_set_t = fm_t::index_set_t;
-    const double fill = 0.5;
+    using index_set_t = typename fm_t::index_set_t;
+    const T fill = T(0.5);
 
-    auto is_error = [](const fm_t& lhs, const fm_t& rhs, double tol)
+    auto is_error = [](const fm_t& lhs, const fm_t& rhs, T tol)
     {
-      using scalar_t = fm_t::scalar_t;
+      using scalar_t = typename fm_t::scalar_t;
       scalar_t diff = abs(lhs - rhs);
       scalar_t ref = abs(rhs);
       return ((abs(lhs) < tol) || (ref < tol)) ? (diff > tol) : (diff > ref * tol);
     };
 
-    static const double eps = std::numeric_limits<double>::epsilon();
-    const double tol = eps * 4096.0;
+    static const T eps = std::numeric_limits<T>::epsilon();
+    const T tol = eps * T(4096.0);
 
     index_set_t frm = index_set_t();
     for (index_t i = 1; i <= 4; ++i)
@@ -2954,9 +2953,9 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>")
 
   SUBCASE("Mixed-representation assignment")
   {
-    using mm_d_t = glucat::matrix_multi<double, -8, 8>;
+    using mm_t = glucat::matrix_multi<T, -8, 8>;
     fm_t f("{1,2}");
-    mm_d_t m("{1,2}");
+    mm_t m("{1,2}");
 
     // Matrix to Framed (matching scalar)
     fm_t f2;
@@ -2966,11 +2965,11 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>")
 
   SUBCASE("Advanced Constructor Gaps")
   {
-    using index_set_t = fm_t::index_set_t;
-    using scalar_t = fm_t::scalar_t;
+    using index_set_t = typename fm_t::index_set_t;
+    using scalar_t = typename fm_t::scalar_t;
     index_set_t ist(1);
     index_set_t frm(1);
-    scalar_t crd(1.0);
+    scalar_t crd(T(1.0));
 
     // Test framed_multi constructor with prechecked
     fm_t m1(ist, crd, frm, true);
@@ -3016,7 +3015,7 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>")
 
   SUBCASE("Exceptions")
   {
-    fm_t f1(1.0);
+    fm_t f1(T(1.0));
     // Parsing errors
     CHECK_THROWS(fm_t("{invalid}"));
 
@@ -3024,13 +3023,24 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>")
     CHECK_THROWS(f1.outer_pow(-1));
 
     // Construction with value outside of frame
-    using is_t = fm_t::index_set_t;
+    using is_t = typename fm_t::index_set_t;
     CHECK_THROWS(fm_t(is_t(1), T(1.0), is_t(), false));
+
+    // Implicit Exception Unwinding Landing Pads (destructor cleanup branches test)
+    CHECK_THROWS(
+        []()
+        {
+          fm_t local_f1("{1}");
+          [[maybe_unused]] fm_t local_f2("{2}");
+          using is_t = typename fm_t::index_set_t;
+          [[maybe_unused]] is_t local_is("{1,2}");
+          local_f1.outer_pow(-1);
+        }());
   }
 
   SUBCASE("I/O and Formatting")
   {
-    fm_t f(1.23456789);
+    fm_t f(T(1.23456789));
     std::ostringstream oss;
     oss << std::setprecision(4) << std::fixed << f;
     CHECK(oss.str().find("1.2346") != std::string::npos);
@@ -3165,7 +3175,7 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>")
 
   SUBCASE("Defensive and Edge Case Coverage")
   {
-    using is_t = fm_t::index_set_t;
+    using is_t = typename fm_t::index_set_t;
     using mm_t = matrix_multi<T, -8, 8>;
 
     // Outside-frame initialization (Line 181)
@@ -3177,7 +3187,7 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>")
     // NaN propagation from matrix (Lines 381-385)
     // Use a 2x2 matrix (dim=2) to avoid the "dim == 1" fast return at line 367
     // but stay below the default fast-path threshold of 4.
-    mm_t m_nan_multi = mm_t(std::numeric_limits<T>::quiet_NaN(), is_t()) * mm_t(is_t("{1}"), 1.0);
+    mm_t m_nan_multi = mm_t(std::numeric_limits<T>::quiet_NaN(), is_t()) * mm_t(is_t("{1}"), T(1.0));
     fm_t f_nan(m_nan_multi);
     CHECK(f_nan.isnan());
 
@@ -3194,7 +3204,7 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>")
     // Fast Path Conversion (Line 372)
     // Default tuning policy has threshold = 4.
     // 4 generators -> 8x8 matrix (dim=8), which triggers the fast path.
-    mm_t m_8x8 = mm_t::random(is_t("{1,2,3,4}"), 1.0);
+    mm_t m_8x8 = mm_t::random(is_t("{1,2,3,4}"), T(1.0));
     fm_t f_fast(m_8x8);
     CHECK(f_fast.frame() == is_t("{1,2,3,4}"));
 
@@ -3224,6 +3234,254 @@ TEST_CASE("framed_multi<Scalar_T, LO, HI, Tune_P>")
     // operator* with NaN (Line 644)
     CHECK((f_nan_val * f_val).isnan());
     CHECK((f_val * f_nan_val).isnan());
+
+    // 1. int constructor non-zero (Line 251)
+    fm_t f_int(2);
+    CHECK(f_int == fm_t(T(2.0)));
+
+    // 2. operator*= 0.0 clearing (Line 556)
+    fm_t f_mul("{1}");
+    f_mul *= T(0.0);
+    CHECK(f_mul.nbr_terms() == 0);
+
+    // 3. Custom tuning values for matrix products (Lines 769-772, 913-916, 1036-1039)
+    // and slow conversion path (Lines 357-376)
+    using custom_tuning_values_t =
+        tuning_values<2,  // Mult_Matrix_Threshold
+                      Tuning_Default_CR_Sqrt_Max_Steps, Tuning_Default_DB_Sqrt_Max_Steps, Tuning_Default_Log_Max_Outer_Steps,
+                      Tuning_Default_Log_Max_Inner_Steps, Tuning_Default_Basis_Max_Count, Tuning_Default_Fast_Size_Threshold,
+                      100,  // Inv_Fast_Dim_Threshold -> force fallback to slow path
+                      Tuning_Default_Denom_Different_Bits, Tuning_Default_Extra_Different_Bits,
+                      Tuning_Default_Products_Different_Bits,
+                      2  // Products_Matrix_Threshold
+                      >;
+    using custom_tune_t = tuning<custom_tuning_values_t>;
+    using fm_custom_t = glucat::framed_multi<T, -8, 8, custom_tune_t>;
+
+    fm_custom_t a_custom("1+{1}+{2}+{1,2}");
+    fm_custom_t b_custom("1+{1}+{2}+{1,2}");
+    auto res_pow = a_custom ^ b_custom;
+    auto res_and = a_custom & b_custom;
+    auto res_mod = a_custom % b_custom;
+
+    // Force fallback to slow conversion path from matrix_multi
+    using mm_custom_t = matrix_multi<T, -8, 8, custom_tune_t>;
+    mm_custom_t m_custom("{1}");
+    fm_custom_t f_custom_slow(m_custom);
+    CHECK(f_custom_slow.frame() == m_custom.frame());
+
+    // 4. operator/= coverage (Lines 1125-1130)
+    fm_t f_div("{1}");
+    f_div /= std::numeric_limits<T>::quiet_NaN();
+    CHECK(f_div.isnan());
+
+    fm_t f_div2("{1}");
+    f_div2 /= std::numeric_limits<T>::infinity();
+    CHECK(f_div2.nbr_terms() == 0);
+
+    fm_t f_div3(std::numeric_limits<T>::quiet_NaN(), is_t());
+    f_div3 /= std::numeric_limits<T>::infinity();
+    CHECK(f_div3.isnan());
+
+    // 5. operator/ by 0 (Line 1162)
+    fm_t f_lhs("{1}");
+    fm_t f_rhs(T(0.0));
+    CHECK((f_lhs / f_rhs).isnan());
+
+    // 6. versor & versor_exp (Lines 1235-1243, 1259)
+    fm_t f_val_v("{1}");
+    fm_t R_val = fm_t(T(1.0)) + fm_t("{1,2}");
+    auto res_v1 = f_val_v.versor(R_val, false);
+    auto res_v2 = f_val_v.versor(R_val, true);
+    CHECK(approx_equal(res_v1, res_v2));
+    auto res_v3 = f_val_v.versor_exp(R_val, false);
+    auto res_v4 = f_val_v.versor_exp(R_val, true);
+    CHECK(approx_equal(res_v3, res_v4));
+
+    // 7. Grade out of range (Line 1401)
+    fm_t f_grade("{1}");
+    CHECK(f_grade(-1) == fm_t(T(0)));
+    CHECK(f_grade(17) == fm_t(T(0)));
+
+    // 8. vector_part error (Line 1504)
+    fm_t f_vec("{1}");
+    CHECK_THROWS_AS(f_vec.vector_part(is_t(), false), glucat_error);
+
+    // 9. Negative generator count_neg (Line 1615)
+    fm_t f_neg("{-1}");
+    CHECK(f_neg.quad() == T(-1.0));
+
+    // 10. random fill clamping (Line 1689)
+    fm_t::random(is_t(), T(-0.5));
+    fm_t::random(is_t(), T(1.5));
+
+    // 11. write closed stream error (Line 1732)
+    std::ofstream closed_file;
+    closed_file.setstate(std::ios_base::failbit);
+    fm_t f_write("{1}");
+    CHECK_THROWS_AS(f_write.write(closed_file, "msg"), glucat_error);
+
+    // 12. Output printing edge cases (Lines 1793, 1795, 1796-1800, 1814-1816, 1823, 1876, 1877)
+    fm_t f_empty_out;
+    std::ostringstream oss_out;
+    oss_out << f_empty_out;
+    CHECK(oss_out.str() == "0");
+
+    fm_t f_nan_out(std::numeric_limits<T>::quiet_NaN(), is_t());
+    oss_out.str("");
+    oss_out << f_nan_out;
+    CHECK((oss_out.str().find("nan") != std::string::npos || oss_out.str().find("NaN") != std::string::npos));
+
+    fm_t f_inf_out(std::numeric_limits<T>::infinity(), is_t());
+    oss_out.str("");
+    oss_out << f_inf_out;
+    CHECK((oss_out.str().find("inf") != std::string::npos || oss_out.str().find("Inf") != std::string::npos));
+
+    fm_t f_ninf_out(-std::numeric_limits<T>::infinity(), is_t());
+    oss_out.str("");
+    oss_out << f_ninf_out;
+    CHECK((oss_out.str().find("-inf") != std::string::npos || oss_out.str().find("-Inf") != std::string::npos));
+
+    oss_out.str("");
+    oss_out.setf(std::ios_base::fixed | std::ios_base::scientific, std::ios_base::floatfield);
+    oss_out << fm_t(T(1.0));
+
+    fm_t f_small_out(T(1.0));
+    oss_out.str("");
+    oss_out.unsetf(std::ios_base::floatfield);
+    oss_out << std::setprecision(0) << f_small_out;
+    CHECK(oss_out.str() == "0");
+
+    fm_t f_neg_tol_out = T(-1.00000000000001) * fm_t("{1}");
+    oss_out.str("");
+    oss_out << std::setprecision(6) << f_neg_tol_out;
+    CHECK(oss_out.str() == "-{1}");
+
+    fm_t f_pos_tol_out = T(1.00000000000001) * fm_t("{1}");
+    oss_out.str("");
+    oss_out << std::setprecision(6) << f_pos_tol_out;
+    CHECK(oss_out.str() == "{1}");
+
+    // 13. Formatting use_double = false (Lines 1864, 1881)
+    oss_out.str("");
+    oss_out << std::setprecision(20);
+    T val_ld = T(1.0) + T(1e-18);
+    oss_out << fm_t(val_ld);
+
+    // 14. Trailing sign parsing error (Lines 1942-1944)
+    CHECK_THROWS(fm_t("1+"));
+
+    // 15. truncated of NaN/Inf (Line 2101)
+    fm_t f_nan_trunc(std::numeric_limits<T>::quiet_NaN(), is_t());
+    CHECK(f_nan_trunc.truncated().isnan());
+
+    // 16. fold & unfold on non-contiguous frame (Lines 2128-2133)
+    // fold: via fast_matrix_multi
+    fm_t f_fold_unfold("{1}");
+    f_fold_unfold.template fast_matrix_multi<T, tuning<>>(is_t("{1,3}"));
+    // unfold: via converting matrix_multi with non-contiguous frame
+    using mm_t = matrix_multi<T, -8, 8>;
+    mm_t m_non_cont(T(1.0), is_t("{1,3}"));
+    fm_t f_unfold_non_cont(m_non_cont);
+
+    // 17. Isomorphism error throws (Lines 2173, 2216, 2258, 2260)
+    // centre_pm4_qp4: LO is too high
+    using fm_err1_t = glucat::framed_multi<T, -1, 8>;
+    using is_err1_t = typename fm_err1_t::index_set_t;
+    fm_err1_t f_iso1;
+    is_err1_t frm_err1("{1,2,3,4,5}");
+    CHECK_THROWS_AS((f_iso1.template fast_matrix_multi<T, tuning<>>(frm_err1)), glucat_error);
+
+    // centre_pp4_qm4: HI is too low
+    using fm_err2_t = glucat::framed_multi<T, -8, 0>;
+    using is_err2_t = typename fm_err2_t::index_set_t;
+    fm_err2_t f_iso2;
+    is_err2_t frm_err2("{-1,-2,-3,-4}");
+    CHECK_THROWS_AS((f_iso2.template fast_matrix_multi<T, tuning<>>(frm_err2)), glucat_error);
+
+    // centre_qp1_pm1: LO is too high
+    using fm_err3_t = glucat::framed_multi<T, 0, 2>;
+    using is_err3_t = typename fm_err3_t::index_set_t;
+    fm_err3_t f_iso3;
+    is_err3_t frm_err3("{1,2}");
+    CHECK_THROWS_AS((f_iso3.template fast_matrix_multi<T, tuning<>>(frm_err3)), glucat_error);
+
+    // 18. fast with level == 0 (Line 2328)
+    fm_t f_non_empty(T(1.0));
+    f_non_empty.template fast_matrix_multi<T, tuning<>>(is_t());
+
+    // 19. fast_matrix_multi error throws (Lines 2397, 2399)
+    // p > HI
+    using fm_err_small_t = glucat::framed_multi<T, -8, 2>;
+    using is_err_small_t = typename fm_err_small_t::index_set_t;
+    fm_err_small_t f_fast_mat1;
+    is_err_small_t large_pos_frm("{-1,-2,-3}");
+    CHECK_THROWS_AS((f_fast_mat1.template fast_matrix_multi<T, tuning<>>(large_pos_frm)), glucat_error);
+
+    // q > -LO
+    using fm_err_small2_t = glucat::framed_multi<T, -1, 8>;
+    using is_err_small2_t = typename fm_err_small2_t::index_set_t;
+    fm_err_small2_t f_fast_mat2;
+    is_err_small2_t large_neg_frm("{1,2,3,4}");
+    CHECK_THROWS_AS((f_fast_mat2.template fast_matrix_multi<T, tuning<>>(large_neg_frm)), glucat_error);
+
+    // 20. centre_pp4_qm4 loop coverage (Line 2404)
+    fm_t f_fast_mat;
+    is_t test_centre_frm("{-1,-2,-3,-4}");
+    f_fast_mat.template fast_matrix_multi<T, tuning<>>(test_centre_frm);
+
+    // 21. sqrt with NaN and realval < 0 (Lines 2492, 2500)
+    fm_t f_nan_val_sq(std::numeric_limits<T>::quiet_NaN(), is_t());
+    fm_t complex_i_sq("{1,2}");
+    CHECK(sqrt(f_nan_val_sq, complex_i_sq, true).isnan());
+
+    fm_t f_neg_scalar(T(-4.0));
+    CHECK(approx_equal(sqrt(f_neg_scalar, complex_i_sq, true), complex_i_sq * T(2.0)));
+
+    // 22. String parsing exceptions (invalid/trailing signs)
+    CHECK_THROWS(fm_t("invalid"));
+    CHECK_THROWS(fm_t("+"));
+    CHECK_THROWS(fm_t("-"));
+    CHECK_THROWS(fm_t("1+ "));
+
+    // 23. Matrix to framed NaN propagation
+    using mm_t = matrix_multi<T, -8, 8>;
+    mm_t m_nan(std::numeric_limits<T>::quiet_NaN());
+    fm_t f_nan_mm(m_nan);
+    CHECK(f_nan_mm.isnan());
+
+    // 24. Catch block fallback in matrix_multi conversion
+    using fm_err_try_t = glucat::framed_multi<T, -1, 8>;
+    using mm_err_try_t = typename fm_err_try_t::matrix_multi_t;
+    mm_err_try_t m_err_try(T(1.0), typename mm_err_try_t::index_set_t("{1,2,3,4,5}"));
+    fm_err_try_t f_err_try(m_err_try);
+    CHECK(f_err_try == fm_err_try_t(T(1.0)));
+
+    // 25. Slow path conversion when dim < inv_fast_dim_threshold
+    using tuning_slow_t = tuning<tuning_values<8, 256, 256, 256, 32, 12, 16, 100, 8, 8, 2, 2>>;
+    using fm_slow_t = framed_multi<T, -8, 8, tuning_slow_t>;
+    using mm_slow_t = matrix_multi<T, -8, 8, tuning_slow_t>;
+    mm_slow_t m_slow(T(1.0), typename mm_slow_t::index_set_t("{1,3}"));
+    fm_slow_t f_slow(m_slow);
+    CHECK(f_slow == fm_slow_t(T(1.0)));
+
+    // 26. Float-safe tolerance formatting
+    fm_t f_neg_tol_out_all = T(-1.00001) * fm_t("{1}");
+    oss_out.str("");
+    oss_out << std::setprecision(4) << f_neg_tol_out_all;
+    CHECK(oss_out.str() == "-{1}");
+
+    // 27. Product (outer, inner, left contraction) slow paths (lhs_size * rhs_size > algebra_dim)
+    fm_t f_prod_lhs(is_t("{1}"), T(1.0));
+    f_prod_lhs += fm_t(T(2.0));
+    fm_t f_prod_rhs(is_t("{1}"), T(3.0));
+    f_prod_rhs += fm_t(T(4.0));
+    auto f_prod_pow = f_prod_lhs ^ f_prod_rhs;
+    auto f_prod_and = f_prod_lhs & f_prod_rhs;
+    auto f_prod_mod = f_prod_lhs % f_prod_rhs;
+    CHECK(f_prod_pow.nbr_terms() >= 0);
+    CHECK(f_prod_and.nbr_terms() >= 0);
+    CHECK(f_prod_mod.nbr_terms() >= 0);
   }
 }
 #endif

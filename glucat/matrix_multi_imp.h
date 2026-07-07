@@ -4089,6 +4089,17 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>")
     // mm_t is <-8, 8>, index_set_t(1) is out of empty frame is_t()
     using is_t = mm_t::index_set_t;
     CHECK_THROWS(mm_t(is_t(1), 1.0, is_t(), false));
+
+    // Implicit Exception Unwinding Landing Pads (destructor cleanup branches test)
+    CHECK_THROWS(
+        []()
+        {
+          mm_t local_m1("{1}");
+          [[maybe_unused]] mm_t local_m2("{2}");
+          using is_t = mm_t::index_set_t;
+          [[maybe_unused]] is_t local_is("{1,2}");
+          local_m1.outer_pow(-1);
+        }());
   }
 
   SUBCASE("Move Semantics and Reframing")
@@ -4210,6 +4221,19 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>")
     mm_t m_inv = m1.inv();
     CHECK(m_inv == m1);
     CHECK(m1.pow(2) == mm_t(1.0));
+
+    // Versor and Versor_exp
+    mm_t R("{1}");
+    mm_t X("{2}");
+    mm_t v_pre = X.versor(R, true);
+    mm_t v_nopre = X.versor(R, false);
+    CHECK(approx_equal(v_pre, -X));
+    CHECK(approx_equal(v_nopre, X));
+
+    const T pi = T(3.141592653589793);
+    mm_t A = R * (pi / 4.0);
+    mm_t v_exp = X.versor_exp(A, true);
+    CHECK_FALSE(v_exp.isnan());
   }
 
   SUBCASE("Expression Templates")

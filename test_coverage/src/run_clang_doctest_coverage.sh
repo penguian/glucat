@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+# Disable debuginfod to prevent hang when resolving coverage symbols
+export DEBUGINFOD_URLS=""
+
 # Move to the project root directory
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT_DIR"
@@ -43,12 +46,12 @@ run_coverage() {
     local flags=$2
 
     echo "=== Running coverage for $name ==="
-    ./configure --disable-pyclical --with-doctest $flags
+    ./configure --disable-pyclical --enable-debug --with-doctest $flags
     make clean || true
 
     # We set LLVM_PROFILE_FILE as an absolute path to avoid directory confusion
     export LLVM_PROFILE_FILE="$(pwd)/${name}.profraw"
-    make -C test_doctest check -j$(( $(nproc) / 2 ))
+    make -C test_doctest check
 
     # Backup binary for llvm-cov
     cp test_doctest/test_doctest test_doctest/test_doctest_${name}
