@@ -1537,6 +1537,15 @@ namespace glucat
         CHECK_THROWS(is_t(traits::lo - 1));
         CHECK_THROWS(is_t("{1} garbage"));
 
+        // Implicit Exception Unwinding Landing Pads (destructor cleanup branches test)
+        CHECK_THROWS(
+            []()
+            {
+              is_t local_is1("{1}");
+              is_t local_is2("{2}");
+              is_t(traits::hi + 1);
+            }());
+
         // Folded value constructors
         is_t s_fold_val(3ULL, is_t("{1,2}"), false);
         CHECK(s_fold_val == is_t("{1,2}"));

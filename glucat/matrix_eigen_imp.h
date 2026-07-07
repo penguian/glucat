@@ -1889,6 +1889,13 @@ namespace glucat
         Matrix_T m5;
         m5 = std::move(m4);
         CHECK(m5(0, 0) == Scalar_T(1));
+
+        // Constructor from Eigen MatrixType
+        typename Matrix_T::MatrixType raw_m(2, 2);
+        raw_m.setZero();
+        raw_m(0, 0) = Scalar_T(10);
+        Matrix_T m_from_raw(raw_m);
+        CHECK(m_from_raw(0, 0) == Scalar_T(10));
       }
 
       SUBCASE("Dense Matrix: Arithmetic Operators")
@@ -2051,6 +2058,13 @@ namespace glucat
 
         auto ins = s.template inner<Scalar_T>(s);
         CHECK(ins == doctest::Approx(numeric_traits<Scalar_T>::to_double(Scalar_T(1 + 16) / Scalar_T(2))));
+
+        // Trace product
+        Matrix_T m_a(2, 2), m_b(2, 2);
+        m_a.unit(2, 2);
+        m_b.unit(2, 2);
+        Scalar_T tr_prod = m_a.trace_product(m_b);
+        CHECK(tr_prod == Scalar_T(1));
       }
 
       SUBCASE("Interop and Conversion")
