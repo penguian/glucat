@@ -49,3 +49,35 @@ cdef extern from "PyClical.h":
     string clifford_to_str(Clifford& Clf)
 
     const scalar_t epsilon
+
+cdef extern from *:
+    """
+    inline IndexSet* new_IndexSet() { return new IndexSet(); }
+    inline IndexSet* new_IndexSet_copy(IndexSet other) { return new IndexSet(other); }
+    inline IndexSet* new_IndexSet_int(int val) { return new IndexSet(val); }
+    inline IndexSet* new_IndexSet_str(const char* val) { return new IndexSet(val); }
+    inline void delete_IndexSet(IndexSet* ptr) { delete ptr; }
+
+    inline Clifford* new_Clifford() { return new Clifford(); }
+    inline Clifford* new_Clifford_copy(Clifford other) { return new Clifford(other); }
+    inline Clifford* new_Clifford_frame_coeff(Clifford other, IndexSet ist) { return new Clifford(other, ist); }
+    inline Clifford* new_Clifford_scalar(scalar_t scr) { return new Clifford(scr); }
+    inline Clifford* new_Clifford_str(const char* str) { return new Clifford(str); }
+    inline Clifford* new_Clifford_frame_scalar(IndexSet ist, scalar_t scr) { return new Clifford(ist, scr); }
+    inline Clifford* new_Clifford_vec_frame(std::vector<scalar_t> vec, IndexSet ist) { return new Clifford(vec, ist); }
+    inline void delete_Clifford(Clifford* ptr) { delete ptr; }
+    """
+    IndexSet* new_IndexSet() except +
+    IndexSet* new_IndexSet_copy(IndexSet other) except +
+    IndexSet* new_IndexSet_int(int val) except +
+    IndexSet* new_IndexSet_str(const char* val) except +
+    void delete_IndexSet(IndexSet* ptr) except +
+
+    Clifford* new_Clifford() except +
+    Clifford* new_Clifford_copy(Clifford other) except +
+    Clifford* new_Clifford_frame_coeff(Clifford other, IndexSet ist) except +
+    Clifford* new_Clifford_scalar(scalar_t scr) except +
+    Clifford* new_Clifford_str(const char* str) except +
+    Clifford* new_Clifford_frame_scalar(IndexSet ist, scalar_t scr) except +
+    Clifford* new_Clifford_vec_frame(vector[scalar_t] vec, IndexSet ist) except +
+    void delete_Clifford(Clifford* ptr) except +

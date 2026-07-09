@@ -4,18 +4,18 @@ if make_pyclical
 
 ext_name = PyClical
 
-EXTCYTHON_SOURCE = $(ext_name).pyx $(ext_name).pxd glucat.pxd
+EXTCYTHON_SOURCE = $(ext_name).py $(ext_name).pxd glucat.pxd
 EXT_HEADER = $(ext_name).h
 
 EXTRA_DIST = Makefile.am $(EXTCYTHON_SOURCE) $(EXT_HEADER) \
              setup_ext.py  setup.py  test.py test.out
 
 SETUP_SOURCE_LIST = $(EXTCYTHON_SOURCE) $(EXT_HEADER)
-SETUP_SOURCE_PARAM = source_pyx="$(ext_name).pyx"
+SETUP_SOURCE_PARAM = source_pyx="$(ext_name).py"
 SETUP = setup
 
 # C++ compiler flags
-EXTCXXFLAGS = $(glucat_extra_cxxflags_pyclical) $(CXXFLAGS)
+EXTCXXFLAGS = $(CXXFLAGS) $(glucat_extra_cxxflags_pyclical)
 # set the include path found by configure
 EXTAM_CPPFLAGS = $(all_includes) $(GLUCAT_CPPFLAGS)
 

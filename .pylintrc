@@ -1,6 +1,6 @@
 [MASTER]
 # Exclude notebook check files and binary builds
-ignore-patterns=.*\.ipynb,build,dist
+ignore-patterns=.*\.ipynb,build,dist,.*PyClical\.py
 
 [MESSAGES CONTROL]
 # Disable rules that are too strict or produce false positives for demos and Cython bindings:

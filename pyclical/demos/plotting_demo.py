@@ -92,11 +92,7 @@ def draw_orbit(
     x = random_clifford(r3frame)(1)
     x = e(1) if x == 0 else x / abs(x)
     u = cga3(x)(1)
-    #
-    # Find the inverses of the rotors r and s.
-    #
-    invr = inv(r)
-    invs = inv(s)
+
     #
     # Array of points to use in plotting.
     #
@@ -134,9 +130,9 @@ def draw_orbit(
             # See [B] for related ideas.
             #
             if np.random.rand() < 0.5:
-                u = r * u * invr
+                u = u | r
             else:
-                u = s * u * invs
+                u = u | s
         #
         # Calculate the norms of the points in p and store them in n.
         #

@@ -43,9 +43,12 @@ README: README.md
 TODO: TODO.md
 	ln -sf TODO.md TODO
 
-check-local: test-out $(PYCLICAL_CHECK_OUT)
+check-local: test-out
 
-fast-check: fast-test-out $(PYCLICAL_CHECK_OUT)
+fast-check: fast-test-out
+
+check-examples: all
+	$(PYTHON) verify_all.py --examples
 
 test-out: $(TESTOUT)
 	mkdir -p test_runtime

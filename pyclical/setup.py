@@ -27,8 +27,8 @@ import Cython.Compiler.Options
 import os
 
 Cython.Compiler.Options.annotate = True
-ext_name = os.environ["ext_name"]
-source = os.environ["source_pyx"]
+ext_name = os.environ.get("ext_name", "PyClical")
+source = os.environ.get("source_pyx", "PyClical.py")
 ext = setup_ext(ext_name, source)
 setup(
     name=ext_name,

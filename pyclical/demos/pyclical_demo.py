@@ -68,7 +68,7 @@ def run(ctx=tutorial_context(globals())):
     print_line()
     print_fill("Rotate the vector x about the axis a by the angle  |a|:")
     print_line()
-    print_exec("y = s*x/s; print(y)")
+    print_exec("y = x | s; print(y)")
     print_line()
     print_fill(
         "Check that the length is preserved by computing the squares of the vectors."
@@ -89,7 +89,7 @@ def run(ctx=tutorial_context(globals())):
     print_fill("Lorentz transformation of a space-time point (or event).")
     print_line()
     print_exec("x = 2*e(-1)+2*e(1)+3*e(2)+5*e(3); print(x)")
-    print_exec("y = s*x/involute(s); print(y)")
+    print_exec("y = x | s; print(y)")
 
     pause()
     print_line()
@@ -105,7 +105,7 @@ def run(ctx=tutorial_context(globals())):
     print_exec(
         "F = -2*e({-1,1})-e({-1,2})+5*e({1,2})-2*e({-1,3})+e({1,3})+7*e({2,3}); print(F)"
     )
-    print_exec("G = s*F/s; print(G)")
+    print_exec("G = F | s; print(G)")
     print_line()
     print_fill(
         "Check that the Lorentz invariants are preserved (j == -{-1,1,2,3})."
@@ -173,7 +173,7 @@ def run(ctx=tutorial_context(globals())):
     print_line()
     print_fill("Lorentz transformation of the electromagnetic field F.")
     print_line()
-    print_exec("G = s*F/s; print(G)")
+    print_exec("G = F | s; print(G)")
 
     pause()
     print_line()
@@ -186,7 +186,7 @@ def run(ctx=tutorial_context(globals())):
     print_fill("Lorentz transformation of a space-time point.")
     print_line()
     print_exec("x = 10+e(1)+e(2); print(x)")
-    print_exec("y = s*x/involute(s); print(y)")
+    print_exec("y = x | s; print(y)")
 
     pause()
     print_line()
@@ -256,7 +256,7 @@ def run(ctx=tutorial_context(globals())):
     print_line()
     print_fill("Perform a complex rotation.")
     print_line()
-    print_exec("w = s*z/s; print(w)")
+    print_exec("w = z | s; print(w)")
 
     pause()
     print_line()
@@ -432,7 +432,7 @@ def run(ctx=tutorial_context(globals())):
     )
     print_line()
     print_exec("u = exp(B/2); print(u)")
-    print_exec("y = u*x/u; print(y)")
+    print_exec("y = x | u; print(y)")
 
     pause()
     print_exec("print(y*y)")
@@ -451,7 +451,7 @@ def run(ctx=tutorial_context(globals())):
     print_exec("v = expo(B); print(v)")
 
     pause()
-    print_exec("z = v*x/v; print(z)")
+    print_exec("z = x | v; print(z)")
     print_exec("print(z*z)")
     print_exec("print(x*x)")
 

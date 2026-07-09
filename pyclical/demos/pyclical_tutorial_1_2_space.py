@@ -231,7 +231,7 @@ def run(ctx):
     )
     print_line()
     print_exec("s1 = exp(a * j / 2); print(s1)")
-    print_exec("q1 = inv(s1) * r * s1; print(q1)")
+    print_exec("q1 = r | inv(s1); print(q1)")
     print_exec("print(abs(q-q1))")
 
     pause()

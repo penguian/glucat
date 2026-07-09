@@ -55,10 +55,21 @@ def setup_ext(ext_name, source):
     if os.environ.get("GLUCAT_PYCLICAL_TRACE"):
         define_macros.append(("CYTHON_TRACE", "1"))
 
+    include_dirs = []
+    library_dirs = []
+    conda_prefix = os.environ.get("CONDA_PREFIX")
+    if conda_prefix:
+        include_dirs.append(os.path.join(conda_prefix, "include"))
+        library_dirs.append(os.path.join(conda_prefix, "lib"))
+
+    # Also check if it's C++ language
     ext = Extension(
         ext_name,
         sources=[source],
         libraries=filtered_libraries(),
         define_macros=define_macros,
+        include_dirs=include_dirs,
+        library_dirs=library_dirs,
+        language="c++",
     )
     return ext

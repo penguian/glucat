@@ -5,6 +5,13 @@ An example of how to modify the data visualized  via an interactive dialog.
 # Author: Gael Varoquaux <gael.varoquaux@normalesup.org>
 # Copyright (c) 2008, Enthought, Inc.
 # License: BSD Style.
+# pylint: disable=wrong-import-position
+
+import numpy as np
+
+# Monkeypatch numpy.in1d which was removed in NumPy 2.0 but is used by VTK/Mayavi
+if not hasattr(np, "in1d"):
+    np.in1d = np.isin
 
 from traits.api import Bool, Button, HasTraits, Instance, Range, on_trait_change
 from traitsui.api import Group, View

@@ -120,7 +120,7 @@ def run(ctx):
     print_fill("Alternatively we could have:")
     print_line()
     print_exec("a1 = exp(A/2); print(a1)")
-    print_exec("y1 = inv(a1) * x * a1; print(y1)")
+    print_exec("y1 = x | inv(a1); print(y1)")
 
     pause()
     check_exec(

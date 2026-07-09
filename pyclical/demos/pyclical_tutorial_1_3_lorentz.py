@@ -129,7 +129,7 @@ def run(ctx):
     print_line()
     print_fill("Use s from Example 13.2.")
     print_line()
-    print_exec("x2 = inv(involute(u)) * x * u; print(x2)")
+    print_exec("x2 = x | inv(u); print(x2)")
     print_exec("print(involute(x)*x)")
     print_exec("print(involute(x2)*x2)")
     print_exec("print(involute(x)*x - involute(x2)*x2)")

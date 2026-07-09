@@ -212,7 +212,7 @@ def run(ctx):
     )
     print_exec("print(a)")
     print_exec("print(b); print(abs(b))")
-    print_exec("c = -a * b / a; print(c); print(abs(c))")
+    print_exec("c = b | a; print(c); print(abs(c))")
 
     pause()
     print_fill(
@@ -227,7 +227,7 @@ def run(ctx):
         "This is also a rotation through *twice* the angle between $a$ and $b$."
     )
     print_exec("x = e(1)+2*e(2); print(x); print(x*x)")
-    print_exec("y = (b * a) * x * inv(b * a); print(y); print(y*y)")
+    print_exec("y = x | (b * a); print(y); print(y*y)")
     print_exec("print(acos((a/abs(a)) & (b/abs(b))) * 180/pi)")
     print_exec("print(acos((x/abs(x)) & (y/abs(y))) * 180/pi)")
 

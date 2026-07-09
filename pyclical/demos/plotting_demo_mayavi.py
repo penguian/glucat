@@ -27,11 +27,17 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
+# pylint: disable=wrong-import-position
 #
 # Imports needed for array calculation and plotting.
 #
 from builtins import range
 import numpy as np
+
+# Monkeypatch numpy.in1d which was removed in NumPy 2.0 but is used by VTK/Mayavi
+if not hasattr(np, "in1d"):
+    np.in1d = np.isin
+
 import mayavi.mlab as ml
 from PyClical import *
 
@@ -92,11 +98,7 @@ def draw_orbit(
     x = random_clifford(r3frame)(1)
     x = e(1) if x == 0 else x / abs(x)
     u = cga3(x)(1)
-    #
-    # Find the inverses of the rotors r and s.
-    #
-    invr = inv(r)
-    invs = inv(s)
+
     #
     # Array of points to use in plotting.
     #
@@ -123,9 +125,9 @@ def draw_orbit(
             # See [B] for related ideas.
             #
             if np.random.rand() < 0.5:
-                u = r * u * invr
+                u = u | r
             else:
-                u = s * u * invs
+                u = u | s
         #
         # Calculate the norms of the points in p and store them in n.
         #
@@ -143,10 +145,12 @@ def draw_orbit(
             resolution=resolution,
             opacity=opacity,
         )
+    # Show the plot if not running in non-interactive verification mode.
     #
-    # Show the plot.
-    #
-    ml.show()
+    import os
+
+    if not os.environ.get("GLUCAT_NON_INTERACTIVE"):
+        ml.show()
 
 
 #
