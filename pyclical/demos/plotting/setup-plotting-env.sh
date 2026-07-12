@@ -30,20 +30,19 @@ if ! command -v mamba >/dev/null 2>&1 && ! command -v conda >/dev/null 2>&1; the
     return 1
 fi
 
-echo "Creating/updating Conda environment from pyclical/demos/plotting/plotting-env.yml ..."
+# Select mamba if available, otherwise fall back to conda.
+# This ensures all operations use the same tool and environment registry.
 if command -v mamba >/dev/null 2>&1; then
-    mamba env create -f "${REPO_ROOT}/pyclical/demos/plotting/plotting-env.yml" 2>/dev/null \
-        || mamba env update -f "${REPO_ROOT}/pyclical/demos/plotting/plotting-env.yml"
+    _CONDACMD=mamba
 else
-    conda env create -f "${REPO_ROOT}/pyclical/demos/plotting/plotting-env.yml" 2>/dev/null \
-        || conda env update -f "${REPO_ROOT}/pyclical/demos/plotting/plotting-env.yml"
+    _CONDACMD=conda
 fi
 
-if command -v mamba >/dev/null 2>&1; then
-    mamba activate pyclical-plotting
-else
-    conda activate pyclical-plotting
-fi
+echo "Creating/updating Conda environment from pyclical/demos/plotting/plotting-env.yml ..."
+$_CONDACMD env create -f "${REPO_ROOT}/pyclical/demos/plotting/plotting-env.yml" 2>/dev/null \
+    || $_CONDACMD env update -f "${REPO_ROOT}/pyclical/demos/plotting/plotting-env.yml"
+
+$_CONDACMD activate pyclical-plotting
 
 # Remove conda-forge's Mesa library if a native GPU driver is present.
 # The presence of /dev/dri/card0 indicates a real GPU with its own OpenGL
@@ -51,9 +50,9 @@ fi
 # removed to prevent rendering failures.
 if [ -e /dev/dri/card0 ]; then
     echo "Native GPU detected (/dev/dri/card0 exists)."
-    if conda list -n pyclical-plotting "^mesalib$" | grep -q mesalib; then
+    if $_CONDACMD list -n pyclical-plotting "^mesalib$" | grep -q mesalib; then
         echo "Removing conda-forge mesalib to avoid OpenGL conflict with system driver."
-        conda remove -n pyclical-plotting --force mesalib -y
+        $_CONDACMD remove -n pyclical-plotting --force mesalib -y
     else
         echo "conda-forge mesalib is not present in the environment; no removal needed."
     fi
@@ -65,5 +64,6 @@ echo ""
 echo "Environment 'pyclical-plotting' is ready."
 echo "Next steps (from the repository root, with this environment active):"
 echo "  make -f admin/Makefile.common bootstrap  # git clone only, not needed for tarballs"
-echo "  make -C pyclical -j\$(($(nproc)/2))"
+echo "  ./configure"
+echo "  make -C pyclical -j$(( $(nproc)/2 ))"
 echo "  source pyclical/demos/plotting/export-plotting-vars.sh"

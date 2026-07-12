@@ -137,7 +137,7 @@ in Python. These scripts rely on the built PyClical extension module.
 The PyClical plotting demos
 ---------------------------
 
-Two of the demos in `./pyclical/demos/` (`plotting_demo_mayavi.py` and
+Two of the demos in `./pyclical/demos/plotting/` (`plotting_demo_mayavi.py` and
 `plotting_demo_dialog.py`) use Mayavi2 and VTK for 3D visualization.
 Because VTK and Mayavi are highly sensitive to library version mismatches,
 they require a special execution environment (see "Setting Up the Mayavi
@@ -823,16 +823,16 @@ are identical on all platforms.
     source pyclical/demos/plotting/export-plotting-vars.sh
     ```
 
-2.  Run either plotting demo from the `pyclical/demos` directory:
+2.  Run either plotting demo from the `pyclical/demos/plotting` directory:
     ```bash
-    cd pyclical/demos
+    cd pyclical/demos/plotting
     python3 plotting_demo_mayavi.py
     python3 plotting_demo_dialog.py
     ```
 
 3.  To run in non-interactive mode (e.g. for automated testing):
     ```bash
-    cd pyclical/demos
+    cd pyclical/demos/plotting
     GLUCAT_NON_INTERACTIVE=1 python3 plotting_demo_mayavi.py
     ```
 

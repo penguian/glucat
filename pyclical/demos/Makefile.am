@@ -14,7 +14,7 @@ pyclical_tutorial_utils.py              pyclical_tutorials.py                   
 
 DEMOSOUT = $(DEMOS) clifford_demo.out pyclical_demo.out sqrt_log_demo.out
 
-dist_demo_DATA = $(DEMOSOUT) plotting_demo_dialog.py plotting_demo_mayavi.py
+dist_demo_DATA = $(DEMOSOUT)
 
 NOTEBOOKS = clifford_demo.ipynb        m_theory_demo.ipynb                         pyclical_demo.ipynb \
 sqrt_log_demo.ipynb                     versor_demo.ipynb \
