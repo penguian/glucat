@@ -1117,35 +1117,163 @@ PyClical is now compatible with Python 3 and is backwards incompatible
 with Python 2.
 
 
-The PyClical plotting demos use Numpy and either Matplotlib or Mayavi2.
+The PyClical plotting demos use NumPy and either Matplotlib or Mayavi2.
 The versions used need to be compatible with each other and with Python.
-For Mayavi2 the versions of VTK and TVTK used also need to be compatible.
+For Mayavi2, the versions of VTK and TVTK also need to be compatible.
 
-The use of Mayavi2-based plotting demos on Kubuntu 24.10 is achieved via the
-following procedure:
+**When a special environment is not needed:**
 
-1. Install Conda from the Anaconda distribution.
-   https://www.anaconda.com/download
+- **C++ only** (GluCat headers, test programs `test00`–`test19`, doctest,
+  benchmarks): No Python environment is required at all. Configure with
+  `--disable-pyclical` to skip PyClical entirely:
+  ```bash
+  ./configure --disable-pyclical
+  make check-local
+  ```
 
-2. Run `pyclical/demos/kubuntu-24-conda-install-mayavi.sh`
+- **PyClical without plotting demos** (doctests, tutorials, all demos except
+  the Mayavi-based ones): The system Python with NumPy and Cython is
+  sufficient. No Conda or venv is required. The Matplotlib-based demo
+  `plotting_demo.py` also falls into this category — it only requires
+  NumPy and Matplotlib, which are available in the system Python on all
+  tested platforms.
 
-3. Run `./configure` with your preferred options.
+- **Mayavi-based plotting demos** (`plotting_demo_mayavi.py`,
+  `plotting_demo_dialog.py`): These require a specially configured
+  environment because Mayavi/VTK version mismatches are common and
+  hard to resolve with system packages alone (on x86-64), and because
+  the correct page-aligned binaries must come from system RPMs (on ARM).
+  The procedures below apply only to these two scripts.
 
-4. Run make clean.
+**When the environment is needed:** only when running
+`plotting_demo_mayavi.py` or `plotting_demo_dialog.py`.
 
-5. Run make.
+The setup procedure depends on your hardware architecture because Conda's
+`linux-aarch64` VTK/Mayavi binaries are compiled with 4 KB memory page
+alignment, which is incompatible with the 16 KB page size required by
+Apple Silicon (Asahi Linux). On ARM aarch64, use the system RPM packages
+(which are rebuilt for 16 KB alignment by the Asahi team) via a Python
+virtual environment instead.
 
-6. Change directory to `pyclical/demos`.
+**Confirmed working versions:**
 
-7. Run `./kubuntu-mayavi-env.sh` before running either
-   `./plotting_demo_dialog.py` or `./plotting_demo_mayavi.py`.
+| Machine | Architecture | OS | Python | Mayavi | VTK |
+|:---|:---|:---|:---|:---|:---|
+| Tempesta (AMD Ryzen) | x86-64 | Kubuntu 26.04 | 3.12.13 (Conda) | 4.8.3 | 9.4.2 |
+| Pensieri (Intel Core) | x86-64 | Kubuntu 25.04 | 3.12.x (Conda) | 4.8.x | 9.4.x |
+| Ginestra (Apple M2 Pro) | aarch64 | Fedora Asahi Remix 43 | 3.14.x (system) | 4.8.x | 9.4.x |
 
-For Kubuntu 25.10, Conda is not needed, but you still need to run
-`./kubuntu-mayavi-env.sh` before running either
-`./plotting_demo_dialog.py` or `./plotting_demo_mayavi.py`.
 
-The use of Mayavi2 4.8.2 with Python 3.11.11 on openSUSE Tumbleweed involves
-the installation following and other related RPM packages:
+### x86-64 (Ubuntu, Kubuntu) — Conda path
+
+Install [Miniforge](https://github.com/conda-forge/miniforge) or
+[Anaconda](https://www.anaconda.com/download) if you do not already have
+Conda or Mamba available.
+
+1.  Create and activate the Conda environment, and remove any conflicting
+    Mesa library. The script `pyclical/demos/setup-conda-env.sh` does all
+    three steps and automatically detects whether `mesalib` should be removed:
+
+    ```bash
+    source pyclical/demos/setup-conda-env.sh
+    ```
+
+    The script detects a native GPU via `/dev/dri/card0`. If present, it
+    removes the conda-forge `mesalib` to prevent conflicts with the system
+    OpenGL driver. On headless systems, it retains `mesalib` for software
+    rendering.
+
+2.  Configure and build PyClical. **The environment must already be active**
+    when `./configure` runs, as `./configure` auto-detects the Python
+    interpreter from `$PATH`. Run from the repository root.
+
+    If working from a git clone (not a release tarball), bootstrap first:
+
+    ```bash
+    make -f admin/Makefile.common bootstrap
+    ```
+
+    Then configure and build. The default `./configure` enables PyClical;
+    no extra flags are needed for demo use:
+
+    ```bash
+    make clean
+    ./configure
+    make -j$(nproc)
+    ```
+
+3.  (Optional) Register a Jupyter kernel for this environment using the
+    make target, which uses the same Python interpreter as the build:
+
+    ```bash
+    make -C pyclical install-pyclical-kernel
+    ```
+
+
+### ARM aarch64 (Fedora Asahi Remix) — system venv path
+
+Conda's `linux-aarch64` VTK/Mayavi binaries are 4 KB page-aligned and
+will segfault immediately on import on Asahi Linux, which requires 16 KB
+page alignment. Use the system package manager to install VTK and Mayavi,
+then create a virtual environment that inherits those packages.
+
+1.  Install the 16 KB-aligned VTK/Mayavi packages from Fedora Asahi RPMs:
+
+    ```bash
+    sudo dnf install python3-mayavi python3-vtk python3-qt5
+    ```
+
+2.  Create a virtual environment that inherits those system packages.
+    Run from the glucat repository root (`.venvs/` is listed in `.gitignore`):
+
+    ```bash
+    python3 -m venv --system-site-packages .venvs/pyclical-mayavi
+    source .venvs/pyclical-mayavi/bin/activate
+    ```
+
+3.  Install the Jupyter stack via pip inside the venv.
+    Do **not** `pip install mayavi` or `pip install vtk` here — let the
+    system RPMs provide them:
+
+    ```bash
+    pip install "notebook>=7" jupyterlab ipykernel
+    ```
+
+4.  Configure and build PyClical against the venv's Python interpreter.
+    **The venv must be active before running `./configure`**, because
+    `$(which python3)` resolves to whichever interpreter is on `$PATH` at the
+    time `./configure` runs. If the venv is not active, PyClical will be built
+    against the system Python ABI and will not have access to the venv's packages.
+
+    Run from the repository root. If working from a git clone (not a release
+    tarball), run the Autotools bootstrap first:
+
+    ```bash
+    make -f admin/Makefile.common bootstrap
+    ```
+
+    Then configure and build. The default `./configure` enables PyClical;
+    no extra flags are needed for demo use:
+
+    ```bash
+    make clean
+    ./configure PYTHON=$(which python3)
+    make -j$(nproc)
+    ```
+
+5.  (Optional) Register a Jupyter kernel:
+
+    ```bash
+    python3 -m ipykernel install --user \
+        --name pyclical \
+        --display-name "Python (PyClical)"
+    ```
+
+
+### openSUSE Tumbleweed — RPM path
+
+The use of Mayavi2 on openSUSE Tumbleweed involves installing the
+following RPM packages (or their current equivalents):
 
     ```
     mayavi 4.8.2
@@ -1164,4 +1292,39 @@ the installation following and other related RPM packages:
     python311-traitsui 8.0.0
     python311-zipp 3.21.0
     ```
+
 The exact versions needed will change as openSUSE Tumbleweed is updated.
+
+
+### Running the Mayavi demos (all platforms)
+
+Once the environment is set up and PyClical is built, the remaining steps
+are identical on all platforms.
+
+1.  Change directory to `pyclical/demos` and source the runtime environment
+    script. This sets `PYTHONPATH`, `QT_API`, and `QT_QPA_PLATFORM`:
+
+    ```bash
+    cd pyclical/demos
+    source ./mayavi-env.sh
+    ```
+
+2.  Run either plotting demo:
+
+    ```bash
+    python3 plotting_demo_mayavi.py
+    python3 plotting_demo_dialog.py
+    ```
+
+3.  To run in non-interactive mode (e.g. for automated testing):
+
+    ```bash
+    GLUCAT_NON_INTERACTIVE=1 python3 plotting_demo_mayavi.py
+    ```
+
+4.  To use the demos via Jupyter notebooks, launch from the `pyclical/demos`
+    directory and select the `Python (PyClical)` kernel:
+
+    ```bash
+    jupyter notebook pyclical/demos/
+    ```

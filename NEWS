@@ -3,6 +3,14 @@ GluCat 0.98a3 implements the Defence in Depth quality-hardening framework.
 
 o Stage 0: Refactored the primary C++ regression suite (test_doctest), deleted redundant test headers, and embedded inline test template assertions next to function definitions.
 
+o Stage 5: Consolidated the Mayavi demo environment into environment.yml at the
+  repository root, providing a cross-platform Conda environment for x86-64
+  (Ubuntu/Kubuntu). The ARM aarch64 (Fedora Asahi Remix) path using a system
+  venv with 16 KB-aligned Fedora RPMs is now documented alongside the Conda path.
+  The platform-independent runtime script has been renamed from
+  kubuntu-mayavi-env.sh to mayavi-env.sh. The outdated
+  kubuntu-24-conda-install-mayavi.sh script has been retired.
+
 2026-06-07: 0.98a2
 GluCat 0.98a2 improves performance and adds configuration options and benchmarks.
 

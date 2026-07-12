@@ -242,19 +242,33 @@ In [1]: %run plotting_demo
 ```
 This demo uses Matplotlib to produce a number of plots.
 
-To run `plotting_demo_mayavi.py`, first ensure that you have Mayavi2 installed
-and working. (See http://code.enthought.com/projects/mayavi/)
-Additional installation and setup steps may depend on your operating system.
-For details, see `INSTALL.md`. Then run `ipython3` and enter the following
-command at the `ipython3` prompt:
-```
-In [1]: %run plotting_demo_mayavi
+To run `plotting_demo_mayavi.py`, first set up the Mayavi2 environment.
+The setup method depends on your hardware architecture — see `INSTALL.md`
+for full details:
+
+- **x86-64 (Ubuntu, Kubuntu):** Create the Conda environment from
+  `environment.yml` at the repository root, then activate it:
+  ```bash
+  mamba env create -f environment.yml
+  conda activate glucat-pyclical
+  conda remove --force mesalib  # on systems with a native GPU driver
+  ```
+- **ARM aarch64 (Fedora Asahi Remix):** Install `python3-mayavi`,
+  `python3-vtk`, and `python3-qt5` via `dnf`, then create a
+  `venv --system-site-packages` (see `INSTALL.md`).
+
+Once the environment is active and PyClical is built, source the runtime
+environment script and run the demo:
+```bash
+cd pyclical/demos
+source ./mayavi-env.sh
+python3 plotting_demo_mayavi.py
 ```
 This demo uses Mayavi to produce a number of plots. These plots are displayed in
 interactive windows, and [you can rotate, zoom and pan them](https://docs.enthought.com/mayavi/mayavi/application.html#mouse-interaction).
 
 You can also run the Mayavi plotting demo from a graphical user interface.
-To do this, run `./plotting_demo_dialog.py`.
+To do this, source `mayavi-env.sh` as above and then run `./plotting_demo_dialog.py`.
 
 The tutorials and demos are also accompanied by a corresponding set of Jupyter
 notebooks. To build the notebooks, see `INSTALL.md`. To run the notebooks, assuming

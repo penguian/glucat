@@ -13,7 +13,7 @@ pyclical_tutorial_utils.py              pyclical_tutorials.py                   
 
 DEMOSOUT = $(DEMOS) clifford_demo.out pyclical_demo.out sqrt_log_demo.out
 
-dist_demo_DATA = $(DEMOSOUT) kubuntu-24-conda-install-mayavi.sh  kubuntu-mayavi-env.sh
+dist_demo_DATA = $(DEMOSOUT) mayavi-env.sh setup-conda-env.sh
 
 NOTEBOOKS = clifford_demo.ipynb        m_theory_demo.ipynb                         pyclical_demo.ipynb \
 sqrt_log_demo.ipynb                     versor_demo.ipynb \
@@ -24,11 +24,15 @@ pyclical_tutorial_1_4_fourth.ipynb     pyclical_tutorial_1_5_conformal.ipynb    
 
 nodist_demo_DATA = $(NOTEBOOKS)
 
-$(NOTEBOOKS):
+notebooks.stamp: build_pyclical_notebooks.py
 	PYTHONPATH="..:$(PYTHONPATH)" $(PYTHON) build_pyclical_notebooks.py
+	touch notebooks.stamp
+
+$(NOTEBOOKS): notebooks.stamp
+	@true
 
 clean-local:
-	rm -rf *.pyc *.ipynb __pycache__
+	rm -rf *.pyc *.ipynb __pycache__ notebooks.stamp
 
 endif
 

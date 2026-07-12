@@ -49,18 +49,20 @@ clean-local:
 	rm -rf __pycache__
 	rm -f $(CHECK_OUT)
 
+install-pyclical-kernel:
+	$(PYTHON) -m ipykernel install --user \
+	    --name pyclical \
+	    --display-name "Python (PyClical)"
+
 
 
 if HAVE_SPHINX
-.PHONY: doc
 doc:
 	$(SPHINXBUILD) -D release=$(VERSION) -D version=$(VERSION) -b html doc doc/_build/html
 
-.PHONY: clean-doc
 clean-doc:
 	rm -rf doc/_build
 
-.PHONY: install-doc
 install-doc: doc
 	$(MKDIR_P) "$(DESTDIR)$(docdir)/pyclical"
 	cp -r doc/_build/html/* "$(DESTDIR)$(docdir)/pyclical"
@@ -70,3 +72,5 @@ install-doc:
 endif
 
 endif
+
+.PHONY: install-pyclical-kernel doc clean-doc install-doc
