@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Set up the glucat-pyclical Conda environment for Mayavi demos.
+# Set up the glucat-pyclical Conda environment for Mayavi plotting demos.
 #
 # Run from the glucat repository root with:
-#   source pyclical/demos/setup-conda-env.sh
+#   source pyclical/demos/plotting/setup-plotting-env.sh
 #
 # This script:
 #   1. Creates (or updates) the glucat-pyclical Conda environment from
-#      environment.yml at the repository root.
+#      pyclical/demos/plotting/plotting-env.yml.
 #   2. Activates the environment.
 #   3. On systems with a native GPU driver (detected via /dev/dri/card0),
 #      removes the conda-forge mesalib package to prevent it from conflicting
@@ -22,7 +22,7 @@ if [ "${BASH_SOURCE-}" = "$0" ]; then
     exit 1
 fi
 
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.."; pwd)"
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.."; pwd)"
 
 if ! command -v mamba >/dev/null 2>&1 && ! command -v conda >/dev/null 2>&1; then
     echo "Error: neither mamba nor conda found on PATH." >&2
@@ -30,13 +30,13 @@ if ! command -v mamba >/dev/null 2>&1 && ! command -v conda >/dev/null 2>&1; the
     return 1
 fi
 
-echo "Creating/updating Conda environment from environment.yml ..."
+echo "Creating/updating Conda environment from pyclical/demos/plotting/plotting-env.yml ..."
 if command -v mamba >/dev/null 2>&1; then
-    mamba env create -f "${REPO_ROOT}/environment.yml" 2>/dev/null \
-        || mamba env update -f "${REPO_ROOT}/environment.yml"
+    mamba env create -f "${REPO_ROOT}/pyclical/demos/plotting/plotting-env.yml" 2>/dev/null \
+        || mamba env update -f "${REPO_ROOT}/pyclical/demos/plotting/plotting-env.yml"
 else
-    conda env create -f "${REPO_ROOT}/environment.yml" 2>/dev/null \
-        || conda env update -f "${REPO_ROOT}/environment.yml"
+    conda env create -f "${REPO_ROOT}/pyclical/demos/plotting/plotting-env.yml" 2>/dev/null \
+        || conda env update -f "${REPO_ROOT}/pyclical/demos/plotting/plotting-env.yml"
 fi
 
 conda activate glucat-pyclical
@@ -61,5 +61,5 @@ echo ""
 echo "Environment 'glucat-pyclical' is ready."
 echo "Next steps (from the repository root, with this environment active):"
 echo "  make -f admin/Makefile.common bootstrap  # git clone only, not needed for tarballs"
-echo "  make clean && ./configure && make -j\$(nproc)"
-echo "  make -C pyclical install-pyclical-kernel  # optional: register Jupyter kernel"
+echo "  make -C pyclical -j\$(($(nproc)/2))"
+echo "  source pyclical/demos/plotting/export-plotting-vars.sh"

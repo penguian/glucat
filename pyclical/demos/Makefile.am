@@ -1,9 +1,10 @@
 AUTOMAKE_OPTIONS = foreign
 
+SUBDIRS = plotting
+
 if make_pyclical
 
 DEMOS =  build_pyclical_notebooks.py    clifford_demo.py                         m_theory_demo.py \
-plotting_demo.py                        plotting_demo_dialog.py                  plotting_demo_mayavi.py \
 pyclical_demo.py                        pyclical_notebook_utils.py               sqrt_log_demo.py \
 pyclical_tutorial_0_0_notation.py       pyclical_tutorial_0_1_index_sets.py      pyclical_tutorial_0_2_operations.py \
 pyclical_tutorial_0_3_functions.py      pyclical_tutorial_0_4_transcendental.py  pyclical_tutorial_1_0_plane.py \
@@ -13,7 +14,7 @@ pyclical_tutorial_utils.py              pyclical_tutorials.py                   
 
 DEMOSOUT = $(DEMOS) clifford_demo.out pyclical_demo.out sqrt_log_demo.out
 
-dist_demo_DATA = $(DEMOSOUT) mayavi-env.sh setup-conda-env.sh
+dist_demo_DATA = $(DEMOSOUT) plotting_demo_dialog.py plotting_demo_mayavi.py
 
 NOTEBOOKS = clifford_demo.ipynb        m_theory_demo.ipynb                         pyclical_demo.ipynb \
 sqrt_log_demo.ipynb                     versor_demo.ipynb \

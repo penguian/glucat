@@ -9,6 +9,12 @@ Armadillo for linear algebra. The PyClical Python extension module is built
 using Cython and Python. Make sure that you have all of these installed and
 working before attempting to use GluCat with PyClical.
 
+The PyClical plotting demos (`plotting_demo_mayavi.py`,
+`plotting_demo_dialog.py`) additionally require a specially configured
+Mayavi/VTK environment. On x86-64, this is provided via a Conda environment;
+on ARM aarch64 (Asahi Linux), via a system venv. See "Setting Up the Mayavi
+Plotting Environment" below for full instructions.
+
 Use the instructions at http://www.boost.org/more/download.html to obtain
 the Boost Library. Make sure that you are able to build the Boost library with
 the same C++ compiler version as you will be using to build programs that will
@@ -66,16 +72,17 @@ current directory.
 Installation Summary
 ====================
 
-There are four different types of program that you can make using the GluCat
+There are several different types of program that you can make using the GluCat
 library with PyClical. These are:
 
  1. The PyClical Python extension module.
- 2. The timing test programs.
- 3. The legacy regression test programs.
- 4. The new doctest-based unit tests.
- 5. Your own programs, written in C++.
+ 2. The PyClical demos.
+ 3. The PyClical plotting demos (requires a special Mayavi/VTK environment).
+ 4. The two types of test programs (timing and regression).
+ 5. Code coverage and unit tests.
+ 6. Your own programs, written in C++.
 
-There are four different things to install. These are:
+The following items can be installed:
 
  1. The PyClical Python extension module.
  2. The GluCat C++ header files.
@@ -106,8 +113,8 @@ You can also make and install the GluCat API documentation, after running
 More details of the installation process are given below.
 
 
-The Four Different Types of Programs
-=====================================
+The Different Types of Programs
+===============================
 
 The PyClical Python extension module
 ------------------------------------
@@ -115,12 +122,26 @@ The PyClical Python extension module
 GluCat includes a Python extension module called PyClical.
 
 The subdirectory `./pyclical` contains source code for the PyClical extension
-module, and the subdirectory `./pyclical/demos` contains demo and tutorial
-scripts written in Python.
+module.
 
 PyClical is written in C++ and Cython, and is defined in the files
 `pyclical/glucat.pxd`, `pyclical/PyClical.h`, `pyclical/PyClical.pxd`, and
 `pyclical/PyClical.pyx`.
+
+The PyClical demos
+------------------
+
+The subdirectory `./pyclical/demos` contains demo and tutorial scripts written
+in Python. These scripts rely on the built PyClical extension module.
+
+The PyClical plotting demos
+---------------------------
+
+Two of the demos in `./pyclical/demos/` (`plotting_demo_mayavi.py` and
+`plotting_demo_dialog.py`) use Mayavi2 and VTK for 3D visualization.
+Because VTK and Mayavi are highly sensitive to library version mismatches,
+they require a special execution environment (see "Setting Up the Mayavi
+Plotting Environment" below).
 
 The two types of test programs
 ------------------------------
@@ -131,24 +152,6 @@ programming examples. The source code for the timing tests is in `./gfft_test`,
 `./products`, `./squaring` and `./transforms`. The source code for the regression
 tests is in the subdirectories `./test00` to `./test19`. Compilation of these test
 programs uses C++ headers defined in `./test` as well as `./glucat`.
-
-Your own programs, written in C++
----------------------------------
-
-Once you have installed  the GluCat C++ library, you use this library to build
-your own C++ programs. To do this, you will need to follow some or all of the
-same steps you took to build the test programs and the PyClical extension
-module. This includes setting compiler flags, and including relevant headers
-and libraries.
-
-Pay special attention to the `-D` flags described in the configuration section
-below, as these control optional parts of the compilation of the GluCat library.
-In particular, if you compile your own programs without setting any of these
-`-D` flags, please be aware that the default random number generator used by
-GluCat requires the use of the C++ 2023 standard. See details below.
-
-To automate the build process, you should use GNU make with your own Makefile.
-For very elaborate software, you may also want to consider using GNU Autotools.
 
 Code Coverage and Unit Tests
 ----------------------------
@@ -162,6 +165,14 @@ be enabled by defining `GLUCAT_DOCTEST`.
 
 The `./test_coverage` directory contains shell scripts for generating code
 coverage reports using Clang/LLVM. See "Running Coverage Tests" below.
+
+Your own programs, written in C++
+---------------------------------
+
+Once you have installed the GluCat C++ library, you use this library to build
+your own C++ programs. See "Building your own C++ programs" in the `To Build`
+section below for the required compiler flags, include paths, and linker
+flags.
 
 
 To Configure
@@ -202,13 +213,6 @@ shell script `./config.status` that you can run in the future to recreate the
 current configuration, a file `./config.cache` that saves the results of its
 tests to speed up reconfiguring, and a file `./config.log` containing compiler
 output (useful mainly for debugging `./configure`).
-
-The following additional options are recognized by `./configure`:
-
-  `--with-doctest`: Enables the modern unit testing suite in `test_doctest`.
-
-  `--with-unordered-map=boost|std`: Chooses the implementation of the hash
-  map used in `framed_multi`. The default is `boost` (requires Boost 1.83.0+).
 
 If you need to do unusual things to compile GluCat with PyClical, please try to
 figure out how `./configure` could check whether to do them, and email diffs or
@@ -427,6 +431,13 @@ Note: If you are using the clang++ compiler you will need to ensure that libomp
 is installed.
 
 ```
+  --with-doctest          enable the doctest unit testing suite [default=no]
+```
+This option enables the doctest unit testing suite. The option `--with-doctest`
+defines `GLUCAT_DOCTEST` in the header files and enables compiling the doctest-based
+unit tests in `test_doctest/`.
+
+```
   --with-unordered-map=boost|std
                           use specified map implementation [default=boost]
 ```
@@ -469,22 +480,20 @@ Operation Controls
 To Build
 ========
 
-Building PyClical and the timing test programs
-----------------------------------------------
+Building the PyClical extension module
+--------------------------------------
 
-To build PyClical and the timing test programs, set the environment variable
-CXX to indicate your C++ compiler, eg. `g++` for GNU C++, `icpx`
-for Intel C++, then run `./configure` as above, and then run `make`.
+To build the PyClical extension module, set the environment variable CXX
+to indicate your C++ compiler (e.g. `g++` for GNU C++, `icpx` for Intel C++),
+run `./configure`, and then run `make`.
 
-Make uses the headers in `./glucat` and `./test` and the source in `./pyclical`,
-`./gfft_test`, `./products`, `./squaring` and `./transforms` to build PyClical
-and the timing test programs `./gfft_test/gfft_test`, `./products/products`,
-`./squaring/squaring` and `./transforms/transforms`.
+Make uses the headers in `./glucat` and the source in `./pyclical` to build
+the PyClical extension module.
 
 The following build steps will be performed if you have not selected the
 configuration option `--disable-pyclical` (equivalently, `--enable-pyclical=no`).
 
-If Cython is installed then `make` builds PyClical by running the command
+If Cython is installed then `make` builds PyClical by running the command:
 
 ```
   ext_name=`PyClical` source_pyx=`PyClical.pyx` \
@@ -502,7 +511,7 @@ variables to appropriate values. See `To Configure` above to determine these
 values.
 
 Alternatively, if you have Python installed but do not have Cython, then
-`./configure` will recognize this, and make will build PyClical via the command
+`./configure` will recognize this, and make will build PyClical via the command:
 
 ```
   ext_name=`PyClical` source_cpp=`PyClical_nocython.cpp` \
@@ -518,20 +527,49 @@ appropriate values.
 Please note that the ability to build PyClical without Cython is deprecated and
 will be removed in future versions.
 
+
+Building and running the PyClical demos
+---------------------------------------
+
 In the `pyclical/demos` directory, there is a Python script
 `build_pyclical_notebooks.py`. This script builds a set of Jupyter notebooks
 that correspond to the PyClical tutorials and some of the demos. Running `make`
 will use this Python script to build these notebooks.
 
+Once built, you can run standard PyClical demos in Python directly:
 
-Building and running the regression test programs
--------------------------------------------------
+```bash
+cd pyclical/demos
+python3 clifford_demo.py
+```
 
-To build and run the regression test programs, set the environment variable `CXX`
-to indicate your C++ compiler, eg. `g++` for GNU C++, `icpx` for Intel
-C++, then run `./configure` as above, and then run `make check`. This builds and
-runs the executable files `./test_move/test_move` and `./test00/test00` to
-`./test19/test19`. This produces the intermediate output files
+
+Building the PyClical plotting demos
+------------------------------------
+
+The plotting demos (`plotting_demo_mayavi.py` and `plotting_demo_dialog.py`)
+require a specially configured environment to satisfy their Mayavi/VTK dependencies.
+Building these demos requires creating/activating the appropriate environment (via Conda
+on x86-64 or a venv on ARM), configuring/building PyClical against the correct Python interpreter, and exporting the required runtime plotting environment variables.
+
+Please refer to the detailed section "Setting Up the Mayavi Plotting Environment"
+below for the full build and execution procedures for these demos.
+
+
+Building and running the test programs
+--------------------------------------
+
+To build and run the timing and functionality (regression) test programs, set the
+environment variable CXX to indicate your C++ compiler (e.g. `g++` for GNU C++,
+`icpx` for Intel C++), run `./configure` as above, and then run `make` (for timing tests)
+or `make check` (for regression tests).
+
+Make uses the C++ headers in `./glucat` and `./test` to compile the timing test programs
+`./gfft_test/gfft_test`, `./products/products`, `./squaring/squaring`, and
+`./transforms/transforms` using the source code in those respective directories.
+
+Running `make check` builds and runs the functionality regression tests `./test_move/test_move`
+and `./test00/test00` to `./test19/test19`. This produces the intermediate output files
 `./test_move/test_move.out` and `./test00/test00.out` to `./test19/test19.out`,
 and the final test output file `./test_runtime/test.out`.
 
@@ -545,8 +583,9 @@ Note the difference between `make check` and `make check-local`:
 When you want to generate `test_runtime/test.out` to compare with the existing
 sample files in `test_runtime.*`, you should use parallel make with the
 `check-local` target:
-```
-  make -j${NPROCS} check-local
+
+```bash
+make -j${NPROCS} check-local
 ```
 where `${NPROCS}` is the number of processes you want to use (e.g. `make -j4 check-local`).
 
@@ -554,8 +593,8 @@ Warning: If you use too many jobs with parallel make, the compiler will have
 problems obtaining enough memory to run efficiently.
 
 
-Building and running the doctest unit tests
--------------------------------------------
+Code Coverage and Unit Tests
+----------------------------
 
 To build and run the modern unit tests, you must configure with the
 `--with-doctest` option. Then run:
@@ -567,16 +606,13 @@ To build and run the modern unit tests, you must configure with the
 This will compile and run the unit tests integrated into the library headers.
 The output will be written to `test_doctest/test_doctest.out`.
 
-
-Running Coverage Tests
-----------------------
-
 If you have Clang and LLVM installed, you can generate code coverage reports
 using the scripts in `test_coverage/src/`.
 
 To run the coverage tests for the doctest suite:
-```
- bash test_coverage/src/run_clang_doctest_coverage.sh [--backend=eigen|arma|both]
+
+```bash
+bash test_coverage/src/run_clang_doctest_coverage.sh [--backend=eigen|arma|both]
 ```
 
 By default, the script tests both backends and combines their results into a
@@ -585,6 +621,233 @@ backend.
 
 The resulting HTML report will be available in
 `test_coverage/results/coverage_html_doctest/index.html`.
+
+
+Building your own C++ programs
+------------------------------
+
+To compile C++ applications against the installed GluCat library:
+
+**Include paths**: Add the GluCat installation prefix to your compiler's
+include search path, e.g. `-I/usr/local/include`.
+
+**Linker flags**: Link against the same linear algebra backend you configured
+GluCat with:
+- Eigen (default): no extra `-l` flag needed; headers-only.
+- Armadillo: add `-larmadillo` (and `-lflexiblas` or `-lopenblas` if used).
+- QD: add `-lqd`.
+- OpenMP: add the appropriate OpenMP flag (e.g. `-fopenmp` for GCC/Clang).
+
+**Preprocessor macros**: Pass the same `-D` flags you used when building
+GluCat, or omit them for defaults. Key macros are:
+- `_GLUCAT_USE_ARMADILLO` — use Armadillo instead of Eigen.
+- `_GLUCAT_USE_QD` — enable QD high-precision types.
+- `_GLUCAT_USE_OPENMP` — enable OpenMP parallelism (requires Armadillo).
+- No macros set — defaults to the Eigen backend and the C++ 2023 standard
+  random number generator.
+
+**Build system**: Use GNU make with your own Makefile. For larger projects,
+consider GNU Autotools.
+
+
+Setting Up the Mayavi Plotting Environment
+==========================================
+
+The PyClical plotting demos (`plotting_demo_mayavi.py` and
+`plotting_demo_dialog.py`) use Mayavi2 and VTK for 3D visualization.
+Because VTK and Mayavi are highly sensitive to library version mismatches,
+they require a special execution environment.
+
+The setup procedure depends on your hardware architecture because Conda's
+`linux-aarch64` VTK/Mayavi binaries are compiled with 4 KB memory page
+alignment, which is incompatible with the 16 KB page size required by
+Apple Silicon (Asahi Linux). On ARM aarch64, use the system RPM packages
+(which are rebuilt for 16 KB alignment by the Asahi team) via a Python
+virtual environment instead.
+
+Confirmed working versions:
+
+| Machine | Architecture | OS | Python | Mayavi | VTK |
+|:---|:---|:---|:---|:---|:---|
+| Tempesta (AMD Ryzen) | x86-64 | Kubuntu 26.04 | 3.12.13 (Conda) | 4.8.3 | 9.4.2 |
+| Pensieri (Intel Core) | x86-64 | Kubuntu 25.04 | 3.12.x (Conda) | 4.8.x | 9.4.x |
+| Ginestra (Apple M2 Pro) | aarch64 | Fedora Asahi Remix 43 | 3.14.x (system) | 4.8.x | 9.4.x |
+
+
+When a special environment is not needed
+----------------------------------------
+
+- **C++ only** (GluCat headers, test programs `test00`–`test19`, doctest,
+  benchmarks): No Python environment is required at all. Configure with
+  `--disable-pyclical` to skip PyClical entirely:
+  ```bash
+  ./configure --disable-pyclical
+  make check-local
+  ```
+
+- **PyClical without plotting demos** (doctests, tutorials, all demos except
+  the Mayavi-based ones): The system Python with NumPy and Cython is
+  sufficient. No Conda or venv is required.
+
+
+x86-64 (Ubuntu, Kubuntu) — Conda path
+-------------------------------------
+
+Install [Miniforge](https://github.com/conda-forge/miniforge) or
+[Anaconda](https://www.anaconda.com/download) if you do not already have
+Conda or Mamba available.
+
+1.  **Set up the Conda environment**: Run this command from the repository root:
+    ```bash
+    source pyclical/demos/plotting/setup-plotting-env.sh
+    ```
+    This script creates or updates the `glucat-pyclical` Conda environment from
+    `pyclical/demos/plotting/plotting-env.yml`, activates it, and removes the
+    conda-forge `mesalib` if a native GPU is detected (via `/dev/dri/card0`).
+
+2.  **Bootstrap the build system** (git clone only, skip for release tarballs):
+    ```bash
+    make -f admin/Makefile.common bootstrap
+    ```
+
+3.  **Configure and build PyClical**: Ensure the environment is active, then run:
+    ```bash
+    make clean
+    ./configure
+    make -C pyclical -j$(($(nproc)/2))
+    ```
+
+4.  **Export the runtime plotting environment variables**:
+    ```bash
+    source pyclical/demos/plotting/export-plotting-vars.sh
+    ```
+
+5.  (Optional) Register a Jupyter kernel for this environment:
+    ```bash
+    make -C pyclical install-pyclical-kernel
+    ```
+
+
+ARM aarch64 (Fedora Asahi Remix) — system venv path
+---------------------------------------------------
+
+Conda's `linux-aarch64` VTK/Mayavi binaries are 4 KB page-aligned and
+will segfault immediately on import on Asahi Linux, which requires 16 KB
+page alignment. Use the system package manager to install VTK and Mayavi,
+then create a virtual environment that inherits those packages.
+
+1.  Install the 16 KB-aligned VTK/Mayavi packages from Fedora Asahi RPMs:
+    ```bash
+    sudo dnf install python3-mayavi python3-vtk python3-qt5
+    ```
+
+2.  Create a virtual environment that inherits those system packages.
+    Run from the glucat repository root (`.venvs/` is listed in `.gitignore`):
+    ```bash
+    python3 -m venv --system-site-packages .venvs/pyclical-mayavi
+    source .venvs/pyclical-mayavi/bin/activate
+    ```
+
+3.  Install the Jupyter stack via pip inside the venv.
+    Do **not** `pip install mayavi` or `pip install vtk` here — let the
+    system RPMs provide them:
+    ```bash
+    pip install "notebook>=7" jupyterlab ipykernel
+    ```
+
+4.  Configure and build PyClical against the venv's Python interpreter.
+    **The venv must be active before running `./configure`**, because
+    `$(which python3)` resolves to whichever interpreter is on `$PATH` at the
+    time `./configure` runs. If the venv is not active, PyClical will be built
+    against the system Python ABI and will not have access to the venv's packages.
+
+    Run from the repository root. If working from a git clone (not a release
+    tarball), run the Autotools bootstrap first:
+    ```bash
+    make -f admin/Makefile.common bootstrap
+    ```
+
+    Then configure and build:
+    ```bash
+    ./configure PYTHON=$(which python3)
+    make -C pyclical -j$(($(nproc)/2))
+    ```
+
+5.  (Optional) Register a Jupyter kernel:
+    ```bash
+    python3 -m ipykernel install --user \
+        --name pyclical \
+        --display-name "Python (PyClical)"
+    ```
+
+After completing these steps, proceed to "Running the Mayavi demos (all platforms)" below, beginning with:
+```bash
+source pyclical/demos/plotting/export-plotting-vars.sh
+```
+
+
+openSUSE Tumbleweed — RPM path
+------------------------------
+
+The use of Mayavi2 on openSUSE Tumbleweed involves installing the
+following RPM packages (or their current equivalents):
+
+    ```
+    mayavi 4.8.2
+    python3-vtk 9.4.1
+    python311-apptools 5.3.0
+    python311-configobj 5.0.9
+    python311-envisage 6.1.1
+    python311-importlib-metadata-8.6.1
+    python311-importlib-resources 6.1.1
+    python311-numpy 2.1.3
+    python311-pyface 8.0.0
+    python311-Pygments 2.19.1
+    python311-setuptools 75.8.0
+    python311-six 1.17.0
+    python311-traits 6.4.3
+    python311-traitsui 8.0.0
+    python311-zipp 3.21.0
+    ```
+
+The exact versions needed will change as openSUSE Tumbleweed is updated.
+
+After installing the RPM packages, follow the same venv and build steps as
+the ARM aarch64 path (steps 2–5 above), using `zypper` in place of `dnf`
+where appropriate. The `export-plotting-vars.sh` script and the "Running the
+Mayavi demos" steps below apply to openSUSE as well.
+
+
+Running the Mayavi demos (all platforms)
+----------------------------------------
+
+Once the environment is set up and PyClical is built, the remaining steps
+are identical on all platforms.
+
+1.  From the repository root, source the runtime environment script.
+    This sets `PYTHONPATH`, `QT_API`, and `QT_QPA_PLATFORM`:
+    ```bash
+    source pyclical/demos/plotting/export-plotting-vars.sh
+    ```
+
+2.  Run either plotting demo from the `pyclical/demos` directory:
+    ```bash
+    cd pyclical/demos
+    python3 plotting_demo_mayavi.py
+    python3 plotting_demo_dialog.py
+    ```
+
+3.  To run in non-interactive mode (e.g. for automated testing):
+    ```bash
+    cd pyclical/demos
+    GLUCAT_NON_INTERACTIVE=1 python3 plotting_demo_mayavi.py
+    ```
+
+4.  To use the demos via Jupyter notebooks, launch from the `pyclical/demos`
+    directory and select the `Python (PyClical)` kernel:
+    ```bash
+    jupyter notebook pyclical/demos/
+    ```
 
 
 To Test
@@ -1065,7 +1328,7 @@ GluCat 0.98a2 with PyClical has so far been built and tested using:
     2) `Ubuntu clang version 20.1.2 (0ubuntu1)`
     3) `Intel(R) oneAPI DPC++/C++ Compiler 2025.0.4 (2025.0.4.20241205)`
 
-3) Vincitor (Pensieri running VirtualBox):
+ 3) Vincitor (Pensieri running VirtualBox):
     Virtual 1 core `Intel(R) Core(TM) i7 CPU 870 @ 2.93GHz` with
 
     ```
@@ -1106,225 +1369,18 @@ GluCat 0.98a2 with PyClical has so far been built and tested using:
     All 12 configuration commands corresponding to each of the 12
     `test.configure*.out` files in `./test_runtime.aarch64`
 
+
 Notes on software versions
 ==========================
 
-Building the documentation requires recent versions of both `doxygen` and
-`latex`, (e.g. `texlive-2024`).
+This section documents currently encountered building bugs and workarounds:
 
+*   **LaTeX/Doxygen version constraints**:
+    Building the documentation requires recent versions of both `doxygen` and
+    `latex` (e.g. `texlive-2024`). Older versions may cause build errors.
 
-PyClical is now compatible with Python 3 and is backwards incompatible
-with Python 2.
-
-
-The PyClical plotting demos use NumPy and either Matplotlib or Mayavi2.
-The versions used need to be compatible with each other and with Python.
-For Mayavi2, the versions of VTK and TVTK also need to be compatible.
-
-**When a special environment is not needed:**
-
-- **C++ only** (GluCat headers, test programs `test00`–`test19`, doctest,
-  benchmarks): No Python environment is required at all. Configure with
-  `--disable-pyclical` to skip PyClical entirely:
-  ```bash
-  ./configure --disable-pyclical
-  make check-local
-  ```
-
-- **PyClical without plotting demos** (doctests, tutorials, all demos except
-  the Mayavi-based ones): The system Python with NumPy and Cython is
-  sufficient. No Conda or venv is required. The Matplotlib-based demo
-  `plotting_demo.py` also falls into this category — it only requires
-  NumPy and Matplotlib, which are available in the system Python on all
-  tested platforms.
-
-- **Mayavi-based plotting demos** (`plotting_demo_mayavi.py`,
-  `plotting_demo_dialog.py`): These require a specially configured
-  environment because Mayavi/VTK version mismatches are common and
-  hard to resolve with system packages alone (on x86-64), and because
-  the correct page-aligned binaries must come from system RPMs (on ARM).
-  The procedures below apply only to these two scripts.
-
-**When the environment is needed:** only when running
-`plotting_demo_mayavi.py` or `plotting_demo_dialog.py`.
-
-The setup procedure depends on your hardware architecture because Conda's
-`linux-aarch64` VTK/Mayavi binaries are compiled with 4 KB memory page
-alignment, which is incompatible with the 16 KB page size required by
-Apple Silicon (Asahi Linux). On ARM aarch64, use the system RPM packages
-(which are rebuilt for 16 KB alignment by the Asahi team) via a Python
-virtual environment instead.
-
-**Confirmed working versions:**
-
-| Machine | Architecture | OS | Python | Mayavi | VTK |
-|:---|:---|:---|:---|:---|:---|
-| Tempesta (AMD Ryzen) | x86-64 | Kubuntu 26.04 | 3.12.13 (Conda) | 4.8.3 | 9.4.2 |
-| Pensieri (Intel Core) | x86-64 | Kubuntu 25.04 | 3.12.x (Conda) | 4.8.x | 9.4.x |
-| Ginestra (Apple M2 Pro) | aarch64 | Fedora Asahi Remix 43 | 3.14.x (system) | 4.8.x | 9.4.x |
-
-
-### x86-64 (Ubuntu, Kubuntu) — Conda path
-
-Install [Miniforge](https://github.com/conda-forge/miniforge) or
-[Anaconda](https://www.anaconda.com/download) if you do not already have
-Conda or Mamba available.
-
-1.  Create and activate the Conda environment, and remove any conflicting
-    Mesa library. The script `pyclical/demos/setup-conda-env.sh` does all
-    three steps and automatically detects whether `mesalib` should be removed:
-
-    ```bash
-    source pyclical/demos/setup-conda-env.sh
-    ```
-
-    The script detects a native GPU via `/dev/dri/card0`. If present, it
-    removes the conda-forge `mesalib` to prevent conflicts with the system
-    OpenGL driver. On headless systems, it retains `mesalib` for software
-    rendering.
-
-2.  Configure and build PyClical. **The environment must already be active**
-    when `./configure` runs, as `./configure` auto-detects the Python
-    interpreter from `$PATH`. Run from the repository root.
-
-    If working from a git clone (not a release tarball), bootstrap first:
-
-    ```bash
-    make -f admin/Makefile.common bootstrap
-    ```
-
-    Then configure and build. The default `./configure` enables PyClical;
-    no extra flags are needed for demo use:
-
-    ```bash
-    make clean
-    ./configure
-    make -j$(nproc)
-    ```
-
-3.  (Optional) Register a Jupyter kernel for this environment using the
-    make target, which uses the same Python interpreter as the build:
-
-    ```bash
-    make -C pyclical install-pyclical-kernel
-    ```
-
-
-### ARM aarch64 (Fedora Asahi Remix) — system venv path
-
-Conda's `linux-aarch64` VTK/Mayavi binaries are 4 KB page-aligned and
-will segfault immediately on import on Asahi Linux, which requires 16 KB
-page alignment. Use the system package manager to install VTK and Mayavi,
-then create a virtual environment that inherits those packages.
-
-1.  Install the 16 KB-aligned VTK/Mayavi packages from Fedora Asahi RPMs:
-
-    ```bash
-    sudo dnf install python3-mayavi python3-vtk python3-qt5
-    ```
-
-2.  Create a virtual environment that inherits those system packages.
-    Run from the glucat repository root (`.venvs/` is listed in `.gitignore`):
-
-    ```bash
-    python3 -m venv --system-site-packages .venvs/pyclical-mayavi
-    source .venvs/pyclical-mayavi/bin/activate
-    ```
-
-3.  Install the Jupyter stack via pip inside the venv.
-    Do **not** `pip install mayavi` or `pip install vtk` here — let the
-    system RPMs provide them:
-
-    ```bash
-    pip install "notebook>=7" jupyterlab ipykernel
-    ```
-
-4.  Configure and build PyClical against the venv's Python interpreter.
-    **The venv must be active before running `./configure`**, because
-    `$(which python3)` resolves to whichever interpreter is on `$PATH` at the
-    time `./configure` runs. If the venv is not active, PyClical will be built
-    against the system Python ABI and will not have access to the venv's packages.
-
-    Run from the repository root. If working from a git clone (not a release
-    tarball), run the Autotools bootstrap first:
-
-    ```bash
-    make -f admin/Makefile.common bootstrap
-    ```
-
-    Then configure and build. The default `./configure` enables PyClical;
-    no extra flags are needed for demo use:
-
-    ```bash
-    make clean
-    ./configure PYTHON=$(which python3)
-    make -j$(nproc)
-    ```
-
-5.  (Optional) Register a Jupyter kernel:
-
-    ```bash
-    python3 -m ipykernel install --user \
-        --name pyclical \
-        --display-name "Python (PyClical)"
-    ```
-
-
-### openSUSE Tumbleweed — RPM path
-
-The use of Mayavi2 on openSUSE Tumbleweed involves installing the
-following RPM packages (or their current equivalents):
-
-    ```
-    mayavi 4.8.2
-    python3-vtk 9.4.1
-    python311-apptools 5.3.0
-    python311-configobj 5.0.9
-    python311-envisage 6.1.1
-    python311-importlib-metadata-8.6.1
-    python311-importlib-resources 6.1.1
-    python311-numpy 2.1.3
-    python311-pyface 8.0.0
-    python311-Pygments 2.19.1
-    python311-setuptools 75.8.0
-    python311-six 1.17.0
-    python311-traits 6.4.3
-    python311-traitsui 8.0.0
-    python311-zipp 3.21.0
-    ```
-
-The exact versions needed will change as openSUSE Tumbleweed is updated.
-
-
-### Running the Mayavi demos (all platforms)
-
-Once the environment is set up and PyClical is built, the remaining steps
-are identical on all platforms.
-
-1.  Change directory to `pyclical/demos` and source the runtime environment
-    script. This sets `PYTHONPATH`, `QT_API`, and `QT_QPA_PLATFORM`:
-
-    ```bash
-    cd pyclical/demos
-    source ./mayavi-env.sh
-    ```
-
-2.  Run either plotting demo:
-
-    ```bash
-    python3 plotting_demo_mayavi.py
-    python3 plotting_demo_dialog.py
-    ```
-
-3.  To run in non-interactive mode (e.g. for automated testing):
-
-    ```bash
-    GLUCAT_NON_INTERACTIVE=1 python3 plotting_demo_mayavi.py
-    ```
-
-4.  To use the demos via Jupyter notebooks, launch from the `pyclical/demos`
-    directory and select the `Python (PyClical)` kernel:
-
-    ```bash
-    jupyter notebook pyclical/demos/
-    ```
+*   **GCC 15 false-positive warnings**:
+    Under GCC 15 on Fedora Asahi Remix, false-positive `-Wmaybe-uninitialized`
+    warnings can be encountered during optimized compilation of Eigen/Armadillo headers.
+    To compile with strict options enabled, either configure with `--disable-strict` or
+    suppress warnings in your compiler flags.
