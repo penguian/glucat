@@ -714,7 +714,7 @@ Conda or Mamba available.
     ```bash
     source pyclical/demos/plotting/setup-plotting-env.sh
     ```
-    This script creates or updates the `glucat-pyclical` Conda environment from
+    This script creates or updates the `pyclical-plotting` Conda environment from
     `pyclical/demos/plotting/plotting-env.yml`, activates it, and removes the
     conda-forge `mesalib` if a native GPU is detected (via `/dev/dri/card0`).
 

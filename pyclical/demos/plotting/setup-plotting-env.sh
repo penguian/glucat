@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Set up the glucat-pyclical Conda environment for Mayavi plotting demos.
+# Set up the pyclical-plotting Conda environment for Mayavi plotting demos.
 #
 # Run from the glucat repository root with:
 #   source pyclical/demos/plotting/setup-plotting-env.sh
 #
 # This script:
-#   1. Creates (or updates) the glucat-pyclical Conda environment from
+#   1. Creates (or updates) the pyclical-plotting Conda environment from
 #      pyclical/demos/plotting/plotting-env.yml.
 #   2. Activates the environment.
 #   3. On systems with a native GPU driver (detected via /dev/dri/card0),
@@ -39,7 +39,11 @@ else
         || conda env update -f "${REPO_ROOT}/pyclical/demos/plotting/plotting-env.yml"
 fi
 
-conda activate glucat-pyclical
+if command -v mamba >/dev/null 2>&1; then
+    mamba activate pyclical-plotting
+else
+    conda activate pyclical-plotting
+fi
 
 # Remove conda-forge's Mesa library if a native GPU driver is present.
 # The presence of /dev/dri/card0 indicates a real GPU with its own OpenGL
@@ -47,9 +51,9 @@ conda activate glucat-pyclical
 # removed to prevent rendering failures.
 if [ -e /dev/dri/card0 ]; then
     echo "Native GPU detected (/dev/dri/card0 exists)."
-    if conda list "^mesalib$" | grep -q mesalib; then
+    if conda list -n pyclical-plotting "^mesalib$" | grep -q mesalib; then
         echo "Removing conda-forge mesalib to avoid OpenGL conflict with system driver."
-        conda remove --force mesalib -y
+        conda remove -n pyclical-plotting --force mesalib -y
     else
         echo "conda-forge mesalib is not present in the environment; no removal needed."
     fi
@@ -58,7 +62,7 @@ else
 fi
 
 echo ""
-echo "Environment 'glucat-pyclical' is ready."
+echo "Environment 'pyclical-plotting' is ready."
 echo "Next steps (from the repository root, with this environment active):"
 echo "  make -f admin/Makefile.common bootstrap  # git clone only, not needed for tarballs"
 echo "  make -C pyclical -j\$(($(nproc)/2))"

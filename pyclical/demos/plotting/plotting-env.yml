@@ -1,4 +1,4 @@
-name: glucat-pyclical
+name: pyclical-plotting
 channels:
   - conda-forge
 dependencies:
