@@ -543,6 +543,19 @@ cd pyclical/demos
 python3 clifford_demo.py
 ```
 
+To launch the Jupyter notebooks for the PyClical tutorials and demos:
+
+```bash
+jupyter notebook pyclical/demos/
+```
+
+If you are using the system Python (not a Conda or venv environment), you may want to
+register a dedicated Jupyter kernel so that the notebooks use the correct PyClical build:
+
+```bash
+make -C pyclical install-pyclical-kernel
+```
+
 
 Building the PyClical plotting demos
 ------------------------------------
@@ -697,7 +710,7 @@ Install [Miniforge](https://github.com/conda-forge/miniforge) or
 [Anaconda](https://www.anaconda.com/download) if you do not already have
 Conda or Mamba available.
 
-1.  **Set up the Conda environment**: Run this command from the repository root:
+1.  Set up the Conda environment. Run this command from the repository root:
     ```bash
     source pyclical/demos/plotting/setup-plotting-env.sh
     ```
@@ -705,85 +718,21 @@ Conda or Mamba available.
     `pyclical/demos/plotting/plotting-env.yml`, activates it, and removes the
     conda-forge `mesalib` if a native GPU is detected (via `/dev/dri/card0`).
 
-2.  **Bootstrap the build system** (git clone only, skip for release tarballs):
+2.  Bootstrap the build system (git clone only, skip for release tarballs):
     ```bash
     make -f admin/Makefile.common bootstrap
     ```
 
-3.  **Configure and build PyClical**: Ensure the environment is active, then run:
+3.  Configure and build PyClical (ensure the environment is active first):
     ```bash
-    make clean
     ./configure
     make -C pyclical -j$(($(nproc)/2))
     ```
 
-4.  **Export the runtime plotting environment variables**:
+4.  Export the runtime plotting environment variables:
     ```bash
     source pyclical/demos/plotting/export-plotting-vars.sh
     ```
-
-5.  (Optional) Register a Jupyter kernel for this environment:
-    ```bash
-    make -C pyclical install-pyclical-kernel
-    ```
-
-
-ARM aarch64 (Fedora Asahi Remix) — system venv path
----------------------------------------------------
-
-Conda's `linux-aarch64` VTK/Mayavi binaries are 4 KB page-aligned and
-will segfault immediately on import on Asahi Linux, which requires 16 KB
-page alignment. Use the system package manager to install VTK and Mayavi,
-then create a virtual environment that inherits those packages.
-
-1.  Install the 16 KB-aligned VTK/Mayavi packages from Fedora Asahi RPMs:
-    ```bash
-    sudo dnf install python3-mayavi python3-vtk python3-qt5
-    ```
-
-2.  Create a virtual environment that inherits those system packages.
-    Run from the glucat repository root (`.venvs/` is listed in `.gitignore`):
-    ```bash
-    python3 -m venv --system-site-packages .venvs/pyclical-mayavi
-    source .venvs/pyclical-mayavi/bin/activate
-    ```
-
-3.  Install the Jupyter stack via pip inside the venv.
-    Do **not** `pip install mayavi` or `pip install vtk` here — let the
-    system RPMs provide them:
-    ```bash
-    pip install "notebook>=7" jupyterlab ipykernel
-    ```
-
-4.  Configure and build PyClical against the venv's Python interpreter.
-    **The venv must be active before running `./configure`**, because
-    `$(which python3)` resolves to whichever interpreter is on `$PATH` at the
-    time `./configure` runs. If the venv is not active, PyClical will be built
-    against the system Python ABI and will not have access to the venv's packages.
-
-    Run from the repository root. If working from a git clone (not a release
-    tarball), run the Autotools bootstrap first:
-    ```bash
-    make -f admin/Makefile.common bootstrap
-    ```
-
-    Then configure and build:
-    ```bash
-    ./configure PYTHON=$(which python3)
-    make -C pyclical -j$(($(nproc)/2))
-    ```
-
-5.  (Optional) Register a Jupyter kernel:
-    ```bash
-    python3 -m ipykernel install --user \
-        --name pyclical \
-        --display-name "Python (PyClical)"
-    ```
-
-After completing these steps, proceed to "Running the Mayavi demos (all platforms)" below, beginning with:
-```bash
-source pyclical/demos/plotting/export-plotting-vars.sh
-```
 
 
 openSUSE Tumbleweed — RPM path
@@ -813,9 +762,53 @@ following RPM packages (or their current equivalents):
 The exact versions needed will change as openSUSE Tumbleweed is updated.
 
 After installing the RPM packages, follow the same venv and build steps as
-the ARM aarch64 path (steps 2–5 above), using `zypper` in place of `dnf`
+the ARM aarch64 section below, using `zypper` in place of `dnf`
 where appropriate. The `export-plotting-vars.sh` script and the "Running the
 Mayavi demos" steps below apply to openSUSE as well.
+
+
+ARM aarch64 (Fedora Asahi Remix) — system venv path
+---------------------------------------------------
+
+Conda's `linux-aarch64` VTK/Mayavi binaries are 4 KB page-aligned and
+will segfault immediately on import on Asahi Linux, which requires 16 KB
+page alignment. Use the system package manager to install VTK and Mayavi,
+then create a virtual environment that inherits those packages.
+
+1.  Install the 16 KB-aligned VTK/Mayavi packages from Fedora Asahi RPMs:
+    ```bash
+    sudo dnf install python3-mayavi python3-vtk python3-qt5
+    ```
+
+2.  Create a virtual environment that inherits those system packages.
+    Run from the glucat repository root (`.venvs/` is listed in `.gitignore`):
+    ```bash
+    python3 -m venv --system-site-packages .venvs/pyclical-mayavi
+    source .venvs/pyclical-mayavi/bin/activate
+    ```
+
+3.  Configure and build PyClical against the venv's Python interpreter.
+    The venv must be active before running `./configure`, because
+    `$(which python3)` resolves to whichever interpreter is on `$PATH` at the
+    time `./configure` runs. If the venv is not active, PyClical will be built
+    against the system Python ABI and will not have access to the venv's packages.
+
+    Run from the repository root. If working from a git clone (not a release
+    tarball), run the Autotools bootstrap first:
+    ```bash
+    make -f admin/Makefile.common bootstrap
+    ```
+
+    Then configure and build:
+    ```bash
+    ./configure PYTHON=$(which python3)
+    make -C pyclical -j$(($(nproc)/2))
+    ```
+
+After completing these steps, proceed to "Running the Mayavi demos (all platforms)" below, beginning with:
+```bash
+source pyclical/demos/plotting/export-plotting-vars.sh
+```
 
 
 Running the Mayavi demos (all platforms)
@@ -843,11 +836,7 @@ are identical on all platforms.
     GLUCAT_NON_INTERACTIVE=1 python3 plotting_demo_mayavi.py
     ```
 
-4.  To use the demos via Jupyter notebooks, launch from the `pyclical/demos`
-    directory and select the `Python (PyClical)` kernel:
-    ```bash
-    jupyter notebook pyclical/demos/
-    ```
+
 
 
 To Test
