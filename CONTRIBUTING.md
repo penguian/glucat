@@ -13,9 +13,9 @@ You can run all local tests and linters at once using the verification script. N
 ./verify_all.sh
 ```
 This script will run:
-1. C++ style check: `clang-format` via `make lint-check` (restricted to the `glucat/` directory).
+1. C++ style check: `clang-format` via `make lint-check` (covering `glucat/`, `test_doctest/`, and `test/` C++ headers/sources).
 2. C++ static analysis: `cppcheck` via `make cppcheck` (restricted to the `glucat/` directory).
-3. Primary regression tests: `make check-local`.
+3. Primary regression tests and doctest suite: `make check-local` (including `test_doctest` by default).
 4. Python checks: `ruff` and `pylint` on the `pyclical/` wrapper, demos, and benchmarks.
 5. Jupyter Notebook validation: Rebuilding and checking generated tutorials and demos against JSON syntax and `nbformat` schema via:
    ```bash

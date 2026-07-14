@@ -436,11 +436,11 @@ Note: If you are using the clang++ compiler you will need to ensure that libomp
 is installed.
 
 ```
-  --with-doctest          enable the doctest unit testing suite [default=no]
+  --with-doctest          enable the doctest unit testing suite [default=yes]
 ```
-This option enables the doctest unit testing suite. The option `--with-doctest`
+This option enables the doctest unit testing suite (enabled by default). The option `--with-doctest`
 defines `GLUCAT_DOCTEST` in the header files and enables compiling the doctest-based
-unit tests in `test_doctest/`.
+unit tests in `test_doctest/`. Use `--without-doctest` to disable doctest execution.
 
 ```
   --with-unordered-map=boost|std

@@ -39,7 +39,6 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-import pyvista as pv
 from pyvistaqt import QtInteractor
 
 from plotting_demo_pyvista import (
@@ -172,10 +171,21 @@ class TorusDemoDialog(QMainWindow):
 
 
 def main():
+    import os
+
+    off_screen = (
+        os.environ.get("PYVISTA_OFF_SCREEN", "").lower() in ("true", "1")
+        or "--off-screen" in sys.argv
+    )
     app = QApplication.instance() or QApplication(sys.argv)
     window = TorusDemoDialog()
-    window.show()
-    sys.exit(app.exec())
+    if off_screen:
+        window.plotter.off_screen = True
+        app.processEvents()
+        window.close()
+    else:
+        window.show()
+        sys.exit(app.exec())
 
 
 if __name__ == "__main__":

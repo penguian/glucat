@@ -186,9 +186,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   AC_ARG_WITH([doctest],
     AS_HELP_STRING(
       [--with-doctest],
-      [use doctest [default=no]]),
+      [use doctest [default=yes]]),
     [glucat_use_doctest="$withval"],
-    [glucat_use_doctest="no"])
+    [glucat_use_doctest="yes"])
 
   dnl Check for Boost version
   GLUCAT_CHECK_HEADERS([boost/version.hpp], [], [])

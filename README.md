@@ -121,7 +121,7 @@ The `./test`, `./test_move` and `./test00` to `./test19` directories contain the
 C++ source code for programming examples and regression tests for GluCat.
 
 The `./test_doctest` directory contains C++ unit tests using the `doctest`
-framework.
+framework, which are compiled and executed by default during `make check`.
 
 The `./test_coverage` directory contains scripts for generating code coverage
 reports for the various test suites. The `doctest` coverage script supports

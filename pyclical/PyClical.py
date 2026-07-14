@@ -31,40 +31,77 @@ import math
 import numbers
 import collections
 
-import cython
-from cython.cimports.libcpp.string import string
-from cython.cimports.libcpp.vector import vector
-import cython.cimports.glucat as glucat
-from cython.cimports.glucat import (
-    IndexSet,
-    String,
-    Clifford,
-    scalar_t,
-    vector as cpp_vector,
-)
-from cython.cimports.PyClical import (
-    glucat_package_version,
-    index_set_to_repr,
-    index_set_to_str,
-    clifford_to_repr,
-    clifford_to_str,
-    epsilon,
-    new_IndexSet,
-    new_IndexSet_copy,
-    new_IndexSet_int,
-    new_IndexSet_str,
-    delete_IndexSet,
-    new_Clifford,
-    new_Clifford_copy,
-    new_Clifford_frame_coeff,
-    new_Clifford_scalar,
-    new_Clifford_str,
-    new_Clifford_frame_scalar,
-    new_Clifford_vec_frame,
-    delete_Clifford,
-)
+try:
+    import cython
 
-__version__ = str(glucat_package_version, "utf-8")
+    compiled = cython.compiled
+except ImportError:
+
+    class DummyCython:
+        compiled = False
+
+        @staticmethod
+        def cfunc(func):
+            return func
+
+        @staticmethod
+        def inline(func):
+            return func
+
+        @staticmethod
+        def cclass(cls):
+            return cls
+
+        @staticmethod
+        def ccall(func):
+            return func
+
+        @staticmethod
+        def pointer(tp):
+            return object
+
+    cython = DummyCython
+    compiled = False
+
+if compiled:
+    from cython.cimports.libcpp.string import string
+    from cython.cimports.libcpp.vector import vector
+    import cython.cimports.glucat as glucat
+    from cython.cimports.glucat import (
+        IndexSet,
+        String,
+        Clifford,
+        scalar_t,
+        vector as cpp_vector,
+    )
+    from cython.cimports.PyClical import (
+        glucat_package_version,
+        index_set_to_repr,
+        index_set_to_str,
+        clifford_to_repr,
+        clifford_to_str,
+        epsilon,
+        new_IndexSet,
+        new_IndexSet_copy,
+        new_IndexSet_int,
+        new_IndexSet_str,
+        delete_IndexSet,
+        new_Clifford,
+        new_Clifford_copy,
+        new_Clifford_frame_coeff,
+        new_Clifford_scalar,
+        new_Clifford_str,
+        new_Clifford_frame_scalar,
+        new_Clifford_vec_frame,
+        delete_Clifford,
+    )
+
+    __version__ = str(glucat_package_version, "utf-8")
+else:
+    import sys
+
+    __version__ = "0.98a3"
+    globals()["epsilon"] = sys.float_info.epsilon
 
 # Forward reference
 
@@ -2572,7 +2609,7 @@ def pow(obj, m):
     """
     try:
         math.pow(obj, m)
-    except:
+    except Exception:
         return clifford(obj).pow(m)
 
 
@@ -2668,7 +2705,7 @@ def sqrt(obj, i=None):
     else:
         try:
             return math.sqrt(obj)
-        except:
+        except Exception:
             return clifford().wrap(glucat.sqrt(toClifford(obj)))
 
 
@@ -2697,7 +2734,7 @@ def exp(obj):
     """
     try:
         return math.exp(obj)
-    except:
+    except Exception:
         return clifford().wrap(glucat.exp(toClifford(obj)))
 
 
@@ -2737,7 +2774,7 @@ def log(obj, i=None):
     else:
         try:
             return math.log(obj)
-        except:
+        except Exception:
             return clifford().wrap(glucat.log(toClifford(obj)))
 
 
@@ -2771,7 +2808,7 @@ def cos(obj, i=None):
     else:
         try:
             return math.cos(obj)
-        except:
+        except Exception:
             return clifford().wrap(glucat.cos(toClifford(obj)))
 
 
@@ -2809,7 +2846,7 @@ def acos(obj, i=None):
     else:
         try:
             return math.acos(obj)
-        except:
+        except Exception:
             return clifford().wrap(glucat.acos(toClifford(obj)))
 
 
@@ -2840,7 +2877,7 @@ def cosh(obj):
     """
     try:
         return math.cosh(obj)
-    except:
+    except Exception:
         return clifford().wrap(glucat.cosh(toClifford(obj)))
 
 
@@ -2880,7 +2917,7 @@ def acosh(obj, i=None):
     else:
         try:
             return math.acosh(obj)
-        except:
+        except Exception:
             return clifford().wrap(glucat.acosh(toClifford(obj)))
 
 
@@ -2916,7 +2953,7 @@ def sin(obj, i=None):
     else:
         try:
             return math.sin(obj)
-        except:
+        except Exception:
             return clifford().wrap(glucat.sin(toClifford(obj)))
 
 
@@ -2954,7 +2991,7 @@ def asin(obj, i=None):
     else:
         try:
             return math.asin(obj)
-        except:
+        except Exception:
             return clifford().wrap(glucat.asin(toClifford(obj)))
 
 
@@ -2983,7 +3020,7 @@ def sinh(obj):
     """
     try:
         return math.sinh(obj)
-    except:
+    except Exception:
         return clifford().wrap(glucat.sinh(toClifford(obj)))
 
 
@@ -3019,7 +3056,7 @@ def asinh(obj, i=None):
     else:
         try:
             return math.asinh(obj)
-        except:
+        except Exception:
             return clifford().wrap(glucat.asinh(toClifford(obj)))
 
 
@@ -3053,7 +3090,7 @@ def tan(obj, i=None):
     else:
         try:
             return math.tan(obj)
-        except:
+        except Exception:
             return clifford().wrap(glucat.tan(toClifford(obj)))
 
 
@@ -3087,7 +3124,7 @@ def atan(obj, i=None):
     else:
         try:
             return math.atan(obj)
-        except:
+        except Exception:
             return clifford().wrap(glucat.atan(toClifford(obj)))
 
 
@@ -3114,7 +3151,7 @@ def tanh(obj):
     """
     try:
         return math.tanh(obj)
-    except:
+    except Exception:
         return clifford().wrap(glucat.tanh(toClifford(obj)))
 
 
@@ -3148,7 +3185,7 @@ def atanh(obj, i=None):
     else:
         try:
             return math.atanh(obj)
-        except:
+        except Exception:
             return clifford().wrap(glucat.atanh(toClifford(obj)))
 
 

@@ -105,10 +105,10 @@ dist-hook:
 	cd $(top_distdir) && rm -rf */.deps
 
 lint-check:
-	python3 format_helper.py check glucat/*.h
+	python3 format_helper.py check glucat/*.h test_doctest/*.cpp test/*.h
 
 lint-fix:
-	python3 format_helper.py fix glucat/*.h
+	python3 format_helper.py fix glucat/*.h test_doctest/*.cpp test/*.h
 
 cppcheck:
 	cppcheck --project=glucat.cppcheck --error-exitcode=1

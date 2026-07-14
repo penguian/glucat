@@ -133,7 +133,7 @@ def get_console_width():
         console_width = int(width_str)
         if console_width < 1:
             console_width = default_console_width
-    except:
+    except Exception:
         console_width = default_console_width
     return console_width
 
@@ -168,7 +168,7 @@ def is_near(x, y):
                 return abs(x - y) < tol
         else:
             return x == y
-    except:
+    except Exception:
         return False
 
 
@@ -253,9 +253,7 @@ class tutorial_context(interaction_context):
             print("")
             self.input_exec(filled_prompt, sandbox)
             value = allowed_eval(value_str, self.object_names)
-        except KeyboardInterrupt:
-            raise
-        except:
+        except Exception:
             value = None
         if var_name in sandbox and is_near(sandbox[var_name], value):
             print("\nThat's right.\n")
@@ -271,7 +269,7 @@ class tutorial_context(interaction_context):
     def check_eval(self, prompt, value_str, command_str):
         try:
             value = allowed_eval(value_str, self.object_names)
-        except:
+        except Exception:
             value = None
         try:
             filled_prompt = fill(
@@ -283,9 +281,7 @@ class tutorial_context(interaction_context):
                 print("\nYour expression gives the right value.\n")
             else:
                 print("\nNot quite.\n")
-        except KeyboardInterrupt:
-            raise
-        except:
+        except Exception:
             print("\nNot quite.\n")
         self.print_fill("Here is one way to use such an expression:")
         command_str = command_str.format(value_str)

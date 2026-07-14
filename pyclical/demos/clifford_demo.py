@@ -288,6 +288,6 @@ def run(ctx):
 if __name__ == "__main__":
     try:
         run(tutorial_context(globals()))
-    except:
+    except (KeyboardInterrupt, Exception):
         print("The demo was interrupted.")
         pass

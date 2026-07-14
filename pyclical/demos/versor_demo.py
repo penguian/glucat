@@ -21,7 +21,6 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
-from builtins import str
 from PyClical import *
 from pyclical_tutorial_utils import *
 
@@ -83,6 +82,6 @@ def run(ctx=tutorial_context(globals())):
 if __name__ == "__main__":
     try:
         run()
-    except:
+    except (KeyboardInterrupt, Exception):
         print("The demo was interrupted.")
         pass

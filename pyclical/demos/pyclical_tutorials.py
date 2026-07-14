@@ -131,7 +131,7 @@ def tutorial():
         except KeyboardInterrupt:
             print_fill("The tutorial was interrupted.")
             continue
-        except:
+        except Exception:
             print_fill("Please enter a valid tutorial number.")
 
 

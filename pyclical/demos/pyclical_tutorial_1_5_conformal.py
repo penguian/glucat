@@ -207,6 +207,6 @@ if __name__ == "__main__":
     ctx = tutorial_context(globals())
     try:
         run(ctx)
-    except:
+    except (KeyboardInterrupt, Exception):
         ctx.print_fill("The tutorial was interrupted.")
         pass
