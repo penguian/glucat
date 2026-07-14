@@ -1,0 +1,9 @@
+# PyVista auxiliary dependencies installed without bundled VTK.
+# VTK is provided by the system python3-vtk RPM on ARM/Asahi.
+# On x86-64 the conda environment (pyvista-env.yml) is used instead.
+scooby
+pooch
+pillow
+imageio
+pyvistaqt
+pyside6

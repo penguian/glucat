@@ -31,9 +31,9 @@ def check_file(filepath):
         content = "".join(lines)
 
         normalized_path = os.path.normpath(filepath).replace("\\", "/")
-        exempt_suffix = "/pyclical/demos/plotting_demo_dialog.py"
+        exempt_suffix = "/pyclical/demos/plotting/plotting_demo_dialog.py"
         is_exempt = (
-            normalized_path == "pyclical/demos/plotting_demo_dialog.py"
+            normalized_path == "pyclical/demos/plotting/plotting_demo_dialog.py"
             or normalized_path.endswith(exempt_suffix)
         )
 

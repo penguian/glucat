@@ -4,8 +4,7 @@
 # PyClical: Python interface to GluCat:
 #           Generic library of universal Clifford algebra templates
 #
-# plotting_demo_mayavi.py: Demonstrate the use of Mayavi2 plotting with PyClical.
-# Note: On ARM64/Asahi Linux, use plotting_demo_pyvista.py instead.
+# plotting_demo_pyvista.py: Demonstrate the use of PyVista 3D plotting with PyClical.
 #
 #    References:
 #    [B] Michael F. Barnsley, Superfractals, http://www.superfractals.com/
@@ -13,7 +12,7 @@
 #    Geometric Algebra Using Polar Decomposition", in Leo Dorst and Joan Lasenby
 #    (eds.), Guide to Geometric Algebra in Practice, Springer, 2011, pp. 81-104.
 #
-#    copyright            : (C) 2010-2014 by Paul C. Leopardi
+#    copyright            : (C) 2010-2026 by Paul C. Leopardi
 #
 #    This library is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Lesser General Public License as published
@@ -32,14 +31,11 @@
 #
 # Imports needed for array calculation and plotting.
 #
+import os
 from builtins import range
 import numpy as np
+import pyvista as pv
 
-# Monkeypatch numpy.in1d which was removed in NumPy 2.0 but is used by VTK/Mayavi
-if not hasattr(np, "in1d"):
-    np.in1d = np.isin
-
-import mayavi.mlab as ml
 from PyClical import *
 
 #
@@ -64,9 +60,10 @@ def draw_orbit(
     radius=default_radius,
     resolution=default_resolution,
     opacity=default_opacity,
+    plotter=None,
 ):
     """
-    Plot an orbit created by a random sequence using the rotors r and s,
+    Plot an orbit created by a random sequence using the rotors r and s via PyVista.
 
     Parameters:
     r, s        : Rotors, even elements of R_{4,1}.
@@ -76,8 +73,9 @@ def draw_orbit(
     figwidth    : Width of figure.
     figheight   : Height of figure.
     radius      : Relative radius of the ball around each point.
-    resolution  : Resolution of the ball around each point.
-    opacity     : Opacity of the ball around each point.
+    resolution  : Angular tessellation resolution (theta and phi) for each 3D sphere glyph.
+    opacity     : Opacity of the points.
+    plotter     : Optional PyVista Plotter or QtInteractor instance.
     """
     #
     # Frame for 3D Euclidean space R^3.
@@ -105,10 +103,22 @@ def draw_orbit(
     #
     p = np.empty((segment_len, 3))
     #
+    # Create or reuse plotter.
+    #
+    local_plotter = False
+    if plotter is None:
+        local_plotter = True
+        off_screen = bool(os.environ.get("GLUCAT_NON_INTERACTIVE"))
+        plotter = pv.Plotter(window_size=[figwidth, figheight], off_screen=off_screen)
+
+    plotter.set_background("gray")
+    plotter.enable_lightkit()
+
+    #
     # Split the orbit into M segments.
     #
     M = nbr_points // segment_len
-    for j in range(M):
+    for _ in range(M):
         #
         # Find segment_len points forming an orbit segment
         # by successively using the rotor r and its inverse.
@@ -132,26 +142,31 @@ def draw_orbit(
         #
         # Calculate the norms of the points in p and store them in n.
         #
-        n = np.sqrt(np.reshape(np.sum(p * p, 1), [segment_len, 1]))
+        n = np.sqrt(np.sum(p * p, axis=1))
         #
-        # Plot the new scattered points.
+        # Create 3D sphere glyphs with the specified resolution.
         #
-        ml.points3d(
-            p[:, 0],
-            p[:, 1],
-            p[:, 2],
-            n[:, 0],
-            colormap="jet",
-            scale_factor=radius,
-            resolution=resolution,
-            opacity=opacity,
+        sphere_geom = pv.Sphere(
+            radius=radius,
+            theta_resolution=resolution,
+            phi_resolution=resolution,
         )
-    # Show the plot if not running in non-interactive verification mode.
-    #
-    import os
+        point_cloud = pv.PolyData(p)
+        point_cloud["scalars"] = n
+        glyphs = point_cloud.glyph(geom=sphere_geom, scale=False, orient=False)
+        plotter.add_mesh(
+            glyphs,
+            cmap="jet",
+            opacity=opacity,
+            smooth_shading=True,
+            ambient=0.3,
+            diffuse=0.7,
+            specular=0.5,
+            show_scalar_bar=False,
+        )
 
-    if not os.environ.get("GLUCAT_NON_INTERACTIVE"):
-        ml.show()
+    if local_plotter and not os.environ.get("GLUCAT_NON_INTERACTIVE"):
+        plotter.show()
 
 
 #
@@ -175,6 +190,7 @@ def demo(
     resolution=default_resolution,
     opacity=default_opacity,
     reciprocal=default_reciprocal,
+    plotter=None,
 ):
     """
     Plot orbits created by exponentiating a random bivector and its reciprocal in R_{4,0}.
@@ -191,6 +207,7 @@ def demo(
     resolution  : Resolution of the ball around each point.
     opacity     : Opacity of the ball around each point.
     reciprocal  : Use the reciprocal bivector with respect to the pseudoscalar of R_{4,0}
+    plotter     : Optional PyVista Plotter or QtInteractor instance.
     """
     #
     # Check and adjust arguments for sanity.
@@ -204,15 +221,14 @@ def demo(
     #
     # Plot nbr_figures figures.
     #
-    for fig in range(nbr_figures):
-        #
-        # Use a new figure.
-        #
-        ml.figure(size=(figwidth, figheight))
+    for _ in range(nbr_figures):
+        if plotter is not None and hasattr(plotter, "clear"):
+            plotter.clear()
+
         #
         # Plot nbr_orbits orbits.
         #
-        for i in range(nbr_orbits):
+        for _ in range(nbr_orbits):
             #
             # Set br to be a random bivector in R_{4,0} with appropriate scaling.
             #
@@ -239,6 +255,7 @@ def demo(
                 radius=radius,
                 resolution=resolution,
                 opacity=opacity,
+                plotter=plotter,
             )
 
 

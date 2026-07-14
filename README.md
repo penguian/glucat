@@ -216,9 +216,10 @@ If you are running Linux or a Unix equivalent, the following should also work:
 ```
 
 For more usage examples, see the example Python files `clifford_demo.py`,
-`m_theory_demo.py`,`pyclical_demo.py`, `plotting_demo.py`, `plotting_demo_dialog.py`,
-`plotting_demo_mayavi.py`, and `sqrt_log_demo.py`, and the example output files
-`pyclical_demo.out` and `sqrt_log_demo.out`.
+`m_theory_demo.py`, `pyclical_demo.py`, `plotting_demo.py`, `sqrt_log_demo.py`,
+and the 3D plotting demos in `pyclical/demos/plotting/` (`plotting_demo_mayavi.py`,
+`plotting_demo_dialog.py`, `plotting_demo_pyvista.py`, and `plotting_demo_pyvista_dialog.py`),
+and the example output files `pyclical_demo.out` and `sqrt_log_demo.out`.
 
 To run `clifford_demo.py`, `m_theory_demo.py`, `pyclical_demo.py`, or
 `sqrt_log_demo.py`, use the following commands:
@@ -242,33 +243,29 @@ In [1]: %run plotting_demo
 ```
 This demo uses Matplotlib to produce a number of plots.
 
-To run `plotting_demo_mayavi.py`, first set up the Mayavi2 environment.
-The setup method depends on your hardware architecture — see `INSTALL.md`
-for full details:
+To run the 3D plotting demos, set up either the Mayavi2 or PyVista environment.
+The setup procedure depends on your hardware architecture — see `INSTALL.md` for full details:
 
-- **x86-64 (Ubuntu, Kubuntu):** Create the Conda environment from
-  `environment.yml` at the repository root, then activate it:
+- **Mayavi (x86-64 / Conda):**
   ```bash
-  mamba env create -f environment.yml
-  conda activate glucat-pyclical
-  conda remove --force mesalib  # on systems with a native GPU driver
+  source pyclical/demos/plotting/setup-mayavi-env.sh
+  # (Build PyClical as described in INSTALL.md)
+  source pyclical/demos/plotting/export-mayavi-vars.sh
+  cd pyclical/demos/plotting
+  python3 plotting_demo_mayavi.py
+  python3 plotting_demo_dialog.py
   ```
-- **ARM aarch64 (Fedora Asahi Remix):** Install `python3-mayavi`,
-  `python3-vtk`, and `python3-qt5` via `dnf`, then create a
-  `venv --system-site-packages` (see `INSTALL.md`).
+- **PyVista (x86-64 / Conda or ARM64 / system venv):**
+  ```bash
+  source pyclical/demos/plotting/setup-pyvista-env.sh
+  # (Build PyClical as described in INSTALL.md)
+  source pyclical/demos/plotting/export-pyvista-vars.sh
+  cd pyclical/demos/plotting
+  python3 plotting_demo_pyvista.py
+  python3 plotting_demo_pyvista_dialog.py
+  ```
 
-Once the environment is active and PyClical is built, source the runtime
-environment script and run the demo:
-```bash
-cd pyclical/demos
-source ./mayavi-env.sh
-python3 plotting_demo_mayavi.py
-```
-This demo uses Mayavi to produce a number of plots. These plots are displayed in
-interactive windows, and [you can rotate, zoom and pan them](https://docs.enthought.com/mayavi/mayavi/application.html#mouse-interaction).
-
-You can also run the Mayavi plotting demo from a graphical user interface.
-To do this, source `mayavi-env.sh` as above and then run `./plotting_demo_dialog.py`.
+The Mayavi and PyVista demos display interactive 3D plots in windows (or PySide6/Qt dialogs) allowing rotation, zooming, and panning.
 
 The tutorials and demos are also accompanied by a corresponding set of Jupyter
 notebooks. To build the notebooks, see `INSTALL.md`. To run the notebooks, assuming

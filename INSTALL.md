@@ -11,9 +11,9 @@ working before attempting to use GluCat with PyClical.
 
 The PyClical plotting demos (`plotting_demo_mayavi.py`,
 `plotting_demo_dialog.py`) additionally require a specially configured
-Mayavi/VTK environment. On x86-64, this is provided via a Conda environment;
-on ARM aarch64 (Asahi Linux), via a system venv. See "Setting Up the Mayavi
-Plotting Environment" below for full instructions.
+Mayavi/PyVista plotting environment. On x86-64, this is provided via Conda environments;
+on ARM aarch64 (Asahi Linux), via a system site-packages venv. See "Setting Up the
+Plotting Environment" below for exact instructions.
 
 Use the instructions at http://www.boost.org/more/download.html to obtain
 the Boost Library. Make sure that you are able to build the Boost library with
@@ -137,11 +137,16 @@ in Python. These scripts rely on the built PyClical extension module.
 The PyClical plotting demos
 ---------------------------
 
-Two of the demos in `./pyclical/demos/plotting/` (`plotting_demo_mayavi.py` and
-`plotting_demo_dialog.py`) use Mayavi2 and VTK for 3D visualization.
-Because VTK and Mayavi are highly sensitive to library version mismatches,
-they require a special execution environment (see "Setting Up the Mayavi
-Plotting Environment" below).
+The PyClical plotting demos (requires a special Mayavi or PyVista environment).
+
+PyClical (Python Interface)
+---------------------------
+
+The PyClical plotting demos (`plotting_demo_mayavi.py`, `plotting_demo_pyvista.py`,
+`plotting_demo_pyvista_dialog.py`, `plotting_demo_dialog.py`) use Mayavi2 or PyVista
+for 3D visualization. Because VTK and rendering dependencies are highly sensitive to
+library version mismatches, they require a special execution environment (see
+"Setting Up the Plotting Environment" below).
 
 The two types of test programs
 ------------------------------
@@ -560,12 +565,14 @@ make -C pyclical install-pyclical-kernel
 Building the PyClical plotting demos
 ------------------------------------
 
-The plotting demos (`plotting_demo_mayavi.py` and `plotting_demo_dialog.py`)
-require a specially configured environment to satisfy their Mayavi/VTK dependencies.
-Building these demos requires creating/activating the appropriate environment (via Conda
-on x86-64 or a venv on ARM), configuring/building PyClical against the correct Python interpreter, and exporting the required runtime plotting environment variables.
+The plotting demos (`plotting_demo_mayavi.py`, `plotting_demo_pyvista.py`,
+`plotting_demo_pyvista_dialog.py`, `plotting_demo_dialog.py`) require a specially
+configured environment to satisfy their Mayavi or PyVista dependencies. Building these
+demos requires creating/activating the appropriate environment (via Conda or system venv),
+configuring/building PyClical against the correct Python interpreter, and exporting the required
+runtime plotting environment variables.
 
-Please refer to the detailed section "Setting Up the Mayavi Plotting Environment"
+Please refer to the detailed section "Setting Up the Plotting Environment"
 below for the full build and execution procedures for these demos.
 
 
@@ -663,28 +670,27 @@ GluCat, or omit them for defaults. Key macros are:
 consider GNU Autotools.
 
 
-Setting Up the Mayavi Plotting Environment
-==========================================
+Setting Up the Plotting Environment
+===================================
 
-The PyClical plotting demos (`plotting_demo_mayavi.py` and
-`plotting_demo_dialog.py`) use Mayavi2 and VTK for 3D visualization.
-Because VTK and Mayavi are highly sensitive to library version mismatches,
-they require a special execution environment.
+The PyClical plotting demos require a 3D visualization backend: either
+**Mayavi2** (`plotting_demo_mayavi.py`, `plotting_demo_dialog.py`) or
+**PyVista** (`plotting_demo_pyvista.py`, `plotting_demo_pyvista_dialog.py`).
+Because VTK, Mayavi, and PyVista are sensitive to library versions and architecture-specific memory page alignment, they require specialized execution environments.
 
-The setup procedure depends on your hardware architecture because Conda's
-`linux-aarch64` VTK/Mayavi binaries are compiled with 4 KB memory page
-alignment, which is incompatible with the 16 KB page size required by
-Apple Silicon (Asahi Linux). On ARM aarch64, use the system RPM packages
-(which are rebuilt for 16 KB alignment by the Asahi team) via a Python
-virtual environment instead.
+- **Mayavi**: Recommended on x86-64 systems via Conda.
+- **PyVista**: Recommended for cross-platform portability and required on ARM64 / Apple Silicon (Asahi Linux).
 
 Confirmed working versions:
 
-| Machine | Architecture | OS | Python | Mayavi | VTK |
-|:---|:---|:---|:---|:---|:---|
-| Tempesta (AMD Ryzen) | x86-64 | Kubuntu 26.04 | 3.12.13 (Conda) | 4.8.3 | 9.4.2 |
-| Pensieri (Intel Core) | x86-64 | Kubuntu 25.04 | 3.12.x (Conda) | 4.8.x | 9.4.x |
-| Ginestra (Apple M2 Pro) | aarch64 | Fedora Asahi Remix 43 | 3.14.x (system) | 4.8.x | 9.4.x |
+| Machine | Architecture | OS | Python | Backend | Version | VTK |
+|:---|:---|:---|:---|:---|:---|:---|
+| Tempesta (AMD Ryzen) | x86-64 | Kubuntu 26.04 | 3.12.13 (Conda) | Mayavi | 4.8.3 | 9.4.2 |
+| Tempesta (AMD Ryzen) | x86-64 | Kubuntu 26.04 | 3.12.13 (Conda) | PyVista | 0.44.x | 9.4.2 |
+| Pensieri (Intel Core) | x86-64 | Kubuntu 25.04 | 3.12.x (Conda) | Mayavi / PyVista | 4.8.x / 0.44.x | 9.4.x |
+| Ginestra (Apple M2 Pro) | aarch64 | Fedora Asahi Remix 43 | 3.14.x (system) | PyVista (system VTK) | 0.44.x | 9.4.x (system) |
+
+*Note on ARM64 / Apple Silicon Validation*: The PyVista system-site-packages setup is designed to utilize the 16 KB page-aligned `python3-vtk` Fedora RPM on Asahi Linux. Further automated/interactive GUI testing on Apple Silicon hardware is pending physical machine access.
 
 
 When a special environment is not needed
@@ -699,23 +705,21 @@ When a special environment is not needed
   ```
 
 - **PyClical without plotting demos** (doctests, tutorials, all demos except
-  the Mayavi-based ones): The system Python with NumPy and Cython is
-  sufficient. No Conda or venv is required.
+  3D graphics): The system Python with NumPy and Cython is sufficient. No Conda or venv is required.
 
 
-x86-64 (Ubuntu, Kubuntu) — Conda path
--------------------------------------
+x86-64 — Mayavi (Conda path)
+----------------------------
 
 Install [Miniforge](https://github.com/conda-forge/miniforge) or
-[Anaconda](https://www.anaconda.com/download) if you do not already have
-Conda or Mamba available.
+[Anaconda](https://www.anaconda.com/download) if you do not already have Conda or Mamba available.
 
-1.  Set up the Conda environment. Run this command from the repository root:
+1.  Set up the Mayavi Conda environment. Run from the repository root:
     ```bash
-    source pyclical/demos/plotting/setup-plotting-env.sh
+    source pyclical/demos/plotting/setup-mayavi-env.sh
     ```
-    This script creates or updates the `pyclical-plotting` Conda environment from
-    `pyclical/demos/plotting/plotting-env.yml`, activates it, and removes the
+    This script creates or updates the `pyclical-mayavi` environment from
+    `pyclical/demos/plotting/mayavi-env.yml`, activates it, and removes
     conda-forge `mesalib` if a native GPU is detected (via `/dev/dri/card0`).
 
 2.  Bootstrap the build system (git clone only, skip for release tarballs):
@@ -729,9 +733,32 @@ Conda or Mamba available.
     make -C pyclical -j$(($(nproc)/2))
     ```
 
-4.  Export the runtime plotting environment variables:
+4.  Export the runtime environment variables:
     ```bash
-    source pyclical/demos/plotting/export-plotting-vars.sh
+    source pyclical/demos/plotting/export-mayavi-vars.sh
+    ```
+
+
+x86-64 — PyVista (Conda path)
+-----------------------------
+
+1.  Set up the PyVista Conda environment. Run from the repository root:
+    ```bash
+    source pyclical/demos/plotting/setup-pyvista-env.sh
+    ```
+    This creates or updates the `pyclical-pyvista` environment from
+    `pyclical/demos/plotting/pyvista-env.yml` (including PySide6) and activates it.
+
+2.  Bootstrap, configure, and build PyClical:
+    ```bash
+    make -f admin/Makefile.common bootstrap   # git clone only
+    ./configure
+    make -C pyclical -j$(($(nproc)/2))
+    ```
+
+3.  Export runtime environment variables for PyVista:
+    ```bash
+    source pyclical/demos/plotting/export-pyvista-vars.sh
     ```
 
 
@@ -759,82 +786,66 @@ following RPM packages (or their current equivalents):
     python311-zipp 3.21.0
     ```
 
-The exact versions needed will change as openSUSE Tumbleweed is updated.
-
-After installing the RPM packages, follow the same venv and build steps as
-the ARM aarch64 section below, using `zypper` in place of `dnf`
-where appropriate. The `export-plotting-vars.sh` script and the "Running the
-Mayavi demos" steps below apply to openSUSE as well.
+After installing the RPM packages, follow the venv and build steps using `zypper` in place of `dnf` where appropriate, export `export-mayavi-vars.sh`, and run the Mayavi demos.
 
 
-ARM aarch64 (Fedora Asahi Remix) — system venv path
----------------------------------------------------
+ARM aarch64 (Fedora Asahi Remix) — PyVista system venv path
+-----------------------------------------------------------
 
-Conda's `linux-aarch64` VTK/Mayavi binaries are 4 KB page-aligned and
-will segfault immediately on import on Asahi Linux, which requires 16 KB
-page alignment. Use the system package manager to install VTK and Mayavi,
-then create a virtual environment that inherits those packages.
+Conda's `linux-aarch64` VTK binaries (and PyPI bundled VTK wheels) are 4 KB page-aligned and segfault on Asahi Linux's 16 KB page kernel. The PyVista setup on ARM uses the system-installed `python3-vtk` Fedora RPM (rebuilt for 16 KB page size) via a `--system-site-packages` virtual environment.
 
-1.  Install the 16 KB-aligned VTK/Mayavi packages from Fedora Asahi RPMs:
+1.  Install system prerequisites:
     ```bash
-    sudo dnf install python3-mayavi python3-vtk python3-qt5
+    sudo dnf install python3-vtk python3-qt5
     ```
 
-2.  Create a virtual environment that inherits those system packages.
-    Run from the glucat repository root (`.venvs/` is listed in `.gitignore`):
+2.  Set up the PyVista venv environment from the repository root:
     ```bash
-    python3 -m venv --system-site-packages .venvs/pyclical-mayavi
-    source .venvs/pyclical-mayavi/bin/activate
+    source pyclical/demos/plotting/setup-pyvista-env.sh
     ```
+    This script creates `.venvs/pyclical-pyvista` with system site-packages access, installs PyVista without bundled VTK (`pip install --no-deps pyvista`), installs PyVista auxiliary requirements (including PySide6), and configures `fedora_lib64.pth`.
 
-3.  Configure and build PyClical against the venv's Python interpreter.
-    The venv must be active before running `./configure`, because
-    `$(which python3)` resolves to whichever interpreter is on `$PATH` at the
-    time `./configure` runs. If the venv is not active, PyClical will be built
-    against the system Python ABI and will not have access to the venv's packages.
-
-    Run from the repository root. If working from a git clone (not a release
-    tarball), run the Autotools bootstrap first:
+3.  Configure and build PyClical against the venv Python:
     ```bash
-    make -f admin/Makefile.common bootstrap
-    ```
-
-    Then configure and build:
-    ```bash
+    make -f admin/Makefile.common bootstrap   # git clone only
     ./configure PYTHON=$(which python3)
     make -C pyclical -j$(($(nproc)/2))
     ```
 
-After completing these steps, proceed to "Running the Mayavi demos (all platforms)" below, beginning with:
+4.  Export PyVista environment variables:
+    ```bash
+    source pyclical/demos/plotting/export-pyvista-vars.sh
+    ```
+
+*Mayavi on ARM (experimental — not currently working)*: Fedora provides a `python3-mayavi` RPM, but due to deep Traits/ETS site-packages version conflicts in Python 3.14+, a reliable Mayavi venv configuration on Asahi has not been achieved. PyVista is the supported 3D backend on ARM.
+
+
+Running the plotting demos
+--------------------------
+
+Once the chosen environment is active and PyClical is built:
+
+### Mayavi demos (x86-64 / openSUSE)
 ```bash
-source pyclical/demos/plotting/export-plotting-vars.sh
+source pyclical/demos/plotting/export-mayavi-vars.sh
+cd pyclical/demos/plotting
+python3 plotting_demo_mayavi.py
+python3 plotting_demo_dialog.py
+
+# Non-interactive mode:
+GLUCAT_NON_INTERACTIVE=1 python3 plotting_demo_mayavi.py
 ```
 
+### PyVista demos (All platforms)
+```bash
+source pyclical/demos/plotting/export-pyvista-vars.sh
+cd pyclical/demos/plotting
+python3 plotting_demo_pyvista.py
+python3 plotting_demo_pyvista_dialog.py
 
-Running the Mayavi demos (all platforms)
-----------------------------------------
-
-Once the environment is set up and PyClical is built, the remaining steps
-are identical on all platforms.
-
-1.  From the repository root, source the runtime environment script.
-    This sets `PYTHONPATH`, `QT_API`, and `QT_QPA_PLATFORM`:
-    ```bash
-    source pyclical/demos/plotting/export-plotting-vars.sh
-    ```
-
-2.  Run either plotting demo from the `pyclical/demos/plotting` directory:
-    ```bash
-    cd pyclical/demos/plotting
-    python3 plotting_demo_mayavi.py
-    python3 plotting_demo_dialog.py
-    ```
-
-3.  To run in non-interactive mode (e.g. for automated testing):
-    ```bash
-    cd pyclical/demos/plotting
-    GLUCAT_NON_INTERACTIVE=1 python3 plotting_demo_mayavi.py
-    ```
+# Non-interactive mode:
+GLUCAT_NON_INTERACTIVE=1 python3 plotting_demo_pyvista.py
+```
 
 
 
