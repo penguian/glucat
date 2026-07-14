@@ -34,6 +34,7 @@ import collections
 import cython
 from cython.cimports.libcpp.string import string
 from cython.cimports.libcpp.vector import vector
+import cython.cimports.glucat as glucat
 from cython.cimports.glucat import (
     IndexSet,
     String,
@@ -733,7 +734,7 @@ def list_to_vector(lst) -> vector[scalar_t]:
     """
     Create a C++ std:vector[scalar_t] from an iterable Python object.
     """
-    v: vector[scalar_t]
+    v: vector[scalar_t] = vector[scalar_t]()
     for s in lst:
         v.push_back(cython.cast(scalar_t, s))
     return v
@@ -1730,7 +1731,7 @@ class clifford:
                 )
             n = vec.size()
             lst = [0.0] * n
-            for i in xrange(n):
+            for i in range(n):
                 lst[i] = vec[i]
             return lst
         except RuntimeError as err:
@@ -2662,7 +2663,7 @@ def sqrt(obj, i=None):
     {1,2,3}
     -1
     """
-    if not (i is None):
+    if i is not None:
         return clifford().wrap(glucat.sqrt(toClifford(obj), toClifford(i)))
     else:
         try:
@@ -2731,7 +2732,7 @@ def log(obj, i=None):
     ...
     RuntimeError: check_complex(val, i): i is not a valid complexifier for val
     """
-    if not (i is None):
+    if i is not None:
         return clifford().wrap(glucat.log(toClifford(obj), toClifford(i)))
     else:
         try:
@@ -2765,7 +2766,7 @@ def cos(obj, i=None):
     >>> x=clifford("{1,2}"); print(cos(acos(x)))
     {1,2}
     """
-    if not (i is None):
+    if i is not None:
         return clifford().wrap(glucat.cos(toClifford(obj), toClifford(i)))
     else:
         try:
@@ -2803,7 +2804,7 @@ def acos(obj, i=None):
     >>> x=clifford("{1,2}"); print(cos(acos(x)))
     {1,2}
     """
-    if not (i is None):
+    if i is not None:
         return clifford().wrap(glucat.acos(toClifford(obj), toClifford(i)))
     else:
         try:
@@ -2874,7 +2875,7 @@ def acosh(obj, i=None):
     >>> x=clifford("{1,2}"); print(cosh(acosh(x)))
     {1,2}
     """
-    if not (i is None):
+    if i is not None:
         return clifford().wrap(glucat.acosh(toClifford(obj), toClifford(i)))
     else:
         try:
@@ -2910,7 +2911,7 @@ def sin(obj, i=None):
     >>> x=clifford("{1,2,3}"); print(asin(sin(x)))
     {1,2,3}
     """
-    if not (i is None):
+    if i is not None:
         return clifford().wrap(glucat.sin(toClifford(obj), toClifford(i)))
     else:
         try:
@@ -2948,7 +2949,7 @@ def asin(obj, i=None):
     >>> x=clifford("{1,2,3}"); print(asin(sin(x)))
     {1,2,3}
     """
-    if not (i is None):
+    if i is not None:
         return clifford().wrap(glucat.asin(toClifford(obj), toClifford(i)))
     else:
         try:
@@ -3013,7 +3014,7 @@ def asinh(obj, i=None):
     >>> x=clifford("{1,2}") / 2; print(asinh(x) * 6/pi)
     {1,2}
     """
-    if not (i is None):
+    if i is not None:
         return clifford().wrap(glucat.asinh(toClifford(obj), toClifford(i)))
     else:
         try:
@@ -3047,7 +3048,7 @@ def tan(obj, i=None):
     >>> x=clifford("{1,2}"); print(tan(x))
     0.7616{1,2}
     """
-    if not (i is None):
+    if i is not None:
         return clifford().wrap(glucat.tan(toClifford(obj), toClifford(i)))
     else:
         try:
@@ -3081,7 +3082,7 @@ def atan(obj, i=None):
     >>> x=clifford("{1}"); print(tan(atan(x)))
     {1}
     """
-    if not (i is None):
+    if i is not None:
         return clifford().wrap(glucat.atan(toClifford(obj), toClifford(i)))
     else:
         try:
@@ -3142,7 +3143,7 @@ def atanh(obj, i=None):
     >>> x=clifford("{1,2}"); print(tanh(atanh(x)))
     {1,2}
     """
-    if not (i is None):
+    if i is not None:
         return clifford().wrap(glucat.atanh(toClifford(obj), toClifford(i)))
     else:
         try:
@@ -3320,7 +3321,8 @@ nbar3 = e(4) - e(-1)  # Null bar point in 3D Conformal Geometric Algebra [DL].
 
 # Doctest interface.
 def _test():
-    import PyClical, doctest
+    import PyClical
+    import doctest
 
     return doctest.testmod(PyClical)
 

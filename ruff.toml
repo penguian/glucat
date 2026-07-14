@@ -11,6 +11,6 @@ select = ["E", "F", "W"]
 
 # Suppress specific rules for demos and test files where star imports, bare-excepts, and long lines are standard
 [lint.per-file-ignores]
-"pyclical/PyClical.py" = ["ALL"]
+"pyclical/PyClical.py" = ["F401", "F403", "F405", "E501", "E722", "F841", "A001", "A002"]
 "pyclical/demos/**" = ["F403", "F405", "E722", "F401", "F841", "E501"]
 "pyclical/test.py" = ["F401", "F841", "E501"]
