@@ -79,5 +79,5 @@ fi
 echo "Next steps (from the repository root, with this environment active):"
 echo "  make -f admin/Makefile.common bootstrap  # git clone only, not needed for tarballs"
 echo "  ./configure"
-echo "  make -C pyclical -j$(( $(nproc)/2 ))"
+echo "  make -C pyclical -j\$(( \$(nproc) > 1 ? \$(nproc)/2 : 1 ))"
 echo "  source pyclical/demos/plotting/export-pyvista-vars.sh"

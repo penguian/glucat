@@ -165,7 +165,11 @@ def draw_orbit(
             show_scalar_bar=False,
         )
 
-    if local_plotter and not os.environ.get("GLUCAT_NON_INTERACTIVE"):
+    if local_plotter and not (
+        os.environ.get("GLUCAT_NON_INTERACTIVE")
+        or os.environ.get("QT_QPA_PLATFORM") == "offscreen"
+        or os.environ.get("PYVISTA_OFF_SCREEN", "").lower() in ("true", "1")
+    ):
         plotter.show()
 
 

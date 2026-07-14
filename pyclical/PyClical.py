@@ -6,7 +6,7 @@ from __future__ import annotations
 # PyClical: Python interface to GluCat:
 #           Generic library of universal Clifford algebra templates
 #
-# PyClical.pyx: Cython definitions visible from Python.
+# PyClical.py: Python interface and Cython definitions visible from Python.
 #
 #    copyright            : (C) 2008-2021 by Paul C. Leopardi
 #

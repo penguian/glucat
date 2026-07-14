@@ -146,7 +146,7 @@ same directory that contains this `README.md` file.
 
 The PyClical Python extension module is written in C++ and Cython, and is defined
 in the files `pyclical/glucat.pxd`, `pyclical/PyClical.h`, `pyclical/PyClical.pxd`,
-and `pyclical/PyClical.pyx`. PyClical is designed to be installed using `make`. For
+and `pyclical/PyClical.py`. PyClical is designed to be installed using `make`. For
 details on building PyClical, see the `./INSTALL.md` file.
 
 The following instructions assume that you have already installed PyClical. If
