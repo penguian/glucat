@@ -30,7 +30,7 @@ notebooks.stamp: build_pyclical_notebooks.py
 	touch notebooks.stamp
 
 $(NOTEBOOKS): notebooks.stamp
-	@true
+	@test -f "$@" || { PYTHONPATH="..:$(PYTHONPATH)" $(PYTHON) build_pyclical_notebooks.py && touch notebooks.stamp; }
 
 clean-local:
 	rm -rf *.pyc *.ipynb __pycache__ notebooks.stamp

@@ -126,7 +126,7 @@ module.
 
 PyClical is written in C++ and Cython, and is defined in the files
 `pyclical/glucat.pxd`, `pyclical/PyClical.h`, `pyclical/PyClical.pxd`, and
-`pyclical/PyClical.pyx`.
+`pyclical/PyClical.py`.
 
 The PyClical demos
 ------------------
@@ -501,7 +501,7 @@ configuration option `--disable-pyclical` (equivalently, `--enable-pyclical=no`)
 If Cython is installed then `make` builds PyClical by running the command:
 
 ```
-  ext_name=`PyClical` source_pyx=`PyClical.pyx` \
+  ext_name=`PyClical` source_pyx=`PyClical.py` \
   CXX=`$(CXX)` CXXVERSION=`$(CXXVERSION)` CFLAGS=`` \
   CXXFLAGS=`$(EXTCXXFLAGS)` AM_CPPFLAGS=`$(EXTAM_CPPFLAGS)` \
   all_includes="$(all_includes)" LDFLAGS=`$(USER_LDFLAGS)` LIBRARIES=`$(LIBS)` \
