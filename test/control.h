@@ -41,35 +41,37 @@ namespace glucat
   private:
     /// Test parameters are valid
     bool m_valid;
-    bool valid() const
-    { return m_valid; }
+    bool valid() const { return m_valid; }
 
     /// Catch exceptions
     bool m_catch_exceptions;
-    bool catch_exceptions() const
-    { return m_catch_exceptions; }
+    bool catch_exceptions() const { return m_catch_exceptions; }
 
     /// Produce more detailed output from tests
     static bool m_verbose_output;
 
     /// Constructor from program arguments
-    control_t(int argc, char ** argv);
+    control_t(int argc, char** argv);
     // Enforce singleton
     // Reference: A. Alexandrescu, "Modern C++ Design", Chapter 6
     control_t() = default;
     ~control_t() = default;
     control_t(const control_t&) = delete;
-    control_t& operator= (const control_t&) = delete;
+    control_t& operator=(const control_t&) = delete;
 
     /// Friend declaration to avoid compiler warning:
     /// "... only defines a private destructor and has no friends"
     /// Ref: Carlos O'Ryan, ACE http://doc.ece.uci.edu
     friend class friend_for_private_destructor;
+
   public:
     /// Single instance
     /// Ref: Scott Meyers, "Effective C++" Second Edition, Addison-Wesley, 1998.
-    static const control_t& control(int argc, char ** argv)
-    { static const control_t c(argc, argv); return c; }
+    static const control_t& control(int argc, char** argv)
+    {
+      static const control_t c(argc, argv);
+      return c;
+    }
 
     /// Call a function that returns int
     int call(intfn f) const;
@@ -77,26 +79,25 @@ namespace glucat
     int call(intintfn f, int arg) const;
 
     /// Produce more detailed output from tests
-    static bool verbose()
-    { return m_verbose_output; }
+    static bool verbose() { return m_verbose_output; }
   };
 
   /// Produce more detailed output from tests
   bool control_t::m_verbose_output = false;
 
   /// Test control constructor from program arguments
-  control_t::
-  control_t(int argc, char ** argv)
-  : m_valid(true), m_catch_exceptions(true)
+  control_t::control_t(int argc, char** argv)
+      : m_valid(true)
+      , m_catch_exceptions(true)
   {
     bool print_help = false;
     const std::string& arg_0_str = argv[0];
-    const std::string program_name = arg_0_str.substr(arg_0_str.find_last_of('/')+1);
+    const std::string program_name = arg_0_str.substr(arg_0_str.find_last_of('/') + 1);
     for (int arg_ndx = 1; arg_ndx < argc; ++arg_ndx)
     {
       const std::string& arg_str = argv[arg_ndx];
       bool valid = false;
-      if (arg_str.substr(0,2) == "--")
+      if (arg_str.substr(0, 2) == "--")
       {
         valid = true;
         const std::string& arg_name = arg_str.substr(2);
@@ -131,31 +132,21 @@ namespace glucat
   }
 
   /// Call a function that returns int
-  inline
-  int
-  control_t::
-  call(intfn f) const
+  inline int control_t::call(intfn f) const
   {
     if (valid())
-      return (catch_exceptions())
-        ? try_catch(f)
-        : (*f)();
+      return (catch_exceptions()) ? try_catch(f) : (*f)();
     else
       return 1;
   }
 
   /// Call a function of int that returns int
-  inline
-  int
-  control_t::
-  call(intintfn f, int arg) const
+  inline int control_t::call(intintfn f, int arg) const
   {
     if (valid())
-      return (catch_exceptions())
-        ? try_catch(f, arg)
-        : (*f)(arg);
+      return (catch_exceptions()) ? try_catch(f, arg) : (*f)(arg);
     else
       return 1;
   }
-}
-#endif // _GLUCAT_CONTROL_H
+}  // namespace glucat
+#endif  // _GLUCAT_CONTROL_H

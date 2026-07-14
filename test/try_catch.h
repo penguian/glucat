@@ -50,13 +50,21 @@ namespace glucat
   {
     int result = 0;
     try
-      { result = (*f)(); }
+    {
+      result = (*f)();
+    }
     catch (const glucat_error& e)
-      { e.print_error_msg(); }
+    {
+      e.print_error_msg();
+    }
     catch (const std::bad_alloc& e)
-      { std::cerr << "bad_alloc" << std::endl; }
+    {
+      std::cerr << "bad_alloc" << std::endl;
+    }
     catch (...)
-      { std::cerr << "unexpected exception" << std::endl; }
+    {
+      std::cerr << "unexpected exception" << std::endl;
+    }
     return result;
   }
 
@@ -65,14 +73,22 @@ namespace glucat
   {
     int result = 0;
     try
-      { result = (*f)(arg); }
+    {
+      result = (*f)(arg);
+    }
     catch (const glucat_error& e)
-      { e.print_error_msg(); }
+    {
+      e.print_error_msg();
+    }
     catch (const std::bad_alloc& e)
-      { std::cerr << "bad_alloc" << std::endl; }
+    {
+      std::cerr << "bad_alloc" << std::endl;
+    }
     catch (...)
-      { std::cerr << "unexpected exception" << std::endl; }
+    {
+      std::cerr << "unexpected exception" << std::endl;
+    }
     return result;
   }
-}
-#endif // _GLUCAT_TRY_CATCH_H
+}  // namespace glucat
+#endif  // _GLUCAT_TRY_CATCH_H
