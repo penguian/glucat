@@ -15,4 +15,7 @@ dist_plot_SCRIPTS = \
     plotting_demo_pyvista_dialog.py
 endif
 
-CLEANFILES = *.gcno *.gcda
+CLEANFILES = *.gcno *.gcda *.pyc
+
+clean-local:
+	rm -rf __pycache__
