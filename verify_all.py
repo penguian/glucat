@@ -50,7 +50,10 @@ def main():
         action="store_true",
         help="Run Python tests, notebook validation, and examples",
     )
-    args = parser.parse_args()
+    args, extra_args = parser.parse_known_args()
+
+    if extra_args and not args.coverage:
+        parser.error(f"unrecognized arguments: {' '.join(extra_args)}")
 
     # Get the project root directory
     root_dir = os.path.dirname(os.path.abspath(__file__))
@@ -64,7 +67,7 @@ def main():
                 print(f"Error: {tool} not found. Please install LLVM tools.", file=sys.stderr)
                 sys.exit(1)
         run_cmd(
-            ["bash", "test_coverage/src/run_clang_doctest_coverage.sh"],
+            ["bash", "test_coverage/src/run_clang_doctest_coverage.sh"] + extra_args,
             cwd=root_dir,
         )
         return
