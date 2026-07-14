@@ -54,6 +54,7 @@ from plotting_demo_pyvista import (
 )
 
 
+# pylint: disable=too-many-instance-attributes
 class TorusDemoDialog(QMainWindow):
     """
     Interactive PySide6 dialog for PyClical PyVista torus demo.

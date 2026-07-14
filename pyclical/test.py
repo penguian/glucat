@@ -23,6 +23,7 @@
 
 import PyClical
 
+# pylint: disable=no-member
 print(PyClical.__version__)
 test_result = PyClical._test()
 print(test_result)

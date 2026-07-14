@@ -12,7 +12,7 @@ if HAVE_DOXYGEN
 
   glucatHEADERS = ../glucat/*.h
   testHEADERS = ../test/*.h
-  PyClicalSOURCE = ../pyclical/glucat.pxd ../pyclical/PyClical.h  ../pyclical/PyClical.pxd ../pyclical/PyClical.pyx
+  PyClicalSOURCE = ../pyclical/glucat.pxd ../pyclical/PyClical.h  ../pyclical/PyClical.pxd ../pyclical/PyClical.py
 
 doc: html pdf
 
