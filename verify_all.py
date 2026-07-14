@@ -24,6 +24,7 @@
 
 import argparse
 import os
+import shutil
 import subprocess
 import sys
 
@@ -59,7 +60,7 @@ def main():
         print("=== Running C++ Block Coverage ===")
         # Check if llvm tools exist
         for tool in ["llvm-profdata", "llvm-cov"]:
-            if subprocess.run(["which", tool], capture_output=True).returncode != 0:
+            if shutil.which(tool) is None:
                 print(f"Error: {tool} not found. Please install LLVM tools.", file=sys.stderr)
                 sys.exit(1)
         run_cmd(
@@ -128,9 +129,10 @@ def main():
             print(f"Running demo: {demo}")
             run_cmd([sys.executable, demo], cwd=demos_dir, env=env)
 
-        # Run plotting demo (can require X display, but we test it here too)
-        print("Running plotting demo: plotting_demo_mayavi.py")
-        run_cmd([sys.executable, "plotting_demo_mayavi.py"], cwd=demos_dir, env=env)
+        # Run plotting demo in non-interactive headless mode
+        print("Running plotting demo: plotting_demo_pyvista.py")
+        plotting_dir = os.path.join(root_dir, "pyclical", "demos", "plotting")
+        run_cmd([sys.executable, "plotting_demo_pyvista.py"], cwd=plotting_dir, env=env)
 
         print("=== Python and examples validation succeeded! ===")
         return

@@ -11,6 +11,8 @@ dist_plot_DATA = \
     pyvista-env.yml \
     requirements-pyvista.txt
 dist_plot_SCRIPTS = \
+    plotting_demo_mayavi.py \
+    plotting_demo_dialog.py \
     plotting_demo_pyvista.py \
     plotting_demo_pyvista_dialog.py
 endif
