@@ -21,12 +21,17 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
-import PyClical
+"""
+pytest discovery wrapper for PyClical doctests.
+"""
+
 import doctest
+import PyClical
 import pytest
 
 
 def test_pyclical_doctests():
+    """Run all doctests defined within PyClical module using doctest.testmod."""
     results = doctest.testmod(PyClical, verbose=False)
     if results.failed > 0:
         pytest.fail(f"PyClical doctests failed: {results}")

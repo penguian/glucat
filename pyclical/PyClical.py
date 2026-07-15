@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=invalid-name
+"""
+PyClical: Python interface and Cython definitions visible from Python.
+"""
 from __future__ import annotations
 # cython: language_level=3
 # distutils: language = c++
@@ -22,6 +26,14 @@ from __future__ import annotations
 #
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with this library.  If not, see <http://www.gnu.org/licenses/>.
+
+# pylint: disable=invalid-name,missing-class-docstring,missing-function-docstring
+# pylint: disable=import-error,no-name-in-module,using-constant-test,used-before-assignment
+# pylint: disable=no-member,too-many-lines,too-many-public-methods,too-many-return-statements
+# pylint: disable=too-many-branches,useless-return,no-self-argument
+# pylint: disable=inconsistent-return-statements,bad-staticmethod-argument
+# pylint: disable=unused-argument,consider-using-from-import,unused-import
+# pylint: disable=import-outside-toplevel,import-self,wrong-import-position,line-too-long
 
 # References for definitions:
 # [DL]:
@@ -201,22 +213,22 @@ class index_set:
                 self.instance = new_IndexSet()
                 for idx in other:
                     self[idx] = True
-            except IndexError:
+            except IndexError as exc:
                 raise IndexError(
                     error_msg_prefix + " invalid " + repr(other) + "."
-                )
-            except (RuntimeError, TypeError):
+                ) from exc
+            except (RuntimeError, TypeError) as exc:
                 raise ValueError(
                     error_msg_prefix + " invalid " + repr(other) + "."
-                )
+                ) from exc
         elif isinstance(other, str):
             try:
                 bother = other.encode("UTF-8")
                 self.instance = new_IndexSet_str(bother)
-            except Exception:
+            except Exception as exc:
                 raise ValueError(
                     error_msg_prefix + " invalid string " + repr(other) + "."
-                )
+                ) from exc
         else:
             raise TypeError(error_msg_prefix + " " + str(type(other)) + ".")
 
@@ -252,37 +264,34 @@ class index_set:
             eq = bool(lhs is rhs)
             if op == 2:  # ==
                 return eq
-            elif op == 3:  # !=
+            if op == 3:  # !=
                 return not eq
-            else:
-                if op == 0:  # <
-                    return False
-                elif op == 1:  # <=
-                    return eq
-                elif op == 4:  # >
-                    return False
-                elif op == 5:  # >=
-                    return eq
-                else:
-                    return NotImplemented
-        else:
-            eq = bool(toIndexSet(lhs) == toIndexSet(rhs))
-            if op == 2:  # ==
+            if op == 0:  # <
+                return False
+            if op == 1:  # <=
                 return eq
-            elif op == 3:  # !=
-                return not eq
-            else:
-                lt = bool(toIndexSet(lhs) < toIndexSet(rhs))
-                if op == 0:  # <
-                    return lt
-                elif op == 1:  # <=
-                    return lt or eq
-                elif op == 4:  # >
-                    return not (lt or eq)
-                elif op == 5:  # >=
-                    return not lt
-                else:
-                    return NotImplemented
+            if op == 4:  # >
+                return False
+            if op == 5:  # >=
+                return eq
+            return NotImplemented
+
+        eq = bool(toIndexSet(lhs) == toIndexSet(rhs))
+        if op == 2:  # ==
+            return eq
+        if op == 3:  # !=
+            return not eq
+
+        lt = bool(toIndexSet(lhs) < toIndexSet(rhs))
+        if op == 0:  # <
+            return lt
+        if op == 1:  # <=
+            return lt or eq
+        if op == 4:  # >
+            return not (lt or eq)
+        if op == 5:  # >=
+            return not lt
+        return NotImplemented
 
     def __setitem__(self, idx, val):
         """
@@ -345,7 +354,7 @@ class index_set:
             if idx in self:
                 yield idx
 
-    def __invert__(self):
+    def __invert__(self):  # pylint: disable=line-too-long
         """
         Set complement: not.
 
@@ -356,7 +365,8 @@ class index_set:
 
         Examples
         --------
-        >>> print(~index_set({-16,-15,-14,-13,-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16}))
+        >>> s = set(range(-16, 0)) | set(range(1, 17))
+        >>> print(~index_set(s))
         {-32,-31,-30,-29,-28,-27,-26,-25,-24,-23,-22,-21,-20,-19,-18,-17,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32}
         """
         return index_set().wrap(self.instance.invert())
@@ -841,7 +851,8 @@ class clifford:
             Can be a scalar, a string representation, a list of coefficients,
             an index_set (creates a basis blade), or another clifford object.
         ixt : index_set, optional
-            The frame (index set) for the multivector. Used if other is a list or scalar.
+            The frame (index set) for the multivector.
+            Used if other is a list or scalar.
             If None, the frame is inferred from `other` or defaults to empty.
 
         Returns
@@ -895,13 +906,13 @@ class clifford:
                     try:
                         bother = other.encode("UTF-8")
                         self.instance = new_Clifford_str(bother)
-                    except RuntimeError:
+                    except RuntimeError as exc:
                         raise ValueError(
                             error_msg_prefix
                             + " invalid string "
                             + repr(other)
                             + "."
-                        )
+                        ) from exc
                 else:
                     raise TypeError(
                         error_msg_prefix + " " + str(type(other)) + "."
@@ -916,7 +927,7 @@ class clifford:
                     + ":"
                     + "\n\t"
                     + str(err)
-                )
+                ) from err
         elif isinstance(ixt, index_set):
             if isinstance(other, numbers.Real):
                 self.instance = new_Clifford_frame_scalar(
@@ -978,12 +989,13 @@ class clifford:
 
     def reframe(self, ixt):
         """
-        Put self into a larger frame, containing the union of self.frame() and index set ixt.
-        This can be used to make multiplication faster, by multiplying within a common frame.
+        Put self into a larger frame containing union of self.frame() and ixt.
+        This can be used to make multiplication faster by using a common frame.
 
         >>> clifford("2+3{1}").reframe(index_set({1,2,3}))
         clifford("2+3{1}")
-        >>> s=index_set({1,2,3});t=index_set({-3,-2,-1});x=random_clifford(s); x.reframe(t).frame() == (s|t);
+        >>> s = index_set({1,2,3}); t = index_set({-3,-2,-1})
+        >>> x = random_clifford(s); x.reframe(t).frame() == (s|t)
         True
         """
         error_msg_prefix = "Cannot reframe"
@@ -1003,7 +1015,7 @@ class clifford:
                     + ":"
                     + "\n\t"
                     + str(err)
-                )
+                ) from err
         else:
             raise TypeError(
                 error_msg_prefix + " using (" + str(type(ixt)) + ")."
@@ -1032,14 +1044,12 @@ class clifford:
         if op == 2:  # ==
             if (lhs is None) or (rhs is None):
                 return bool(lhs is rhs)
-            else:
-                return bool(toClifford(lhs) == toClifford(rhs))
-        elif op == 3:  # !=
+            return bool(toClifford(lhs) == toClifford(rhs))
+        if op == 3:  # !=
             if (lhs is None) or (rhs is None):
                 return not bool(lhs is rhs)
-            else:
-                return bool(toClifford(lhs) != toClifford(rhs))
-        elif isinstance(lhs, clifford) or isinstance(rhs, clifford):
+            return bool(toClifford(lhs) != toClifford(rhs))
+        if isinstance(lhs, clifford) or isinstance(rhs, clifford):
             raise TypeError(
                 "This comparison operator is not implemented for "
                 + str(type(lhs))
@@ -1047,8 +1057,7 @@ class clifford:
                 + str(type(rhs))
                 + "."
             )
-        else:
-            return NotImplemented
+        return NotImplemented
 
     def __getitem__(self, ixt):
         """
@@ -1588,8 +1597,7 @@ class clifford:
         """
         if isinstance(m, numbers.Integral):
             return clifford().wrap(self.instance.pow(m))
-        else:
-            return exp(m * log(self))
+        return exp(m * log(self))
 
     def outer_pow(self, m):
         """
@@ -1791,7 +1799,7 @@ class clifford:
                 + repr(frm)
                 + " as frame:\n\t"
                 + str(err)
-            )
+            ) from err
 
     def involute(self):
         """
@@ -1915,7 +1923,8 @@ class clifford:
 
     def max_abs(self):
         """
-        Maximum of absolute values of components of multivector: multivector infinity norm.
+        Maximum of absolute values of components of multivector.
+        Infinity norm of multivector.
 
         Returns
         -------
@@ -2045,7 +2054,7 @@ class clifford:
         return clifford_to_str(self.unwrap()).decode()
 
 
-def _clifford_hidden_doctests():
+def _clifford_hidden_doctests():  # pylint: disable=line-too-long
     """
     Tests for functions that Doctest cannot see.
 
@@ -2148,7 +2157,9 @@ def error_squared_tol(obj):
 
     Examples
     --------
-    >>> print(error_squared_tol(clifford("{1}")) * 3.0 - error_squared_tol(clifford("1{1}-2{2}+3{3}")))
+    >>> e1 = error_squared_tol(clifford("{1}"))
+    >>> e2 = error_squared_tol(clifford("1{1}-2{2}+3{3}"))
+    >>> print(e1 * 3.0 - e2)
     0.0
     """
     return glucat.error_squared_tol(toClifford(obj))
@@ -2218,9 +2229,12 @@ def approx_equal(lhs, rhs, threshold=None, tol=None):
     True
     >>> print(approx_equal(clifford("1{1}-3{2}+4{3}"), clifford("{1}")))
     False
-    >>> print(approx_equal(clifford("1{1}-3{2}+4{3}+0.001"), clifford("1{1}-3{2}+4{3}"), err2, err2))
+    >>> c1 = clifford("1{1}-3{2}+4{3}+0.001")
+    >>> c2 = clifford("1{1}-3{2}+4{3}")
+    >>> print(approx_equal(c1, c2, err2, err2))
     False
-    >>> print(approx_equal(clifford("1{1}-3{2}+4{3}+1.0e-30"), clifford("1{1}-3{2}+4{3}"), err2, err2))
+    >>> c3 = clifford("1{1}-3{2}+4{3}+1.0e-30")
+    >>> print(approx_equal(c3, c2, err2, err2))
     True
     """
     threshold = error_squared_tol(rhs) if threshold is None else threshold
@@ -2655,7 +2669,7 @@ def outer_pow(obj, m):
 @cython.inline
 def complexifier(obj):
     """
-    Square root of -1 which commutes with all members of the frame of the given multivector.
+    Square root of -1 commuting with all members of given frame.
 
     Parameters
     ----------
@@ -2714,11 +2728,10 @@ def sqrt(obj, i=None):
     """
     if i is not None:
         return clifford().wrap(glucat.sqrt(toClifford(obj), toClifford(i)))
-    else:
-        try:
-            return math.sqrt(obj)
-        except Exception:
-            return clifford().wrap(glucat.sqrt(toClifford(obj)))
+    try:
+        return math.sqrt(obj)
+    except Exception:
+        return clifford().wrap(glucat.sqrt(toClifford(obj)))
 
 
 @cython.ccall
@@ -2783,11 +2796,10 @@ def log(obj, i=None):
     """
     if i is not None:
         return clifford().wrap(glucat.log(toClifford(obj), toClifford(i)))
-    else:
-        try:
-            return math.log(obj)
-        except Exception:
-            return clifford().wrap(glucat.log(toClifford(obj)))
+    try:
+        return math.log(obj)
+    except Exception:
+        return clifford().wrap(glucat.log(toClifford(obj)))
 
 
 @cython.ccall
@@ -2817,11 +2829,10 @@ def cos(obj, i=None):
     """
     if i is not None:
         return clifford().wrap(glucat.cos(toClifford(obj), toClifford(i)))
-    else:
-        try:
-            return math.cos(obj)
-        except Exception:
-            return clifford().wrap(glucat.cos(toClifford(obj)))
+    try:
+        return math.cos(obj)
+    except Exception:
+        return clifford().wrap(glucat.cos(toClifford(obj)))
 
 
 @cython.ccall
@@ -2855,11 +2866,10 @@ def acos(obj, i=None):
     """
     if i is not None:
         return clifford().wrap(glucat.acos(toClifford(obj), toClifford(i)))
-    else:
-        try:
-            return math.acos(obj)
-        except Exception:
-            return clifford().wrap(glucat.acos(toClifford(obj)))
+    try:
+        return math.acos(obj)
+    except Exception:
+        return clifford().wrap(glucat.acos(toClifford(obj)))
 
 
 @cython.ccall
@@ -2926,11 +2936,10 @@ def acosh(obj, i=None):
     """
     if i is not None:
         return clifford().wrap(glucat.acosh(toClifford(obj), toClifford(i)))
-    else:
-        try:
-            return math.acosh(obj)
-        except Exception:
-            return clifford().wrap(glucat.acosh(toClifford(obj)))
+    try:
+        return math.acosh(obj)
+    except Exception:
+        return clifford().wrap(glucat.acosh(toClifford(obj)))
 
 
 @cython.ccall
@@ -2962,11 +2971,10 @@ def sin(obj, i=None):
     """
     if i is not None:
         return clifford().wrap(glucat.sin(toClifford(obj), toClifford(i)))
-    else:
-        try:
-            return math.sin(obj)
-        except Exception:
-            return clifford().wrap(glucat.sin(toClifford(obj)))
+    try:
+        return math.sin(obj)
+    except Exception:
+        return clifford().wrap(glucat.sin(toClifford(obj)))
 
 
 @cython.ccall
@@ -3000,11 +3008,10 @@ def asin(obj, i=None):
     """
     if i is not None:
         return clifford().wrap(glucat.asin(toClifford(obj), toClifford(i)))
-    else:
-        try:
-            return math.asin(obj)
-        except Exception:
-            return clifford().wrap(glucat.asin(toClifford(obj)))
+    try:
+        return math.asin(obj)
+    except Exception:
+        return clifford().wrap(glucat.asin(toClifford(obj)))
 
 
 @cython.ccall
@@ -3065,11 +3072,10 @@ def asinh(obj, i=None):
     """
     if i is not None:
         return clifford().wrap(glucat.asinh(toClifford(obj), toClifford(i)))
-    else:
-        try:
-            return math.asinh(obj)
-        except Exception:
-            return clifford().wrap(glucat.asinh(toClifford(obj)))
+    try:
+        return math.asinh(obj)
+    except Exception:
+        return clifford().wrap(glucat.asinh(toClifford(obj)))
 
 
 @cython.ccall
@@ -3099,11 +3105,10 @@ def tan(obj, i=None):
     """
     if i is not None:
         return clifford().wrap(glucat.tan(toClifford(obj), toClifford(i)))
-    else:
-        try:
-            return math.tan(obj)
-        except Exception:
-            return clifford().wrap(glucat.tan(toClifford(obj)))
+    try:
+        return math.tan(obj)
+    except Exception:
+        return clifford().wrap(glucat.tan(toClifford(obj)))
 
 
 @cython.ccall
@@ -3133,11 +3138,10 @@ def atan(obj, i=None):
     """
     if i is not None:
         return clifford().wrap(glucat.atan(toClifford(obj), toClifford(i)))
-    else:
-        try:
-            return math.atan(obj)
-        except Exception:
-            return clifford().wrap(glucat.atan(toClifford(obj)))
+    try:
+        return math.atan(obj)
+    except Exception:
+        return clifford().wrap(glucat.atan(toClifford(obj)))
 
 
 @cython.ccall
@@ -3194,11 +3198,10 @@ def atanh(obj, i=None):
     """
     if i is not None:
         return clifford().wrap(glucat.atanh(toClifford(obj), toClifford(i)))
-    else:
-        try:
-            return math.atanh(obj)
-        except Exception:
-            return clifford().wrap(glucat.atanh(toClifford(obj)))
+    try:
+        return math.atanh(obj)
+    except Exception:
+        return clifford().wrap(glucat.atanh(toClifford(obj)))
 
 
 @cython.ccall
@@ -3233,7 +3236,8 @@ def random_clifford(ixt: index_set, fill=1.0):
 @cython.inline
 def cga3(obj):
     """
-    Convert Euclidean 3D multivector to Conformal Geometric Algebra using Doran and Lasenby definition.
+    Convert Euclidean 3D multivector to Conformal Geometric Algebra
+    using Doran and Lasenby definition.
 
     Parameters
     ----------
@@ -3257,7 +3261,8 @@ def cga3(obj):
 @cython.inline
 def cga3std(obj):
     """
-    Convert CGA3 null vector to standard conformal null vector using Doran and Lasenby definition.
+    Convert CGA3 null vector to standard conformal null vector
+    using Doran and Lasenby definition.
 
     Parameters
     ----------

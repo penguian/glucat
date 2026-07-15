@@ -20,11 +20,15 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
+"""
+Use Cython and Distutils to build PyClical.
+"""
+
+import os
 from setuptools import setup
 from setup_ext import setup_ext
 from Cython.Build import cythonize
 import Cython.Compiler.Options
-import os
 
 Cython.Compiler.Options.annotate = True
 ext_name = os.environ.get("ext_name", "PyClical")
