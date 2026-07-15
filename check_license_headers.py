@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#
-# check_license_headers.py:
-# Verify that source files contain the GluCat LGPL header.
+"""
+check_license_headers.py:
+Verify that source files contain the GluCat LGPL header.
+"""
 #
 #    copyright            : (C) 2026 by Paul C. Leopardi
 #
@@ -19,12 +20,16 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
 import os
+import sys
 
 LICENSE_SUBSTRINGS = ["GNU Lesser General Public License", "CC BY-SA 3.0"]
 
+
 def check_file(filepath):
+    """
+    Check if the given file contains valid license header substrings.
+    """
     try:
         with open(filepath, "r", encoding="utf-8") as f:
             lines = [f.readline() for _ in range(50)]
@@ -62,11 +67,15 @@ def check_file(filepath):
             print(msg, file=sys.stderr)
             return False
         return True
-    except Exception as e:  # pylint: disable=broad-exception-caught
+    except (OSError, UnicodeDecodeError) as e:
         print(f"Error reading {filepath}: {e}", file=sys.stderr)
         return False
 
+
 def main():
+    """
+    Main entry point to iterate over arguments and verify license headers.
+    """
     if len(sys.argv) < 2:
         sys.exit(0)
 
