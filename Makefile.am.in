@@ -47,8 +47,11 @@ check-local: test-out
 
 fast-check: fast-test-out
 
+check-coverage-doctest:
+	$(MAKE) -C test_doctest check
+
 check-examples: all
-	$(PYTHON) verify_all.py --examples
+	$(PYTHON) verify_all.py --coverage --examples
 
 test-out: $(TESTOUT)
 	mkdir -p test_runtime
@@ -113,4 +116,4 @@ lint-fix:
 cppcheck:
 	cppcheck --project=glucat.cppcheck --error-exitcode=1
 
-.PHONY: doc test-out install-doc lint-check lint-fix cppcheck
+.PHONY: doc test-out install-doc check-coverage-doctest lint-check lint-fix cppcheck

@@ -143,15 +143,10 @@ jobs:
       - name: Build
         run: make -j$(nproc)
 
-      - name: Lint PyClical & demos
-        run: |
-          ruff check pyclical/ pyclical/demos/
-          pylint pyclical/ pyclical/demos/
+      - name: Run full verification pipeline
+        run: python3 verify_all.py --coverage --examples
 
-      - name: Validate generated notebooks
-        run: python3 pyclical/demos/validate_notebooks.py
-
-      - name: Run PyClical tests
+      - name: Run PyClical doctests via pytest
         run: python3 -m pytest pyclical/test_pytest_doctests.py -v
 
   doc:

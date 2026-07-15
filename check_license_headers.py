@@ -118,14 +118,25 @@ def main():
         files_to_check = collect_files(".")
 
     failed = False
+    checked_count = 0
     for filepath in files_to_check:
         if not os.path.isfile(filepath):
             continue
         ext = os.path.splitext(filepath)[1]
         if ext not in VALID_EXTENSIONS:
             continue
+        checked_count += 1
         if not check_file(filepath):
             failed = True
+
+    if checked_count == 0:
+        print(
+            "Error: No files were checked for license headers.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    print(f"Checked {checked_count} file(s) for license headers.")
 
     if failed:
         sys.exit(1)

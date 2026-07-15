@@ -83,8 +83,30 @@ def find_cython_python():
     return sys.executable
 
 
+def check_makefile_target(cmd, cwd=None):
+    """Verify that a requested make target exists using dry-run (`make -n`)."""
+    if not cmd or cmd[0] != "make":
+        return
+    dry_run_cmd = ["make", "-n"] + cmd[1:]
+    res = subprocess.run(
+        dry_run_cmd,
+        cwd=cwd,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        check=False,
+    )
+    if res.returncode != 0:
+        print(
+            f"Error: Target in command '{' '.join(cmd)}' does not exist.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+
 def run_cmd(cmd, cwd=None, env=None):
     """Execute a subprocess command, exiting on failure."""
+    if cmd and cmd[0] == "make":
+        check_makefile_target(cmd, cwd=cwd)
     print(f"Running: {' '.join(cmd)}")
     try:
         subprocess.run(cmd, cwd=cwd, env=env, check=True, stdin=subprocess.DEVNULL)
@@ -124,9 +146,10 @@ def main():
 
     if args.coverage:
         print("--- C++ header coverage check ---")
-        run_cmd(
-            ["make", "check-coverage-doctest"], cwd=root_dir, env=os.environ.copy()
-        )
+        coverage_cmd = ["make", "check-coverage-doctest"]
+        if extra_args:
+            coverage_cmd.extend(extra_args)
+        run_cmd(coverage_cmd, cwd=root_dir, env=os.environ.copy())
 
     if args.examples:
         print("--- License headers check ---")
