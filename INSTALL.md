@@ -561,6 +561,18 @@ register a dedicated Jupyter kernel so that the notebooks use the correct PyClic
 make -C pyclical install-pyclical-kernel
 ```
 
+### Environment Notes & Troubleshooting for Jupyter Notebooks
+
+* **Ensure Matching Python Environments:**
+  Make sure `jupyter notebook` is launched from the same Python environment used to compile PyClical (e.g. deactivate Conda via `conda deactivate` if PyClical was built using system Python). If an ABI mismatch occurs between the interpreter and the compiled extension, Python will fail to load the `.so` binary and fall back to `PyClical.py`, raising a `NameError`.
+
+* **Silencing the WebSocket Ping Warning:**
+  If Jupyter logs `The websocket_ping_timeout (90000) cannot be longer than the websocket_ping_interval (30000)`, this is a harmless default notice auto-corrected by Jupyter at startup. To permanently suppress it, set:
+  ```bash
+  mkdir -p ~/.jupyter
+  echo "c.NotebookApp.websocket_ping_timeout = 30000" >> ~/.jupyter/jupyter_notebook_config.py
+  ```
+
 
 Building the PyClical plotting demos
 ------------------------------------
