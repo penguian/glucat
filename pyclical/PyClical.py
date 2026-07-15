@@ -215,7 +215,7 @@ class index_set:
                 self.instance = new_IndexSet_str(bother)
             except Exception:
                 raise ValueError(
-                    error_msg_prefix + " invalid " + repr(other) + "."
+                    error_msg_prefix + " invalid string " + repr(other) + "."
                 )
         else:
             raise TypeError(error_msg_prefix + " " + str(type(other)) + ".")
