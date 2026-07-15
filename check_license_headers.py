@@ -23,7 +23,43 @@ Verify that source files contain the GluCat LGPL header.
 import os
 import sys
 
+IGNORED_DIRS = {
+    ".git",
+    ".pytest_cache",
+    ".deps",
+    ".libs",
+    ".venvs",
+    "venv",
+    "venvs",
+    "build",
+    "dist",
+    "__pycache__",
+    "node_modules",
+    "artifacts",
+}
+EXCLUDED_FILES = {"config.h", "glucat_config.h", "PyClical.cpp"}
+VALID_EXTENSIONS = {".py", ".h", ".cpp", ".hpp", ".pyx", ".pxd"}
 LICENSE_SUBSTRINGS = ["GNU Lesser General Public License", "CC BY-SA 3.0"]
+
+
+def collect_files(root_dir="."):
+    """
+    Recursively collect source files with valid extensions, excluding hidden/venv dirs.
+    """
+    collected = []
+    for dirpath, dirnames, filenames in os.walk(root_dir):
+        dirnames[:] = [
+            d
+            for d in dirnames
+            if d not in IGNORED_DIRS and not d.startswith(".")
+        ]
+        for filename in filenames:
+            if filename in EXCLUDED_FILES:
+                continue
+            ext = os.path.splitext(filename)[1]
+            if ext in VALID_EXTENSIONS:
+                collected.append(os.path.join(dirpath, filename))
+    return collected
 
 
 def check_file(filepath):
@@ -76,21 +112,24 @@ def main():
     """
     Main entry point to iterate over arguments and verify license headers.
     """
-    if len(sys.argv) < 2:
-        sys.exit(0)
+    if len(sys.argv) >= 2:
+        files_to_check = sys.argv[1:]
+    else:
+        files_to_check = collect_files(".")
 
     failed = False
-    for filepath in sys.argv[1:]:
+    for filepath in files_to_check:
         if not os.path.isfile(filepath):
             continue
         ext = os.path.splitext(filepath)[1]
-        if ext not in [".py", ".h", ".cpp", ".hpp", ".pyx", ".pxd"]:
+        if ext not in VALID_EXTENSIONS:
             continue
         if not check_file(filepath):
             failed = True
 
     if failed:
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

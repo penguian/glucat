@@ -58,6 +58,31 @@ def find_nbformat_python():
     return None
 
 
+def find_cython_python():
+    """Find a Python interpreter executable that has `Cython` installed."""
+    candidates = [sys.executable]
+    path_python = shutil.which("python3")
+    if path_python and path_python not in candidates:
+        candidates.append(path_python)
+    for std_path in ("/usr/bin/python3", "/usr/local/bin/python3"):
+        if os.path.exists(std_path) and std_path not in candidates:
+            candidates.append(std_path)
+
+    for py_bin in candidates:
+        try:
+            res = subprocess.run(
+                [py_bin, "-c", "import Cython"],
+                check=False,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            if res.returncode == 0:
+                return py_bin
+        except Exception:
+            continue
+    return sys.executable
+
+
 def run_cmd(cmd, cwd=None, env=None):
     """Execute a subprocess command, exiting on failure."""
     print(f"Running: {' '.join(cmd)}")
@@ -71,7 +96,7 @@ def run_cmd(cmd, cwd=None, env=None):
 def main():
     """Main verification runner parsing flags and executing checks."""
     os.environ.setdefault("MAKEFLAGS", "-j4")
-    python_bin = sys.executable
+    python_bin = find_cython_python()
     parser = argparse.ArgumentParser(
         description="GluCat & PyClical verification runner"
     )
@@ -126,7 +151,10 @@ def main():
 
         # Run PyClical C++-based tests
         print("--- PyClical test ---")
-        run_cmd(["make", "-C", "pyclical", "check"], cwd=root_dir)
+        run_cmd(
+            ["make", "-C", "pyclical", "check", f"PYTHON={python_bin}"],
+            cwd=root_dir,
+        )
 
         # Run notebook validation
         print("--- Notebook validation ---")
