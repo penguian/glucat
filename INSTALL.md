@@ -706,9 +706,9 @@ Confirmed working versions:
 | Tempesta (AMD Ryzen) | x86-64 | Kubuntu 26.04 | 3.12.13 (Conda) | Mayavi | 4.8.3 | 9.4.2 |
 | Tempesta (AMD Ryzen) | x86-64 | Kubuntu 26.04 | 3.12.13 (Conda) | PyVista | 0.44.x | 9.4.2 |
 | Pensieri (Intel Core) | x86-64 | Kubuntu 25.04 | 3.12.x (Conda) | Mayavi / PyVista | 4.8.x / 0.44.x | 9.4.x |
-| Ginestra (Apple M2 Pro) | aarch64 | Fedora Asahi Remix 43 | 3.14.x (system) | PyVista (system VTK) | 0.44.x | 9.4.x (system) |
+| Ginestra (Apple M2) | aarch64 | Fedora Asahi Remix 45 | 3.14.x (system) | PyVista (system VTK) | 0.44.x | 9.4.x (system) |
 
-*Note on ARM64 / Apple Silicon Validation*: The PyVista system-site-packages setup is designed to utilize the 16 KB page-aligned `python3-vtk` Fedora RPM on Asahi Linux. Further automated/interactive GUI testing on Apple Silicon hardware is pending physical machine access.
+*Note on ARM64 / Apple Silicon (Fedora Asahi Remix)*: The PyVista system-site-packages setup utilizes the 16 KB page-aligned `python3-vtk` Fedora RPM and runs smoothly and efficiently on Apple M2 (Ginestra). PyVista is the officially supported and recommended 3D plotting backend on ARM64 / Asahi Linux; Mayavi support on Asahi is unsupported.
 
 
 When a special environment is not needed
@@ -835,7 +835,7 @@ Conda's `linux-aarch64` VTK binaries (and PyPI bundled VTK wheels) are 4 KB page
     source pyclical/demos/plotting/export-pyvista-vars.sh
     ```
 
-*Mayavi on ARM (experimental — not currently working)*: Fedora provides a `python3-mayavi` RPM, but due to deep Traits/ETS site-packages version conflicts in Python 3.14+, a reliable Mayavi venv configuration on Asahi has not been achieved. PyVista is the supported 3D backend on ARM.
+*Mayavi on ARM (unsupported)*: Due to deep ETS/Traits version incompatibilities with system Python 3.14+ site-packages, Mayavi is not supported on Fedora Asahi Remix. PyVista is the official, fast, and fully verified 3D plotting backend on ARM64 / Apple Silicon.
 
 
 Running the plotting demos
