@@ -551,11 +551,11 @@ python3 clifford_demo.py
 To launch the Jupyter notebooks for the PyClical tutorials and demos:
 
 ```bash
-jupyter notebook pyclical/demos/
+jupyter lab pyclical/demos/
 ```
+*(or `jupyter notebook` if using Jupyter Notebook v7+).*
 
-If you are using the system Python (not a Conda or venv environment), you may want to
-register a dedicated Jupyter kernel so that the notebooks use the correct PyClical build:
+If you are using the system Python (not a Conda or venv environment), you should register a dedicated Jupyter kernel so that the notebooks use the active PyClical build:
 
 ```bash
 make -C pyclical install-pyclical-kernel
@@ -563,8 +563,14 @@ make -C pyclical install-pyclical-kernel
 
 ### Environment Notes & Troubleshooting for Jupyter Notebooks
 
+* **Use JupyterLab on Python 3.14+ (Ubuntu 26.04+):**
+  On systems running Python 3.14+ (such as Ubuntu 26.04), legacy Jupyter Classic Notebook (v6.x) suffers from an upstream `asyncio` Task context incompatibility when shutting down or restarting kernels (`RuntimeError: Timeout should be used inside a task`). Use `jupyter lab` (JupyterLab 4.x / `jupyter-server`) instead.
+
+* **Fixing Stale Kernel Paths (`FileNotFoundError`):**
+  If JupyterLab reports `FileNotFoundError: [Errno 2] No such file or directory: '.../bin/python3'` when starting a notebook, your user kernel spec points to an old or deleted virtual environment path. Run `make -C pyclical install-pyclical-kernel` to update `~/.local/share/jupyter/kernels/pyclical/kernel.json` with the active Python path.
+
 * **Ensure Matching Python Environments:**
-  Make sure `jupyter notebook` is launched from the same Python environment used to compile PyClical (e.g. deactivate Conda via `conda deactivate` if PyClical was built using system Python). If an ABI mismatch occurs between the interpreter and the compiled extension, Python will fail to load the `.so` binary and fall back to `PyClical.py`, raising a `NameError`.
+  Make sure `jupyter lab` or `jupyter notebook` is launched from the same Python environment used to compile PyClical (e.g. deactivate Conda via `conda deactivate` if PyClical was built using system Python). If an ABI mismatch occurs between the interpreter and the compiled extension, Python will fail to load the `.so` binary and fall back to `PyClical.py`, raising a `NameError`.
 
 * **Silencing the WebSocket Ping Warning:**
   If Jupyter logs `The websocket_ping_timeout (90000) cannot be longer than the websocket_ping_interval (30000)`, this is a harmless default notice auto-corrected by Jupyter at startup. To permanently suppress it, set:
