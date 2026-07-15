@@ -1,3 +1,4 @@
+"""Tutorial 0.4 Transcendental Functions for PyClical."""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -16,14 +17,16 @@ from pyclical_tutorial_utils import *
 
 
 def run(ctx):
+    """Run tutorial 0.4 Transcendental Functions."""
     for name, method in get_object_methods(ctx).items():
-        exec("global " + name + ";" + name + "=method")
+        globals()[name] = method
 
     print_head("0.4 Square root and transcendental functions.")
     print_line()
     print_fill(
         "This file contains a tutorial that describes the square root and "
-        + " transcendental functions on Clifford algebra elements available within PyClical."
+        + " transcendental functions on Clifford algebra elements available"
+        + " within PyClical."
     )
     print_line()
     print_fill(
@@ -72,9 +75,9 @@ def run(ctx):
     )
     print_line()
     print_fill(
-        "The complexifier function takes a clifford object x and returns the pseudoscalar e(s)"
-        + " corresponding to the smallest Clifford algebra A containing x,"
-        + " such that A is isomorphic to a full complex matrix algebra. "
+        "The complexifier function takes a clifford object x and returns the"
+        + " pseudoscalar e(s) corresponding to the smallest Clifford algebra A"
+        + " containing x, such that A is isomorphic to a full complex matrix algebra. "
         + " In some cases, there are two such algebras and an arbitrary choice is made."
     )
     print_line()
@@ -100,7 +103,8 @@ def run(ctx):
 
     pause()
     print_fill(
-        "The complexifier function can also take an index set or a string as an argument."
+        "The complexifier function can also take an index set or a string as"
+        + " an argument."
     )
     print_line()
     print_fill("Examples:")
@@ -118,9 +122,9 @@ def run(ctx):
     print_line()
     print_fill(
         "In the case of the square root and logarithm functions, this is because"
-        + " the function needs to use a complexifier i in the case where"
-        + " the matrix representation of the clifford object x has a negative real eigenvalue. "
-        " See [L-2010] for more details."
+        + " the function needs to use a complexifier i in the case where the"
+        + " matrix representation of the clifford object x has a negative real"
+        + " eigenvalue. See [L-2010] for more details."
     )
     print_line()
     print_fill(
@@ -257,6 +261,5 @@ if __name__ == "__main__":
     ctx = tutorial_context(globals())
     try:
         run(ctx)
-    except (KeyboardInterrupt, Exception):
+    except (KeyboardInterrupt, Exception):  # pylint: disable=broad-exception-caught
         ctx.print_fill("The tutorial was interrupted.")
-        pass

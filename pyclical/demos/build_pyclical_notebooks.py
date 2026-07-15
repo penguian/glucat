@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Build IPython notebook files for PyClical tutorials and demos."""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -13,12 +14,13 @@
 #
 # Licensed under CC BY-SA 3.0 http://creativecommons.org/licenses/by-sa/3.0/
 
-import pyclical_tutorials as pt
-import pyclical_notebook_utils as pn
 import sys
+import pyclical_notebook_utils as pn
+import pyclical_tutorials as pt
 
 
 def build_notebook(ctx, module_name, title):
+    """Build a single IPython notebook from a PyClical module."""
     module = __import__(module_name)
     original_stdout = sys.stdout
     try:
@@ -32,10 +34,12 @@ def build_notebook(ctx, module_name, title):
 
 
 def build_notebook_from_demo(ctx, module_name):
+    """Build an IPython notebook for a demo module."""
     build_notebook(ctx, module_name, module_name)
 
 
 def build_notebook_from_tut(ctx, tut):
+    """Build an IPython notebook for a tutorial module."""
     build_notebook(ctx, tut.module_name, tut.title)
 
 

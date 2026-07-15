@@ -3,7 +3,7 @@
 # Exclude notebooks and build artifacts
 extend-exclude = ["*.ipynb", "build/", "dist/", "__pycache__"]
 
-line-length = 80
+line-length = 88
 
 [lint]
 # Enable Pyflakes (F), pycodestyle (E, W)

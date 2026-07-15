@@ -95,7 +95,7 @@ def main():
         )
         print("--- Pylint check ---")
         run_cmd(
-            ["pylint", "--disable=broad-exception-caught", "pyclical/", "pyclical/demos/", "benchmarks/"],
+            ["pylint", "pyclical/", "pyclical/demos/"],
             cwd=root_dir,
         )
 

@@ -1,3 +1,4 @@
+"""Tutorial 1.2 Space Geometry for PyClical."""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -22,15 +23,16 @@ from pyclical_tutorial_utils import *
 
 
 def run(ctx):
+    """Run tutorial 1.2 Space Geometry."""
     for name, method in get_object_methods(ctx).items():
-        exec("global " + name + ";" + name + "=method")
+        globals()[name] = method
 
     print_head("1.2 Space geometry and vector algebra")
     print_line()
     print_fill(
-        "This tutorial file contains examples which will introduce you to PyClical"
-        + " and the wide range of calculations with Clifford and Grassmann algebras that"
-        + " you can use PyClical to perform."
+        "This tutorial file contains examples which will introduce you to"
+        + " PyClical and the wide range of calculations with Clifford and"
+        + " Grassmann algebras that you can use PyClical to perform."
     )
     print_line()
     print_fill(
@@ -64,8 +66,10 @@ def run(ctx):
     pause()
     print_line()
     print_fill(
-        "Example 10.2. Divide the vector r == -{1}+8{2}+{3} into components parallel to a == 2{1}-{2},"
-        + " b == 2{1}+3{2}-{3} and c == 2{1}+2{2}+5{3}, that is, determine the coefficients alpha, beta"
+        "Example 10.2. Divide the vector r == -{1}+8{2}+{3} into components"
+        + " parallel to a == 2{1}-{2},"
+        + " b == 2{1}+3{2}-{3} and c == 2{1}+2{2}+5{3}, that is, determine"
+        + " the coefficients alpha, beta"
         + " and gamma in the decomposition r == alpha*a + beta*b + gamma*c."
     )
     print_line()
@@ -103,9 +107,9 @@ def run(ctx):
     pause()
     print_line()
     print_fill(
-        "Example 11.1. A plane A is spanned by the vectors x == 4{1}+{3} and y == 3{1}+{2}. "
-        + " Compute the projection p of the vector v == -5{1}+7{2} in the plane A and the"
-        + " component r of v perpendicular to A."
+        "Example 11.1. A plane A is spanned by the vectors x == 4{1}+{3} and"
+        + " y == 3{1}+{2}. Compute the projection p of the vector v == -5{1}+7{2}"
+        + " in the plane A and the component r of v perpendicular to A."
     )
     print_line()
 
@@ -129,9 +133,9 @@ def run(ctx):
     pause()
     print_line()
     print_fill(
-        "In this example the bivector A == x ^ y represents the oriented plane spanned by the"
-        + " vectors x and y. "
-        + " More precisely A is the oriented area of the parallelogram with sides x and y."
+        "In this example the bivector A == x ^ y represents the oriented plane"
+        + " spanned by the vectors x and y. More precisely A is the oriented area"
+        + " of the parallelogram with sides x and y."
     )
     print_line()
     print_fill("Compare with Example 8.1 from Tutorial 1.0 Plane geometry.")
@@ -140,9 +144,10 @@ def run(ctx):
     pause()
     print_line()
     print_fill(
-        "Example 11.2. Determine three perpendicular unit vectors, t1, t2 and t3, with t1"
-        + " parallel to v1 == 3{1}-{2}, t2 in the plane of v1 and v2 == {1}+2{3}, pointing into"
-        + " the half-plane of v2, and t3 pointing into the half-space of v3 == {2}+{3}."
+        "Example 11.2. Determine three perpendicular unit vectors, t1, t2 and t3,"
+        + " with t1 parallel to v1 == 3{1}-{2}, t2 in the plane of v1 and"
+        + " v2 == {1}+2{3}, pointing into the half-plane of v2, and t3 pointing"
+        + " into the half-space of v3 == {2}+{3}."
     )
     print_line()
 
@@ -191,8 +196,8 @@ def run(ctx):
     pause()
     print_line()
     print_fill(
-        "Example 12.1. the force F == 7{1}+4{2}+5{3} is applied to the point P == (4,6,7). "
-        + " Determine t, the magnitude of the torque about the origin O."
+        "Example 12.1. the force F == 7{1}+4{2}+5{3} is applied to the point"
+        + " P == (4,6,7). Determine t, the magnitude of the torque about O."
     )
     print_line()
 
@@ -203,16 +208,17 @@ def run(ctx):
     print_exec("t = abs(OP ^ F); print(t)")
     print_line()
     print_fill(
-        "Here we have used the alternate input notation for vectors, which uses a tuple or list of"
-        + " coordinates, and a basis defined by an index_set, in this case R3 == {1,2,3}."
+        "Here we have used the alternate input notation for vectors, which uses a"
+        + " tuple or list of coordinates, and a basis defined by an index_set,"
+        + " in this case R3 == {1,2,3}."
     )
     print_line()
 
     pause()
     print_line()
     print_fill(
-        "Example 12.2. Rotate the vector r == 4{1}+2{2}+2{3} about the axis a == 1.5{1}+2{2}"
-        + " by the angle alpha == abs(a), to obtain the vector q."
+        "Example 12.2. Rotate the vector r == 4{1}+2{2}+2{3} about the axis"
+        + " a == 1.5{1}+2{2} by the angle alpha == abs(a), to obtain q."
     )
     print_line()
 
@@ -253,10 +259,10 @@ def run(ctx):
     pause()
     print_line()
     print_fill(
-        "Example 12.3. Perform two successive rotations, the first one around the axis OA,"
-        + " A == (1,-1,1) by the angle 2*pi/3, and the second around the axis OB, B == (0,1,-1)"
-        + " by the angle pi. "
-        + " What is the axis of the combined rotation?"
+        "Example 12.3. Perform two successive rotations, the first one around"
+        + " the axis OA, A == (1,-1,1) by the angle 2*pi/3, and the second around"
+        + " the axis OB, B == (0,1,-1) by the angle pi. What is the axis of"
+        + " the combined rotation?"
     )
     print_line()
 
@@ -287,6 +293,5 @@ if __name__ == "__main__":
     ctx = tutorial_context(globals())
     try:
         run(ctx)
-    except (KeyboardInterrupt, Exception):
+    except (KeyboardInterrupt, Exception):  # pylint: disable=broad-exception-caught
         ctx.print_fill("The tutorial was interrupted.")
-        pass

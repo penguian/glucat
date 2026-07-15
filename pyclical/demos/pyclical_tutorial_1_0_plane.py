@@ -1,3 +1,4 @@
+"""Tutorial 1.0 Plane Geometry for PyClical."""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -22,17 +23,18 @@ from pyclical_tutorial_utils import *
 
 
 def run(ctx):
+    """Run tutorial 1.0 Plane Geometry."""
     for name, method in get_object_methods(ctx).items():
-        exec("global " + name + ";" + name + "=method")
+        globals()[name] = method
 
     print_fill("# pyclical_tutorial_1_0_plane.py:")
     print_line()
     print_fill("1.0 Plane Geometry")
     print_line()
     print_fill(
-        "This tutorial file contains examples which will introduce you to PyClical"
-        + " and the wide range of calculations with Clifford and Grassmann algebras that"
-        + " you can use PyClical to perform."
+        "This tutorial file contains examples which will introduce you to"
+        + " PyClical and the wide range of calculations with Clifford and"
+        + " Grassmann algebras that you can use PyClical to perform."
     )
     print_line()
     print_fill(
@@ -240,7 +242,7 @@ def run(ctx):
     )
     pause()
     check_eval(
-        "compare with r | a to check the third\n" "equality above.",
+        "compare with r | a to check the third\nequality above.",
         "r - 2 * (a & r) * a / (a & a)",
         "print(abs( (r | a) - ({}) ))",
     )
@@ -256,6 +258,5 @@ if __name__ == "__main__":
     ctx = tutorial_context(globals())
     try:
         run(ctx)
-    except (KeyboardInterrupt, Exception):
+    except (KeyboardInterrupt, Exception):  # pylint: disable=broad-exception-caught
         ctx.print_fill("The tutorial was interrupted.")
-        pass

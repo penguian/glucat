@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Sqrt and log calculations demonstration script."""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -28,11 +29,13 @@ from pyclical_tutorial_utils import *
 
 
 def run(ctx=tutorial_context(globals())):
+    """Run the sqrt and log demonstration."""
     for name, method in get_object_methods(ctx).items():
-        exec("global " + name + ";" + name + "=method")
+        globals()[name] = method
 
     print_fill(
-        "# sqrt_log_demo.py: Demonstrate various sqrt and log calculations with PyClical."
+        "# sqrt_log_demo.py: Demonstrate various sqrt and log calculations"
+        + " with PyClical."
     )
     print_line()
     print_fill("INITIALIZATION.")
@@ -110,7 +113,8 @@ def run(ctx=tutorial_context(globals())):
     print_fill("Define a bivector B.")
     print_line()
     print_exec(
-        "B = clifford('2{-1,1}+3{-1,2}+4{-1,3}+5{-1,4}+{1,2}+2{1,3}+3{1,4}-4{2,3}-5{2,4}+{3,4}')"
+        "B = clifford('2{-1,1}+3{-1,2}+4{-1,3}+5{-1,4}+{1,2}+2{1,3}+3{1,4}'"
+        + " + '-4{2,3}-5{2,4}+{3,4}')"
     )
     print_exec("print(B)")
     print_line()
@@ -136,21 +140,12 @@ def run(ctx=tutorial_context(globals())):
     print_exec("dv_disc = (1+R(0))**2 - (R(4))**2")
     print_exec("print(dv_disc)")
     print_exec(
-        "dv_sqrt_R = (1+R)*(1+R(0)-R(4))/(2*dv_disc)*(1+R(0)+R(4)+sqrt(dv_disc))/sqrt(1+R(0)+sqrt(dv_disc))"
+        "dv_sqrt_R = (1+R)*(1+R(0)-R(4))/(2*dv_disc)*"
+        + "(1+R(0)+R(4)+sqrt(dv_disc))/sqrt(1+R(0)+sqrt(dv_disc))"
     )
     print_exec("print(dv_sqrt_R)")
     print_exec("print(dv_sqrt_R*dv_sqrt_R)")
     print_exec("print(abs(dv_sqrt_R*dv_sqrt_R - R))")
-
-    pause()
-    print_line()
-    print_fill("The [D+V (5.4)] square root of R is even.")
-    print_line()
-    print_exec("print(abs(odd(dv_sqrt_R)))")
-    print_line()
-    print_fill(" The PyClical square root of R is odd.")
-    print_line()
-    print_exec("print(abs(even(sqrt_R)))")
 
     pause()
     print_line()
@@ -172,7 +167,8 @@ def run(ctx=tutorial_context(globals())):
     print_line()
     print_line()
     print_fill(
-        "Obtain the bivector F via the exterior derivative of the action of the rotor R, as per [D+V (5.24)]."
+        "Obtain the bivector F via the exterior derivative of the action of the"
+        + " rotor R, as per [D+V (5.24)]."
     )
     print_line()
     print_exec("F = 2 * (R(4)-R(0)) * R(2); print(F)")
@@ -213,10 +209,10 @@ def run(ctx=tutorial_context(globals())):
     print_line()
     print_exec(
         "atanh2 = lambda s, c :"
-        + " math.asinh(sqrt(scalar(s**2)))/sqrt(scalar(s**2))*s if scalar(s**2) > 0"
-        + " else s if scalar(s**2) == 0"
-        + " else math.atan2(sqrt(scalar(-s**2)),c)/sqrt(scalar(-s**2))*s if -1 <= scalar(s**2) < 0"
-        + " else float('nan')"
+        + " math.asinh(sqrt(scalar(s**2)))/sqrt(scalar(s**2))*s"
+        + " if scalar(s**2) > 0 else s if scalar(s**2) == 0"
+        + " else math.atan2(sqrt(scalar(-s**2)),c)/sqrt(scalar(-s**2))*s"
+        + " if -1 <= scalar(s**2) < 0 else float('nan')"
     )
     print_line()
     print_fill(
@@ -246,7 +242,8 @@ def run(ctx=tutorial_context(globals())):
     print_exec("i = e({-1,1,2,3,4})")
     print_line()
     print_fill(
-        "First, verify that i has the required properties: squares to -1 and commutes with vectors."
+        "First, verify that i has the required properties: squares to -1 and"
+        + " commutes with vectors."
     )
     print_line()
     print_exec("print(i*i)")
@@ -269,6 +266,5 @@ def run(ctx=tutorial_context(globals())):
 if __name__ == "__main__":
     try:
         run()
-    except (KeyboardInterrupt, Exception):
+    except (KeyboardInterrupt, Exception):  # pylint: disable=broad-exception-caught
         print("The demo was interrupted.")
-        pass

@@ -1,3 +1,4 @@
+"""Tutorial 0.2 Operations for PyClical."""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -5,8 +6,8 @@
 #
 # pyclical_tutorial_0_2_operations.py:
 #
-# This file contains a tutorial that explains the unary and binary operations on
-# Clifford algebra elements available within PyClical.
+# This file contains a tutorial that explains how to manipulate clifford
+# objects within PyClical.
 #
 #    copyright            : (C) 2012-2014 by Paul C. Leopardi
 #
@@ -16,8 +17,9 @@ from pyclical_tutorial_utils import *
 
 
 def run(ctx):
+    """Run tutorial 0.2 Operations."""
     for name, method in get_object_methods(ctx).items():
-        exec("global " + name + ";" + name + "=method")
+        globals()[name] = method
 
     print_head("0.2 Operations.")
     print_line()
@@ -290,6 +292,5 @@ if __name__ == "__main__":
     ctx = tutorial_context(globals())
     try:
         run(ctx)
-    except (KeyboardInterrupt, Exception):
+    except (KeyboardInterrupt, Exception):  # pylint: disable=broad-exception-caught
         ctx.print_fill("The tutorial was interrupted.")
-        pass

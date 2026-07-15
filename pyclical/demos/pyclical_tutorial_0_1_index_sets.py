@@ -1,3 +1,4 @@
+"""Tutorial 0.1 Index Sets for PyClical."""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -16,8 +17,9 @@ from pyclical_tutorial_utils import *
 
 
 def run(ctx):
+    """Run tutorial 0.1 Index Sets."""
     for name, method in get_object_methods(ctx).items():
-        exec("global " + name + ";" + name + "=method")
+        globals()[name] = method
 
     print_head("0.1 Index sets.")
     print_line()
@@ -163,7 +165,8 @@ def run(ctx):
 
     pause()
     check_exec(
-        "set s to be the symmetric set difference between the index sets {1,3} and {3,5}.",
+        "set s to be the symmetric set difference between the index sets {1,3}"
+        + " and {3,5}.",
         "s",
         "ist({1,3}) ^ ist({3,5})",
     )
@@ -271,6 +274,5 @@ if __name__ == "__main__":
     ctx = tutorial_context(globals())
     try:
         run(ctx)
-    except (KeyboardInterrupt, Exception):
+    except (KeyboardInterrupt, Exception):  # pylint: disable=broad-exception-caught
         ctx.print_fill("The tutorial was interrupted.")
-        pass

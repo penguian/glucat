@@ -1,9 +1,11 @@
+"""Utilities for PyClical tutorials and interactive context management."""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
 #           Generic library of universal Clifford algebra templates
 #
-# pyclical_tutorial_utils.py: This file contains utilities for use with PyClical tutorials.
+# pyclical_tutorial_utils.py:
+#   This file contains utilities for use with PyClical tutorials.
 #
 #    copyright            : (C) 2012-2026 by Paul C. Leopardi
 #
@@ -20,16 +22,58 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
-from builtins import input
-from builtins import range
-from builtins import object
-import sys
-import numbers
-from PyClical import *
-import PyClical
+import importlib
 import math
+import numbers
+import os
+import sys
+from textwrap import TextWrapper
+
+from builtins import input, range
+import PyClical
+from PyClical import *
+
+
+# Stubs for tutorial context functions populated dynamically at runtime
+# pylint: disable=unused-argument
+def pause(*args, **kwargs):
+    """Stub for pause tutorial function."""
+
+
+def print_line(*args, **kwargs):
+    """Stub for print_line tutorial function."""
+
+
+def print_head(*args, **kwargs):
+    """Stub for print_head tutorial function."""
+
+
+def print_fill(*args, **kwargs):
+    """Stub for print_fill tutorial function."""
+
+
+def print_exec(*args, **kwargs):
+    """Stub for print_exec tutorial function."""
+
+
+def input_exec(*args, **kwargs):
+    """Stub for input_exec tutorial function."""
+
+
+def input_eval(*args, **kwargs):
+    """Stub for input_eval tutorial function."""
+
+
+def check_exec(*args, **kwargs):
+    """Stub for check_exec tutorial function."""
+
+
+def check_eval(*args, **kwargs):
+    """Stub for check_eval tutorial function."""
+
 
 # Allowed builtins
+
 allowed_builtins = {
     "False": False,
     "None": None,
@@ -66,18 +110,11 @@ allowed_builtins = {
 }
 
 
-def allowed_import(name, globals=None, locals=None, fromlist=(), level=0):
-    """
-    Restricted __import__ function that only allows importing PyClical and IPython.
-
-    Note: this is not a security measure and assumes a non-malicious user.
-    It is intended to prevent accidental execution of arbitrary code.
-    """
+def allowed_import(name, globals_dict=None, locals_dict=None, fromlist=(), level=0):
+    """Restricted __import__ function allowing only PyClical and IPython."""
     if name == "PyClical":
         return PyClical
     if name.startswith("IPython"):
-        import importlib
-
         return importlib.import_module(name)
     raise ImportError(f"Import of '{name}' is not allowed in tutorial sandbox.")
 
@@ -86,13 +123,7 @@ allowed_builtins["__import__"] = allowed_import
 
 
 def get_allowed_scope():
-    """
-    Return a dictionary suitable for use as a restricted execution namespace.
-    This includes allowed builtins and all public symbols from PyClical.
-
-    Note: this is not a security measure and assumes a non-malicious user.
-    It is intended to prevent accidental execution of arbitrary code.
-    """
+    """Return a dictionary suitable for use as a restricted execution namespace."""
     scope = {"__builtins__": allowed_builtins}
     for name in dir(PyClical):
         if not name.startswith("_"):
@@ -101,35 +132,24 @@ def get_allowed_scope():
 
 
 def allowed_exec(command_str, scope=None):
-    """
-    Restricted exec function that executes within an allowed scope.
-
-    Note: this is not a security measure and assumes a non-malicious user.
-    It is intended to prevent accidental execution of arbitrary code.
-    """
+    """Restricted exec function that executes within an allowed scope."""
     if scope is None:
         scope = get_allowed_scope()
-    exec(command_str, scope)
+    exec(command_str, scope)  # pylint: disable=exec-used
 
 
 def allowed_eval(expression_str, scope=None):
-    """
-    Restricted eval function that evaluates within an allowed scope.
-
-    Note: this is not a security measure and assumes a non-malicious user.
-    It is intended to prevent accidental execution of arbitrary code.
-    """
+    """Restricted eval function that evaluates within an allowed scope."""
     if scope is None:
         scope = get_allowed_scope()
-    return eval(expression_str, scope)
+    return eval(expression_str, scope)  # pylint: disable=eval-used
 
 
 def get_console_width():
-    import os
-
+    """Determine terminal console width or default to 80."""
     default_console_width = 80
     try:
-        height_str, width_str = os.popen("stty size", "r").read().split()
+        _, width_str = os.popen("stty size", "r").read().split()
         console_width = int(width_str)
         if console_width < 1:
             console_width = default_console_width
@@ -139,8 +159,7 @@ def get_console_width():
 
 
 def fill(output_str, indent="    "):
-    from textwrap import TextWrapper
-
+    """Format and wrap text according to console width."""
     console_width = get_console_width()
     wrapper = TextWrapper(
         initial_indent=indent, subsequent_indent=indent, width=console_width
@@ -148,103 +167,120 @@ def fill(output_str, indent="    "):
     return wrapper.fill(output_str)
 
 
-def is_near(x, y):
+def is_near(x, y):  # pylint: disable=too-many-return-statements
+    """Determine whether two elements or lists of elements are near equal."""
     try:
         if isinstance(x, list):
-            result = isinstance(y, list) and (len(x) == len(y))
-            if result:
-                for k in range(len(x)):
-                    if not is_near(x[k], y[k]):
-                        result = False
-                        break
-            return result
-        elif isinstance(x, bool):
+            if not isinstance(y, list) or len(x) != len(y):
+                return False
+            for elem_x, elem_y in zip(x, y):
+                if not is_near(elem_x, elem_y):
+                    return False
+            return True
+        if isinstance(x, bool):
             return x == y
-        elif isinstance(x, numbers.Real) or isinstance(x, clifford):
-            tol = 4.0 * scalar_epsilon
+        if isinstance(x, (numbers.Real, PyClical.clifford)):
+            tol = 4.0 * PyClical.scalar_epsilon
             if abs(x) > tol:
                 return abs(x - y) / abs(x) < tol
-            else:
-                return abs(x - y) < tol
-        else:
-            return x == y
+            return abs(x - y) < tol
+        return x == y
     except Exception:
         return False
 
 
 def get_object_methods(obj):
-    return dict(
-        [
-            (method, getattr(obj, method))
-            for method in dir(obj)
-            if callable(getattr(obj, method)) and not method.startswith("_")
-        ]
-    )
+    """Retrieve all callable public methods of an object as a dictionary."""
+    return {
+        method: getattr(obj, method)
+        for method in dir(obj)
+        if callable(getattr(obj, method)) and not method.startswith("_")
+    }
 
 
-class interaction_context(object):
+class InteractionContext:
+    """Base class for managing tutorial interaction execution contexts."""
+
     def __init__(self, dictionary):
         self.object_names = dictionary
 
     def pause(self):
+        """Pause interaction."""
         print("pause")
 
     def print_line(self):
+        """Print a line separation."""
         print("print_line")
 
     def print_head(self, output_str, indent="    "):
+        """Print a header string."""
         print("print_head: ", output_str)
 
     def print_fill(self, output_str, indent="    "):
+        """Print wrapped text string."""
         print("print_fill: ", output_str)
 
     def print_exec(self, command_str):
+        """Execute and print a command."""
         print("print_exec: ", command_str)
 
     def input_exec(self, prompt, sandbox):
+        """Execute interactive code input."""
         print("input_exec: ", prompt)
 
     def input_eval(self, prompt):
+        """Evaluate interactive code input."""
         print("input_eval: ", prompt)
 
     def check_exec(self, prompt, var_name, value_str):
+        """Validate execution result against target variable."""
         print("check_exec: ", prompt, var_name, value_str)
 
     def check_eval(self, prompt, value_str, command_str):
+        """Validate evaluation result against expected value."""
         print("check_exec: ", prompt, value_str, command_str)
 
 
-class tutorial_context(interaction_context):
+class TutorialContext(InteractionContext):
+    """Interactive execution context used for running PyClical tutorials."""
+
     def __init__(self, dictionary=None):
-        # We ignore the passed dictionary to enforce the allowed scope
-        self.object_names = get_allowed_scope()
+        super().__init__(get_allowed_scope())
 
     def pause(self):
+        """Prompt user to press ENTER if running in terminal."""
         if sys.stdin.isatty() and sys.stdout.isatty():
             input("Press ENTER to continue:")
 
     def print_line(self):
+        """Print an empty line."""
         print("")
 
     def print_head(self, output_str, indent=""):
+        """Print filled header string."""
         print(fill(output_str, indent))
 
     def print_fill(self, output_str, indent="    "):
+        """Print filled body string."""
         print(fill(output_str, indent))
 
     def print_exec(self, command_str):
+        """Display command and execute in allowed scope."""
         print(">>>", command_str)
         allowed_exec(command_str, self.object_names)
 
     def input_exec(self, prompt, sandbox):
+        """Prompt user for input and execute in sandbox scope."""
         input_str = input(prompt + "\n>>> ")
         allowed_exec(input_str, sandbox)
 
     def input_eval(self, prompt):
+        """Prompt user for expression input and evaluate in allowed scope."""
         input_str = input(prompt + "\n>>> ")
         return allowed_eval(input_str, self.object_names)
 
     def check_exec(self, prompt, var_name, value_str):
+        """Interactively test user command against reference value."""
         try:
             sandbox = self.object_names.copy()
             filled_prompt = fill(
@@ -267,6 +303,7 @@ class tutorial_context(interaction_context):
         )
 
     def check_eval(self, prompt, value_str, command_str):
+        """Interactively test user expression against reference value."""
         try:
             value = allowed_eval(value_str, self.object_names)
         except Exception:
@@ -286,3 +323,8 @@ class tutorial_context(interaction_context):
         self.print_fill("Here is one way to use such an expression:")
         command_str = command_str.format(value_str)
         self.print_exec(command_str)
+
+
+# Aliases for backwards compatibility with legacy tutorials
+interaction_context = InteractionContext  # pylint: disable=invalid-name
+tutorial_context = TutorialContext  # pylint: disable=invalid-name

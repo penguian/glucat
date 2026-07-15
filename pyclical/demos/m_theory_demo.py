@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""M-Theory physics analysis demo."""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -27,8 +28,9 @@ from pyclical_tutorial_utils import *
 
 
 def run(ctx=tutorial_context(globals())):
+    """Run the M-Theory physics analysis demo."""
     for name, method in get_object_methods(ctx).items():
-        exec("global " + name + ";" + name + "=method")
+        globals()[name] = method
 
     print_fill("# M-Theory Analysis: R_(10, 1) vs R_(1, 10)")
     print_line()
@@ -124,6 +126,5 @@ def run(ctx=tutorial_context(globals())):
 if __name__ == "__main__":
     try:
         run()
-    except (KeyboardInterrupt, Exception):
+    except (KeyboardInterrupt, Exception):  # pylint: disable=broad-exception-caught
         print("The demo was interrupted.")
-        pass

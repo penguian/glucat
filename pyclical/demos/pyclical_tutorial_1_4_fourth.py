@@ -1,3 +1,4 @@
+"""Tutorial 1.4 Fourth Dimension for PyClical."""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -22,15 +23,16 @@ from pyclical_tutorial_utils import *
 
 
 def run(ctx):
+    """Run tutorial 1.4 Fourth Dimension."""
     for name, method in get_object_methods(ctx).items():
-        exec("global " + name + ";" + name + "=method")
+        globals()[name] = method
 
     print_fill("1.4 The fourth dimension")
     print_line()
     print_fill(
-        "This tutorial file contains examples which will introduce you to PyClical"
-        + " and the wide range of calculations with Clifford and Grassmann algebras that"
-        + " you can use PyClical to perform."
+        "This tutorial file contains examples which will introduce you to"
+        + " PyClical and the wide range of calculations with Clifford and"
+        + " Grassmann algebras that you can use PyClical to perform."
     )
     print_line()
     print_fill(
@@ -99,7 +101,8 @@ def run(ctx):
         "a ^ b ^ c",
     )
     check_exec(
-        "set vol to be the absolute volume of the parallelepiped with sides a, b and c.",
+        "set vol to be the absolute volume of the parallelepiped with sides"
+        + " a, b and c.",
         "vol",
         "abs(V)",
     )
@@ -107,9 +110,10 @@ def run(ctx):
     pause()
     print_line()
     print_fill(
-        "Example 15.4.Rotate the vector x == {1}+{2}+{4} in the four-dimensional Euclidean space"
-        + " first in the {1,2} plane by the angle pi/3 to produce the vector y, and then in the"
-        + " {3,4} plane by the angle pi/4 to produce the vector z."
+        "Example 15.4.Rotate the vector x == {1}+{2}+{4} in four-dimensional"
+        + " Euclidean space first in the {1,2} plane by the angle pi/3 to produce"
+        + " the vector y, and then in the {3,4} plane by the angle pi/4 to"
+        + " produce the vector z."
     )
     print_line()
     print_exec("x = e(1)+e(3)+e(4); print(x)")
@@ -124,7 +128,8 @@ def run(ctx):
 
     pause()
     check_exec(
-        "set B to be the bivector that generates a rotation in the {3,4} plane by the angle pi/4.",
+        "set B to be the bivector that generates a rotation in the {3,4} plane"
+        + " by the angle pi/4.",
         "B",
         "pi/4*e({3,4})",
     )
@@ -141,8 +146,9 @@ def run(ctx):
     pause()
     print_line()
     print_fill(
-        "Example 16.1. How far is the point P == (1,-5,5,6) from the plane B spanned by the vectors"
-        + " x == 3{1}-6{2}+7{3}+2{4} and y == 3{1}+2{2}+3{3}-2{4} ?"
+        "Example 16.1. How far is the point P == (1,-5,5,6) from the plane B"
+        + " spanned by the vectors x == 3{1}-6{2}+7{3}+2{4} and"
+        + " y == 3{1}+2{2}+3{3}-2{4} ?"
     )
     print_line()
     print_exec("R4 = istpq(4,0); print(R4)")
@@ -162,7 +168,8 @@ def run(ctx):
     pause()
     print_line()
     print_fill(
-        "Example 16.2. Find the squares of the multivectors (1 + {1,2} + {3,4} +/- {1,2,3,4})/2."
+        "Example 16.2. Find the squares of the multivectors"
+        + " (1 + {1,2} + {3,4} +/- {1,2,3,4})/2."
     )
     print_line()
     print_exec("a = (1+e({1,2})+e({3,4})+e({1,2,3,4}))/2; print(a)")
@@ -187,6 +194,5 @@ if __name__ == "__main__":
     ctx = tutorial_context(globals())
     try:
         run(ctx)
-    except (KeyboardInterrupt, Exception):
+    except (KeyboardInterrupt, Exception):  # pylint: disable=broad-exception-caught
         ctx.print_fill("The tutorial was interrupted.")
-        pass

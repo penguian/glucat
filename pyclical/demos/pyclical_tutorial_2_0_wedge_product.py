@@ -1,3 +1,4 @@
+"""Tutorial 2.0 Exterior Product for PyClical."""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -15,8 +16,9 @@ from pyclical_tutorial_utils import *
 
 
 def run(ctx):
+    """Run tutorial 2.0 Exterior Product."""
     for name, method in get_object_methods(ctx).items():
-        exec("global " + name + ";" + name + "=method")
+        globals()[name] = method
 
     print_head("2.0 Exterior product.")
     print_line()
@@ -80,6 +82,5 @@ if __name__ == "__main__":
     ctx = tutorial_context(globals())
     try:
         run(ctx)
-    except (KeyboardInterrupt, Exception):
+    except (KeyboardInterrupt, Exception):  # pylint: disable=broad-exception-caught
         ctx.print_fill("The tutorial was interrupted.")
-        pass
