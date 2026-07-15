@@ -185,6 +185,11 @@ class index_set:
         {}
         """
         error_msg_prefix = "Cannot initialize index_set object from"
+        if not compiled:
+            raise ImportError(
+                "PyClical C++ extension is not compiled. "
+                "Please build the compiled extension using `make -C pyclical`."
+            )
         if isinstance(other, index_set):
             self.instance = new_IndexSet_copy(
                 (cython.cast(index_set, other)).unwrap()
@@ -208,9 +213,9 @@ class index_set:
             try:
                 bother = other.encode("UTF-8")
                 self.instance = new_IndexSet_str(bother)
-            except RuntimeError:
+            except Exception:
                 raise ValueError(
-                    error_msg_prefix + " invalid string " + repr(other) + "."
+                    error_msg_prefix + " invalid " + repr(other) + "."
                 )
         else:
             raise TypeError(error_msg_prefix + " " + str(type(other)) + ".")
@@ -219,7 +224,8 @@ class index_set:
         """
         Clean up by deallocating the instance of C++ class IndexSet.
         """
-        delete_IndexSet(self.instance)
+        if compiled and self.instance != cython.NULL:
+            delete_IndexSet(self.instance)
 
     def __richcmp__(lhs, rhs, op: int):
         """
@@ -865,6 +871,11 @@ class clifford:
         2{1}+3{2}
         """
         error_msg_prefix = "Cannot initialize clifford object from"
+        if not compiled:
+            raise ImportError(
+                "PyClical C++ extension is not compiled. "
+                "Please build the compiled extension using `make -C pyclical`."
+            )
         if ixt is None:
             try:
                 if isinstance(other, clifford):
@@ -940,7 +951,8 @@ class clifford:
         """
         Clean up by deallocating the instance of C++ class Clifford.
         """
-        delete_Clifford(self.instance)
+        if compiled and self.instance != cython.NULL:
+            delete_Clifford(self.instance)
 
     def __contains__(self, x):
         """

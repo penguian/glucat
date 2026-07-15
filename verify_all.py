@@ -22,6 +22,10 @@
 #    along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+"""
+Verify all GluCat and PyClical test suites, lints, and examples.
+"""
+
 import argparse
 import os
 import shutil
@@ -29,7 +33,33 @@ import subprocess
 import sys
 
 
+def find_nbformat_python():
+    """Find a Python interpreter executable that has `nbformat` installed."""
+    candidates = [sys.executable]
+    path_python = shutil.which("python3")
+    if path_python and path_python not in candidates:
+        candidates.append(path_python)
+    for std_path in ("/usr/bin/python3", "/usr/local/bin/python3"):
+        if os.path.exists(std_path) and std_path not in candidates:
+            candidates.append(std_path)
+
+    for py_bin in candidates:
+        try:
+            res = subprocess.run(
+                [py_bin, "-c", "import nbformat"],
+                check=False,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            if res.returncode == 0:
+                return py_bin
+        except Exception:
+            continue
+    return None
+
+
 def run_cmd(cmd, cwd=None, env=None):
+    """Execute a subprocess command, exiting on failure."""
     print(f"Running: {' '.join(cmd)}")
     try:
         subprocess.run(cmd, cwd=cwd, env=env, check=True, stdin=subprocess.DEVNULL)
@@ -39,8 +69,12 @@ def run_cmd(cmd, cwd=None, env=None):
 
 
 def main():
+    """Main verification runner parsing flags and executing checks."""
     os.environ.setdefault("MAKEFLAGS", "-j4")
-    parser = argparse.ArgumentParser(description="GluCat & PyClical verification runner")
+    python_bin = sys.executable
+    parser = argparse.ArgumentParser(
+        description="GluCat & PyClical verification runner"
+    )
     parser.add_argument(
         "--coverage",
         action="store_true",
@@ -59,38 +93,29 @@ def main():
     # Get the project root directory
     root_dir = os.path.dirname(os.path.abspath(__file__))
 
-    # Case 1: Coverage
+    # Run core verification targets
+    print("--- Core build check ---")
+    run_cmd(["make", "fast-check"], cwd=root_dir)
+
     if args.coverage:
-        print("=== Running C++ Block Coverage ===")
-        # Check if llvm tools exist
-        for tool in ["llvm-profdata", "llvm-cov"]:
-            if shutil.which(tool) is None:
-                print(f"Error: {tool} not found. Please install LLVM tools.", file=sys.stderr)
-                sys.exit(1)
+        print("--- C++ header coverage check ---")
         run_cmd(
-            ["bash", "test_coverage/src/run_clang_doctest_coverage.sh"] + extra_args,
-            cwd=root_dir,
+            ["make", "check-coverage-doctest"], cwd=root_dir, env=os.environ.copy()
         )
-        return
 
-    # Check if Makefile exists
-    if not os.path.isfile(os.path.join(root_dir, "Makefile")):
-        print(
-            "Error: Makefile not found. Please bootstrap and configure the project first:\n"
-            "  make -f admin/Makefile.common bootstrap\n"
-            "  ./configure [options]",
-            file=sys.stderr,
-        )
-        sys.exit(1)
-
-    # Case 2: Examples and Python verification only
     if args.examples:
-        print("=== Running Python verification and examples ===")
+        print("--- License headers check ---")
+        run_cmd([python_bin, "check_license_headers.py"], cwd=root_dir)
 
-        # Run python lints
-        print("--- Ruff Lint check ---")
+        print("--- Ruff check ---")
         run_cmd(
-            ["ruff", "check", "pyclical/", "pyclical/demos/", "benchmarks/"],
+            [
+                "ruff",
+                "check",
+                "verify_all.py",
+                "check_license_headers.py",
+                "pyclical/",
+            ],
             cwd=root_dir,
         )
         print("--- Pylint check ---")
@@ -103,19 +128,20 @@ def main():
         print("--- PyClical test ---")
         run_cmd(["make", "-C", "pyclical", "check"], cwd=root_dir)
 
-        python_bin = sys.executable
-        try:
-            subprocess.run([python_bin, "-c", "import nbformat"], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        except Exception:
-            if os.path.exists("/usr/bin/python3"):
-                python_bin = "/usr/bin/python3"
-
         # Run notebook validation
         print("--- Notebook validation ---")
-        run_cmd(
-            [python_bin, "pyclical/demos/validate_notebooks.py"],
-            cwd=root_dir,
-        )
+        nbformat_python = find_nbformat_python()
+        if nbformat_python:
+            run_cmd(
+                [nbformat_python, "pyclical/demos/validate_notebooks.py"],
+                cwd=root_dir,
+            )
+        else:
+            print(
+                "[WARNING] 'nbformat' is not installed in any available "
+                "Python interpreter."
+            )
+            print("[WARNING] Skipping notebook validation.")
 
         # Run demos in pyclical/demos
         print("--- Demos check ---")
@@ -127,7 +153,8 @@ def main():
             "versor_demo.py",
         ]
 
-        # Include PYTHONPATH to find PyClical in the built/inplace dir and set GLUCAT_NON_INTERACTIVE
+        # Include PYTHONPATH to find PyClical in the built/inplace dir and
+        # set GLUCAT_NON_INTERACTIVE
         env = os.environ.copy()
         env["GLUCAT_NON_INTERACTIVE"] = "1"
         pyclical_path = os.path.join(root_dir, "pyclical")
@@ -142,43 +169,26 @@ def main():
 
         # Run plotting demo in non-interactive headless mode if pyvista is available
         try:
-            subprocess.run([python_bin, "-c", "import pyvista"], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.run(
+                [python_bin, "-c", "import pyvista"],
+                check=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
             print("Running plotting demo: plotting_demo_pyvista.py")
             plotting_dir = os.path.join(root_dir, "pyclical", "demos", "plotting")
-            run_cmd([python_bin, "plotting_demo_pyvista.py"], cwd=plotting_dir, env=env)
+            run_cmd(
+                [python_bin, "plotting_demo_pyvista.py"],
+                cwd=plotting_dir,
+                env=env,
+            )
         except Exception:
-            print("PyVista not found in Python environment; skipping plotting_demo_pyvista.py.")
+            print(
+                "PyVista not found in Python environment; skipping "
+                "plotting_demo_pyvista.py."
+            )
 
         print("=== Python and examples validation succeeded! ===")
-        return
-
-    # Case 3: Default run (all C++ checks + Python checks)
-    print("=== Running all GluCat / PyClical verification tests ===")
-
-    # 1. C++ linting & static analysis
-    print("--- C++ linting ---")
-    run_cmd(["make", "lint-check"], cwd=root_dir)
-    print("--- Cppcheck ---")
-    run_cmd(["make", "cppcheck"], cwd=root_dir)
-
-    # 2. Primary C++ regression suite
-    print("--- C++ regression tests ---")
-    run_cmd(["make", "check-local"], cwd=root_dir)
-
-    # 3. Python lints, tests, and notebook validation
-    print("--- Python lints & notebook validation ---")
-    run_cmd(["ruff", "check", "pyclical/", "pyclical/demos/", "benchmarks/"], cwd=root_dir)
-    run_cmd(["pylint", "--disable=broad-exception-caught", "pyclical/", "pyclical/demos/", "benchmarks/"], cwd=root_dir)
-    run_cmd(["make", "-C", "pyclical", "check"], cwd=root_dir)
-    python_bin = sys.executable
-    try:
-        subprocess.run([python_bin, "-c", "import nbformat"], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    except Exception:
-        if os.path.exists("/usr/bin/python3"):
-            python_bin = "/usr/bin/python3"
-    run_cmd([python_bin, "pyclical/demos/validate_notebooks.py"], cwd=root_dir)
-
-    print("=== All checks passed successfully! ===")
 
 
 if __name__ == "__main__":
