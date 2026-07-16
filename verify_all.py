@@ -234,7 +234,7 @@ Main verification runner parsing flags and executing checks.
             print(f"{name}... OK")
 
     log_step("Core build check")
-    run_cmd(["make", "fast-check"], cwd=root_dir, quiet=args.quiet)
+    check_makefile_target(["make", "check"], cwd=root_dir)
     log_success("Core build check")
 
     if args.fast or args.examples:
