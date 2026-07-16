@@ -49,6 +49,7 @@ echo "Creating/updating Conda environment from pyclical/demos/plotting/mayavi-en
 $_CONDACMD env create -f "${REPO_ROOT}/pyclical/demos/plotting/mayavi-env.yml" 2>/dev/null \
     || $_CONDACMD env update -f "${REPO_ROOT}/pyclical/demos/plotting/mayavi-env.yml"
 
+eval "$($_CONDACMD shell.bash hook)"
 $_CONDACMD activate pyclical-mayavi
 
 # Remove conda-forge's Mesa library if a native GPU driver is present.

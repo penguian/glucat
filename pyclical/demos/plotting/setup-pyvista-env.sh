@@ -70,6 +70,7 @@ else
     $_CONDACMD env create -f "${REPO_ROOT}/pyclical/demos/plotting/pyvista-env.yml" 2>/dev/null \
         || $_CONDACMD env update -f "${REPO_ROOT}/pyclical/demos/plotting/pyvista-env.yml"
 
+    eval "$($_CONDACMD shell.bash hook)"
     $_CONDACMD activate pyclical-pyvista
 
     echo ""

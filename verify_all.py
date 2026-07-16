@@ -102,10 +102,20 @@ def get_clean_make_env(env=None):
 
 def check_makefile_target(cmd, cwd=None):
     """
-Verify that a requested make target exists using dry-run (`make -n`).
-"""
+    Verify that a requested make target exists using dry-run (`make -n`).
+    """
     if not cmd or cmd[0] != "make":
         return
+    target_dir = cwd if cwd else os.getcwd()
+    makefile_path = os.path.join(target_dir, "Makefile")
+    if not os.path.exists(makefile_path):
+        print(
+            "Error: Makefile not found. Please run "
+            "'make -f admin/Makefile.common bootstrap' and './configure' first.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
     dry_run_cmd = ["make", "-n"] + cmd[1:]
     res = subprocess.run(
         dry_run_cmd,
@@ -221,7 +231,10 @@ Main verification runner parsing flags and executing checks.
     parser.add_argument(
         "--fast",
         action="store_true",
-        help="Run ultra-fast checks (core build, license headers, Ruff linter)",
+        help=(
+            "Run ultra-fast checks (Makefile pre-flight check, "
+            "license headers, Ruff linter)"
+        ),
     )
     parser.add_argument(
         "--coverage",
@@ -236,6 +249,12 @@ Main verification runner parsing flags and executing checks.
         help="Run Python tests, notebook validation, and examples",
     )
     args, extra_args = parser.parse_known_args()
+
+    if not (args.fast or args.coverage or args.python):
+        parser.error(
+            "at least one verification flag must be specified "
+            "(--fast, --coverage, or --python)"
+        )
 
     if extra_args and not args.coverage:
         parser.error(f"unrecognized arguments: {' '.join(extra_args)}")
@@ -328,7 +347,7 @@ Main verification runner parsing flags and executing checks.
         run_all_demos(root_dir, python_bin, quiet=args.quiet)
         log_success("Demos check")
 
-    print("=== Python and examples validation succeeded! ===")
+    print("=== Verification succeeded! ===")
 
 
 if __name__ == "__main__":
