@@ -8,25 +8,23 @@ Before submitting a Pull Request, please ensure that all checks pass locally.
 
 ### Local Verification Gate
 
-You can run all local tests and linters at once using the verification script. Note that this requires the project to be bootstrapped and configured beforehand (so that a top-level `Makefile` is present):
+You can run local tests, linters, and verification checks at once using the Python verification runner:
 ```bash
-./verify_all.sh
+python3 verify_all.py -q --coverage --examples
 ```
-This script will run:
-1. C++ style check: `clang-format` via `make lint-check` (covering `glucat/`, `test_doctest/`, and `test/` C++ headers/sources).
-2. C++ static analysis: `cppcheck` via `make cppcheck` (restricted to the `glucat/` directory).
-3. Primary regression tests and doctest suite: `make check-local` (including `test_doctest` by default).
-4. Python checks: `ruff` and `pylint` on the `pyclical/` wrapper, demos, and benchmarks.
-5. Jupyter Notebook validation: Rebuilding and checking generated tutorials and demos against JSON syntax and `nbformat` schema via:
-   ```bash
-   python3 pyclical/demos/validate_notebooks.py
-   ```
+Available flags for `verify_all.py`:
+- `-q`, `--quiet`: Suppress sub-command stdout unless a step fails, emitting 1-line check status indicators.
+- `--fast`: Execute ultra-fast (~0.12s) pre-commit checks: Makefile target dry-run validation (`make fast-check`), license header scanning (`check_license_headers.py`), and Ruff linting (`ruff check`).
+- `--coverage`: Execute C++ template header block and branch coverage tests (`make check-coverage-doctest`). Any extra CLI arguments passed to `verify_all.py` are forwarded directly to `make check-coverage-doctest`.
+- `--examples`: Run full Python linter static analysis (`pylint`), PyClical test suite, Jupyter notebook validation (`pyclical/demos/validate_notebooks.py`), and interactive/plotting demo scripts (`pyclical/demos/`).
+
+---
 
 ### Continuous Integration (GitHub Actions)
 
 All pull requests and merges to `master` automatically trigger our GitHub Actions CI pipeline, which runs:
 - **C++ Build & Test Matrix:** Builds and tests GluCat against GCC 14 and Clang 18 using both Eigen and Armadillo backends across Boost versions 1.84.0 and 1.85.0. Curated compiler warning-to-error options (e.g. `-Werror=return-type`, `-Werror=uninitialized`, `-Werror=format`) are enforced.
-- **PyClical Validation:** Lints Python files with Ruff/Pylint, validates generated Jupyter notebooks, and runs Python doctests.
+- **PyClical Validation Engine:** Executes `python3 verify_all.py --coverage --examples`, exercising all C++ coverage doctests, Python linters (Ruff/Pylint at 10.00/10), notebook validations, and demo script executions.
 - **Documentation Build:** Installs doc dependencies (Doxygen, Graphviz, LaTeX) and verifies that documentation PDF and HTML manuals build cleanly.
 
 ---
@@ -56,29 +54,27 @@ We provide Makefile targets for style checks and formatting:
 
 ---
 
-## Commit-level Enforcement (Pre-commit Hooks)
+## Commit & Push-level Enforcement (Git Hooks)
 
-We use `pre-commit` to automate code quality and compliance checks at the commit level.
+We provide an automated Git hooks installer script to enable repository-wide verification gates.
 
 ### Installation & Activation
 
-To install the hooks in your local Git repository:
-1. Install `pre-commit` via pip:
-   ```bash
-   pip install pre-commit
-   ```
-2. Activate the pre-commit hooks:
-   ```bash
-   pre-commit install
-   ```
+To install the pre-commit and pre-push hooks in your local repository, run:
+```bash
+./admin/setup-git-hooks.sh
+```
 
-Once installed, these hooks run automatically every time you execute `git commit`. If a hook fails (e.g., due to trailing whitespace, syntax issues, or missing license headers), the commit will be rejected, and any autofixes will be applied to your workspace files.
+This installs two executable hooks in your `.git/hooks/` directory:
+1. **Pre-commit hook (`.git/hooks/pre-commit`)**: Runs `python3 verify_all.py -q --fast` (~0.12s) on every local `git commit` to verify Makefile targets, license headers, and Ruff styling.
+2. **Pre-push hook (`.git/hooks/pre-push`)**: Runs `python3 verify_all.py -q --coverage --examples` (~6.6s) on every `git push` to ensure zero CI regressions before pushing code to GitHub.
 
 ### Bypassing Hooks
 
-If you need to bypass the pre-commit hooks for a specific commit (for example, during temporary WIP commits), use the `--no-verify` flag:
+If you need to bypass the local Git hooks for a specific action (for example, during temporary WIP commits), use the `--no-verify` flag:
 ```bash
 git commit -m "temp commit" --no-verify
+git push --no-verify
 ```
 
 ### Licensing & Header Policy
