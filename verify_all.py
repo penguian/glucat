@@ -87,6 +87,19 @@ Find a Python interpreter executable that has `Cython` installed.
     return sys.executable
 
 
+def get_clean_make_env(env=None):
+    """
+    Sanitize MAKEFLAGS in env to strip jobserver flags that cause
+    warnings in sub-make processes.
+    """
+    base_env = env.copy() if env is not None else os.environ.copy()
+    if "MAKEFLAGS" in base_env:
+        flags = base_env["MAKEFLAGS"].split()
+        cleaned = [f for f in flags if not f.startswith("--jobserver")]
+        base_env["MAKEFLAGS"] = " ".join(cleaned)
+    return base_env
+
+
 def check_makefile_target(cmd, cwd=None):
     """
 Verify that a requested make target exists using dry-run (`make -n`).
@@ -97,6 +110,7 @@ Verify that a requested make target exists using dry-run (`make -n`).
     res = subprocess.run(
         dry_run_cmd,
         cwd=cwd,
+        env=get_clean_make_env(),
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
         check=False,
@@ -115,6 +129,7 @@ Execute a subprocess command, exiting on failure.
 """
     if cmd and cmd[0] == "make":
         check_makefile_target(cmd, cwd=cwd)
+        env = get_clean_make_env(env)
     if not quiet:
         print(f"Running: {' '.join(cmd)}")
     try:
