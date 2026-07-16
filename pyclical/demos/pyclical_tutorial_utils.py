@@ -25,6 +25,7 @@ Utilities for PyClical tutorials and interactive context management.
 #    along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 import importlib
+import inspect
 import math
 import numbers
 import shutil
@@ -33,7 +34,19 @@ from textwrap import TextWrapper
 
 from builtins import input, range
 import PyClical
-from PyClical import *
+
+
+def load_pyclical_symbols(target_globals=None):
+    """
+    Inject all exported PyClical symbols into target globals dict.
+    """
+    if target_globals is None:
+        target_globals = inspect.currentframe().f_back.f_globals
+    symbols = getattr(
+        PyClical, "__all__", [k for k in dir(PyClical) if not k.startswith("_")]
+    )
+    for symbol in symbols:
+        target_globals[symbol] = getattr(PyClical, symbol)
 
 
 # Stubs for tutorial context functions populated dynamically at runtime
