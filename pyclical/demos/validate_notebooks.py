@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Build and validate Jupyter notebook files for PyClical tutorials and demos."""
+"""
+Build and validate Jupyter notebook files for PyClical tutorials and demos.
+"""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -33,7 +35,9 @@ from nbformat.validator import validate, NotebookValidationError
 
 
 def main():
-    """Main execution entry point for building and validating notebooks."""
+    """
+Main execution entry point for building and validating notebooks.
+"""
     # Get the directory of this script
     script_dir = os.path.dirname(os.path.abspath(__file__))
 

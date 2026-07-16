@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Time and relative directions in space demonstration script."""
+"""
+Time and relative directions in space demonstration script.
+"""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -28,7 +30,9 @@ from pyclical_tutorial_utils import *
 
 
 def run(ctx):
-    """Run the Time and Relative Directions in Space presentation demo."""
+    """
+Run the Time and Relative Directions in Space presentation demo.
+"""
     for name, method in get_object_methods(ctx).items():
         globals()[name] = method
 

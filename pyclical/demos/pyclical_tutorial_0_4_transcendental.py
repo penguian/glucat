@@ -1,4 +1,6 @@
-"""Tutorial 0.4 Transcendental Functions for PyClical."""
+"""
+Tutorial 0.4 Transcendental Functions for PyClical.
+"""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -17,7 +19,9 @@ from pyclical_tutorial_utils import *
 
 
 def run(ctx):
-    """Run tutorial 0.4 Transcendental Functions."""
+    """
+Run tutorial 0.4 Transcendental Functions.
+"""
     for name, method in get_object_methods(ctx).items():
         globals()[name] = method
 

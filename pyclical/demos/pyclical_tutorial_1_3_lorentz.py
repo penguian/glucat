@@ -1,4 +1,6 @@
-"""Tutorial 1.3 Lorentz Transformations for PyClical."""
+"""
+Tutorial 1.3 Lorentz Transformations for PyClical.
+"""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -23,7 +25,9 @@ from pyclical_tutorial_utils import *
 
 
 def run(ctx):
-    """Run tutorial 1.3 Lorentz Transformations."""
+    """
+Run tutorial 1.3 Lorentz Transformations.
+"""
     for name, method in get_object_methods(ctx).items():
         globals()[name] = method
 

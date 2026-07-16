@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Sqrt and log calculations demonstration script."""
+"""
+Sqrt and log calculations demonstration script.
+"""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -29,7 +31,9 @@ from pyclical_tutorial_utils import *
 
 
 def run(ctx=tutorial_context(globals())):
-    """Run the sqrt and log demonstration."""
+    """
+Run the sqrt and log demonstration.
+"""
     for name, method in get_object_methods(ctx).items():
         globals()[name] = method
 

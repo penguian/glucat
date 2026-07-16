@@ -29,7 +29,9 @@ from setuptools.extension import Extension
 
 
 def filtered_libraries():
-    """Return a list of libraries filtered for MKL runtime compatibility."""
+    """
+Return a list of libraries filtered for MKL runtime compatibility.
+"""
     libraries_list = os.environ.get("LIBRARIES", "").replace("-l", "").split()
     filtered_libraries_list = []
     mkl_libraries = [
@@ -56,7 +58,9 @@ def filtered_libraries():
 
 
 def setup_ext(ext_name, source):
-    """Construct and return a setuptools C++ Extension object for PyClical."""
+    """
+Construct and return a setuptools C++ Extension object for PyClical.
+"""
     define_macros = []
     if os.environ.get("GLUCAT_PYCLICAL_TRACE"):
         define_macros.append(("CYTHON_TRACE", "1"))

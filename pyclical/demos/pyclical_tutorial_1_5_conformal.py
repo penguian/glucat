@@ -1,4 +1,6 @@
-"""Tutorial 1.5 Conformal Geometric Algebra for PyClical."""
+"""
+Tutorial 1.5 Conformal Geometric Algebra for PyClical.
+"""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -17,7 +19,9 @@ from pyclical_tutorial_utils import *
 
 
 def run(ctx):
-    """Run tutorial 1.5 Conformal Geometric Algebra."""
+    """
+Run tutorial 1.5 Conformal Geometric Algebra.
+"""
     for name, method in get_object_methods(ctx).items():
         globals()[name] = method
 

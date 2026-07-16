@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Runner module for PyClical interactive tutorials."""
+"""
+Runner module for PyClical interactive tutorials.
+"""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -17,7 +19,9 @@ from pyclical_tutorial_utils import *
 
 
 class TutorialModule:  # pylint: disable=too-few-public-methods
-    """Descriptor for a PyClical tutorial title and module entry point."""
+    """
+Descriptor for a PyClical tutorial title and module entry point.
+"""
 
     def __init__(self, tutorial_title, tutorial_module_name):
         self.title = tutorial_title
@@ -105,7 +109,9 @@ tutorial_dict = dict(
 
 
 def tutorial():
-    """Interactively select and run available PyClical tutorials."""
+    """
+Interactively select and run available PyClical tutorials.
+"""
     ctx = tutorial_context(globals())
     print_fill = ctx.print_fill
     input_str = ""

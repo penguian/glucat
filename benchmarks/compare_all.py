@@ -25,7 +25,9 @@ import re
 
 
 def parse_prod_output(cfg_dir):
-    """Parse products-8.out for framed_multi and matrix_multi times."""
+    """
+Parse products-8.out for framed_multi and matrix_multi times.
+"""
     prod_fm = float("nan")
     prod_mm = float("nan")
     prod_path = os.path.join(cfg_dir, "products-8.out")
@@ -61,7 +63,9 @@ def parse_prod_output(cfg_dir):
 
 
 def parse_sq_output(cfg_dir):
-    """Parse squaring-11.out for framed_multi and matrix_multi times."""
+    """
+Parse squaring-11.out for framed_multi and matrix_multi times.
+"""
     sq_fm = float("nan")
     sq_mm = float("nan")
     sq_path = os.path.join(cfg_dir, "squaring-11.out")
@@ -97,7 +101,9 @@ def parse_sq_output(cfg_dir):
 
 
 def parse_trans_output(cfg_dir):
-    """Parse transforms-8.out for mm and fm old/new GFFT times."""
+    """
+Parse transforms-8.out for mm and fm old/new GFFT times.
+"""
     trans_mm_old = float("nan")
     trans_mm_new = float("nan")
     trans_fm_old = float("nan")
@@ -125,7 +131,9 @@ def parse_trans_output(cfg_dir):
 
 
 def parse_gfft_test_output(cfg_dir):
-    """Parse gfft_test-11.out for mm and fm GFFT times."""
+    """
+Parse gfft_test-11.out for mm and fm GFFT times.
+"""
     gfft_mm = float("nan")
     gfft_fm = float("nan")
     gfft_path = os.path.join(cfg_dir, "gfft_test-11.out")
@@ -150,7 +158,9 @@ def parse_gfft_test_output(cfg_dir):
 
 
 def parse_versor_output(cfg_dir):
-    """Parse versor-16.out for fm and mm naive, op|, and versor times."""
+    """
+Parse versor-16.out for fm and mm naive, op|, and versor times.
+"""
     results = {}
     versor_path = os.path.join(cfg_dir, "versor-16.out")
     if not os.path.exists(versor_path):
@@ -193,7 +203,9 @@ def parse_versor_output(cfg_dir):
 
 
 def parse_expr_output(cfg_dir):
-    """Parse expressions-8.out for fm/mm algebra expression times."""
+    """
+Parse expressions-8.out for fm/mm algebra expression times.
+"""
     results = {}
     expr_path = os.path.join(cfg_dir, "expressions-8.out")
     if not os.path.exists(expr_path):
@@ -238,7 +250,9 @@ def parse_expr_output(cfg_dir):
 
 
 def load_results(base_dir, cfgs):
-    """Parse all benchmark output files into a results dictionary."""
+    """
+Parse all benchmark output files into a results dictionary.
+"""
     results = {}
     for cfg in cfgs:
         results[cfg] = {}
@@ -284,12 +298,16 @@ def load_results(base_dir, cfgs):
 
 
 def print_row(*cols):
-    """Print a list of columns as a markdown table row."""
+    """
+Print a list of columns as a markdown table row.
+"""
     print("| " + " | ".join(str(c) for c in cols) + " |")
 
 
 def print_multiplications_table(results, cfgs):
-    """Print products benchmark results."""
+    """
+Print products benchmark results.
+"""
     print("## 1. Multiplications (products-8.out, Cl(8,8) * under Fill: 0.5)")
     print_row(
         "Configuration",
@@ -323,7 +341,9 @@ def print_multiplications_table(results, cfgs):
 
 
 def print_squaring_table(results, cfgs):
-    """Print squaring benchmark results."""
+    """
+Print squaring benchmark results.
+"""
     print(
         "\n## 2. Squaring (squaring-11.out, Cl(11,11) squaring * "
         "under Fill: 0.5)"
@@ -360,7 +380,9 @@ def print_squaring_table(results, cfgs):
 
 
 def print_transforms_table(results, cfgs):
-    """Print GFFT transform benchmark results."""
+    """
+Print GFFT transform benchmark results.
+"""
     print(
         "\n## 3. GFFT Transforms (transforms-8.out, Cl(8,8) GFFT "
         "under Fill: 0.5)"
@@ -414,7 +436,9 @@ def print_transforms_table(results, cfgs):
 
 
 def print_gfft_test_table(results, cfgs):
-    """Print GFFT high-dimension benchmark results."""
+    """
+Print GFFT high-dimension benchmark results.
+"""
     print(
         "\n## 4. GFFT Test (gfft_test-11.out, R_{-11,11} GFFT "
         "under Fill: 0.5)"
@@ -449,7 +473,9 @@ def print_gfft_test_table(results, cfgs):
 
 
 def print_versors_table(results, cfgs):
-    """Print versor product benchmark results."""
+    """
+Print versor product benchmark results.
+"""
     print(
         "\n## 5. Versor Product Benchmarks (versor-16.out, Cl(16,0) under "
         "Fill: 0.5)"
@@ -552,7 +578,9 @@ def print_versors_table(results, cfgs):
 
 
 def print_expressions_table(results, cfgs):
-    """Print expression algebra benchmark results."""
+    """
+Print expression algebra benchmark results.
+"""
     print(
         "\n## 6. Algebra Expressions (expressions-8.out, Cl(8,8) "
         "under Fill: 0.5)"
@@ -655,7 +683,9 @@ def print_expressions_table(results, cfgs):
 
 
 def main():
-    """Main entrypoint for comprehensive benchmark comparison."""
+    """
+Main entrypoint for comprehensive benchmark comparison.
+"""
     script_dir = os.path.dirname(os.path.abspath(__file__))
     base_dir = os.path.join(script_dir, "AMD-Ryzen-7-8840HS")
     cfgs = [

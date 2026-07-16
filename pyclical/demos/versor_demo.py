@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Versor and versor_exp demonstration script."""
+"""
+Versor and versor_exp demonstration script.
+"""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -27,7 +29,9 @@ from pyclical_tutorial_utils import *
 
 
 def run(ctx=tutorial_context(globals())):
-    """Run the versor demonstration."""
+    """
+Run the versor demonstration.
+"""
     for name, method in get_object_methods(ctx).items():
         globals()[name] = method
 

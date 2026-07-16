@@ -1,4 +1,6 @@
-"""Tutorial 1.0 Plane Geometry for PyClical."""
+"""
+Tutorial 1.0 Plane Geometry for PyClical.
+"""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -23,7 +25,9 @@ from pyclical_tutorial_utils import *
 
 
 def run(ctx):
-    """Run tutorial 1.0 Plane Geometry."""
+    """
+Run tutorial 1.0 Plane Geometry.
+"""
     for name, method in get_object_methods(ctx).items():
         globals()[name] = method
 

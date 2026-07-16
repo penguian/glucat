@@ -1,4 +1,6 @@
-"""Tutorial 1.4 Fourth Dimension for PyClical."""
+"""
+Tutorial 1.4 Fourth Dimension for PyClical.
+"""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -23,7 +25,9 @@ from pyclical_tutorial_utils import *
 
 
 def run(ctx):
-    """Run tutorial 1.4 Fourth Dimension."""
+    """
+Run tutorial 1.4 Fourth Dimension.
+"""
     for name, method in get_object_methods(ctx).items():
         globals()[name] = method
 

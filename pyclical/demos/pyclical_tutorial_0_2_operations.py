@@ -1,4 +1,6 @@
-"""Tutorial 0.2 Operations for PyClical."""
+"""
+Tutorial 0.2 Operations for PyClical.
+"""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -17,7 +19,9 @@ from pyclical_tutorial_utils import *
 
 
 def run(ctx):
-    """Run tutorial 0.2 Operations."""
+    """
+Run tutorial 0.2 Operations.
+"""
     for name, method in get_object_methods(ctx).items():
         globals()[name] = method
 

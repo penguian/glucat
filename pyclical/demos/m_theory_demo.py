@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""M-Theory physics analysis demo."""
+"""
+M-Theory physics analysis demo.
+"""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -28,7 +30,9 @@ from pyclical_tutorial_utils import *
 
 
 def run(ctx=tutorial_context(globals())):
-    """Run the M-Theory physics analysis demo."""
+    """
+Run the M-Theory physics analysis demo.
+"""
     for name, method in get_object_methods(ctx).items():
         globals()[name] = method
 

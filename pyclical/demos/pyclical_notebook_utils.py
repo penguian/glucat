@@ -1,4 +1,6 @@
-"""Utilities for generating and formatting PyClical IPython notebook cells."""
+"""
+Utilities for generating and formatting PyClical IPython notebook cells.
+"""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -27,7 +29,9 @@ from pyclical_tutorial_utils import *
 
 
 def print_cell_markdown(source):
-    """Print a JSON-formatted markdown cell."""
+    """
+Print a JSON-formatted markdown cell.
+"""
     print(
         js.dumps(
             {"cell_type": "markdown", "metadata": {}, "source": [source]},
@@ -38,7 +42,9 @@ def print_cell_markdown(source):
 
 
 def print_cell_code(code_input, execution_count):
-    """Print a JSON-formatted code cell."""
+    """
+Print a JSON-formatted code cell.
+"""
     print(
         js.dumps(
             {
@@ -55,12 +61,16 @@ def print_cell_code(code_input, execution_count):
 
 
 def print_metadata_name(name):
-    """Print metadata section name for notebook."""
+    """
+Print metadata section name for notebook.
+"""
     print(js.dumps({"name": name}, indent=1), end="")
 
 
 class NotebookContext(InteractionContext):
-    """Execution context for compiling tutorials into Jupyter/IPython notebooks."""
+    """
+Execution context for compiling tutorials into Jupyter/IPython notebooks.
+"""
 
     def __init__(self, dictionary):
         super().__init__(dictionary)
@@ -68,7 +78,9 @@ class NotebookContext(InteractionContext):
 
     # pylint: disable=unused-argument
     def print_notebook_header(self, notebook_title):
-        """Print notebook JSON header format."""
+        """
+Print notebook JSON header format.
+"""
         print("{")
         print(' "nbformat":', 4, ",")
         print(' "nbformat_minor":', 2, ",")
@@ -91,39 +103,55 @@ class NotebookContext(InteractionContext):
         print(' "cells": [')
 
     def print_notebook_footer(self):
-        """Print notebook JSON footer format."""
+        """
+Print notebook JSON footer format.
+"""
         print_cell_markdown(" ")
         print("")
         print(" ]")
         print("}")
 
     def pause(self):
-        """No-op for notebooks."""
+        """
+No-op for notebooks.
+"""
 
     def print_head(self, output_str, indent=""):
-        """Print notebook header cell."""
+        """
+Print notebook header cell.
+"""
         print_cell_markdown("# " + output_str)
         print(",")
 
     def print_fill(self, output_str, indent="    "):
-        """Print notebook markdown content cell."""
+        """
+Print notebook markdown content cell.
+"""
         print_cell_markdown(output_str)
         print(",")
 
     def print_line(self):
-        """No-op for notebook line breaks."""
+        """
+No-op for notebook line breaks.
+"""
 
     def print_exec(self, command_str):
-        """Print notebook code cell."""
+        """
+Print notebook code cell.
+"""
         print_cell_code(command_str, self.execution_count)
         print(",")
         self.execution_count += 1
 
     def input_exec(self, prompt, sandbox):
-        """No-op for notebook interactive input."""
+        """
+No-op for notebook interactive input.
+"""
 
     def check_exec(self, prompt, var_name, value_str):
-        """Print exercise solution block in notebook format."""
+        """
+Print exercise solution block in notebook format.
+"""
         self.print_fill("Exercise: Enter a Python statement to " + prompt)
         self.print_exec("")
         self.print_fill(
@@ -134,10 +162,14 @@ class NotebookContext(InteractionContext):
         )
 
     def input_eval(self, prompt):
-        """No-op for notebook expression evaluation."""
+        """
+No-op for notebook expression evaluation.
+"""
 
     def check_eval(self, prompt, value_str, command_str):
-        """Print exercise evaluation block in notebook format."""
+        """
+Print exercise evaluation block in notebook format.
+"""
         self.print_fill("Exercise: Enter a Python expression to " + prompt)
         self.print_exec("")
         self.print_fill("Here is one way to use such an expression:")

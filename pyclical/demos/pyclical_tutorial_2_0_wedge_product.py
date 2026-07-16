@@ -1,4 +1,6 @@
-"""Tutorial 2.0 Exterior Product for PyClical."""
+"""
+Tutorial 2.0 Exterior Product for PyClical.
+"""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -16,7 +18,9 @@ from pyclical_tutorial_utils import *
 
 
 def run(ctx):
-    """Run tutorial 2.0 Exterior Product."""
+    """
+Run tutorial 2.0 Exterior Product.
+"""
     for name, method in get_object_methods(ctx).items():
         globals()[name] = method
 

@@ -31,7 +31,9 @@ import pytest
 
 
 def test_pyclical_doctests():
-    """Run all doctests defined within PyClical module using doctest.testmod."""
+    """
+Run all doctests defined within PyClical module using doctest.testmod.
+"""
     results = doctest.testmod(PyClical, verbose=False)
     if results.failed > 0:
         pytest.fail(f"PyClical doctests failed: {results}")
