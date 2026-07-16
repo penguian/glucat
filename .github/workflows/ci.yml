@@ -140,11 +140,8 @@ jobs:
           make -f admin/Makefile.common bootstrap
           ./configure --enable-pyclical
 
-      - name: Build
-        run: make -j$(nproc)
-
-      - name: Run full verification pipeline
-        run: python3 verify_all.py --coverage --examples
+      - name: Run full PyClical verification pipeline
+        run: make check-python -j$(nproc)
 
       - name: Run PyClical doctests via pytest
         run: python3 -m pytest pyclical/test_pytest_doctests.py -v
