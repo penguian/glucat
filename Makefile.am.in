@@ -52,7 +52,7 @@ check-coverage-doctest:
 
 check-python:
 	$(MAKE) -C pyclical
-	$(PYTHON) verify_all.py --coverage --examples
+	$(PYTHON) verify_all.py --python
 
 check-examples: check-python
 

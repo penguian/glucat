@@ -12,13 +12,13 @@ You can run local tests, linters, and verification checks at once using `make ch
 ```bash
 make check-python
 # or directly:
-python3 verify_all.py -q --coverage --examples
+python3 verify_all.py -q --python
 ```
 Available flags for `verify_all.py`:
 - `-q`, `--quiet`: Suppress sub-command stdout unless a step fails, emitting 1-line check status indicators.
 - `--fast`: Execute ultra-fast (~0.12s) pre-commit checks: Makefile dry-run target validation (`make -n check`), license header scanning (`check_license_headers.py`), and Ruff linting (`ruff check`).
+- `--python` (alias `--examples`): Run full Python linter static analysis (`pylint`), PyClical doctest suite (`pytest`), Jupyter notebook validation (`pyclical/demos/validate_notebooks.py`), and interactive/plotting demo scripts (`pyclical/demos/`).
 - `--coverage`: Execute C++ template header block and branch coverage tests (`make check-coverage-doctest`). Any extra CLI arguments passed to `verify_all.py` are forwarded directly to `make check-coverage-doctest`.
-- `--examples`: Run full Python linter static analysis (`pylint`), PyClical test suite, Jupyter notebook validation (`pyclical/demos/validate_notebooks.py`), and interactive/plotting demo scripts (`pyclical/demos/`).
 
 ---
 
@@ -26,7 +26,7 @@ Available flags for `verify_all.py`:
 
 All pull requests and merges to `master` automatically trigger our GitHub Actions CI pipeline, which runs:
 - **C++ Build & Test Matrix:** Builds and tests GluCat against GCC 14 and Clang 18 using both Eigen and Armadillo backends across Boost versions 1.84.0 and 1.85.0. Curated compiler warning-to-error options (e.g. `-Werror=return-type`, `-Werror=uninitialized`, `-Werror=format`) are enforced.
-- **PyClical Validation Engine:** Executes `python3 verify_all.py --coverage --examples`, exercising all C++ coverage doctests, Python linters (Ruff/Pylint at 10.00/10), notebook validations, and demo script executions.
+- **PyClical Validation Engine:** Executes `python3 verify_all.py --python`, exercising Python linters (Ruff/Pylint at 10.00/10), PyClical doctests via `pytest`, notebook validations, and demo script executions.
 - **Documentation Build:** Installs doc dependencies (Doxygen, Graphviz, LaTeX) and verifies that documentation PDF and HTML manuals build cleanly.
 
 ---
@@ -69,7 +69,7 @@ To install the pre-commit and pre-push hooks in your local repository, run:
 
 This installs two executable hooks in your `.git/hooks/` directory:
 1. **Pre-commit hook (`.git/hooks/pre-commit`)**: Runs `python3 verify_all.py -q --fast` (~0.12s) on every local `git commit` to verify Makefile targets, license headers, and Ruff styling.
-2. **Pre-push hook (`.git/hooks/pre-push`)**: Runs `python3 verify_all.py -q --coverage --examples` (~6.6s) on every `git push` to ensure zero CI regressions before pushing code to GitHub.
+2. **Pre-push hook (`.git/hooks/pre-push`)**: Runs `python3 verify_all.py -q --python` (~6.0s) on every `git push` to ensure zero CI regressions before pushing code to GitHub.
 
 ### Bypassing Hooks
 

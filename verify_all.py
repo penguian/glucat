@@ -229,7 +229,9 @@ Main verification runner parsing flags and executing checks.
         help="Run C++ block and branch coverage tests",
     )
     parser.add_argument(
+        "--python",
         "--examples",
+        dest="python",
         action="store_true",
         help="Run Python tests, notebook validation, and examples",
     )
@@ -252,7 +254,7 @@ Main verification runner parsing flags and executing checks.
     check_makefile_target(["make", "check"], cwd=root_dir)
     log_success("Build target pre-flight check")
 
-    if args.fast or args.examples:
+    if args.fast or args.python:
         log_step("License headers check")
         run_cmd(
             [python_bin, "check_license_headers.py"],
@@ -283,7 +285,7 @@ Main verification runner parsing flags and executing checks.
         run_cmd(coverage_cmd, cwd=root_dir, env=os.environ.copy(), quiet=args.quiet)
         log_success("C++ header coverage check")
 
-    if args.examples:
+    if args.python:
         log_step("Pylint check")
         run_cmd(
             ["pylint", "pyclical/", "pyclical/demos/"],
@@ -292,13 +294,19 @@ Main verification runner parsing flags and executing checks.
         )
         log_success("Pylint check")
 
-        log_step("PyClical test")
+        log_step("PyClical test (pytest)")
         run_cmd(
-            ["make", "-C", "pyclical", "check", f"PYTHON={python_bin}"],
+            [
+                python_bin,
+                "-m",
+                "pytest",
+                "pyclical/test_pytest_doctests.py",
+                "-v",
+            ],
             cwd=root_dir,
             quiet=args.quiet,
         )
-        log_success("PyClical test")
+        log_success("PyClical test (pytest)")
 
         log_step("Notebook validation")
         nbformat_python = find_nbformat_python()
