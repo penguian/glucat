@@ -233,9 +233,9 @@ Main verification runner parsing flags and executing checks.
         if args.quiet:
             print(f"{name}... OK")
 
-    log_step("Core build check")
+    log_step("Build target pre-flight check")
     check_makefile_target(["make", "check"], cwd=root_dir)
-    log_success("Core build check")
+    log_success("Build target pre-flight check")
 
     if args.fast or args.examples:
         log_step("License headers check")

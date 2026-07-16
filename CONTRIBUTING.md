@@ -8,8 +8,10 @@ Before submitting a Pull Request, please ensure that all checks pass locally.
 
 ### Local Verification Gate
 
-You can run local tests, linters, and verification checks at once using the Python verification runner:
+You can run local tests, linters, and verification checks at once using `make check-python` or the Python verification runner:
 ```bash
+make check-python
+# or directly:
 python3 verify_all.py -q --coverage --examples
 ```
 Available flags for `verify_all.py`:
