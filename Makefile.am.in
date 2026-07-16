@@ -50,7 +50,8 @@ fast-check: fast-test-out
 check-coverage-doctest:
 	$(MAKE) -C test_doctest check
 
-check-python: all
+check-python:
+	$(MAKE) -C pyclical
 	$(PYTHON) verify_all.py --coverage --examples
 
 check-examples: check-python
@@ -118,4 +119,7 @@ lint-fix:
 cppcheck:
 	cppcheck --project=glucat.cppcheck --error-exitcode=1
 
-.PHONY: doc test-out install-doc check-coverage-doctest check-python check-examples lint-check lint-fix cppcheck
+timing:
+	for d in $(TIMING); do $(MAKE) -C $$d; done
+
+.PHONY: doc test-out install-doc check-coverage-doctest check-python check-examples timing lint-check lint-fix cppcheck
