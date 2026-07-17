@@ -164,6 +164,55 @@ Execute a subprocess command, exiting on failure.
         sys.exit(e.returncode)
 
 
+def check_shutil_which_usage(root_dir):
+    """
+    Ensure Python scripts use shutil.which() instead of subprocess 'which'.
+    """
+    for dirpath, _, filenames in os.walk(root_dir):
+        if any(
+            ignored in dirpath
+            for ignored in [".git", ".venv", "build", "__pycache__"]
+        ):
+            continue
+        for fname in filenames:
+            if fname.endswith(".py"):
+                fpath = os.path.join(dirpath, fname)
+                with open(fpath, "r", encoding="utf-8", errors="ignore") as fh:
+                    content = fh.read()
+                    target_which_run = "subprocess.run([" + '"which"'
+                    target_which_popen = "subprocess.Popen([" + '"which"'
+                    if (
+                        target_which_run in content
+                        or target_which_popen in content
+                    ):
+                        rel_path = os.path.relpath(fpath, root_dir)
+                        print(
+                            f"Portability Flaw in {rel_path}: uses subprocess "
+                            "'which' instead of 'shutil.which()'.",
+                            file=sys.stderr,
+                        )
+                        sys.exit(1)
+
+
+def check_extra_dist_entries(root_dir):
+    """
+    Ensure critical entrypoints are in Makefile.am.in EXTRA_DIST.
+    """
+    makefile_in = os.path.join(root_dir, "Makefile.am.in")
+    if not os.path.isfile(makefile_in):
+        return
+    with open(makefile_in, "r", encoding="utf-8", errors="ignore") as fh:
+        content = fh.read()
+        for required in ["verify_all.py", "check_license_headers.py"]:
+            if required not in content:
+                print(
+                    f"Distribution Flaw in Makefile.am.in: '{required}' "
+                    "is missing from EXTRA_DIST.",
+                    file=sys.stderr,
+                )
+                sys.exit(1)
+
+
 def run_all_demos(root_dir, python_bin, quiet=False):
     """
 Run interactive and plotting python demos in pyclical/demos.
@@ -274,6 +323,14 @@ Main verification runner parsing flags and executing checks.
     log_success("Build target pre-flight check")
 
     if args.fast or args.python:
+        log_step("Distribution EXTRA_DIST check")
+        check_extra_dist_entries(root_dir)
+        log_success("Distribution EXTRA_DIST check")
+
+        log_step("Portability shutil.which check")
+        check_shutil_which_usage(root_dir)
+        log_success("Portability shutil.which check")
+
         log_step("License headers check")
         run_cmd(
             [python_bin, "check_license_headers.py"],

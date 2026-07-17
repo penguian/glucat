@@ -28,7 +28,7 @@ DOC = doc
 
 doc_DATA = AUTHORS AUTHORS.md COPYING ChangeLog DESIGN.md glucat.lsm INSTALL INSTALL.md NEWS README README.md TODO TODO.md
 
-EXTRA_DIST = admin m4 test test_runtime.aarch64 test_runtime.x86-64 test_doctest $(EXAMPLES) $(SEMANTICS) \
+EXTRA_DIST = admin m4 test test_runtime.aarch64 test_runtime.x86-64 test_doctest verify_all.py check_license_headers.py $(EXAMPLES) $(SEMANTICS) \
              subdirs configure.ac.in configure.ac configure Makefile.am $(doc_DATA) doc/Makefile.am doc/Makefile.in
 
 AUTHORS: AUTHORS.md
