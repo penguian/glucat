@@ -305,6 +305,10 @@ Main verification runner parsing flags and executing checks.
         log_success("C++ header coverage check")
 
     if args.python:
+        log_step("PyClical C++ extension build")
+        run_cmd(["make", "-C", "pyclical"], cwd=root_dir, quiet=args.quiet)
+        log_success("PyClical C++ extension build")
+
         log_step("Pylint check")
         run_cmd(
             ["pylint", "pyclical/", "pyclical/demos/"],
