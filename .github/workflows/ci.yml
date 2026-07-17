@@ -143,9 +143,6 @@ jobs:
       - name: Run full PyClical verification pipeline
         run: make check-python -j$(nproc)
 
-      - name: Run PyClical doctests via pytest
-        run: python3 -m pytest pyclical/test_pytest_doctests.py -v
-
   doc:
     name: Documentation Build
     runs-on: ubuntu-24.04
