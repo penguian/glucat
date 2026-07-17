@@ -143,6 +143,13 @@ Print notebook code cell.
         print(",")
         self.execution_count += 1
 
+    def display_image(self, url):
+        """
+        Print notebook code cells for importing IPython Image and rendering URL.
+        """
+        self.print_exec("from IPython.display import Image")
+        self.print_exec(f"Image(url='{url}')")
+
     def input_exec(self, prompt, sandbox):
         """
 No-op for notebook interactive input.

@@ -77,8 +77,14 @@ Stub for print_fill tutorial function.
 
 def print_exec(*args, **kwargs):
     """
-Stub for print_exec tutorial function.
-"""
+    Stub for print_exec tutorial function.
+    """
+
+
+def display_image(*args, **kwargs):
+    """
+    Stub for display_image tutorial function.
+    """
 
 
 def input_exec(*args, **kwargs):
@@ -277,9 +283,15 @@ Print wrapped text string.
 
     def print_exec(self, command_str):
         """
-Execute and print a command.
-"""
+        Execute and print a command.
+        """
         print("print_exec: ", command_str)
+
+    def display_image(self, url):
+        """
+        Display image command string in terminal mode without IPython execution.
+        """
+        print(f">>> Image(url='{url}')")
 
     def input_exec(self, prompt, sandbox):
         """

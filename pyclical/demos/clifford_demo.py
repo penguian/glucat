@@ -51,7 +51,6 @@ Run the Time and Relative Directions in Space presentation demo.
         + " hosted by John Fletcher."
     )
     print_exec("from PyClical import *")
-    print_exec("from IPython.display import Image")
 
     pause()
     print_fill("A *vector* is a quantity with a *direction* and a *magnitude*.")
@@ -94,10 +93,9 @@ Run the Time and Relative Directions in Space presentation demo.
     print_exec("print(a ^ b); print(b ^ a)")
 
     pause()
-    print_exec(
-        "Image(url="
-        + "'http://upload.wikimedia.org/wikipedia/commons/6/6c/"
-        + "Hermann_Gra%C3%9Fmann.jpg')"
+    display_image(
+        "http://upload.wikimedia.org/wikipedia/commons/6/6c/"
+        + "Hermann_Gra%C3%9Fmann.jpg"
     )
     print_fill("Hermann Grassmann (1809-1877) [Wikimedia Commons]")
 
@@ -151,10 +149,9 @@ Run the Time and Relative Directions in Space presentation demo.
 
     pause()
     print_fill("William Kingdon Clifford had other ideas ...")
-    print_exec(
-        "Image(url="
-        + "'http://upload.wikimedia.org/wikipedia/commons/e/eb/"
-        + "Clifford_William_Kingdon.jpg')"
+    display_image(
+        "http://upload.wikimedia.org/wikipedia/commons/e/eb/"
+        + "Clifford_William_Kingdon.jpg"
     )
 
     pause()
