@@ -105,11 +105,17 @@ def draw_orbit(
     #
     # Create or reuse plotter.
     #
+    non_interactive = (
+        os.environ.get("GLUCAT_NON_INTERACTIVE", "").lower()
+        in ("1", "true", "yes")
+    )
     local_plotter = False
     if plotter is None:
         local_plotter = True
-        off_screen = bool(os.environ.get("GLUCAT_NON_INTERACTIVE"))
-        plotter = pv.Plotter(window_size=[figwidth, figheight], off_screen=off_screen)
+        plotter = pv.Plotter(
+            window_size=[figwidth, figheight],
+            off_screen=non_interactive,
+        )
 
     plotter.set_background("gray")
     plotter.enable_lightkit()
@@ -166,7 +172,7 @@ def draw_orbit(
         )
 
     if local_plotter and not (
-        os.environ.get("GLUCAT_NON_INTERACTIVE")
+        non_interactive
         or os.environ.get("QT_QPA_PLATFORM") == "offscreen"
         or os.environ.get("PYVISTA_OFF_SCREEN", "").lower() in ("true", "1")
     ):
