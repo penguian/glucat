@@ -21,9 +21,14 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
+"""
+Test PyClical using built-in doctests.
+"""
+
+import sys
 import PyClical
 
 print(PyClical.__version__)
-test_result = PyClical._test()
+test_result = PyClical._test()  # pylint: disable=protected-access
 print(test_result)
-exit(test_result.failed > 0)
+sys.exit(1 if test_result.failed > 0 else 0)

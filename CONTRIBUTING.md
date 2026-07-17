@@ -8,25 +8,25 @@ Before submitting a Pull Request, please ensure that all checks pass locally.
 
 ### Local Verification Gate
 
-You can run all local tests and linters at once using the verification script. Note that this requires the project to be bootstrapped and configured beforehand (so that a top-level `Makefile` is present):
+You can run local tests, linters, and verification checks at once using `make check-python` or the Python verification runner:
 ```bash
-./verify_all.sh
+make check-python
+# or directly:
+python3 verify_all.py -q --python
 ```
-This script will run:
-1. C++ style check: `clang-format` via `make lint-check` (restricted to the `glucat/` directory).
-2. C++ static analysis: `cppcheck` via `make cppcheck` (restricted to the `glucat/` directory).
-3. Primary regression tests: `make check-local`.
-4. Python checks: `ruff` and `pylint` on the `pyclical/` wrapper, demos, and benchmarks.
-5. Jupyter Notebook validation: Rebuilding and checking generated tutorials and demos against JSON syntax and `nbformat` schema via:
-   ```bash
-   python3 pyclical/demos/validate_notebooks.py
-   ```
+Available flags for `verify_all.py`:
+- `-q`, `--quiet`: Suppress sub-command stdout unless a step fails, emitting 1-line check status indicators.
+- `--fast`: Execute ultra-fast (~0.12s) pre-commit checks: Makefile dry-run target validation (`make -n check`), license header scanning (`check_license_headers.py`), and Ruff linting (`ruff check`).
+- `--python` (alias `--examples`): Run full Python linter static analysis (`pylint`), PyClical doctest suite (`pytest`), Jupyter notebook validation (`pyclical/demos/validate_notebooks.py`), and interactive/plotting demo scripts (`pyclical/demos/`).
+- `--coverage`: Execute C++ template header block and branch coverage tests (`make check-coverage-doctest`). Any extra CLI arguments passed to `verify_all.py` are forwarded directly to `make check-coverage-doctest`.
+
+---
 
 ### Continuous Integration (GitHub Actions)
 
 All pull requests and merges to `master` automatically trigger our GitHub Actions CI pipeline, which runs:
 - **C++ Build & Test Matrix:** Builds and tests GluCat against GCC 14 and Clang 18 using both Eigen and Armadillo backends across Boost versions 1.84.0 and 1.85.0. Curated compiler warning-to-error options (e.g. `-Werror=return-type`, `-Werror=uninitialized`, `-Werror=format`) are enforced.
-- **PyClical Validation:** Lints Python files with Ruff/Pylint, validates generated Jupyter notebooks, and runs Python doctests.
+- **PyClical Validation Engine:** Executes `python3 verify_all.py --python`, exercising Python linters (Ruff/Pylint at 10.00/10), PyClical doctests via `pytest`, notebook validations, and demo script executions.
 - **Documentation Build:** Installs doc dependencies (Doxygen, Graphviz, LaTeX) and verifies that documentation PDF and HTML manuals build cleanly.
 
 ---
@@ -56,29 +56,27 @@ We provide Makefile targets for style checks and formatting:
 
 ---
 
-## Commit-level Enforcement (Pre-commit Hooks)
+## Commit & Push-level Enforcement (Git Hooks)
 
-We use `pre-commit` to automate code quality and compliance checks at the commit level.
+We provide an automated Git hooks installer script to enable repository-wide verification gates.
 
 ### Installation & Activation
 
-To install the hooks in your local Git repository:
-1. Install `pre-commit` via pip:
-   ```bash
-   pip install pre-commit
-   ```
-2. Activate the pre-commit hooks:
-   ```bash
-   pre-commit install
-   ```
+To install the pre-commit and pre-push hooks in your local repository, run:
+```bash
+./admin/setup-git-hooks.sh
+```
 
-Once installed, these hooks run automatically every time you execute `git commit`. If a hook fails (e.g., due to trailing whitespace, syntax issues, or missing license headers), the commit will be rejected, and any autofixes will be applied to your workspace files.
+This installs two executable hooks in your `.git/hooks/` directory:
+1. **Pre-commit hook (`.git/hooks/pre-commit`)**: Runs `python3 verify_all.py -q --fast` (~0.12s) on every local `git commit` to verify Makefile targets, license headers, and Ruff styling.
+2. **Pre-push hook (`.git/hooks/pre-push`)**: Runs `python3 verify_all.py -q --python` (~6.0s) on every `git push` to ensure zero CI regressions before pushing code to GitHub.
 
 ### Bypassing Hooks
 
-If you need to bypass the pre-commit hooks for a specific commit (for example, during temporary WIP commits), use the `--no-verify` flag:
+If you need to bypass the local Git hooks for a specific action (for example, during temporary WIP commits), use the `--no-verify` flag:
 ```bash
 git commit -m "temp commit" --no-verify
+git push --no-verify
 ```
 
 ### Licensing & Header Policy
@@ -88,4 +86,4 @@ All source files (`.py`, `.h`, `.cpp`, `.hpp`, `.pyx`, `.pxd`) must have a valid
 - PyClical tutorials (e.g., `pyclical_tutorial_*.py` files) must include the **Creative Commons BY-SA 3.0** header. Other PyClical source files (including core wrapper modules and general demos) should include the **GNU Lesser General Public License (LGPL)** header.
 
 > [!NOTE]
-> **Unique Exemption:** The demo file [pyclical/demos/plotting_demo_dialog.py](pyclical/demos/plotting_demo_dialog.py) is a unique exemption. Since it is a derivative work of a TraitsUI/Mayavi template copyrighted by Enthought, Inc., it maintains its original **BSD Style** license header. This is the only BSD-licensed file permitted in the repository.
+> **Unique Exemption:** The demo file [pyclical/demos/plotting/plotting_demo_dialog.py](pyclical/demos/plotting/plotting_demo_dialog.py) is a unique exemption. Since it is a derivative work of a TraitsUI/Mayavi template copyrighted by Enthought, Inc., it maintains its original **BSD Style** license header. This is the only BSD-licensed file permitted in the repository.

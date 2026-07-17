@@ -1,3 +1,6 @@
+"""
+Tutorial 0.0 Notation for PyClical.
+"""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -15,8 +18,11 @@ from pyclical_tutorial_utils import *
 
 
 def run(ctx):
+    """
+Run tutorial 0.0 Notation.
+"""
     for name, method in get_object_methods(ctx).items():
-        exec("global " + name + ";" + name + "=method")
+        globals()[name] = method
 
     print_head("0.0 Notation.")
     print_line()
@@ -74,7 +80,8 @@ def run(ctx):
     print_exec("w = clifford(index_set({-2,3,4})); print(w)")
     print_exec("print(repr(w))")
     print_exec(
-        "x = clifford(index_set({-2})) * clifford(index_set({3})) * clifford(index_set({4})); print(x)"
+        "x = clifford(index_set({-2})) * clifford(index_set({3})) *"
+        + " clifford(index_set({4})); print(x)"
     )
     print_exec("print(repr(x))")
 
@@ -136,8 +143,8 @@ def run(ctx):
     pause()
     print_line()
     print_fill(
-        "To obtain the coordinate of a clifford object x with respect to an index set s,"
-        + " use subscripting notation x[s]. "
+        "To obtain the coordinate of a clifford object x with respect to an"
+        + " index set s, use subscripting notation x[s]. "
         + " You can also use an index, a set of indices, or a string as the subscript,"
         " as long as the subscript defines an index set."
     )
@@ -197,6 +204,5 @@ if __name__ == "__main__":
     ctx = tutorial_context(globals())
     try:
         run(ctx)
-    except:
+    except (KeyboardInterrupt, Exception):  # pylint: disable=broad-exception-caught
         ctx.print_fill("The tutorial was interrupted.")
-        pass

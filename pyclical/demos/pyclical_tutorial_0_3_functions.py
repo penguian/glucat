@@ -1,3 +1,6 @@
+"""
+Tutorial 0.3 Functions for PyClical.
+"""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -16,8 +19,11 @@ from pyclical_tutorial_utils import *
 
 
 def run(ctx):
+    """
+Run tutorial 0.3 Functions.
+"""
     for name, method in get_object_methods(ctx).items():
-        exec("global " + name + ";" + name + "=method")
+        globals()[name] = method
 
     print_head("0.3 Algebraic functions.")
     print_line()
@@ -251,7 +257,8 @@ def run(ctx):
     print_fill("Examples: Properties of clifford objects.")
     print_line()
     print_fill(
-        "PyClical implements a number of functions yielding properties of clifford objects. "
+        "PyClical implements a number of functions yielding properties of"
+        + " clifford objects. "
         + " Four of these give different ideas of the size of an object. "
         + " These are all available as both member functions and ordinary functions."
     )
@@ -344,6 +351,5 @@ if __name__ == "__main__":
     ctx = tutorial_context(globals())
     try:
         run(ctx)
-    except:
+    except (KeyboardInterrupt, Exception):  # pylint: disable=broad-exception-caught
         ctx.print_fill("The tutorial was interrupted.")
-        pass

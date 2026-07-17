@@ -20,11 +20,18 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
-from setuptools.extension import Extension
+"""
+Use Distutils/Setuptools to set up an extension to build PyClical.
+"""
+
 import os
+from setuptools.extension import Extension
 
 
 def filtered_libraries():
+    """
+Return a list of libraries filtered for MKL runtime compatibility.
+"""
     libraries_list = os.environ.get("LIBRARIES", "").replace("-l", "").split()
     filtered_libraries_list = []
     mkl_libraries = [
@@ -51,14 +58,28 @@ def filtered_libraries():
 
 
 def setup_ext(ext_name, source):
+    """
+Construct and return a setuptools C++ Extension object for PyClical.
+"""
     define_macros = []
     if os.environ.get("GLUCAT_PYCLICAL_TRACE"):
         define_macros.append(("CYTHON_TRACE", "1"))
 
+    include_dirs = []
+    library_dirs = []
+    conda_prefix = os.environ.get("CONDA_PREFIX")
+    if conda_prefix:
+        include_dirs.append(os.path.join(conda_prefix, "include"))
+        library_dirs.append(os.path.join(conda_prefix, "lib"))
+
+    # Also check if it's C++ language
     ext = Extension(
         ext_name,
         sources=[source],
         libraries=filtered_libraries(),
         define_macros=define_macros,
+        include_dirs=include_dirs,
+        library_dirs=library_dirs,
+        language="c++",
     )
     return ext

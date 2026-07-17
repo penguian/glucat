@@ -186,9 +186,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   AC_ARG_WITH([doctest],
     AS_HELP_STRING(
       [--with-doctest],
-      [use doctest [default=no]]),
+      [use doctest [default=yes]]),
     [glucat_use_doctest="$withval"],
-    [glucat_use_doctest="no"])
+    [glucat_use_doctest="yes"])
 
   dnl Check for Boost version
   GLUCAT_CHECK_HEADERS([boost/version.hpp], [], [])
@@ -510,12 +510,24 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     if [[[ "$glucat_use_pyclical" != "no" ]]]; then
       case "$basename_cxx" in
         "clang++"*)
+          GLUCAT_CHECK_COMPILER_FLAG([Wno-error=maybe-uninitialized],
+          [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-error=maybe-uninitialized"])
           ;;
         "g++"*)
           GLUCAT_CHECK_COMPILER_FLAG([fno-strict-aliasing],
           [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -fno-strict-aliasing"])
           GLUCAT_CHECK_COMPILER_FLAG([Wno-unused],
           [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-unused"])
+          dnl GCC 15 triggers false-positive -Wmaybe-uninitialized on Eigen AVX512
+          dnl intrinsics in conda-provided headers, both at compile time (cc1plus) and
+          dnl at LTO link time (lto1). Suppress the whole warning class; -Wno-maybe-uninitialized
+          dnl is stored in the .o LTO metadata so lto1 also respects it.
+          GLUCAT_CHECK_COMPILER_FLAG([Wno-maybe-uninitialized],
+          [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-maybe-uninitialized"])
+          dnl Boost.Hana (used by Boost.YAP) uses deprecated C++23 literal operator
+          dnl spacing (e.g. operator"" _c) in conda-provided headers; suppress.
+          GLUCAT_CHECK_COMPILER_FLAG([Wno-deprecated],
+          [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-deprecated"])
           ;;
         icpc)
           GLUCAT_CHECK_COMPILER_FLAG([diag-disable=1292],
@@ -527,6 +539,8 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
         icpx)
           GLUCAT_CHECK_COMPILER_FLAG([Wno-deprecated],
           [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-deprecated"])
+          GLUCAT_CHECK_COMPILER_FLAG([Wno-error=maybe-uninitialized],
+          [glucat_extra_cxxflags_pyclical="$glucat_extra_cxxflags_pyclical -Wno-error=maybe-uninitialized"])
           ;;
         *)
           ;;

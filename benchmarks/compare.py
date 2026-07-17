@@ -25,7 +25,9 @@ import re
 
 
 def parse_prod_output(ver_cfg_dir):
-    """Parse products-8.out for framed_multi and matrix_multi times."""
+    """
+Parse products-8.out for framed_multi and matrix_multi times.
+"""
     prod_fm = float("nan")
     prod_mm = float("nan")
     prod_path = os.path.join(ver_cfg_dir, "products-8.out")
@@ -61,7 +63,9 @@ def parse_prod_output(ver_cfg_dir):
 
 
 def parse_sq_output(ver_cfg_dir):
-    """Parse squaring-11.out for framed_multi and matrix_multi times."""
+    """
+Parse squaring-11.out for framed_multi and matrix_multi times.
+"""
     sq_fm = float("nan")
     sq_mm = float("nan")
     sq_path = os.path.join(ver_cfg_dir, "squaring-11.out")
@@ -99,7 +103,9 @@ def parse_sq_output(ver_cfg_dir):
 
 
 def parse_trans_output(ver_cfg_dir):
-    """Parse transforms-8.out for mm and fm old/new GFFT times."""
+    """
+Parse transforms-8.out for mm and fm old/new GFFT times.
+"""
     trans_mm_old = float("nan")
     trans_mm_new = float("nan")
     trans_fm_old = float("nan")
@@ -127,7 +133,9 @@ def parse_trans_output(ver_cfg_dir):
 
 
 def load_results(base_dir, cfgs):
-    """Parse products, squaring, and transforms benchmark output files."""
+    """
+Parse products, squaring, and transforms benchmark output files.
+"""
     results = {}
     for cfg in cfgs:
         results[cfg] = {}
@@ -153,12 +161,16 @@ def load_results(base_dir, cfgs):
 
 
 def print_row(*cols):
-    """Print a list of columns as a markdown table row."""
+    """
+Print a list of columns as a markdown table row.
+"""
     print("| " + " | ".join(str(c) for c in cols) + " |")
 
 
 def print_products_table(results, cfgs):
-    """Print multiplication benchmark results."""
+    """
+Print multiplication benchmark results.
+"""
     print(
         "\n### 1. products-8.out - framed_multi<double> vs "
         "matrix_multi<double> Multiplication (Cl(8,8) * at Fill: 0.5)"
@@ -197,7 +209,9 @@ def print_products_table(results, cfgs):
 
 
 def print_squaring_table(results, cfgs):
-    """Print squaring benchmark results."""
+    """
+Print squaring benchmark results.
+"""
     print(
         "\n### 2. squaring-11.out - Squaring Performance "
         "(Cl(11,11) squaring * at Fill: 0.5)"
@@ -236,7 +250,9 @@ def print_squaring_table(results, cfgs):
 
 
 def print_transforms_table(results, cfgs):
-    """Print GFFT transform benchmark results."""
+    """
+Print GFFT transform benchmark results.
+"""
     print(
         "\n### 3. transforms-8.out - Transform Performance "
         "(Cl(8,8) GFFT at Fill: 0.5)"
@@ -294,7 +310,9 @@ def print_transforms_table(results, cfgs):
 
 
 def main():
-    """Main entrypoint for benchmark comparison."""
+    """
+Main entrypoint for benchmark comparison.
+"""
     script_dir = os.path.dirname(os.path.abspath(__file__))
     base_dir = os.path.join(script_dir, "AMD-Ryzen-7-8840HS")
     cfgs = [

@@ -3,6 +3,14 @@ GluCat 0.98a3 implements the Defence in Depth quality-hardening framework.
 
 o Stage 0: Refactored the primary C++ regression suite (test_doctest), deleted redundant test headers, and embedded inline test template assertions next to function definitions.
 
+o Stage 5: Decoupled the Mayavi and PyVista plotting environments into separate
+  per-backend setup scripts and Conda environment files under
+  pyclical/demos/plotting/: mayavi-env.yml and pyvista-env.yml for x86-64 Conda
+  paths, and requirements-pyvista.txt for the ARM aarch64 (Fedora Asahi Remix)
+  system venv path using 16 KB-aligned Fedora RPMs. Added PyVista plotting demos
+  plotting_demo_pyvista.py and plotting_demo_pyvista_dialog.py (PySide6 GUI).
+  The outdated kubuntu-24-conda-install-mayavi.sh script has been retired.
+
 2026-06-07: 0.98a2
 GluCat 0.98a2 improves performance and adds configuration options and benchmarks.
 

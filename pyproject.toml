@@ -1,0 +1,22 @@
+[tool.pylint.format]
+max-line-length = 88
+
+[tool.pylint.main]
+ignore-patterns = ["plotting"]
+extension-pkg-allow-list = ["PyClical"]
+
+[tool.pylint.reports]
+fail-under = 8.0
+
+[tool.pylint."messages control"]
+disable = [
+    "broad-exception-caught",
+    "c-extension-no-member",
+    "duplicate-code",
+    "redefined-builtin",
+    "wildcard-import",
+    "unused-wildcard-import",
+    "exec-used",
+    "redefined-outer-name",
+    "too-many-statements",
+]

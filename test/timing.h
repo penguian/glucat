@@ -45,12 +45,9 @@ namespace glucat
     const int EXTRA_TRIALS = 2;
 
     /// Elapsed time in milliseconds
-    inline
-    static
-    double
-    elapsed(clock_t cpu_time)
+    inline static double elapsed(clock_t cpu_time)
     { return double(clock() - cpu_time) * MS_PER_CLOCK; }
 
-  }
-}
-#endif // GLUCAT_TEST_TIMING_H
+  }  // namespace timing
+}  // namespace glucat
+#endif  // GLUCAT_TEST_TIMING_H

@@ -121,7 +121,7 @@ The `./test`, `./test_move` and `./test00` to `./test19` directories contain the
 C++ source code for programming examples and regression tests for GluCat.
 
 The `./test_doctest` directory contains C++ unit tests using the `doctest`
-framework.
+framework, which are compiled and executed by default during `make check`.
 
 The `./test_coverage` directory contains scripts for generating code coverage
 reports for the various test suites. The `doctest` coverage script supports
@@ -146,7 +146,7 @@ same directory that contains this `README.md` file.
 
 The PyClical Python extension module is written in C++ and Cython, and is defined
 in the files `pyclical/glucat.pxd`, `pyclical/PyClical.h`, `pyclical/PyClical.pxd`,
-and `pyclical/PyClical.pyx`. PyClical is designed to be installed using `make`. For
+and `pyclical/PyClical.py`. PyClical is designed to be installed using `make`. For
 details on building PyClical, see the `./INSTALL.md` file.
 
 The following instructions assume that you have already installed PyClical. If
@@ -216,9 +216,10 @@ If you are running Linux or a Unix equivalent, the following should also work:
 ```
 
 For more usage examples, see the example Python files `clifford_demo.py`,
-`m_theory_demo.py`,`pyclical_demo.py`, `plotting_demo.py`, `plotting_demo_dialog.py`,
-`plotting_demo_mayavi.py`, and `sqrt_log_demo.py`, and the example output files
-`pyclical_demo.out` and `sqrt_log_demo.out`.
+`m_theory_demo.py`, `pyclical_demo.py`, `plotting_demo.py`, `sqrt_log_demo.py`,
+and the 3D plotting demos in `pyclical/demos/plotting/` (`plotting_demo_mayavi.py`,
+`plotting_demo_dialog.py`, `plotting_demo_pyvista.py`, and `plotting_demo_pyvista_dialog.py`),
+and the example output files `pyclical_demo.out` and `sqrt_log_demo.out`.
 
 To run `clifford_demo.py`, `m_theory_demo.py`, `pyclical_demo.py`, or
 `sqrt_log_demo.py`, use the following commands:
@@ -242,19 +243,29 @@ In [1]: %run plotting_demo
 ```
 This demo uses Matplotlib to produce a number of plots.
 
-To run `plotting_demo_mayavi.py`, first ensure that you have Mayavi2 installed
-and working. (See http://code.enthought.com/projects/mayavi/)
-Additional installation and setup steps may depend on your operating system.
-For details, see `INSTALL.md`. Then run `ipython3` and enter the following
-command at the `ipython3` prompt:
-```
-In [1]: %run plotting_demo_mayavi
-```
-This demo uses Mayavi to produce a number of plots. These plots are displayed in
-interactive windows, and [you can rotate, zoom and pan them](https://docs.enthought.com/mayavi/mayavi/application.html#mouse-interaction).
+To run the 3D plotting demos, set up either the Mayavi2 or PyVista environment.
+The setup procedure depends on your hardware architecture — see `INSTALL.md` for full details:
 
-You can also run the Mayavi plotting demo from a graphical user interface.
-To do this, run `./plotting_demo_dialog.py`.
+- **Mayavi (x86-64 / Conda):**
+  ```bash
+  source pyclical/demos/plotting/setup-mayavi-env.sh
+  # (Build PyClical as described in INSTALL.md)
+  source pyclical/demos/plotting/export-mayavi-vars.sh
+  cd pyclical/demos/plotting
+  python3 plotting_demo_mayavi.py
+  python3 plotting_demo_dialog.py
+  ```
+- **PyVista (x86-64 / Conda or ARM64 / system venv):**
+  ```bash
+  source pyclical/demos/plotting/setup-pyvista-env.sh
+  # (Build PyClical as described in INSTALL.md)
+  source pyclical/demos/plotting/export-pyvista-vars.sh
+  cd pyclical/demos/plotting
+  python3 plotting_demo_pyvista.py
+  python3 plotting_demo_pyvista_dialog.py
+  ```
+
+The Mayavi and PyVista demos display interactive 3D plots in windows (or PySide6/Qt dialogs) allowing rotation, zooming, and panning.
 
 The tutorials and demos are also accompanied by a corresponding set of Jupyter
 notebooks. To build the notebooks, see `INSTALL.md`. To run the notebooks, assuming

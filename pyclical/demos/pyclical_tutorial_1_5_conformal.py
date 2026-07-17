@@ -1,3 +1,6 @@
+"""
+Tutorial 1.5 Conformal Geometric Algebra for PyClical.
+"""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -16,8 +19,11 @@ from pyclical_tutorial_utils import *
 
 
 def run(ctx):
+    """
+Run tutorial 1.5 Conformal Geometric Algebra.
+"""
     for name, method in get_object_methods(ctx).items():
-        exec("global " + name + ";" + name + "=method")
+        globals()[name] = method
 
     print_head("1.5 Conformal Geometric Algebra.")
     print_line()
@@ -86,8 +92,8 @@ def run(ctx):
     pause()
     print_line()
     print_fill(
-        "The function agc3 maps a standard null vector in GGA back to Euclidean 3D space."
-        + " The mapping is defined by [DL (10.50)]."
+        "The function agc3 maps a standard null vector in GGA back to"
+        + " Euclidean 3D space. The mapping is defined by [DL (10.50)]."
     )
 
     print_line()
@@ -207,6 +213,5 @@ if __name__ == "__main__":
     ctx = tutorial_context(globals())
     try:
         run(ctx)
-    except:
+    except (KeyboardInterrupt, Exception):  # pylint: disable=broad-exception-caught
         ctx.print_fill("The tutorial was interrupted.")
-        pass

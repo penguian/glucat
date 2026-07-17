@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+"""
+PyClical complete demonstration script (CLICAL port).
+"""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -27,14 +30,18 @@ from pyclical_tutorial_utils import *
 
 
 def run(ctx=tutorial_context(globals())):
+    """
+Run the main PyClical demonstration.
+"""
     for name, method in get_object_methods(ctx).items():
-        exec("global " + name + ";" + name + "=method")
+        globals()[name] = method
 
     print_fill(
         "# pyclical_demo.py: This file is an almost complete port of the DEMO file from"
     )
     print_fill(
-        "#                   CLICAL by Pertti Lounesto, R. Mikkola, V. Vierros, 1987-1994."
+        "#                   CLICAL by Pertti Lounesto, R. Mikkola, V. Vierros,"
+        + " 1987-1994."
     )
     print_line()
     print_fill(
@@ -68,7 +75,7 @@ def run(ctx=tutorial_context(globals())):
     print_line()
     print_fill("Rotate the vector x about the axis a by the angle  |a|:")
     print_line()
-    print_exec("y = s*x/s; print(y)")
+    print_exec("y = x | s; print(y)")
     print_line()
     print_fill(
         "Check that the length is preserved by computing the squares of the vectors."
@@ -82,14 +89,15 @@ def run(ctx=tutorial_context(globals())):
     print_fill("LORENTZ TRANSFORMATIONS IN THE MINKOWSKI SPACE-TIME R^(3,1)")
     print_line()
     print_exec(
-        "A = -3*e({-1,1})-e({-1,2})+4*e({1,2})-2*e({-1,3})+3*e({1,3})+e({2,3}); print(A)"
+        "A = -3*e({-1,1})-e({-1,2})+4*e({1,2})-2*e({-1,3})+3*e({1,3})+e({2,3});"
+        + " print(A)"
     )
     print_exec("s = exp(A/2); print(s)")
     print_line()
     print_fill("Lorentz transformation of a space-time point (or event).")
     print_line()
     print_exec("x = 2*e(-1)+2*e(1)+3*e(2)+5*e(3); print(x)")
-    print_exec("y = s*x/involute(s); print(y)")
+    print_exec("y = x | s; print(y)")
 
     pause()
     print_line()
@@ -103,9 +111,10 @@ def run(ctx=tutorial_context(globals())):
     print_fill("Lorentz transformation of an electromagnetic bivector F.")
     print_line()
     print_exec(
-        "F = -2*e({-1,1})-e({-1,2})+5*e({1,2})-2*e({-1,3})+e({1,3})+7*e({2,3}); print(F)"
+        "F = -2*e({-1,1})-e({-1,2})+5*e({1,2})-2*e({-1,3})+e({1,3})+7*e({2,3});"
+        + " print(F)"
     )
-    print_exec("G = s*F/s; print(G)")
+    print_exec("G = F | s; print(G)")
     print_line()
     print_fill(
         "Check that the Lorentz invariants are preserved (j == -{-1,1,2,3})."
@@ -173,7 +182,7 @@ def run(ctx=tutorial_context(globals())):
     print_line()
     print_fill("Lorentz transformation of the electromagnetic field F.")
     print_line()
-    print_exec("G = s*F/s; print(G)")
+    print_exec("G = F | s; print(G)")
 
     pause()
     print_line()
@@ -186,7 +195,7 @@ def run(ctx=tutorial_context(globals())):
     print_fill("Lorentz transformation of a space-time point.")
     print_line()
     print_exec("x = 10+e(1)+e(2); print(x)")
-    print_exec("y = s*x/involute(s); print(y)")
+    print_exec("y = x | s; print(y)")
 
     pause()
     print_line()
@@ -256,7 +265,7 @@ def run(ctx=tutorial_context(globals())):
     print_line()
     print_fill("Perform a complex rotation.")
     print_line()
-    print_exec("w = s*z/s; print(w)")
+    print_exec("w = z | s; print(w)")
 
     pause()
     print_line()
@@ -283,7 +292,8 @@ def run(ctx=tutorial_context(globals())):
     print_fill("Define a Cayley product of two paravectors in R+R^(0,7).")
     print_line()
     print_exec(
-        "f = (1-e({-7,-6,-4}))*(1-e({-6,-5,-3}))*(1-e({-5,-4,-2}))*(1-e({-4,-3,-1})); print(f)"
+        "f = (1-e({-7,-6,-4}))*(1-e({-6,-5,-3}))*(1-e({-5,-4,-2}))"
+        + "*(1-e({-4,-3,-1})); print(f)"
     )
     print_exec("o = lambda x,y:   real(x*y*f)+(x*y*f)(1)")
 
@@ -335,8 +345,8 @@ def run(ctx=tutorial_context(globals())):
     print_fill("in the Minkowski space-time R^(3,1).")
     print_line()
     print_fill(
-        "We choose the two extra dimensions e(-2), e(4)  so that our Minkowski space-time"
-        + " has a basis  { e(-1), e(1), e(2), e(3) }."
+        "We choose the two extra dimensions e(-2), e(4)  so that our Minkowski"
+        + " space-time has a basis  { e(-1), e(1), e(2), e(3) }."
     )
     print_line()
     print_exec("eneg = e(-2); print(eneg)")
@@ -432,7 +442,7 @@ def run(ctx=tutorial_context(globals())):
     )
     print_line()
     print_exec("u = exp(B/2); print(u)")
-    print_exec("y = u*x/u; print(y)")
+    print_exec("y = x | u; print(y)")
 
     pause()
     print_exec("print(y*y)")
@@ -451,7 +461,7 @@ def run(ctx=tutorial_context(globals())):
     print_exec("v = expo(B); print(v)")
 
     pause()
-    print_exec("z = v*x/v; print(z)")
+    print_exec("z = x | v; print(z)")
     print_exec("print(z*z)")
     print_exec("print(x*x)")
 
@@ -498,7 +508,8 @@ def run(ctx=tutorial_context(globals())):
     )
     print_line()
     print_exec(
-        "B = 3*(e({-2,-1})-e({-1,3}))-4*(e({-4,1})-e({-3,2}))-7*(e({-3,1})+e({-4,2})); print(B)"
+        "B = 3*(e({-2,-1})-e({-1,3}))-4*(e({-4,1})-e({-3,2}))"
+        + "-7*(e({-3,1})+e({-4,2})); print(B)"
     )
     print_line()
     print_fill("and exponentiate:")
@@ -539,10 +550,12 @@ def run(ctx=tutorial_context(globals())):
     print_line()
     print_exec("A1 = 2*e(1)+3*e(2)+5*e(3)+7*e(-4)+e(-3)+4*e(-2); print(A1)")
     print_exec(
-        "A2 = e({-4,-3})-4*e({-3,1})-3*e({-4,2})+3*e({1,2})-5*e({-4,3})-e({-2,3})+2*e({2,3}); print(A2)"
+        "A2 = e({-4,-3})-4*e({-3,1})-3*e({-4,2})+3*e({1,2})-5*e({-4,3})"
+        + "-e({-2,3})+2*e({2,3}); print(A2)"
     )
     print_exec(
-        "A3 = e({-4,-3,-2})+2*e({-4,-3,2})+4*e({-2,1,2})+e({-4,-3,3})+5*e({-3,-2,3})+3*e({-4,2,3})+e({1,2,3}); print(A3)"
+        "A3 = e({-4,-3,-2})+2*e({-4,-3,2})+4*e({-2,1,2})+e({-4,-3,3})"
+        + "+5*e({-3,-2,3})+3*e({-4,2,3})+e({1,2,3}); print(A3)"
     )
 
     pause()
@@ -566,6 +579,5 @@ def run(ctx=tutorial_context(globals())):
 if __name__ == "__main__":
     try:
         run()
-    except:
+    except (KeyboardInterrupt, Exception):  # pylint: disable=broad-exception-caught
         print("The demo was interrupted.")
-        pass

@@ -140,19 +140,8 @@ jobs:
           make -f admin/Makefile.common bootstrap
           ./configure --enable-pyclical
 
-      - name: Build
-        run: make -j$(nproc)
-
-      - name: Lint PyClical & demos
-        run: |
-          ruff check pyclical/ pyclical/demos/
-          pylint pyclical/ pyclical/demos/
-
-      - name: Validate generated notebooks
-        run: python3 pyclical/demos/validate_notebooks.py
-
-      - name: Run PyClical tests
-        run: python3 -m pytest pyclical/test_pytest_doctests.py -v
+      - name: Run full PyClical verification pipeline
+        run: make check-python -j$(nproc)
 
   doc:
     name: Documentation Build

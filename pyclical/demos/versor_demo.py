@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+"""
+Versor and versor_exp demonstration script.
+"""
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
@@ -21,14 +24,16 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
-from builtins import str
 from PyClical import *
 from pyclical_tutorial_utils import *
 
 
 def run(ctx=tutorial_context(globals())):
+    """
+Run the versor demonstration.
+"""
     for name, method in get_object_methods(ctx).items():
-        exec("global " + name + ";" + name + "=method")
+        globals()[name] = method
 
     print_fill(
         "# versor_demo.py: Demonstrate versor and versor_exp with PyClical."
@@ -83,6 +88,5 @@ def run(ctx=tutorial_context(globals())):
 if __name__ == "__main__":
     try:
         run()
-    except:
+    except (KeyboardInterrupt, Exception):  # pylint: disable=broad-exception-caught
         print("The demo was interrupted.")
-        pass
