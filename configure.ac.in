@@ -190,6 +190,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
     [glucat_use_doctest="$withval"],
     [glucat_use_doctest="yes"])
 
+  dnl Set the language standard
+  AX_CXX_COMPILE_STDCXX(23, noext, mandatory)
+
   dnl Check for Boost version
   GLUCAT_CHECK_HEADERS([boost/version.hpp], [], [])
 
@@ -367,9 +370,6 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
 
   dnl Check for a C++ compiler
   AC_LANG([C]++)
-
-  dnl Set the language standard
-  AX_CXX_COMPILE_STDCXX(23, noext, mandatory)
 
   basename_cxx=[$(basename $(cut -d' ' -f1 <<<$CXX))]
 

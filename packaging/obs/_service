@@ -1,0 +1,19 @@
+<services>
+  <service name="obs_scm">
+    <param name="url">https://github.com/penguian/glucat.git</param>
+    <param name="scm">git</param>
+    <param name="revision">master</param>
+    <param name="extract">packaging/obs/glucat.spec</param>
+    <param name="versionformat">@PARENT_TAG@</param>
+    <param name="versionrewrite-pattern">release_(.*)</param>
+    <param name="versionrewrite-replacement">\1</param>
+    <param name="filename">glucat</param>
+    <param name="changesgenerate">disable</param>
+  </service>
+  <service name="set_version" mode="buildtime"/>
+  <service name="tar"         mode="buildtime"/>
+  <service name="recompress"  mode="buildtime">
+    <param name="file">*.tar</param>
+    <param name="compression">xz</param>
+  </service>
+</services>
