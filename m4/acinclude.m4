@@ -66,7 +66,7 @@ AC_DEFUN([GLUCAT_CHECK_HEADER],
 [
 AC_LANG_SAVE
    glucat_safe_cppflags=$CPPFLAGS
-   CPPFLAGS="$CPPFLAGS $all_includes $GLUCAT_CPPFLAGS"
+   CPPFLAGS="$CPPFLAGS $CXXFLAGS $all_includes $GLUCAT_CPPFLAGS"
    AC_LANG([C++])
    AC_CHECK_HEADER($1, $2, $3, [$4])
    CPPFLAGS=$glucat_safe_cppflags
@@ -77,7 +77,7 @@ AC_DEFUN([GLUCAT_CHECK_HEADERS],
 [
 AC_LANG_SAVE
    glucat_safe_cppflags=$CPPFLAGS
-   CPPFLAGS="$CPPFLAGS $all_includes $GLUCAT_CPPFLAGS"
+   CPPFLAGS="$CPPFLAGS $CXXFLAGS $all_includes $GLUCAT_CPPFLAGS"
    AC_LANG([C++])
    for k_header in $1; do
       AC_CHECK_HEADER($k_header, $2, $3, [$4])
