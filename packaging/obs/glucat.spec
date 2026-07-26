@@ -25,7 +25,11 @@ BuildRequires:  automake
 BuildRequires:  boost-devel >= 1.66.0
 BuildRequires:  doctest-devel
 BuildRequires:  eigen3-devel
+%if 0%{?suse_version} < 1600
+BuildRequires:  gcc13-c++
+%else
 BuildRequires:  gcc-c++
+%endif
 BuildRequires:  libtool
 BuildRequires:  make
 BuildRequires:  perl
@@ -58,6 +62,10 @@ This package contains the C++ header files and documentation.
 %autosetup -p1 -n %{name}-%{version}
 
 %build
+%if 0%{?suse_version} < 1600
+export CC=gcc-13
+export CXX=g++-13
+%endif
 make -f admin/Makefile.common bootstrap
 %configure --enable-shared=no
 %make_build
