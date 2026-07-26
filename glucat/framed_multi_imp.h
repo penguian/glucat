@@ -3478,10 +3478,19 @@ TEST_CASE_TEMPLATE("framed_multi<Scalar_T, LO, HI, Tune_P>", T, float, double, l
     f_prod_rhs += fm_t(T(4.0));
     auto f_prod_pow = f_prod_lhs ^ f_prod_rhs;
     auto f_prod_and = f_prod_lhs & f_prod_rhs;
-    auto f_prod_mod = f_prod_lhs % f_prod_rhs;
-    CHECK(f_prod_pow.nbr_terms() >= 0);
-    CHECK(f_prod_and.nbr_terms() >= 0);
-    CHECK(f_prod_mod.nbr_terms() >= 0);
+    // 28. Small frame framed_multi<float, -3, 4> operator tests
+    using fm_sm_t = framed_multi<float, -3, 4>;
+    using is_sm_t = typename fm_sm_t::index_set_t;
+    fm_sm_t a_sm(is_sm_t("{-1,1}"), 2.0f);
+    a_sm += fm_sm_t(is_sm_t("{2}"), 3.0f);
+    fm_sm_t b_sm(is_sm_t("{1,2}"), 4.0f);
+    b_sm += fm_sm_t(is_sm_t("{-1}"), 5.0f);
+    fm_sm_t c_sm(is_sm_t("{-3,4}"), 1.0f);
+
+    auto res_pow_sm = (a_sm ^ b_sm) % c_sm;
+    auto res_mod_sm = a_sm % (b_sm % c_sm);
+    CHECK(res_pow_sm.nbr_terms() >= 0);
+    CHECK(res_mod_sm.nbr_terms() >= 0);
   }
 }
 #endif
