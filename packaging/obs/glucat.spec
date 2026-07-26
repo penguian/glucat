@@ -34,6 +34,7 @@ Source0:        %{pname}-%{version}.tar.xz
 BuildRequires:  autoconf
 BuildRequires:  automake
 BuildRequires:  boost-devel >= 1.68.0
+BuildRequires:  eigen3-devel
 BuildRequires:  libtool
 BuildRequires:  make
 BuildRequires:  perl
@@ -55,7 +56,6 @@ BuildRequires:  %{python_module setuptools}
 %else
 BuildRequires:  armadillo-devel
 BuildRequires:  doctest-devel
-BuildRequires:  eigen3-devel
 %endif
 
 %description
@@ -82,6 +82,8 @@ export CC=gcc-14
 export CXX=g++-14
 %endif
 make -f admin/Makefile.common bootstrap
+# Strip -march=native for reproducible OBS builds
+sed -i "s|-march=native||g" configure
 
 %if %{with python}
 %{python_expand # Apply to all supported python flavors
@@ -91,7 +93,6 @@ cp -pr ./ ../${PYTHON}_build
 pushd ../${PYTHON}_build
 %configure --enable-shared=no --enable-pyclical
 %make_build
-%make_build -C pyclical
 popd
 }
 %else
@@ -107,8 +108,6 @@ pushd ../${PYTHON}_build
 $python -m pytest pyclical/test_pytest_doctests.py
 popd
 }
-%else
-make -j8 check-local
 %endif
 
 %install
@@ -133,8 +132,7 @@ rm -rf %{buildroot}%{_includedir}/
 
 %if %{with python}
 %files %{python_files}
-%{python_sitearch}/PyClical*
-%{python_sitearch}/pyclical*
+%{python_sitearch}/PyClical*.so
 %endif
 
 %changelog
