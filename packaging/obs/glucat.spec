@@ -26,7 +26,7 @@ BuildRequires:  boost-devel >= 1.66.0
 BuildRequires:  doctest-devel
 BuildRequires:  eigen3-devel
 %if 0%{?suse_version} < 1600
-BuildRequires:  gcc13-c++
+BuildRequires:  gcc14-c++
 %else
 BuildRequires:  gcc-c++
 %endif
@@ -63,8 +63,8 @@ This package contains the C++ header files and documentation.
 
 %build
 %if 0%{?suse_version} < 1600
-export CC=gcc-13
-export CXX=g++-13
+export CC=gcc-14
+export CXX=g++-14
 %endif
 make -f admin/Makefile.common bootstrap
 %configure --enable-shared=no
