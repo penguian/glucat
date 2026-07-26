@@ -1136,27 +1136,7 @@ namespace glucat
   inline constexpr auto index_set<LO, HI>::to_sign_helper() const -> sign_helper
   {
     const auto uthis = this->to_set_value();
-    const auto nbits = HI - LO;
-    if constexpr (nbits > 8)
-    { return sign_helper(inverse_reversed_gray(uthis)); }
-    else
-    {
-      auto h = set_value_t(0);
-      auto helper_value = set_value_t(0);
-      for (auto j = index_t(0); j < -LO; ++j)
-      {
-        h ^= uthis >> j;
-        if (h & 1)
-          helper_value |= (set_value_t(1) << j);
-      }
-      for (auto j = index_t(-LO); j < nbits; ++j)
-      {
-        if (h & 1)
-          helper_value |= (set_value_t(1) << j);
-        h ^= uthis >> j;
-      }
-      return sign_helper(helper_value);
-    }
+    return sign_helper(inverse_reversed_gray(uthis));
   }
 
   /*
@@ -1615,6 +1595,25 @@ namespace glucat
     }
   }  // namespace test
 }  // namespace glucat
+
+TEST_CASE("index_set<-3, 4>")
+{
+  glucat::test::run_index_set_tests<glucat::index_set<-3, 4>>();
+
+  SUBCASE("Small frame to_sign_helper and sign_of_mult consistency")
+  {
+    using is_t = glucat::index_set<-3, 4>;
+    is_t s1("{-1, 1}");
+    is_t s2("{1, 2}");
+    auto helper2 = s2.to_sign_helper();
+    CHECK(is_t::sign_of_mult(s1, s2, helper2) == s1.sign_of_mult(s2));
+
+    is_t s3("{-3, 4}");
+    is_t s4("{-2, 1, 3}");
+    auto helper4 = s4.to_sign_helper();
+    CHECK(is_t::sign_of_mult(s3, s4, helper4) == s3.sign_of_mult(s4));
+  }
+}
 
 TEST_CASE("index_set<-4, 4>")
 {
