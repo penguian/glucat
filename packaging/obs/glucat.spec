@@ -81,7 +81,6 @@ python3 -m pytest pyclical/test_pytest_doctests.py
 %license COPYING
 %doc AUTHORS AUTHORS.md ChangeLog DESIGN.md NEWS README README.md TODO TODO.md
 %{_includedir}/glucat/
-%{_libdir}/pkgconfig/glucat.pc
 
 %files %{python_files}
 %{python_sitearch}/PyClical*
