@@ -22,7 +22,7 @@ Source0:        %{name}-%{version}.tar.xz
 BuildRequires:  armadillo-devel
 BuildRequires:  autoconf
 BuildRequires:  automake
-BuildRequires:  boost-devel >= 1.66.0
+BuildRequires:  boost-devel >= 1.68.0
 BuildRequires:  doctest-devel
 BuildRequires:  eigen3-devel
 %if 0%{?suse_version} < 1600
@@ -72,7 +72,7 @@ make -f admin/Makefile.common bootstrap
 %make_build -C pyclical
 
 %check
-%python_exec -m pytest pyclical/test_pytest_doctests.py
+python3 -m pytest pyclical/test_pytest_doctests.py
 
 %install
 %make_install
