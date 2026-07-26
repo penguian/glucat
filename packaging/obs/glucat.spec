@@ -84,11 +84,15 @@ export CXX=g++-14
 make -f admin/Makefile.common bootstrap
 
 %if %{with python}
-%{python_expand
+%{python_expand # Apply to all supported python flavors
 export PYTHON=$python
+mkdir ../${PYTHON}_build
+cp -pr ./ ../${PYTHON}_build
+pushd ../${PYTHON}_build
 %configure --enable-shared=no --enable-pyclical
 %make_build
 %make_build -C pyclical
+popd
 }
 %else
 %configure --enable-shared=no --disable-pyclical
@@ -97,9 +101,11 @@ export PYTHON=$python
 
 %check
 %if %{with python}
-%{python_expand
+%{python_expand # Apply to all supported python flavors
 export PYTHON=$python
+pushd ../${PYTHON}_build
 $python -m pytest pyclical/test_pytest_doctests.py
+popd
 }
 %else
 make -j8 check-local
@@ -107,9 +113,11 @@ make -j8 check-local
 
 %install
 %if %{with python}
-%{python_expand
+%{python_expand # Apply to all supported python flavors
 export PYTHON=$python
+pushd ../${PYTHON}_build
 %make_install
+popd
 }
 rm -rf %{buildroot}%{_includedir}/
 %else
