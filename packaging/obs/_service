@@ -2,7 +2,7 @@
   <service name="obs_scm">
     <param name="url">https://github.com/penguian/glucat.git</param>
     <param name="scm">git</param>
-    <param name="revision">master</param>
+    <param name="revision">93-obs-packaging</param>
     <param name="extract">packaging/obs/glucat.spec</param>
     <param name="versionformat">@PARENT_TAG@</param>
     <param name="versionrewrite-pattern">release_(.*)</param>
