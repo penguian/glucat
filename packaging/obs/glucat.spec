@@ -39,7 +39,7 @@ BuildRequires:  libtool
 BuildRequires:  make
 BuildRequires:  perl
 BuildRequires:  pkgconfig
-%if 0%{?suse_version} <= 1600
+%if 0%{?suse_version} < 1699
 BuildRequires:  gcc14-c++
 %else
 BuildRequires:  gcc-c++
@@ -77,7 +77,7 @@ This package contains the C++ header files and documentation.
 %autosetup -p1 -n %{pname}-%{version}
 
 %build
-%if 0%{?suse_version} <= 1600
+%if 0%{?suse_version} < 1699
 export CC=gcc-14
 export CXX=g++-14
 %endif
