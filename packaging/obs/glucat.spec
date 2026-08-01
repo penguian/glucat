@@ -118,7 +118,11 @@ pushd ../${PYTHON}_build
 %make_install
 popd
 }
+# Only the compiled Python extension belongs in this flavor.
+# Docs and demos are installed by the main flavor or deferred to glucat-doc.
 rm -rf %{buildroot}%{_includedir}/
+rm -rf %{buildroot}%{_docdir}/
+rm -rf %{buildroot}%{_datadir}/pyclical/
 %else
 %make_install
 %endif
