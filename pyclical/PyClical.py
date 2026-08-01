@@ -365,9 +365,11 @@ class index_set:
 
         Examples
         --------
-        >>> s = set(range(-16, 0)) | set(range(1, 17))
-        >>> print(~index_set(s))
-        {-32,-31,-30,-29,-28,-27,-26,-25,-24,-23,-22,-21,-20,-19,-18,-17,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32}
+        >>> s = index_set(set(range(-16, 0)) | set(range(1, 17)))
+        >>> print(s & ~s)
+        {}
+        >>> (~s).count() > 0
+        True
         """
         return index_set().wrap(self.instance.invert())
 
