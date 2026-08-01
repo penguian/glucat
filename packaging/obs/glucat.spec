@@ -121,10 +121,12 @@ popd
 # Only the compiled Python extension belongs in this flavor.
 # Docs and demos are installed by the main flavor or deferred to glucat-doc.
 rm -rf %{buildroot}%{_includedir}/
+rm -rf %{buildroot}%{_datadir}/doc/
 rm -rf %{buildroot}%{_docdir}/
 rm -rf %{buildroot}%{_datadir}/pyclical/
 %else
 %make_install
+rm -rf %{buildroot}%{_datadir}/doc/glucat
 %endif
 
 %if %{without python}
