@@ -6,6 +6,8 @@ dependencies:
   - cython
   - setuptools
   - numpy
+  - pytest
+  - nbformat
   - pyvista
   - pyvistaqt
   - pyside6
