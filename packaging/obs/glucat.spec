@@ -31,6 +31,11 @@ Group:          Development/Libraries/C and C++
 URL:            https://github.com/penguian/glucat
 Source0:        %{pname}-%{version}.tar.xz
 
+# GluCat 0.98a2+ requires full C++23 support (GCC 14+)
+%if 0%{?gcc_version} && 0%{?gcc_version} < 14
+ExclusiveArch:  do_not_build
+%endif
+
 BuildRequires:  autoconf
 BuildRequires:  automake
 BuildRequires:  boost-devel >= 1.68.0
@@ -39,11 +44,7 @@ BuildRequires:  libtool
 BuildRequires:  make
 BuildRequires:  perl
 BuildRequires:  pkgconfig
-%if 0%{?suse_version} < 1699
-BuildRequires:  gcc14-c++
-%else
 BuildRequires:  gcc-c++
-%endif
 
 %if %{with python}
 BuildRequires:  python-rpm-macros
@@ -77,10 +78,6 @@ This package contains the C++ header files and documentation.
 %autosetup -p1 -n %{pname}-%{version}
 
 %build
-%if 0%{?suse_version} < 1699
-export CC=gcc-14
-export CXX=g++-14
-%endif
 make -f admin/Makefile.common bootstrap
 # Strip -march=native for reproducible OBS builds
 sed -i "s|-march=native||g" configure
