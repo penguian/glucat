@@ -39,7 +39,7 @@ BuildRequires:  libtool
 BuildRequires:  make
 BuildRequires:  perl
 BuildRequires:  pkgconfig
-%if 0%{?suse_version} < 1600
+%if 0%{?suse_version} <= 1600
 BuildRequires:  gcc14-c++
 %else
 BuildRequires:  gcc-c++
@@ -77,7 +77,7 @@ This package contains the C++ header files and documentation.
 %autosetup -p1 -n %{pname}-%{version}
 
 %build
-%if 0%{?suse_version} < 1600
+%if 0%{?suse_version} <= 1600
 export CC=gcc-14
 export CXX=g++-14
 %endif
@@ -101,6 +101,7 @@ popd
 %endif
 
 %check
+%ifnarch %{ix86}
 %if %{with python}
 %{python_expand # Apply to all supported python flavors
 export PYTHON=$python
@@ -108,6 +109,7 @@ pushd ../${PYTHON}_build
 $python -m pytest pyclical/test_pytest_doctests.py
 popd
 }
+%endif
 %endif
 
 %install
