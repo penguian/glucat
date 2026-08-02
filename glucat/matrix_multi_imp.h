@@ -3685,7 +3685,7 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>")
     CHECK((m1 - m2) == mm_t("1-{1}"));
     CHECK((m1 * T(2.0)) == mm_t(T(2.0)));
     CHECK((T(2.0) * m1) == mm_t(T(2.0)));
-    CHECK(approx_equal(m1, mm_t(T(1.0) + T(1e-15))));
+    CHECK(approx_equal(m1, mm_t(T(1.0) + T(std::numeric_limits<T>::epsilon() * T(10.0)))));
     CHECK(m1 != m2);
     CHECK(m1 != 0.0);
     CHECK(0.0 != m1);
@@ -3694,12 +3694,13 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>")
   SUBCASE("Transcendental functions")
   {
     mm_t x("{1,2}");
-    const T pi = T(std::numbers::pi);
+    const T pi = numeric_traits<T>::pi();
 
     // exp and log
     mm_t e_x = exp(x * (pi / 4.0));
     // exp({1,2}*pi/4) = cos(pi/4) + {1,2}*sin(pi/4) = (1 + {1,2})/sqrt(2)
-    CHECK(approx_equal(e_x, (mm_t(1.0) + mm_t("{1,2}")) / std::sqrt(2.0)));
+    CHECK(approx_equal(e_x, (mm_t(T(1.0)) + mm_t("{1,2}")) / std::sqrt(T(2.0))));
+
     CHECK(approx_equal(exp(log(e_x)), e_x));
 
     // sin and cos
@@ -3741,9 +3742,9 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>")
 
     // Purely scalar multivector in transcendental functions
     mm_t s(T(2.0), mm_t::index_set_t());
-    CHECK(approx_equal(exp(s), mm_t(T(std::exp(2.0)))));
-    CHECK(approx_equal(log(s), mm_t(T(std::log(2.0)))));
-    CHECK(approx_equal(sqrt(s), mm_t(T(std::sqrt(2.0)))));
+    CHECK(approx_equal(exp(s), mm_t(std::exp(T(2.0)))));
+    CHECK(approx_equal(log(s), mm_t(numeric_traits<T>::ln_2())));
+    CHECK(approx_equal(sqrt(s), mm_t(std::numbers::sqrt2_v<T>)));
 
     // Zero
     mm_t zero(T(0.0), mm_t::index_set_t());
@@ -3753,7 +3754,7 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>")
     // Negative log with complexifier
     mm_t neg(T(-1.0), mm_t::index_set_t());
     mm_t i("{-1}");
-    CHECK(approx_equal(log(neg, i, false), i * T(std::numbers::pi)));
+    CHECK(approx_equal(log(neg, i, false), i * numeric_traits<T>::pi()));
   }
   SUBCASE("Transcendental identities (random)")
   {
@@ -4230,7 +4231,7 @@ TEST_CASE("matrix_multi<Scalar_T, LO, HI, Tune_P>")
     CHECK(approx_equal(v_pre, -X));
     CHECK(approx_equal(v_nopre, X));
 
-    const T pi = T(3.141592653589793);
+    const T pi = numeric_traits<T>::pi();
     mm_t A = R * (pi / 4.0);
     mm_t v_exp = X.versor_exp(A, true);
     CHECK_FALSE(v_exp.isnan());

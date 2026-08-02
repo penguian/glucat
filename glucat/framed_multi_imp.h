@@ -2670,7 +2670,7 @@ TEST_CASE_TEMPLATE("framed_multi<Scalar_T, LO, HI, Tune_P>", T, float, double, l
     CHECK((m1 - m2) == fm_t("1-{1}"));
     CHECK((m1 * T(2.0)) == fm_t(T(2.0)));
     CHECK((T(2.0) * m1) == fm_t(T(2.0)));
-    CHECK(approx_equal(m1, fm_t(T(1.0) + T(1e-15))));
+    CHECK(approx_equal(m1, fm_t(T(1.0) + T(std::numeric_limits<T>::epsilon() * T(10.0)))));
     CHECK(m1 != m2);
     CHECK(m1 != T(0.0));
     CHECK(T(0.0) != m1);
@@ -2679,12 +2679,13 @@ TEST_CASE_TEMPLATE("framed_multi<Scalar_T, LO, HI, Tune_P>", T, float, double, l
   SUBCASE("Transcendental functions")
   {
     fm_t x("{1,2}");
-    const T pi = T(std::numbers::pi);
+    const T pi = numeric_traits<T>::pi();
 
     // exp and log
     fm_t e_x = exp(x * (pi / T(4.0)));
     // exp({1,2}*pi/4) = cos(pi/4) + {1,2}*sin(pi/4) = (1 + {1,2})/sqrt(2)
     CHECK(approx_equal(e_x, (fm_t(T(1.0)) + fm_t("{1,2}")) / std::sqrt(T(2.0))));
+
     CHECK(approx_equal(exp(log(e_x)), e_x));
 
     // sin and cos
@@ -2727,11 +2728,11 @@ TEST_CASE_TEMPLATE("framed_multi<Scalar_T, LO, HI, Tune_P>", T, float, double, l
     // Purely scalar multivector
     fm_t s(T(2.0), is_t());
     CHECK(approx_equal(exp(s), fm_t(std::exp(T(2.0)))));
-    CHECK(approx_equal(log(s), fm_t(std::log(T(2.0)))));
-    CHECK(approx_equal(sqrt(s), fm_t(std::sqrt(T(2.0)))));
+    CHECK(approx_equal(log(s), fm_t(numeric_traits<T>::ln_2())));
+    CHECK(approx_equal(sqrt(s), fm_t(std::numbers::sqrt2_v<T>)));
     // For log of scalar, we need a valid complexifier
     fm_t i("{-1}");
-    CHECK(approx_equal(log(s, i, false), fm_t(std::log(T(2.0)))));
+    CHECK(approx_equal(log(s, i, false), fm_t(numeric_traits<T>::ln_2())));
 
     // Zero
     fm_t zero(T(0.0), is_t());
@@ -2744,7 +2745,7 @@ TEST_CASE_TEMPLATE("framed_multi<Scalar_T, LO, HI, Tune_P>", T, float, double, l
 
     // Negative log for framed_multi
     fm_t neg(T(-1.0), is_t());
-    CHECK(approx_equal(log(neg, fm_t("{-1}"), false), fm_t("{-1}") * T(std::numbers::pi)));
+    CHECK(approx_equal(log(neg, fm_t("{-1}"), false), fm_t("{-1}") * numeric_traits<T>::pi()));
   }
   SUBCASE("Transcendental identities (random)")
   {
