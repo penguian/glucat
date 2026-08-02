@@ -618,6 +618,9 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
   dnl Cater to compiler quirks
   case "$basename_cxx" in
     "clang++"*)
+      dnl Suppress system header preprocessor #warning diagnostics (e.g. GCC 16 <ciso646> in doctest.h)
+      GLUCAT_CHECK_COMPILER_FLAG([Wno-cpp],
+            [CXXFLAGS="$CXXFLAGS -Wno-cpp"])
       ;;
     "g++"*)
       GLUCAT_CHECK_COMPILER_FLAG([fno-check-new],
