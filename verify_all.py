@@ -87,6 +87,28 @@ Find a Python interpreter executable that has `Cython` installed.
     return sys.executable
 
 
+def find_python_tool(python_bin, tool_name):
+    """
+    Find executable or module for a python tool (e.g. pylint, ruff).
+    Returns command list if found, or None.
+    """
+    if shutil.which(tool_name):
+        return [tool_name]
+    if python_bin:
+        try:
+            res = subprocess.run(
+                [python_bin, "-m", tool_name, "--version"],
+                check=False,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            if res.returncode == 0:
+                return [python_bin, "-m", tool_name]
+        except Exception:
+            pass
+    return None
+
+
 def get_clean_make_env(env=None):
     """
     Sanitize MAKEFLAGS in env to strip jobserver flags that cause
@@ -340,18 +362,22 @@ Main verification runner parsing flags and executing checks.
         log_success("License headers check")
 
         log_step("Ruff check")
-        run_cmd(
-            [
-                "ruff",
-                "check",
-                "verify_all.py",
-                "check_license_headers.py",
-                "pyclical/",
-            ],
-            cwd=root_dir,
-            quiet=args.quiet,
-        )
-        log_success("Ruff check")
+        ruff_cmd = find_python_tool(python_bin, "ruff")
+        if ruff_cmd:
+            run_cmd(
+                ruff_cmd
+                + [
+                    "check",
+                    "verify_all.py",
+                    "check_license_headers.py",
+                    "pyclical/",
+                ],
+                cwd=root_dir,
+                quiet=args.quiet,
+            )
+            log_success("Ruff check")
+        else:
+            print("[WARNING] 'ruff' is not installed. Skipping ruff check.")
 
     if args.coverage:
         log_step("C++ header coverage check")
@@ -367,12 +393,16 @@ Main verification runner parsing flags and executing checks.
         log_success("PyClical C++ extension build")
 
         log_step("Pylint check")
-        run_cmd(
-            ["pylint", "pyclical/", "pyclical/demos/"],
-            cwd=root_dir,
-            quiet=args.quiet,
-        )
-        log_success("Pylint check")
+        pylint_cmd = find_python_tool(python_bin, "pylint")
+        if pylint_cmd:
+            run_cmd(
+                pylint_cmd + ["pyclical/", "pyclical/demos/"],
+                cwd=root_dir,
+                quiet=args.quiet,
+            )
+            log_success("Pylint check")
+        else:
+            print("[WARNING] 'pylint' is not installed. Skipping pylint check.")
 
         log_step("PyClical test (pytest)")
         run_cmd(
