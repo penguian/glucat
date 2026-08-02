@@ -62,8 +62,9 @@ Find a Python interpreter executable that has `nbformat` installed.
 
 def find_cython_python():
     """
-Find a Python interpreter executable that has `Cython` installed.
-"""
+    Find a Python interpreter executable that has `Cython` installed.
+    Prefers interpreters that also have `pytest` installed.
+    """
     candidates = [sys.executable]
     path_python = shutil.which("python3")
     if path_python and path_python not in candidates:
@@ -71,6 +72,19 @@ Find a Python interpreter executable that has `Cython` installed.
     for std_path in ("/usr/bin/python3", "/usr/local/bin/python3"):
         if os.path.exists(std_path) and std_path not in candidates:
             candidates.append(std_path)
+
+    for py_bin in candidates:
+        try:
+            res = subprocess.run(
+                [py_bin, "-c", "import Cython, pytest"],
+                check=False,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            if res.returncode == 0:
+                return py_bin
+        except Exception:
+            continue
 
     for py_bin in candidates:
         try:
@@ -84,6 +98,7 @@ Find a Python interpreter executable that has `Cython` installed.
                 return py_bin
         except Exception:
             continue
+
     return sys.executable
 
 
@@ -405,18 +420,23 @@ Main verification runner parsing flags and executing checks.
             print("[WARNING] 'pylint' is not installed. Skipping pylint check.")
 
         log_step("PyClical test (pytest)")
-        run_cmd(
-            [
-                python_bin,
-                "-m",
-                "pytest",
-                "pyclical/test_pytest_doctests.py",
-                "-v",
-            ],
-            cwd=root_dir,
-            quiet=args.quiet,
-        )
-        log_success("PyClical test (pytest)")
+        pytest_cmd = find_python_tool(python_bin, "pytest")
+        if pytest_cmd:
+            run_cmd(
+                pytest_cmd
+                + [
+                    "pyclical/test_pytest_doctests.py",
+                    "-v",
+                ],
+                cwd=root_dir,
+                quiet=args.quiet,
+            )
+            log_success("PyClical test (pytest)")
+        else:
+            print(
+                f"[WARNING] 'pytest' is not installed in {python_bin}. "
+                "Skipping PyClical pytest."
+            )
 
         log_step("Notebook validation")
         nbformat_python = find_nbformat_python()
