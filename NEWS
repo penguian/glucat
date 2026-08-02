@@ -1,5 +1,5 @@
-2026-08-01: 0.98b3
-GluCat 0.98b3 hardens version metadata and top-level documentation.
+2026-08-01: 0.98a3
+GluCat 0.98a3 hardens version metadata and top-level documentation.
 
 o Established configure.ac.in as the single ultimate source of truth for versioning
   across C++ headers, Cython extensions, pure Python fallback (PyClical.py.in),
