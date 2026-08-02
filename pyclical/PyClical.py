@@ -112,7 +112,7 @@ if compiled:
 else:
     import sys
 
-    __version__ = "0.98a3"
+    __version__ = "0.98b3"
     globals()["epsilon"] = sys.float_info.epsilon
 
 # Forward reference

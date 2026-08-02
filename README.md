@@ -1,4 +1,4 @@
-README for GluCat 0.98a2 with PyClical
+README for GluCat 0.98b3 with PyClical
 ======================================
 
 [![CI](https://github.com/penguian/glucat/actions/workflows/ci.yml/badge.svg)](https://github.com/penguian/glucat/actions/workflows/ci.yml)

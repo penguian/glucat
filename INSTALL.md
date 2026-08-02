@@ -1,4 +1,4 @@
-INSTALL for GluCat 0.98a2 with PyClical
+INSTALL for GluCat 0.98b3 with PyClical
 ========================================
 
 Prerequisites: Before You Begin
@@ -46,26 +46,24 @@ To install the first way, from (e.g.) GitHub, run the following commands on a
 Linux machine or equivalent Posix environment connected to the Internet:
 
 ```
-> git clone git@github.com:penguian/glucat.git glucat-0.98a2
-> cd glucat-0.98a2
+> git clone git@github.com:penguian/glucat.git glucat-0.98b3
+> cd glucat-0.98b3
 > make -f admin/Makefile.common bootstrap
 ```
-This results in a directory structure that includes glucat-0.98a2/configure,
+This results in a directory structure that includes glucat-0.98b3/configure,
 allowing you to make and install GluCat in the same way as if you had downloaded
-and unzipped the tarball glucat-0.98a2.tar.gz.
+and unzipped the tarball glucat-0.98b3.tar.gz.
 
 
 Directory Structure
 ===================
 
-Once you have downloaded, unzipped and untarred the source code, or followed
-the instructions above to install from Git clone, you should have a directory,
-glucat-0.98a2. Under this directory you should see a number of subdirectories,
-including `./admin`, `./doc`, `./glucat`, `./gfft_test`, `./products`,
-`./pyclical`, `./squaring`, `./test`, `./test_coverage`, `./test_doctest`,
-`./test_move`, `./test_runtime.*`, `./test00` to `./test19`, and `./transforms`.
+When you unzip and untar the tarball, you will obtain a directory named
+glucat-0.98b3. Under this directory you should see a number of subdirectories,
+including `./admin`, `./doc`, `./gfft_test`, `./glucat`, `./m4`, `./products`,
+`./pyclical`, `./squaring`, `./test`, `./test_doctest`, `./test_move`, and `./transforms`.
 
-The following instructions are meant to be used with `glucat-0.98a2` as the
+The following instructions are meant to be used with `glucat-0.98b3` as the
 current directory.
 
 
@@ -189,7 +187,7 @@ subdirectories.
 
 As briefly described above, the simplest way to install this package is:
 
- 1. `cd` to the `glucat-0.98a2` directory containing the source code and type
+ 1. `cd` to the `glucat-0.98b3` directory containing the source code and type
     `./configure` to configure GluCat with PyClical for your system.
     If you are using `csh` on an old version of System V, you might need to type
     `sh ./configure` instead to prevent `csh` from trying to execute
@@ -1102,9 +1100,9 @@ speeding up the entire testing process.
 
 Rather than running the regression tests in-place and copying the output
 directly into `./test_runtime`, the script `./test/test-all-config-options.sh`
-produces as many copies of the whole directory `glucat-0.98a2` as there are lines
-in `./test/config-options.txt`, naming them `glucat-0.98a2.1` to `glucat-0.98a2.12`,
-in the parent directory of `glucat-0.98a2`. This allows the effect of each set
+produces as many copies of the whole directory `glucat-0.98b3` as there are lines
+in `./test/config-options.txt`, naming them `glucat-0.98b3.1` to `glucat-0.98b3.12`,
+in the parent directory of `glucat-0.98b3`. This allows the effect of each set
 of configuration options to be directly compared, and also ensures that any
 side-effect of a configuration does not affect the test results of another
 configuration.
@@ -1283,7 +1281,7 @@ to use `sudo`, login as `root`, or `su` to `root` before you run `make install`.
 List of Successful Builds
 =========================
 
-GluCat 0.98a2 with PyClical has so far been built and tested using:
+GluCat 0.98b3 with PyClical has so far been built and tested using:
 
  1) Tempesta:
     8 core `AMD Ryzen 7 8840HS w/ Radeon 780M Graphics` @ 3.3 GHz with

@@ -8,7 +8,7 @@ check_DATA = eg8.txt
 
 check: test08.out
 test08.out: test08 eg8.txt
-	../test/test.sh 08 > test08.out
+	$(top_srcdir)/test/test.sh 08 > test08.out
 
 noinst_HEADERS = peg08.h
 test08_SOURCES = peg08.cpp

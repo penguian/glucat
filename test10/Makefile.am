@@ -6,7 +6,7 @@ noinst_PROGRAMS = test10
 
 check: test10.out
 test10.out: test10
-	../test/test.sh 10 > test10.out
+	$(top_srcdir)/test/test.sh 10 > test10.out
 
 noinst_HEADERS = peg10.h
 test10_SOURCES = peg10.cpp
