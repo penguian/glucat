@@ -625,6 +625,11 @@ AC_DEFUN([GLUCAT_CHECK_COMPILERS],
       dnl Suppress noisy ABI warnings on GCC (highly prevalent on AArch64 and SIMD code)
       GLUCAT_CHECK_COMPILER_FLAG([Wno-psabi],
             [CXXFLAGS="$CXXFLAGS -Wno-psabi"])
+      dnl GCC triggers false-positive -Wmaybe-uninitialized in system headers (doctest.h, Eigen)
+      dnl both at compile time (cc1plus) and at LTO link time (lto1).
+      GLUCAT_CHECK_COMPILER_FLAG([Wno-maybe-uninitialized],
+            [CXXFLAGS="$CXXFLAGS -Wno-maybe-uninitialized"])
+
       dnl For compatibility with Cygwin gcc
       GLUCAT_CHECK_HEADERS([bits/wordsize.h],[GLUCAT_CPPFLAGS="$GLUCAT_CPPFLAGS -DHAVE_BITS_WORDSIZE_H"],[],[])
       if [[[ "$glucat_build_using_qd" == "yes" ]]]; then
