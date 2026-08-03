@@ -257,9 +257,8 @@ The setup procedure depends on your hardware architecture — see `INSTALL.md` f
   ```
 - **PyVista (x86-64 / Conda or ARM64 / system venv):**
   ```bash
-  source pyclical/demos/plotting/setup-pyvista-env.sh
+  source pyclical/setup-env.sh
   # (Build PyClical as described in INSTALL.md)
-  source pyclical/demos/plotting/export-pyvista-vars.sh
   cd pyclical/demos/plotting
   python3 plotting_demo_pyvista.py
   python3 plotting_demo_pyvista_dialog.py

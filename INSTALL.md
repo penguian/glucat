@@ -758,23 +758,17 @@ Install [Miniforge](https://github.com/conda-forge/miniforge) or
 x86-64 — PyVista (Conda path)
 -----------------------------
 
-1.  Set up the PyVista Conda environment. Run from the repository root:
+1.  Set up the PyVista environment. Run from the repository root:
     ```bash
-    source pyclical/demos/plotting/setup-pyvista-env.sh
+    source pyclical/setup-env.sh
     ```
-    This creates or updates the `pyclical-pyvista` environment from
-    `pyclical/demos/plotting/pyvista-env.yml` (including PySide6) and activates it.
+    This creates or updates the `pyclical-env` environment from `pyclical/environment.yml` (including PySide6), exports the required environment variables (`PYTHONPATH`, `QT_API`), and activates it.
 
 2.  Bootstrap, configure, and build PyClical:
     ```bash
     make -f admin/Makefile.common bootstrap   # git clone only
     ./configure
     make -C pyclical -j$(($(nproc)/2))
-    ```
-
-3.  Export runtime environment variables for PyVista:
-    ```bash
-    source pyclical/demos/plotting/export-pyvista-vars.sh
     ```
 
 
@@ -817,20 +811,15 @@ Conda's `linux-aarch64` VTK binaries (and PyPI bundled VTK wheels) are 4 KB page
 
 2.  Set up the PyVista venv environment from the repository root:
     ```bash
-    source pyclical/demos/plotting/setup-pyvista-env.sh
+    source pyclical/setup-env.sh
     ```
-    This script creates `.venvs/pyclical-pyvista` with system site-packages access, installs PyVista without bundled VTK (`pip install --no-deps pyvista`), installs PyVista auxiliary requirements (including PySide6), and configures `fedora_lib64.pth`.
+    This script creates `.venvs/pyclical-env` with system site-packages access, installs PyVista without bundled VTK (`pip install --no-deps pyvista`), installs PyVista auxiliary requirements (including PySide6), configures `fedora_lib64.pth`, and exports environment variables (`PYTHONPATH`, `QT_API`).
 
 3.  Configure and build PyClical against the venv Python:
     ```bash
     make -f admin/Makefile.common bootstrap   # git clone only
     ./configure PYTHON=$(which python3)
     make -C pyclical -j$(($(nproc)/2))
-    ```
-
-4.  Export PyVista environment variables:
-    ```bash
-    source pyclical/demos/plotting/export-pyvista-vars.sh
     ```
 
 *Mayavi on ARM (unsupported)*: Due to deep ETS/Traits version incompatibilities with system Python 3.14+ site-packages, Mayavi is not supported on Fedora Asahi Remix. PyVista is the official, fast, and fully verified 3D plotting backend on ARM64 / Apple Silicon.
@@ -854,7 +843,6 @@ GLUCAT_NON_INTERACTIVE=1 python3 plotting_demo_mayavi.py
 
 ### PyVista demos (All platforms)
 ```bash
-source pyclical/demos/plotting/export-pyvista-vars.sh
 cd pyclical/demos/plotting
 python3 plotting_demo_pyvista.py
 python3 plotting_demo_pyvista_dialog.py

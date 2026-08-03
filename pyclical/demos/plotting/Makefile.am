@@ -4,12 +4,8 @@ if make_pyclical
 plotdir = $(demodir)/plotting
 dist_plot_DATA = \
     setup-mayavi-env.sh \
-    setup-pyvista-env.sh \
     export-mayavi-vars.sh \
-    export-pyvista-vars.sh \
-    mayavi-env.yml \
-    pyvista-env.yml \
-    requirements-pyvista.txt
+    mayavi-env.yml
 dist_plot_SCRIPTS = \
     plotting_demo_mayavi.py \
     plotting_demo_dialog.py \
