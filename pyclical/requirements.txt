@@ -1,0 +1,17 @@
+# PyClical testing, linting, notebook & PyVista plotting dependencies
+cython
+setuptools
+numpy
+pytest
+pylint
+ruff
+nbformat
+jupyterlab
+ipykernel
+scooby
+pooch
+pillow
+imageio
+pyvista
+pyvistaqt
+pyside6

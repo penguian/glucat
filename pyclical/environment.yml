@@ -1,0 +1,17 @@
+name: pyclical-env
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - cython
+  - setuptools
+  - numpy
+  - pytest
+  - pylint
+  - ruff
+  - nbformat
+  - jupyterlab
+  - ipykernel
+  - pyvista
+  - pyvistaqt
+  - pyside6
