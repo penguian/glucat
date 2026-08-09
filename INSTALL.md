@@ -9,11 +9,12 @@ Armadillo for linear algebra. The PyClical Python extension module is built
 using Cython and Python. Make sure that you have all of these installed and
 working before attempting to use GluCat with PyClical.
 
-The PyClical plotting demos (`plotting_demo_mayavi.py`,
-`plotting_demo_dialog.py`) additionally require a specially configured
-Mayavi/PyVista plotting environment. On x86-64, this is provided via Conda environments;
-on ARM aarch64 (Asahi Linux), via a system site-packages venv. See "Setting Up the
-Plotting Environment" below for exact instructions.
+The PyClical plotting demos (`plotting_demo_pyvista.py`,
+`plotting_demo_pyvista_dialog.py`) require a configured PyVista plotting
+environment. Mayavi support is deprecated and installation instructions for
+Mayavi have been removed. Use `source pyclical/setup-env.sh` to set up the
+unified PyVista plotting environment. See "Setting Up the Plotting Environment"
+below for exact instructions.
 
 Use the instructions at http://www.boost.org/more/download.html to obtain
 the Boost Library. Make sure that you are able to build the Boost library with
@@ -28,7 +29,9 @@ http://arma.sourceforge.net/.
 The default configuration of GluCat, as well as most combinations of
 configuration options, require a compiler that supports the C++ 2023 standard.
 
-Note: The legacy Intel Classic C++ compilers (`icc`/`icpc`) are deprecated and will be removed in a future release. Users in Intel hardware environments should compile using the modern oneAPI LLVM-based C++ compilers (`icx`/`icpx`) instead.
+Note: The legacy Intel Classic C++ compilers (`icc`/`icpc`) are deprecated and 
+will be removed in a future release. Users in Intel hardware environments should 
+compile using the modern oneAPI LLVM-based C++ compilers (`icx`/`icpx`) instead.
 
 Scroll to the end of these instructions to see a list of successful builds,
 including version numbers of various software components, and notes on software
@@ -75,7 +78,7 @@ library with PyClical. These are:
 
  1. The PyClical Python extension module.
  2. The PyClical demos.
- 3. The PyClical plotting demos (requires a special Mayavi/VTK environment).
+ 3. The PyClical plotting demos (requires the PyVista plotting environment).
  4. The two types of test programs (timing and regression).
  5. Code coverage and unit tests.
  6. Your own programs, written in C++.
@@ -135,16 +138,13 @@ in Python. These scripts rely on the built PyClical extension module.
 The PyClical plotting demos
 ---------------------------
 
-The PyClical plotting demos (requires a special Mayavi or PyVista environment).
-
-PyClical (Python Interface)
----------------------------
-
-The PyClical plotting demos (`plotting_demo_mayavi.py`, `plotting_demo_pyvista.py`,
-`plotting_demo_pyvista_dialog.py`, `plotting_demo_dialog.py`) use Mayavi2 or PyVista
-for 3D visualization. Because VTK and rendering dependencies are highly sensitive to
-library version mismatches, they require a special execution environment (see
-"Setting Up the Plotting Environment" below).
+The PyClical plotting demos (`plotting_demo_pyvista.py`,
+`plotting_demo_pyvista_dialog.py`) use PyVista for 3D visualization. Mayavi
+support (`plotting_demo_mayavi.py`, `plotting_demo_dialog.py`) is deprecated and
+installation instructions for Mayavi have been removed. Because VTK and
+rendering dependencies are sensitive to library version mismatches, they require
+the execution environment configured by `pyclical/setup-env.sh` (see "Setting
+Up the Plotting Environment" below).
 
 The two types of test programs
 ------------------------------
@@ -321,8 +321,8 @@ does nothing.
 ```
   --enable-strict         compile with strict compiler options (may not work!)
 ```
-This option adds strict compiler flags to `CXXFLAGS`, such as `-pedantic`. Use this
-with caution as it may cause the build to fail on warnings.
+This option adds strict compiler flags to `CXXFLAGS`, such as `-pedantic`.
+Use this with caution as it may cause the build to fail on warnings.
 
 ```
   --disable-warnings      disable compilation with -Wall and similar
@@ -382,9 +382,9 @@ The option `--with-qd` adds `-D_GLUCAT_USE_QD` to `CXXFLAGS` and adds the flag
 file `<qd/qd_real.h>` and the library `libqd` are usable.
 
 
-If `_GLUCAT_USE_QD` is defined, `glucat/qd.h` includes `<qd/qd_real.h>` and supports
-the use of QD in GluCat by defining specializations for `numeric_traits<dd_real>`
-and `numeric_traits<qd_real>`.
+If `_GLUCAT_USE_QD` is defined, `glucat/qd.h` includes `<qd/qd_real.h>` and 
+supports the use of QD in GluCat by defining specializations for
+`numeric_traits<dd_real>` and `numeric_traits<qd_real>`.
 
 
 To compile your own programs using the GluCat library with QD, your Makefile
@@ -395,26 +395,40 @@ You will also need to ensure that the include path used by the compiler sees
 ```
   --with-armadillo        use Armadillo library [default=no]
 ```
-This option controls the use of the Armadillo C++ linear algebra library. The only valid values are `yes` or `no`.
+This option controls the use of the Armadillo C++ linear algebra library.
+The only valid values are `yes` or `no`.
 
-The value `yes` (or `--with-armadillo` without an explicit value) adds `-D_GLUCAT_USE_ARMADILLO` to `CXXFLAGS` and the flag `-larmadillo` to the list of libraries, `LIBS` in the Makefiles.
+The value `yes` (or `--with-armadillo` without an explicit value) adds
+`-D_GLUCAT_USE_ARMADILLO` to `CXXFLAGS` and the flag `-larmadillo` to the list
+of libraries, `LIBS` in the Makefiles.
 
-To compile your own programs using GluCat headers with Armadillo, your Makefile needs to pass the flags `-D_GLUCAT_USE_ARMADILLO` and `-larmadillo` (along with `-lflexiblas` or `-lopenblas` if those backends are used) to the C++ compiler. You will also need to ensure that the include path used by the compiler sees `<armadillo>` and the library path sees `libarmadillo.*`.
+To compile your own programs using GluCat headers with Armadillo, your Makefile 
+needs to pass the flags `-D_GLUCAT_USE_ARMADILLO` and `-larmadillo` (along with 
+`-lflexiblas` or `-lopenblas` if those backends are used) to the C++ compiler.
+You will also need to ensure that the include path used by the compiler sees 
+`<armadillo>` and the library path sees `libarmadillo.*`.
 
 ```
   --with-blas=yes|no|flexiblas|openblas
                           use specified BLAS/LAPACK library backend [default=no]
 ```
-This option controls the BLAS/LAPACK library backend used in conjunction with Armadillo. This option requires that the Armadillo library is also used.
+This option controls the BLAS/LAPACK library backend used in conjunction with 
+Armadillo. This option requires that the Armadillo library is also used.
 
 The value `yes` automatically probes the host system's optimized backends:
-1. It checks for the `flexiblas` library. If found, it enables FlexiBLAS, which appends `-lflexiblas` to the libraries.
-2. If `flexiblas` is not found, it checks for the `openblas` library. If found, it enables OpenBLAS, which appends `-lopenblas` to the libraries.
+
+1. It checks for the `flexiblas` library. If found, it enables FlexiBLAS, which 
+appends `-lflexiblas` to the libraries.
+2. If `flexiblas` is not found, it checks for the `openblas` library. If found,
+it enables OpenBLAS, which appends `-lopenblas` to the libraries.
 3. If both are absent, it defaults to standard dynamic linkage with `-larmadillo`.
 
-Specifying `flexiblas` or `openblas` directly skips the auto-probing and forces the configuration to use the respective library.
+Specifying `flexiblas` or `openblas` directly skips the auto-probing and forces 
+the configuration to use the respective library.
 
-To compile your own programs using the GluCat library with OpenBLAS or FlexiBLAS, your Makefile needs to pass the flag `-lopenblas` or `-lflexiblas` respectively to the C++ compiler.
+To compile your own programs using the GluCat library with OpenBLAS or FlexiBLAS, 
+your Makefile needs to pass the flag `-lopenblas` or `-lflexiblas` respectively to 
+the C++ compiler.
 
 ```
   --with-openmp           use OpenMP (requires Armadillo) [default=no]
@@ -436,9 +450,10 @@ is installed.
 ```
   --with-doctest          enable the doctest unit testing suite [default=yes]
 ```
-This option enables the doctest unit testing suite (enabled by default). The option `--with-doctest`
-defines `GLUCAT_DOCTEST` in the header files and enables compiling the doctest-based
-unit tests in `test_doctest/`. Use `--without-doctest` to disable doctest execution.
+This option enables the doctest unit testing suite (enabled by default). The 
+option `--with-doctest` defines `GLUCAT_DOCTEST` in the header files and enables 
+compiling the doctest-based unit tests in `test_doctest/`. Use `--without-doctest` 
+to disable doctest execution.
 
 ```
   --with-unordered-map=boost|std
@@ -553,7 +568,9 @@ jupyter lab pyclical/demos/
 ```
 *(or `jupyter notebook` if using Jupyter Notebook v7+).*
 
-If you are using the system Python (not a Conda or venv environment), you should register a dedicated Jupyter kernel so that the notebooks use the active PyClical build:
+If you are using the system Python (not a Conda or venv environment), you should 
+register a dedicated Jupyter kernel so that the notebooks use the active PyClical 
+build:
 
 ```bash
 make -C pyclical install-pyclical-kernel
@@ -561,32 +578,46 @@ make -C pyclical install-pyclical-kernel
 
 ### Environment Notes & Troubleshooting for Jupyter Notebooks
 
-* **Use JupyterLab on Python 3.14+ (Ubuntu 26.04+):**
-  On systems running Python 3.14+ (such as Ubuntu 26.04), legacy Jupyter Classic Notebook (v6.x) suffers from an upstream `asyncio` Task context incompatibility when shutting down or restarting kernels (`RuntimeError: Timeout should be used inside a task`). Use `jupyter lab` (JupyterLab 4.x / `jupyter-server`) instead.
+* **Use JupyterLab on Python 3.14+ (Ubuntu 26.04+):** On systems running Python 
+3.14+ (such as Ubuntu 26.04), legacy Jupyter Classic Notebook (v6.x) suffers from 
+an upstream `asyncio` Task context incompatibility when shutting down or 
+restarting kernels (`RuntimeError: Timeout should be used inside a task`). Use 
+`jupyter lab` (JupyterLab 4.x / `jupyter-server`) instead.
 
-* **Fixing Stale Kernel Paths (`FileNotFoundError`):**
-  If JupyterLab reports `FileNotFoundError: [Errno 2] No such file or directory: '.../bin/python3'` when starting a notebook, your user kernel spec points to an old or deleted virtual environment path. Run `make -C pyclical install-pyclical-kernel` to update `~/.local/share/jupyter/kernels/pyclical/kernel.json` with the active Python path.
+* **Fixing Stale Kernel Paths (`FileNotFoundError`):** If JupyterLab reports 
+`FileNotFoundError: [Errno 2] No such file or directory: '.../bin/python3'` when 
+starting a notebook, your user kernel spec points to an old or deleted virtual 
+environment path. Run `make -C pyclical install-pyclical-kernel` to update 
+`~/.local/share/jupyter/kernels/pyclical/kernel.json` with the active Python path.
 
-* **Ensure Matching Python Environments:**
-  Make sure `jupyter lab` or `jupyter notebook` is launched from the same Python environment used to compile PyClical (e.g. deactivate Conda via `conda deactivate` if PyClical was built using system Python). If an ABI mismatch occurs between the interpreter and the compiled extension, Python will fail to load the `.so` binary and fall back to `PyClical.py`, raising a `NameError`.
+* **Ensure Matching Python Environments:** Make sure `jupyter lab` or `jupyter 
+notebook` is launched from the same Python environment used to compile PyClical 
+(e.g. deactivate Conda via `conda deactivate` if PyClical was built using system 
+Python). If an ABI mismatch occurs between the interpreter and the compiled 
+extension, Python will fail to load the `.so` binary and fall back to 
+`PyClical.py`, raising a `NameError`.
 
-* **Silencing the WebSocket Ping Warning:**
-  If Jupyter logs `The websocket_ping_timeout (90000) cannot be longer than the websocket_ping_interval (30000)`, this is a harmless default notice auto-corrected by Jupyter at startup. To permanently suppress it, set:
+* **Silencing the WebSocket Ping Warning:** If Jupyter logs `The 
+websocket_ping_timeout (90000) cannot be longer than the websocket_ping_interval 
+(30000)`, this is a harmless default notice auto-corrected by Jupyter at startup. 
+To permanently suppress it, set:
   ```bash
   mkdir -p ~/.jupyter
-  echo "c.NotebookApp.websocket_ping_timeout = 30000" >> ~/.jupyter/jupyter_notebook_config.py
+  echo "c.NotebookApp.websocket_ping_timeout = 30000" >> \
+  ~/.jupyter/jupyter_notebook_config.py
   ```
 
 
 Building the PyClical plotting demos
 ------------------------------------
 
-The plotting demos (`plotting_demo_mayavi.py`, `plotting_demo_pyvista.py`,
-`plotting_demo_pyvista_dialog.py`, `plotting_demo_dialog.py`) require a specially
-configured environment to satisfy their Mayavi or PyVista dependencies. Building these
-demos requires creating/activating the appropriate environment (via Conda or system venv),
-configuring/building PyClical against the correct Python interpreter, and exporting the required
-runtime plotting environment variables.
+The plotting demos (`plotting_demo_pyvista.py`, `plotting_demo_pyvista_dialog.py`)
+require a configured environment to satisfy their PyVista dependencies. Mayavi
+support is deprecated and installation instructions for Mayavi have been
+removed. Building these demos requires running `source pyclical/setup-env.sh` to
+set up and activate the environment (via Conda or system venv), configuring and
+building PyClical against the active Python interpreter, and exporting the
+required runtime plotting environment variables.
 
 Please refer to the detailed section "Setting Up the Plotting Environment"
 below for the full build and execution procedures for these demos.
@@ -595,19 +626,21 @@ below for the full build and execution procedures for these demos.
 Building and running the test programs
 --------------------------------------
 
-To build and run the timing and functionality (regression) test programs, set the
-environment variable CXX to indicate your C++ compiler (e.g. `g++` for GNU C++,
-`icpx` for Intel C++), run `./configure` as above, and then run `make` (for timing tests)
-or `make check` (for regression tests).
+To build and run the timing and functionality (regression) test programs, set the 
+environment variable CXX to indicate your C++ compiler (e.g. `g++` for GNU C++, 
+`icpx` for Intel C++), run `./configure` as above, and then run `make` (for timing 
+tests) or `make check` (for regression tests).
 
-Make uses the C++ headers in `./glucat` and `./test` to compile the timing test programs
-`./gfft_test/gfft_test`, `./products/products`, `./squaring/squaring`, and
-`./transforms/transforms` using the source code in those respective directories.
+Make uses the C++ headers in `./glucat` and `./test` to compile the timing test 
+programs `./gfft_test/gfft_test`, `./products/products`, `./squaring/squaring`, 
+and `./transforms/transforms` using the source code in those respective 
+directories.
 
-Running `make check` builds and runs the functionality regression tests `./test_move/test_move`
-and `./test00/test00` to `./test19/test19`. This produces the intermediate output files
-`./test_move/test_move.out` and `./test00/test00.out` to `./test19/test19.out`,
-and the final test output file `./test_runtime/test.out`.
+Running `make check` builds and runs the functionality regression tests 
+`./test_move/test_move` and `./test00/test00` to `./test19/test19`. This produces 
+the intermediate output files `./test_move/test_move.out` and 
+`./test00/test00.out` to `./test19/test19.out`, and the final test output file 
+`./test_runtime/test.out`.
 
 Note the difference between `make check` and `make check-local`:
 * `make check` is a standard recursive Automake target. It first enters each
@@ -623,7 +656,8 @@ sample files in `test_runtime.*`, you should use parallel make with the
 ```bash
 make -j${NPROCS} check-local
 ```
-where `${NPROCS}` is the number of processes you want to use (e.g. `make -j4 check-local`).
+where `${NPROCS}` is the number of processes you want to use
+(e.g. `make -j4 check-local`).
 
 Warning: If you use too many jobs with parallel make, the compiler will have
 problems obtaining enough memory to run efficiently.
@@ -689,24 +723,28 @@ consider GNU Autotools.
 Setting Up the Plotting Environment
 ===================================
 
-The PyClical plotting demos require a 3D visualization backend: either
-**Mayavi2** (`plotting_demo_mayavi.py`, `plotting_demo_dialog.py`) or
+The PyClical plotting demos require a 3D visualization backend using
 **PyVista** (`plotting_demo_pyvista.py`, `plotting_demo_pyvista_dialog.py`).
-Because VTK, Mayavi, and PyVista are sensitive to library versions and architecture-specific memory page alignment, they require specialized execution environments.
+Mayavi support (`plotting_demo_mayavi.py`, `plotting_demo_dialog.py`) is
+deprecated, and installation instructions for Mayavi have been removed.
 
-- **Mayavi**: Recommended on x86-64 systems via Conda.
-- **PyVista**: Recommended for cross-platform portability and required on ARM64 / Apple Silicon (Asahi Linux).
+Because VTK and rendering dependencies are sensitive to library versions and
+architecture-specific memory page alignment, setting up the plotting environment
+is handled automatically by running `source pyclical/setup-env.sh` from the
+repository root.
 
-Confirmed working versions:
+Confirmed working versions for PyVista:
 
 | Machine | Architecture | OS | Python | Backend | Version | VTK |
 |:---|:---|:---|:---|:---|:---|:---|
-| Tempesta (AMD Ryzen) | x86-64 | Kubuntu 26.04 | 3.12.13 (Conda) | Mayavi | 4.8.3 | 9.4.2 |
 | Tempesta (AMD Ryzen) | x86-64 | Kubuntu 26.04 | 3.12.13 (Conda) | PyVista | 0.44.x | 9.4.2 |
-| Pensieri (Intel Core) | x86-64 | Kubuntu 25.04 | 3.12.x (Conda) | Mayavi / PyVista | 4.8.x / 0.44.x | 9.4.x |
+| Pensieri (Intel Core) | x86-64 | Kubuntu 25.04 | 3.12.x (Conda) | PyVista | 0.44.x | 9.4.x |
 | Ginestra (Apple M2) | aarch64 | Fedora Asahi Remix 45 | 3.14.x (system) | PyVista (system VTK) | 0.44.x | 9.4.x (system) |
 
-*Note on ARM64 / Apple Silicon (Fedora Asahi Remix)*: The PyVista system-site-packages setup utilizes the 16 KB page-aligned `python3-vtk` Fedora RPM and runs smoothly and efficiently on Apple M2 (Ginestra). PyVista is the officially supported and recommended 3D plotting backend on ARM64 / Asahi Linux; Mayavi support on Asahi is unsupported.
+*Note on ARM64 / Apple Silicon (Fedora Asahi Remix)*: The PyVista
+system-site-packages setup utilizes the 16 KB page-aligned `python3-vtk` Fedora
+RPM and runs smoothly and efficiently on Apple M2 (Ginestra). PyVista is the
+officially supported 3D plotting backend on ARM64 / Asahi Linux.
 
 
 When a special environment is not needed
@@ -721,127 +759,51 @@ When a special environment is not needed
   ```
 
 - **PyClical without plotting demos** (doctests, tutorials, all demos except
-  3D graphics): The system Python with NumPy and Cython is sufficient. No Conda or venv is required.
+  3D graphics): The system Python with NumPy and Cython is sufficient. No Conda or
+  venv is required.
 
 
-x86-64 — Mayavi (Conda path)
-----------------------------
+Using pyclical/setup-env.sh
+---------------------------
 
-Install [Miniforge](https://github.com/conda-forge/miniforge) or
-[Anaconda](https://www.anaconda.com/download) if you do not already have Conda or Mamba available.
+The unified environment setup script `pyclical/setup-env.sh` detects your
+platform and configures the active environment for testing, Jupyter notebooks,
+and PyVista 3D plotting.
 
-1.  Set up the Mayavi Conda environment. Run from the repository root:
-    ```bash
-    source pyclical/demos/plotting/setup-mayavi-env.sh
-    ```
-    This script creates or updates the `pyclical-mayavi` environment from
-    `pyclical/demos/plotting/mayavi-env.yml`, activates it, and removes
-    conda-forge `mesalib` if a native GPU is detected (via `/dev/dri/card0`).
+To use `pyclical/setup-env.sh`:
 
-2.  Bootstrap the build system (git clone only, skip for release tarballs):
-    ```bash
-    make -f admin/Makefile.common bootstrap
-    ```
-
-3.  Configure and build PyClical (ensure the environment is active first):
-    ```bash
-    ./configure
-    make -C pyclical -j$(($(nproc)/2))
-    ```
-
-4.  Export the runtime environment variables:
-    ```bash
-    source pyclical/demos/plotting/export-mayavi-vars.sh
-    ```
-
-
-x86-64 — PyVista (Conda path)
------------------------------
-
-1.  Set up the PyVista environment. Run from the repository root:
+1.  Set up and activate the environment from the repository root:
     ```bash
     source pyclical/setup-env.sh
     ```
-    This creates or updates the `pyclical-env` environment from `pyclical/environment.yml` (including PySide6), exports the required environment variables (`PYTHONPATH`, `QT_API`), and activates it.
+    This automatically manages environment creation and activation:
+    - **x86-64 (with Conda/Mamba)**: Creates or updates the `pyclical-env` Conda
+      environment from `pyclical/environment.yml` (including PySide6) and
+      activates it.
+    - **x86-64 (without Conda)**: Creates a standard virtual environment at
+      `.venvs/pyclical-env` and installs dependencies from
+      `pyclical/requirements.txt`.
+    - **ARM64 / aarch64 (Fedora Asahi Remix)**: Creates `.venvs/pyclical-env` with
+      system site-packages enabled (requiring `python3-vtk`), installs PyVista
+      without bundled VTK (`pip install --no-deps pyvista`), installs PySide6,
+      and configures `fedora_lib64.pth`.
 
-2.  Bootstrap, configure, and build PyClical:
-    ```bash
-    make -f admin/Makefile.common bootstrap   # git clone only
-    ./configure
-    make -C pyclical -j$(($(nproc)/2))
-    ```
+    The script also exports required environment variables (`PYTHONPATH`,
+    `QT_API`, `QT_QPA_PLATFORM`) and registers the PyClical Jupyter kernel.
 
-
-openSUSE Tumbleweed — RPM path
-------------------------------
-
-The use of Mayavi2 on openSUSE Tumbleweed involves installing the
-following RPM packages (or their current equivalents):
-
-    ```
-    mayavi 4.8.2
-    python3-vtk 9.4.1
-    python311-apptools 5.3.0
-    python311-configobj 5.0.9
-    python311-envisage 6.1.1
-    python311-importlib-metadata-8.6.1
-    python311-importlib-resources 6.1.1
-    python311-numpy 2.1.3
-    python311-pyface 8.0.0
-    python311-Pygments 2.19.1
-    python311-setuptools 75.8.0
-    python311-six 1.17.0
-    python311-traits 6.4.3
-    python311-traitsui 8.0.0
-    python311-zipp 3.21.0
-    ```
-
-After installing the RPM packages, follow the venv and build steps using `zypper` in place of `dnf` where appropriate, export `export-mayavi-vars.sh`, and run the Mayavi demos.
-
-
-ARM aarch64 (Fedora Asahi Remix) — PyVista system venv path
------------------------------------------------------------
-
-Conda's `linux-aarch64` VTK binaries (and PyPI bundled VTK wheels) are 4 KB page-aligned and segfault on Asahi Linux's 16 KB page kernel. The PyVista setup on ARM uses the system-installed `python3-vtk` Fedora RPM (rebuilt for 16 KB page size) via a `--system-site-packages` virtual environment.
-
-1.  Install system prerequisites:
-    ```bash
-    sudo dnf install python3-vtk python3-qt5
-    ```
-
-2.  Set up the PyVista venv environment from the repository root:
-    ```bash
-    source pyclical/setup-env.sh
-    ```
-    This script creates `.venvs/pyclical-env` with system site-packages access, installs PyVista without bundled VTK (`pip install --no-deps pyvista`), installs PyVista auxiliary requirements (including PySide6), configures `fedora_lib64.pth`, and exports environment variables (`PYTHONPATH`, `QT_API`).
-
-3.  Configure and build PyClical against the venv Python:
+2.  Bootstrap (git clone only), configure, and build PyClical:
     ```bash
     make -f admin/Makefile.common bootstrap   # git clone only
     ./configure PYTHON=$(which python3)
     make -C pyclical -j$(($(nproc)/2))
     ```
 
-*Mayavi on ARM (unsupported)*: Due to deep ETS/Traits version incompatibilities with system Python 3.14+ site-packages, Mayavi is not supported on Fedora Asahi Remix. PyVista is the official, fast, and fully verified 3D plotting backend on ARM64 / Apple Silicon.
 
+Running the PyVista plotting demos
+----------------------------------
 
-Running the plotting demos
---------------------------
+Once `source pyclical/setup-env.sh` has been run and PyClical is built:
 
-Once the chosen environment is active and PyClical is built:
-
-### Mayavi demos (x86-64 / openSUSE)
-```bash
-source pyclical/demos/plotting/export-mayavi-vars.sh
-cd pyclical/demos/plotting
-python3 plotting_demo_mayavi.py
-python3 plotting_demo_dialog.py
-
-# Non-interactive mode:
-GLUCAT_NON_INTERACTIVE=1 python3 plotting_demo_mayavi.py
-```
-
-### PyVista demos (All platforms)
 ```bash
 cd pyclical/demos/plotting
 python3 plotting_demo_pyvista.py
@@ -850,9 +812,6 @@ python3 plotting_demo_pyvista_dialog.py
 # Non-interactive mode:
 GLUCAT_NON_INTERACTIVE=1 python3 plotting_demo_pyvista.py
 ```
-
-
-
 
 To Test
 =======
@@ -866,15 +825,16 @@ The static test runtime baseline directories `./test_runtime.x86-64` and
 The sample test output files include `expressions-8.out`, `gfft_test-11.out`,
 `products-8.out`, `squaring-11.out`, and `transforms-8.out`.
 
-The `./test_runtime.x86-64` directory contains 24 sample versions of the regression
-test results (corresponding to 12 different combinations of configuration
-parameters, for two different sets of tests: the complete set of 20 tests, and a
-subset of 3 tests), and also includes the sample output file `eg3.res` and the
-test input file `eg8.txt` (needed by programming example 8, reading multivectors from input).
+The `./test_runtime.x86-64` directory contains 24 sample versions of the 
+regression test results (corresponding to 12 different combinations of 
+configuration parameters, for two different sets of tests: the complete set of 20 
+tests, and a subset of 3 tests), and also includes the sample output file 
+`eg3.res` and the test input file `eg8.txt` (needed by programming example 8, 
+reading multivectors from input).
 
-The `./test_runtime.aarch64` directory contains 12 sample versions of the full
-regression test results (corresponding to 12 different combinations of configuration
-parameters for the complete set of 20 tests).
+The `./test_runtime.aarch64` directory contains 12 sample versions of the full 
+regression test results (corresponding to 12 different combinations of 
+configuration parameters for the complete set of 20 tests).
 
 
 Re-running the regression tests
@@ -1125,16 +1085,16 @@ directory to ease future comparisons without clobbering the baseline
 `./test_runtime.${arch}` directory directly. To do so, run the script
 `./test/copy-all-config-outputs.sh`.
 
-The difference between `./test/test-all-config-options.sh` and
-`./test/fast-test-all-config-options.sh` is that the former runs all of the tests
-`./test00` to `./test19`, whereas the latter runs only `./test00`, `./test10` and
-`./test11`. Both scripts build and check `./pyclical`. More specifically, the
-`./test/test-one-config-option.sh` script runs `make check`, and the
-`./test/fast-test-one-config-option.sh` script runs `make fast-check`. For the
-definitions of these arguments to `make`, see the file `./Makefile.am.in`. To
-compare or copy the output of `./test/fast-test-all-config-options.sh`, use either
-`./test/fast-diff-all-config-outputs.sh ${arch}` or `./test/fast-copy-all-config-outputs.sh`
-respectively.
+The difference between `./test/test-all-config-options.sh` and 
+`./test/fast-test-all-config-options.sh` is that the former runs all of the tests 
+`./test00` to `./test19`, whereas the latter runs only `./test00`, `./test10` and 
+`./test11`. Both scripts build and check `./pyclical`. More specifically, the 
+`./test/test-one-config-option.sh` script runs `make check`, and the 
+`./test/fast-test-one-config-option.sh` script runs `make fast-check`.
+For the definitions of these arguments to `make`, see the file `./Makefile.am.in`.
+To compare or copy the output of `./test/fast-test-all-config-options.sh`, use 
+either `./test/fast-diff-all-config-outputs.sh ${arch}` or 
+`./test/fast-copy-all-config-outputs.sh` respectively.
 
 The script `./test/pyclical-test-all-config-options.sh` just builds and checks
 `./pyclical` without running any of the other regression tests. To examine the
@@ -1206,18 +1166,37 @@ on an 8 core `AMD Ryzen 7 8840HS w/ Radeon 780M Graphics` @ 3.3 GHz with
 Systematic Benchmarking
 -----------------------
 
-In addition to individual timing tests, the test suite includes scripts for systematic performance benchmarking across 16 different library configurations (varying backends such as Eigen/Armadillo, parallel and serial BLAS, and OpenMP settings). Note that these benchmarking directories and scripts are included in the Git repository but are deliberately excluded from the installation tarball to prevent bloat.
+In addition to individual timing tests, the test suite includes scripts for 
+systematic performance benchmarking across 16 different library configurations 
+(varying backends such as Eigen/Armadillo, parallel and serial BLAS, and OpenMP 
+settings). Note that these benchmarking directories and scripts are included in 
+the Git repository but are deliberately excluded from the installation tarball to 
+prevent bloat.
 
-These benchmarks are driven by the following scripts in the `./test` directory:
-* `./test/benchmark-all-config-options.sh`: Builds and runs benchmarks for all 16 configurations specified in `./test/benchmark-config-options.txt`.
-* `./test/benchmark-one-config-option.sh`: Runs a single configuration by line number.
-* `./test/copy-all-benchmark-outputs.sh` / `./test/copy-one-benchmark-output.sh`: Copies benchmark results to the `./benchmarks` directory.
+These benchmarks are driven by the following scripts in the `./test` directory: * 
+`./test/benchmark-all-config-options.sh`: Builds and runs benchmarks for all 16 
+configurations specified in `./test/benchmark-config-options.txt`. * 
+`./test/benchmark-one-config-option.sh`: Runs a single configuration by line 
+number. * `./test/copy-all-benchmark-outputs.sh` / 
+`./test/copy-one-benchmark-output.sh`: Copies benchmark results to the 
+`./benchmarks` directory.
 
-To ensure consistent processor affinity, multithreading, and cache behavior, the benchmarks source configuration-specific environment scripts from the `./benchmarks` directory, which route environment variables (such as `OMP_NUM_THREADS` and `OPENBLAS_NUM_THREADS`) depending on the profile:
-* `env-*.sh`: A set of 16 wrappers corresponding to each configuration abbreviation.
-* `env_setup_common.sh`: A common script performing platform-independent CPU architecture probing (isolating Performance cores on hybrid Apple Silicon Asahi Linux platforms, and targeting physical cores on homogeneous AMD/Intel x86-64 Linux).
+To ensure consistent processor affinity, multithreading, and cache behavior, the 
+benchmarks source configuration-specific environment scripts from the 
+`./benchmarks` directory, which route environment variables (such as 
+`OMP_NUM_THREADS` and `OPENBLAS_NUM_THREADS`) depending on the profile: * 
+`env-*.sh`: A set of 16 wrappers corresponding to each configuration abbreviation. 
+* `env_setup_common.sh`: A common script performing platform-independent CPU 
+architecture probing (isolating Performance cores on hybrid Apple Silicon Asahi 
+Linux platforms, and targeting physical cores on homogeneous AMD/Intel x86-64 
+Linux).
 
-Results and comparative reports from these systematic benchmarks are stored in the `./doc/benchmarks/` directory. In particular, the file `./doc/benchmarks/compiler_architecture_comparison_report.md` contains a comprehensive performance analysis across three hardware architectures (Intel Core i7-870, AMD Ryzen 7 8840HS, Apple Avalanche M2 Pro) and three compilers (GCC, Clang, Intel oneAPI), accompanied by performance scaling plots.
+Results and comparative reports from these systematic benchmarks are stored in the 
+`./doc/benchmarks/` directory. In particular, the file 
+`./doc/benchmarks/compiler_architecture_comparison_report.md` contains a 
+comprehensive performance analysis across three hardware architectures (Intel Core 
+i7-870, AMD Ryzen 7 8840HS, Apple Avalanche M2 Pro) and three compilers (GCC, 
+Clang, Intel oneAPI), accompanied by performance scaling plots.
 
 Testing PyClical
 ----------------
@@ -1275,31 +1254,29 @@ GluCat 0.98a3 with PyClical has so far been built and tested using:
     8 core `AMD Ryzen 7 8840HS w/ Radeon 780M Graphics` @ 3.3 GHz with
 
     ```
-    Linux 7.0.0-15-generic #15-Ubuntu SMP 2026
+    Linux 7.0.0-29-generic #29-Ubuntu SMP 2026
     Kubuntu 26.04 LTS
     Armadillo 15.2.1
+    Boost 10.90.0
     Doxygen 1.15.0
     Eigen3 3.4.0
-    GSL 2.8
     QD 2.3.23
     TeXLive 2025.20260124
 
-    Conda 26.3.2 env containing:
-    Boost 1.88.0
-    Cython 3.1.6
-    Jupyter Server 2.18.2
-    Matplotlib 3.10.9
-    Mayavi2 4.8.3
-    Notebook 7.5.6
-    Numpy 1.26.4
+    Conda 26.3.2 env including:
+    Cython 3.2.8
+    Jupyterlab 4.6.1
+    Matplotlib 3.11.0
+    Numpy 2.5.1
     PyQT 5.15.11
     Python 3.12.13
-    VTK 9.4.2
+    PyVista 0.48.4
+    VTK 9.6.2
     ```
 
     `./test/test-all-config-options.sh`:
     All 12 configuration commands corresponding to each of the 12
-    `test.configure*.out` files in `./test_runtime`
+    `test.configure*.out` files in `./test_runtime.x86_64`
     tested with the following compiler versions:
 
     1) `g++ (Ubuntu 15.2.0-16ubuntu1) 15.2.0`
@@ -1309,53 +1286,37 @@ GluCat 0.98a3 with PyClical has so far been built and tested using:
     4 core `Intel(R) Core(TM) i7 CPU 870  @ 2.93GHz` with
 
     ```
-    Linux 6.14.0-35-generic #35-Ubuntu SMP 2025
+    Linux 6.14.0-35-generic #37-Ubuntu SMP 2025
     Kubuntu 25.04 LTS
-    Armadillo 15.2.1
+    Armadillo 14.2.3
     Boost 1.83.0
-    Cython 3.0.11
     Doxygen 1.9.8
     Eigen3 3.4.0
-    GSL 2.8
-    Numpy 2.2.3
+    PyQT 5.15.11
     QD 2.3.23
-    Python 3.13.3
     TeXLive 2024.20250309
 
+    Conda 24.9.2 env including:
+    Cython 3.2.9
+    Jupyterlab 4.6.2
+    Matplotlib 3.11.1
+    Numpy 2.5.1
+    Python 3.12.13
+    PyVista 0.48.4
+    VTK 9.6.2
     ```
-    `./test/fast-test-all-config-options.sh`:
+    `./test/test-all-config-options.sh`:
     All 12 configuration commands corresponding to each of the 12
-    `fast-test.configure*.out` files in `./test_runtime`
+    `fast-test.configure*.out` files in `./test_runtime.x86_64`
     tested with the following compiler versions:
 
     1) `g++ 14.2.0 (Ubuntu 14.2.0-19ubuntu2)`
     2) `Ubuntu clang version 20.1.2 (0ubuntu1)`
-    3) `Intel(R) oneAPI DPC++/C++ Compiler 2025.0.4 (2025.0.4.20241205)`
+    3) `Intel(R) oneAPI DPC++/C++ Compiler 2025.2.1 (2025.2.0.20250806)`
 
- 3) Vincitor (Pensieri running VirtualBox):
-    Virtual 1 core `Intel(R) Core(TM) i7 CPU 870 @ 2.93GHz` with
-
-    ```
-    Linux 6.12.6-1-default #1 SMP 2024
-    openSUSE Tumbleweed Release 20241224
-    g++ (SUSE Linux) 14.2.1 20241007
-    Armadillo 15.2.4
-    Boost 1.86.0
-    Cython 3.0.12
-    Doxygen 1.12.0
-    Eigen 5.0.1
-    GSL 2.8
-    Numpy 2.1.3
-    Python 3.11.11
-    QD 2.3.24
-    TeX Live 2026.20260301
-    ```
-    `./test/fast-test-all-config-options.sh`
-    All 12 configuration commands corresponding to each of the 12
-    `fast-test.configure*.out` files in `./test_runtime.x86-64`
-
- 4) Ginestra
-    Apple M2 Pro with 6 Avalanche performance cores and 4 Icestorm efficiency cores with
+ 3) Ginestra
+    Apple M2 Pro with 6 Avalanche performance cores and 4 Icestorm efficiency
+    cores with
     ```
     Linux 6.19.14-400.asahi.fc43.aarch64+16k SMP aarch64
     Fedora Linux Asahi Remix 43 (KDE Plasma Desktop Edition)
@@ -1384,7 +1345,7 @@ This section documents currently encountered building bugs and workarounds:
     `latex` (e.g. `texlive-2024`). Older versions may cause build errors.
 
 *   **GCC 15 false-positive warnings**:
-    Under GCC 15 on Fedora Asahi Remix, false-positive `-Wmaybe-uninitialized`
-    warnings can be encountered during optimized compilation of Eigen/Armadillo headers.
-    To compile with strict options enabled, either configure with `--disable-strict` or
-    suppress warnings in your compiler flags.
+    Under GCC 15 on Fedora Asahi Remix, false-positive `-Wmaybe-uninitialized` 
+warnings can be encountered during optimized compilation of Eigen/Armadillo 
+headers. To compile with strict options enabled, either configure with 
+`--disable-strict` or suppress warnings in your compiler flags.

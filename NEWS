@@ -1,25 +1,13 @@
 2026-08-01: 0.98a3
-GluCat 0.98a3 hardens version metadata and top-level documentation.
-
-o Established configure.ac.in as the single ultimate source of truth for versioning
-  across C++ headers, Cython extensions, pure Python fallback (PyClical.py.in),
-  and LSM metadata.
-o Hardened OBS spec packaging for openSUSE Tumbleweed, enforcing GCC 14+ C++23 guards.
-o Refactored PyClical test doctests for architecture-agnostic 32-bit/64-bit safety.
-o Verified Doxygen documentation build pipeline (make doc).
-
-2026-06-23: 0.98a3
 GluCat 0.98a3 implements the Defence in Depth quality-hardening framework.
 
-o Stage 0: Refactored the primary C++ regression suite (test_doctest), deleted redundant test headers, and embedded inline test template assertions next to function definitions.
-
-o Stage 5: Decoupled the Mayavi and PyVista plotting environments into separate
-  per-backend setup scripts and Conda environment files under
-  pyclical/demos/plotting/: mayavi-env.yml and pyvista-env.yml for x86-64 Conda
-  paths, and requirements-pyvista.txt for the ARM aarch64 (Fedora Asahi Remix)
-  system venv path using 16 KB-aligned Fedora RPMs. Added PyVista plotting demos
-  plotting_demo_pyvista.py and plotting_demo_pyvista_dialog.py (PySide6 GUI).
-  The outdated kubuntu-24-conda-install-mayavi.sh script has been retired.
+o Established configure.ac.in as single source of truth for versioning.
+o Integrated clang-format, cppcheck, ruff, and pylint for code quality.
+o Added pre-commit hooks and GitHub Actions CI workflows for automated testing.
+o Refactored C++ unit tests into header definitions under doctest guards.
+o Standardized PyClical environment setup via pyclical/setup-env.sh.
+o Transitioned 3D plotting from deprecated Mayavi to PyVista.
+o Hardened openSUSE spec packaging for GCC 14+ and C++23 toolchains.
 
 2026-06-07: 0.98a2
 GluCat 0.98a2 improves performance and adds configuration options and benchmarks.
