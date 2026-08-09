@@ -1,69 +1,69 @@
 Benchmarking versor product performance up to Cl(16,0)
 
 --- Benchmarking framed_multi ---
-Cl( 1, 0) | naive :      0.185 ms | operator| :      0.023 ms | versor :      0.003 ms | versor_exp :      0.017 ms
-Cl( 2, 0) | naive :      0.009 ms | operator| :      0.003 ms | versor :      0.002 ms | versor_exp :      0.012 ms
-Cl( 3, 0) | naive :      0.013 ms | operator| :      0.007 ms | versor :      0.006 ms | versor_exp :      0.019 ms
-Cl( 4, 0) | naive :      0.045 ms | operator| :      0.033 ms | versor :      0.025 ms | versor_exp :      0.055 ms
-Cl( 5, 0) | naive :      0.133 ms | operator| :      0.126 ms | versor :      0.116 ms | versor_exp :      0.214 ms
-Cl( 6, 0) | naive :      0.154 ms | operator| :      0.143 ms | versor :      0.139 ms | versor_exp :      0.269 ms
-Cl( 7, 0) | naive :      0.206 ms | operator| :      0.169 ms | versor :      0.163 ms | versor_exp :      0.361 ms
-Cl( 8, 0) | naive :      0.426 ms | operator| :      0.219 ms | versor :      0.213 ms | versor_exp :      0.322 ms
-Cl( 9, 0) | naive :      1.235 ms | operator| :      0.671 ms | versor :      0.659 ms | versor_exp :      0.978 ms
-Cl(10, 0) | naive :      2.401 ms | operator| :      1.292 ms | versor :      1.299 ms | versor_exp :      1.929 ms
-Cl(11, 0) | naive :      8.448 ms | operator| :      4.925 ms | versor :      4.903 ms | versor_exp :      7.941 ms
-Cl(12, 0) | naive :     30.511 ms | operator| :     18.028 ms | versor :     18.092 ms | versor_exp :     31.717 ms
-Cl(13, 0) | naive :    121.054 ms | operator| :     66.931 ms | versor :     66.748 ms | versor_exp :    305.514 ms
-Cl(14, 0) | naive :    135.100 ms | operator| :     79.229 ms | versor :     79.377 ms | versor_exp :    351.762 ms
-Cl(15, 0) | naive :    184.886 ms | operator| :    102.335 ms | versor :    101.636 ms | versor_exp :    434.534 ms
-Cl(16, 0) | naive :    270.769 ms | operator| :    148.931 ms | versor :    148.626 ms | versor_exp :    583.673 ms
-Cl( 0, 1) | naive :      0.014 ms | operator| :      0.007 ms | versor :      0.003 ms | versor_exp :      0.003 ms
-Cl( 0, 2) | naive :      0.011 ms | operator| :      0.006 ms | versor :      0.004 ms | versor_exp :      0.014 ms
-Cl( 0, 3) | naive :      0.023 ms | operator| :      0.017 ms | versor :      0.015 ms | versor_exp :      0.035 ms
-Cl( 0, 4) | naive :      0.040 ms | operator| :      0.031 ms | versor :      0.028 ms | versor_exp :      0.058 ms
-Cl( 0, 5) | naive :      0.045 ms | operator| :      0.040 ms | versor :      0.037 ms | versor_exp :      0.087 ms
-Cl( 0, 6) | naive :      0.067 ms | operator| :      0.049 ms | versor :      0.047 ms | versor_exp :      0.122 ms
-Cl( 0, 7) | naive :      0.213 ms | operator| :      0.175 ms | versor :      0.168 ms | versor_exp :      0.378 ms
-Cl( 0, 8) | naive :      0.428 ms | operator| :      0.218 ms | versor :      0.212 ms | versor_exp :      0.319 ms
-Cl( 0, 9) | naive :      1.235 ms | operator| :      0.678 ms | versor :      0.664 ms | versor_exp :      0.964 ms
-Cl( 0,10) | naive :      4.400 ms | operator| :      2.549 ms | versor :      2.525 ms | versor_exp :      3.772 ms
-Cl( 0,11) | naive :     15.508 ms | operator| :      9.182 ms | versor :      9.157 ms | versor_exp :     14.537 ms
-Cl( 0,12) | naive :     33.731 ms | operator| :     18.949 ms | versor :     18.941 ms | versor_exp :     33.130 ms
-Cl( 0,13) | naive :     43.000 ms | operator| :     23.824 ms | versor :     23.780 ms | versor_exp :    141.505 ms
-Cl( 0,14) | naive :     59.808 ms | operator| :     33.727 ms | versor :     33.743 ms | versor_exp :    175.484 ms
-Cl( 0,15) | naive :    185.920 ms | operator| :    103.176 ms | versor :    103.455 ms | versor_exp :    437.563 ms
-Cl( 0,16) | naive :    272.777 ms | operator| :    150.677 ms | versor :    151.146 ms | versor_exp :    588.725 ms
+Cl( 1, 0) | naive :      0.187 ms | operator| :      0.050 ms | versor :      0.003 ms | versor_exp :      0.002 ms
+Cl( 2, 0) | naive :      0.008 ms | operator| :      0.003 ms | versor :      0.002 ms | versor_exp :      0.011 ms
+Cl( 3, 0) | naive :      0.013 ms | operator| :      0.006 ms | versor :      0.006 ms | versor_exp :      0.017 ms
+Cl( 4, 0) | naive :      0.041 ms | operator| :      0.032 ms | versor :      0.023 ms | versor_exp :      0.051 ms
+Cl( 5, 0) | naive :      0.127 ms | operator| :      0.119 ms | versor :      0.113 ms | versor_exp :      0.207 ms
+Cl( 6, 0) | naive :      0.148 ms | operator| :      0.141 ms | versor :      0.133 ms | versor_exp :      0.262 ms
+Cl( 7, 0) | naive :      0.206 ms | operator| :      0.161 ms | versor :      0.153 ms | versor_exp :      0.353 ms
+Cl( 8, 0) | naive :      0.408 ms | operator| :      0.210 ms | versor :      0.201 ms | versor_exp :      0.307 ms
+Cl( 9, 0) | naive :      1.175 ms | operator| :      0.632 ms | versor :      0.627 ms | versor_exp :      0.916 ms
+Cl(10, 0) | naive :      2.324 ms | operator| :      1.269 ms | versor :      1.243 ms | versor_exp :      1.889 ms
+Cl(11, 0) | naive :      8.233 ms | operator| :      4.741 ms | versor :      4.714 ms | versor_exp :      7.644 ms
+Cl(12, 0) | naive :     29.785 ms | operator| :     17.461 ms | versor :     17.457 ms | versor_exp :     30.910 ms
+Cl(13, 0) | naive :    119.604 ms | operator| :     65.655 ms | versor :     65.208 ms | versor_exp :    296.927 ms
+Cl(14, 0) | naive :    132.339 ms | operator| :     77.642 ms | versor :     77.538 ms | versor_exp :    341.587 ms
+Cl(15, 0) | naive :    182.236 ms | operator| :    100.766 ms | versor :    100.310 ms | versor_exp :    424.791 ms
+Cl(16, 0) | naive :    267.033 ms | operator| :    147.388 ms | versor :    147.047 ms | versor_exp :    573.427 ms
+Cl( 0, 1) | naive :      0.014 ms | operator| :      0.008 ms | versor :      0.003 ms | versor_exp :      0.002 ms
+Cl( 0, 2) | naive :      0.011 ms | operator| :      0.005 ms | versor :      0.004 ms | versor_exp :      0.013 ms
+Cl( 0, 3) | naive :      0.022 ms | operator| :      0.016 ms | versor :      0.014 ms | versor_exp :      0.031 ms
+Cl( 0, 4) | naive :      0.037 ms | operator| :      0.030 ms | versor :      0.027 ms | versor_exp :      0.057 ms
+Cl( 0, 5) | naive :      0.043 ms | operator| :      0.038 ms | versor :      0.035 ms | versor_exp :      0.084 ms
+Cl( 0, 6) | naive :      0.065 ms | operator| :      0.048 ms | versor :      0.045 ms | versor_exp :      0.118 ms
+Cl( 0, 7) | naive :      0.207 ms | operator| :      0.167 ms | versor :      0.159 ms | versor_exp :      0.361 ms
+Cl( 0, 8) | naive :      0.410 ms | operator| :      0.210 ms | versor :      0.204 ms | versor_exp :      0.305 ms
+Cl( 0, 9) | naive :      1.177 ms | operator| :      0.642 ms | versor :      0.635 ms | versor_exp :      0.917 ms
+Cl( 0,10) | naive :      4.133 ms | operator| :      2.404 ms | versor :      2.383 ms | versor_exp :      3.568 ms
+Cl( 0,11) | naive :     14.980 ms | operator| :      8.830 ms | versor :      8.831 ms | versor_exp :     14.104 ms
+Cl( 0,12) | naive :     33.272 ms | operator| :     18.572 ms | versor :     18.538 ms | versor_exp :     32.603 ms
+Cl( 0,13) | naive :     42.169 ms | operator| :     23.386 ms | versor :     23.352 ms | versor_exp :    138.903 ms
+Cl( 0,14) | naive :     59.245 ms | operator| :     33.357 ms | versor :     33.374 ms | versor_exp :    173.149 ms
+Cl( 0,15) | naive :    183.435 ms | operator| :    101.870 ms | versor :    101.326 ms | versor_exp :    428.139 ms
+Cl( 0,16) | naive :    270.591 ms | operator| :    149.582 ms | versor :    149.313 ms | versor_exp :    580.372 ms
 
 --- Benchmarking matrix_multi ---
-Cl( 1, 0) | naive :      0.010 ms | operator| :      0.002 ms | versor :      0.001 ms | versor_exp :      0.022 ms
-Cl( 2, 0) | naive :      0.015 ms | operator| :      0.002 ms | versor :      0.001 ms | versor_exp :      0.006 ms
-Cl( 3, 0) | naive :      0.020 ms | operator| :      0.002 ms | versor :      0.002 ms | versor_exp :      0.007 ms
-Cl( 4, 0) | naive :      0.025 ms | operator| :      0.003 ms | versor :      0.003 ms | versor_exp :      0.015 ms
-Cl( 5, 0) | naive :      0.021 ms | operator| :      0.008 ms | versor :      0.008 ms | versor_exp :      0.037 ms
-Cl( 6, 0) | naive :      0.048 ms | operator| :      0.008 ms | versor :      0.008 ms | versor_exp :      0.035 ms
-Cl( 7, 0) | naive :      0.048 ms | operator| :      0.008 ms | versor :      0.008 ms | versor_exp :      0.034 ms
-Cl( 8, 0) | naive :      1.035 ms | operator| :      0.008 ms | versor :      0.007 ms | versor_exp :      0.034 ms
-Cl( 9, 0) | naive :      0.191 ms | operator| :      0.026 ms | versor :      0.024 ms | versor_exp :      0.098 ms
-Cl(10, 0) | naive :      3.678 ms | operator| :      0.025 ms | versor :      0.024 ms | versor_exp :      0.097 ms
-Cl(11, 0) | naive :     27.011 ms | operator| :      0.093 ms | versor :      0.090 ms | versor_exp :      0.403 ms
-Cl(12, 0) | naive :    200.292 ms | operator| :      0.456 ms | versor :      0.452 ms | versor_exp :      2.093 ms
-Cl(13, 0) | naive :      3.974 ms | operator| :      2.736 ms | versor :      2.744 ms | versor_exp :     13.199 ms
-Cl(14, 0) | naive :     11.179 ms | operator| :      2.767 ms | versor :      2.765 ms | versor_exp :     13.228 ms
-Cl(15, 0) | naive :     11.196 ms | operator| :      2.740 ms | versor :      2.731 ms | versor_exp :     13.227 ms
-Cl(16, 0) | naive :   3752.765 ms | operator| :      2.741 ms | versor :      2.738 ms | versor_exp :     13.177 ms
-Cl( 0, 1) | naive :      0.006 ms | operator| :      0.002 ms | versor :      0.002 ms | versor_exp :      0.002 ms
-Cl( 0, 2) | naive :      0.013 ms | operator| :      0.002 ms | versor :      0.001 ms | versor_exp :      0.007 ms
-Cl( 0, 3) | naive :      0.026 ms | operator| :      0.003 ms | versor :      0.003 ms | versor_exp :      0.013 ms
-Cl( 0, 4) | naive :      0.063 ms | operator| :      0.003 ms | versor :      0.003 ms | versor_exp :      0.012 ms
-Cl( 0, 5) | naive :      0.079 ms | operator| :      0.003 ms | versor :      0.003 ms | versor_exp :      0.013 ms
-Cl( 0, 6) | naive :      0.080 ms | operator| :      0.003 ms | versor :      0.003 ms | versor_exp :      0.013 ms
-Cl( 0, 7) | naive :      0.864 ms | operator| :      0.008 ms | versor :      0.007 ms | versor_exp :      0.036 ms
-Cl( 0, 8) | naive :      1.037 ms | operator| :      0.008 ms | versor :      0.007 ms | versor_exp :      0.034 ms
-Cl( 0, 9) | naive :      0.314 ms | operator| :      0.025 ms | versor :      0.024 ms | versor_exp :      0.096 ms
-Cl( 0,10) | naive :      1.064 ms | operator| :      0.091 ms | versor :      0.089 ms | versor_exp :      0.402 ms
-Cl( 0,11) | naive :      4.033 ms | operator| :      0.454 ms | versor :      0.452 ms | versor_exp :      2.193 ms
-Cl( 0,12) | naive :    209.440 ms | operator| :      0.457 ms | versor :      0.455 ms | versor_exp :      2.195 ms
-Cl( 0,13) | naive :    213.117 ms | operator| :      0.454 ms | versor :      0.453 ms | versor_exp :      2.200 ms
-Cl( 0,14) | naive :    212.510 ms | operator| :      0.462 ms | versor :      0.453 ms | versor_exp :      2.202 ms
-Cl( 0,15) | naive :    171.126 ms | operator| :      2.756 ms | versor :      2.753 ms | versor_exp :     13.205 ms
-Cl( 0,16) | naive :   3762.886 ms | operator| :      2.747 ms | versor :      2.738 ms | versor_exp :     13.205 ms
+Cl( 1, 0) | naive :      0.016 ms | operator| :      0.002 ms | versor :      0.001 ms | versor_exp :      0.002 ms
+Cl( 2, 0) | naive :      0.014 ms | operator| :      0.002 ms | versor :      0.001 ms | versor_exp :      0.007 ms
+Cl( 3, 0) | naive :      0.015 ms | operator| :      0.002 ms | versor :      0.002 ms | versor_exp :      0.007 ms
+Cl( 4, 0) | naive :      0.020 ms | operator| :      0.003 ms | versor :      0.003 ms | versor_exp :      0.014 ms
+Cl( 5, 0) | naive :      0.019 ms | operator| :      0.008 ms | versor :      0.008 ms | versor_exp :      0.036 ms
+Cl( 6, 0) | naive :      0.039 ms | operator| :      0.008 ms | versor :      0.008 ms | versor_exp :      0.036 ms
+Cl( 7, 0) | naive :      0.040 ms | operator| :      0.007 ms | versor :      0.007 ms | versor_exp :      0.036 ms
+Cl( 8, 0) | naive :      0.835 ms | operator| :      0.007 ms | versor :      0.007 ms | versor_exp :      0.036 ms
+Cl( 9, 0) | naive :      0.162 ms | operator| :      0.025 ms | versor :      0.024 ms | versor_exp :      0.098 ms
+Cl(10, 0) | naive :      3.010 ms | operator| :      0.025 ms | versor :      0.024 ms | versor_exp :      0.099 ms
+Cl(11, 0) | naive :     23.352 ms | operator| :      0.094 ms | versor :      0.092 ms | versor_exp :      0.411 ms
+Cl(12, 0) | naive :    181.029 ms | operator| :      0.455 ms | versor :      0.451 ms | versor_exp :      2.125 ms
+Cl(13, 0) | naive :      4.023 ms | operator| :      2.805 ms | versor :      2.810 ms | versor_exp :     13.337 ms
+Cl(14, 0) | naive :     10.722 ms | operator| :      2.776 ms | versor :      2.762 ms | versor_exp :     13.423 ms
+Cl(15, 0) | naive :     10.694 ms | operator| :      2.768 ms | versor :      2.768 ms | versor_exp :     13.372 ms
+Cl(16, 0) | naive :   3413.768 ms | operator| :      2.803 ms | versor :      2.839 ms | versor_exp :     13.649 ms
+Cl( 0, 1) | naive :      0.011 ms | operator| :      0.003 ms | versor :      0.001 ms | versor_exp :      0.002 ms
+Cl( 0, 2) | naive :      0.015 ms | operator| :      0.002 ms | versor :      0.001 ms | versor_exp :      0.007 ms
+Cl( 0, 3) | naive :      0.020 ms | operator| :      0.003 ms | versor :      0.003 ms | versor_exp :      0.014 ms
+Cl( 0, 4) | naive :      0.054 ms | operator| :      0.003 ms | versor :      0.003 ms | versor_exp :      0.013 ms
+Cl( 0, 5) | naive :      0.062 ms | operator| :      0.003 ms | versor :      0.003 ms | versor_exp :      0.013 ms
+Cl( 0, 6) | naive :      0.066 ms | operator| :      0.003 ms | versor :      0.003 ms | versor_exp :      0.013 ms
+Cl( 0, 7) | naive :      0.696 ms | operator| :      0.008 ms | versor :      0.008 ms | versor_exp :      0.037 ms
+Cl( 0, 8) | naive :      0.843 ms | operator| :      0.008 ms | versor :      0.007 ms | versor_exp :      0.037 ms
+Cl( 0, 9) | naive :      0.263 ms | operator| :      0.024 ms | versor :      0.024 ms | versor_exp :      0.097 ms
+Cl( 0,10) | naive :      0.937 ms | operator| :      0.091 ms | versor :      0.089 ms | versor_exp :      0.402 ms
+Cl( 0,11) | naive :      3.733 ms | operator| :      0.455 ms | versor :      0.457 ms | versor_exp :      2.225 ms
+Cl( 0,12) | naive :    189.842 ms | operator| :      0.467 ms | versor :      0.460 ms | versor_exp :      2.262 ms
+Cl( 0,13) | naive :    192.912 ms | operator| :      0.465 ms | versor :      0.461 ms | versor_exp :      2.252 ms
+Cl( 0,14) | naive :    192.775 ms | operator| :      0.462 ms | versor :      0.453 ms | versor_exp :      2.218 ms
+Cl( 0,15) | naive :    157.075 ms | operator| :      2.818 ms | versor :      2.772 ms | versor_exp :     13.329 ms
+Cl( 0,16) | naive :   3405.845 ms | operator| :      2.802 ms | versor :      2.790 ms | versor_exp :     13.520 ms
