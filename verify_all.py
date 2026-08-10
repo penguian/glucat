@@ -107,8 +107,6 @@ def find_python_tool(python_bin, tool_name):
     Find executable or module for a python tool (e.g. pylint, ruff).
     Returns command list if found, or None.
     """
-    if shutil.which(tool_name):
-        return [tool_name]
     if python_bin:
         try:
             res = subprocess.run(
@@ -121,6 +119,8 @@ def find_python_tool(python_bin, tool_name):
                 return [python_bin, "-m", tool_name]
         except Exception:
             pass
+    if shutil.which(tool_name):
+        return [tool_name]
     return None
 
 
@@ -233,21 +233,50 @@ def check_shutil_which_usage(root_dir):
 
 def check_extra_dist_entries(root_dir):
     """
-    Ensure critical entrypoints are in Makefile.am.in EXTRA_DIST.
+    Ensure critical entrypoints and configurations are in EXTRA_DIST.
     """
     makefile_in = os.path.join(root_dir, "Makefile.am.in")
-    if not os.path.isfile(makefile_in):
-        return
-    with open(makefile_in, "r", encoding="utf-8", errors="ignore") as fh:
-        content = fh.read()
-        for required in ["verify_all.py", "check_license_headers.py"]:
-            if required not in content:
-                print(
-                    f"Distribution Flaw in Makefile.am.in: '{required}' "
-                    "is missing from EXTRA_DIST.",
-                    file=sys.stderr,
-                )
-                sys.exit(1)
+    if os.path.isfile(makefile_in):
+        with open(makefile_in, "r", encoding="utf-8", errors="ignore") as fh:
+            content = fh.read()
+            required_toplevel = [
+                "verify_all.py",
+                "check_license_headers.py",
+                "format_helper.py",
+                "CONTRIBUTING.md",
+                "benchmarks",
+                ".clang-format",
+                "glucat.cppcheck",
+                "ruff.toml",
+                ".pylintrc",
+                "pyproject.toml",
+                ".pre-commit-config.yaml",
+            ]
+            for required in required_toplevel:
+                if required not in content:
+                    print(
+                        f"Distribution Flaw in Makefile.am.in: '{required}' "
+                        "is missing from EXTRA_DIST or doc_DATA.",
+                        file=sys.stderr,
+                    )
+                    sys.exit(1)
+
+    pyclical_am = os.path.join(root_dir, "pyclical", "Makefile.am")
+    if os.path.isfile(pyclical_am):
+        with open(pyclical_am, "r", encoding="utf-8", errors="ignore") as fh:
+            content = fh.read()
+            required_pyclical = [
+                "test_pytest_doctests.py",
+                "setup-env.sh",
+            ]
+            for required in required_pyclical:
+                if required not in content:
+                    print(
+                        f"Distribution Flaw in pyclical/Makefile.am: '{required}' "
+                        "is missing from EXTRA_DIST.",
+                        file=sys.stderr,
+                    )
+                    sys.exit(1)
 
 
 def run_all_demos(root_dir, python_bin, quiet=False):

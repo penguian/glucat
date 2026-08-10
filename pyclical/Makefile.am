@@ -7,8 +7,8 @@ ext_name = PyClical
 EXTCYTHON_SOURCE = $(ext_name).py $(ext_name).pxd glucat.pxd
 EXT_HEADER = $(ext_name).h
 
-EXTRA_DIST = Makefile.am PyClical.py.in $(EXTCYTHON_SOURCE) $(EXT_HEADER) \
-             setup_ext.py setup.py test.py test.out \
+EXTRA_DIST = Makefile.am PyClical.py.in $(ext_name).pxd glucat.pxd $(EXT_HEADER) \
+             setup_ext.py setup.py test.py test.out test_pytest_doctests.py \
              requirements.txt environment.yml setup-env.sh
 
 SETUP_SOURCE_LIST = $(EXTCYTHON_SOURCE) $(EXT_HEADER)
