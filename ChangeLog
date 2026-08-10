@@ -1,3 +1,767 @@
+2026-08-10  Paul Leopardi <paul.leopardi@gmail.com>
+
+	* glucat.lsm: Update the email address
+
+2026-08-10  Paul Leopardi <paul.leopardi@gmail.com>
+
+	* glucat/framed_multi_imp.h, test/check-coverage.sh, test/test.sh,
+	verify_all.py: Address reviewer comments
+
+2026-08-10  Paul Leopardi <paul.leopardi@gmail.com>
+
+	* Makefile.am.in, pyclical/Makefile.am, pyclical/test.out,
+	test/test_optional.sh, verify_all.py: Improve packaging and testing
+
+2026-08-09  Paul Leopardi <paul.leopardi@gmail.com>
+
+	* .gitattributes: Tell GithUb that the benchmarks directory contains
+	generated files
+
+2026-08-09  Paul Leopardi <paul.leopardi@gmail.com>
+
+	* .github/instructions/benchmarks.instructions.md: Tell GitHub
+	Copilot to ignore the benchmarks directory
+
+2026-08-09  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md, NEWS, README.md, TODO.md: Update the top directory
+	documentation for 0.98a3
+
+2026-08-09  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Update benchmark results
+
+2026-08-09  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* doc/benchmarks/compiler_architecture_comparison_report.md: Update
+	benchmark results
+
+2026-08-03  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/environment.yml, pyclical/requirements.txt,
+	pyclical/setup-env.sh: Unify the PyClical environment setup: add
+	setup files
+
+2026-08-03  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md, README.md, pyclical/Makefile.am,
+	pyclical/demos/plotting/Makefile.am,
+	pyclical/demos/plotting/export-pyvista-vars.sh,
+	pyclical/demos/plotting/pyvista-env.yml,
+	pyclical/demos/plotting/requirements-pyvista.txt,
+	pyclical/demos/plotting/setup-pyvista-env.sh: Unify the PyClical
+	environment setup
+
+2026-08-03  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* AUTHORS.md, INSTALL.md, NEWS, configure.ac.in, glucat.lsm: correct
+	the release name to 0.98a3
+
+2026-08-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* verify_all.py: Improve the search for Cython and pytest
+
+2026-08-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* verify_all.py: Check for ruff and pylint and warn if not found
+
+2026-08-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in: Suppress system header preprocessor warnings
+
+2026-08-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h, glucat/long_double.h,
+	glucat/matrix_base_imp.h, glucat/matrix_multi_imp.h,
+	glucat/scalar.h: Unify special floating point literal usage
+
+2026-08-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in: Suppress maybe-uninitialized warnings
+
+2026-08-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/Makefile.am, pyclical/PyClical.py: Remove PyClical.py
+	from Git tracking
+
+2026-08-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/PyClical.py.in, test/check-coverage.sh,
+	test/coverage_gap_report.py: Add previously untracked files
+
+2026-08-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* AUTHORS.md, DESIGN.md, INSTALL.md, NEWS, README.md,
+	configure.ac.in, glucat.lsm, glucat/Makefile.am,
+	pyclical/Makefile.am, pyclical/PyClical.py, test/test.sh,
+	test/test_optional.sh, test00/Makefile.am, test01/Makefile.am,
+	test02/Makefile.am, test03/Makefile.am, test04/Makefile.am,
+	test05/Makefile.am, test06/Makefile.am, test07/Makefile.am,
+	test08/Makefile.am, test09/Makefile.am, test10/Makefile.am,
+	test11/Makefile.am, test12/Makefile.am, test13/Makefile.am,
+	test14/Makefile.am, test15/Makefile.am, test16/Makefile.am,
+	test17/Makefile.am, test18/Makefile.am, test19/Makefile.am: Prepare
+	the 0.98b3 release
+
+2026-08-01  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* packaging/obs/glucat.spec: Build requires at least gcc-14
+
+2026-08-01  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* packaging/obs/glucat.spec: Use g++-14 with old suse_version
+
+2026-08-01  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/plotting/mayavi-env.yml,
+	pyclical/demos/plotting/pyvista-env.yml: Add dependencies
+
+2026-08-01  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/PyClical.py, pyclical/test.out: Make the test for ~
+	(unary not) independent of word size. Update test results
+
+2026-08-01  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* packaging/obs/glucat.spec:  Enforce gcc14 on Leap 16.X and skip doctests on 32-bit i586
+
+2026-08-01  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* packaging/obs/glucat.spec: Clean up unpackaged doc files in spec
+	install
+
+2026-08-01  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* packaging/obs/glucat.spec: Strip unpackaged doc and demo files
+	from Python flavour install
+
+2026-07-27  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* packaging/obs/glucat.spec: Comprehensive spec fix
+
+2026-07-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* packaging/obs/glucat.spec: Fix python_expand macro syntax
+
+2026-07-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* packaging/obs/glucat.spec: Use multiple flavours
+
+2026-07-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* packaging/obs/glucat.spec: Do not use pkgconfig/glucat.pc
+
+2026-07-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in, packaging/obs/glucat.spec: Use python3 explcitly.
+	Require at least Boost 1.68.0
+
+2026-07-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* packaging/obs/glucat.spec: Try reverting a previous simplification
+
+2026-07-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* configure.ac.in, m4/acinclude.m4: Revert an ineffective change to
+	CPPFLAGS
+
+2026-07-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* packaging/obs/glucat.spec: Require g++-14
+
+2026-07-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* packaging/obs/glucat.spec: Require gcc14-c++ for Leap 15.x in OBS
+	spec
+
+2026-07-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* packaging/obs/_service: Temporarily use the 93-obs-packaging
+	branch for OBS testing
+
+2026-07-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* packaging/obs/glucat.spec: Specify a minimum g++ version for OBS
+
+2026-07-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* m4/acinclude.m4: Fix header checks
+
+2026-07-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* Makefile.am.in, configure.ac.in, packaging/obs/_service,
+	packaging/obs/glucat.changes, packaging/obs/glucat.spec: Update OBS
+	packaging
+
+2026-07-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h, glucat/index_set_imp.h: Simplify
+	to_sign_helper
+
+2026-08-10  Paul Leopardi <paul.leopardi@gmail.com>
+
+	* : Merge pull request #96 from
+	penguian/95-update-and-improve-benchmarks Update and improve benchmarks
+
+2026-07-18  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #92 from penguian/91-pyclical-hardening PyClical improvements and hardening
+
+2026-07-18  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* verify_all.py: Ensure that PyClical has been built before running
+	pytest
+
+2026-07-18  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/plotting/plotting_demo_pyvista.py: Set and use a
+	non_interactive variable
+
+2026-07-18  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .github/workflows/ci.yml: Remove a redundant CI check job
+
+2026-07-17  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/clifford_demo.py,
+	pyclical/demos/pyclical_notebook_utils.py,
+	pyclical/demos/pyclical_tutorial_utils.py: Use display_image in
+	clifford_demo.py
+
+2026-07-17  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* admin/setup-git-hooks.sh,
+	pyclical/demos/plotting/setup-mayavi-env.sh,
+	pyclical/demos/plotting/setup-pyvista-env.sh, verify_all.py: 
+	Introduce more checks and address pull request comments
+
+2026-07-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* CONTRIBUTING.md, Makefile.am.in, verify_all.py: Make the PyClical
+	CI and pre-push tests much faster
+
+2026-07-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* verify_all.py: Eliminate the jobserver warning
+
+2026-07-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .github/workflows/ci.yml: Make the Python CI check faster
+
+2026-07-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* Makefile.am.in: Make testing faster
+
+2026-07-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/pyclical_tutorial_utils.py, ruff.toml: Improve
+	imports in pyclical_tutorial_utils.py
+
+2026-07-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* CONTRIBUTING.md, Makefile.am.in,
+	pyclical/demos/pyclical_tutorial_utils.py, verify_all.py: Respond to
+	reviewer comments
+
+2026-07-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* CONTRIBUTING.md, verify_all.py: Run "make check" so that
+	test_doctest is used
+
+2026-07-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* CONTRIBUTING.md: Update doc to reflect changes to validation
+
+2026-07-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* verify_all.py: Further handening of verify_all.py
+
+2026-07-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/pyclical_tutorial_utils.py: Use multiline doc
+	comments
+
+2026-07-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* benchmarks/compare.py, benchmarks/compare_all.py,
+	pyclical/demos/build_pyclical_notebooks.py,
+	pyclical/demos/clifford_demo.py, pyclical/demos/m_theory_demo.py,
+	pyclical/demos/pyclical_demo.py,
+	pyclical/demos/pyclical_notebook_utils.py,
+	pyclical/demos/pyclical_tutorial_0_0_notation.py,
+	pyclical/demos/pyclical_tutorial_0_1_index_sets.py,
+	pyclical/demos/pyclical_tutorial_0_2_operations.py,
+	pyclical/demos/pyclical_tutorial_0_3_functions.py,
+	pyclical/demos/pyclical_tutorial_0_4_transcendental.py,
+	pyclical/demos/pyclical_tutorial_1_0_plane.py,
+	pyclical/demos/pyclical_tutorial_1_1_complex.py,
+	pyclical/demos/pyclical_tutorial_1_2_space.py,
+	pyclical/demos/pyclical_tutorial_1_3_lorentz.py,
+	pyclical/demos/pyclical_tutorial_1_4_fourth.py,
+	pyclical/demos/pyclical_tutorial_1_5_conformal.py,
+	pyclical/demos/pyclical_tutorial_2_0_wedge_product.py,
+	pyclical/demos/pyclical_tutorials.py,
+	pyclical/demos/sqrt_log_demo.py,
+	pyclical/demos/validate_notebooks.py,
+	pyclical/demos/versor_demo.py, pyclical/setup_ext.py,
+	pyclical/test_pytest_doctests.py: Use multiline doc comments
+
+2026-07-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .github/workflows/ci.yml, Makefile.am.in,
+	check_license_headers.py, verify_all.py: Harden the CI checks
+
+2026-07-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* check_license_headers.py, verify_all.py: Harden checking scripts
+
+2026-07-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* check_license_headers.py: Satisfy Ruff and Pylint
+
+2026-07-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/PyClical.py, pyclical/setup.py, pyclical/setup_ext.py,
+	pyclical/test.py, pyclical/test_pytest_doctests.py: Improve Pylint
+	score while removing disable directives
+
+2026-07-16  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/PyClical.py: Fix an error message
+
+2026-07-15  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/PyClical.py, verify_all.py: Address more reviewer
+	comments
+
+2026-07-15  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md: The PyClical plotting demo does not support MayaVi on
+	Apple aarch64
+
+2026-07-15  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyproject.toml: Add PyLint and Ruff rules file
+
+2026-07-15  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md: Add more troubleshooting
+
+2026-07-15  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md: Add a note about Jupyter notebooks
+
+2026-07-15  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .pylintrc, pyclical/demos/build_pyclical_notebooks.py,
+	pyclical/demos/clifford_demo.py, pyclical/demos/m_theory_demo.py,
+	pyclical/demos/pyclical_demo.py,
+	pyclical/demos/pyclical_notebook_utils.py,
+	pyclical/demos/pyclical_tutorial_0_0_notation.py,
+	pyclical/demos/pyclical_tutorial_0_1_index_sets.py,
+	pyclical/demos/pyclical_tutorial_0_2_operations.py,
+	pyclical/demos/pyclical_tutorial_0_3_functions.py,
+	pyclical/demos/pyclical_tutorial_0_4_transcendental.py,
+	pyclical/demos/pyclical_tutorial_1_0_plane.py,
+	pyclical/demos/pyclical_tutorial_1_1_complex.py,
+	pyclical/demos/pyclical_tutorial_1_2_space.py,
+	pyclical/demos/pyclical_tutorial_1_3_lorentz.py,
+	pyclical/demos/pyclical_tutorial_1_4_fourth.py,
+	pyclical/demos/pyclical_tutorial_1_5_conformal.py,
+	pyclical/demos/pyclical_tutorial_2_0_wedge_product.py,
+	pyclical/demos/pyclical_tutorial_utils.py,
+	pyclical/demos/pyclical_tutorials.py,
+	pyclical/demos/sqrt_log_demo.py,
+	pyclical/demos/validate_notebooks.py,
+	pyclical/demos/versor_demo.py, pyclical/test.py, ruff.toml,
+	verify_all.py: Satisfy Ruff and PyLint. Enforce 88 character lines
+
+2026-07-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* CONTRIBUTING.md, INSTALL.md, Makefile.am.in, README.md,
+	configure.ac.in, pyclical/PyClical.py,
+	pyclical/demos/clifford_demo.py, pyclical/demos/m_theory_demo.py,
+	pyclical/demos/plotting/plotting_demo_pyvista_dialog.py,
+	pyclical/demos/pyclical_demo.py,
+	pyclical/demos/pyclical_tutorial_0_0_notation.py,
+	pyclical/demos/pyclical_tutorial_0_1_index_sets.py,
+	pyclical/demos/pyclical_tutorial_0_2_operations.py,
+	pyclical/demos/pyclical_tutorial_0_3_functions.py,
+	pyclical/demos/pyclical_tutorial_0_4_transcendental.py,
+	pyclical/demos/pyclical_tutorial_1_0_plane.py,
+	pyclical/demos/pyclical_tutorial_1_1_complex.py,
+	pyclical/demos/pyclical_tutorial_1_2_space.py,
+	pyclical/demos/pyclical_tutorial_1_3_lorentz.py,
+	pyclical/demos/pyclical_tutorial_1_4_fourth.py,
+	pyclical/demos/pyclical_tutorial_1_5_conformal.py,
+	pyclical/demos/pyclical_tutorial_2_0_wedge_product.py,
+	pyclical/demos/pyclical_tutorial_utils.py,
+	pyclical/demos/pyclical_tutorials.py,
+	pyclical/demos/sqrt_log_demo.py, pyclical/demos/versor_demo.py,
+	ruff.toml, verify_all.py: Improve Python hardening
+
+2026-07-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* test/control.h, test/driver.h, test/timing.h, test/try_catch.h,
+	test/tuning.h: Improve C++ formatting
+
+2026-07-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/PyClical.py, ruff.toml: Use ruff to check PyClical.py
+
+2026-07-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* README.md, pyclical/PyClical.py,
+	pyclical/demos/plotting/plotting_demo_pyvista.py,
+	pyclical/demos/plotting/setup-mayavi-env.sh,
+	pyclical/demos/plotting/setup-pyvista-env.sh, stamp-h1: Improve
+	hardening
+
+2026-07-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md, pyclical/demos/Makefile.am: Address more pull request
+	comments
+
+2026-07-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* ruff.toml, verify_all.py: Address more pull request comments
+
+2026-07-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* Doxyfile.in, doc/Makefile.am,
+	pyclical/demos/plotting/plotting_demo_pyvista_dialog.py,
+	pyclical/test.py: Address CI failures
+
+2026-07-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* NEWS, pyclical/demos/plotting/Makefile.am, verify_all.py: Address
+	pull request failures and comments
+
+2026-07-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/plotting/Makefile.am: Improve "make clean"
+
+2026-07-14  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* CONTRIBUTING.md, INSTALL.md, README.md, check_license_headers.py,
+	pyclical/demos/plotting/Makefile.am,
+	pyclical/demos/plotting/{export-plotting-vars.sh =>
+	export-mayavi-vars.sh},
+	pyclical/demos/plotting/export-pyvista-vars.sh,
+	pyclical/demos/plotting/mayavi-env.yml,
+	pyclical/demos/plotting/plotting-env.yml,
+	pyclical/demos/plotting/plotting_demo_mayavi.py,
+	pyclical/demos/plotting/plotting_demo_pyvista.py,
+	pyclical/demos/plotting/plotting_demo_pyvista_dialog.py,
+	pyclical/demos/plotting/pyvista-env.yml,
+	pyclical/demos/plotting/requirements-pyvista.txt,
+	pyclical/demos/plotting/{setup-plotting-env.sh =>
+	setup-mayavi-env.sh}, pyclical/demos/plotting/setup-pyvista-env.sh: 
+	Split the Python plotting demo into MayaVi and PyVista
+
+2026-07-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md, pyclical/demos/Makefile.am,
+	pyclical/demos/plotting/Makefile.am,
+	pyclical/demos/plotting/export-plotting-vars.sh, pyclical/demos/{
+	=> plotting}/plotting_demo_dialog.py, pyclical/demos/{ =>
+	plotting}/plotting_demo_mayavi.py,
+	pyclical/demos/plotting/setup-plotting-env.sh: Move the plotting
+	demo Python scripts
+
+2026-07-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md, pyclical/demos/plotting/plotting-env.yml,
+	pyclical/demos/plotting/setup-plotting-env.sh: Rename the plotting
+	environment
+
+2026-07-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md, pyclical/demos/plotting/plotting-env.yml: Streamline
+	the Conda environment and refine the instructions
+
+2026-07-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* INSTALL.md, pyclical/demos/Makefile.am,
+	pyclical/demos/plotting/Makefile.am, pyclical/demos/{mayavi-env.sh
+	=> plotting/export-plotting-vars.sh}, environment.yml =>
+	pyclical/demos/plotting/plotting-env.yml,
+	pyclical/demos/{setup-conda-env.sh =>
+	plotting/setup-plotting-env.sh}, pyclical/demos/plotting_demo.py: 
+	Refactor plotting demos and update installation instructions
+
+2026-07-12  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .gitignore, INSTALL.md, NEWS, README.md, environment.yml,
+	pyclical/Makefile.am, pyclical/demos/Makefile.am,
+	pyclical/demos/kubuntu-24-conda-install-mayavi.sh,
+	pyclical/demos/{kubuntu-mayavi-env.sh => mayavi-env.sh},
+	pyclical/demos/setup-conda-env.sh: Update the environment for the
+	Mayavi demos
+
+2026-07-10  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .pylintrc, Makefile.am.in, configure.ac.in, pyclical/Makefile.am,
+	pyclical/PyClical.pxd, pyclical/{PyClical.pyx => PyClical.py},
+	pyclical/demos/clifford_demo.py, pyclical/demos/plotting_demo.py,
+	pyclical/demos/plotting_demo_dialog.py,
+	pyclical/demos/plotting_demo_mayavi.py,
+	pyclical/demos/pyclical_demo.py,
+	pyclical/demos/pyclical_tutorial_1_2_space.py,
+	pyclical/demos/pyclical_tutorial_1_3_lorentz.py,
+	pyclical/demos/pyclical_tutorial_1_4_fourth.py, pyclical/setup.py,
+	pyclical/setup_ext.py, pyclical/test.out, ruff.toml, verify_all.py,
+	verify_all.sh: Harden PyClical
+
+2026-07-08  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #90 from penguian/89-coverage-hardening Improve coverage and streamline GitHub CI
+
+2026-07-07  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h, glucat/index_set_imp.h,
+	glucat/matrix_multi_imp.h: Address review comments
+
+2026-07-07  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h, glucat/index_set_imp.h,
+	glucat/matrix_eigen_imp.h, glucat/matrix_multi_imp.h: Increase
+	coverage
+
+2026-07-06  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .github/workflows/ci.yml, glucat/framed_multi_imp.h,
+	glucat/index_set_imp.h,
+	test_coverage/src/run_clang_doctest_coverage.sh, verify_all.sh: 
+	Improve coverage
+
+2026-07-05  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #88 from penguian/86-github-actions-ci Add a GitHub Actions CI workflow and validate notebooks
+
+2026-07-05  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .github/workflows/ci.yml: Make the CI more robust
+
+2026-07-05  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .github/workflows/ci.yml, pyclical/demos/validate_notebooks.py: 
+	Address more reviewer comments
+
+2026-07-05  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* verify_all.sh: Update verify_all.sh in response to reviewer
+	comments
+
+2026-07-05  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .github/workflows/ci.yml, verify_all.sh: Address more reviewer
+	comments
+
+2026-07-05  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .github/workflows/ci.yml, CONTRIBUTING.md, verify_all.sh: Address
+	reviewer comments
+
+2026-07-05  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* pyclical/demos/validate_notebooks.py: Add parent dir to PYTHONPATH
+	before running
+
+2026-07-04  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .github/workflows/ci.yml: Add setuptools and wheel to the PyClical
+	build
+
+2026-07-04  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .github/workflows/ci.yml: Use g++-14 for the PyClical and doc
+	builds
+
+2026-07-04  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .github/workflows/ci.yml: Update the build dependencies
+
+2026-07-04  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .github/workflows/ci.yml: Use make ... bootstrap
+
+2026-07-04  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .github/workflows/ci.yml: Try correcting the Boost download and
+	extraction
+
+2026-07-04  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .github/workflows/ci.yml, CONTRIBUTING.md, README.md,
+	pyclical/demos/validate_notebooks.py: Add a GitHub Actions CI
+	workflow and validate notebooks
+
+2026-07-04  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #85 from penguian/84-pre-commit-hooks Pre-Commit Hooks and License Enforcement
+
+2026-07-04  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .pre-commit-config.yaml, CONTRIBUTING.md: Address more review
+	comments
+
+2026-07-04  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .pre-commit-config.yaml, CONTRIBUTING.md,
+	check_license_headers.py, pyclical/demos/pyclical_notebook_utils.py: 
+	Address review comments
+
+2026-07-04  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .devcontainer/Dockerfile, .devcontainer/devcontainer.json,
+	.gitignore, AUTHORS.md, CONTRIBUTING.md, COPYING, DESIGN.md,
+	INSTALL.md, README.md, admin/detect-autoconf.sh,
+	benchmarks/compare.py, benchmarks/compare_all.py, configure.ac.in,
+	doc/Makefile.am,
+	doc/benchmarks/compiler_architecture_comparison_report.md,
+	format_helper.py, pyclical/demos/build_pyclical_notebooks.py,
+	pyclical/demos/clifford_demo.py, pyclical/demos/m_theory_demo.py,
+	pyclical/demos/plotting_demo.py,
+	pyclical/demos/plotting_demo_dialog.py,
+	pyclical/demos/plotting_demo_mayavi.py,
+	pyclical/demos/pyclical_demo.py,
+	pyclical/demos/pyclical_notebook_utils.py,
+	pyclical/demos/pyclical_tutorial_0_0_notation.py,
+	pyclical/demos/pyclical_tutorial_0_1_index_sets.py,
+	pyclical/demos/pyclical_tutorial_0_2_operations.py,
+	pyclical/demos/pyclical_tutorial_0_3_functions.py,
+	pyclical/demos/pyclical_tutorial_0_4_transcendental.py,
+	pyclical/demos/pyclical_tutorial_1_0_plane.py,
+	pyclical/demos/pyclical_tutorial_1_1_complex.py,
+	pyclical/demos/pyclical_tutorial_1_2_space.py,
+	pyclical/demos/pyclical_tutorial_1_3_lorentz.py,
+	pyclical/demos/pyclical_tutorial_1_4_fourth.py,
+	pyclical/demos/pyclical_tutorial_1_5_conformal.py,
+	pyclical/demos/pyclical_tutorial_2_0_wedge_product.py,
+	pyclical/demos/pyclical_tutorial_utils.py,
+	pyclical/demos/pyclical_tutorials.py,
+	pyclical/demos/sqrt_log_demo.py, pyclical/demos/versor_demo.py,
+	pyclical/setup.py, pyclical/setup_ext.py,
+	pyclical/test_pytest_doctests.py, test08/eg8.txt, test19/peg19.h,
+	test19/test19.cpp, test_coverage/src/run_clang_doctest_coverage.sh,
+	test_doctest/test_doctest.cpp, transforms/Makefile.am,
+	versor/Makefile.am, versor/versor.cpp, versor/versor.h: Add licence
+	headers and satisfy pre-commit
+
+2026-07-04  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* check_license_headers.py: Check iicense headers
+
+2026-07-04  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .pre-commit-config.yaml: Define pre-commit
+
+2026-07-04  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #83 from penguian/82-linting-setup Linting Setup and Benchmark Consolidation
+
+2026-07-03  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .git-blame-ignore-revs, CONTRIBUTING.md, format_helper.py,
+	pyclical/demos/build_pyclical_notebooks.py: Respond to pull request
+	comments
+
+2026-07-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* benchmarks/compare.py, benchmarks/compare_all.py, verify_all.sh: 
+	Refactor the comparison scripts and add them to verify_all.py
+
+2026-07-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .pylintrc, ruff.toml: Update ruff and linting rules
+
+2026-07-02  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .gitignore, benchmarks/compare.py, benchmarks/compare_all.py: Add
+	some benchmark comparison scripts
+
+2026-06-28  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* format_helper.py, glucat/errors.h, glucat/errors_imp.h,
+	glucat/framed_multi.h, glucat/framed_multi_imp.h, glucat/global.h,
+	glucat/index_set_imp.h, glucat/matrix.h, glucat/matrix_arma_imp.h,
+	glucat/matrix_base.h, glucat/matrix_eigen_imp.h,
+	glucat/matrix_imp.h, glucat/matrix_multi.h,
+	glucat/matrix_multi_imp.h, glucat/qd.h, glucat/scalar.h,
+	glucat/tuning.h: Put empty blocks on a single line
+
+2026-06-28  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h, glucat/global.h, glucat/index_set.h,
+	glucat/index_set_imp.h: Use sign_helper and move bit wizardry back
+	to index_set_imp.h
+
+2026-06-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .git-blame-ignore-revs, configure.ac.in, doc/Makefile.am,
+	glucat/global.h, glucat/index_set_imp.h: Commit work in progress for
+	stage 1 of defence in depth
+
+2026-06-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/clifford_algebra.h, glucat/clifford_algebra_imp.h,
+	glucat/errors.h, glucat/errors_imp.h, glucat/framed_multi.h,
+	glucat/framed_multi_imp.h, glucat/generation.h,
+	glucat/generation_imp.h, glucat/global.h, glucat/glucat.h,
+	glucat/glucat_imp.h, glucat/index_set.h, glucat/index_set_imp.h,
+	glucat/long_double.h, glucat/matrix.h, glucat/matrix_arma.h,
+	glucat/matrix_arma_imp.h, glucat/matrix_base.h,
+	glucat/matrix_base_imp.h, glucat/matrix_eigen.h,
+	glucat/matrix_eigen_imp.h, glucat/matrix_imp.h,
+	glucat/matrix_multi.h, glucat/matrix_multi_imp.h,
+	glucat/portability.h, glucat/promotion.h, glucat/qd.h,
+	glucat/random.h, glucat/scalar.h, glucat/scalar_imp.h,
+	glucat/tuning.h: Re-format to satisfy clang-format
+
+2026-06-26  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* Makefile.am.in, format_helper.py: Preserve one-line function
+	bodies.
+
+2026-06-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* CONTRIBUTING.md: Contribution guidelines
+
+2026-06-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* Makefile.am.in, configure.ac.in, doc/Makefile.am: Add --enable-doc
+	to configure
+
+2026-06-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* .git-blame-ignore-revs, .gitignore, glucat.cppcheck,
+	verify_all.sh: Add some checking
+
+2026-06-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #81 from penguian/80-improve-testing Improve testing
+
+2026-06-25  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h, glucat/matrix_multi_imp.h: Address
+	reviewer comments
+
+2026-06-23  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* DESIGN.md, NEWS: Update some top-level documents
+
+2026-06-23  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* glucat/framed_multi_imp.h, glucat/matrix_multi_imp.h,
+	test_doctest/test_doctest.cpp, test_doctest/test_doctest.h,
+	test_doctest/test_matrix_methods.h: Refactor C++ doctests
+
+2026-06-21  Paul Leopardi <paul.leopardi@anu.edu.au>
+
+	* : Merge pull request #79 from
+	penguian/78-investigate-expression-templates Use expression templates. See the pull request comment for details.
+
 2026-06-21  Paul Leopardi <paul.leopardi@anu.edu.au>
 
 	* NEWS: Update NEWS for 0.98a2
