@@ -62,8 +62,9 @@ Find a Python interpreter executable that has `nbformat` installed.
 
 def find_cython_python():
     """
-Find a Python interpreter executable that has `Cython` installed.
-"""
+    Find a Python interpreter executable that has `Cython` installed.
+    Prefers interpreters that also have `pytest` installed.
+    """
     candidates = [sys.executable]
     path_python = shutil.which("python3")
     if path_python and path_python not in candidates:
@@ -71,6 +72,19 @@ Find a Python interpreter executable that has `Cython` installed.
     for std_path in ("/usr/bin/python3", "/usr/local/bin/python3"):
         if os.path.exists(std_path) and std_path not in candidates:
             candidates.append(std_path)
+
+    for py_bin in candidates:
+        try:
+            res = subprocess.run(
+                [py_bin, "-c", "import Cython, pytest"],
+                check=False,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            if res.returncode == 0:
+                return py_bin
+        except Exception:
+            continue
 
     for py_bin in candidates:
         try:
@@ -84,7 +98,30 @@ Find a Python interpreter executable that has `Cython` installed.
                 return py_bin
         except Exception:
             continue
+
     return sys.executable
+
+
+def find_python_tool(python_bin, tool_name):
+    """
+    Find executable or module for a python tool (e.g. pylint, ruff).
+    Returns command list if found, or None.
+    """
+    if python_bin:
+        try:
+            res = subprocess.run(
+                [python_bin, "-m", tool_name, "--version"],
+                check=False,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            if res.returncode == 0:
+                return [python_bin, "-m", tool_name]
+        except Exception:
+            pass
+    if shutil.which(tool_name):
+        return [tool_name]
+    return None
 
 
 def get_clean_make_env(env=None):
@@ -196,21 +233,50 @@ def check_shutil_which_usage(root_dir):
 
 def check_extra_dist_entries(root_dir):
     """
-    Ensure critical entrypoints are in Makefile.am.in EXTRA_DIST.
+    Ensure critical entrypoints and configurations are in EXTRA_DIST.
     """
     makefile_in = os.path.join(root_dir, "Makefile.am.in")
-    if not os.path.isfile(makefile_in):
-        return
-    with open(makefile_in, "r", encoding="utf-8", errors="ignore") as fh:
-        content = fh.read()
-        for required in ["verify_all.py", "check_license_headers.py"]:
-            if required not in content:
-                print(
-                    f"Distribution Flaw in Makefile.am.in: '{required}' "
-                    "is missing from EXTRA_DIST.",
-                    file=sys.stderr,
-                )
-                sys.exit(1)
+    if os.path.isfile(makefile_in):
+        with open(makefile_in, "r", encoding="utf-8", errors="ignore") as fh:
+            content = fh.read()
+            required_toplevel = [
+                "verify_all.py",
+                "check_license_headers.py",
+                "format_helper.py",
+                "CONTRIBUTING.md",
+                "benchmarks",
+                ".clang-format",
+                "glucat.cppcheck",
+                "ruff.toml",
+                ".pylintrc",
+                "pyproject.toml",
+                ".pre-commit-config.yaml",
+            ]
+            for required in required_toplevel:
+                if required not in content:
+                    print(
+                        f"Distribution Flaw in Makefile.am.in: '{required}' "
+                        "is missing from EXTRA_DIST or doc_DATA.",
+                        file=sys.stderr,
+                    )
+                    sys.exit(1)
+
+    pyclical_am = os.path.join(root_dir, "pyclical", "Makefile.am")
+    if os.path.isfile(pyclical_am):
+        with open(pyclical_am, "r", encoding="utf-8", errors="ignore") as fh:
+            content = fh.read()
+            required_pyclical = [
+                "test_pytest_doctests.py",
+                "setup-env.sh",
+            ]
+            for required in required_pyclical:
+                if required not in content:
+                    print(
+                        f"Distribution Flaw in pyclical/Makefile.am: '{required}' "
+                        "is missing from EXTRA_DIST.",
+                        file=sys.stderr,
+                    )
+                    sys.exit(1)
 
 
 def run_all_demos(root_dir, python_bin, quiet=False):
@@ -340,18 +406,26 @@ Main verification runner parsing flags and executing checks.
         log_success("License headers check")
 
         log_step("Ruff check")
-        run_cmd(
-            [
-                "ruff",
-                "check",
-                "verify_all.py",
-                "check_license_headers.py",
-                "pyclical/",
-            ],
-            cwd=root_dir,
-            quiet=args.quiet,
-        )
-        log_success("Ruff check")
+        ruff_cmd = find_python_tool(python_bin, "ruff")
+        if ruff_cmd:
+            run_cmd(
+                ruff_cmd
+                + [
+                    "check",
+                    "verify_all.py",
+                    "check_license_headers.py",
+                    "pyclical/",
+                ],
+                cwd=root_dir,
+                quiet=args.quiet,
+            )
+            log_success("Ruff check")
+        else:
+            print(
+                "Error: 'ruff' is not installed in the active environment.",
+                file=sys.stderr,
+            )
+            sys.exit(1)
 
     if args.coverage:
         log_step("C++ header coverage check")
@@ -367,26 +441,40 @@ Main verification runner parsing flags and executing checks.
         log_success("PyClical C++ extension build")
 
         log_step("Pylint check")
-        run_cmd(
-            ["pylint", "pyclical/", "pyclical/demos/"],
-            cwd=root_dir,
-            quiet=args.quiet,
-        )
-        log_success("Pylint check")
+        pylint_cmd = find_python_tool(python_bin, "pylint")
+        if pylint_cmd:
+            run_cmd(
+                pylint_cmd + ["pyclical/", "pyclical/demos/"],
+                cwd=root_dir,
+                quiet=args.quiet,
+            )
+            log_success("Pylint check")
+        else:
+            print(
+                "Error: 'pylint' is not installed in the active environment.",
+                file=sys.stderr,
+            )
+            sys.exit(1)
 
         log_step("PyClical test (pytest)")
-        run_cmd(
-            [
-                python_bin,
-                "-m",
-                "pytest",
-                "pyclical/test_pytest_doctests.py",
-                "-v",
-            ],
-            cwd=root_dir,
-            quiet=args.quiet,
-        )
-        log_success("PyClical test (pytest)")
+        pytest_cmd = find_python_tool(python_bin, "pytest")
+        if pytest_cmd:
+            run_cmd(
+                pytest_cmd
+                + [
+                    "pyclical/test_pytest_doctests.py",
+                    "-v",
+                ],
+                cwd=root_dir,
+                quiet=args.quiet,
+            )
+            log_success("PyClical test (pytest)")
+        else:
+            print(
+                f"Error: 'pytest' is not installed in {python_bin}.",
+                file=sys.stderr,
+            )
+            sys.exit(1)
 
         log_step("Notebook validation")
         nbformat_python = find_nbformat_python()

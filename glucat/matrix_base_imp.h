@@ -277,7 +277,7 @@ TEST_CASE("matrix::matrix_base")
     m(0, 1) = -1.0;
     m(1, 0) = 1.0;
     // Block 2: rot by 0.6*pi -> eigenvalues {e^i0.6pi, e^-i0.6pi}
-    double theta = 0.6 * 3.14159265358979323846;
+    double theta = 0.6 * numeric_traits<double>::pi();
     m(2, 2) = std::cos(theta);
     m(2, 3) = -std::sin(theta);
     m(3, 2) = std::sin(theta);

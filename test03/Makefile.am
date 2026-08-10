@@ -6,7 +6,7 @@ noinst_PROGRAMS = test03
 
 check: test03.out
 test03.out: test03
-	../test/test.sh 03 > test03.out
+	$(top_srcdir)/test/test.sh 03 > test03.out
 
 noinst_HEADERS = peg03.h
 test03_SOURCES = peg03.cpp
@@ -17,4 +17,4 @@ AM_CPPFLAGS = $(all_includes) $(GLUCAT_CPPFLAGS)
 # the library search path.
 test03_LDFLAGS = $(USER_LDFLAGS)
 
-CLEANFILES = test03.out *.gcno *.gcda
+CLEANFILES = test03.out *.gcno *.gcda eg3.res

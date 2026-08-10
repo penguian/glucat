@@ -34,6 +34,7 @@
 #include <cmath>
 #include <complex>
 #include <limits>
+#include <numbers>
 #include <type_traits>
 
 #include "glucat/global.h"
@@ -136,10 +137,22 @@ namespace glucat
     }
 
     // Pi
-    inline static auto pi() -> Scalar_T { return Scalar_T(3.14159265358979323); }
+    inline static auto pi() -> Scalar_T
+    {
+      if constexpr (std::is_arithmetic_v<Scalar_T>)
+        return std::numbers::pi_v<Scalar_T>;
+      else
+        return Scalar_T(std::numbers::pi_v<long double>);
+    }
 
     // log(2)
-    inline static auto ln_2() -> Scalar_T { return Scalar_T(0.693147180559945309); }
+    inline static auto ln_2() -> Scalar_T
+    {
+      if constexpr (std::is_arithmetic_v<Scalar_T>)
+        return std::numbers::ln2_v<Scalar_T>;
+      else
+        return Scalar_T(std::numbers::ln2_v<long double>);
+    }
 
     // Integer power
     inline static auto pow(const Scalar_T& val, int n) -> Scalar_T

@@ -1,4 +1,4 @@
-GluCat design notes 2016-07-10, updated 2026-06-21
+GluCat design notes 2016-07-10, updated 2026-08-01
 ==================================================
 
 This document describes some of the decisions that underly the design of GluCat,

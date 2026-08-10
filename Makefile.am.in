@@ -26,10 +26,11 @@ FAST_TESTOUT = test_move/test_move.out test00/test00.out test10/test10.out test1
 
 DOC = doc
 
-doc_DATA = AUTHORS AUTHORS.md COPYING ChangeLog DESIGN.md glucat.lsm INSTALL INSTALL.md NEWS README README.md TODO TODO.md
+doc_DATA = AUTHORS AUTHORS.md CONTRIBUTING.md COPYING ChangeLog DESIGN.md glucat.lsm INSTALL INSTALL.md NEWS README README.md TODO TODO.md
 
-EXTRA_DIST = admin m4 test test_runtime.aarch64 test_runtime.x86-64 test_doctest verify_all.py check_license_headers.py $(EXAMPLES) $(SEMANTICS) \
-             subdirs configure.ac.in configure.ac configure Makefile.am $(doc_DATA) doc/Makefile.am doc/Makefile.in
+EXTRA_DIST = admin benchmarks m4 packaging test test_runtime.aarch64 test_runtime.x86-64 test_doctest verify_all.py check_license_headers.py format_helper.py \
+             .clang-format glucat.cppcheck ruff.toml .pylintrc pyproject.toml .pre-commit-config.yaml \
+             $(EXAMPLES) $(SEMANTICS) subdirs configure.ac.in configure.ac configure Makefile.am $(doc_DATA) doc/Makefile.am doc/Makefile.in
 
 AUTHORS: AUTHORS.md
 	ln -sf AUTHORS.md AUTHORS
@@ -117,6 +118,7 @@ lint-fix:
 	python3 format_helper.py fix glucat/*.h test_doctest/*.cpp test/*.h
 
 cppcheck:
+	mkdir -p .cppcheck_build
 	cppcheck --project=glucat.cppcheck --error-exitcode=1
 
 timing:

@@ -6,6 +6,8 @@ dependencies:
   - cython
   - setuptools
   - numpy
+  - pytest
+  - nbformat
   # Mayavi >= 4.8.3 supports NumPy 2.x (released May 2025).
   # x86-64 ONLY: conda-forge VTK binaries are 4KB page-aligned and
   # will segfault on Asahi Linux (16KB page kernel). See INSTALL.md.

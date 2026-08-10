@@ -1,0 +1,42 @@
+-------------------------------------------------------------------
+Sat Jul 18 12:50:00 UTC 2026 - Paul Leopardi <paul.leopardi@anu.edu.au>
+
+- Update to GluCat 0.98a3:
+  * Defence in Depth quality hardening release.
+  * Primary C++ regression suite doctest definition-adjacent testing.
+  * Pure Python PyClical wrapper and PyVista/Mayavi graphics portability.
+  * Multi-compiler (GCC/Clang) and multi-backend (Eigen/Armadillo) checks.
+  * Branchless sign_helper optimizations.
+  * Transition to upstream-first GitHub obs_scm packaging workflow.
+
+-------------------------------------------------------------------
+Sun Jun  8 00:00:00 UTC 2026 - Paul Leopardi <paul.leopardi@anu.edu.au>
+
+- Update to GluCat 0.98a2:
+  * Optimized framed_multi/matrix_multi products with native sparse versor solvers.
+  * Integrated Boost.YAP-based expression templates for matrix_multi engine.
+  * Hardened build safety by adding temp_storage to stabilize temporary reference lifetimes.
+  * Added --with-blas configure option and systematic cross-platform benchmarks.
+  * Conditionally suppressed noisy g++ ABI warnings (-Wno-psabi).
+  * Added test18, test19, and expanded C++ doctest coverage.
+
+-------------------------------------------------------------------
+Mon May 12 00:00:00 UTC 2026 - Paul Leopardi <paul.leopardi@anu.edu.au>
+
+- Update to GluCat 0.98a1:
+  * Achieved 100% C++ function coverage via test_doctest.
+  * Integrated Eigen and Armadillo linear algebra backends.
+  * Optimized Clifford product operators using a 3-way dispatch strategy.
+  * Standardized include paths and return types across the library.
+  * Transitioned to set_value_t for index_set value retrieval.
+
+-------------------------------------------------------------------
+Wed Apr 29 00:00:00 UTC 2026 - Paul Leopardi <paul.leopardi@anu.edu.au>
+
+- Update to GluCat 0.98a0:
+  * Modernization phase (2024-2026) has reached Alpha release.
+  * Refactored linear algebra architecture to use Eigen and Armadillo wrappers.
+  * Upgraded required C++ standard to C++23 across the entire library.
+  * Modernized public API with decltype(auto) and standard return types.
+  * Integrated Doctest-based unit testing suite with comprehensive backend coverage.
+  * Enforced real-valued Scalar_T requirements via compile-time assertions.

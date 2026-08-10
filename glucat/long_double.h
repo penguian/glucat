@@ -36,22 +36,14 @@
 
 namespace glucat
 {
-#if defined(__USE_GNU)
-  static const long double l_pi = M_PIl;
-  static const long double l_ln2 = M_LN2l;
-#else
-  static const long double l_pi = 3.1415926535897932384626433832795029L;
-  static const long double l_ln2 = 0.6931471805599453094172321214581766L;
-#endif
-
   // Pi for long double
   template <>
   inline auto numeric_traits<long double>::pi() -> long double
-  { return l_pi; }
+  { return std::numbers::pi_v<long double>; }
 
   // log(2) for long double
   template <>
   inline auto numeric_traits<long double>::ln_2() -> long double
-  { return l_ln2; }
+  { return std::numbers::ln2_v<long double>; }
 }  // namespace glucat
 #endif  // _GLUCAT_LONG_DOUBLE_H

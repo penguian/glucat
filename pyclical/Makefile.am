@@ -7,8 +7,9 @@ ext_name = PyClical
 EXTCYTHON_SOURCE = $(ext_name).py $(ext_name).pxd glucat.pxd
 EXT_HEADER = $(ext_name).h
 
-EXTRA_DIST = Makefile.am $(EXTCYTHON_SOURCE) $(EXT_HEADER) \
-             setup_ext.py  setup.py  test.py test.out
+EXTRA_DIST = Makefile.am PyClical.py.in $(ext_name).pxd glucat.pxd $(EXT_HEADER) \
+             setup_ext.py setup.py test.py test.out test_pytest_doctests.py \
+             requirements.txt environment.yml setup-env.sh
 
 SETUP_SOURCE_LIST = $(EXTCYTHON_SOURCE) $(EXT_HEADER)
 SETUP_SOURCE_PARAM = source_pyx="$(ext_name).py"
@@ -42,6 +43,8 @@ $(CHECK_OUT): all
 CLEAN_CYTHON = $(ext_name).cpp $(ext_name).html
 
 CLEANFILES = $(pyexec_DATA) $(CLEAN_CYTHON) *.gcno *.gcda
+DISTCLEANFILES = PyClical.py
+
 
 clean-local:
 	rm -f *.pyc

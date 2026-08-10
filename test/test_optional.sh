@@ -5,5 +5,11 @@ for i in ${tests}
 do
 echo
 echo "Test "$i":"
-${dir}/../test$i/test$i $*
+if [ -x ./test"$i" ]; then
+ ./test"$i" "$@"
+elif [ -x ../test"$i"/test"$i" ]; then
+ ../test"$i"/test"$i" "$@"
+else
+ "${dir}/../test$i/test$i" "$@"
+fi
 done
