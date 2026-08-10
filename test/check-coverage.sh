@@ -78,14 +78,14 @@ llvm-cov export \
   --instr-profile="${output_dir}/all_tests.profdata" \
   --object "$doctest_bin" \
   "${object_args[@]}" \
-  "$package_dir/glucat/" \
+  "$build_dir/glucat/" \
   > "${output_dir}/all_tests.lcov"
 
 llvm-cov export \
   --format=lcov \
   --instr-profile="${output_dir}/test_doctest_only.profdata" \
   --object "$doctest_bin" \
-  "$package_dir/glucat/" \
+  "$build_dir/glucat/" \
   > "${output_dir}/test_doctest_only.lcov"
 
 echo "=== 6. Computing coverage gap report ==="

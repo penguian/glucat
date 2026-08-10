@@ -421,7 +421,11 @@ Main verification runner parsing flags and executing checks.
             )
             log_success("Ruff check")
         else:
-            print("[WARNING] 'ruff' is not installed. Skipping ruff check.")
+            print(
+                "Error: 'ruff' is not installed in the active environment.",
+                file=sys.stderr,
+            )
+            sys.exit(1)
 
     if args.coverage:
         log_step("C++ header coverage check")
@@ -446,7 +450,11 @@ Main verification runner parsing flags and executing checks.
             )
             log_success("Pylint check")
         else:
-            print("[WARNING] 'pylint' is not installed. Skipping pylint check.")
+            print(
+                "Error: 'pylint' is not installed in the active environment.",
+                file=sys.stderr,
+            )
+            sys.exit(1)
 
         log_step("PyClical test (pytest)")
         pytest_cmd = find_python_tool(python_bin, "pytest")
@@ -463,9 +471,10 @@ Main verification runner parsing flags and executing checks.
             log_success("PyClical test (pytest)")
         else:
             print(
-                f"[WARNING] 'pytest' is not installed in {python_bin}. "
-                "Skipping PyClical pytest."
+                f"Error: 'pytest' is not installed in {python_bin}.",
+                file=sys.stderr,
             )
+            sys.exit(1)
 
         log_step("Notebook validation")
         nbformat_python = find_nbformat_python()
