@@ -23,8 +23,8 @@ import pyclical_tutorials as pt
 
 def build_notebook(ctx, module_name, title):
     """
-Build a single IPython notebook from a PyClical module.
-"""
+    Build a single IPython notebook from a PyClical module.
+    """
     module = __import__(module_name)
     original_stdout = sys.stdout
     try:
@@ -39,15 +39,15 @@ Build a single IPython notebook from a PyClical module.
 
 def build_notebook_from_demo(ctx, module_name):
     """
-Build an IPython notebook for a demo module.
-"""
+    Build an IPython notebook for a demo module.
+    """
     build_notebook(ctx, module_name, module_name)
 
 
 def build_notebook_from_tut(ctx, tut):
     """
-Build an IPython notebook for a tutorial module.
-"""
+    Build an IPython notebook for a tutorial module.
+    """
     build_notebook(ctx, tut.module_name, tut.title)
 
 
@@ -57,6 +57,7 @@ build_notebook_from_demo(ctx, "pyclical_demo")
 build_notebook_from_demo(ctx, "sqrt_log_demo")
 build_notebook_from_demo(ctx, "m_theory_demo")
 build_notebook_from_demo(ctx, "versor_demo")
+build_notebook_from_demo(ctx, "msta_demo")
 
 for key, tut in sorted(pt.tutorial_dict.items()):
     build_notebook_from_tut(ctx, tut)
