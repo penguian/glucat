@@ -196,6 +196,15 @@ To improve the organization and readability of the regression test suite:
 - **Type Safety & Hardening**: Comparisons with `Approx` and `is_error` lambdas were updated to accept concrete multivector types (`const fm_t&` and `const mm_t&`), preventing type deduction errors for standard double scalars.
 
 
+PyClical Sandbox, Marimo Notebooks, and Test Optimization (0.98a3 to 0.98a4)
+---------------------------------------------------------------------------
+The 0.98a4 release reorganizes the PyClical demos and tutorials, integrates reactive Marimo notebooks, removes legacy Mayavi scripts, and streamlines regression testing:
+
+- **Sandbox & Plotting Split**: Interactive tutorials, presentation demos, notebook builders, reference outputs, and offline portrait images (`pyclical/demos/sandbox/images/`) were organized into `pyclical/demos/sandbox/`, leaving `pyclical/demos/plotting/` standardized exclusively on PyVista and PySide6 after removing legacy Mayavi scripts.
+- **Single-Pass Marimo Reactive Notebooks**: `MarimoContext` in `pyclical_notebook_utils.py` and `build_marimo_notebooks.py` generate `*_marimo.py` notebooks directly, backed by `pyclical_marimo_utils.py` (`MarimoSession`) so tutorial steps run sequentially without `ImportStarError` or `MultipleDefinitionError`, presenting immutable syntax-highlighted code blocks with clickable `▶` output toggles and interactive `Check` exercise editors with live `is_near()` grading.
+- **Test Harness Optimization**: `test/test-one-config-option.sh` now runs `test_doctest` prior to the full `make check` suite for faster failure detection, and `test/fast-test-one-config-option.sh` focuses exclusively on `test_doctest`.
+
+
 Split of code between glucat/matrix_imp.h and glucat/matrix_multi_imp.h
 -----------------------------------------------------------------------
 

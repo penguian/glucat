@@ -1,9 +1,9 @@
-TODO for GluCat 0.98a3 with PyClical
+TODO for GluCat 0.98a4 with PyClical
 ====================================
 
 ## Roadmap
 
-### 0.98a3: Defence in Depth (Current)
+### 0.98a3: Defence in Depth
 * [x] **C++ Quality**: Implement `clang-format` and `cppcheck` linting.
 * [x] **Cython/Python Quality**: Implement `ruff` and `pylint` for PyClical.
 * [x] **Automation**: Integrate `pre-commit` hooks for all quality checks.
@@ -12,7 +12,13 @@ TODO for GluCat 0.98a3 with PyClical
   `pyclical/setup-env.sh`; deprecate Mayavi support.
 * [x] **Downstream Packaging**: Establish openSUSE RPM packaging (`glucat.spec`).
 
-### 0.98a4: Raytracer
+### 0.98a4: PyClical Sandbox & Test Optimization (Current)
+* [x] **Sandbox Reorganization**: Move interactive tutorials, notebook tools, and offline media to `pyclical/demos/sandbox/`.
+* [x] **Marimo Integration**: Generate and validate reactive Marimo notebooks alongside Jupyter notebooks, with immutable code toggles and interactive exercises.
+* [x] **Mayavi Deprecation**: Remove legacy Mayavi 3D plotting scripts, standardizing on PyVista.
+* [x] **Test Harness Optimization**: Update `test-one-config-option.sh` to run `test_doctest` first, and `fast-test-one-config-option.sh` to only run `test_doctest`.
+
+### 0.98a5: Raytracer
 * Remove deprecated items.
 * Integrate `rayconfglucat` as `raytracer` subdirectory under GPL v3.
 * Implement `--enable-raytracer` configure option and dependency checks (FLTK, 
@@ -20,7 +26,7 @@ OpenGL, libpng, zlib).
 * Update coordinate transformations in `scene.cpp` to use `operator|` and 
 `versor_exp`.
 
-### 0.98a5: Documentation
+### 0.98a6: Documentation
 * **ReadTheDocs**: Set up RTD formatting and automated deployment.
 * **Defence of Documentation**: Establish tests for the documentation.
 * **User Guide**: Develop a comprehensive User Guide using Sphinx + MyST.
@@ -29,7 +35,7 @@ Sphinx (Breathe).
 * **Case Studies**: Write a programmer's guide with descriptions of usage via use 
 cases.
 
-### 0.98a6: Packaging
+### 0.98a7: Packaging
 * Update and create all relevant downstream packages, including OpenSUSE.
 
 ## Future Stabilisation (0.99bx series)

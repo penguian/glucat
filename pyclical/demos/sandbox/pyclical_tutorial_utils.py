@@ -230,9 +230,9 @@ Determine whether two elements or lists of elements are near equal.
             return x == y
         if isinstance(x, (numbers.Real, PyClical.clifford)):
             tol = 4.0 * PyClical.scalar_epsilon
-            if abs(x) > tol:
-                return abs(x - y) / abs(x) < tol
-            return abs(x - y) < tol
+            if PyClical.abs(x) > tol:
+                return PyClical.abs(x - y) / PyClical.abs(x) < tol
+            return PyClical.abs(x - y) < tol
         return x == y
     except Exception:
         return False
@@ -291,7 +291,10 @@ Print wrapped text string.
         """
         Display image command string in terminal mode without IPython execution.
         """
-        print(f">>> Image(url='{url}')")
+        if url.startswith("http://") or url.startswith("https://"):
+            print(f">>> Image(url='{url}')")
+        else:
+            print(f">>> Image(filename='{url}')")
 
     def input_exec(self, prompt, sandbox):
         """

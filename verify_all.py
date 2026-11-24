@@ -283,7 +283,7 @@ def run_all_demos(root_dir, python_bin, quiet=False):
     """
 Run interactive and plotting python demos in pyclical/demos.
 """
-    demos_dir = os.path.join(root_dir, "pyclical", "demos")
+    demos_dir = os.path.join(root_dir, "pyclical", "demos", "sandbox")
     demo_files = [
         "clifford_demo.py",
         "m_theory_demo.py",
@@ -443,9 +443,23 @@ Main verification runner parsing flags and executing checks.
         log_step("Pylint check")
         pylint_cmd = find_python_tool(python_bin, "pylint")
         if pylint_cmd:
+            env = os.environ.copy()
+            demos_sandbox = os.path.join(root_dir, "pyclical", "demos", "sandbox")
+            pyclical_path = os.path.join(root_dir, "pyclical")
+            if "PYTHONPATH" in env:
+                env["PYTHONPATH"] = (
+                    demos_sandbox
+                    + os.pathsep
+                    + pyclical_path
+                    + os.pathsep
+                    + env["PYTHONPATH"]
+                )
+            else:
+                env["PYTHONPATH"] = demos_sandbox + os.pathsep + pyclical_path
             run_cmd(
-                pylint_cmd + ["pyclical/", "pyclical/demos/"],
+                pylint_cmd + ["pyclical/", "pyclical/demos/sandbox/"],
                 cwd=root_dir,
+                env=env,
                 quiet=args.quiet,
             )
             log_success("Pylint check")
@@ -480,7 +494,7 @@ Main verification runner parsing flags and executing checks.
         nbformat_python = find_nbformat_python()
         if nbformat_python:
             run_cmd(
-                [nbformat_python, "pyclical/demos/validate_notebooks.py"],
+                [nbformat_python, "pyclical/demos/sandbox/validate_notebooks.py"],
                 cwd=root_dir,
                 quiet=args.quiet,
             )

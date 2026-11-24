@@ -38,7 +38,7 @@ pushd ${package_dir}/.. \
       > /dev/null
     make clean \
       > /dev/null
-    make ${args} fast-check \
+    make ${args} -C test_doctest check \
       > make.out
 
     pushd pyclical \
@@ -56,7 +56,13 @@ pushd ${package_dir}/.. \
     pushd test_runtime \
       > /dev/null
 
-      mv fast-test.out fast-test.configure.${abbrev}.out
+      if [ -f ../test_doctest/test_doctest.out ]
+      then
+        cp ../test_doctest/test_doctest.out fast-test.configure.${abbrev}.out
+      elif [ -f fast-test.out ]
+      then
+        mv fast-test.out fast-test.configure.${abbrev}.out
+      fi
 
     popd \
       > /dev/null

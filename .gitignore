@@ -54,6 +54,11 @@ test03/eg3.res
 .ipynb_checkpoints/
 *.ipynb
 
+# Generated Marimo notebooks and notebook stamps
+*_marimo.py
+__marimo__/
+notebooks.stamp
+
 # Linter and static analysis caches
 .ruff_cache/
 .pylint.d/

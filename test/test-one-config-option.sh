@@ -38,6 +38,8 @@ pushd ${package_dir}/.. \
       > /dev/null
     make clean \
       > /dev/null
+    make ${args} -C test_doctest check \
+      > make.test_doctest.out
     make ${args} check \
       > make.out
 

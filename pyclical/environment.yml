@@ -12,6 +12,7 @@ dependencies:
   - nbformat
   - jupyterlab
   - ipykernel
+  - marimo
   - pyvista
   - pyvistaqt
   - pyside6
