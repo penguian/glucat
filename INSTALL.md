@@ -554,11 +554,12 @@ will be removed in future versions.
 Building and running the PyClical demos
 ---------------------------------------
 
-In the `pyclical/demos/sandbox` directory, the Python script
-`build_pyclical_notebooks.py` builds Jupyter notebooks (`.ipynb`) corresponding to
-the PyClical tutorials and demos, while `build_marimo_notebooks.py` generates reactive
-Marimo notebooks (`.py`). Running `make` in `pyclical/demos/sandbox` (or top-level
-`make`) will use these Python scripts to build the notebooks.
+In the `pyclical/demos/sandbox` directory, `build_pyclical_notebooks.py` builds
+Jupyter notebooks (`.ipynb`) corresponding to the PyClical tutorials and demos,
+while `build_marimo_notebooks.py` generates reactive Marimo notebooks
+(`*_marimo.py`) directly from those tutorial and demo modules. Running `make` in
+`pyclical/demos/sandbox` (or top-level `make`) runs `build_pyclical_notebooks.py`
+to build the `.ipynb` notebooks.
 
 Once built, you can run standard PyClical demos in Python directly:
 
@@ -575,13 +576,19 @@ jupyter lab pyclical/demos/sandbox/
 ```
 *(or `jupyter notebook` if using Jupyter Notebook v7+).*
 
-To run or edit the Marimo reactive notebooks:
+To generate, run, or edit the Marimo reactive notebooks (`marimo` is included in
+`pyclical/environment.yml` and `pyclical/requirements.txt` and installed
+automatically by `source pyclical/setup-env.sh`, or can be installed via
+`conda install -c conda-forge marimo` or `pip install marimo`):
 
 ```bash
-# Run a reactive notebook in your browser:
+# Generate the Marimo reactive notebooks (*_marimo.py):
+python3 pyclical/demos/sandbox/build_marimo_notebooks.py
+
+# Run a reactive notebook in your browser (App mode):
 marimo run pyclical/demos/sandbox/clifford_demo_marimo.py
 
-# Or launch the interactive Marimo editor:
+# Or launch the interactive Marimo editor (Studio mode):
 marimo edit pyclical/demos/sandbox/clifford_demo_marimo.py
 ```
 
@@ -623,6 +630,28 @@ To permanently suppress it, set:
   echo "c.NotebookApp.websocket_ping_timeout = 30000" >> \
   ~/.jupyter/jupyter_notebook_config.py
   ```
+
+### Environment Notes for Marimo Reactive Notebooks
+
+* **Direct Python Interpreter Execution (No Jupyter Kernels):** Unlike Jupyter,
+  which routes notebook execution through registered `kernel.json` kernel specs,
+  Marimo executes code directly inside the Python interpreter that invokes the
+  `marimo` CLI. Always launch `marimo` from the same Python or Conda environment
+  used to compile PyClical to avoid binary ABI mismatches (where Python fails to
+  load the compiled extension and falls back to `PyClical.py`, raising an
+  `ImportError`).
+
+* **Reactive DAG Model and Generated PyClical Notebooks:** Marimo parses cells
+  into a directed acyclic graph (DAG), so raw scripts using wildcard imports
+  (`from PyClical import *`) or sequential variable re-assignments trigger Marimo
+  DAG diagnostics (`ImportStarError`, `MultipleDefinitionError`) if converted
+  naively. To avoid those diagnostics, `build_marimo_notebooks.py` generates the
+  `*_marimo.py` notebooks directly via `MarimoContext` and
+  `pyclical_marimo_utils.py`. Each generated notebook executes its tutorial steps
+  sequentially inside an isolated PyClical session, presents immutable
+  syntax-highlighted code blocks with clickable `▶` output toggles, and renders
+  interactive `Check` exercise editors with live `is_near()` grading and
+  collapsible `"Show solution"` accordions.
 
 
 Building the PyClical plotting demos

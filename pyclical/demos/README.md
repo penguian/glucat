@@ -15,7 +15,8 @@ The demos are divided into two focused subdirectories:
   - `pyclical_demo.py` & `sqrt_log_demo.py`: Core functionality and matrix logarithm/square root benchmarks.
   - `versor_demo.py`: Versor and rotor demonstrations.
   - `build_pyclical_notebooks.py`: Builds Jupyter notebooks (`.ipynb`) from tutorial scripts.
-  - `build_marimo_notebooks.py`: Builds reactive Marimo notebooks (`.py`) from tutorial scripts.
+  - `build_marimo_notebooks.py`: Builds reactive Marimo notebooks (`*_marimo.py`) from tutorial scripts.
+  - `pyclical_marimo_utils.py`: Runtime helpers for Marimo notebooks (sequential PyClical session execution, clickable `▶` output toggles, and interactive exercise grading).
   - `validate_notebooks.py`: Automated validation test runner for generated Jupyter notebooks.
   - `images/`: Offline historical portraits used by notebooks and presentation scripts.
 - **`plotting/`**: 3D geometric visualization using PyVista and PySide6.
@@ -48,12 +49,17 @@ jupyter lab pyclical/demos/sandbox/
 *(If using system Python, register the PyClical kernel first via `make -C pyclical install-pyclical-kernel`).*
 
 ### 4. Marimo Reactive Notebooks
-Marimo notebooks provide reactive execution where dependent cells update automatically:
+Ensure `marimo` is installed in the active Python environment used to compile PyClical (included automatically by `source pyclical/setup-env.sh`, or install via `conda install -c conda-forge marimo` or `pip install marimo`). Unlike Jupyter, Marimo does not use `kernel.json` kernel specs; it executes directly inside the Python environment that runs the `marimo` CLI.
+
+Each generated notebook displays immutable syntax-highlighted code blocks with clickable `▶` output toggles, plus interactive `Check` exercise editors and collapsible `"Show solution"` accordions:
 ```bash
-# Run in read-only interactive app mode:
+# Generate reactive Marimo notebooks (*_marimo.py):
+python3 pyclical/demos/sandbox/build_marimo_notebooks.py
+
+# Run in read-only interactive App mode:
 marimo run pyclical/demos/sandbox/clifford_demo_marimo.py
 
-# Or edit and inspect cells interactively:
+# Or edit and inspect cells interactively in Studio mode:
 marimo edit pyclical/demos/sandbox/clifford_demo_marimo.py
 ```
 
