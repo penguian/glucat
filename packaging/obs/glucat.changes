@@ -1,4 +1,14 @@
 -------------------------------------------------------------------
+Tue Nov 24 11:51:00 UTC 2026 - Paul Leopardi <paul.leopardi@gmail.com>
+
+- Update to GluCat 0.98a4:
+  * Reorganized PyClical tutorials, demos, and offline portrait images into pyclical/demos/sandbox/.
+  * Implemented single-pass Marimo reactive notebook generation with immutable code toggles and interactive exercises.
+  * Added Marimo to PyClical environment manifests, validation suite, and GitHub Actions CI.
+  * Removed legacy Mayavi 3D plotting scripts, standardizing on PyVista.
+  * Optimized test-one-config-option.sh and fast-test-one-config-option.sh to prioritize test_doctest.
+
+-------------------------------------------------------------------
 Sat Jul 18 12:50:00 UTC 2026 - Paul Leopardi <paul.leopardi@anu.edu.au>
 
 - Update to GluCat 0.98a3:

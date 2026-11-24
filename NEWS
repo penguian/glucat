@@ -1,3 +1,13 @@
+2026-11-24: 0.98a4
+GluCat 0.98a4 reorganizes the PyClical demos sandbox, adds Marimo reactive notebooks, removes Mayavi, and optimizes test scripts.
+
+o Reorganized PyClical tutorials, demos, notebook tools, and offline portraits into pyclical/demos/sandbox/.
+o Implemented single-pass Marimo reactive notebook generation (MarimoContext, pyclical_marimo_utils.py) with clickable output toggles and interactive exercises.
+o Integrated Marimo checks into pyclical/demos/sandbox/validate_notebooks.py, PyClical environment manifests, and GitHub Actions CI.
+o Fixed PyClical.abs usage in pyclical_tutorial_utils.is_near() for clifford exercise grading.
+o Removed legacy Mayavi 3D plotting scripts, standardizing on PyVista.
+o Optimized test/test-one-config-option.sh and test/fast-test-one-config-option.sh to prioritize test_doctest.
+
 2026-08-01: 0.98a3
 GluCat 0.98a3 implements the Defence in Depth quality-hardening framework.
 

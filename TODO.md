@@ -1,9 +1,9 @@
-TODO for GluCat 0.98a3 with PyClical
+TODO for GluCat 0.98a4 with PyClical
 ====================================
 
 ## Roadmap
 
-### 0.98a3: Defence in Depth (Current)
+### 0.98a3: Defence in Depth
 * [x] **C++ Quality**: Implement `clang-format` and `cppcheck` linting.
 * [x] **Cython/Python Quality**: Implement `ruff` and `pylint` for PyClical.
 * [x] **Automation**: Integrate `pre-commit` hooks for all quality checks.
@@ -12,11 +12,11 @@ TODO for GluCat 0.98a3 with PyClical
   `pyclical/setup-env.sh`; deprecate Mayavi support.
 * [x] **Downstream Packaging**: Establish openSUSE RPM packaging (`glucat.spec`).
 
-### 0.98a4: PyClical Sandbox & Test Optimization
-* **Sandbox Reorganization**: Move interactive tutorials, notebook tools, and offline media to `pyclical/demos/sandbox/`.
-* **Marimo Integration**: Investigate generating reactive Marimo notebooks alongside Jupyter notebooks.
-* **Mayavi Deprecation**: Remove legacy Mayavi 3D plotting scripts, standardizing on PyVista.
-* **Test Harness Optimization**: Update `test-one-config-option.sh` to run `test_doctest` first, and `fast-test-one-config-option.sh` to only run `test_doctest`.
+### 0.98a4: PyClical Sandbox & Test Optimization (Current)
+* [x] **Sandbox Reorganization**: Move interactive tutorials, notebook tools, and offline media to `pyclical/demos/sandbox/`.
+* [x] **Marimo Integration**: Generate and validate reactive Marimo notebooks alongside Jupyter notebooks, with immutable code toggles and interactive exercises.
+* [x] **Mayavi Deprecation**: Remove legacy Mayavi 3D plotting scripts, standardizing on PyVista.
+* [x] **Test Harness Optimization**: Update `test-one-config-option.sh` to run `test_doctest` first, and `fast-test-one-config-option.sh` to only run `test_doctest`.
 
 ### 0.98a5: Raytracer
 * Remove deprecated items.

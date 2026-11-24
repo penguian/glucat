@@ -1,7 +1,7 @@
 Begin3
 Title:          GluCat
-Version:        0.98a3
-Entered-date:   2026-08-10
+Version:        0.98a4
+Entered-date:   2026-11-24
 Description:    Generic library of universal Clifford algebra templates
 Keywords:       Clifford algebra, geometric algebra, template library
 Author:         Paul C. Leopardi <paul.leopardi@gmail.com>
