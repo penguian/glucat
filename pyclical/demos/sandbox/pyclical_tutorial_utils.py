@@ -291,7 +291,10 @@ Print wrapped text string.
         """
         Display image command string in terminal mode without IPython execution.
         """
-        print(f">>> Image(url='{url}')")
+        if url.startswith("http://") or url.startswith("https://"):
+            print(f">>> Image(url='{url}')")
+        else:
+            print(f">>> Image(filename='{url}')")
 
     def input_exec(self, prompt, sandbox):
         """

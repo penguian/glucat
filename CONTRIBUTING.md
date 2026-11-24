@@ -17,7 +17,7 @@ python3 verify_all.py -q --python
 Available flags for `verify_all.py`:
 - `-q`, `--quiet`: Suppress sub-command stdout unless a step fails, emitting 1-line check status indicators.
 - `--fast`: Execute ultra-fast (~0.12s) pre-commit checks: Makefile dry-run target validation (`make -n check`), license header scanning (`check_license_headers.py`), and Ruff linting (`ruff check`).
-- `--python` (alias `--examples`): Run full Python linter static analysis (`pylint`), PyClical doctest suite (`pytest`), Jupyter notebook validation (`pyclical/demos/validate_notebooks.py`), and interactive/plotting demo scripts (`pyclical/demos/`).
+- `--python` (alias `--examples`): Run full Python linter static analysis (`pylint`), PyClical doctest suite (`pytest`), Jupyter notebook validation (`pyclical/demos/sandbox/validate_notebooks.py`), and interactive/plotting demo scripts (`pyclical/demos/sandbox/` and `pyclical/demos/plotting/`).
 - `--coverage`: Execute C++ template header block and branch coverage tests (`make check-coverage-doctest`). Any extra CLI arguments passed to `verify_all.py` are forwarded directly to `make check-coverage-doctest`.
 
 ---

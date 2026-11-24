@@ -81,7 +81,7 @@ else
 fi
 
 # Export environment variables for PyVista plotting and PyClical imports
-export PYTHONPATH="${REPO_ROOT}/pyclical:${REPO_ROOT}/pyclical/demos/plotting:${PYTHONPATH}"
+export PYTHONPATH="${REPO_ROOT}/pyclical:${REPO_ROOT}/pyclical/demos/sandbox:${REPO_ROOT}/pyclical/demos/plotting:${PYTHONPATH}"
 export QT_API="pyside6"
 export QT_QPA_PLATFORM="xcb"
 

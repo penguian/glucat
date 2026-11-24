@@ -102,9 +102,14 @@ The `./glucat` directory contains all the header files that define the GluCat C+
 template library.
 
 The `./pyclical` directory contains the C++ and Cython source code for the
-PyClical Python extension module, as well as a subdirectory `./pyclical/demos`
-containing Python source code for the PyClical demos and tutorials, and sample
-demo output.
+PyClical Python extension module, as well as the `./pyclical/demos` directory,
+structured into two subdirectories:
+- `./pyclical/demos/sandbox`: Interactive tutorials (`0.0` through `2.0`),
+  presentation demos (`clifford_demo.py`, `m_theory_demo.py`, `pyclical_demo.py`,
+  `sqrt_log_demo.py`, `versor_demo.py`), Jupyter notebooks (`.ipynb`), reactive
+  Marimo notebooks (`.py`), reference test outputs (`.out`), and offline assets.
+- `./pyclical/demos/plotting`: 3D visual geometry demonstrations using the PyVista
+  backend.
 
 The `./admin` and `./m4` directories are part of the `autotools` infrastructure for
 building GluCat, and should normally be left unchanged.
@@ -174,13 +179,13 @@ way to do this is to use the following Python statement:
 >>> from PyClical import *
 ```
 Probably the easiest way to get familiar with PyClical is to make a copy of the
-`pyclical/demos` directory and run the tutorials and demos. By default, the
+`pyclical/demos/sandbox` directory and run the tutorials and demos. By default, the
 `pyclical/demos` directory installs into `/usr/local/share/pyclical/demos`.
 
 For example, assuming you are using the Bash shell on Linux, and have installed
 PyClical, use the following commands:
 ```
-% cp -a /usr/local/share/pyclical/demos /path/to/my/demos
+% cp -a /usr/local/share/pyclical/demos/sandbox /path/to/my/demos
 % cd /path/to/my/demos
 % python3 pyclical_tutorials.py
 ```
@@ -215,22 +220,19 @@ If you are running Linux or a Unix equivalent, the following should also work:
 % ./pyclical_tutorials.py
 ```
 
-For more usage examples, see the example Python files `clifford_demo.py`,
-`m_theory_demo.py`, `pyclical_demo.py`, `plotting_demo.py`, `sqrt_log_demo.py`,
-and the 3D plotting demos in `pyclical/demos/plotting/`
-(`plotting_demo_pyvista.py` and `plotting_demo_pyvista_dialog.py`). Note that
-Mayavi support (`plotting_demo_mayavi.py`, `plotting_demo_dialog.py`) is
-deprecated and installation instructions for Mayavi have been removed. See the
-example output files `pyclical_demo.out` and `sqrt_log_demo.out`.
+For more usage examples, see the presentation demo scripts in `pyclical/demos/sandbox/`:
+`clifford_demo.py`, `m_theory_demo.py`, `pyclical_demo.py`, `sqrt_log_demo.py`, and
+`versor_demo.py`. Reference output files `clifford_demo.out`, `pyclical_demo.out`, and
+`sqrt_log_demo.out` are provided to verify calculation results.
 
-To run `clifford_demo.py`, `m_theory_demo.py`, `pyclical_demo.py`, or
-`sqrt_log_demo.py`, use the following commands:
+To run `clifford_demo.py`, `m_theory_demo.py`, `pyclical_demo.py`,
+`sqrt_log_demo.py`, or `versor_demo.py`, use the following commands:
 ```
 % cd /path/to/my/demos
 % python3 $DEMO.py
 ```
-where `$DEMO` is one of `clifford_demo`, `m_theory_demo`, `pyclical_demo` or
-`sqrt_log_demo`.
+where `$DEMO` is one of `clifford_demo`, `m_theory_demo`, `pyclical_demo`,
+`sqrt_log_demo`, or `versor_demo`.
 
 If you are running Linux or a Unix equivalent, the following should also work:
 ```
@@ -238,16 +240,11 @@ If you are running Linux or a Unix equivalent, the following should also work:
 % chmod +x $DEMO.py
 % ./$DEMO.py
 ```
-To run `plotting_demo.py`, run `ipython3 --pylab` and enter the following command
-at the IPython prompt:
-```
-In [1]: %run plotting_demo
-```
-This demo uses Matplotlib to produce a number of plots.
 
-To run the 3D plotting demos, set up the PyVista environment using
-`source pyclical/setup-env.sh`. Mayavi support is deprecated and installation
-instructions for Mayavi have been removed. See `INSTALL.md` for full details.
+To run the interactive 3D plotting demos, set up the PyVista environment using
+`source pyclical/setup-env.sh`. Note that Mayavi support has been completely
+removed in GluCat 0.98a4, standardizing on PyVista as the sole 3D plotting backend.
+See `INSTALL.md` for full details.
 
 ```bash
 source pyclical/setup-env.sh
@@ -255,24 +252,35 @@ source pyclical/setup-env.sh
 cd pyclical/demos/plotting
 python3 plotting_demo_pyvista.py
 python3 plotting_demo_pyvista_dialog.py
+
+# Non-interactive / headless verification:
+GLUCAT_NON_INTERACTIVE=1 python3 plotting_demo_pyvista.py
 ```
 
 The PyVista demos display interactive 3D plots in windows (or PySide6/Qt
 dialogs) allowing rotation, zooming, and panning.
 
-The tutorials and demos are also accompanied by a corresponding set of Jupyter
-notebooks. To build the notebooks, see `INSTALL.md`. To run the notebooks, assuming
-that you have a copy of the notebooks in the directory `/path/to/my/demos`, you have
-`ipython3` installed, you have installed PyClical, or set `PYTHONPATH` appropriately,
-and you are able to use Jupyter notebooks via a web browser, use the following
-commands:
-```
-% cd /path/to/my/demos
-% jupyter notebook
-```
-Your web browser should open a new window or tab, displaying a page that lists
-all of the available tutorials and demos as notebooks. To select a notebook,
-click on the corresponding name in the list.
+The tutorials and demos are also accompanied by interactive notebooks in two formats:
+
+1. **JupyterLab Notebooks (`.ipynb`)**:
+   Pre-generated Jupyter notebooks for each tutorial and demo reside in
+   `pyclical/demos/sandbox/`. To launch JupyterLab:
+   ```bash
+   cd /path/to/my/demos
+   jupyter lab
+   ```
+   *(or `jupyter notebook` if using Jupyter Notebook v7+).*
+
+2. **Marimo Reactive Notebooks (`.py`)**:
+   Reactive Python notebooks can be generated directly using the converter in
+   `pyclical/demos/sandbox/`:
+   ```bash
+   cd /path/to/my/demos
+   python3 build_marimo_notebooks.py
+   marimo run clifford_demo_marimo.py
+   # Or to open interactive reactive editor:
+   marimo edit clifford_demo_marimo.py
+   ```
 
 
 5 Writing C++ programs that use GluCat classes

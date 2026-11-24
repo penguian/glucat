@@ -145,10 +145,13 @@ Print notebook code cell.
 
     def display_image(self, url):
         """
-        Print notebook code cells for importing IPython Image and rendering URL.
+        Print notebook code cells for importing Image and rendering path or URL.
         """
         self.print_exec("from IPython.display import Image")
-        self.print_exec(f"Image(url='{url}')")
+        if url.startswith("http://") or url.startswith("https://"):
+            self.print_exec(f"Image(url='{url}')")
+        else:
+            self.print_exec(f"Image(filename='{url}')")
 
     def input_exec(self, prompt, sandbox):
         """

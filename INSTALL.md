@@ -133,15 +133,20 @@ The PyClical demos
 ------------------
 
 The subdirectory `./pyclical/demos` contains demo and tutorial scripts written
-in Python. These scripts rely on the built PyClical extension module.
+in Python, organized into two subdirectories:
+- `sandbox/`: Contains interactive tutorials, presentation demos, reference output
+  files, Jupyter notebooks (`.ipynb`), and Marimo reactive notebooks (`.py`).
+- `plotting/`: Contains 3D visualization demos using PyVista.
+
+These scripts rely on the built PyClical extension module.
 
 The PyClical plotting demos
 ---------------------------
 
 The PyClical plotting demos (`plotting_demo_pyvista.py`,
-`plotting_demo_pyvista_dialog.py`) use PyVista for 3D visualization. Mayavi
-support (`plotting_demo_mayavi.py`, `plotting_demo_dialog.py`) is deprecated and
-installation instructions for Mayavi have been removed. Because VTK and
+`plotting_demo_pyvista_dialog.py`) in `pyclical/demos/plotting/` use PyVista
+for 3D visualization. Legacy Mayavi support has been completely removed in GluCat
+0.98a4, with PyVista serving as the exclusive 3D plotting backend. Because VTK and
 rendering dependencies are sensitive to library version mismatches, they require
 the execution environment configured by `pyclical/setup-env.sh` (see "Setting
 Up the Plotting Environment" below).
@@ -549,24 +554,36 @@ will be removed in future versions.
 Building and running the PyClical demos
 ---------------------------------------
 
-In the `pyclical/demos` directory, there is a Python script
-`build_pyclical_notebooks.py`. This script builds a set of Jupyter notebooks
-that correspond to the PyClical tutorials and some of the demos. Running `make`
-will use this Python script to build these notebooks.
+In the `pyclical/demos/sandbox` directory, the Python script
+`build_pyclical_notebooks.py` builds Jupyter notebooks (`.ipynb`) corresponding to
+the PyClical tutorials and demos, while `build_marimo_notebooks.py` generates reactive
+Marimo notebooks (`.py`). Running `make` in `pyclical/demos/sandbox` (or top-level
+`make`) will use these Python scripts to build the notebooks.
 
 Once built, you can run standard PyClical demos in Python directly:
 
 ```bash
-cd pyclical/demos
+cd pyclical/demos/sandbox
 python3 clifford_demo.py
+python3 pyclical_tutorials.py   # interactive menu of tutorials 00 to 09
 ```
 
 To launch the Jupyter notebooks for the PyClical tutorials and demos:
 
 ```bash
-jupyter lab pyclical/demos/
+jupyter lab pyclical/demos/sandbox/
 ```
 *(or `jupyter notebook` if using Jupyter Notebook v7+).*
+
+To run or edit the Marimo reactive notebooks:
+
+```bash
+# Run a reactive notebook in your browser:
+marimo run pyclical/demos/sandbox/clifford_demo_marimo.py
+
+# Or launch the interactive Marimo editor:
+marimo edit pyclical/demos/sandbox/clifford_demo_marimo.py
+```
 
 If you are using the system Python (not a Conda or venv environment), you should 
 register a dedicated Jupyter kernel so that the notebooks use the active PyClical 
@@ -612,12 +629,13 @@ Building the PyClical plotting demos
 ------------------------------------
 
 The plotting demos (`plotting_demo_pyvista.py`, `plotting_demo_pyvista_dialog.py`)
-require a configured environment to satisfy their PyVista dependencies. Mayavi
-support is deprecated and installation instructions for Mayavi have been
-removed. Building these demos requires running `source pyclical/setup-env.sh` to
-set up and activate the environment (via Conda or system venv), configuring and
-building PyClical against the active Python interpreter, and exporting the
-required runtime plotting environment variables.
+located in `pyclical/demos/plotting/` require a configured environment to satisfy
+their PyVista dependencies. Legacy Mayavi support has been completely removed in
+GluCat 0.98a4, with PyVista serving as the exclusive 3D plotting backend. Building
+these demos requires running `source pyclical/setup-env.sh` to set up and activate
+the environment (via Conda or system venv), configuring and building PyClical
+against the active Python interpreter, and exporting the required runtime plotting
+environment variables.
 
 Please refer to the detailed section "Setting Up the Plotting Environment"
 below for the full build and execution procedures for these demos.
@@ -724,9 +742,9 @@ Setting Up the Plotting Environment
 ===================================
 
 The PyClical plotting demos require a 3D visualization backend using
-**PyVista** (`plotting_demo_pyvista.py`, `plotting_demo_pyvista_dialog.py`).
-Mayavi support (`plotting_demo_mayavi.py`, `plotting_demo_dialog.py`) is
-deprecated, and installation instructions for Mayavi have been removed.
+**PyVista** (`plotting_demo_pyvista.py`, `plotting_demo_pyvista_dialog.py` in
+`pyclical/demos/plotting/`). Legacy Mayavi support has been completely removed in
+GluCat 0.98a4, with PyVista serving as the exclusive 3D plotting backend.
 
 Because VTK and rendering dependencies are sensitive to library versions and
 architecture-specific memory page alignment, setting up the plotting environment
@@ -1215,7 +1233,7 @@ ipython3 --classic --no-banner < test.py
 ```
 and compare the output with `test.out`.
 
-In the directory `pyclical/demos`, the Python script files `pyclical_demo.py` and
+In the directory `pyclical/demos/sandbox`, the Python script files `pyclical_demo.py` and
 `sqrt_log_demo.py` have corresponding output files `pyclical_demo.out` and
 `sqrt_log_demo.out`. Run these two Python script files and compare their output to
 the contents of the two output files. See the file `README.md` under "Using the
@@ -1237,9 +1255,10 @@ GNU top level documentation files `AUTHORS.md`, `ChangeLog`, `COPYING`,
 `glucat.lsm`, `INSTALL.md`, `NEWS`, `README.md` and `TODO.md` are installed into
 `$DATAROOTDIR/doc/glucat`. This defaults to `$PREFIX/share/doc/glucat`, i.e.
 `/usr/local/share/doc/glucat`. The PyClical demos and notebooks are installed by
-default into the directory `$DATAROOTDIR/pyclical/demos`. This defaults to
-`$PREFIX/share/pyclical/demos`, i.e. `/usr/local/share/pyclical/demos`. You can
-change this directory by using the configuration option `--with-demo-dir=DIR`.
+default into the directory `$DATAROOTDIR/pyclical/demos` (with subdirectories
+`sandbox` and `plotting`). This defaults to `$PREFIX/share/pyclical/demos`, i.e.
+`/usr/local/share/pyclical/demos`. You can change this directory by using the
+configuration option `--with-demo-dir=DIR`.
 
 You will need permission to update the installation directories, so you may need
 to use `sudo`, login as `root`, or `su` to `root` before you run `make install`.

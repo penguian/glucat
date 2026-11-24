@@ -44,11 +44,15 @@ Main execution entry point for building and validating notebooks.
     # 1. Run the build script
     print("Building notebooks...")
     env = os.environ.copy()
-    parent_dir = os.path.dirname(script_dir)
+    demos_dir = os.path.dirname(script_dir)
+    pyclical_dir = os.path.dirname(demos_dir)
+    extra_paths = [script_dir, demos_dir, pyclical_dir]
     if "PYTHONPATH" in env:
-        env["PYTHONPATH"] = parent_dir + os.pathsep + env["PYTHONPATH"]
+        env["PYTHONPATH"] = (
+            os.pathsep.join(extra_paths) + os.pathsep + env["PYTHONPATH"]
+        )
     else:
-        env["PYTHONPATH"] = parent_dir
+        env["PYTHONPATH"] = os.pathsep.join(extra_paths)
 
     try:
         subprocess.run(
