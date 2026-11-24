@@ -1,111 +1,81 @@
 #!/usr/bin/env python3
 """
-Convert generated Jupyter notebooks (.ipynb) into Marimo reactive Python notebooks.
+Build Marimo reactive Python notebooks for PyClical tutorials and demos.
 """
 # -*- coding: utf-8 -*-
 #
 # PyClical: Python interface to GluCat:
 #           Generic library of universal Clifford algebra templates
 #
-# build_marimo_notebooks.py: Build Marimo reactive notebooks from Jupyter notebooks.
+# build_marimo_notebooks.py:
+#
+# Build Marimo reactive notebooks corresponding to PyClical tutorials and demos.
 #
 #    copyright            : (C) 2026 by Paul C. Leopardi
 #
 # Licensed under CC BY-SA 3.0 http://creativecommons.org/licenses/by-sa/3.0/
 
-import glob
-import json
 import os
-import shutil
-import subprocess
 import sys
 
+DEMO_MODULES = (
+    "clifford_demo",
+    "pyclical_demo",
+    "sqrt_log_demo",
+    "m_theory_demo",
+    "versor_demo",
+)
 
-def convert_ipynb_to_marimo_fallback(ipynb_path, out_py_path):
-    """
-    Programmatically convert a Jupyter notebook JSON structure into a Marimo .py app
-    when the marimo CLI tool is not installed.
-    """
-    with open(ipynb_path, "r", encoding="utf-8") as f:
-        nb = json.load(f)
 
-    lines = []
-    lines.append("import marimo")
-    lines.append("")
-    lines.append('app = marimo.App(title="PyClical Marimo Sandbox")')
-    lines.append("")
+def _configure_paths(script_dir):
+    """Ensure sandbox, demos, and pyclical directories are on sys.path."""
+    demos_dir = os.path.dirname(script_dir)
+    pyclical_dir = os.path.dirname(demos_dir)
+    for path in (pyclical_dir, demos_dir, script_dir):
+        if path not in sys.path:
+            sys.path.insert(0, path)
 
-    cell_index = 0
-    for cell in nb.get("cells", []):
-        cell_type = cell.get("cell_type")
-        source = cell.get("source", [])
-        if isinstance(source, list):
-            source_text = "".join(source)
-        else:
-            source_text = str(source)
 
-        if not source_text.strip():
-            continue
+def build_marimo_notebook(ctx, module_name, title, out_dir):
+    """Build a single Marimo reactive notebook from a PyClical module."""
+    module = __import__(module_name)
+    out_path = os.path.join(out_dir, f"{module_name}_marimo.py")
+    original_stdout = sys.stdout
+    try:
+        with open(out_path, "w", encoding="utf-8") as handle:
+            sys.stdout = handle
+            ctx.print_notebook_header(title, module_name=module_name)
+            module.run(ctx)
+            ctx.print_notebook_footer()
+    finally:
+        sys.stdout = original_stdout
+    print(f"Generated {os.path.basename(out_path)}.")
 
-        cell_index += 1
-        lines.append("@app.cell")
-        if cell_type == "markdown":
-            # Wrap markdown in marimo.md(...)
-            escaped_md = repr(source_text)
-            lines.append(f"def cell_{cell_index}(mo):")
-            lines.append(f"    return mo.md({escaped_md}),")
-        else:
-            # Code cell
-            indented_code = "\n    ".join(source_text.splitlines())
-            lines.append(f"def cell_{cell_index}():")
-            if indented_code.strip():
-                lines.append(f"    {indented_code}")
-            else:
-                lines.append("    pass")
-            lines.append("    return")
-        lines.append("")
 
-    lines.append('if __name__ == "__main__":')
-    lines.append("    app.run()")
-    lines.append("")
+def build_marimo_from_demo(ctx, module_name, out_dir):
+    """Build a Marimo reactive notebook for a demo module."""
+    build_marimo_notebook(ctx, module_name, module_name, out_dir)
 
-    with open(out_py_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(lines))
+
+def build_marimo_from_tut(ctx, tut, out_dir):
+    """Build a Marimo reactive notebook for a tutorial module."""
+    build_marimo_notebook(ctx, tut.module_name, tut.title, out_dir)
 
 
 def main():
-    """
-    Main conversion loop for all .ipynb files in the sandbox directory.
-    """
+    """Generate all PyClical Marimo demo and tutorial notebooks."""
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    marimo_cli = shutil.which("marimo")
+    _configure_paths(script_dir)
 
-    notebook_files = glob.glob(os.path.join(script_dir, "*.ipynb"))
-    if not notebook_files:
-        print("No Jupyter notebooks found to convert.", file=sys.stderr)
-        return 1
+    import pyclical_notebook_utils as pn  # pylint: disable=import-outside-toplevel
+    import pyclical_tutorials as pt  # pylint: disable=import-outside-toplevel
 
-    print(f"Found {len(notebook_files)} notebooks for Marimo conversion.")
-    for nb_path in sorted(notebook_files):
-        base_name = os.path.splitext(os.path.basename(nb_path))[0]
-        out_py = os.path.join(script_dir, f"{base_name}_marimo.py")
-        print(f"Generating {os.path.basename(out_py)}...")
+    ctx = pn.marimo_context(globals())
+    for demo_name in DEMO_MODULES:
+        build_marimo_from_demo(ctx, demo_name, script_dir)
 
-        if marimo_cli:
-            try:
-                subprocess.run(
-                    [marimo_cli, "convert", nb_path, "-o", out_py],
-                    check=True,
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL,
-                )
-                print("  Used marimo CLI converter.")
-                continue
-            except subprocess.CalledProcessError:
-                print("  CLI conversion failed; falling back to python generator.")
-
-        convert_ipynb_to_marimo_fallback(nb_path, out_py)
-        print("  Generated using internal AST/template fallback generator.")
+    for _, tut in sorted(pt.tutorial_dict.items()):
+        build_marimo_from_tut(ctx, tut, script_dir)
 
     return 0
 

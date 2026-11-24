@@ -10,6 +10,7 @@ dist_sandbox_DATA = \
     m_theory_demo.py \
     pyclical_demo.out \
     pyclical_demo.py \
+    pyclical_marimo_utils.py \
     pyclical_notebook_utils.py \
     pyclical_tutorial_0_0_notation.py \
     pyclical_tutorial_0_1_index_sets.py \
